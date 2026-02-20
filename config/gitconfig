@@ -1,0 +1,8 @@
+[user]
+	name = lodekeeper
+	email = lodekeeper@users.noreply.github.com
+	signingkey = 9FD7E71AE4B4EB74
+[commit]
+	gpgsign = true
+[tag]
+	gpgsign = true

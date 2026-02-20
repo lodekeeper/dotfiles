@@ -34,3 +34,11 @@ if [ -d "$DOTFILES_DIR/skills" ]; then
 fi
 
 echo "Done. Agent config linked."
+
+# Git config (identity + signing, no credentials)
+if [ -f "$DOTFILES_DIR/config/gitconfig" ] && [ ! -f ~/.gitconfig ]; then
+  ln -sf "$DOTFILES_DIR/config/gitconfig" ~/.gitconfig
+  echo "  ✓ ~/.gitconfig"
+else
+  echo "  ⊘ ~/.gitconfig already exists (skipped)"
+fi
