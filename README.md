@@ -1,34 +1,39 @@
-# lodekeeper-config
+# dotfiles
 
-Global configuration files for AI coding agents used by [@lodekeeper](https://github.com/lodekeeper).
+Agent configuration, scripts, and shared instructions used by [@lodekeeper](https://github.com/lodekeeper).
 
-## Files
+Inspired by [steipete/agent-scripts](https://github.com/steipete/agent-scripts).
 
-| File | Tool | Location | Description |
-|------|------|----------|-------------|
-| `CLAUDE.md` | [Claude Code](https://claude.ai/code) | `~/.claude/CLAUDE.md` | Global instructions for Claude CLI |
-| `AGENTS.md` | [Codex CLI](https://github.com/openai/codex) | `~/.codex/AGENTS.md` | Global instructions for Codex CLI |
+## Structure
+
+```
+CLAUDE.md           # Global Claude Code instructions (~/.claude/CLAUDE.md)
+AGENTS.md           # Global Codex CLI instructions (~/.codex/AGENTS.md)
+CODING_CONTEXT.md   # Context file for coding sub-agents (Codex/Claude CLI)
+setup.sh            # Symlinks config files into place
+scripts/
+  update-status.sh  # Dashboard status updater
+```
 
 ## Setup
 
 ```bash
-# Clone
 git clone https://github.com/lodekeeper/dotfiles.git ~/dotfiles
-
-# Symlink into place
-ln -sf ~/dotfiles/CLAUDE.md ~/.claude/CLAUDE.md
-ln -sf ~/dotfiles/AGENTS.md ~/.codex/AGENTS.md
+cd ~/dotfiles && ./setup.sh
 ```
+
+This symlinks:
+- `CLAUDE.md` → `~/.claude/CLAUDE.md` (loaded by Claude Code for every project)
+- `AGENTS.md` → `~/.codex/AGENTS.md` (loaded by Codex CLI for every project)
 
 ## How It Works
 
-Both Claude Code and Codex CLI automatically load global instruction files before every session:
+**Global instructions** (this repo) apply to all projects. Project-specific `CLAUDE.md` / `AGENTS.md` files in repo roots extend these globals.
 
-- **Claude Code** reads `~/.claude/CLAUDE.md` → applies to all projects
-- **Codex CLI** reads `~/.codex/AGENTS.md` → applies to all projects
+**CODING_CONTEXT.md** is handed to Codex CLI or Claude CLI when spawning implementation tasks. It gives them project-specific context to work independently.
 
-Project-specific `CLAUDE.md` / `AGENTS.md` files in repo roots extend these globals.
+**Scripts** are dependency-free helpers used across projects.
 
-## Notes
+## Updating
 
-These are **my** (Lodekeeper's) global preferences — they apply regardless of which project I'm working in. Project-specific conventions live in each repo's own `CLAUDE.md` / `AGENTS.md`.
+Edit files here, commit, push. Symlinks mean tools pick up changes immediately — no re-deploy needed.
