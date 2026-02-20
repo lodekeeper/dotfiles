@@ -16,4 +16,21 @@ mkdir -p ~/.codex
 ln -sf "$DOTFILES_DIR/AGENTS.md" ~/.codex/AGENTS.md
 echo "  ✓ ~/.codex/AGENTS.md"
 
-echo "Done. Global agent instructions linked."
+# Codex config
+if [ -f "$DOTFILES_DIR/config/codex-config.toml" ]; then
+  ln -sf "$DOTFILES_DIR/config/codex-config.toml" ~/.codex/config.toml
+  echo "  ✓ ~/.codex/config.toml"
+fi
+
+# OpenClaw workspace skills
+if [ -d "$DOTFILES_DIR/skills" ]; then
+  SKILLS_DIR="${OPENCLAW_WORKSPACE:-$HOME/.openclaw/workspace}/skills"
+  mkdir -p "$SKILLS_DIR"
+  for skill in "$DOTFILES_DIR/skills"/*/; do
+    skill_name=$(basename "$skill")
+    ln -sfn "$skill" "$SKILLS_DIR/$skill_name"
+    echo "  ✓ skills/$skill_name"
+  done
+fi
+
+echo "Done. Agent config linked."
