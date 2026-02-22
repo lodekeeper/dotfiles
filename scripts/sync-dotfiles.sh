@@ -50,7 +50,7 @@ cp ~/lodekeeper-dash/scripts/deploy.sh "$DOTFILES_DIR/scripts/deploy.sh" 2>/dev/
 
 # Check for changes
 cd "$DOTFILES_DIR"
-if git diff --quiet && git diff --cached --quiet; then
+if git diff --quiet && git diff --cached --quiet && [ -z "$(git ls-files --others --exclude-standard)" ]; then
   echo "No changes to sync."
   exit 0
 fi
