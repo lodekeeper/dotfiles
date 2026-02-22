@@ -37,8 +37,17 @@ Cost is not a concern — use all relevant reviewers.
 
 ### 1. Get the diff
 
+**For open PRs:**
 ```bash
 gh pr diff <PR_NUMBER> --repo ChainSafe/lodestar
+```
+
+**For local changes (pre-PR, dev workflow Phase 4):**
+```bash
+cd ~/lodestar-<feature>
+git diff unstable...HEAD    # diff against base branch
+# or for staged changes:
+git diff --cached
 ```
 
 For large diffs (>3000 lines), focus on the most critical files or split into chunks.
@@ -65,7 +74,9 @@ Spawn all selected reviewers in parallel (no dependencies between them).
 
 All spawned reviewers will announce their findings back to the main session. Wait for ALL to complete before synthesizing.
 
-### 5. Post findings as inline PR review comments
+### 5. Act on findings
+
+**For open PRs — post as inline review comments:**
 
 **Do NOT post one big summary comment.** Instead, post each finding as an inline comment on the specific line of code using GitHub's review API:
 
@@ -102,6 +113,14 @@ if (result.retrying) {
 - Deduplicate: if multiple reviewers flag the same line, merge into one comment noting convergence
 
 **Convergence signals quality:** When multiple reviewers independently flag the same issue from different angles, highlight it — it's likely a real problem.
+
+**For local changes (pre-PR, dev workflow Phase 4):**
+
+Don't post to GitHub — there's no PR yet. Instead:
+1. Collect all reviewer findings
+2. Fix issues directly in the worktree (small fixes → do yourself, large → back to coding agent)
+3. Re-run reviewers on the updated diff if changes were significant
+4. Only open the PR after the review cycle is clean
 
 ## Lodestar Context for Reviewers
 

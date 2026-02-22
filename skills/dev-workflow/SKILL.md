@@ -230,12 +230,14 @@ process action:list
    # Run targeted unit tests for changed packages
    ```
 3. **Multi-persona review:** Use the `lodestar-review` skill (`skills/lodestar-review/SKILL.md`):
+   - Get the local diff: `git diff unstable...HEAD` in the worktree
    - Read the skill for reviewer selection matrix and Lodestar-tailored persona prompts
-   - Spawn appropriate reviewers (bugs, security, wisdom, architect, etc.) based on PR type
+   - Spawn appropriate reviewers (bugs, security, wisdom, architect, etc.) based on change type
    - Wait for ALL reviewers to complete
-   - Post findings as **inline PR comments** on specific lines (not one big summary)
-   - Use GitHub suggestion blocks for concrete code changes
+   - **This is a local review** — no PR exists yet. Fix issues directly in the worktree.
+   - Re-run reviewers if changes were significant
 4. **Fix issues:** Small fixes → do directly. Large issues → back to Codex
+5. **Only proceed to Phase 5 (PR) after the review cycle is clean**
 
 **Legacy reviewers** (codex-reviewer, gemini-reviewer, gpt-advisor) are still available for general second opinions but the persona-based reviewers from `lodestar-review` are preferred for PR reviews.
 
