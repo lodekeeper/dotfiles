@@ -11,9 +11,11 @@ Run Ethereum consensus/execution client devnets via [kurtosis](https://github.co
 
 ```bash
 # Start devnet from config
+# Always use --image-download always to ensure external images are up to date
 kurtosis run github.com/ethpandaops/ethereum-package \
   --enclave <name> \
-  --args-file network_params.yaml
+  --args-file network_params.yaml \
+  --image-download always
 
 # List enclaves
 kurtosis enclave ls
@@ -116,6 +118,16 @@ participants:
     el_type: geth
     ...
 ```
+
+## Log Levels
+
+For debugging, set `global_log_level: "debug"` in the config to get debug logs from all nodes:
+
+```yaml
+global_log_level: "debug"
+```
+
+This applies to all participants. For per-participant overrides, use `cl_log_level` / `el_log_level` on individual entries.
 
 ## Monitoring & Debugging
 
