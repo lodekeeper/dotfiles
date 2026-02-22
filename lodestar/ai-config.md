@@ -1,5 +1,3 @@
-Lodestar AI Contributor Configuration
-
 # Lodestar AI Contributor Configuration
 
 This is a shareable configuration for AI contributors working on Lodestar. Adapt it to your own setup.
