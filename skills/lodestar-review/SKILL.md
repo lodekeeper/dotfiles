@@ -65,21 +65,41 @@ Spawn all selected reviewers in parallel (no dependencies between them).
 
 All spawned reviewers will announce their findings back to the main session. Wait for ALL to complete before synthesizing.
 
-### 5. Synthesize consolidated report
+### 5. Post findings as inline PR review comments
 
-Combine findings into a single report:
+**Do NOT post one big summary comment.** Instead, post each finding as an inline comment on the specific line of code using GitHub's review API:
 
+```bash
+# Start a review (batch comments into one review, not individual comments)
+gh api repos/ChainSafe/lodestar/pulls/<PR>/reviews \
+  -f event="COMMENT" \
+  -f body="Review by Lodekeeper persona reviewers (bugs, wisdom, architect)" \
+  --jq '.id'
+
+# For each finding, post an inline comment on the exact line:
+gh api repos/ChainSafe/lodestar/pulls/<PR>/comments \
+  -f body="<finding>" \
+  -f path="<file path>" \
+  -F line=<line number> \
+  -f side="RIGHT" \
+  -F pull_number=<PR>
 ```
-## 🔍 PR #<number> — Review Summary
 
-**Reviewers:** <emoji> <name> · <emoji> <name> · ...
-
-### ✅ / ⚠️ <Category>
-<Consolidated findings, noting convergence across reviewers>
-
-### Key Takeaway
-<Most actionable finding and recommended next step>
+**For concrete code changes, use GitHub suggestion blocks:**
+````
+```suggestion
+const result = batch.downloadingRateLimited(peer.peerId);
+if (result.retrying) {
+  await sleep(result.delayMs);
+}
 ```
+````
+
+**Format:**
+- One inline comment per finding, on the relevant line
+- Use suggestion blocks when proposing specific code changes
+- Optionally add a brief summary comment tying findings together
+- Deduplicate: if multiple reviewers flag the same line, merge into one comment noting convergence
 
 **Convergence signals quality:** When multiple reviewers independently flag the same issue from different angles, highlight it — it's likely a real problem.
 
