@@ -27,12 +27,22 @@ for skill_dir in "$WORKSPACE/skills"/*/; do
   cp -r "$skill_dir"* "$DOTFILES_DIR/skills/$skill_name/" 2>/dev/null || true
 done
 
-# All notes (specs, eip8025, epbs, etc.)
+# All notes (specs, eip8025, epbs, lodekeeper-dash, etc.)
 for notes_dir in "$WORKSPACE/notes"/*/; do
   notes_name=$(basename "$notes_dir")
   mkdir -p "$DOTFILES_DIR/notes/$notes_name"
   cp -r "$notes_dir"* "$DOTFILES_DIR/notes/$notes_name/" 2>/dev/null || true
 done
+
+# Specs (gloas, peerdas, etc.)
+for spec_dir in "$WORKSPACE/specs"/*/; do
+  spec_name=$(basename "$spec_dir")
+  mkdir -p "$DOTFILES_DIR/specs/$spec_name"
+  cp -r "$spec_dir"* "$DOTFILES_DIR/specs/$spec_name/" 2>/dev/null || true
+done
+
+# Lodestar ai-config
+cp "$WORKSPACE/lodestar-ai-config.md" "$DOTFILES_DIR/lodestar/ai-config.md" 2>/dev/null || true
 
 # Scripts
 cp ~/lodekeeper-dash/scripts/update-status.sh "$DOTFILES_DIR/scripts/update-status.sh" 2>/dev/null || true
