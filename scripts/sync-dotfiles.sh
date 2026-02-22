@@ -27,10 +27,12 @@ for skill_dir in "$WORKSPACE/skills"/*/; do
   cp -r "$skill_dir"* "$DOTFILES_DIR/skills/$skill_name/" 2>/dev/null || true
 done
 
-# Spec notes
-mkdir -p "$DOTFILES_DIR/notes/specs" "$DOTFILES_DIR/notes/eip8025"
-cp "$WORKSPACE/notes/specs/"* "$DOTFILES_DIR/notes/specs/" 2>/dev/null || true
-cp "$WORKSPACE/notes/eip8025/"* "$DOTFILES_DIR/notes/eip8025/" 2>/dev/null || true
+# All notes (specs, eip8025, epbs, etc.)
+for notes_dir in "$WORKSPACE/notes"/*/; do
+  notes_name=$(basename "$notes_dir")
+  mkdir -p "$DOTFILES_DIR/notes/$notes_name"
+  cp -r "$notes_dir"* "$DOTFILES_DIR/notes/$notes_name/" 2>/dev/null || true
+done
 
 # Scripts
 cp ~/lodekeeper-dash/scripts/update-status.sh "$DOTFILES_DIR/scripts/update-status.sh" 2>/dev/null || true
