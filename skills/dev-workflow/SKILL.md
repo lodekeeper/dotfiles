@@ -229,8 +229,15 @@ process action:list
    pnpm build
    # Run targeted unit tests for changed packages
    ```
-3. **Sub-agent review:** Send diff to gemini-reviewer and/or codex-reviewer
+3. **Multi-persona review:** Use the `lodestar-review` skill (`skills/lodestar-review/SKILL.md`):
+   - Read the skill for reviewer selection matrix and Lodestar-tailored persona prompts
+   - Spawn appropriate reviewers (bugs, security, wisdom, architect, etc.) based on PR type
+   - Wait for ALL reviewers to complete
+   - Post findings as **inline PR comments** on specific lines (not one big summary)
+   - Use GitHub suggestion blocks for concrete code changes
 4. **Fix issues:** Small fixes → do directly. Large issues → back to Codex
+
+**Legacy reviewers** (codex-reviewer, gemini-reviewer, gpt-advisor) are still available for general second opinions but the persona-based reviewers from `lodestar-review` are preferred for PR reviews.
 
 ## Phase 5: PR
 
