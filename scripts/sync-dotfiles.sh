@@ -11,6 +11,12 @@ echo "Syncing agent files to dotfiles repo..."
 # Global agent instructions (source of truth: dotfiles repo via symlinks)
 # These are already symlinked, no sync needed
 
+# OpenClaw workspace files
+mkdir -p "$DOTFILES_DIR/openclaw"
+for f in AGENTS.md HEARTBEAT.md IDENTITY.md SOUL.md TOOLS.md USER.md; do
+  cp "$WORKSPACE/$f" "$DOTFILES_DIR/openclaw/$f" 2>/dev/null || true
+done
+
 # Codex config
 cp ~/.codex/config.toml "$DOTFILES_DIR/config/codex-config.toml" 2>/dev/null || true
 
