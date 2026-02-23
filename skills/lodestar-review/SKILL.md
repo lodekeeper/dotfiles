@@ -81,6 +81,14 @@ All spawned reviewers will announce their findings back to the main session. Wai
 > ⛔ **MANDATORY: Post findings as INLINE review comments on the diff.**
 > Never post a single large summary comment with all findings. This has been explicitly flagged multiple times.
 
+### 5.1 Output hygiene (Nico requirement)
+
+For any PR review content you post (inline comments or review body):
+- Include only reviewer-useful technical feedback.
+- Do **not** mention review process internals (multi-persona setup, AI/sub-agents, model names, orchestration steps).
+- Do **not** include process narration like "I asked X reviewers" or "agent Y found...".
+- If explicitly asked for methodology transparency, provide it separately in chat — not in the PR review text.
+
 **Step 5a: Compute line numbers**
 
 Before posting anything, map each finding to its exact file + line number in the new code. Use this helper to find new-file line numbers from the PR diff:
@@ -122,7 +130,7 @@ cat > /tmp/review-payload.json << 'EOF'
 {
   "commit_id": "<head_sha>",
   "event": "COMMENT",
-  "body": "Brief 2-3 line summary. See inline comments for details.",
+  "body": "Brief summary of overall assessment + any general/cross-cutting findings not tied to specific lines. DO NOT mention review process details (multi-persona, AI reviewers, sub-agents). Only include info useful to the PR author.",
   "comments": [
     {
       "path": "packages/reqresp/src/file.ts",
@@ -142,7 +150,8 @@ gh api repos/ChainSafe/lodestar/pulls/<PR>/reviews \
 - One inline comment per finding, on the exact line it refers to
 - Use `🔴` for must-fix, `🟡` for should-fix, `🟢` for suggestions
 - Use `suggestion` blocks for concrete code changes (GitHub renders these as committable)
-- The review `body` should be a brief 2-3 line summary only — all detail goes in inline comments
+- **General/cross-cutting findings** that aren't tied to a specific line go in the review `body` — that's what it's for
+- The review `body` can contain both a brief summary AND general findings (architecture observations, cross-cutting patterns, etc.)
 - Deduplicate: if multiple reviewers flag the same line, merge into one comment noting convergence
 - Use `-F line=N` or JSON input (not `-f line=N`) — line must be an integer, not a string
 
@@ -153,6 +162,7 @@ gh api repos/ChainSafe/lodestar/pulls/<PR>/reviews \
 > - Use `gh pr comment` for review findings
 > - Skip the line-number computation step
 > - Use `-f line=N` (string) — always use `-F line=N` (integer) or JSON input
+> - Mention review process details in the PR comment (multi-persona, AI reviewers, sub-agents, model names) — only include info useful to the PR author
 
 **For local changes (pre-PR, dev workflow Phase 4):**
 
