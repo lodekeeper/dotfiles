@@ -98,13 +98,16 @@ git branch -d <branch-name>  # optional: delete local branch
 - **Test:** `make test`
 
 ## Code Review Workflow
-- **Before opening PRs:** Run diff through sub-agents
-- **codex-reviewer:** GPT-5.3-Codex (deep code review)
-- **gemini-reviewer:** Gemini 2.5 Pro (different perspective)
-- **gpt-advisor:** GPT-5.3-Codex, **thinking: "high"** (complex decisions)
-- **Usage:** `sessions_spawn(agentId: "codex-reviewer", task: "Review this diff briefly...")`
-- **gpt-advisor:** Always spawn with `thinking: "high"` for better reasoning
-- **⚠️ WAIT for all sub-agents to finish before posting PR reviews!** Don't approve then backtrack with critical findings.
+- **Skill:** `skills/lodestar-review/SKILL.md` — full instructions, Lodestar-specific persona prompts
+- **Before opening PRs:** Run diff through persona-based reviewers
+- **⚠️ WAIT for all sub-agents to finish before posting PR reviews!**
+- **Persona prompts:** `skills/lodestar-review/references/<agent-id>.md` — Lodestar-tailored
+- See skill SKILL.md for reviewer selection matrix and workflow
+
+### Legacy Reviewers (still available)
+- **codex-reviewer:** GPT-5.3-Codex — general code review
+- **gemini-reviewer:** Gemini 2.5 Pro — second perspective
+- **gpt-advisor:** GPT-5.3-Codex, **thinking: "xhigh"** — architecture & deep reasoning
 
 ## Coding Agents (Implementation)
 - **Codex CLI:** `codex exec --full-auto "..."` — best for focused implementation tasks
@@ -130,6 +133,14 @@ git branch -d <branch-name>  # optional: delete local branch
 ---
 
 Add whatever helps you do your job. This is your cheat sheet.
+
+## Grafana (Lodestar Monitoring)
+- **URL:** https://grafana-lodestar.chainsafe.io
+- **Token:** stored in `$GRAFANA_TOKEN` (set in `~/.bashrc`)
+- **Role:** Read-only Viewer
+- **Prometheus datasource ID:** 1
+- **Loki datasource ID:** 4
+- **Skills:** `skills/release-metrics/` (Prometheus), `skills/grafana-loki/` (Loki logs)
 
 ## Discord
 - **Bot:** @lodekeeper (ID: 1467247836117860547)
