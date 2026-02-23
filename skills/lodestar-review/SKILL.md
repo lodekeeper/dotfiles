@@ -78,43 +78,81 @@ All spawned reviewers will announce their findings back to the main session. Wai
 
 ### 5. Act on findings
 
-**For open PRs — post as inline review comments:**
+> ⛔ **MANDATORY: Post findings as INLINE review comments on the diff.**
+> Never post a single large summary comment with all findings. This has been explicitly flagged multiple times.
 
-**Do NOT post one big summary comment.** Instead, post each finding as an inline comment on the specific line of code using GitHub's review API:
+**Step 5a: Compute line numbers**
+
+Before posting anything, map each finding to its exact file + line number in the new code. Use this helper to find new-file line numbers from the PR diff:
+
+```python
+# Save as /tmp/find-review-lines.py and run with: python3 /tmp/find-review-lines.py
+import json, subprocess, re
+
+result = subprocess.run(
+    ["gh", "api", f"repos/ChainSafe/lodestar/pulls/<PR>/files?per_page=100",
+     "--jq", ".[] | {filename, patch}"],
+    capture_output=True, text=True
+)
+
+def find_line(patch, search_text):
+    lines = patch.split("\n")
+    new_line = None
+    for line in lines:
+        m = re.match(r'^@@ -\d+(?:,\d+)? \+(\d+)(?:,\d+)? @@', line)
+        if m:
+            new_line = int(m.group(1))
+            continue
+        if new_line is None:
+            continue
+        if line.startswith('-'):
+            continue
+        if search_text in line:
+            return new_line
+        new_line += 1
+    return None
+```
+
+**Step 5b: Post as a single GitHub review with inline comments**
+
+Use the review API to batch all comments into ONE review submission. Use JSON input (not `-f` flags) so `line` is a proper integer:
 
 ```bash
-# Start a review (batch comments into one review, not individual comments)
-gh api repos/ChainSafe/lodestar/pulls/<PR>/reviews \
-  -f event="COMMENT" \
-  -f body="Review by Lodekeeper persona reviewers (bugs, wisdom, architect)" \
-  --jq '.id'
-
-# For each finding, post an inline comment on the exact line:
-gh api repos/ChainSafe/lodestar/pulls/<PR>/comments \
-  -f body="<finding>" \
-  -f path="<file path>" \
-  -F line=<line number> \
-  -f side="RIGHT" \
-  -F pull_number=<PR>
-```
-
-**For concrete code changes, use GitHub suggestion blocks:**
-````
-```suggestion
-const result = batch.downloadingRateLimited(peer.peerId);
-if (result.retrying) {
-  await sleep(result.delayMs);
+cat > /tmp/review-payload.json << 'EOF'
+{
+  "commit_id": "<head_sha>",
+  "event": "COMMENT",
+  "body": "Brief 2-3 line summary. See inline comments for details.",
+  "comments": [
+    {
+      "path": "packages/reqresp/src/file.ts",
+      "line": 42,
+      "side": "RIGHT",
+      "body": "🔴 **Finding title**\n\nExplanation.\n\n```suggestion\nfixed code here\n```"
+    }
+  ]
 }
-```
-````
+EOF
 
-**Format:**
-- One inline comment per finding, on the relevant line
-- Use suggestion blocks when proposing specific code changes
-- Optionally add a brief summary comment tying findings together
+gh api repos/ChainSafe/lodestar/pulls/<PR>/reviews \
+  --method POST --input /tmp/review-payload.json
+```
+
+**Comment format rules:**
+- One inline comment per finding, on the exact line it refers to
+- Use `🔴` for must-fix, `🟡` for should-fix, `🟢` for suggestions
+- Use `suggestion` blocks for concrete code changes (GitHub renders these as committable)
+- The review `body` should be a brief 2-3 line summary only — all detail goes in inline comments
 - Deduplicate: if multiple reviewers flag the same line, merge into one comment noting convergence
+- Use `-F line=N` or JSON input (not `-f line=N`) — line must be an integer, not a string
 
 **Convergence signals quality:** When multiple reviewers independently flag the same issue from different angles, highlight it — it's likely a real problem.
+
+> ❌ **DO NOT:**
+> - Post a single large comment with all findings listed
+> - Use `gh pr comment` for review findings
+> - Skip the line-number computation step
+> - Use `-f line=N` (string) — always use `-F line=N` (integer) or JSON input
 
 **For local changes (pre-PR, dev workflow Phase 4):**
 
