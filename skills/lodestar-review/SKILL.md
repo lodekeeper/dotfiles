@@ -16,7 +16,7 @@ Multi-persona review system for ChainSafe/lodestar PRs. Each reviewer has a narr
 | `review-linter` | Style Enforcer | Gemini 2.5 Pro | Style consistency vs Lodestar conventions. |
 | `review-security` | Security Engineer | GPT-5.3-Codex | DoS vectors, peer manipulation, validation bypasses, crypto misuse. |
 | `review-wisdom` | Wise Senior | Claude Opus 4.6 | Clean code principles, maintainability, readability. |
-| `reviewer-architect` | Architect | Claude Opus 4.6 | Package boundaries, consensus spec alignment, module coupling. |
+| `reviewer-architect` | Architect | GPT-5.3-Codex (thinking: xhigh) | Package boundaries, consensus spec alignment, module coupling. |
 
 ## Reviewer Selection
 
@@ -69,6 +69,8 @@ sessions_spawn(
 ```
 
 Spawn all selected reviewers in parallel (no dependencies between them).
+
+**Note:** For `reviewer-architect`, always pass `thinking: "xhigh"` in the spawn call for deep architectural reasoning.
 
 ### 4. Wait for results
 
