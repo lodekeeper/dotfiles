@@ -12,9 +12,14 @@ echo "Syncing agent files to dotfiles repo..."
 # These are already symlinked, no sync needed
 
 # OpenClaw workspace files
+# NOTE: The dotfiles repo versions (openclaw/) are the source of truth.
+# They contain more content than the runtime workspace versions.
+# Only sync if the dotfiles version doesn't exist yet.
 mkdir -p "$DOTFILES_DIR/openclaw"
 for f in AGENTS.md HEARTBEAT.md IDENTITY.md SOUL.md TOOLS.md USER.md; do
-  cp "$WORKSPACE/$f" "$DOTFILES_DIR/openclaw/$f" 2>/dev/null || true
+  if [ ! -f "$DOTFILES_DIR/openclaw/$f" ]; then
+    cp "$WORKSPACE/$f" "$DOTFILES_DIR/openclaw/$f" 2>/dev/null || true
+  fi
 done
 
 # Codex config
