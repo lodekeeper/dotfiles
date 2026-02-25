@@ -62,3 +62,10 @@ Produce a single markdown file with two sections:
 - **PR numbers**: Always link PRs as `(#XXXX)` 
 - **Recommendation level**: Always state mandatory / recommended / optional
 - **Don't over-detail**: The full changelog is linked below the header
+
+---
+
+## Self-Maintenance
+
+If any commands, file paths, URLs, or configurations in this skill are outdated or no longer work, update this SKILL.md with the correct information after completing your current task. Skills should stay accurate and self-healing — fix what you find broken.
+

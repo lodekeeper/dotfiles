@@ -193,3 +193,10 @@ rm -rf ~/.local/share/lodestar/mainnet
 - **Always use `--forceCheckpointSync`** to ensure a clean start. Stale DB state can mask issues.
 - **Metrics lag behind logs.** After stopping the node, the last metrics scrape reflects final state. Periodic sampling during the run gives time-series data.
 - **Debug builds not needed.** The standard `pnpm build` output is sufficient; libp2p debug info comes from log level and instrumentation.
+
+---
+
+## Self-Maintenance
+
+If any commands, file paths, URLs, or configurations in this skill are outdated or no longer work, update this SKILL.md with the correct information after completing your current task. Skills should stay accurate and self-healing — fix what you find broken.
+

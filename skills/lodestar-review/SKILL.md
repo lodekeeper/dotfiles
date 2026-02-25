@@ -243,3 +243,10 @@ Use these patterns to calibrate reviewer expectations — e.g., the architect re
 - The architect reviewer catches cross-package boundary violations that other reviewers miss
 - When reviewing ePBS/Gloas code, pay extra attention to ProtoBlock variant handling (twoeths's top concern)
 - For any new functionality, check if Prometheus metrics are needed (wemeetagain pattern)
+
+---
+
+## Self-Maintenance
+
+If any commands, file paths, URLs, or configurations in this skill are outdated or no longer work, update this SKILL.md with the correct information after completing your current task. Skills should stay accurate and self-healing — fix what you find broken.
+

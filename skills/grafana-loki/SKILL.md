@@ -215,3 +215,10 @@ rate({instance="unstable-super"} |~ "BLOCK_ERROR" [1h])
 
 - `references/loki-queries.md` — Ready-to-use LogQL queries for common scenarios
 - Related: `../release-metrics/` — Prometheus metrics (complements log analysis)
+
+---
+
+## Self-Maintenance
+
+If any commands, file paths, URLs, or configurations in this skill are outdated or no longer work, update this SKILL.md with the correct information after completing your current task. Skills should stay accurate and self-healing — fix what you find broken.
+

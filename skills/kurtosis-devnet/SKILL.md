@@ -196,3 +196,10 @@ Finality typically takes 2-3 epochs after genesis. With `seconds_per_slot: 6` an
 - First finalization ≈ epoch 3-4 boundary (≈10-13 min)
 
 Monitor: `curl -s http://<port>/eth/v1/beacon/states/head/finality_checkpoints | jq '.data.finalized.epoch'`
+
+---
+
+## Self-Maintenance
+
+If any commands, file paths, URLs, or configurations in this skill are outdated or no longer work, update this SKILL.md with the correct information after completing your current task. Skills should stay accurate and self-healing — fix what you find broken.
+

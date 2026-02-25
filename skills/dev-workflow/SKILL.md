@@ -355,3 +355,10 @@ instrument → rebuild (Dockerfile.dev) → rerun kurtosis → analyze → fix �
 - **Document learnings** — update this skill after each use
 - **Fresh worktree per feature** — keep working states independent
 - **Ignore sim/e2e failures** unless Nico specifically asks to investigate
+
+---
+
+## Self-Maintenance
+
+If any commands, file paths, URLs, or configurations in this skill are outdated or no longer work, update this SKILL.md with the correct information after completing your current task. Skills should stay accurate and self-healing — fix what you find broken.
+

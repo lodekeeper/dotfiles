@@ -196,3 +196,10 @@ These are not Prometheus metrics but are part of the release process:
 
 - `references/prometheus-queries.md` — All PromQL queries by category
 - `references/grafana-dashboards.md` — Dashboard UIDs and panel descriptions
+
+---
+
+## Self-Maintenance
+
+If any commands, file paths, URLs, or configurations in this skill are outdated or no longer work, update this SKILL.md with the correct information after completing your current task. Skills should stay accurate and self-healing — fix what you find broken.
+
