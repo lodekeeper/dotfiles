@@ -11,6 +11,7 @@ Multi-agent deep research pipeline for complex topics. Produces formalized resea
 ## Prerequisites
 
 - **Oracle CLI:** `oracle` (GPT-5 Pro access for deep reasoning)
+- **Oracle Bridge:** See `skills/oracle-bridge/SKILL.md` — required for browser mode on this server
 - **Sub-agents:** Available via `sessions_spawn` (explorer, specialist, adversary roles)
 - **Web search:** For prior art, papers, existing implementations
 - **File access:** For reading specs, code, EIPs locally
@@ -19,6 +20,40 @@ Check Oracle is available:
 ```bash
 source ~/.nvm/nvm.sh && nvm use 22 && oracle --version
 ```
+
+### Oracle Engine Priority
+
+Oracle has two engines. **Always use browser mode first** (uses ChatGPT Pro subscription, no per-query cost).
+
+| Engine | Command | Cost | Reliability |
+|--------|---------|------|-------------|
+| **Browser (default)** | `ORACLE_REUSE_TAB=1 oracle --engine browser --remote-chrome localhost:9222` | Free (Pro sub) | Requires bridge running + valid session token |
+| **API (fallback)** | `oracle --engine api` | ~$0.09/query | Always works if API key set |
+
+**⚠️ CRITICAL:** Do NOT silently fall back to API mode. If browser mode fails (expired token, bridge down):
+1. **Stop** — do not continue research
+2. **Alert user:** "ChatGPT session token expired. Need fresh `__Secure-next-auth.session-token` from chatgpt.com, or explicit approval to use API mode."
+3. Only switch to API if user explicitly approves
+
+### Starting the Oracle Bridge
+
+Before any Oracle browser-mode call, ensure the bridge is running:
+
+```bash
+# Check if bridge is already running
+curl -s http://localhost:9222/json/version && echo "Bridge running" || echo "Bridge not running"
+
+# Start bridge (if not running)
+source ~/camoufox-env/bin/activate
+python3 ~/.openclaw/workspace/research/oracle-bridge-v3.py \
+  --cookies ~/.oracle/chatgpt-cookies.json &
+sleep 15  # wait for browser + CF bypass + login
+
+# Verify
+curl -s http://localhost:9222/json/version | grep -q Chrome && echo "Ready"
+```
+
+For full bridge documentation, see `skills/oracle-bridge/SKILL.md`.
 
 ---
 
@@ -67,10 +102,15 @@ sessions_spawn task:"Research [sub-question]. Search for:
 Write findings to ~/research/<topic>/findings/web-research.md"
 ```
 
-**Deep Reasoning (Oracle / GPT-5 Pro):**
+**Deep Reasoning (Oracle / GPT-5 Pro — browser mode):**
+
+Ensure the Oracle bridge is running first (see Prerequisites above), then:
+
 ```bash
 source ~/.nvm/nvm.sh && nvm use 22
-oracle -p "Given the following context: [context]
+ORACLE_REUSE_TAB=1 oracle --engine browser \
+  --remote-chrome localhost:9222 \
+  -p "Given the following context: [context]
 
 Analyze [sub-question] in depth. Consider:
 - First-principles reasoning
@@ -80,9 +120,11 @@ Analyze [sub-question] in depth. Consider:
 
 Be rigorous and cite specific reasoning." \
   --file ~/research/<topic>/plan.md \
-  --model gpt-5.1-pro \
+  --model gpt-5.2-pro --wait \
   2>&1 | tee ~/research/<topic>/findings/oracle-analysis.md
 ```
+
+> **If bridge fails:** Do NOT silently switch to `--engine api`. Alert the user — see "Oracle Engine Priority" above.
 
 **Code/Spec Specialist:**
 ```
@@ -123,7 +165,9 @@ Send the draft through adversarial review using Oracle (GPT-5 Pro):
 
 ```bash
 source ~/.nvm/nvm.sh && nvm use 22
-oracle -p "You are a rigorous adversarial reviewer. Your job is to find weaknesses, gaps, and flawed reasoning in this research document.
+ORACLE_REUSE_TAB=1 oracle --engine browser \
+  --remote-chrome localhost:9222 \
+  -p "You are a rigorous adversarial reviewer. Your job is to find weaknesses, gaps, and flawed reasoning in this research document.
 
 For each section:
 1. Challenge the key claims — are they well-supported?
@@ -134,7 +178,7 @@ For each section:
 
 Be constructive but ruthless. Don't accept hand-waving." \
   --file ~/research/<topic>/drafts/v1.md \
-  --model gpt-5.1-pro \
+  --model gpt-5.2-pro --wait \
   2>&1 | tee ~/research/<topic>/drafts/critique.md
 ```
 
@@ -231,8 +275,10 @@ model:"anthropic/claude-sonnet-4-5" thinking:"high"
 
 If something fails during research:
 
-1. **Oracle unavailable:** Fall back to sub-agents with thinking:high for deep reasoning
-2. **Web search returns nothing:** Try alternative search queries, check specific repos/forums directly
+1. **Oracle browser mode fails (token expired):** Alert user immediately. Do NOT silently fall back to API. Only use `--engine api` with explicit user approval.
+2. **Oracle bridge won't start:** Kill stale processes (`pkill -f "chromium.*headless"`), check `~/.oracle/chatgpt-cookies.json` exists, reinstall browser if needed (`python3 -m rebrowser_playwright install chromium`). See `skills/oracle-bridge/SKILL.md` for full troubleshooting.
+3. **Oracle completely unavailable (no bridge, no API key):** Fall back to sub-agents with thinking:high for deep reasoning
+4. **Web search returns nothing:** Try alternative search queries, check specific repos/forums directly
 3. **Sub-agent times out:** Retry with a narrower scope or split the task
 4. **Source contradictions:** Document both perspectives, flag for human judgment
 5. **Scope creep:** If a sub-question opens up a rabbit hole, note it in "Open Questions" rather than derailing the main research
@@ -288,23 +334,41 @@ Some topics naturally lead to follow-up questions:
 ## Oracle Quick Reference
 
 ```bash
-# Ensure oracle is available
 source ~/.nvm/nvm.sh && nvm use 22
 
-# Basic query with context files
-oracle -p "Your prompt" --file path/to/context.md --model gpt-5.1-pro
+# --- BROWSER MODE (default — uses ChatGPT Pro subscription, free) ---
 
-# Multi-model query (cross-check findings)
-oracle -p "Your prompt" --models gpt-5.1-pro,gemini-3-pro --file context.md
+# 1. Ensure bridge is running (see skills/oracle-bridge/SKILL.md)
+curl -s http://localhost:9222/json/version | grep -q Chrome || {
+  echo "Start bridge first!"
+  echo "source ~/camoufox-env/bin/activate"
+  echo "python3 ~/.openclaw/workspace/research/oracle-bridge-v3.py --cookies ~/.oracle/chatgpt-cookies.json &"
+}
+
+# 2. Run queries
+ORACLE_REUSE_TAB=1 oracle --engine browser \
+  --remote-chrome localhost:9222 \
+  -p "Your prompt" --file path/to/context.md \
+  --model gpt-5.2-pro --wait
 
 # With multiple context files
-oracle -p "Your prompt" --file "src/**/*.ts" --file specs/phase0.md
+ORACLE_REUSE_TAB=1 oracle --engine browser \
+  --remote-chrome localhost:9222 \
+  -p "Your prompt" --file "src/**/*.ts" --file specs/phase0.md \
+  --model gpt-5.2-pro --wait
+
+# --- API MODE (fallback — costs per query, needs user approval) ---
+
+oracle --engine api -p "Your prompt" --file context.md --model gpt-5.2-pro
 
 # Dry run (preview without spending tokens)
 oracle --dry-run summary -p "Your prompt" --file context.md
 ```
 
-**Environment:** Requires `OPENAI_API_KEY` for API mode (should be set in `~/.bashrc`).
+**Browser mode:** Requires oracle-bridge running + valid session token at `~/.oracle/chatgpt-cookies.json`.
+**API mode:** Requires `OPENAI_API_KEY` (set in `~/.bashrc`). Only use as explicit fallback.
+
+See `skills/oracle-bridge/SKILL.md` for full bridge setup, troubleshooting, and token refresh.
 
 ---
 
