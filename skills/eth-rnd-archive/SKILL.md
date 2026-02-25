@@ -37,6 +37,15 @@ Configured in `config.json` (this skill directory). Only these channels are moni
 - `peerdas-devnet-alerts` — PeerDAS devnet status
 - `client-development` — client team discussions
 
+## Thread Support
+
+Threads are stored in `_threads/` subdirectories within each channel:
+```
+epbs/_threads/make it two clients/2026-02-23.json
+l1-zkevm/_threads/Proof orchestration/2026-02-23.json
+```
+Thread messages have `"parent": "<thread name>"` set. The check script scans these automatically.
+
 ## Message Format
 
 ```json
