@@ -48,7 +48,7 @@ Phase 5: PR                    (me)
 
 1. Analyze the problem — read relevant code, specs, issues
 2. Draft initial approach with key decisions, edge cases, test plan
-3. Send to **gpt-advisor** (`thinking: high`) for feedback
+3. Send to **gpt-advisor** (`thinking: xhigh`) for feedback
 4. Multiple rounds (3-5 typically) until converged
 5. Output: `/tmp/spec-<feature>.md`
 
