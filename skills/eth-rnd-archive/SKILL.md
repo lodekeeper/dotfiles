@@ -127,3 +127,10 @@ Edit `config.json` in this skill directory. Format:
   "checkIntervalMinutes": 60
 }
 ```
+
+---
+
+## Self-Maintenance
+
+If any commands, file paths, URLs, or configurations in this skill are outdated or no longer work, update this SKILL.md with the correct information after completing your current task. Skills should stay accurate and self-healing — fix what you find broken.
+
