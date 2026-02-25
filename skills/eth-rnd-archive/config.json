@@ -11,16 +11,13 @@
     "l1-zkevm-protocol",
     "data-availability-sampling",
     "networking",
-    "libp2p",
-    "peerdas-testing",
-    "peerdas-devnet-alerts",
     "client-development",
     "execution-dev",
     "ai-workflows"
   ],
   "digestTimeWET": "08:00",
   "digestTimeUTC": "08:00",
-  "timezone": "Atlantic/Madeira",
+  "timezone": "Europe/Lisbon",
   "checkIntervalMinutes": 60,
   "repoPath": "~/eth-rnd-archive",
   "notesPath": "~/eth-rnd-archive-notes"

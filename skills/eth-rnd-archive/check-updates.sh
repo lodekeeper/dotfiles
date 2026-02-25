@@ -66,7 +66,7 @@ else
     while IFS= read -r file; do
         # Extract channel name (first path component)
         CHANNEL=$(echo "$file" | cut -d'/' -f1)
-        # Check if this channel is tracked
+        # Check if this channel is tracked (also match _threads subdirs)
         if echo "$CHANNELS" | grep -qx "$CHANNEL"; then
             if [[ "$file" == *.json ]] && [ -f "$REPO_PATH/$file" ]; then
                 if [ "$FIRST" = true ]; then FIRST=false; else echo ","; fi
