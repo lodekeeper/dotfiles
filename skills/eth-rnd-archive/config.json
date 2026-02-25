@@ -1,0 +1,27 @@
+{
+  "channels": [
+    "epbs",
+    "consensus-dev",
+    "allcoredevs",
+    "apis",
+    "specifications",
+    "inclusion-lists",
+    "shorter-slot-times",
+    "l1-zkevm",
+    "l1-zkevm-protocol",
+    "data-availability-sampling",
+    "networking",
+    "libp2p",
+    "peerdas-testing",
+    "peerdas-devnet-alerts",
+    "client-development",
+    "execution-dev",
+    "ai-workflows"
+  ],
+  "digestTimeWET": "08:00",
+  "digestTimeUTC": "08:00",
+  "timezone": "Atlantic/Madeira",
+  "checkIntervalMinutes": 60,
+  "repoPath": "~/eth-rnd-archive",
+  "notesPath": "~/eth-rnd-archive-notes"
+}
