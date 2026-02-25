@@ -77,7 +77,9 @@ oracle --engine api \
   2>&1 | tee ~/research/<topic>/findings/web-survey.md
 ```
 
-**Cost:** `o4-mini-deep-research` ~$1.10/$4.40 per 1M tokens (cheaper). `o3-deep-research` ~$10/$40 per 1M tokens (most powerful). **Requires user approval** for API spend — ask before using.
+**Cost:** `o4-mini-deep-research` ~$1.10/$4.40 per 1M tokens (cheaper). `o3-deep-research` ~$10/$40 per 1M tokens (most powerful).
+
+**⚠️ MANDATORY: Ask Nico before using ANY deep research API model.** Explain why `web_search` + sub-agents weren't sufficient. Only proceed after explicit "yes".
 
 **Fallback (free):** Sub-agent + web_search (our existing approach — slower, less comprehensive, but no API cost):
 ```
@@ -357,7 +359,11 @@ ChatGPT's built-in **Deep Research** feature is the most powerful option for web
 | `o3-deep-research` | $10/1M | $40/1M | Most powerful deep research |
 | Sub-agents (Claude) | Session cost | Session cost | Included in OpenClaw |
 
-**Rule:** Always propose the free option first. Only suggest API-cost models when the research genuinely needs web browsing + synthesis that sub-agents can't match, and **get explicit approval** before using them.
+**Rules:**
+1. **Always try free options first:** `web_search` + `web_fetch` + sub-agents. Only escalate to API models if manual search is genuinely insufficient.
+2. **`o3-deep-research` and `o4-mini-deep-research` require explicit approval from Nico before every use.** These are expensive — ask first, explain why manual search wasn't enough, and get a "yes" before running.
+3. **GPT-5.2 Pro browser mode is free** (Pro subscription) — use it freely for reasoning tasks.
+4. **GPT-5.2 Pro API mode** (~$0.09/query) — acceptable for occasional use but prefer browser mode.
 
 ---
 
