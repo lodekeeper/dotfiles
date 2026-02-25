@@ -1,3 +1,8 @@
+---
+name: deep-research
+description: Multi-agent deep research pipeline for complex questions (EIP analysis, architecture decisions, cross-client comparisons, protocol design). Use when single-shot answers are insufficient and you need decomposition, parallel investigation, adversarial critique, and a formal output document.
+---
+
 # Deep Research Skill
 
 Multi-agent deep research pipeline for complex topics. Produces formalized research documents (specs, analyses, proposals) through iterative investigation, synthesis, and adversarial critique.
@@ -15,6 +20,12 @@ Multi-agent deep research pipeline for complex topics. Produces formalized resea
 - **Sub-agents:** Available via `sessions_spawn` (explorer, specialist, adversary roles)
 - **Web search:** For prior art, papers, existing implementations
 - **File access:** For reading specs, code, EIPs locally
+
+## Related Skills
+
+- `skills/oracle-bridge/SKILL.md` — starts and troubleshoots Oracle browser mode (default path for GPT-5.2-pro reasoning).
+- `skills/web-scraping/SKILL.md` — use when `web_search`/`web_fetch` are insufficient or blocked and you need robust page acquisition before synthesis.
+- `skills/dev-workflow/SKILL.md` — use when research is feeding directly into a Lodestar implementation plan/PR.
 
 Check Oracle is available:
 ```bash
@@ -81,9 +92,9 @@ oracle --engine api \
 
 **⚠️ MANDATORY: Ask Nico before using ANY deep research API model.** Explain why `web_search` + sub-agents weren't sufficient. Only proceed after explicit "yes".
 
-**Fallback (free):** Sub-agent + web_search (our existing approach — slower, less comprehensive, but no API cost):
+**Fallback (free):** Sub-agent + `web_search` + `web_fetch`; if sources are blocked/partial, switch to `skills/web-scraping/SKILL.md` for robust acquisition before synthesis.
 ```
-sessions_spawn task:"Research [sub-question]. Search for prior art, papers, implementations. Write findings to ~/research/<topic>/findings/web-research.md"
+sessions_spawn task:"Research [sub-question]. Start with web_search/web_fetch for prior art and papers. If key pages are blocked or JS-rendered, use skills/web-scraping/SKILL.md tiered scraper. Write findings to ~/research/<topic>/findings/web-research.md"
 ```
 
 ### Type B: Codebase / Spec Analysis

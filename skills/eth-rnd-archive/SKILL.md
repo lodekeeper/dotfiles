@@ -1,3 +1,8 @@
+---
+name: eth-rnd-archive
+description: Track and summarize discussions from ethereum/eth-rnd-archive across selected Discord channels, with hourly monitoring and daily digest outputs. Use for protocol/R&D intelligence, spotting spec changes, and surfacing Lodestar-relevant action items from Eth R&D chatter.
+---
+
 # Eth R&D Archive Tracker
 
 Track discussions from the [Ethereum R&D Discord Archive](https://github.com/ethereum/eth-rnd-archive) and surface important research conversations relevant to Lodestar development.
@@ -5,6 +10,11 @@ Track discussions from the [Ethereum R&D Discord Archive](https://github.com/eth
 ## Overview
 
 The archive repo contains daily JSON exports of every Eth R&D Discord channel. Updated hourly by EF DevOps. Each channel is a directory with `YYYY-MM-DD.json` files containing messages.
+
+## Related Skills
+
+- `skills/deep-research/SKILL.md` — use when an archive thread needs full analysis/design synthesis (not just monitoring summary).
+- `skills/web-scraping/SKILL.md` — use to fetch linked external sources (spec posts, blogs, docs) when `web_fetch` is blocked/incomplete.
 
 ## Repo Location
 
