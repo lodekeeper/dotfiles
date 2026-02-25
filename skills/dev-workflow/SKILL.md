@@ -28,6 +28,12 @@ Phase 4: Quality Gate           (me + gemini-reviewer + codex-reviewer)
 Phase 5: PR                    (me)
 ```
 
+## Related Skills
+
+- `skills/deep-research/SKILL.md` — use for complex Phase 0/1 investigations that need formal decomposition + synthesis.
+- `skills/web-scraping/SKILL.md` — use in Phase 0 when external sources are blocked by CF/JS and `web_fetch` is insufficient.
+- `skills/oracle-bridge/SKILL.md` — use when deep-research needs Oracle browser mode on this server.
+
 ## Phase 0: Research (for interop/cross-client features)
 
 **When to use:** Features that need to match other client implementations (Lighthouse, Prysm, etc.) or implement new EIPs/specs.
@@ -35,8 +41,9 @@ Phase 5: PR                    (me)
 1. Clone/study reference implementations from other clients
 2. Read the formal spec and note divergences in practice
 3. Study devnet configs (kurtosis, etc.) for integration patterns
-4. Save research artifacts: `notes/<feature>/RESEARCH.md`, `*-DEEP-DIVE.md`, `*-MAPPING.md`
-5. Document wire format differences between spec and actual devnet usage
+4. For external web sources, start with `web_fetch`; if blocked/incomplete, switch to `skills/web-scraping/SKILL.md`
+5. Save research artifacts: `notes/<feature>/RESEARCH.md`, `*-DEEP-DIVE.md`, `*-MAPPING.md`
+6. Document wire format differences between spec and actual devnet usage
 
 **Output:** Research notes + clear understanding of what to actually implement (which may differ from the spec).
 

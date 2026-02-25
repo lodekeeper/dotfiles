@@ -1,8 +1,11 @@
+---
+name: web-scraping
+description: Universal web scraping for AI agents using free/open-source tools. Use when `web_fetch` is blocked or incomplete, when scraping JS-rendered SPAs, Cloudflare-protected pages, structured data, or login-gated pages. Provides tiered escalation: curl_cffi → DynamicFetcher → Camoufox → authenticated sessions.
+---
+
 # Web Scraping Skill
 
 Universal web scraping for AI agents. Scrape any website — static, JS-rendered, or Cloudflare-protected — using free/open-source tools only.
-
-**When to use:** Fetching web content that `web_fetch` can't handle (CF-blocked, JS-rendered SPAs, structured data extraction, stealth required).
 
 **Try `web_fetch` first.** Only use this skill when the built-in tool fails or returns incomplete content.
 
@@ -23,6 +26,11 @@ python3 -c "import camoufox; print('camoufox:', camoufox.__version__)"
 
 **Venv location:** `~/camoufox-env` (Python 3.12)
 **Installed:** curl_cffi, scrapling 0.4, camoufox 0.4.11, rebrowser-playwright, trafilatura, patchright, playwright-stealth, nodriver
+
+## Related Skills
+
+- `skills/deep-research/SKILL.md` — use after scraping when the task needs synthesis, tradeoff analysis, or a formal research output.
+- `skills/oracle-bridge/SKILL.md` — use when Oracle browser mode is needed for ChatGPT Pro reasoning/manual Deep Research handoff.
 
 ---
 

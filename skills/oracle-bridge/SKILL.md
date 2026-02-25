@@ -1,8 +1,11 @@
+---
+name: oracle-bridge
+description: Run Oracle CLI browser mode on this headless server by connecting to a stealth Chromium CDP bridge with ChatGPT auth cookies. Use when `oracle --engine browser` is needed (GPT-5.2-pro/o-series via ChatGPT Pro), including troubleshooting bridge, token expiry, and Cloudflare/Turnstile issues.
+---
+
 # Oracle Browser Bridge Skill
 
 Run Oracle CLI in browser mode on a headless Linux server by routing through a stealth Chromium instance that bypasses Cloudflare Turnstile.
-
-**When to use:** Any time you need Oracle's `--engine browser` mode for ChatGPT Pro access (GPT-5 Pro, o-series models, etc.) on this server.
 
 ---
 
@@ -30,6 +33,11 @@ The bridge solves both: it launches a stealth Chromium (rebrowser-playwright) th
 - **Oracle CLI:** `@steipete/oracle` (v0.8.6+) installed globally via nvm 22
 - **Oracle patch:** `ORACLE_REUSE_TAB=1` env var (patched in `chromeLifecycle.js`)
 - **Auth cookies:** `~/.oracle/chatgpt-cookies.json` with ChatGPT session token
+
+## Related Skills
+
+- `skills/deep-research/SKILL.md` — primary consumer of this bridge (default browser-mode reasoning path).
+- `skills/web-scraping/SKILL.md` — companion skill when research requires robust source collection before Oracle synthesis.
 
 ### Cookie Format
 
