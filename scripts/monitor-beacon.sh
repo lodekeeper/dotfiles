@@ -3,7 +3,7 @@
 # Called by cron job, outputs findings or nothing
 
 CONTAINER="mainnet-consensus-1"
-SINCE="31m"
+SINCE="24h"
 
 # Grab recent logs, strip ANSI codes
 LOGS=$(docker logs "$CONTAINER" --since "$SINCE" 2>&1 | sed 's/\x1b\[[0-9;]*m//g')
@@ -11,7 +11,7 @@ LOGS=$(docker logs "$CONTAINER" --since "$SINCE" 2>&1 | sed 's/\x1b\[[0-9;]*m//g
 ALERTS=""
 
 # 1. Check for errors (exclude known noisy getBlockV2 warnings)
-ERRORS=$(echo "$LOGS" | grep -E '\berror\b|\bwarn\b' | grep -v 'getBlockV2 failed reason=Block not found' | grep -v 'getBlockV2 failed reason=No block' | grep -v 'getBlockHeader failed reason=Block not found' | tail -10)
+ERRORS=$(echo "$LOGS" | grep -E '\berror\b|\bwarn\b' | grep -v 'getBlockV2 failed reason=Block not found' | grep -v 'getBlockV2 failed reason=No block' | grep -v 'getBlockHeader failed reason=Block not found' | grep -v 'Route GET:/ not found' | tail -10)
 if [ -n "$ERRORS" ]; then
   COUNT=$(echo "$ERRORS" | wc -l)
   ALERTS+="⚠️ **$COUNT error/warn lines** (excluding known getBlockV2 noise):\n"
@@ -23,7 +23,7 @@ fi
 # 2. Check sync status from latest info line
 LATEST_INFO=$(echo "$LOGS" | grep 'info.*Synced' | tail -1)
 if [ -z "$LATEST_INFO" ]; then
-  # No "Synced" line in last 6 min — node may be struggling
+  # No "Synced" line in last 24h — node may be struggling
   ALERTS+="🔴 **No 'Synced' log line in last $SINCE** — node may be down or stuck\n\n"
 else
   # Check peer count
@@ -34,7 +34,7 @@ else
 fi
 
 # 3. Check for crash/OOM signals
-CRASH=$(echo "$LOGS" | grep -iE 'fatal|SIGTERM|SIGKILL|OOM|heap out|JavaScript heap|Allocation failed|v8::' | head -3)
+CRASH=$(echo "$LOGS" | grep -iE '\bfatal\b|SIGTERM|SIGKILL|\bOOM\b|heap out|JavaScript heap|Allocation failed|v8::' | head -3)
 if [ -n "$CRASH" ]; then
   ALERTS+="🔴 **Crash/OOM signal detected:**\n"
   ALERTS+='```\n'
