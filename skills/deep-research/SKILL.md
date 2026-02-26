@@ -32,6 +32,10 @@ Check Oracle is available:
 source ~/.nvm/nvm.sh && nvm use 22 && oracle --version
 ```
 
+### ⚠️ Always Save Oracle Output to File
+
+Oracle runs take minutes+. Context can compact mid-run, losing stdout. **Every Oracle call MUST pipe to a file via `| tee <path>`**. No exceptions. This ensures output survives compaction and can be read back later.
+
 ### Oracle Engine Priority
 
 Oracle has two engines. **Always use browser mode first** (uses ChatGPT Pro subscription, no per-query cost).

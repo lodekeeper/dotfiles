@@ -61,6 +61,22 @@ The bridge solves both: it launches a stealth Chromium (rebrowser-playwright) th
 
 ## Usage
 
+### ⚠️ CRITICAL: Always Save Output to File
+
+Oracle runs can take minutes. If context compacts mid-run, stdout is lost. **Always pipe output to a file via `tee`:**
+
+```bash
+# WRONG — output lost if context compacts
+oracle ... --wait 2>&1
+
+# RIGHT — output saved to disk regardless
+oracle ... --wait 2>&1 | tee ~/research/<topic>/oracle-output.md
+```
+
+This is non-negotiable. Every Oracle invocation must write to a file.
+
+---
+
 ### Option 1: One-shot (recommended for single queries)
 
 ```bash
