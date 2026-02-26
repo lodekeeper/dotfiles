@@ -19,6 +19,6 @@
   "digestTimeUTC": "08:00",
   "timezone": "Europe/Lisbon",
   "checkIntervalMinutes": 60,
-  "repoPath": "~/eth-rnd-archive",
+  "repoPath": "~/ethereum-repos/eth-rnd-archive",
   "notesPath": "~/eth-rnd-archive-notes"
 }
