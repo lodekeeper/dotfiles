@@ -18,11 +18,9 @@
 - **Never** set "working" for heartbeat polling itself
 
 ## STEP 2: Monitoring (only after confirming no actionable backlog tasks)
-- Check GitHub notifications (unread OR updated since last read):
-  ```
-  gh api notifications?participating=true --jq '.[] | select(.unread or (.updated_at > .last_read_at)) | {id, reason, title: .subject.title, type: .subject.type}'
-  ```
-- If any need attention: review and respond to comments, then mark as done
+
+**Note:** GitHub notification polling is handled by a dedicated cron (every 3 min, Gemini Flash). It will alert the main session when action is needed. Do NOT duplicate that check here.
+
 - Discord @mentions arrive instantly (no polling needed), but do a search backup check:
   ```
   message action=search channel=discord query="lodekeeper" guildId=593655374469660673 limit=5
