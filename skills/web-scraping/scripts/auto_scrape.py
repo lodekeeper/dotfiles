@@ -35,10 +35,33 @@ def is_cf_blocked(html: str) -> bool:
 
 def is_empty_spa(html: str) -> bool:
     """Check if response is an empty SPA shell needing JS."""
+    # If it has hydration data, it's NOT empty — we can extract from script tags
+    if extract_hydration_data(html) is not None:
+        return False
     if len(html) < 5000:
         return True
     spa_shells = ['<div id="root"></div>', '<div id="app"></div>', '<div id="__next"></div>']
     return any(shell in html for shell in spa_shells) and len(html) < 15000
+
+
+def extract_hydration_data(html: str) -> dict | None:
+    """Extract __NEXT_DATA__ or __NUXT__ embedded state from SPA HTML."""
+    import re
+    # Next.js
+    m = re.search(r'<script id="__NEXT_DATA__"[^>]*>(.*?)</script>', html, re.DOTALL)
+    if m:
+        try:
+            return json.loads(m.group(1))
+        except json.JSONDecodeError:
+            pass
+    # Nuxt
+    m = re.search(r'window\.__NUXT__\s*=\s*(\{.*?\})\s*;?\s*</script>', html, re.DOTALL)
+    if m:
+        try:
+            return json.loads(m.group(1))
+        except json.JSONDecodeError:
+            pass
+    return None
 
 
 def validate_content(html: str, url: str) -> bool:
