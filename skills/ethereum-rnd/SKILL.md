@@ -7,15 +7,13 @@ description: Use when working on Ethereum protocol development, consensus layer,
 
 You have access to 17 Ethereum R&D resources for answering questions about Ethereum protocol development.
 
-## Local Clone Strategy (Preferred)
+## Local-First Access (MANDATORY)
 
-**Clone repos locally for fast, reliable access.** Run the setup script from the plugin repo:
+**Always use local repos at `~/ethereum-repos/` first.** All GitHub-hosted resources below are cloned locally. Use `grep`, `find`, and `cat` — never use WebFetch for content available locally.
 
-```bash
-bash scripts/clone-repos.sh [base-dir]  # default: ~/ethereum-repos
-```
+To update repos: `bash scripts/clone-repos.sh ~/ethereum-repos` (does `git pull` on existing clones).
 
-Once cloned, use `grep`, `find`, and `cat` to search and read content directly:
+Search and read content directly:
 
 ```bash
 # Search consensus specs for a function
@@ -34,16 +32,14 @@ grep -r "post_beacon_blocks" ~/ethereum-repos/beacon-APIs/apis/
 grep -rn "processAttestation\|process_attestation" ~/ethereum-repos/lodestar/packages/ ~/ethereum-repos/lighthouse/consensus/ --include="*.ts" --include="*.rs"
 ```
 
-**Why local clones are better than WebFetch:**
+**Why local-first:**
 - Instant access (no network latency)
 - Can use grep/find for powerful cross-file search
 - Works offline
 - No rate limits or URL guessing
 - Can diff between versions
 
-**Keep repos updated:** Re-run `clone-repos.sh` periodically (it does `git pull` on existing clones).
-
-**Fallback:** If repos aren't cloned locally, use WebFetch with the raw GitHub URLs documented below for each resource.
+**Fallback:** Only use WebFetch for non-GitHub resources (ethresear.ch, ethereum-magicians, forkcast.org, eth2book, leanroadmap, strawmap). For anything in `~/ethereum-repos/`, always use local access.
 
 ## Quick Reference: Which Resource to Use
 
@@ -497,10 +493,10 @@ Dark boxes denote headliners, grey boxes indicate offchain upgrades, black boxes
 
 ## General Tips
 
-1. **Prefer local clones over WebFetch** — use `grep`/`cat` on cloned repos (see "Local Clone Strategy" at the top). Fall back to raw GitHub URLs only if repos aren't cloned.
-2. **For OpenAPI specs** (beacon-APIs, builder-specs), fetch the rendered docs site for human-readable format or the raw YAML for structured data
+1. **ALWAYS use local repos** — `grep`/`cat` on `~/ethereum-repos/`. WebFetch is only for non-GitHub sources (ethresear.ch, ethereum-magicians, forkcast, eth2book, leanroadmap, strawmap).
+2. **For OpenAPI specs** (beacon-APIs, builder-specs), read the YAML locally: `cat ~/ethereum-repos/beacon-APIs/apis/...`
 3. **For "why" questions**, check annotated-spec and eth2book before the raw specs
-4. **For recent protocol decisions**, check pm meeting notes and ethresear.ch
+4. **For recent protocol decisions**, check pm meeting notes locally, ethresear.ch via WebFetch
 5. **For implementation details**, the consensus-specs Python code is executable and testable — it's not just documentation
 6. **Fork order matters** — each fork builds on the previous. Start with the latest relevant fork and reference earlier ones for context
-7. **Cross-file search is powerful** — `grep -r "term" ~/ethereum-repos/consensus-specs/specs/` finds all references instantly, much faster than fetching individual files
+7. **Cross-file search is powerful** — `grep -r "term" ~/ethereum-repos/consensus-specs/specs/` finds all references instantly
