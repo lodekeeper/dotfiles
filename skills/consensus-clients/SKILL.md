@@ -7,15 +7,13 @@ description: Use when comparing Ethereum consensus client implementations, looki
 
 You have detailed maps of all 6 Ethereum consensus clients. Use this to find implementations, compare approaches, and track activity.
 
-## Local Clone Strategy (Preferred)
+## Local-First Access (MANDATORY)
 
-**Clone client repos locally for fast code navigation.** Run the setup script from the plugin repo:
+**All 6 client repos are cloned at `~/ethereum-repos/`.** Always use `grep`, `find`, and `cat` for code navigation — never use WebFetch for GitHub-hosted content.
 
-```bash
-bash scripts/clone-repos.sh [base-dir]  # default: ~/ethereum-repos
-```
+To update repos: `cd ~/ethereum-repos && for d in lodestar lighthouse prysm teku nimbus-eth2 grandine; do git -C $d pull -q; done`
 
-Once cloned, use `grep`, `find`, and `cat` to navigate codebases directly:
+Navigate codebases directly:
 
 ```bash
 # Find how each client implements a spec function
@@ -36,13 +34,13 @@ grep -rn "ExecutionPayloadEnvelope" ~/ethereum-repos/{lodestar,lighthouse,prysm,
   --include="*.ts" --include="*.rs" --include="*.go" --include="*.java" --include="*.nim" | head -30
 ```
 
-**Why local clones are better than WebFetch:**
+**Why local-first:**
 - Cross-client grep finds implementations in seconds
 - No URL guessing or 404s on wrong file paths
 - Can search across all clients simultaneously
 - Works offline, no rate limits
 
-**Fallback:** If repos aren't cloned locally, use WebFetch with the raw GitHub URLs listed for each client below.
+**Fallback:** Only use WebFetch URLs below if a specific repo isn't cloned locally (unusual). All 6 clients + secondary repos are at `~/ethereum-repos/`.
 
 ## Client Overview
 
