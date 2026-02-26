@@ -39,7 +39,7 @@ grep -rn "processAttestation\|process_attestation" ~/ethereum-repos/lodestar/pac
 - No rate limits or URL guessing
 - Can diff between versions
 
-**Fallback:** Only use WebFetch for non-GitHub resources (ethresear.ch, ethereum-magicians, forkcast.org, eth2book, leanroadmap, strawmap). For anything in `~/ethereum-repos/`, always use local access.
+**Fallback:** Only use web scraping for non-GitHub resources (ethresear.ch, ethereum-magicians, forkcast.org, eth2book, leanroadmap, strawmap). For anything in `~/ethereum-repos/`, always use local access. For web access, use the web-scraping skill (`skills/web-scraping/SKILL.md`) which provides tiered fetching with Cloudflare bypass.
 
 ## Quick Reference: Which Resource to Use
 
@@ -92,9 +92,9 @@ The canonical source for Ethereum's proof-of-stake protocol.
 https://raw.githubusercontent.com/ethereum/consensus-specs/master/specs/{fork}/{file}.md
 ```
 
-Example — fetch the Electra beacon chain spec:
-```
-WebFetch: https://raw.githubusercontent.com/ethereum/consensus-specs/master/specs/electra/beacon-chain.md
+Example — read the Electra beacon chain spec:
+```bash
+cat ~/ethereum-repos/consensus-specs/specs/electra/beacon-chain.md
 ```
 
 **Additional content:**
@@ -374,20 +374,20 @@ https://raw.githubusercontent.com/ethereum/eth-rnd-archive/master/{channel}/YYYY
 
 ## 13. ethresear.ch — Ethereum Research Forum
 
-Discourse forum for protocol research. Accessible via WebFetch.
+Discourse forum for protocol research. Use the web-scraping skill for access.
 
 **Key categories:**
 - Proof-of-Stake, Execution Layer Research, Cryptography
 - Economics, Networking, Privacy, ZK-SNARKs
 
-**How to search (use JSON API for reliable results):**
+**How to search (use JSON API via web-scraping skill):**
 ```
-WebFetch: https://ethresear.ch/search.json?q={query}
+python3 skills/web-scraping/scripts/auto_scrape.py "https://ethresear.ch/search.json?q={query}"
 ```
 
 **How to read a specific post:**
 ```
-WebFetch: https://ethresear.ch/t/{topic-slug}/{topic-id}.json
+python3 skills/web-scraping/scripts/auto_scrape.py "https://ethresear.ch/t/{topic-slug}/{topic-id}.json"
 ```
 
 ---
@@ -402,9 +402,9 @@ Discourse forum focused on EIP/ERC governance and protocol coordination.
 - RIPs (18 topics) — rollup improvement proposals
 - Protocol Calls & Happenings — meeting coordination
 
-**How to search (use JSON API for reliable results):**
+**How to search (use JSON API via web-scraping skill):**
 ```
-WebFetch: https://ethereum-magicians.org/search.json?q={query}
+python3 skills/web-scraping/scripts/auto_scrape.py "https://ethereum-magicians.org/search.json?q={query}"
 ```
 
 **When to use:** For understanding the governance status, community sentiment, or discussion history around a specific EIP.
@@ -423,10 +423,10 @@ Comprehensive technical reference book on Ethereum's proof-of-stake transition.
 
 **Coverage:** Up to Capella (edition 0.3, work in progress). Does not cover Deneb+.
 
-**How to fetch:**
+**How to fetch (via web-scraping skill):**
 ```
-WebFetch: https://eth2book.info/latest/part2/building_blocks/{topic}/
-WebFetch: https://eth2book.info/latest/part3/transition/{topic}/
+python3 skills/web-scraping/scripts/auto_scrape.py "https://eth2book.info/latest/part2/building_blocks/{topic}/"
+python3 skills/web-scraping/scripts/auto_scrape.py "https://eth2book.info/latest/part3/transition/{topic}/"
 ```
 
 **When to use:** For thorough explanations of beacon chain fundamentals — validator lifecycle, consensus mechanics, incentive structures. Best for "explain how X works" questions about the core protocol.
@@ -445,7 +445,7 @@ Tracks Ethereum's consensus layer redesign — forward-looking research and engi
 
 **Topics:** Gossipsub v2.0, attester-proposer separation, Poseidon hash cryptanalysis
 
-**Note:** This is a JS-rendered SPA — WebFetch may not extract full content. Use WebSearch as fallback for specific lean consensus topics.
+**Note:** This is a JS-rendered SPA — may need the web-scraping skill's DynamicFetcher or Camoufox tier. Use web_search as fallback for specific lean consensus topics.
 
 ---
 
@@ -453,7 +453,7 @@ Tracks Ethereum's consensus layer redesign — forward-looking research and engi
 
 The official EF Protocol draft roadmap for Ethereum L1, maintained by the EF Architecture team (Ansgar, Barnabé, Francesco, Justin Drake). A living document updated at least quarterly.
 
-**Format:** Google Drawings diagram embedded via iframe. Requires Google sign-in to view. Not machine-readable via WebFetch — use the sidebar FAQ and info below as reference.
+**Format:** Google Drawings diagram embedded via iframe. Requires Google sign-in to view. Not machine-readable — use the sidebar FAQ and info below as reference.
 
 **URL:**
 ```
@@ -493,10 +493,10 @@ Dark boxes denote headliners, grey boxes indicate offchain upgrades, black boxes
 
 ## General Tips
 
-1. **ALWAYS use local repos** — `grep`/`cat` on `~/ethereum-repos/`. WebFetch is only for non-GitHub sources (ethresear.ch, ethereum-magicians, forkcast, eth2book, leanroadmap, strawmap).
+1. **ALWAYS use local repos** — `grep`/`cat` on `~/ethereum-repos/`. For non-GitHub sources (ethresear.ch, ethereum-magicians, forkcast, eth2book, leanroadmap, strawmap), use the web-scraping skill (`skills/web-scraping/SKILL.md`).
 2. **For OpenAPI specs** (beacon-APIs, builder-specs), read the YAML locally: `cat ~/ethereum-repos/beacon-APIs/apis/...`
 3. **For "why" questions**, check annotated-spec and eth2book before the raw specs
-4. **For recent protocol decisions**, check pm meeting notes locally, ethresear.ch via WebFetch
+4. **For recent protocol decisions**, check pm meeting notes locally, ethresear.ch via web-scraping skill
 5. **For implementation details**, the consensus-specs Python code is executable and testable — it's not just documentation
 6. **Fork order matters** — each fork builds on the previous. Start with the latest relevant fork and reference earlier ones for context
 7. **Cross-file search is powerful** — `grep -r "term" ~/ethereum-repos/consensus-specs/specs/` finds all references instantly

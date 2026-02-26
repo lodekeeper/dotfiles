@@ -40,7 +40,7 @@ grep -rn "ExecutionPayloadEnvelope" ~/ethereum-repos/{lodestar,lighthouse,prysm,
 - Can search across all clients simultaneously
 - Works offline, no rate limits
 
-**Fallback:** Only use WebFetch URLs below if a specific repo isn't cloned locally (unusual). All 6 clients + secondary repos are at `~/ethereum-repos/`.
+**Fallback:** If a repo isn't cloned locally (unusual), use the web-scraping skill (`skills/web-scraping/SKILL.md`) with the raw GitHub URLs below. All 6 clients + secondary repos should be at `~/ethereum-repos/`.
 
 ## Client Overview
 
