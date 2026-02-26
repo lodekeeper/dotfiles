@@ -19,7 +19,7 @@
 
 ## STEP 2: Monitoring (only after confirming no actionable backlog tasks)
 
-**Note:** GitHub notification polling is handled by a dedicated cron (every 3 min, Gemini Flash). It will alert the main session when action is needed. Do NOT duplicate that check here.
+**Note:** GitHub notification polling is handled by a dedicated cron (every 3 min, Codex/GPT-5.3). It will alert the main session when action is needed. Do NOT duplicate that check here.
 
 - Discord @mentions arrive instantly (no polling needed), but do a search backup check:
   ```
@@ -52,6 +52,11 @@ gh run list --repo ChainSafe/lodestar --branch unstable --limit 10 --json databa
 ## 🔄 Sync dotfiles repo (every ~6 hours)
 Run `~/dotfiles/scripts/sync-dotfiles.sh` to push local changes to https://github.com/lodekeeper/dotfiles.
 Only needed if local files changed (skills, notes, scripts, codex config, lodestar AGENTS.md).
+
+## 🔄 Review identity files (every few days)
+- Re-read SOUL.md, IDENTITY.md, MEMORY.md — are they still accurate?
+- Add new lessons, update strengths/weaknesses, refine personality notes
+- Sync updates to dotfiles/openclaw/ and push
 
 ## 🧹 Periodic cleanup (every ~6 hours)
 - Remove completed/merged items from this file and BACKLOG.md
