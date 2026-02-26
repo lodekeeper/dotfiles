@@ -283,6 +283,56 @@ with Camoufox(headless=True) as browser:
 
 ---
 
+## Tier 0: Discovery Sources (Before Scraping)
+
+Before hitting a page with a browser, check for cheaper data sources:
+
+```python
+"""Check for structured data sources before scraping."""
+import trafilatura
+
+# 1. Sitemaps / RSS feeds
+sitemap_urls = trafilatura.sitemaps.sitemap_search("https://example.com")
+
+# 2. SPA hydration blobs (Next.js, Nuxt, etc.)
+# Many SPAs embed full page data in script tags — no browser needed
+import re, json
+def extract_hydration_data(html: str) -> dict | None:
+    """Extract __NEXT_DATA__ or __NUXT__ from SPA HTML."""
+    # Next.js
+    m = re.search(r'<script id="__NEXT_DATA__"[^>]*>(.*?)</script>', html, re.DOTALL)
+    if m:
+        return json.loads(m.group(1))
+    # Nuxt
+    m = re.search(r'window\.__NUXT__\s*=\s*({.*?})\s*;?\s*</script>', html, re.DOTALL)
+    if m:
+        return json.loads(m.group(1))
+    return None
+```
+
+**When this helps:** Many React/Next.js/Nuxt sites embed all page data as JSON in the initial HTML. curl_cffi (Tier 1) can get this without a browser, even on SPAs.
+
+## Structured Data Extraction (JSON-LD, Microdata, OpenGraph)
+
+Use `extruct` to extract machine-readable structured data embedded in pages:
+
+```python
+import extruct
+from w3lib.html import get_base_url
+
+def extract_structured(html: str, url: str) -> dict:
+    """Extract JSON-LD, microdata, RDFa, OpenGraph from HTML."""
+    base_url = get_base_url(html, url)
+    return extruct.extract(html, base_url=base_url)
+
+# Returns dict with keys: json-ld, microdata, rdfa, opengraph, microformat, dublincore
+# Example: product pages have JSON-LD with price, availability, reviews
+```
+
+**When this helps:** E-commerce, news articles, documentation — any page with structured metadata. Often gives cleaner data than DOM scraping.
+
+---
+
 ## Content Extraction
 
 ### Trafilatura (Primary — F1 = 0.958)
@@ -583,6 +633,74 @@ for url in urls:
         # Process result["content"]...
     else:
         print(f"❌ {url} — failed")
+```
+
+---
+
+## Advanced Techniques
+
+### Network Interception (Browser Tier)
+
+For SPAs, the cleanest data is often in XHR/Fetch JSON responses, not the DOM:
+
+```python
+"""Capture API responses during page load."""
+from rebrowser_playwright.sync_api import sync_playwright
+
+with sync_playwright() as pw:
+    browser = pw.chromium.launch(headless=True)
+    page = browser.new_page()
+    
+    captured = []
+    def on_response(response):
+        if "application/json" in (response.headers.get("content-type") or ""):
+            try:
+                captured.append({"url": response.url, "data": response.json()})
+            except: pass
+    
+    page.on("response", on_response)
+    page.goto("https://example-spa.com", wait_until="networkidle")
+    
+    # captured[] now has all JSON API responses — often cleaner than DOM scraping
+    for c in captured:
+        print(f"API: {c['url'][:80]} → {len(str(c['data']))} chars")
+```
+
+### Domain Profile Learning
+
+For repeated scraping of the same domains, remember which tier works:
+
+```python
+"""Simple domain profile store — remember what works."""
+import json, os
+from urllib.parse import urlparse
+
+PROFILE_PATH = os.path.expanduser("~/camoufox-env/domain-profiles.json")
+
+def load_profiles() -> dict:
+    if os.path.isfile(PROFILE_PATH):
+        with open(PROFILE_PATH) as f:
+            return json.load(f)
+    return {}
+
+def save_profile(url: str, tier: int, success: bool):
+    domain = urlparse(url).netloc
+    profiles = load_profiles()
+    profiles.setdefault(domain, {"successes": {}, "failures": {}})
+    key = "successes" if success else "failures"
+    profiles[domain][key][str(tier)] = profiles[domain][key].get(str(tier), 0) + 1
+    with open(PROFILE_PATH, "w") as f:
+        json.dump(profiles, f, indent=2)
+
+def best_tier(url: str) -> int:
+    """Return the cheapest tier that has succeeded for this domain."""
+    domain = urlparse(url).netloc
+    profiles = load_profiles()
+    if domain in profiles:
+        for tier in [1, 2, 3]:
+            if profiles[domain]["successes"].get(str(tier), 0) > 0:
+                return tier
+    return 1  # default: try cheapest first
 ```
 
 ---
