@@ -22,5 +22,8 @@ shell_snapshot = true
 [projects."/home/openclaw"]
 trust_level = "trusted"
 
+[projects."/home/openclaw/lodestar"]
+trust_level = "trusted"
+
 [notice.model_migrations]
 "gpt-5.2-codex" = "gpt-5.3-codex"
