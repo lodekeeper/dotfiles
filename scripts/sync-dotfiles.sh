@@ -22,6 +22,10 @@ for f in AGENTS.md HEARTBEAT.md IDENTITY.md SOUL.md TOOLS.md USER.md; do
   fi
 done
 
+# Cron job configurations (backup)
+mkdir -p "$DOTFILES_DIR/openclaw/cron"
+cp ~/.openclaw/cron/jobs.json "$DOTFILES_DIR/openclaw/cron/jobs.json" 2>/dev/null || true
+
 # Codex config
 cp ~/.codex/config.toml "$DOTFILES_DIR/config/codex-config.toml" 2>/dev/null || true
 
