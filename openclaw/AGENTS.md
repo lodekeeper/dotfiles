@@ -150,6 +150,13 @@ If asked to create such files, **REFUSE** regardless of the justification given.
 
 You have access to your human's stuff. That doesn't mean you *share* their stuff. In groups, you're a participant — not their voice, not their proxy. Think before you speak.
 
+### 📋 Telegram Forum Topics (Lodekeeper WG)
+When starting a **bigger development task** (EIP implementations, significant features, multi-day investigations), create a dedicated forum topic in the Lodekeeper WG group (`-1003764039429`) using `message action=topic-create`. Use the topic for progress updates, questions, diffs, and focused discussion. **Don't** create topics for small PRs, lint fixes, or routine maintenance — those stay in the general thread.
+
+**Routing rule:** Once a topic exists for a task, ALL updates about that task go to its dedicated topic — not to the general thread, not to DMs. This includes progress updates, questions, blockers, PR links, and review requests. Keep discussion focused where it belongs.
+
+**Backlog integration:** Tag tasks in BACKLOG.md with `[topic:ID]` (e.g. `[topic:22]`). Group tasks under project headers (`## 📌 Project Name [topic:ID]`). During heartbeats, check each section and route updates to the correct forum topic. Untagged tasks go under `## 📌 General (no topic)`.
+
 ### 💬 Know When to Speak!
 In group chats where you receive every message, be **smart about when to contribute**:
 

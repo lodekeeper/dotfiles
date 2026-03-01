@@ -148,7 +148,7 @@
       "name": "beacon-log-monitor",
       "enabled": true,
       "createdAtMs": 1771513454598,
-      "updatedAtMs": 1772281198172,
+      "updatedAtMs": 1772367602406,
       "schedule": {
         "kind": "every",
         "everyMs": 86400000,
@@ -165,10 +165,10 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1772367577433,
-        "lastRunAtMs": 1772281177433,
+        "nextRunAtMs": 1772453977439,
+        "lastRunAtMs": 1772367577439,
         "lastStatus": "ok",
-        "lastDurationMs": 20739,
+        "lastDurationMs": 24967,
         "lastRunStatus": "ok",
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
@@ -214,7 +214,7 @@
       "name": "eth-rnd-archive-hourly",
       "enabled": true,
       "createdAtMs": 1772034567300,
-      "updatedAtMs": 1772363710451,
+      "updatedAtMs": 1772367332025,
       "schedule": {
         "kind": "cron",
         "expr": "15 * * * *",
@@ -231,14 +231,16 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1772367300000,
-        "lastRunAtMs": 1772363700003,
-        "lastStatus": "ok",
-        "lastDurationMs": 10448,
-        "lastRunStatus": "ok",
+        "nextRunAtMs": 1772370900000,
+        "lastRunAtMs": 1772367300003,
+        "lastStatus": "error",
+        "lastDurationMs": 32022,
+        "lastRunStatus": "error",
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
-        "consecutiveErrors": 0
+        "consecutiveErrors": 1,
+        "lastError": "⚠️ 📝 Edit: `in ~/eth-rnd-archive-notes/2026-03-01.md (178 chars)` failed",
+        "lastDeliveryError": "⚠️ 📝 Edit: `in ~/eth-rnd-archive-notes/2026-03-01.md (178 chars)` failed"
       }
     },
     {
@@ -316,7 +318,7 @@
       "name": "github-notifications",
       "enabled": true,
       "createdAtMs": 1772107716625,
-      "updatedAtMs": 1772367074718,
+      "updatedAtMs": 1772368710197,
       "schedule": {
         "kind": "every",
         "everyMs": 180000,
@@ -334,10 +336,10 @@
         "mode": "announce"
       },
       "state": {
-        "nextRunAtMs": 1772367231386,
-        "lastRunAtMs": 1772367051386,
+        "nextRunAtMs": 1772368862436,
+        "lastRunAtMs": 1772368682436,
         "lastStatus": "ok",
-        "lastDurationMs": 23332,
+        "lastDurationMs": 27761,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
