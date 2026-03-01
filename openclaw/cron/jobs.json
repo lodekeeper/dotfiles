@@ -1,112 +1,208 @@
+│
+◇  Doctor changes ────────────────────────────────────────────────────╮
+│                                                                     │
+│  Moved channels.discord.dm.policy → channels.discord.dmPolicy.      │
+│  Moved channels.discord.dm.allowFrom → channels.discord.allowFrom.  │
+│  Removed empty channels.discord.dm after migration.                 │
+│                                                                     │
+├─────────────────────────────────────────────────────────────────────╯
+│
+◇  Doctor ──────────────────────────────────────────────╮
+│                                                       │
+│  Run "openclaw doctor --fix" to apply these changes.  │
+│                                                       │
+├───────────────────────────────────────────────────────╯
 {
-  "version": 1,
   "jobs": [
     {
-      "id": "4f081573-9bed-4c92-9334-d39ba402b2da",
+      "id": "b5b7dac2-71d8-4329-8db9-150229a78f29",
       "agentId": "main",
-      "name": "daily-summary",
+      "name": "github-notifications",
       "enabled": true,
-      "createdAtMs": 1769895413579,
-      "updatedAtMs": 1772287557091,
+      "createdAtMs": 1772107716625,
+      "updatedAtMs": 1772326448617,
+      "schedule": {
+        "kind": "every",
+        "everyMs": 180000,
+        "anchorMs": 1772107716625
+      },
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "Check GitHub notifications for lodekeeper. Run:\n```\ngh api notifications?participating=true --jq \".[] | select(.unread or (.updated_at > .last_read_at)) | {id, reason, title: .subject.title, type: .subject.type, updated: .updated_at, url: .subject.url}\"\n```\nFor each PR notification, check BOTH comment types:\n- Review comments: `gh api repos/{owner}/{repo}/pulls/{number}/comments --jq \".[-3:] | .[] | {author: .user.login, body: .body[:150], created: .created_at}\"`\n- Issue comments: `gh api repos/{owner}/{repo}/issues/{number}/comments --jq \".[-3:] | .[] | {author: .user.login, body: .body[:150], created: .created_at}\"`\n\nExtract owner/repo/number from the notification subject URL.\n\nIf there are NEW human comments (not from lodekeeper):\n1. BEFORE inserting a backlog entry, check if the PR is ALREADY mentioned in BACKLOG.md (grep for the PR number). If it already exists (active OR completed), do NOT insert a duplicate — just report the new comments.\n2. Only insert a new 🔴 task under \"## Active Tasks\" if the PR is NOT already in BACKLOG.md.\n3. Report the comments in your response.\n\nIf no new human comments, reply HEARTBEAT_OK.\nDo NOT try to handle or respond to notifications — just detect and report.",
+        "model": "openai-codex/gpt-5.3-codex",
+        "timeoutSeconds": 150
+      },
+      "delivery": {
+        "mode": "announce"
+      },
+      "state": {
+        "nextRunAtMs": 1772326597256,
+        "lastRunAtMs": 1772326417256,
+        "lastStatus": "ok",
+        "lastDurationMs": 31361,
+        "lastRunStatus": "ok",
+        "lastDeliveryStatus": "not-delivered",
+        "consecutiveErrors": 0,
+        "lastDelivered": false
+      }
+    },
+    {
+      "id": "a81458a8-24ea-4d1d-9847-378168f0711d",
+      "agentId": "main",
+      "name": "eth-rnd-archive-hourly",
+      "enabled": true,
+      "createdAtMs": 1772034567300,
+      "updatedAtMs": 1772324125535,
       "schedule": {
         "kind": "cron",
-        "expr": "0 23 * * *",
+        "expr": "15 * * * *",
         "tz": "UTC"
       },
       "sessionTarget": "isolated",
-      "wakeMode": "next-heartbeat",
+      "wakeMode": "now",
       "payload": {
         "kind": "agentTurn",
-        "message": "End of day. Write a summary of today's work to memory/YYYY-MM-DD.md (use today's date). Include: PRs reviewed, PRs opened/updated, code written, issues found, lessons learned. Keep it concise but complete."
+        "message": "HOURLY CHECK: Eth R&D Archive.\n\n1. Read skill: skills/eth-rnd-archive/SKILL.md\n2. Run: bash skills/eth-rnd-archive/check-updates.sh\n3. If new messages in tracked channels: read the JSON files listed, summarize key discussions, save notes to ~/eth-rnd-archive-notes/YYYY-MM-DD.md\n4. If something CRITICAL for Lodestar (spec changes, breaking decisions, action items): alert Nico immediately via Telegram\n5. Otherwise just log the summary to the notes file silently\n\nDo NOT send anything to Nico unless it's genuinely important. Most checks will just be quiet logging.",
+        "timeoutSeconds": 180
+      },
+      "delivery": {
+        "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1772319600000,
-        "lastRunAtMs": 1772287453773,
+        "nextRunAtMs": 1772327700000,
+        "lastRunAtMs": 1772324115714,
         "lastStatus": "ok",
-        "lastDurationMs": 103318,
+        "lastDurationMs": 9821,
+        "lastRunStatus": "ok",
+        "lastDelivered": false,
+        "lastDeliveryStatus": "not-delivered",
+        "consecutiveErrors": 0
+      }
+    },
+    {
+      "id": "573d18ec-602c-40ba-a01a-004841c0da1a",
+      "name": "ci-autofix-unstable",
+      "enabled": true,
+      "createdAtMs": 1772326513772,
+      "updatedAtMs": 1772326513772,
+      "schedule": {
+        "kind": "every",
+        "everyMs": 3600000,
+        "anchorMs": 1772326513772
+      },
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "Read ~/.openclaw/workspace/scripts/ci/CRON_PROMPT.md and follow the instructions. Run the detector, act on actionable findings, report results.",
+        "model": "openai-codex/gpt-5.3-codex"
+      },
+      "delivery": {
+        "mode": "announce",
+        "channel": "last"
+      },
+      "state": {
+        "nextRunAtMs": 1772330113772
+      }
+    },
+    {
+      "id": "4aaaf7f7-fa4c-45ba-9aea-8676b4a46bd1",
+      "agentId": "main",
+      "name": "nightly-memory-consolidation",
+      "enabled": true,
+      "createdAtMs": 1772320910346,
+      "updatedAtMs": 1772321872485,
+      "schedule": {
+        "kind": "cron",
+        "expr": "30 3 * * *",
+        "tz": "UTC",
+        "staggerMs": 0
+      },
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "Run: bash ~/.openclaw/workspace/scripts/memory/nightly_memory_cycle.sh. Report what was consolidated and indexed.",
+        "model": "anthropic/claude-sonnet-4-5",
+        "timeoutSeconds": 300
+      },
+      "delivery": {
+        "mode": "announce",
+        "channel": "last"
+      },
+      "state": {
+        "nextRunAtMs": 1772335800000
+      }
+    },
+    {
+      "id": "b5863a09-ee40-4381-8be4-9ee1246bcc5f",
+      "agentId": "main",
+      "name": "Check libp2p npm publish",
+      "enabled": true,
+      "createdAtMs": 1772048380834,
+      "updatedAtMs": 1772321994331,
+      "schedule": {
+        "kind": "every",
+        "everyMs": 21600000,
+        "anchorMs": 1772300401847
+      },
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "Check if @libp2p/identify@4.0.11 and @libp2p/utils@7.0.11 have been published to npm yet. Run: npm view @libp2p/identify version && npm view @libp2p/utils version. If either shows 4.0.11 / 7.0.11 respectively, the packages are live — create a PR upgrading libp2p deps in ~/lodestar (branch from unstable, pnpm update the @libp2p/* packages, commit, push to fork, open PR). Then disable this cron job. If still on 4.0.10/7.0.10, reply with 'Still waiting for libp2p publish' and do nothing else.",
+        "timeoutSeconds": 120
+      },
+      "delivery": {
+        "mode": "announce",
+        "to": "1471515015671709962",
+        "channel": "discord"
+      },
+      "state": {
+        "nextRunAtMs": 1772343580916,
+        "lastRunAtMs": 1772321980916,
+        "lastStatus": "ok",
+        "lastDurationMs": 13415,
         "lastRunStatus": "ok",
         "lastDelivered": true,
         "lastDeliveryStatus": "delivered",
         "consecutiveErrors": 0
-      },
-      "delivery": {
-        "mode": "announce"
       }
     },
     {
-      "id": "47ae264f-3f07-4bf9-bbb1-a9f3a1d26497",
+      "id": "0e3e3b9d-1922-49b4-a000-6823f174232d",
       "agentId": "main",
-      "name": "fastify-pr-ready",
-      "enabled": false,
-      "createdAtMs": 1770056633482,
-      "updatedAtMs": 1770228000000,
-      "schedule": {
-        "kind": "at",
-        "at": "2026-02-04T18:00:00.000Z"
-      },
-      "sessionTarget": "main",
-      "wakeMode": "next-heartbeat",
-      "payload": {
-        "kind": "systemEvent",
-        "text": "⏰ Reminder: Fastify 5.7.3 has now passed the 48-hour release age policy. Time to re-open PR #8842, remove minimumReleaseAgeExclude, and mark it ready for review."
-      },
-      "state": {
-        "lastRunAtMs": 1770228000000,
-        "lastStatus": "ok",
-        "lastDurationMs": 4
-      }
-    },
-    {
-      "id": "601e11a3-dd92-4a77-b301-ccefdaa2cc86",
-      "agentId": "main",
-      "name": "specs-study-reminder",
-      "enabled": false,
-      "createdAtMs": 1771194766869,
-      "updatedAtMs": 1771540396334,
-      "schedule": {
-        "kind": "every",
-        "everyMs": 14400000,
-        "anchorMs": 1771194766869
-      },
-      "sessionTarget": "main",
-      "wakeMode": "now",
-      "payload": {
-        "kind": "systemEvent",
-        "text": "Reminder: If no active PRs or urgent work, continue the consensus specs study plan. Check notes/specs/PROGRESS.md for where you left off. Read a spec section, find the Lodestar implementation, document learnings, and open PRs for any issues found."
-      },
-      "state": {
-        "lastRunAtMs": 1771540366871,
-        "lastStatus": "ok",
-        "lastDurationMs": 29463
-      }
-    },
-    {
-      "id": "6e703342-d57b-4fa0-9ba3-69f225de3cd5",
-      "agentId": "main",
-      "name": "Monitor EIP-8025 / zkEVM updates",
+      "name": "eth-rnd-daily-digest",
       "enabled": true,
-      "createdAtMs": 1771320800043,
-      "updatedAtMs": 1772041266293,
+      "createdAtMs": 1772034576175,
+      "updatedAtMs": 1772285667896,
       "schedule": {
-        "kind": "every",
-        "everyMs": 259200000,
-        "anchorMs": 1771781762791
+        "kind": "cron",
+        "expr": "0 8 * * *",
+        "tz": "Europe/Lisbon"
       },
       "sessionTarget": "isolated",
       "wakeMode": "now",
       "payload": {
         "kind": "agentTurn",
-        "message": "Check for updates on EIP-8025 (optional execution proofs) across other clients and research discussions. Do the following:\n\n1. Check ethereum/consensus-specs repo for any new commits/PRs related to EIP-8025, optional proofs, or zkvm\n2. Check Lighthouse repo (sigp/lighthouse) for commits on their optional-proofs branch\n3. Check ethpandaops/prysm repo (NOT prysmaticlabs/prysm) for any optional-proofs related branches\n4. Check ethereum/pm repo for updates to zkEVM planning\n5. Check the Eth R&D Archive for recent discussions in zkEVM-related channels:\n   - Run: bash skills/eth-rnd-archive/check-updates.sh\n   - Read recent JSON files from ~/eth-rnd-archive/l1-zkevm/ and ~/eth-rnd-archive/l1-zkevm-protocol/ (last 3 days)\n   - Also check their _threads/ subdirectories for thread discussions\n   - Look for mentions of EIP-8025, optional proofs, proof orchestration, zkEVM protocol changes\n6. If any changes found that affect our implementation in lodestar (branch feat/eip8025-optional-proofs in ~/lodestar-eip8025), summarize what we need to update\n7. Report findings to Nico via Telegram (chat ID 5774760693) — only if there are actual updates, stay silent otherwise\n\nOur current implementation: PR #8918 merged + PR #8923 ready on ChainSafe/lodestar optional-proofs branch. 3-client interop validated.",
+        "message": "DAILY DIGEST: Eth R&D Archive — send to Nico.\n\n1. Read skill: skills/eth-rnd-archive/SKILL.md\n2. First run check-updates.sh to get any final overnight messages\n3. Read all notes from ~/eth-rnd-archive-notes/ for the past 24h\n4. Also read the raw JSON files from tracked channels for yesterday and today\n5. Create a concise daily digest for Nico covering:\n   - Key decisions made across channels\n   - Action items for Lodestar\n   - Interesting discussions worth following up\n   - Notable participants driving topics\n   - Any spec changes or breaking API changes\n6. Send the digest to Nico via Telegram (target: 5774760693)\n7. Keep it concise — TLDR style, grouped by channel/topic\n8. Update state.json lastDigest timestamp",
         "timeoutSeconds": 300
       },
       "delivery": {
-        "mode": "announce"
+        "mode": "announce",
+        "channel": "telegram"
       },
       "state": {
-        "nextRunAtMs": 1772300162791,
-        "lastRunAtMs": 1772040962793,
+        "nextRunAtMs": 1772352000000,
+        "lastRunAtMs": 1772285620353,
         "lastStatus": "ok",
-        "lastDurationMs": 89086
+        "lastDurationMs": 47543,
+        "lastRunStatus": "ok",
+        "lastDelivered": true,
+        "lastDeliveryStatus": "delivered",
+        "consecutiveErrors": 0
       }
     },
     {
@@ -115,7 +211,7 @@
       "name": "Sync dotfiles repo",
       "enabled": true,
       "createdAtMs": 1771362496423,
-      "updatedAtMs": 1772286877718,
+      "updatedAtMs": 1772323519129,
       "schedule": {
         "kind": "cron",
         "expr": "0 */12 * * *",
@@ -129,10 +225,10 @@
         "text": "Reminder: Run ~/dotfiles/scripts/sync-dotfiles.sh to sync local files to the dotfiles repo (github.com/lodekeeper/dotfiles). Gists are no longer the source of truth — the repo is."
       },
       "state": {
-        "nextRunAtMs": 1772323398972,
-        "lastRunAtMs": 1772286610565,
+        "nextRunAtMs": 1772366598972,
+        "lastRunAtMs": 1772323398975,
         "lastStatus": "ok",
-        "lastDurationMs": 267153,
+        "lastDurationMs": 120154,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-requested",
         "consecutiveErrors": 0
@@ -177,7 +273,7 @@
       "name": "daily-meme",
       "enabled": true,
       "createdAtMs": 1771753595377,
-      "updatedAtMs": 1772285814837,
+      "updatedAtMs": 1772316147354,
       "schedule": {
         "kind": "cron",
         "expr": "0 22 * * *",
@@ -194,10 +290,10 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1772316000000,
-        "lastRunAtMs": 1772285679094,
+        "nextRunAtMs": 1772402400000,
+        "lastRunAtMs": 1772316011701,
         "lastStatus": "ok",
-        "lastDurationMs": 135743,
+        "lastDurationMs": 135653,
         "lastRunStatus": "ok",
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
@@ -205,167 +301,74 @@
       }
     },
     {
-      "id": "a81458a8-24ea-4d1d-9847-378168f0711d",
+      "id": "4f081573-9bed-4c92-9334-d39ba402b2da",
       "agentId": "main",
-      "name": "eth-rnd-archive-hourly",
+      "name": "daily-summary",
       "enabled": true,
-      "createdAtMs": 1772034567300,
-      "updatedAtMs": 1772288117805,
+      "createdAtMs": 1769895413579,
+      "updatedAtMs": 1772319669401,
       "schedule": {
         "kind": "cron",
-        "expr": "15 * * * *",
+        "expr": "0 23 * * *",
         "tz": "UTC"
       },
       "sessionTarget": "isolated",
-      "wakeMode": "now",
+      "wakeMode": "next-heartbeat",
       "payload": {
         "kind": "agentTurn",
-        "message": "HOURLY CHECK: Eth R&D Archive.\n\n1. Read skill: skills/eth-rnd-archive/SKILL.md\n2. Run: bash skills/eth-rnd-archive/check-updates.sh\n3. If new messages in tracked channels: read the JSON files listed, summarize key discussions, save notes to ~/eth-rnd-archive-notes/YYYY-MM-DD.md\n4. If something CRITICAL for Lodestar (spec changes, breaking decisions, action items): alert Nico immediately via Telegram\n5. Otherwise just log the summary to the notes file silently\n\nDo NOT send anything to Nico unless it's genuinely important. Most checks will just be quiet logging.",
-        "timeoutSeconds": 180
-      },
-      "delivery": {
-        "mode": "none"
+        "message": "End of day. Write a summary of today's work to memory/YYYY-MM-DD.md (use today's date). Include: PRs reviewed, PRs opened/updated, code written, issues found, lessons learned. Keep it concise but complete."
       },
       "state": {
-        "nextRunAtMs": 1772291700000,
-        "lastRunAtMs": 1772288100003,
+        "nextRunAtMs": 1772406000000,
+        "lastRunAtMs": 1772319611451,
         "lastStatus": "ok",
-        "lastDurationMs": 17802,
+        "lastDurationMs": 57950,
         "lastRunStatus": "ok",
-        "lastDelivered": false,
-        "lastDeliveryStatus": "not-delivered",
+        "lastDelivered": true,
+        "lastDeliveryStatus": "delivered",
         "consecutiveErrors": 0
+      },
+      "delivery": {
+        "mode": "announce"
       }
     },
     {
-      "id": "0e3e3b9d-1922-49b4-a000-6823f174232d",
+      "id": "6e703342-d57b-4fa0-9ba3-69f225de3cd5",
       "agentId": "main",
-      "name": "eth-rnd-daily-digest",
+      "name": "Monitor EIP-8025 / zkEVM updates",
       "enabled": true,
-      "createdAtMs": 1772034576175,
-      "updatedAtMs": 1772285667896,
+      "createdAtMs": 1771320800043,
+      "updatedAtMs": 1772300299636,
       "schedule": {
-        "kind": "cron",
-        "expr": "0 8 * * *",
-        "tz": "Europe/Lisbon"
+        "kind": "every",
+        "everyMs": 259200000,
+        "anchorMs": 1771781762791
       },
       "sessionTarget": "isolated",
       "wakeMode": "now",
       "payload": {
         "kind": "agentTurn",
-        "message": "DAILY DIGEST: Eth R&D Archive — send to Nico.\n\n1. Read skill: skills/eth-rnd-archive/SKILL.md\n2. First run check-updates.sh to get any final overnight messages\n3. Read all notes from ~/eth-rnd-archive-notes/ for the past 24h\n4. Also read the raw JSON files from tracked channels for yesterday and today\n5. Create a concise daily digest for Nico covering:\n   - Key decisions made across channels\n   - Action items for Lodestar\n   - Interesting discussions worth following up\n   - Notable participants driving topics\n   - Any spec changes or breaking API changes\n6. Send the digest to Nico via Telegram (target: 5774760693)\n7. Keep it concise — TLDR style, grouped by channel/topic\n8. Update state.json lastDigest timestamp",
+        "message": "Check for updates on EIP-8025 (optional execution proofs) across other clients and research discussions. Do the following:\n\n1. Check ethereum/consensus-specs repo for any new commits/PRs related to EIP-8025, optional proofs, or zkvm\n2. Check Lighthouse repo (sigp/lighthouse) for commits on their optional-proofs branch\n3. Check ethpandaops/prysm repo (NOT prysmaticlabs/prysm) for any optional-proofs related branches\n4. Check ethereum/pm repo for updates to zkEVM planning\n5. Check the Eth R&D Archive for recent discussions in zkEVM-related channels:\n   - Run: bash skills/eth-rnd-archive/check-updates.sh\n   - Read recent JSON files from ~/eth-rnd-archive/l1-zkevm/ and ~/eth-rnd-archive/l1-zkevm-protocol/ (last 3 days)\n   - Also check their _threads/ subdirectories for thread discussions\n   - Look for mentions of EIP-8025, optional proofs, proof orchestration, zkEVM protocol changes\n6. If any changes found that affect our implementation in lodestar (branch feat/eip8025-optional-proofs in ~/lodestar-eip8025), summarize what we need to update\n7. Report findings to Nico via Telegram (chat ID 5774760693) — only if there are actual updates, stay silent otherwise\n\nOur current implementation: PR #8918 merged + PR #8923 ready on ChainSafe/lodestar optional-proofs branch. 3-client interop validated.",
         "timeoutSeconds": 300
       },
       "delivery": {
-        "mode": "announce",
-        "channel": "telegram"
+        "mode": "announce"
       },
       "state": {
-        "nextRunAtMs": 1772352000000,
-        "lastRunAtMs": 1772285620353,
+        "nextRunAtMs": 1772559362794,
+        "lastRunAtMs": 1772300162794,
         "lastStatus": "ok",
-        "lastDurationMs": 47543,
+        "lastDurationMs": 136842,
         "lastRunStatus": "ok",
         "lastDelivered": true,
         "lastDeliveryStatus": "delivered",
         "consecutiveErrors": 0
-      }
-    },
-    {
-      "id": "b5863a09-ee40-4381-8be4-9ee1246bcc5f",
-      "agentId": "main",
-      "name": "Check libp2p npm publish",
-      "enabled": true,
-      "createdAtMs": 1772048380834,
-      "updatedAtMs": 1772285994568,
-      "schedule": {
-        "kind": "every",
-        "everyMs": 3600000,
-        "anchorMs": 1772048380834
-      },
-      "sessionTarget": "isolated",
-      "wakeMode": "now",
-      "payload": {
-        "kind": "agentTurn",
-        "message": "Check if @libp2p/identify@4.0.11 and @libp2p/utils@7.0.11 have been published to npm yet. Run: npm view @libp2p/identify version && npm view @libp2p/utils version. If either shows 4.0.11 / 7.0.11 respectively, the packages are live — create a PR upgrading libp2p deps in ~/lodestar (branch from unstable, pnpm update the @libp2p/* packages, commit, push to fork, open PR). Then disable this cron job. If still on 4.0.10/7.0.10, reply with 'Still waiting for libp2p publish' and do nothing else.",
-        "timeoutSeconds": 120
-      },
-      "delivery": {
-        "mode": "announce",
-        "to": "1471515015671709962",
-        "channel": "discord"
-      },
-      "state": {
-        "nextRunAtMs": 1772289580896,
-        "lastRunAtMs": 1772285980896,
-        "lastStatus": "ok",
-        "lastDurationMs": 13672,
-        "lastRunStatus": "ok",
-        "lastDelivered": true,
-        "lastDeliveryStatus": "delivered",
-        "consecutiveErrors": 0
-      }
-    },
-    {
-      "id": "b5b7dac2-71d8-4329-8db9-150229a78f29",
-      "agentId": "main",
-      "name": "github-notifications",
-      "enabled": true,
-      "createdAtMs": 1772107716625,
-      "updatedAtMs": 1772288269903,
-      "schedule": {
-        "kind": "every",
-        "everyMs": 180000,
-        "anchorMs": 1772107716625
-      },
-      "sessionTarget": "isolated",
-      "wakeMode": "now",
-      "payload": {
-        "kind": "agentTurn",
-        "message": "Check GitHub notifications for lodekeeper. Run:\n```\ngh api notifications?participating=true --jq \".[] | select(.unread or (.updated_at > .last_read_at)) | {id, reason, title: .subject.title, type: .subject.type, updated: .updated_at, url: .subject.url}\"\n```\nFor each PR notification, check BOTH comment types:\n- Review comments: `gh api repos/{owner}/{repo}/pulls/{number}/comments --jq \".[-3:] | .[] | {author: .user.login, body: .body[:150], created: .created_at}\"`\n- Issue comments: `gh api repos/{owner}/{repo}/issues/{number}/comments --jq \".[-3:] | .[] | {author: .user.login, body: .body[:150], created: .created_at}\"`\n\nExtract owner/repo/number from the notification subject URL.\n\nSummarize any new comments from humans (skip bot comments unless actionable). Otherwise reply HEARTBEAT_OK.\nDo NOT try to handle or respond to notifications — just report what exists.",
-        "model": "openai-codex/gpt-5.3-codex",
-        "timeoutSeconds": 150
-      },
-      "delivery": {
-        "mode": "none"
-      },
-      "state": {
-        "nextRunAtMs": 1772288335823,
-        "lastRunAtMs": 1772288155823,
-        "lastStatus": "ok",
-        "lastDurationMs": 55554,
-        "lastRunStatus": "ok",
-        "lastDeliveryStatus": "not-delivered",
-        "consecutiveErrors": 0,
-        "lastDelivered": false
-      }
-    },
-    {
-      "id": "7556f303-ae10-4dd9-9dd9-c04f6280db90",
-      "agentId": "main",
-      "name": "v8-ptr-compress-metrics-6h",
-      "enabled": false,
-      "createdAtMs": 1772142500515,
-      "updatedAtMs": 1772285511523,
-      "schedule": {
-        "kind": "every",
-        "everyMs": 21600000,
-        "anchorMs": 1772142500515
-      },
-      "sessionTarget": "isolated",
-      "wakeMode": "now",
-      "payload": {
-        "kind": "agentTurn",
-        "message": "Pull V8 pointer compression metrics comparison: feat4 (pointer compression) vs unstable (standard). Query Grafana for RSS, V8 heap used, peer count, sync status, GC pauses — per node type (solo, semi, super, sas, mainnet-super). Save to notes/v8-ptr-compress-metrics-latest.md and send summary to Nico on Telegram if anything concerning (heap approaching 4GB cage, GC spikes, sync issues, peer drops). If all looks fine, just save the data silently."
-      },
-      "delivery": {
-        "mode": "none"
-      },
-      "state": {
-        "lastRunAtMs": 1772272100517,
-        "lastStatus": "ok",
-        "lastDurationMs": 174149
       }
     }
-  ]
+  ],
+  "total": 11,
+  "offset": 0,
+  "limit": 11,
+  "hasMore": false,
+  "nextOffset": null
 }
