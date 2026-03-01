@@ -198,7 +198,7 @@ python3 scripts/memory/consolidate_from_daily.py --limit 7 --mode heuristic --ap
 **Environment variables:**
 - `OPENAI_API_KEY` — API key for LLM extraction
 - `OPENAI_BASE_URL` — Base URL (default: `https://api.openai.com/v1`)
-- `MEMORY_LLM_MODEL` — Model to use (default: `gpt-4o-mini`, we use `gpt-5.2`)
+- `MEMORY_LLM_MODEL` — Model to use (default: `gpt-5.2`)
 - `MEMORY_LLM_BATCH` — Records per LLM batch (default: 60)
 
 ### 4. SQLite FTS Index
@@ -302,7 +302,11 @@ qmd search "Nico preferences" -c memory-bank -n 5
 - **PRs** (`bank/entities/prs/pr-8968.md`) — sections: Changes & Status, Review Decisions, Lessons
 - **EIPs** (`bank/entities/projects/eip-7782.md`) — same structure as projects
 
-Entity pages are generated from active `state.json` entries, grouped by kind (fact/decision/preference/lesson), and sorted by importance within each section. They serve as quick-reference pages when the agent needs context about a specific entity — much faster than searching through daily notes.
+Entity pages are generated from active `state.json` entries, grouped by kind (fact/decision/preference/lesson), and sorted by importance within each section (top 8-12 per section). They serve as quick-reference pages when the agent needs context about a specific entity — much faster than searching through daily notes.
+
+**Person pages** have sections: Preferences & Communication Style, Key Decisions & Rules, Facts, Lessons Learned.
+**Project/EIP pages** have sections: Key Facts, Decisions, Lessons Learned, Preferences.
+**PR pages** have sections: Changes & Status, Review Decisions, Lessons.
 
 ### 7. Nightly Cycle (Automation)
 
@@ -313,10 +317,10 @@ Entity pages are generated from active `state.json` entries, grouped by kind (fa
 set -euo pipefail
 cd "$(dirname "$0")/../.."
 
-# Step 1: Extract durable memories from daily notes via LLM
+# Step 1: Extract durable memories from daily notes via LLM (last 7 days)
 python3 scripts/memory/consolidate_from_daily.py --limit 7 --mode auto --apply
 
-# Step 2: Generate entity pages from active state
+# Step 2: Generate structured entity pages from active state
 python3 scripts/memory/generate_entity_pages.py
 
 # Step 3: Rebuild SQLite FTS index
@@ -326,7 +330,7 @@ python3 scripts/memory/rebuild_index.py
 qmd update 2>&1 || true
 qmd embed 2>&1 || true
 
-# Step 5: Prune old cycle logs
+# Step 5: Prune old cycle logs (keep 14 days)
 find memory/ -name "memory-cycle-*.log" -mtime +14 -delete 2>/dev/null || true
 ```
 
@@ -616,7 +620,7 @@ Copy the following scripts to `scripts/memory/`:
 - `consolidate_from_daily.py` (683 lines) — Core consolidation pipeline
 - `rebuild_index.py` (341 lines) — SQLite FTS index builder
 - `query_index.py` (169 lines) — Query interface
-- `generate_entity_pages.py` (100 lines) — Entity page generator
+- `generate_entity_pages.py` (215 lines) — Entity page generator (structured by kind)
 - `nightly_memory_cycle.sh` (37 lines) — Orchestrator
 
 ### Step 3: Install QMD
@@ -669,13 +673,14 @@ Add the "Query Before Guessing" rule and pipeline documentation to your agent's 
 
 ## Metrics
 
-Our production deployment:
+Our production deployment (as of 2026-03-01):
 - **81 structured entries** (75 active, 6 superseded) from 30 days of daily notes
 - **2330 SQLite FTS records** across 59 markdown files + 81 state entries
 - **72 QMD-indexed documents** across 3 collections
-- **10 auto-generated entity pages** (1 person, 5 projects, 4 PRs)
+- **10 auto-generated entity pages** (1 person, 5 projects, 4 PRs) with structured kind-based sections
+- **1445 total lines of code** across 5 scripts
 - **Nightly cycle runtime:** ~60 seconds (including LLM extraction + QMD embedding on CPU)
-- **LLM cost:** ~$0.01/night (gpt-4o-mini processing ~180 bullet records)
+- **LLM cost:** ~$0.01/night (gpt-5.2 processing ~180 bullet records)
 
 ---
 
