@@ -69,6 +69,16 @@ if [ -d "$HOME/research" ]; then
   done
 fi
 
+# Memory scripts
+mkdir -p "$DOTFILES_DIR/openclaw/scripts/memory"
+for f in "$WORKSPACE/scripts/memory"/*.py "$WORKSPACE/scripts/memory"/*.sh; do
+  [ -f "$f" ] && cp "$f" "$DOTFILES_DIR/openclaw/scripts/memory/" 2>/dev/null || true
+done
+
+# Docs
+mkdir -p "$DOTFILES_DIR/openclaw/docs"
+cp "$WORKSPACE/docs"/*.md "$DOTFILES_DIR/openclaw/docs/" 2>/dev/null || true
+
 # Scripts
 cp ~/lodekeeper-dash/scripts/update-status.sh "$DOTFILES_DIR/scripts/update-status.sh" 2>/dev/null || true
 cp ~/lodekeeper-dash/scripts/deploy.sh "$DOTFILES_DIR/scripts/deploy.sh" 2>/dev/null || true

@@ -119,7 +119,7 @@
       "name": "Sync dotfiles repo",
       "enabled": true,
       "createdAtMs": 1771362496423,
-      "updatedAtMs": 1772323519129,
+      "updatedAtMs": 1772359102641,
       "schedule": {
         "kind": "cron",
         "expr": "0 */12 * * *",
@@ -134,13 +134,12 @@
       },
       "state": {
         "nextRunAtMs": 1772366598972,
-        "lastRunAtMs": 1772323398975,
+        "lastRunAtMs": 1772359095480,
         "lastStatus": "ok",
-        "lastDurationMs": 120154,
+        "lastDurationMs": 7161,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-requested",
-        "consecutiveErrors": 0,
-        "runningAtMs": 1772359095480
+        "consecutiveErrors": 0
       }
     },
     {
@@ -317,7 +316,7 @@
       "name": "github-notifications",
       "enabled": true,
       "createdAtMs": 1772107716625,
-      "updatedAtMs": 1772358983015,
+      "updatedAtMs": 1772359900611,
       "schedule": {
         "kind": "every",
         "everyMs": 180000,
@@ -335,10 +334,10 @@
         "mode": "announce"
       },
       "state": {
-        "nextRunAtMs": 1772359131210,
-        "lastRunAtMs": 1772358951210,
+        "nextRunAtMs": 1772360031228,
+        "lastRunAtMs": 1772359851228,
         "lastStatus": "ok",
-        "lastDurationMs": 31805,
+        "lastDurationMs": 49383,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
