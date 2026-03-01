@@ -295,14 +295,14 @@ qmd search "Nico preferences" -c memory-bank -n 5
 
 ### 6. Entity Pages
 
-`scripts/memory/generate_entity_pages.py` auto-generates markdown pages for frequently mentioned entities:
+`scripts/memory/generate_entity_pages.py` auto-generates structured markdown pages for frequently mentioned entities, grouped by memory kind:
 
-- **People** (`bank/entities/people/nico.md`) — aggregates all memories mentioning a person
-- **Projects** (`bank/entities/projects/lodestar.md`) — all memories for a project
-- **PRs** (`bank/entities/prs/pr-8968.md`) — all memories about a specific PR
-- **EIPs** (`bank/entities/projects/eip-7782.md`) — all memories about a spec
+- **People** (`bank/entities/people/nico.md`) — sections: Preferences & Communication Style, Key Decisions & Rules, Facts, Lessons Learned
+- **Projects** (`bank/entities/projects/lodestar.md`) — sections: Key Facts, Decisions, Lessons Learned, Preferences
+- **PRs** (`bank/entities/prs/pr-8968.md`) — sections: Changes & Status, Review Decisions, Lessons
+- **EIPs** (`bank/entities/projects/eip-7782.md`) — same structure as projects
 
-Entity pages are generated from active `state.json` entries and include the top 12 by importance. They serve as quick-reference pages when the agent needs context about a specific entity.
+Entity pages are generated from active `state.json` entries, grouped by kind (fact/decision/preference/lesson), and sorted by importance within each section. They serve as quick-reference pages when the agent needs context about a specific entity — much faster than searching through daily notes.
 
 ### 7. Nightly Cycle (Automation)
 
