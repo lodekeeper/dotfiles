@@ -198,7 +198,7 @@ python3 scripts/memory/consolidate_from_daily.py --limit 7 --mode heuristic --ap
 **Environment variables:**
 - `OPENAI_API_KEY` — API key for LLM extraction
 - `OPENAI_BASE_URL` — Base URL (default: `https://api.openai.com/v1`)
-- `MEMORY_LLM_MODEL` — Model to use (default: `gpt-5.2`)
+- `MEMORY_LLM_MODEL` — Model to use (default: `gpt-5.3`)
 - `MEMORY_LLM_BATCH` — Records per LLM batch (default: 60)
 
 ### 4. SQLite FTS Index
@@ -680,7 +680,7 @@ Our production deployment (as of 2026-03-01):
 - **10 auto-generated entity pages** (1 person, 5 projects, 4 PRs) with structured kind-based sections
 - **1445 total lines of code** across 5 scripts
 - **Nightly cycle runtime:** ~60 seconds (including LLM extraction + QMD embedding on CPU)
-- **LLM cost:** ~$0.01/night (gpt-5.2 processing ~180 bullet records)
+- **LLM cost:** ~$0.01/night (gpt-5.3 processing ~180 bullet records)
 
 ---
 
