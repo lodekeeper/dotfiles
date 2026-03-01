@@ -155,75 +155,110 @@ One-line success criteria.
 
 This is especially valuable for large features spanning days/weeks — without the heartbeat entry, progress stalls between sessions because the agent has no directive to continue.
 
-## Phase 3: Implementation (Codex CLI or Claude CLI)
+## Phase 3: Implementation
 
-Choose agent based on task characteristics:
+Two modes: **lodeloop** (multi-story, autonomous) or **direct CLI** (single task, interactive).
 
-| Use Codex CLI when... | Use Claude CLI when... |
-|---|---|
-| Clear, focused implementation tasks | Tasks needing broader reasoning |
-| "Implement this interface" | Refactoring, debugging, test writing |
-| Structured/repetitive code | Understanding system-wide implications |
-| Speed is priority | Nuanced design decisions |
+### Option A: lodeloop (preferred for multi-story features)
 
-### Spawning a coding agent
+Use lodeloop when the feature has multiple stories/steps that should be implemented autonomously with verification gates. The agent runs in a loop until all stories pass.
+
+**Tool:** `~/lodeloop/lodeloop.sh` — [github.com/lodekeeper/lodeloop](https://github.com/lodekeeper/lodeloop)
 
 ```bash
-# Always provide CODING_CONTEXT.md + task-specific instructions
-cd ~/lodestar-<feature-name>
-
-# Codex CLI
-codex exec --full-auto "Read CODING_CONTEXT.md in ~/.openclaw/workspace/ for project context. Then: <task description>"
-
-# Claude CLI
-claude "Read CODING_CONTEXT.md in ~/.openclaw/workspace/ for project context. Then: <task description>"
-```
-
-For complex tasks, write a task file first:
-```bash
-# Write task instructions
-cat > /tmp/task-<feature>.md << 'EOF'
-# Task: <description>
-Read ~/.openclaw/workspace/CODING_CONTEXT.md for project conventions.
-## Requirements
-...
-## Files to modify
-...
-## Acceptance criteria
-...
+# 1. Create task.json in the worktree
+cat > ~/lodestar-<feature>/.lodeloop/task.json << 'EOF'
+{
+  "project": "lodestar",
+  "feature": "<feature description>",
+  "branch": "feat/<feature-name>",
+  "workdir": "~/lodestar-<feature>",
+  "agent": "codex",
+  "verify": {
+    "commands": [
+      "pnpm check-types",
+      "pnpm lint",
+      "pnpm test:unit"
+    ],
+    "timeout": 300
+  },
+  "context_files": [
+    "~/.openclaw/workspace/CODING_CONTEXT.md"
+  ],
+  "stories": [
+    {
+      "id": "S1",
+      "title": "Story title",
+      "description": "What to implement",
+      "acceptance": ["Criteria 1", "Criteria 2", "Typecheck passes"],
+      "priority": 1,
+      "passes": false,
+      "notes": ""
+    }
+  ]
+}
 EOF
 
-# Hand off (background + PTY for monitoring)
-# Codex:
-exec pty:true workdir:~/lodestar-<feature> background:true \
-  command:"codex --full-auto exec 'Follow instructions in /tmp/task-<feature>.md'"
-# Claude:
-exec pty:true workdir:~/lodestar-<feature> background:true \
-  command:"claude 'Follow instructions in /tmp/task-<feature>.md'"
+# 2. Launch (background, Codex is default)
+exec pty:true workdir:~/lodestar-<feature> background:true timeout:3600 \
+  command:"~/lodeloop/lodeloop.sh -a codex -n 15 .lodeloop/task.json"
+
+# 3. Check status
+~/lodeloop/lodeloop.sh --status ~/lodestar-<feature>/.lodeloop/task.json
+
+# 4. Check result
+cat ~/lodestar-<feature>/.lodeloop/result.json
 ```
+
+**When to use lodeloop:**
+- Feature has 2+ discrete stories
+- Verification gates are well-defined (typecheck + lint + test)
+- I want to set-and-forget while doing other work
+- Task is well-scoped (each story fits one context window)
+
+**Story sizing:** Each story must be completable in one iteration. "Add a config field" ✅. "Build the entire subsystem" ❌ — split it.
+
+**Agent:** Default to **Codex CLI** (`-a codex`). Claude is supported (`-a claude`) but Codex is preferred for Lodestar work.
+
+**Completion signal:** The agent must output `LODELOOP_DONE: <story-id>` after completing each story. This is included in the prompt template automatically.
+
+### Option B: Direct CLI (for single focused tasks)
+
+Use direct Codex/Claude CLI for single-shot tasks that don't need a loop.
+
+```bash
+# Codex (preferred)
+exec pty:true workdir:~/lodestar-<feature> background:true timeout:3600 \
+  command:"source ~/.nvm/nvm.sh && nvm use 24 2>/dev/null && codex exec --full-auto 'Read ~/.openclaw/workspace/CODING_CONTEXT.md for project context. Then: <task>'"
+
+# Claude (for broader reasoning tasks)
+exec pty:true workdir:~/lodestar-<feature> background:true timeout:3600 \
+  command:"claude 'Read ~/.openclaw/workspace/CODING_CONTEXT.md for project context. Then: <task>'"
+```
+
+**When to use direct CLI:**
+- Single focused task (one story)
+- Quick fix or one-liner
+- Exploratory/debugging work
+- Need interactive control
 
 ### Parallel execution
 
-Spawn multiple agents in separate worktrees for independent tasks:
+Both modes support parallelism across separate worktrees:
 ```bash
-# Task A in worktree A
-exec pty:true workdir:~/lodestar-taskA background:true command:"codex ..."
-# Task B in worktree B  
-exec pty:true workdir:~/lodestar-taskB background:true command:"claude ..."
-# Monitor both
+# lodeloop in worktree A
+exec pty:true workdir:~/lodestar-taskA background:true command:"~/lodeloop/lodeloop.sh ..."
+# Direct codex in worktree B
+exec pty:true workdir:~/lodestar-taskB background:true command:"codex ..."
+# Monitor
 process action:list
 ```
 
-**The coding agent has full access to the worktree** — it can:
-- Read and modify files
-- Run `pnpm build`, `pnpm lint`, `pnpm check-types`
-- Run targeted unit tests
-- Iterate on its own errors
-
-**After agent finishes:**
+**After agent/loop finishes:**
 - Review `git diff` in the worktree
 - Check that all acceptance criteria from spec are met
 - Run build/lint/tests myself to verify
+- Check `.lodeloop/progress.md` and `.lodeloop/result.json` for lodeloop runs
 
 ## Phase 4: Quality Gate
 
@@ -295,6 +330,7 @@ Track what works and what doesn't after each use:
 | Date | Feature | What worked | What to improve |
 |------|---------|-------------|-----------------|
 | 2026-02-22 | EPBS devnet-0 interop | Tracker file + HEARTBEAT.md priority entry kept progress across sessions. gpt-advisor caught race hypothesis early. Structured acceptance counters (ISR/PU/lag/etc.) made pass/fail unambiguous. Multiple soak passes caught regressions. | Used `Dockerfile` + `--no-cache` for ALL 15+ rebuilds instead of `Dockerfile.dev` (wasted hours). Sent partial progress updates before all criteria were met. Didn't separate validator vs observer testing early enough — observer was clean while validator had bugs. |
+| 2026-03-01 | lodeloop integration | Added lodeloop (~/lodeloop) as Phase 3 Option A for multi-story features. Keeps Codex as default. Direct CLI remains Option B for single tasks. GPT-5.2-pro review caught 14 issues, all fixed in v0.2.0. | Not yet tested on a real Lodestar task — first real test will validate story sizing, verification gate config, and circuit breaker thresholds. |
 
 **Numbered learnings:**
 18. **Use `Dockerfile.dev` for iterative builds** — production `Dockerfile` + `--no-cache` is for debugging build issues, not source changes. `Dockerfile.dev` caches dependency layers and rebuilds in seconds. I wasted hours on unnecessary full rebuilds. Already documented in kurtosis skill — follow your own docs.

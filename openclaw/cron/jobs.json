@@ -119,7 +119,7 @@
       "name": "Sync dotfiles repo",
       "enabled": true,
       "createdAtMs": 1771362496423,
-      "updatedAtMs": 1772359102641,
+      "updatedAtMs": 1772366612123,
       "schedule": {
         "kind": "cron",
         "expr": "0 */12 * * *",
@@ -133,14 +133,13 @@
         "text": "Reminder: Run ~/dotfiles/scripts/sync-dotfiles.sh to sync local files to the dotfiles repo (github.com/lodekeeper/dotfiles). Gists are no longer the source of truth — the repo is."
       },
       "state": {
-        "nextRunAtMs": 1772366598972,
-        "lastRunAtMs": 1772359095480,
+        "nextRunAtMs": 1772409798972,
+        "lastRunAtMs": 1772366598976,
         "lastStatus": "ok",
-        "lastDurationMs": 7161,
+        "lastDurationMs": 13147,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-requested",
-        "consecutiveErrors": 0,
-        "runningAtMs": 1772366598975
+        "consecutiveErrors": 0
       }
     },
     {
@@ -317,7 +316,7 @@
       "name": "github-notifications",
       "enabled": true,
       "createdAtMs": 1772107716625,
-      "updatedAtMs": 1772366538536,
+      "updatedAtMs": 1772367074718,
       "schedule": {
         "kind": "every",
         "everyMs": 180000,
@@ -335,10 +334,10 @@
         "mode": "announce"
       },
       "state": {
-        "nextRunAtMs": 1772366691373,
-        "lastRunAtMs": 1772366511373,
+        "nextRunAtMs": 1772367231386,
+        "lastRunAtMs": 1772367051386,
         "lastStatus": "ok",
-        "lastDurationMs": 27163,
+        "lastDurationMs": 23332,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,

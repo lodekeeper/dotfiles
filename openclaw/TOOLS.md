@@ -113,6 +113,11 @@ git branch -d <branch-name>  # optional: delete local branch
 ## Coding Agents (Implementation)
 - **Codex CLI:** `codex exec --full-auto "..."` — best for focused implementation tasks
 - **Claude CLI:** `claude "..."` — best for tasks needing broader reasoning
+- **lodeloop:** `~/lodeloop/lodeloop.sh` — autonomous loop for multi-story features
+  - Repo: https://github.com/lodekeeper/lodeloop
+  - Default to Codex (`-a codex`)
+  - Creates task.json → loops agent → verification gates → circuit breaker
+  - Use for features with 2+ stories; use direct CLI for single tasks
 - **Context file:** Always point them to `~/.openclaw/workspace/CODING_CONTEXT.md`
 - **Always use PTY:** `exec pty:true workdir:~/lodestar-<feature> command:"codex ..."`
 - **Parallel OK:** Spawn multiple in separate worktrees
