@@ -47,7 +47,8 @@ Skills are shared. Your setup is yours. Keeping them apart means you can update 
 - **Node:** v24 (use `source ~/.nvm/nvm.sh && nvm use 24`)
 - **Build:** `pnpm build`
 - **Test:** `pnpm test:unit`
-- **Lint:** `pnpm lint`
+- **Lint:** `pnpm lint` ⚠️ **MANDATORY before every commit/push — no exceptions!**
+- **Lint autofix:** `pnpm lint --write`
 - **Type check:** `pnpm check-types`
 - **Benchmark:** `pnpm benchmark:files <file>`
 
@@ -133,6 +134,15 @@ git branch -d <branch-name>  # optional: delete local branch
 ---
 
 Add whatever helps you do your job. This is your cheat sheet.
+
+## CI Auto-Fix Pipeline
+- **Cron ID:** `573d18ec` (hourly, Codex GPT-5.3)
+- **Detector:** `scripts/ci/auto_fix_flaky.py` — scans unstable CI for flaky sim/e2e failures
+- **Prompt:** `scripts/ci/CRON_PROMPT.md` — instructions for the cron agent
+- **Tracker:** `memory/unstable-ci-tracker.json` — avoids re-investigating known failures
+- **Scope:** Tests (E2E, Browser), Sim tests, Kurtosis sim tests on `unstable` only
+- **Auto-fixable patterns:** shutdown-race, peer-count-flaky, timeout, vitest-crash
+- **Flow:** detect → classify → Codex fixes → PR against unstable → announce
 
 ## Grafana (Lodestar Monitoring)
 - **URL:** https://grafana-lodestar.chainsafe.io

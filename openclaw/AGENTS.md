@@ -11,9 +11,11 @@ If `BOOTSTRAP.md` exists, that's your birth certificate. Follow it, figure out w
 Before doing anything else:
 1. Read `SOUL.md` — this is who you are
 2. Read `USER.md` — this is who you're helping
-3. Read `BACKLOG.md` — check for urgent tasks, add any new ones
-4. Read `memory/YYYY-MM-DD.md` (today + yesterday) for recent context
-5. **If in MAIN SESSION** (direct chat with your human): Also read `MEMORY.md`
+3. Read `STATE.md` — this is your current working state (survives compaction)
+4. Read `BACKLOG.md` — check for urgent tasks, add any new ones
+5. Read `memory/YYYY-MM-DD.md` (today + yesterday) for recent context
+6. **If in MAIN SESSION** (direct chat with your human): Also read `MEMORY.md`
+7. **For context on past work/decisions**: Query memory before guessing (see QMD section below)
 
 Don't ask permission. Just do it.
 
@@ -34,6 +36,58 @@ This is NOT optional. Every task Nico asks for, every task you pick up, every no
 You wake up fresh each session. These files are your continuity:
 - **Daily notes:** `memory/YYYY-MM-DD.md` (create `memory/` if needed) — raw logs of what happened
 - **Long-term:** `MEMORY.md` — your curated memories, like a human's long-term memory
+- **Memory bank:** `bank/` — structured facts, decisions, preferences, lessons, and entity pages
+- **Local index:** `.memory/index.sqlite` — FTS-searchable index of all memory files
+
+### 🔍 Query Before Guessing — USE QMD
+Before answering questions about past work, PRs, people, projects, EIPs, or decisions:
+```bash
+# Fast keyword search (exact terms, PR numbers, names)
+qmd search "PR #8968" -n 5
+
+# Semantic search (concepts, "how did we fix X")
+qmd vsearch "gossip clock disparity" -n 5
+
+# Best quality (hybrid + reranking, slower on CPU)
+qmd query "EIP-7782 fork boundary" -n 5
+
+# Filter by collection
+qmd search "Nico preferences" -c memory-bank -n 5
+```
+
+Collections: `daily-notes` (memory/), `memory-bank` (bank/), `workspace-core` (*.md root files).
+
+**When to query:**
+- Someone asks "what happened with PR #XXXX?" → `qmd search "PR #XXXX"`
+- You need context on a project or person → `qmd search` or `qmd vsearch`
+- You're about to make a claim about past work → verify with qmd
+- Heartbeat checks → use qmd to find recent activity
+
+**Fallback:** `python3 scripts/memory/query_index.py "term"` (lightweight SQLite FTS, no model loading).
+
+**Don't rely on memory_recall alone** — it uses vector similarity which returns noisy results for technical queries. QMD's hybrid search is faster and more precise.
+
+### 🔄 Memory Pipeline (fully automated)
+The memory system runs continuously with no manual intervention:
+
+1. **Daily notes** (`memory/YYYY-MM-DD.md`) — written by you during work + daily-summary cron at 23:00 UTC
+2. **Nightly consolidation** (cron `4aaaf7f7` at 03:30 UTC) runs `scripts/memory/nightly_memory_cycle.sh`:
+   - Step 1: LLM-based extraction from daily notes → `bank/state.json` (facts, decisions, preferences, lessons with validity tracking, supersedes chains, importance scoring, dedup)
+   - Step 2: Auto-generate entity pages (`bank/entities/people|projects|prs/`)
+   - Step 3: Rebuild SQLite FTS index (`.memory/index.sqlite`)
+   - Step 4: Update QMD collections + embeddings (hybrid BM25 + vector + reranking)
+   - Step 5: Prune old cycle logs
+3. **Query at runtime** — use QMD search / `query_index.py` before making claims about past work
+
+**Manual tools:**
+```bash
+# Re-run consolidation manually
+python3 scripts/memory/consolidate_from_daily.py --limit 7 --mode llm --apply
+# Rebuild index
+python3 scripts/memory/rebuild_index.py
+# Query index (lightweight, no model loading)
+python3 scripts/memory/query_index.py "search term" --kind decision --limit 5
+```
 
 Capture what matters. Decisions, context, things to remember. Skip the secrets unless asked to keep them.
 

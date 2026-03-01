@@ -16,8 +16,9 @@ echo "Syncing agent files to dotfiles repo..."
 # They contain more content than the runtime workspace versions.
 # Only sync if the dotfiles version doesn't exist yet.
 mkdir -p "$DOTFILES_DIR/openclaw"
-for f in AGENTS.md HEARTBEAT.md IDENTITY.md SOUL.md TOOLS.md USER.md; do
-  if [ ! -f "$DOTFILES_DIR/openclaw/$f" ]; then
+for f in AGENTS.md HEARTBEAT.md IDENTITY.md SOUL.md TOOLS.md; do
+  # Always overwrite — workspace is source of truth
+  if true; then
     cp "$WORKSPACE/$f" "$DOTFILES_DIR/openclaw/$f" 2>/dev/null || true
   fi
 done
