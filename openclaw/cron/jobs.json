@@ -212,9 +212,9 @@
       "id": "a81458a8-24ea-4d1d-9847-378168f0711d",
       "agentId": "main",
       "name": "eth-rnd-archive-hourly",
-      "enabled": true,
+      "enabled": false,
       "createdAtMs": 1772034567300,
-      "updatedAtMs": 1772367332025,
+      "updatedAtMs": 1772371316164,
       "schedule": {
         "kind": "cron",
         "expr": "15 * * * *",
@@ -231,25 +231,22 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1772370900000,
-        "lastRunAtMs": 1772367300003,
-        "lastStatus": "error",
-        "lastDurationMs": 32022,
-        "lastRunStatus": "error",
+        "lastRunAtMs": 1772370900004,
+        "lastStatus": "ok",
+        "lastDurationMs": 15053,
+        "lastRunStatus": "ok",
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
-        "consecutiveErrors": 1,
-        "lastError": "⚠️ 📝 Edit: `in ~/eth-rnd-archive-notes/2026-03-01.md (178 chars)` failed",
-        "lastDeliveryError": "⚠️ 📝 Edit: `in ~/eth-rnd-archive-notes/2026-03-01.md (178 chars)` failed"
+        "consecutiveErrors": 0
       }
     },
     {
       "id": "0e3e3b9d-1922-49b4-a000-6823f174232d",
       "agentId": "main",
       "name": "eth-rnd-daily-digest",
-      "enabled": true,
+      "enabled": false,
       "createdAtMs": 1772034576175,
-      "updatedAtMs": 1772358831194,
+      "updatedAtMs": 1772371475834,
       "schedule": {
         "kind": "cron",
         "expr": "0 8 * * *",
@@ -259,21 +256,21 @@
       "wakeMode": "now",
       "payload": {
         "kind": "agentTurn",
-        "message": "DAILY DIGEST: Eth R&D Archive — send to Nico.\n\n1. Read skill: skills/eth-rnd-archive/SKILL.md\n2. First run check-updates.sh to get any final overnight messages\n3. Read all notes from ~/eth-rnd-archive-notes/ for the past 24h\n4. Also read the raw JSON files from tracked channels for yesterday and today\n5. Create a concise daily digest for Nico covering:\n   - Key decisions made across channels\n   - Action items for Lodestar\n   - Interesting discussions worth following up\n   - Notable participants driving topics\n   - Any spec changes or breaking API changes\n6. Send the digest to Nico via Telegram (target: 5774760693)\n7. Keep it concise — TLDR style, grouped by channel/topic\n8. Update state.json lastDigest timestamp",
+        "message": "DAILY DIGEST: Eth R&D Archive.\n\n1. Read skill: skills/eth-rnd-archive/SKILL.md\n2. First run check-updates.sh to get any final overnight messages\n3. Read all notes from ~/eth-rnd-archive-notes/ for the past 24h\n4. Also read the raw JSON files from tracked channels for yesterday and today\n5. Create a concise daily digest covering:\n   - Key decisions made across channels\n   - Action items for Lodestar\n   - Interesting discussions worth following up\n   - Notable participants driving topics\n   - Any spec changes or breaking API changes\n6. Send the digest using the message tool: action=send, channel=telegram, target=-1003764039429, threadId=59\n7. Keep it concise — TLDR style, grouped by channel/topic\n8. Update state.json lastDigest timestamp\n9. After sending to the group topic, reply with just NO_REPLY",
         "timeoutSeconds": 300
       },
       "delivery": {
-        "mode": "announce",
-        "channel": "telegram"
+        "mode": "none",
+        "channel": "telegram",
+        "to": "-1003764039429:59"
       },
       "state": {
-        "nextRunAtMs": 1772438400000,
-        "lastRunAtMs": 1772358779421,
+        "lastRunAtMs": 1772371387908,
         "lastStatus": "ok",
-        "lastDurationMs": 51773,
+        "lastDurationMs": 87926,
         "lastRunStatus": "ok",
-        "lastDelivered": true,
-        "lastDeliveryStatus": "delivered",
+        "lastDelivered": false,
+        "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0
       }
     },
@@ -283,7 +280,7 @@
       "name": "Check libp2p npm publish",
       "enabled": true,
       "createdAtMs": 1772048380834,
-      "updatedAtMs": 1772358951210,
+      "updatedAtMs": 1772380551209,
       "schedule": {
         "kind": "every",
         "everyMs": 21600000,
@@ -302,14 +299,14 @@
         "channel": "discord"
       },
       "state": {
-        "nextRunAtMs": 1772380431194,
-        "lastRunAtMs": 1772358831194,
+        "nextRunAtMs": 1772402031199,
+        "lastRunAtMs": 1772380431199,
         "lastStatus": "error",
-        "lastDurationMs": 120016,
+        "lastDurationMs": 120010,
         "lastRunStatus": "error",
         "lastDeliveryStatus": "unknown",
-        "consecutiveErrors": 1,
-        "lastError": "cron: job execution timed out"
+        "consecutiveErrors": 2,
+        "runningAtMs": 1772402031202
       }
     },
     {
@@ -318,7 +315,7 @@
       "name": "github-notifications",
       "enabled": true,
       "createdAtMs": 1772107716625,
-      "updatedAtMs": 1772368710197,
+      "updatedAtMs": 1772402019930,
       "schedule": {
         "kind": "every",
         "everyMs": 180000,
@@ -336,10 +333,10 @@
         "mode": "announce"
       },
       "state": {
-        "nextRunAtMs": 1772368862436,
-        "lastRunAtMs": 1772368682436,
+        "nextRunAtMs": 1772402163199,
+        "lastRunAtMs": 1772401983199,
         "lastStatus": "ok",
-        "lastDurationMs": 27761,
+        "lastDurationMs": 36731,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
@@ -414,7 +411,7 @@
       "name": "ci-autofix-unstable",
       "enabled": true,
       "createdAtMs": 1772326513772,
-      "updatedAtMs": 1772366262393,
+      "updatedAtMs": 1772398682594,
       "schedule": {
         "kind": "every",
         "everyMs": 3600000,
@@ -428,17 +425,51 @@
         "model": "openai-codex/gpt-5.3-codex"
       },
       "delivery": {
+        "mode": "none",
+        "channel": "telegram",
+        "to": "-1003764039429:52"
+      },
+      "state": {
+        "nextRunAtMs": 1772402229297,
+        "lastRunAtMs": 1772398629297,
+        "lastRunStatus": "ok",
+        "lastStatus": "ok",
+        "lastDurationMs": 53297,
+        "lastDelivered": false,
+        "lastDeliveryStatus": "not-delivered",
+        "consecutiveErrors": 0
+      }
+    },
+    {
+      "id": "2f3cccd0-4dc3-4528-a6d9-becd492469cc",
+      "name": "aztec-sequencer-health",
+      "enabled": true,
+      "createdAtMs": 1772373812089,
+      "updatedAtMs": 1772388223164,
+      "schedule": {
+        "kind": "every",
+        "everyMs": 14400000,
+        "anchorMs": 1772373812089
+      },
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "Check the Aztec sequencer Docker container for errors.\n\n1. Run: docker logs aztec-sequencer --since 4h 2>&1 | grep -iE 'error|fatal|panic|crash|failed|restart|killed|oom' | tail -50\n2. Also check if the container is running: docker ps --filter name=aztec-sequencer --format '{{.Status}}'\n3. If there are ANY errors, fatal messages, or the container is not running/restarting:\n   - Send a notification using the message tool: action=send, channel=telegram, target=5774760693, message=<concise summary of errors found>\n   - Include the most relevant error lines (up to 10)\n4. If everything looks healthy (no errors, container running fine):\n   - Reply with just NO_REPLY (do NOT notify Nico)\n5. Do NOT send messages for routine INFO/WARN logs — only actual errors, crashes, or container issues",
+        "model": "gpt-5.3-codex"
+      },
+      "delivery": {
         "mode": "announce",
         "channel": "last"
       },
       "state": {
-        "nextRunAtMs": 1772369829258,
-        "lastRunAtMs": 1772366229258,
+        "nextRunAtMs": 1772402612093,
+        "lastRunAtMs": 1772388212093,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 33135,
-        "lastDelivered": true,
-        "lastDeliveryStatus": "delivered",
+        "lastDurationMs": 11071,
+        "lastDelivered": false,
+        "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0
       }
     }

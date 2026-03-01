@@ -57,10 +57,14 @@ Use worktrees to work on multiple branches without cross-contamination:
 
 **Current layout:**
 ```
-~/lodestar               → unstable (main repo, stays clean)
-~/lodestar-lazy-slasher  → feat/lazy-slasher-clean (PR #8874)
-~/lodestar-graffiti      → feat/graffiti-append (PR #8839)
-~/lodestar-eip8025       → feat/eip8025-optional-proofs (EIP-8025, based on optional-proofs)
+~/lodestar                      → unstable (main repo, stays clean)
+~/lodestar-6s-slots             → feat/eip7782-6s-slots
+~/lodestar-eip8025              → feat/proof-driven-execution (EIP-8025, ON HOLD)
+~/lodestar-epbs-devnet-0        → epbs-devnet-0
+~/lodestar-lazy-slasher         → feat/lazy-slasher-clean
+~/lodestar-proposer-preferences → feat/proposer-preferences
+~/lodestar-ptr-compress         → feat/pointer-compression
+~/lodestar-rate-limit-fix       → fix/sync-rate-limit-backoff (PR #8924)
 ```
 
 **Commands:**
