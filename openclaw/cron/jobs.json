@@ -214,7 +214,7 @@
       "name": "eth-rnd-archive-hourly",
       "enabled": true,
       "createdAtMs": 1772034567300,
-      "updatedAtMs": 1772358779421,
+      "updatedAtMs": 1772360111911,
       "schedule": {
         "kind": "cron",
         "expr": "15 * * * *",
@@ -231,10 +231,10 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1772360100000,
-        "lastRunAtMs": 1772358708742,
+        "nextRunAtMs": 1772363700000,
+        "lastRunAtMs": 1772360100004,
         "lastStatus": "ok",
-        "lastDurationMs": 70679,
+        "lastDurationMs": 11907,
         "lastRunStatus": "ok",
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
@@ -316,7 +316,7 @@
       "name": "github-notifications",
       "enabled": true,
       "createdAtMs": 1772107716625,
-      "updatedAtMs": 1772359900611,
+      "updatedAtMs": 1772360413733,
       "schedule": {
         "kind": "every",
         "everyMs": 180000,
@@ -334,10 +334,10 @@
         "mode": "announce"
       },
       "state": {
-        "nextRunAtMs": 1772360031228,
-        "lastRunAtMs": 1772359851228,
+        "nextRunAtMs": 1772360571244,
+        "lastRunAtMs": 1772360391244,
         "lastStatus": "ok",
-        "lastDurationMs": 49383,
+        "lastDurationMs": 22489,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,

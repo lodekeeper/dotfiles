@@ -631,9 +631,9 @@ npm install -g @tobilu/qmd
 
 Configure collections in `~/.qmdrc` or via CLI:
 ```bash
-qmd add daily-notes ./memory "**/*.md"
-qmd add memory-bank ./bank "**/*.md"
-qmd add workspace-core . "*.md"
+qmd collection add ./memory --name daily-notes --mask "**/*.md"
+qmd collection add ./bank --name memory-bank --mask "**/*.md"
+qmd collection add . --name workspace-core --mask "*.md"
 ```
 
 ### Step 4: Set Environment Variables
@@ -674,10 +674,10 @@ Add the "Query Before Guessing" rule and pipeline documentation to your agent's 
 ## Metrics
 
 Our production deployment (as of 2026-03-01):
-- **81 structured entries** (75 active, 6 superseded) from 30 days of daily notes
-- **2330 SQLite FTS records** across 59 markdown files + 81 state entries
-- **72 QMD-indexed documents** across 3 collections
-- **10 auto-generated entity pages** (1 person, 5 projects, 4 PRs) with structured kind-based sections
+- **106 structured entries** (99 active, 7 superseded) from 30 days of daily notes
+- **2371 SQLite FTS records** across 68 markdown files + 106 state entries
+- **77 QMD-indexed documents** across 3 collections
+- **14 auto-generated entity pages** (1 person, 5 projects, 8 PRs) with structured kind-based sections
 - **1445 total lines of code** across 5 scripts
 - **Nightly cycle runtime:** ~60 seconds (including LLM extraction + QMD embedding on CPU)
 - **LLM cost:** ~$0.01/night (gpt-5.3 processing ~180 bullet records)
