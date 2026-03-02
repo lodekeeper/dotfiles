@@ -96,7 +96,7 @@
       "name": "Sync dotfiles repo",
       "enabled": true,
       "createdAtMs": 1771362496423,
-      "updatedAtMs": 1772454689497,
+      "updatedAtMs": 1772474647100,
       "schedule": {
         "kind": "cron",
         "expr": "0 */6 * * *",
@@ -109,14 +109,13 @@
         "text": "Reminder: Run ~/dotfiles/scripts/sync-dotfiles.sh to sync local files to the dotfiles repo (github.com/lodekeeper/dotfiles). Gists are no longer the source of truth — the repo is."
       },
       "state": {
-        "nextRunAtMs": 1772474598972,
-        "lastRunAtMs": 1772453083855,
+        "nextRunAtMs": 1772496198972,
+        "lastRunAtMs": 1772474625997,
         "lastStatus": "ok",
-        "lastDurationMs": 120013,
+        "lastDurationMs": 21103,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-requested",
-        "consecutiveErrors": 0,
-        "runningAtMs": 1772474625996
+        "consecutiveErrors": 0
       }
     },
     {
@@ -158,7 +157,7 @@
       "name": "daily-meme",
       "enabled": true,
       "createdAtMs": 1771753595377,
-      "updatedAtMs": 1772402493499,
+      "updatedAtMs": 1772488928718,
       "schedule": {
         "kind": "cron",
         "expr": "0 22 * * *",
@@ -175,10 +174,10 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1772488800000,
-        "lastRunAtMs": 1772402400004,
+        "nextRunAtMs": 1772575200000,
+        "lastRunAtMs": 1772488800005,
         "lastStatus": "ok",
-        "lastDurationMs": 93495,
+        "lastDurationMs": 128713,
         "lastRunStatus": "ok",
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
@@ -191,7 +190,7 @@
       "name": "eth-rnd-archive-hourly",
       "enabled": true,
       "createdAtMs": 1772034567300,
-      "updatedAtMs": 1772471854765,
+      "updatedAtMs": 1772489828058,
       "schedule": {
         "kind": "cron",
         "expr": "15 * * * *",
@@ -208,14 +207,14 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1772471721717,
+        "lastRunAtMs": 1772489736989,
         "lastStatus": "ok",
-        "lastDurationMs": 133048,
+        "lastDurationMs": 91069,
         "lastRunStatus": "ok",
-        "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1772475300000
+        "nextRunAtMs": 1772493300000,
+        "lastDelivered": false
       }
     },
     {
@@ -294,7 +293,7 @@
       "name": "github-notifications",
       "enabled": true,
       "createdAtMs": 1772107716625,
-      "updatedAtMs": 1772474624709,
+      "updatedAtMs": 1772491005182,
       "schedule": {
         "kind": "every",
         "everyMs": 180000,
@@ -312,10 +311,10 @@
         "mode": "announce"
       },
       "state": {
-        "nextRunAtMs": 1772474735348,
-        "lastRunAtMs": 1772474555348,
+        "nextRunAtMs": 1772491088786,
+        "lastRunAtMs": 1772490908786,
         "lastStatus": "ok",
-        "lastDurationMs": 69361,
+        "lastDurationMs": 96396,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
@@ -363,7 +362,7 @@
       "name": "ci-autofix-unstable",
       "enabled": true,
       "createdAtMs": 1772326513772,
-      "updatedAtMs": 1772474351456,
+      "updatedAtMs": 1772488775581,
       "schedule": {
         "kind": "every",
         "everyMs": 3600000,
@@ -382,11 +381,11 @@
         "to": "-1003764039429:52"
       },
       "state": {
-        "nextRunAtMs": 1772477902633,
-        "lastRunAtMs": 1772474302633,
+        "nextRunAtMs": 1772492337146,
+        "lastRunAtMs": 1772488737146,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 48823,
+        "lastDurationMs": 38435,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0
@@ -397,7 +396,7 @@
       "name": "aztec-sequencer-health",
       "enabled": true,
       "createdAtMs": 1772373812089,
-      "updatedAtMs": 1772460223809,
+      "updatedAtMs": 1772489077076,
       "schedule": {
         "kind": "every",
         "everyMs": 14400000,
@@ -415,15 +414,14 @@
         "channel": "last"
       },
       "state": {
-        "nextRunAtMs": 1772474612113,
-        "lastRunAtMs": 1772460212113,
+        "nextRunAtMs": 1772503449052,
+        "lastRunAtMs": 1772489049052,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 11696,
+        "lastDurationMs": 28024,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
-        "consecutiveErrors": 0,
-        "runningAtMs": 1772474625996
+        "consecutiveErrors": 0
       }
     }
   ]
