@@ -125,7 +125,7 @@
       "name": "beacon-log-monitor",
       "enabled": true,
       "createdAtMs": 1771513454598,
-      "updatedAtMs": 1772367602406,
+      "updatedAtMs": 1772454035971,
       "schedule": {
         "kind": "every",
         "everyMs": 86400000,
@@ -142,10 +142,10 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1772453977439,
-        "lastRunAtMs": 1772367577439,
+        "nextRunAtMs": 1772540425611,
+        "lastRunAtMs": 1772454025611,
         "lastStatus": "ok",
-        "lastDurationMs": 24967,
+        "lastDurationMs": 10360,
         "lastRunStatus": "ok",
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
@@ -191,7 +191,7 @@
       "name": "eth-rnd-archive-hourly",
       "enabled": true,
       "createdAtMs": 1772034567300,
-      "updatedAtMs": 1772450163946,
+      "updatedAtMs": 1772453789086,
       "schedule": {
         "kind": "cron",
         "expr": "15 * * * *",
@@ -208,14 +208,14 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1772450141314,
+        "lastRunAtMs": 1772453700003,
         "lastStatus": "ok",
-        "lastDurationMs": 22632,
+        "lastDurationMs": 89083,
         "lastRunStatus": "ok",
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1772453700000
+        "nextRunAtMs": 1772457300000
       }
     },
     {
@@ -294,7 +294,7 @@
       "name": "github-notifications",
       "enabled": true,
       "createdAtMs": 1772107716625,
-      "updatedAtMs": 1772453288364,
+      "updatedAtMs": 1772454547763,
       "schedule": {
         "kind": "every",
         "everyMs": 180000,
@@ -312,10 +312,10 @@
         "mode": "announce"
       },
       "state": {
-        "nextRunAtMs": 1772453384272,
-        "lastRunAtMs": 1772453204272,
+        "nextRunAtMs": 1772454689109,
+        "lastRunAtMs": 1772454509109,
         "lastStatus": "ok",
-        "lastDurationMs": 84092,
+        "lastDurationMs": 38654,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
