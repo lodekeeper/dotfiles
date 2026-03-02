@@ -96,7 +96,7 @@
       "name": "Sync dotfiles repo",
       "enabled": true,
       "createdAtMs": 1771362496423,
-      "updatedAtMs": 1772409807698,
+      "updatedAtMs": 1772453203868,
       "schedule": {
         "kind": "cron",
         "expr": "0 */12 * * *",
@@ -110,10 +110,10 @@
         "text": "Reminder: Run ~/dotfiles/scripts/sync-dotfiles.sh to sync local files to the dotfiles repo (github.com/lodekeeper/dotfiles). Gists are no longer the source of truth — the repo is."
       },
       "state": {
-        "nextRunAtMs": 1772452998972,
-        "lastRunAtMs": 1772409798978,
+        "nextRunAtMs": 1772496198972,
+        "lastRunAtMs": 1772453083855,
         "lastStatus": "ok",
-        "lastDurationMs": 8720,
+        "lastDurationMs": 120013,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-requested",
         "consecutiveErrors": 0
@@ -224,7 +224,7 @@
       "name": "eth-rnd-daily-digest",
       "enabled": true,
       "createdAtMs": 1772034576175,
-      "updatedAtMs": 1772450402981,
+      "updatedAtMs": 1772451451769,
       "schedule": {
         "kind": "cron",
         "expr": "0 8 * * *",
@@ -244,9 +244,9 @@
         "bestEffort": true
       },
       "state": {
-        "lastRunAtMs": 1772450308299,
+        "lastRunAtMs": 1772451386367,
         "lastStatus": "ok",
-        "lastDurationMs": 94682,
+        "lastDurationMs": 65402,
         "lastRunStatus": "ok",
         "lastDelivered": true,
         "lastDeliveryStatus": "delivered",
@@ -294,7 +294,7 @@
       "name": "github-notifications",
       "enabled": true,
       "createdAtMs": 1772107716625,
-      "updatedAtMs": 1772450490307,
+      "updatedAtMs": 1772453288364,
       "schedule": {
         "kind": "every",
         "everyMs": 180000,
@@ -312,15 +312,14 @@
         "mode": "announce"
       },
       "state": {
-        "nextRunAtMs": 1772450616814,
-        "lastRunAtMs": 1772450436814,
+        "nextRunAtMs": 1772453384272,
+        "lastRunAtMs": 1772453204272,
         "lastStatus": "ok",
-        "lastDurationMs": 53493,
+        "lastDurationMs": 84092,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "lastDelivered": false,
-        "runningAtMs": 1772450616817
+        "lastDelivered": false
       }
     },
     {
@@ -364,7 +363,7 @@
       "name": "ci-autofix-unstable",
       "enabled": true,
       "createdAtMs": 1772326513772,
-      "updatedAtMs": 1772449114809,
+      "updatedAtMs": 1772452711114,
       "schedule": {
         "kind": "every",
         "everyMs": 3600000,
@@ -383,11 +382,11 @@
         "to": "-1003764039429:52"
       },
       "state": {
-        "nextRunAtMs": 1772452658804,
-        "lastRunAtMs": 1772449058804,
+        "nextRunAtMs": 1772456264586,
+        "lastRunAtMs": 1772452664586,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 56005,
+        "lastDurationMs": 46528,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0
