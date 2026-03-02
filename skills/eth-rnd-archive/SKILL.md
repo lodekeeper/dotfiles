@@ -18,7 +18,7 @@ The archive repo contains daily JSON exports of every Eth R&D Discord channel. U
 
 ## Repo Location
 
-- **Local clone:** `~/eth-rnd-archive`
+- **Local clone:** `~/ethereum-repos/eth-rnd-archive`
 - **Remote:** `https://github.com/ethereum/eth-rnd-archive`
 
 ## Tracked Channels
@@ -39,6 +39,9 @@ Configured in `config.json` (this skill directory). Only these channels are moni
 - `l1-zkevm-protocol` — CK EVM protocol details (EIP-8025)
 - `data-availability-sampling` — DAS / PeerDAS
 - `apis` — Beacon/Engine API discussions
+
+### Infrastructure
+- `payload-builders` — MEV/PBS/builder discussions
 
 ### Networking & Testing
 - `networking` — general networking

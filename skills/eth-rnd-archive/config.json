@@ -13,6 +13,7 @@
     "networking",
     "client-development",
     "execution-dev",
+    "payload-builders",
     "ai-workflows"
   ],
   "digestTimeWET": "08:00",
