@@ -191,7 +191,7 @@
       "name": "eth-rnd-archive-hourly",
       "enabled": true,
       "createdAtMs": 1772034567300,
-      "updatedAtMs": 1772446548817,
+      "updatedAtMs": 1772450163946,
       "schedule": {
         "kind": "cron",
         "expr": "15 * * * *",
@@ -208,14 +208,14 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1772446529390,
+        "lastRunAtMs": 1772450141314,
         "lastStatus": "ok",
-        "lastDurationMs": 19427,
+        "lastDurationMs": 22632,
         "lastRunStatus": "ok",
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1772450100000
+        "nextRunAtMs": 1772453700000
       }
     },
     {
@@ -224,7 +224,7 @@
       "name": "eth-rnd-daily-digest",
       "enabled": true,
       "createdAtMs": 1772034576175,
-      "updatedAtMs": 1772447169518,
+      "updatedAtMs": 1772450402981,
       "schedule": {
         "kind": "cron",
         "expr": "0 8 * * *",
@@ -234,21 +234,22 @@
       "wakeMode": "now",
       "payload": {
         "kind": "agentTurn",
-        "message": "DAILY DIGEST: Eth R&D Archive.\n\n1. Read skill: skills/eth-rnd-archive/SKILL.md\n2. Run: bash skills/eth-rnd-archive/check-updates.sh\n3. Read raw JSON files from tracked channels for the past 2 days (today + yesterday). Check both main channel files and _threads/ subdirectories.\n4. Create a concise daily digest covering:\n   - Key decisions made across channels\n   - Action items for Lodestar\n   - Interesting discussions worth following up\n   - Notable participants driving topics\n   - Any spec changes or breaking API changes\n5. IMPORTANT: After generating the digest, send it using the message tool: action=send, channel=telegram, target=-1003764039429, threadId=59\n6. Keep it concise — TL;DR style, grouped by channel/topic. Use emoji headers.\n7. If no activity in tracked channels, still send a short \"no activity\" note to the topic.\n8. After sending to the Telegram topic, reply with NO_REPLY",
+        "message": "DAILY DIGEST: Eth R&D Archive.\n\n1. Read skill: skills/eth-rnd-archive/SKILL.md\n2. Run: bash skills/eth-rnd-archive/check-updates.sh\n3. Read raw JSON files from tracked channels for the past 2 days (today + yesterday). Check both main channel files and _threads/ subdirectories.\n4. Create a concise daily digest covering:\n   - Key decisions made across channels\n   - Action items for Lodestar\n   - Interesting discussions worth following up\n   - Notable participants driving topics\n   - Any spec changes or breaking API changes\n5. **SEND FIRST** — Use the message tool IMMEDIATELY: action=send, channel=telegram, target=-1003764039429, threadId=59. Do this BEFORE any file writes.\n6. Keep it concise — TL;DR style, grouped by channel/topic. Use emoji headers.\n7. If no activity in tracked channels, still send a short \"no activity\" note to the topic.\n8. After sending to the Telegram topic, optionally log a summary to ~/eth-rnd-archive-notes/YYYY-MM-DD.md (if write fails, ignore it).\n9. Reply with NO_REPLY",
         "timeoutSeconds": 300
       },
       "delivery": {
-        "mode": "none",
+        "mode": "announce",
         "channel": "telegram",
-        "to": "-1003764039429"
+        "to": "-1003764039429",
+        "bestEffort": true
       },
       "state": {
-        "lastRunAtMs": 1772447021084,
+        "lastRunAtMs": 1772450308299,
         "lastStatus": "ok",
-        "lastDurationMs": 148434,
+        "lastDurationMs": 94682,
         "lastRunStatus": "ok",
-        "lastDelivered": false,
-        "lastDeliveryStatus": "not-delivered",
+        "lastDelivered": true,
+        "lastDeliveryStatus": "delivered",
         "consecutiveErrors": 0,
         "nextRunAtMs": 1772524800000
       }
@@ -257,9 +258,9 @@
       "id": "b5863a09-ee40-4381-8be4-9ee1246bcc5f",
       "agentId": "main",
       "name": "Check libp2p npm publish",
-      "enabled": true,
+      "enabled": false,
       "createdAtMs": 1772048380834,
-      "updatedAtMs": 1772445384070,
+      "updatedAtMs": 1772450014987,
       "schedule": {
         "kind": "every",
         "everyMs": 21600000,
@@ -278,7 +279,6 @@
         "channel": "discord"
       },
       "state": {
-        "nextRunAtMs": 1772466864070,
         "lastRunAtMs": 1772445264070,
         "lastStatus": "error",
         "lastDurationMs": 120000,
@@ -294,7 +294,7 @@
       "name": "github-notifications",
       "enabled": true,
       "createdAtMs": 1772107716625,
-      "updatedAtMs": 1772447780962,
+      "updatedAtMs": 1772450490307,
       "schedule": {
         "kind": "every",
         "everyMs": 180000,
@@ -312,15 +312,15 @@
         "mode": "announce"
       },
       "state": {
-        "nextRunAtMs": 1772447907138,
-        "lastRunAtMs": 1772447727138,
+        "nextRunAtMs": 1772450616814,
+        "lastRunAtMs": 1772450436814,
         "lastStatus": "ok",
-        "lastDurationMs": 53824,
+        "lastDurationMs": 53493,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false,
-        "runningAtMs": 1772447907140
+        "runningAtMs": 1772450616817
       }
     },
     {
@@ -364,7 +364,7 @@
       "name": "ci-autofix-unstable",
       "enabled": true,
       "createdAtMs": 1772326513772,
-      "updatedAtMs": 1772445501836,
+      "updatedAtMs": 1772449114809,
       "schedule": {
         "kind": "every",
         "everyMs": 3600000,
@@ -383,11 +383,11 @@
         "to": "-1003764039429:52"
       },
       "state": {
-        "nextRunAtMs": 1772449055915,
-        "lastRunAtMs": 1772445455915,
+        "nextRunAtMs": 1772452658804,
+        "lastRunAtMs": 1772449058804,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 45921,
+        "lastDurationMs": 56005,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0

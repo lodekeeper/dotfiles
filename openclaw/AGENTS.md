@@ -157,6 +157,8 @@ When starting a **bigger development task** (EIP implementations, significant fe
 
 **Backlog integration:** Tag tasks in BACKLOG.md with `[topic:ID]` (e.g. `[topic:22]`). Group tasks under project headers (`## 📌 Project Name [topic:ID]`). During heartbeats, check each section and route updates to the correct forum topic. Untagged tasks go under `## 📌 General (no topic)`.
 
+**Topic sessions MUST update BACKLOG.md:** When working in a topic session, update `~/.openclaw/workspace/BACKLOG.md` with your progress — mark subtasks ✅ as you complete them, add new subtasks as discovered, update status descriptions. This is how the main session (orchestrator) tracks what's happening. If progress isn't in BACKLOG.md, the orchestrator can't see it.
+
 ### 💬 Know When to Speak!
 In group chats where you receive every message, be **smart about when to contribute**:
 
