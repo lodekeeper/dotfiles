@@ -34,29 +34,6 @@
       }
     },
     {
-      "id": "47ae264f-3f07-4bf9-bbb1-a9f3a1d26497",
-      "agentId": "main",
-      "name": "fastify-pr-ready",
-      "enabled": false,
-      "createdAtMs": 1770056633482,
-      "updatedAtMs": 1770228000000,
-      "schedule": {
-        "kind": "at",
-        "at": "2026-02-04T18:00:00.000Z"
-      },
-      "sessionTarget": "main",
-      "wakeMode": "next-heartbeat",
-      "payload": {
-        "kind": "systemEvent",
-        "text": "⏰ Reminder: Fastify 5.7.3 has now passed the 48-hour release age policy. Time to re-open PR #8842, remove minimumReleaseAgeExclude, and mark it ready for review."
-      },
-      "state": {
-        "lastRunAtMs": 1770228000000,
-        "lastStatus": "ok",
-        "lastDurationMs": 4
-      }
-    },
-    {
       "id": "601e11a3-dd92-4a77-b301-ccefdaa2cc86",
       "agentId": "main",
       "name": "specs-study-reminder",
@@ -119,7 +96,7 @@
       "name": "Sync dotfiles repo",
       "enabled": true,
       "createdAtMs": 1771362496423,
-      "updatedAtMs": 1772366612123,
+      "updatedAtMs": 1772409807698,
       "schedule": {
         "kind": "cron",
         "expr": "0 */12 * * *",
@@ -133,14 +110,13 @@
         "text": "Reminder: Run ~/dotfiles/scripts/sync-dotfiles.sh to sync local files to the dotfiles repo (github.com/lodekeeper/dotfiles). Gists are no longer the source of truth — the repo is."
       },
       "state": {
-        "nextRunAtMs": 1772409798972,
-        "lastRunAtMs": 1772366598976,
+        "nextRunAtMs": 1772452998972,
+        "lastRunAtMs": 1772409798978,
         "lastStatus": "ok",
-        "lastDurationMs": 13147,
+        "lastDurationMs": 8720,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-requested",
-        "consecutiveErrors": 0,
-        "runningAtMs": 1772409798976
+        "consecutiveErrors": 0
       }
     },
     {
@@ -213,9 +189,9 @@
       "id": "a81458a8-24ea-4d1d-9847-378168f0711d",
       "agentId": "main",
       "name": "eth-rnd-archive-hourly",
-      "enabled": false,
+      "enabled": true,
       "createdAtMs": 1772034567300,
-      "updatedAtMs": 1772371316164,
+      "updatedAtMs": 1772446548817,
       "schedule": {
         "kind": "cron",
         "expr": "15 * * * *",
@@ -232,22 +208,23 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1772370900004,
+        "lastRunAtMs": 1772446529390,
         "lastStatus": "ok",
-        "lastDurationMs": 15053,
+        "lastDurationMs": 19427,
         "lastRunStatus": "ok",
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
-        "consecutiveErrors": 0
+        "consecutiveErrors": 0,
+        "nextRunAtMs": 1772450100000
       }
     },
     {
       "id": "0e3e3b9d-1922-49b4-a000-6823f174232d",
       "agentId": "main",
       "name": "eth-rnd-daily-digest",
-      "enabled": false,
+      "enabled": true,
       "createdAtMs": 1772034576175,
-      "updatedAtMs": 1772371475834,
+      "updatedAtMs": 1772447169518,
       "schedule": {
         "kind": "cron",
         "expr": "0 8 * * *",
@@ -257,22 +234,23 @@
       "wakeMode": "now",
       "payload": {
         "kind": "agentTurn",
-        "message": "DAILY DIGEST: Eth R&D Archive.\n\n1. Read skill: skills/eth-rnd-archive/SKILL.md\n2. First run check-updates.sh to get any final overnight messages\n3. Read all notes from ~/eth-rnd-archive-notes/ for the past 24h\n4. Also read the raw JSON files from tracked channels for yesterday and today\n5. Create a concise daily digest covering:\n   - Key decisions made across channels\n   - Action items for Lodestar\n   - Interesting discussions worth following up\n   - Notable participants driving topics\n   - Any spec changes or breaking API changes\n6. Send the digest using the message tool: action=send, channel=telegram, target=-1003764039429, threadId=59\n7. Keep it concise — TLDR style, grouped by channel/topic\n8. Update state.json lastDigest timestamp\n9. After sending to the group topic, reply with just NO_REPLY",
+        "message": "DAILY DIGEST: Eth R&D Archive.\n\n1. Read skill: skills/eth-rnd-archive/SKILL.md\n2. Run: bash skills/eth-rnd-archive/check-updates.sh\n3. Read raw JSON files from tracked channels for the past 2 days (today + yesterday). Check both main channel files and _threads/ subdirectories.\n4. Create a concise daily digest covering:\n   - Key decisions made across channels\n   - Action items for Lodestar\n   - Interesting discussions worth following up\n   - Notable participants driving topics\n   - Any spec changes or breaking API changes\n5. IMPORTANT: After generating the digest, send it using the message tool: action=send, channel=telegram, target=-1003764039429, threadId=59\n6. Keep it concise — TL;DR style, grouped by channel/topic. Use emoji headers.\n7. If no activity in tracked channels, still send a short \"no activity\" note to the topic.\n8. After sending to the Telegram topic, reply with NO_REPLY",
         "timeoutSeconds": 300
       },
       "delivery": {
         "mode": "none",
         "channel": "telegram",
-        "to": "-1003764039429:59"
+        "to": "-1003764039429"
       },
       "state": {
-        "lastRunAtMs": 1772371387908,
+        "lastRunAtMs": 1772447021084,
         "lastStatus": "ok",
-        "lastDurationMs": 87926,
+        "lastDurationMs": 148434,
         "lastRunStatus": "ok",
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
-        "consecutiveErrors": 0
+        "consecutiveErrors": 0,
+        "nextRunAtMs": 1772524800000
       }
     },
     {
@@ -281,7 +259,7 @@
       "name": "Check libp2p npm publish",
       "enabled": true,
       "createdAtMs": 1772048380834,
-      "updatedAtMs": 1772402151222,
+      "updatedAtMs": 1772445384070,
       "schedule": {
         "kind": "every",
         "everyMs": 21600000,
@@ -300,13 +278,13 @@
         "channel": "discord"
       },
       "state": {
-        "nextRunAtMs": 1772423631203,
-        "lastRunAtMs": 1772402031203,
+        "nextRunAtMs": 1772466864070,
+        "lastRunAtMs": 1772445264070,
         "lastStatus": "error",
-        "lastDurationMs": 120019,
+        "lastDurationMs": 120000,
         "lastRunStatus": "error",
         "lastDeliveryStatus": "unknown",
-        "consecutiveErrors": 3,
+        "consecutiveErrors": 5,
         "lastError": "cron: job execution timed out"
       }
     },
@@ -316,7 +294,7 @@
       "name": "github-notifications",
       "enabled": true,
       "createdAtMs": 1772107716625,
-      "updatedAtMs": 1772409758855,
+      "updatedAtMs": 1772447780962,
       "schedule": {
         "kind": "every",
         "everyMs": 180000,
@@ -326,7 +304,7 @@
       "wakeMode": "now",
       "payload": {
         "kind": "agentTurn",
-        "message": "Check GitHub notifications for lodekeeper. Run:\n```\ngh api notifications?participating=true --jq \".[] | select(.unread or (.updated_at > .last_read_at)) | {id, reason, title: .subject.title, type: .subject.type, updated: .updated_at, url: .subject.url}\"\n```\nFor each PR notification, check BOTH comment types:\n- Review comments: `gh api repos/{owner}/{repo}/pulls/{number}/comments --jq \".[-3:] | .[] | {author: .user.login, body: .body[:150], created: .created_at}\"`\n- Issue comments: `gh api repos/{owner}/{repo}/issues/{number}/comments --jq \".[-3:] | .[] | {author: .user.login, body: .body[:150], created: .created_at}\"`\n\nExtract owner/repo/number from the notification subject URL.\n\nIf there are NEW human comments (not from lodekeeper):\n1. BEFORE inserting a backlog entry, check if the PR is ALREADY mentioned in BACKLOG.md (grep for the PR number). If it already exists (active OR completed), do NOT insert a duplicate — just report the new comments.\n2. Only insert a new 🔴 task under \"## Active Tasks\" if the PR is NOT already in BACKLOG.md.\n3. Report the comments in your response.\n\nIf no new human comments, reply HEARTBEAT_OK.\nDo NOT try to handle or respond to notifications — just detect and report.",
+        "message": "Check GitHub notifications for lodekeeper. Use a state file at ~/gh-notif-state.json to track already-reported comments.\n\n## Step 1: Load state\n```bash\ncat ~/gh-notif-state.json 2>/dev/null || echo '{}'\n```\nThe state maps PR numbers to the latest reported comment ID.\n\n## Step 2: Get notifications\n```bash\ngh api notifications?participating=true --jq '.[] | select(.unread or (.updated_at > .last_read_at)) | {id, reason, title: .subject.title, type: .subject.type, updated: .updated_at, url: .subject.url}'\n```\n\n## Step 3: For each PR notification\nCheck BOTH comment types:\n- Review comments: `gh api repos/{owner}/{repo}/pulls/{number}/comments --jq '.[-3:] | .[] | {id: .id, author: .user.login, body: .body[:150], created: .created_at}'`\n- Issue comments: `gh api repos/{owner}/{repo}/issues/{number}/comments --jq '.[-3:] | .[] | {id: .id, author: .user.login, body: .body[:150], created: .created_at}'`\n\nFilter out comments from lodekeeper and bots. Compare comment IDs against the state file — only report comments with IDs HIGHER than the last reported ID for that PR.\n\n## Step 4: If NEW human comments found\n1. Check BACKLOG.md for the PR number. Only insert a 🔴 task if NOT already present.\n2. Report the new comments.\n3. Update ~/gh-notif-state.json with the latest comment ID per PR.\n\n## Step 5: If no new comments\nUpdate state file if needed and reply HEARTBEAT_OK.\n\nDo NOT respond to or handle notifications — just detect, track, and report.",
         "model": "openai-codex/gpt-5.3-codex",
         "timeoutSeconds": 150
       },
@@ -334,41 +312,15 @@
         "mode": "announce"
       },
       "state": {
-        "nextRunAtMs": 1772409903355,
-        "lastRunAtMs": 1772409723355,
+        "nextRunAtMs": 1772447907138,
+        "lastRunAtMs": 1772447727138,
         "lastStatus": "ok",
-        "lastDurationMs": 35500,
+        "lastDurationMs": 53824,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "lastDelivered": false
-      }
-    },
-    {
-      "id": "7556f303-ae10-4dd9-9dd9-c04f6280db90",
-      "agentId": "main",
-      "name": "v8-ptr-compress-metrics-6h",
-      "enabled": false,
-      "createdAtMs": 1772142500515,
-      "updatedAtMs": 1772285511523,
-      "schedule": {
-        "kind": "every",
-        "everyMs": 21600000,
-        "anchorMs": 1772142500515
-      },
-      "sessionTarget": "isolated",
-      "wakeMode": "now",
-      "payload": {
-        "kind": "agentTurn",
-        "message": "Pull V8 pointer compression metrics comparison: feat4 (pointer compression) vs unstable (standard). Query Grafana for RSS, V8 heap used, peer count, sync status, GC pauses — per node type (solo, semi, super, sas, mainnet-super). Save to notes/v8-ptr-compress-metrics-latest.md and send summary to Nico on Telegram if anything concerning (heap approaching 4GB cage, GC spikes, sync issues, peer drops). If all looks fine, just save the data silently."
-      },
-      "delivery": {
-        "mode": "none"
-      },
-      "state": {
-        "lastRunAtMs": 1772272100517,
-        "lastStatus": "ok",
-        "lastDurationMs": 174149
+        "lastDelivered": false,
+        "runningAtMs": 1772447907140
       }
     },
     {
@@ -377,7 +329,7 @@
       "name": "nightly-memory-consolidation",
       "enabled": true,
       "createdAtMs": 1772320910346,
-      "updatedAtMs": 1772359029250,
+      "updatedAtMs": 1772422251018,
       "schedule": {
         "kind": "cron",
         "expr": "30 3 * * *",
@@ -397,11 +349,11 @@
         "channel": "last"
       },
       "state": {
-        "nextRunAtMs": 1772422200000,
-        "lastRunAtMs": 1772358983015,
+        "nextRunAtMs": 1772508600000,
+        "lastRunAtMs": 1772422200003,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 46235,
+        "lastDurationMs": 51015,
         "lastDelivered": true,
         "lastDeliveryStatus": "delivered",
         "consecutiveErrors": 0
@@ -412,7 +364,7 @@
       "name": "ci-autofix-unstable",
       "enabled": true,
       "createdAtMs": 1772326513772,
-      "updatedAtMs": 1772409474783,
+      "updatedAtMs": 1772445501836,
       "schedule": {
         "kind": "every",
         "everyMs": 3600000,
@@ -431,11 +383,11 @@
         "to": "-1003764039429:52"
       },
       "state": {
-        "nextRunAtMs": 1772413029310,
-        "lastRunAtMs": 1772409429310,
+        "nextRunAtMs": 1772449055915,
+        "lastRunAtMs": 1772445455915,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 45473,
+        "lastDurationMs": 45921,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0
@@ -446,7 +398,7 @@
       "name": "aztec-sequencer-health",
       "enabled": true,
       "createdAtMs": 1772373812089,
-      "updatedAtMs": 1772402626826,
+      "updatedAtMs": 1772445927060,
       "schedule": {
         "kind": "every",
         "everyMs": 14400000,
@@ -464,13 +416,13 @@
         "channel": "last"
       },
       "state": {
-        "nextRunAtMs": 1772417012098,
-        "lastRunAtMs": 1772402612098,
+        "nextRunAtMs": 1772460212109,
+        "lastRunAtMs": 1772445812109,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 14728,
-        "lastDelivered": true,
-        "lastDeliveryStatus": "delivered",
+        "lastDurationMs": 114951,
+        "lastDelivered": false,
+        "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0
       }
     }
