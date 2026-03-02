@@ -7,7 +7,7 @@
       "name": "daily-summary",
       "enabled": true,
       "createdAtMs": 1769895413579,
-      "updatedAtMs": 1772358767315,
+      "updatedAtMs": 1772406037109,
       "schedule": {
         "kind": "cron",
         "expr": "0 23 * * *",
@@ -20,10 +20,10 @@
         "message": "End of day. Write a summary of today's work to memory/YYYY-MM-DD.md (use today's date). Include: PRs reviewed, PRs opened/updated, code written, issues found, lessons learned. Keep it concise but complete."
       },
       "state": {
-        "nextRunAtMs": 1772406000000,
-        "lastRunAtMs": 1772358708527,
+        "nextRunAtMs": 1772492400000,
+        "lastRunAtMs": 1772406000004,
         "lastStatus": "ok",
-        "lastDurationMs": 58788,
+        "lastDurationMs": 37105,
         "lastRunStatus": "ok",
         "lastDelivered": true,
         "lastDeliveryStatus": "delivered",
@@ -139,7 +139,8 @@
         "lastDurationMs": 13147,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-requested",
-        "consecutiveErrors": 0
+        "consecutiveErrors": 0,
+        "runningAtMs": 1772409798976
       }
     },
     {
@@ -181,7 +182,7 @@
       "name": "daily-meme",
       "enabled": true,
       "createdAtMs": 1771753595377,
-      "updatedAtMs": 1772316147354,
+      "updatedAtMs": 1772402493499,
       "schedule": {
         "kind": "cron",
         "expr": "0 22 * * *",
@@ -198,10 +199,10 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1772402400000,
-        "lastRunAtMs": 1772316011701,
+        "nextRunAtMs": 1772488800000,
+        "lastRunAtMs": 1772402400004,
         "lastStatus": "ok",
-        "lastDurationMs": 135653,
+        "lastDurationMs": 93495,
         "lastRunStatus": "ok",
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
@@ -280,7 +281,7 @@
       "name": "Check libp2p npm publish",
       "enabled": true,
       "createdAtMs": 1772048380834,
-      "updatedAtMs": 1772380551209,
+      "updatedAtMs": 1772402151222,
       "schedule": {
         "kind": "every",
         "everyMs": 21600000,
@@ -299,14 +300,14 @@
         "channel": "discord"
       },
       "state": {
-        "nextRunAtMs": 1772402031199,
-        "lastRunAtMs": 1772380431199,
+        "nextRunAtMs": 1772423631203,
+        "lastRunAtMs": 1772402031203,
         "lastStatus": "error",
-        "lastDurationMs": 120010,
+        "lastDurationMs": 120019,
         "lastRunStatus": "error",
         "lastDeliveryStatus": "unknown",
-        "consecutiveErrors": 2,
-        "runningAtMs": 1772402031202
+        "consecutiveErrors": 3,
+        "lastError": "cron: job execution timed out"
       }
     },
     {
@@ -315,7 +316,7 @@
       "name": "github-notifications",
       "enabled": true,
       "createdAtMs": 1772107716625,
-      "updatedAtMs": 1772402019930,
+      "updatedAtMs": 1772409758855,
       "schedule": {
         "kind": "every",
         "everyMs": 180000,
@@ -333,10 +334,10 @@
         "mode": "announce"
       },
       "state": {
-        "nextRunAtMs": 1772402163199,
-        "lastRunAtMs": 1772401983199,
+        "nextRunAtMs": 1772409903355,
+        "lastRunAtMs": 1772409723355,
         "lastStatus": "ok",
-        "lastDurationMs": 36731,
+        "lastDurationMs": 35500,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
@@ -411,7 +412,7 @@
       "name": "ci-autofix-unstable",
       "enabled": true,
       "createdAtMs": 1772326513772,
-      "updatedAtMs": 1772398682594,
+      "updatedAtMs": 1772409474783,
       "schedule": {
         "kind": "every",
         "everyMs": 3600000,
@@ -430,11 +431,11 @@
         "to": "-1003764039429:52"
       },
       "state": {
-        "nextRunAtMs": 1772402229297,
-        "lastRunAtMs": 1772398629297,
+        "nextRunAtMs": 1772413029310,
+        "lastRunAtMs": 1772409429310,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 53297,
+        "lastDurationMs": 45473,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0
@@ -445,7 +446,7 @@
       "name": "aztec-sequencer-health",
       "enabled": true,
       "createdAtMs": 1772373812089,
-      "updatedAtMs": 1772388223164,
+      "updatedAtMs": 1772402626826,
       "schedule": {
         "kind": "every",
         "everyMs": 14400000,
@@ -463,13 +464,13 @@
         "channel": "last"
       },
       "state": {
-        "nextRunAtMs": 1772402612093,
-        "lastRunAtMs": 1772388212093,
+        "nextRunAtMs": 1772417012098,
+        "lastRunAtMs": 1772402612098,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 11071,
-        "lastDelivered": false,
-        "lastDeliveryStatus": "not-delivered",
+        "lastDurationMs": 14728,
+        "lastDelivered": true,
+        "lastDeliveryStatus": "delivered",
         "consecutiveErrors": 0
       }
     }
