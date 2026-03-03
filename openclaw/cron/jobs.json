@@ -63,7 +63,7 @@
       "name": "Monitor EIP-8025 / zkEVM updates",
       "enabled": true,
       "createdAtMs": 1771320800043,
-      "updatedAtMs": 1772300299636,
+      "updatedAtMs": 1772559612491,
       "schedule": {
         "kind": "every",
         "everyMs": 259200000,
@@ -80,13 +80,13 @@
         "mode": "announce"
       },
       "state": {
-        "nextRunAtMs": 1772559362794,
-        "lastRunAtMs": 1772300162794,
+        "nextRunAtMs": 1772818562804,
+        "lastRunAtMs": 1772559362804,
         "lastStatus": "ok",
-        "lastDurationMs": 136842,
+        "lastDurationMs": 249687,
         "lastRunStatus": "ok",
-        "lastDelivered": true,
-        "lastDeliveryStatus": "delivered",
+        "lastDelivered": false,
+        "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0
       }
     },
@@ -96,7 +96,7 @@
       "name": "Sync dotfiles repo",
       "enabled": true,
       "createdAtMs": 1771362496423,
-      "updatedAtMs": 1772517817122,
+      "updatedAtMs": 1772539487983,
       "schedule": {
         "kind": "cron",
         "expr": "0 */6 * * *",
@@ -109,14 +109,14 @@
         "text": "Reminder: Run ~/dotfiles/scripts/sync-dotfiles.sh to sync local files to the dotfiles repo (github.com/lodekeeper/dotfiles). Gists are no longer the source of truth — the repo is."
       },
       "state": {
-        "nextRunAtMs": 1772539398972,
-        "lastRunAtMs": 1772517798975,
+        "nextRunAtMs": 1772560998972,
+        "lastRunAtMs": 1772539434938,
         "lastStatus": "ok",
-        "lastDurationMs": 18147,
+        "lastDurationMs": 53045,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-requested",
         "consecutiveErrors": 0,
-        "runningAtMs": 1772539434938
+        "runningAtMs": 1772560998975
       }
     },
     {
@@ -125,7 +125,7 @@
       "name": "beacon-log-monitor",
       "enabled": true,
       "createdAtMs": 1771513454598,
-      "updatedAtMs": 1772454035971,
+      "updatedAtMs": 1772540532197,
       "schedule": {
         "kind": "every",
         "everyMs": 86400000,
@@ -142,10 +142,10 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1772540425611,
-        "lastRunAtMs": 1772454025611,
+        "nextRunAtMs": 1772626875260,
+        "lastRunAtMs": 1772540475260,
         "lastStatus": "ok",
-        "lastDurationMs": 10360,
+        "lastDurationMs": 56937,
         "lastRunStatus": "ok",
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
@@ -191,7 +191,7 @@
       "name": "eth-rnd-archive-hourly",
       "enabled": true,
       "createdAtMs": 1772034567300,
-      "updatedAtMs": 1772536553548,
+      "updatedAtMs": 1772558134658,
       "schedule": {
         "kind": "cron",
         "expr": "15 * * * *",
@@ -208,13 +208,13 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1772536500004,
+        "lastRunAtMs": 1772558100004,
         "lastStatus": "ok",
-        "lastDurationMs": 53544,
+        "lastDurationMs": 34654,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1772540100000,
+        "nextRunAtMs": 1772561700000,
         "lastDelivered": false
       }
     },
@@ -294,7 +294,7 @@
       "name": "github-notifications",
       "enabled": true,
       "createdAtMs": 1772107716625,
-      "updatedAtMs": 1772539364725,
+      "updatedAtMs": 1772560956288,
       "schedule": {
         "kind": "every",
         "everyMs": 180000,
@@ -312,10 +312,10 @@
         "mode": "announce"
       },
       "state": {
-        "nextRunAtMs": 1772539439759,
-        "lastRunAtMs": 1772539259759,
+        "nextRunAtMs": 1772561052528,
+        "lastRunAtMs": 1772560872528,
         "lastStatus": "ok",
-        "lastDurationMs": 104966,
+        "lastDurationMs": 83760,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
@@ -363,7 +363,7 @@
       "name": "ci-autofix-unstable",
       "enabled": true,
       "createdAtMs": 1772326513772,
-      "updatedAtMs": 1772539434930,
+      "updatedAtMs": 1772557623264,
       "schedule": {
         "kind": "every",
         "everyMs": 3600000,
@@ -382,11 +382,11 @@
         "to": "-1003764039429:52"
       },
       "state": {
-        "nextRunAtMs": 1772542980076,
-        "lastRunAtMs": 1772539380076,
+        "nextRunAtMs": 1772561151902,
+        "lastRunAtMs": 1772557551902,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 54854,
+        "lastDurationMs": 71362,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0
@@ -397,7 +397,7 @@
       "name": "aztec-sequencer-health",
       "enabled": true,
       "createdAtMs": 1772373812089,
-      "updatedAtMs": 1772532349994,
+      "updatedAtMs": 1772546768694,
       "schedule": {
         "kind": "every",
         "everyMs": 14400000,
@@ -415,11 +415,11 @@
         "channel": "last"
       },
       "state": {
-        "nextRunAtMs": 1772546717128,
-        "lastRunAtMs": 1772532317128,
+        "nextRunAtMs": 1772561121503,
+        "lastRunAtMs": 1772546721503,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 32866,
+        "lastDurationMs": 47191,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0
