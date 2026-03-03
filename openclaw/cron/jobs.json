@@ -96,7 +96,7 @@
       "name": "Sync dotfiles repo",
       "enabled": true,
       "createdAtMs": 1771362496423,
-      "updatedAtMs": 1772474647100,
+      "updatedAtMs": 1772496348558,
       "schedule": {
         "kind": "cron",
         "expr": "0 */6 * * *",
@@ -109,14 +109,13 @@
         "text": "Reminder: Run ~/dotfiles/scripts/sync-dotfiles.sh to sync local files to the dotfiles repo (github.com/lodekeeper/dotfiles). Gists are no longer the source of truth — the repo is."
       },
       "state": {
-        "nextRunAtMs": 1772496198972,
-        "lastRunAtMs": 1772474625997,
+        "nextRunAtMs": 1772517798972,
+        "lastRunAtMs": 1772496289013,
         "lastStatus": "ok",
-        "lastDurationMs": 21103,
+        "lastDurationMs": 59545,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-requested",
-        "consecutiveErrors": 0,
-        "runningAtMs": 1772496289013
+        "consecutiveErrors": 0
       }
     },
     {
@@ -191,7 +190,7 @@
       "name": "eth-rnd-archive-hourly",
       "enabled": true,
       "createdAtMs": 1772034567300,
-      "updatedAtMs": 1772493478859,
+      "updatedAtMs": 1772507796022,
       "schedule": {
         "kind": "cron",
         "expr": "15 * * * *",
@@ -208,16 +207,16 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1772493394438,
+        "lastRunAtMs": 1772507713251,
         "lastStatus": "error",
-        "lastDurationMs": 84421,
+        "lastDurationMs": 82771,
         "lastRunStatus": "error",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 1,
-        "nextRunAtMs": 1772496900000,
+        "nextRunAtMs": 1772511300000,
         "lastDelivered": false,
-        "lastError": "⚠️ 📝 Edit: `in ~/eth-rnd-archive-notes/2026-03-02.md (1155 chars)` failed",
-        "lastDeliveryError": "⚠️ 📝 Edit: `in ~/eth-rnd-archive-notes/2026-03-02.md (1155 chars)` failed"
+        "lastError": "⚠️ 📝 Edit: `in ~/eth-rnd-archive-notes/2026-03-03.md (29 chars)` failed",
+        "lastDeliveryError": "⚠️ 📝 Edit: `in ~/eth-rnd-archive-notes/2026-03-03.md (29 chars)` failed"
       }
     },
     {
@@ -296,7 +295,7 @@
       "name": "github-notifications",
       "enabled": true,
       "createdAtMs": 1772107716625,
-      "updatedAtMs": 1772496289005,
+      "updatedAtMs": 1772508236639,
       "schedule": {
         "kind": "every",
         "everyMs": 180000,
@@ -314,10 +313,10 @@
         "mode": "announce"
       },
       "state": {
-        "nextRunAtMs": 1772496358927,
-        "lastRunAtMs": 1772496178927,
+        "nextRunAtMs": 1772508336029,
+        "lastRunAtMs": 1772508156029,
         "lastStatus": "ok",
-        "lastDurationMs": 110078,
+        "lastDurationMs": 80610,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
@@ -365,7 +364,7 @@
       "name": "ci-autofix-unstable",
       "enabled": true,
       "createdAtMs": 1772326513772,
-      "updatedAtMs": 1772495981825,
+      "updatedAtMs": 1772506778076,
       "schedule": {
         "kind": "every",
         "everyMs": 3600000,
@@ -384,11 +383,11 @@
         "to": "-1003764039429:52"
       },
       "state": {
-        "nextRunAtMs": 1772499537194,
-        "lastRunAtMs": 1772495937194,
+        "nextRunAtMs": 1772510337335,
+        "lastRunAtMs": 1772506737335,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 44631,
+        "lastDurationMs": 40741,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0
@@ -399,7 +398,7 @@
       "name": "aztec-sequencer-health",
       "enabled": true,
       "createdAtMs": 1772373812089,
-      "updatedAtMs": 1772489077076,
+      "updatedAtMs": 1772503484031,
       "schedule": {
         "kind": "every",
         "everyMs": 14400000,
@@ -417,11 +416,11 @@
         "channel": "last"
       },
       "state": {
-        "nextRunAtMs": 1772503449052,
-        "lastRunAtMs": 1772489049052,
+        "nextRunAtMs": 1772517849986,
+        "lastRunAtMs": 1772503449986,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 28024,
+        "lastDurationMs": 34045,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0
