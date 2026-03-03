@@ -7,7 +7,7 @@
       "name": "daily-summary",
       "enabled": true,
       "createdAtMs": 1769895413579,
-      "updatedAtMs": 1772406037109,
+      "updatedAtMs": 1772492562841,
       "schedule": {
         "kind": "cron",
         "expr": "0 23 * * *",
@@ -20,10 +20,10 @@
         "message": "End of day. Write a summary of today's work to memory/YYYY-MM-DD.md (use today's date). Include: PRs reviewed, PRs opened/updated, code written, issues found, lessons learned. Keep it concise but complete."
       },
       "state": {
-        "nextRunAtMs": 1772492400000,
-        "lastRunAtMs": 1772406000004,
+        "nextRunAtMs": 1772578800000,
+        "lastRunAtMs": 1772492486391,
         "lastStatus": "ok",
-        "lastDurationMs": 37105,
+        "lastDurationMs": 76450,
         "lastRunStatus": "ok",
         "lastDelivered": true,
         "lastDeliveryStatus": "delivered",
@@ -115,7 +115,8 @@
         "lastDurationMs": 21103,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-requested",
-        "consecutiveErrors": 0
+        "consecutiveErrors": 0,
+        "runningAtMs": 1772496289013
       }
     },
     {
@@ -190,7 +191,7 @@
       "name": "eth-rnd-archive-hourly",
       "enabled": true,
       "createdAtMs": 1772034567300,
-      "updatedAtMs": 1772489828058,
+      "updatedAtMs": 1772493478859,
       "schedule": {
         "kind": "cron",
         "expr": "15 * * * *",
@@ -207,14 +208,16 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1772489736989,
-        "lastStatus": "ok",
-        "lastDurationMs": 91069,
-        "lastRunStatus": "ok",
+        "lastRunAtMs": 1772493394438,
+        "lastStatus": "error",
+        "lastDurationMs": 84421,
+        "lastRunStatus": "error",
         "lastDeliveryStatus": "not-delivered",
-        "consecutiveErrors": 0,
-        "nextRunAtMs": 1772493300000,
-        "lastDelivered": false
+        "consecutiveErrors": 1,
+        "nextRunAtMs": 1772496900000,
+        "lastDelivered": false,
+        "lastError": "⚠️ 📝 Edit: `in ~/eth-rnd-archive-notes/2026-03-02.md (1155 chars)` failed",
+        "lastDeliveryError": "⚠️ 📝 Edit: `in ~/eth-rnd-archive-notes/2026-03-02.md (1155 chars)` failed"
       }
     },
     {
@@ -293,7 +296,7 @@
       "name": "github-notifications",
       "enabled": true,
       "createdAtMs": 1772107716625,
-      "updatedAtMs": 1772491005182,
+      "updatedAtMs": 1772496289005,
       "schedule": {
         "kind": "every",
         "everyMs": 180000,
@@ -311,10 +314,10 @@
         "mode": "announce"
       },
       "state": {
-        "nextRunAtMs": 1772491088786,
-        "lastRunAtMs": 1772490908786,
+        "nextRunAtMs": 1772496358927,
+        "lastRunAtMs": 1772496178927,
         "lastStatus": "ok",
-        "lastDurationMs": 96396,
+        "lastDurationMs": 110078,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
@@ -362,7 +365,7 @@
       "name": "ci-autofix-unstable",
       "enabled": true,
       "createdAtMs": 1772326513772,
-      "updatedAtMs": 1772488775581,
+      "updatedAtMs": 1772495981825,
       "schedule": {
         "kind": "every",
         "everyMs": 3600000,
@@ -381,11 +384,11 @@
         "to": "-1003764039429:52"
       },
       "state": {
-        "nextRunAtMs": 1772492337146,
-        "lastRunAtMs": 1772488737146,
+        "nextRunAtMs": 1772499537194,
+        "lastRunAtMs": 1772495937194,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 38435,
+        "lastDurationMs": 44631,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0
