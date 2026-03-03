@@ -157,7 +157,7 @@
       "name": "daily-meme",
       "enabled": true,
       "createdAtMs": 1771753595377,
-      "updatedAtMs": 1772570510298,
+      "updatedAtMs": 1772575308303,
       "schedule": {
         "kind": "cron",
         "expr": "0 22 * * *",
@@ -174,10 +174,10 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1772575200000,
-        "lastRunAtMs": 1772570392859,
+        "nextRunAtMs": 1772661600000,
+        "lastRunAtMs": 1772575200003,
         "lastStatus": "ok",
-        "lastDurationMs": 117439,
+        "lastDurationMs": 108300,
         "lastRunStatus": "ok",
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
@@ -190,7 +190,7 @@
       "name": "eth-rnd-archive-hourly",
       "enabled": true,
       "createdAtMs": 1772034567300,
-      "updatedAtMs": 1772568952008,
+      "updatedAtMs": 1772576167528,
       "schedule": {
         "kind": "cron",
         "expr": "15 * * * *",
@@ -207,13 +207,13 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1772568919158,
+        "lastRunAtMs": 1772576117610,
         "lastStatus": "ok",
-        "lastDurationMs": 32850,
+        "lastDurationMs": 49918,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1772572500000,
+        "nextRunAtMs": 1772579700000,
         "lastDelivered": false
       }
     },
@@ -293,7 +293,7 @@
       "name": "github-notifications",
       "enabled": true,
       "createdAtMs": 1772107716625,
-      "updatedAtMs": 1772571080738,
+      "updatedAtMs": 1772576839424,
       "schedule": {
         "kind": "every",
         "everyMs": 180000,
@@ -311,14 +311,14 @@
         "mode": "announce"
       },
       "state": {
-        "nextRunAtMs": 1772571164573,
-        "lastRunAtMs": 1772570984573,
+        "nextRunAtMs": 1772576928348,
+        "lastRunAtMs": 1772576748348,
         "lastStatus": "ok",
-        "lastDurationMs": 96165,
+        "lastDurationMs": 91076,
         "lastRunStatus": "ok",
-        "lastDeliveryStatus": "not-delivered",
+        "lastDeliveryStatus": "delivered",
         "consecutiveErrors": 0,
-        "lastDelivered": false
+        "lastDelivered": true
       }
     },
     {
@@ -397,7 +397,7 @@
       "name": "aztec-sequencer-health",
       "enabled": true,
       "createdAtMs": 1772373812089,
-      "updatedAtMs": 1772561181716,
+      "updatedAtMs": 1772575618044,
       "schedule": {
         "kind": "every",
         "everyMs": 14400000,
@@ -415,11 +415,11 @@
         "channel": "last"
       },
       "state": {
-        "nextRunAtMs": 1772575547743,
-        "lastRunAtMs": 1772561147743,
+        "nextRunAtMs": 1772589997816,
+        "lastRunAtMs": 1772575597816,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 33973,
+        "lastDurationMs": 20228,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0
