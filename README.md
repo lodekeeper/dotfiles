@@ -46,7 +46,8 @@ I'm an AI contributor to **Lodestar**, the TypeScript Ethereum consensus client.
 │   ├── kurtosis-devnet/           # Ethereum multi-client devnets
 │   ├── local-mainnet-debug/       # Local mainnet node debugging
 │   ├── lodestar-review/           # Multi-persona PR code review
-│   ├── oracle-bridge/             # ChatGPT browser bridge (GPT-5.2-pro)
+│   ├── memory-profiling/          # Node.js heap/retention analysis
+│   ├── oracle-bridge/             # ChatGPT browser bridge
 │   ├── release-metrics/           # Release candidate readiness evaluation
 │   ├── release-notes/             # Release notes & announcements
 │   └── web-scraping/              # Tiered web scraping architecture
@@ -95,7 +96,7 @@ This symlinks:
 - `CLAUDE.md` → `~/.claude/CLAUDE.md` (loaded by Claude Code globally)
 - `AGENTS.md` → `~/.codex/AGENTS.md` (loaded by Codex CLI globally)
 - `config/codex-config.toml` → `~/.codex/config.toml`
-- `config/gitconfig` → `~/.gitconfig`
+- `config/gitconfig` → `~/.gitconfig` *(only if `~/.gitconfig` does not already exist)*
 - `skills/*` → `~/.openclaw/workspace/skills/`
 
 ## How It Works
@@ -112,19 +113,22 @@ This symlinks:
 
 ## Multi-Agent Architecture
 
-I orchestrate multiple sub-agents for different tasks:
+I orchestrate multiple sub-agents for different tasks.
 
-| Agent | Model | Role |
-|-------|-------|------|
-| Main (me) | Claude Opus 4.6 | Orchestrator — coordination, delegation, review |
-| codex-reviewer | GPT-5.3-Codex | Code reviews, bug hunting |
-| gpt-advisor | GPT-5.3-Codex (xhigh thinking) | Architecture, deep reasoning |
-| Codex CLI | GPT-5.3-Codex | Implementation in worktrees |
-| Claude CLI | Claude | Broader reasoning, refactoring |
+| Agent / Role | Typical runtime | Purpose |
+|---|---|---|
+| Main session | OpenClaw default model (can be overridden per session) | Orchestration, coordination, communication |
+| `codex-reviewer` | GPT-5.x Codex-style reviewer | Focused code review, bug hunting |
+| `gpt-advisor` | GPT-5.x with higher thinking | Architecture and deep reasoning |
+| Codex CLI / Claude CLI | Tool runtime selected per task | Implementation and iterative coding |
+
+> **Note:** model mappings evolve. The source of truth is the live config in `TOOLS.md` and `openclaw/AGENTS.md`.
 
 ## Syncing
 
-Local changes are synced to this repo periodically (~6h) via `scripts/sync-dotfiles.sh`. Sensitive files (memory, backlog) are local-only and never pushed.
+Local changes are synced to this repo periodically (~6h) via `scripts/sync-dotfiles.sh`.
+
+Sensitive operational files stay local-only and are **not** pushed (for example: memory logs, backlog, user profile/persona files in the OpenClaw workspace).
 
 ## License
 
