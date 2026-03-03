@@ -96,7 +96,7 @@
       "name": "Sync dotfiles repo",
       "enabled": true,
       "createdAtMs": 1771362496423,
-      "updatedAtMs": 1772496348558,
+      "updatedAtMs": 1772517817122,
       "schedule": {
         "kind": "cron",
         "expr": "0 */6 * * *",
@@ -109,10 +109,10 @@
         "text": "Reminder: Run ~/dotfiles/scripts/sync-dotfiles.sh to sync local files to the dotfiles repo (github.com/lodekeeper/dotfiles). Gists are no longer the source of truth — the repo is."
       },
       "state": {
-        "nextRunAtMs": 1772517798972,
-        "lastRunAtMs": 1772496289013,
+        "nextRunAtMs": 1772539398972,
+        "lastRunAtMs": 1772517798975,
         "lastStatus": "ok",
-        "lastDurationMs": 59545,
+        "lastDurationMs": 18147,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-requested",
         "consecutiveErrors": 0
@@ -190,7 +190,7 @@
       "name": "eth-rnd-archive-hourly",
       "enabled": true,
       "createdAtMs": 1772034567300,
-      "updatedAtMs": 1772507796022,
+      "updatedAtMs": 1772529346863,
       "schedule": {
         "kind": "cron",
         "expr": "15 * * * *",
@@ -207,16 +207,14 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1772507713251,
-        "lastStatus": "error",
-        "lastDurationMs": 82771,
-        "lastRunStatus": "error",
+        "lastRunAtMs": 1772529300005,
+        "lastStatus": "ok",
+        "lastDurationMs": 46858,
+        "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
-        "consecutiveErrors": 1,
-        "nextRunAtMs": 1772511300000,
-        "lastDelivered": false,
-        "lastError": "⚠️ 📝 Edit: `in ~/eth-rnd-archive-notes/2026-03-03.md (29 chars)` failed",
-        "lastDeliveryError": "⚠️ 📝 Edit: `in ~/eth-rnd-archive-notes/2026-03-03.md (29 chars)` failed"
+        "consecutiveErrors": 0,
+        "nextRunAtMs": 1772532900000,
+        "lastDelivered": false
       }
     },
     {
@@ -225,7 +223,7 @@
       "name": "eth-rnd-daily-digest",
       "enabled": true,
       "createdAtMs": 1772034576175,
-      "updatedAtMs": 1772451451769,
+      "updatedAtMs": 1772524971113,
       "schedule": {
         "kind": "cron",
         "expr": "0 8 * * *",
@@ -245,14 +243,15 @@
         "bestEffort": true
       },
       "state": {
-        "lastRunAtMs": 1772451386367,
-        "lastStatus": "ok",
-        "lastDurationMs": 65402,
-        "lastRunStatus": "ok",
+        "lastRunAtMs": 1772524817660,
+        "lastStatus": "error",
+        "lastDurationMs": 153453,
+        "lastRunStatus": "error",
         "lastDelivered": true,
         "lastDeliveryStatus": "delivered",
-        "consecutiveErrors": 0,
-        "nextRunAtMs": 1772524800000
+        "consecutiveErrors": 1,
+        "nextRunAtMs": 1772611200000,
+        "lastError": "⚠️ 📝 Edit: `in ~/eth-rnd-archive-notes/2026-03-03.md (1755 chars)` failed"
       }
     },
     {
@@ -295,7 +294,7 @@
       "name": "github-notifications",
       "enabled": true,
       "createdAtMs": 1772107716625,
-      "updatedAtMs": 1772508236639,
+      "updatedAtMs": 1772529611950,
       "schedule": {
         "kind": "every",
         "everyMs": 180000,
@@ -313,14 +312,15 @@
         "mode": "announce"
       },
       "state": {
-        "nextRunAtMs": 1772508336029,
-        "lastRunAtMs": 1772508156029,
+        "nextRunAtMs": 1772529706888,
+        "lastRunAtMs": 1772529526888,
         "lastStatus": "ok",
-        "lastDurationMs": 80610,
+        "lastDurationMs": 85062,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "lastDelivered": false
+        "lastDelivered": false,
+        "runningAtMs": 1772529706890
       }
     },
     {
@@ -349,7 +349,7 @@
         "channel": "last"
       },
       "state": {
-        "nextRunAtMs": 1772508600000,
+        "nextRunAtMs": 1772595000000,
         "lastRunAtMs": 1772422200003,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
@@ -364,7 +364,7 @@
       "name": "ci-autofix-unstable",
       "enabled": true,
       "createdAtMs": 1772326513772,
-      "updatedAtMs": 1772506778076,
+      "updatedAtMs": 1772528610839,
       "schedule": {
         "kind": "every",
         "everyMs": 3600000,
@@ -383,11 +383,11 @@
         "to": "-1003764039429:52"
       },
       "state": {
-        "nextRunAtMs": 1772510337335,
-        "lastRunAtMs": 1772506737335,
+        "nextRunAtMs": 1772532171116,
+        "lastRunAtMs": 1772528571116,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 40741,
+        "lastDurationMs": 39723,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0
@@ -398,7 +398,7 @@
       "name": "aztec-sequencer-health",
       "enabled": true,
       "createdAtMs": 1772373812089,
-      "updatedAtMs": 1772503484031,
+      "updatedAtMs": 1772517880442,
       "schedule": {
         "kind": "every",
         "everyMs": 14400000,
@@ -416,11 +416,11 @@
         "channel": "last"
       },
       "state": {
-        "nextRunAtMs": 1772517849986,
-        "lastRunAtMs": 1772503449986,
+        "nextRunAtMs": 1772532249990,
+        "lastRunAtMs": 1772517849990,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 34045,
+        "lastDurationMs": 30452,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0
