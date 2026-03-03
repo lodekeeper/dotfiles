@@ -9,7 +9,7 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 CONFIG="$SCRIPT_DIR/config.json"
 STATE="$SCRIPT_DIR/state.json"
 REPO_PATH="$HOME/ethereum-repos/eth-rnd-archive"
-NOTES_PATH="$HOME/eth-rnd-archive-notes"
+NOTES_PATH="$(python3 -c "import json; print(json.load(open('$CONFIG')).get('notesPath', '/home/openclaw/.openclaw/workspace/memory/eth-rnd-archive-notes'))")"
 SPECIFIC_DATE="${1:-}"
 
 # Ensure notes directory exists

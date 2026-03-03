@@ -115,7 +115,8 @@
         "lastDurationMs": 18147,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-requested",
-        "consecutiveErrors": 0
+        "consecutiveErrors": 0,
+        "runningAtMs": 1772539434938
       }
     },
     {
@@ -190,7 +191,7 @@
       "name": "eth-rnd-archive-hourly",
       "enabled": true,
       "createdAtMs": 1772034567300,
-      "updatedAtMs": 1772529346863,
+      "updatedAtMs": 1772536553548,
       "schedule": {
         "kind": "cron",
         "expr": "15 * * * *",
@@ -207,13 +208,13 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1772529300005,
+        "lastRunAtMs": 1772536500004,
         "lastStatus": "ok",
-        "lastDurationMs": 46858,
+        "lastDurationMs": 53544,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1772532900000,
+        "nextRunAtMs": 1772540100000,
         "lastDelivered": false
       }
     },
@@ -223,7 +224,7 @@
       "name": "eth-rnd-daily-digest",
       "enabled": true,
       "createdAtMs": 1772034576175,
-      "updatedAtMs": 1772524971113,
+      "updatedAtMs": 1772531352039,
       "schedule": {
         "kind": "cron",
         "expr": "0 8 * * *",
@@ -233,25 +234,24 @@
       "wakeMode": "now",
       "payload": {
         "kind": "agentTurn",
-        "message": "DAILY DIGEST: Eth R&D Archive.\n\n1. Read skill: skills/eth-rnd-archive/SKILL.md\n2. Run: bash skills/eth-rnd-archive/check-updates.sh\n3. Read raw JSON files from tracked channels for the past 2 days (today + yesterday). Check both main channel files and _threads/ subdirectories.\n4. Create a concise daily digest covering:\n   - Key decisions made across channels\n   - Action items for Lodestar\n   - Interesting discussions worth following up\n   - Notable participants driving topics\n   - Any spec changes or breaking API changes\n5. **SEND FIRST** — Use the message tool IMMEDIATELY: action=send, channel=telegram, target=-1003764039429, threadId=59. Do this BEFORE any file writes.\n6. Keep it concise — TL;DR style, grouped by channel/topic. Use emoji headers.\n7. If no activity in tracked channels, still send a short \"no activity\" note to the topic.\n8. After sending to the Telegram topic, optionally log a summary to ~/eth-rnd-archive-notes/YYYY-MM-DD.md (if write fails, ignore it).\n9. Reply with NO_REPLY",
+        "message": "DAILY DIGEST: Eth R&D Archive.\n\n1. Read skill: skills/eth-rnd-archive/SKILL.md\n2. Run: bash skills/eth-rnd-archive/check-updates.sh\n3. Read raw JSON files from tracked channels for the past 2 days (today + yesterday). Check both main channel files and _threads/ subdirectories.\n4. Create a concise daily digest covering:\n   - Key decisions made across channels\n   - Action items for Lodestar\n   - Interesting discussions worth following up\n   - Notable participants driving topics\n   - Any spec changes or breaking API changes\n5. SEND FIRST — Use the message tool IMMEDIATELY: action=send, channel=telegram, target=-1003764039429, threadId=59. Do this BEFORE any file writes.\n6. Keep it concise — TL;DR style, grouped by channel/topic. Use emoji headers.\n7. If no activity in tracked channels, still send a short \"no activity\" note to the topic.\n8. Optional logging: ONLY if convenient, append a short summary to `/home/openclaw/.openclaw/workspace/memory/eth-rnd-archive-notes/YYYY-MM-DD.md`.\n   - Do NOT use `~/eth-rnd-archive-notes/...`.\n   - If logging fails, ignore it and continue (job should still succeed).\n9. Reply with NO_REPLY",
         "timeoutSeconds": 300
       },
       "delivery": {
-        "mode": "announce",
+        "mode": "none",
         "channel": "telegram",
         "to": "-1003764039429",
         "bestEffort": true
       },
       "state": {
-        "lastRunAtMs": 1772524817660,
-        "lastStatus": "error",
-        "lastDurationMs": 153453,
-        "lastRunStatus": "error",
-        "lastDelivered": true,
-        "lastDeliveryStatus": "delivered",
-        "consecutiveErrors": 1,
-        "nextRunAtMs": 1772611200000,
-        "lastError": "⚠️ 📝 Edit: `in ~/eth-rnd-archive-notes/2026-03-03.md (1755 chars)` failed"
+        "lastRunAtMs": 1772531266782,
+        "lastStatus": "ok",
+        "lastDurationMs": 85257,
+        "lastRunStatus": "ok",
+        "lastDelivered": false,
+        "lastDeliveryStatus": "not-delivered",
+        "consecutiveErrors": 0,
+        "nextRunAtMs": 1772611200000
       }
     },
     {
@@ -294,7 +294,7 @@
       "name": "github-notifications",
       "enabled": true,
       "createdAtMs": 1772107716625,
-      "updatedAtMs": 1772530874721,
+      "updatedAtMs": 1772539364725,
       "schedule": {
         "kind": "every",
         "everyMs": 180000,
@@ -312,10 +312,10 @@
         "mode": "announce"
       },
       "state": {
-        "nextRunAtMs": 1772530966919,
-        "lastRunAtMs": 1772530786919,
+        "nextRunAtMs": 1772539439759,
+        "lastRunAtMs": 1772539259759,
         "lastStatus": "ok",
-        "lastDurationMs": 87802,
+        "lastDurationMs": 104966,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
@@ -363,7 +363,7 @@
       "name": "ci-autofix-unstable",
       "enabled": true,
       "createdAtMs": 1772326513772,
-      "updatedAtMs": 1772528610839,
+      "updatedAtMs": 1772539434930,
       "schedule": {
         "kind": "every",
         "everyMs": 3600000,
@@ -382,11 +382,11 @@
         "to": "-1003764039429:52"
       },
       "state": {
-        "nextRunAtMs": 1772532171116,
-        "lastRunAtMs": 1772528571116,
+        "nextRunAtMs": 1772542980076,
+        "lastRunAtMs": 1772539380076,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 39723,
+        "lastDurationMs": 54854,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0
@@ -397,7 +397,7 @@
       "name": "aztec-sequencer-health",
       "enabled": true,
       "createdAtMs": 1772373812089,
-      "updatedAtMs": 1772517880442,
+      "updatedAtMs": 1772532349994,
       "schedule": {
         "kind": "every",
         "everyMs": 14400000,
@@ -415,11 +415,11 @@
         "channel": "last"
       },
       "state": {
-        "nextRunAtMs": 1772532249990,
-        "lastRunAtMs": 1772517849990,
+        "nextRunAtMs": 1772546717128,
+        "lastRunAtMs": 1772532317128,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 30452,
+        "lastDurationMs": 32866,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0
