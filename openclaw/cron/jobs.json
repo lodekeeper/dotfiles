@@ -115,7 +115,8 @@
         "lastDurationMs": 58383,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-requested",
-        "consecutiveErrors": 0
+        "consecutiveErrors": 0,
+        "runningAtMs": 1772647398977
       }
     },
     {
@@ -190,7 +191,7 @@
       "name": "eth-rnd-archive-hourly",
       "enabled": true,
       "createdAtMs": 1772034567300,
-      "updatedAtMs": 1772633738228,
+      "updatedAtMs": 1772644547182,
       "schedule": {
         "kind": "cron",
         "expr": "15 * * * *",
@@ -207,13 +208,13 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1772633700003,
+        "lastRunAtMs": 1772644500003,
         "lastStatus": "ok",
-        "lastDurationMs": 38225,
+        "lastDurationMs": 47179,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1772637300000,
+        "nextRunAtMs": 1772648100000,
         "lastDelivered": false
       }
     },
@@ -293,7 +294,7 @@
       "name": "github-notifications",
       "enabled": true,
       "createdAtMs": 1772107716625,
-      "updatedAtMs": 1772637277933,
+      "updatedAtMs": 1772647375856,
       "schedule": {
         "kind": "every",
         "everyMs": 180000,
@@ -311,10 +312,10 @@
         "mode": "announce"
       },
       "state": {
-        "nextRunAtMs": 1772637429007,
-        "lastRunAtMs": 1772637249007,
+        "nextRunAtMs": 1772647527126,
+        "lastRunAtMs": 1772647347126,
         "lastStatus": "ok",
-        "lastDurationMs": 28926,
+        "lastDurationMs": 28730,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
@@ -457,7 +458,7 @@
       "name": "monitor-open-pr-ci",
       "enabled": true,
       "createdAtMs": 1772635128553,
-      "updatedAtMs": 1772637244975,
+      "updatedAtMs": 1772646038136,
       "schedule": {
         "kind": "every",
         "everyMs": 1800000,
@@ -473,15 +474,14 @@
         "mode": "announce"
       },
       "state": {
-        "nextRunAtMs": 1772638728557,
-        "lastRunAtMs": 1772636928557,
-        "lastRunStatus": "error",
-        "lastStatus": "error",
-        "lastDurationMs": 140434,
-        "lastError": "⚠️ 📝 Edit: `in ~/.openclaw/workspace/BACKLOG.md (670 chars)` failed",
-        "lastDelivered": true,
-        "lastDeliveryStatus": "delivered",
-        "consecutiveErrors": 1
+        "nextRunAtMs": 1772647817398,
+        "lastRunAtMs": 1772646017398,
+        "lastRunStatus": "ok",
+        "lastStatus": "ok",
+        "lastDurationMs": 20738,
+        "lastDelivered": false,
+        "lastDeliveryStatus": "not-delivered",
+        "consecutiveErrors": 0
       }
     },
     {
@@ -540,7 +540,7 @@
       "name": "cron-health-watchdog",
       "enabled": true,
       "createdAtMs": 1772636078136,
-      "updatedAtMs": 1772636714494,
+      "updatedAtMs": 1772646987095,
       "schedule": {
         "kind": "every",
         "everyMs": 600000,
@@ -556,11 +556,11 @@
         "mode": "announce"
       },
       "state": {
-        "nextRunAtMs": 1772637299136,
-        "lastRunAtMs": 1772636699136,
+        "nextRunAtMs": 1772647574997,
+        "lastRunAtMs": 1772646974997,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 15358,
+        "lastDurationMs": 12098,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0

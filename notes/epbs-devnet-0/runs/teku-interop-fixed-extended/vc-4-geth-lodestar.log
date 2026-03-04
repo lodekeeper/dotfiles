@@ -1,0 +1,200 @@
+[vc-4-geth-lodestar] Mar-04 15:16:40.652[]                 [32minfo[39m: Published block and execution payload envelope slot=124, validator=0x8875…cab8, graffiti=undefined, consensusBlockValue=0.00118 ETH, blockRoot=0x6b780863a14bef1dcf267d0432ef42af0bded9e902b2e63fc587c1299d00c123
+[vc-4-geth-lodestar] Mar-04 15:16:40.759[]                 [32minfo[39m: Published attestations slot=124, head=0x6b78…c123, count=1
+[vc-4-geth-lodestar] Mar-04 15:16:40.759[]                 [32minfo[39m: Published SyncCommitteeMessage slot=124, count=128
+[vc-4-geth-lodestar] Mar-04 15:16:46.054[]                 [32minfo[39m: Published SyncCommitteeContribution slot=124, index=2, count=2
+[vc-4-geth-lodestar] Mar-04 15:16:46.056[]                 [32minfo[39m: Published SyncCommitteeContribution slot=124, index=0, count=3
+[vc-4-geth-lodestar] Mar-04 15:16:46.056[]                 [32minfo[39m: Published aggregateAndProofs slot=124, index=0, participants=1, count=1
+[vc-4-geth-lodestar] Mar-04 15:16:46.144[]                 [32minfo[39m: Published SyncCommitteeContribution slot=124, index=3, count=7
+[vc-4-geth-lodestar] Mar-04 15:16:52.604[]                 [32minfo[39m: Published block and execution payload envelope slot=125, validator=0xafd9…49f5, graffiti=undefined, consensusBlockValue=0.00026 ETH, blockRoot=0x65f7d307e8ef6a7b56db88fd5600869e25dd80cf692a90292c534da713fe9692
+[vc-4-geth-lodestar] Mar-04 15:16:52.675[]                 [32minfo[39m: Published SyncCommitteeMessage slot=125, count=128
+[vc-4-geth-lodestar] Mar-04 15:16:52.690[]                 [32minfo[39m: Published attestations slot=125, head=0x65f7…9692, count=6
+[vc-4-geth-lodestar] Mar-04 15:16:58.055[]                 [32minfo[39m: Published SyncCommitteeContribution slot=125, index=1, count=1
+[vc-4-geth-lodestar] Mar-04 15:16:58.056[]                 [32minfo[39m: Published SyncCommitteeContribution slot=125, index=2, count=5
+[vc-4-geth-lodestar] Mar-04 15:16:58.060[]                 [32minfo[39m: Published SyncCommitteeContribution slot=125, index=0, count=8
+[vc-4-geth-lodestar] Mar-04 15:16:58.061[]                 [32minfo[39m: Published SyncCommitteeContribution slot=125, index=3, count=4
+[vc-4-geth-lodestar] Mar-04 15:16:58.140[]                 [32minfo[39m: Published aggregateAndProofs slot=125, index=0, participants=6, count=6
+[vc-4-geth-lodestar] Mar-04 15:17:04.608[]                 [32minfo[39m: Published block and execution payload envelope slot=126, validator=0xa822…f007, graffiti=undefined, consensusBlockValue=0.00056 ETH, blockRoot=0xef46589d14631ac405aed4879d0f483e466ec9952646c0a52041161dcb556c52
+[vc-4-geth-lodestar] Mar-04 15:17:04.679[]                 [32minfo[39m: Published SyncCommitteeMessage slot=126, count=128
+[vc-4-geth-lodestar] Mar-04 15:17:04.679[]                 [32minfo[39m: Published attestations slot=126, head=0xef46…6c52, count=5
+[vc-4-geth-lodestar] Mar-04 15:17:10.055[]                 [32minfo[39m: Published SyncCommitteeContribution slot=126, index=1, count=2
+[vc-4-geth-lodestar] Mar-04 15:17:10.055[]                 [32minfo[39m: Published SyncCommitteeContribution slot=126, index=2, count=1
+[vc-4-geth-lodestar] Mar-04 15:17:10.056[]                 [32minfo[39m: Published SyncCommitteeContribution slot=126, index=0, count=4
+[vc-4-geth-lodestar] Mar-04 15:17:10.068[]                 [32minfo[39m: Published SyncCommitteeContribution slot=126, index=3, count=5
+[vc-4-geth-lodestar] Mar-04 15:17:10.069[]                 [32minfo[39m: Published aggregateAndProofs slot=126, index=0, participants=9, count=5
+[vc-4-geth-lodestar] Mar-04 15:17:16.683[]                 [32minfo[39m: Published attestations slot=127, head=0xca3d…718d, count=3
+[vc-4-geth-lodestar] Mar-04 15:17:16.688[]                 [32minfo[39m: Published SyncCommitteeMessage slot=127, count=128
+[vc-4-geth-lodestar] Mar-04 15:17:22.048[]                 [32minfo[39m: Published SyncCommitteeContribution slot=127, index=1, count=3
+[vc-4-geth-lodestar] Mar-04 15:17:22.048[]                 [32minfo[39m: Published SyncCommitteeContribution slot=127, index=2, count=4
+[vc-4-geth-lodestar] Mar-04 15:17:22.049[]                 [32minfo[39m: Published aggregateAndProofs slot=127, index=0, participants=7, count=3
+[vc-4-geth-lodestar] Mar-04 15:17:22.085[]                 [32minfo[39m: Published SyncCommitteeContribution slot=127, index=0, count=6
+[vc-4-geth-lodestar] Mar-04 15:17:22.085[]                 [32minfo[39m: Published SyncCommitteeContribution slot=127, index=3, count=1
+[vc-4-geth-lodestar] Mar-04 15:17:31.195[]                 [32minfo[39m: Published SyncCommitteeMessage slot=128, count=128
+[vc-4-geth-lodestar] Mar-04 15:17:31.195[]                 [32minfo[39m: Published attestations slot=128, head=0xca3d…718d, count=5
+[vc-4-geth-lodestar] Mar-04 15:17:34.054[]                 [32minfo[39m: Published SyncCommitteeContribution slot=128, index=1, count=7
+[vc-4-geth-lodestar] Mar-04 15:17:34.066[]                 [32minfo[39m: Published SyncCommitteeContribution slot=128, index=2, count=5
+[vc-4-geth-lodestar] Mar-04 15:17:34.069[]                 [32minfo[39m: Published SyncCommitteeContribution slot=128, index=0, count=3
+[vc-4-geth-lodestar] Mar-04 15:17:34.070[]                 [32minfo[39m: Published SyncCommitteeContribution slot=128, index=3, count=3
+[vc-4-geth-lodestar] Mar-04 15:17:34.149[]                 [32minfo[39m: Published aggregateAndProofs slot=128, index=0, participants=5, count=5
+[vc-4-geth-lodestar] Mar-04 15:17:40.681[]                 [32minfo[39m: Published attestations slot=129, head=0xaff6…2abb, count=3
+[vc-4-geth-lodestar] Mar-04 15:17:40.685[]                 [32minfo[39m: Published SyncCommitteeMessage slot=129, count=128
+[vc-4-geth-lodestar] Mar-04 15:17:46.057[]                 [32minfo[39m: Published SyncCommitteeContribution slot=129, index=1, count=6
+[vc-4-geth-lodestar] Mar-04 15:17:46.057[]                 [32minfo[39m: Published aggregateAndProofs slot=129, index=0, participants=7, count=3
+[vc-4-geth-lodestar] Mar-04 15:17:46.059[]                 [32minfo[39m: Published SyncCommitteeContribution slot=129, index=2, count=7
+[vc-4-geth-lodestar] Mar-04 15:17:46.060[]                 [32minfo[39m: Published SyncCommitteeContribution slot=129, index=0, count=6
+[vc-4-geth-lodestar] Mar-04 15:17:46.071[]                 [32minfo[39m: Published SyncCommitteeContribution slot=129, index=3, count=5
+[vc-4-geth-lodestar] Mar-04 15:17:55.136[]                 [32minfo[39m: Published attestations slot=130, head=0xaff6…2abb, count=4
+[vc-4-geth-lodestar] Mar-04 15:17:55.195[]                 [32minfo[39m: Published SyncCommitteeMessage slot=130, count=128
+[vc-4-geth-lodestar] Mar-04 15:17:58.080[]                 [32minfo[39m: Published SyncCommitteeContribution slot=130, index=1, count=1
+[vc-4-geth-lodestar] Mar-04 15:17:58.081[]                 [32minfo[39m: Published SyncCommitteeContribution slot=130, index=2, count=6
+[vc-4-geth-lodestar] Mar-04 15:17:58.083[]                 [32minfo[39m: Published aggregateAndProofs slot=130, index=0, participants=8, count=4
+[vc-4-geth-lodestar] Mar-04 15:17:58.094[]                 [32minfo[39m: Published SyncCommitteeContribution slot=130, index=0, count=4
+[vc-4-geth-lodestar] Mar-04 15:17:58.095[]                 [32minfo[39m: Published SyncCommitteeContribution slot=130, index=3, count=3
+[vc-4-geth-lodestar] Mar-04 15:18:04.597[]                 [32minfo[39m: Published block and execution payload envelope slot=131, validator=0x8c96…9dbd, graffiti=undefined, consensusBlockValue=0.00082 ETH, blockRoot=0x0d08f80a2415fe97af4a7cd166662d03ab3428a7b6f748d34de483cb2290c398
+[vc-4-geth-lodestar] Mar-04 15:18:04.608[]                 [32minfo[39m: Published attestations slot=131, head=0x0d08…c398, count=4
+[vc-4-geth-lodestar] Mar-04 15:18:04.652[]                 [32minfo[39m: Published SyncCommitteeMessage slot=131, count=128
+[vc-4-geth-lodestar] Mar-04 15:18:10.050[]                 [32minfo[39m: Published SyncCommitteeContribution slot=131, index=1, count=3
+[vc-4-geth-lodestar] Mar-04 15:18:10.052[]                 [32minfo[39m: Published aggregateAndProofs slot=131, index=0, participants=4, count=4
+[vc-4-geth-lodestar] Mar-04 15:18:10.087[]                 [32minfo[39m: Published SyncCommitteeContribution slot=131, index=2, count=5
+[vc-4-geth-lodestar] Mar-04 15:18:10.089[]                 [32minfo[39m: Published SyncCommitteeContribution slot=131, index=0, count=2
+[vc-4-geth-lodestar] Mar-04 15:18:10.089[]                 [32minfo[39m: Published SyncCommitteeContribution slot=131, index=3, count=6
+[vc-4-geth-lodestar] Mar-04 15:18:16.604[]                 [32minfo[39m: Published block and execution payload envelope slot=132, validator=0x8153…aa72, graffiti=undefined, consensusBlockValue=0.00026 ETH, blockRoot=0x952228709e8c19ca6658ef45a5ff6d33fad749fe6deecaf41f427d6376b14e3a
+[vc-4-geth-lodestar] Mar-04 15:18:16.662[]                 [32minfo[39m: Published SyncCommitteeMessage slot=132, count=128
+[vc-4-geth-lodestar] Mar-04 15:18:16.729[]                 [32minfo[39m: Published attestations slot=132, head=0x9522…4e3a, count=5
+[vc-4-geth-lodestar] Mar-04 15:18:22.046[]                 [32minfo[39m: Published SyncCommitteeContribution slot=132, index=1, count=1
+[vc-4-geth-lodestar] Mar-04 15:18:22.047[]                 [32minfo[39m: Published SyncCommitteeContribution slot=132, index=2, count=3
+[vc-4-geth-lodestar] Mar-04 15:18:22.048[]                 [32minfo[39m: Published SyncCommitteeContribution slot=132, index=0, count=4
+[vc-4-geth-lodestar] Mar-04 15:18:22.137[]                 [32minfo[39m: Published SyncCommitteeContribution slot=132, index=3, count=6
+[vc-4-geth-lodestar] Mar-04 15:18:22.137[]                 [32minfo[39m: Published aggregateAndProofs slot=132, index=0, participants=5, count=5
+[vc-4-geth-lodestar] Mar-04 15:18:31.217[]                 [32minfo[39m: Published SyncCommitteeMessage slot=133, count=128
+[vc-4-geth-lodestar] Mar-04 15:18:31.218[]                 [32minfo[39m: Published attestations slot=133, head=0x9522…4e3a, count=5
+[vc-4-geth-lodestar] Mar-04 15:18:34.050[]                 [32minfo[39m: Published SyncCommitteeContribution slot=133, index=1, count=1
+[vc-4-geth-lodestar] Mar-04 15:18:34.052[]                 [32minfo[39m: Published aggregateAndProofs slot=133, index=0, participants=9, count=5
+[vc-4-geth-lodestar] Mar-04 15:18:34.076[]                 [32minfo[39m: Published SyncCommitteeContribution slot=133, index=2, count=7
+[vc-4-geth-lodestar] Mar-04 15:18:34.076[]                 [32minfo[39m: Published SyncCommitteeContribution slot=133, index=0, count=4
+[vc-4-geth-lodestar] Mar-04 15:18:34.077[]                 [32minfo[39m: Published SyncCommitteeContribution slot=133, index=3, count=4
+[vc-4-geth-lodestar] Mar-04 15:18:43.132[]                 [32minfo[39m: Published attestations slot=134, head=0x9522…4e3a, count=4
+[vc-4-geth-lodestar] Mar-04 15:18:43.174[]                 [32minfo[39m: Published SyncCommitteeMessage slot=134, count=128
+[vc-4-geth-lodestar] Mar-04 15:18:46.061[]                 [32minfo[39m: Published SyncCommitteeContribution slot=134, index=1, count=4
+[vc-4-geth-lodestar] Mar-04 15:18:46.061[]                 [32minfo[39m: Published SyncCommitteeContribution slot=134, index=2, count=1
+[vc-4-geth-lodestar] Mar-04 15:18:46.062[]                 [32minfo[39m: Published aggregateAndProofs slot=134, index=0, participants=4, count=4
+[vc-4-geth-lodestar] Mar-04 15:18:46.075[]                 [32minfo[39m: Published SyncCommitteeContribution slot=134, index=0, count=6
+[vc-4-geth-lodestar] Mar-04 15:18:46.075[]                 [32minfo[39m: Published SyncCommitteeContribution slot=134, index=3, count=3
+[vc-4-geth-lodestar] Mar-04 15:18:55.166[]                 [32minfo[39m: Published attestations slot=135, head=0x9522…4e3a, count=1
+[vc-4-geth-lodestar] Mar-04 15:18:55.190[]                 [32minfo[39m: Published SyncCommitteeMessage slot=135, count=128
+[vc-4-geth-lodestar] Mar-04 15:18:58.047[]                 [32minfo[39m: Published SyncCommitteeContribution slot=135, index=1, count=3
+[vc-4-geth-lodestar] Mar-04 15:18:58.048[]                 [32minfo[39m: Published SyncCommitteeContribution slot=135, index=2, count=4
+[vc-4-geth-lodestar] Mar-04 15:18:58.048[]                 [32minfo[39m: Published SyncCommitteeContribution slot=135, index=0, count=3
+[vc-4-geth-lodestar] Mar-04 15:18:58.048[]                 [32minfo[39m: Published aggregateAndProofs slot=135, index=0, participants=5, count=1
+[vc-4-geth-lodestar] Mar-04 15:18:58.067[]                 [32minfo[39m: Published SyncCommitteeContribution slot=135, index=3, count=6
+[vc-4-geth-lodestar] Mar-04 15:19:04.656[]                 [32minfo[39m: Published attestations slot=136, head=0x67d0…6119, count=4
+[vc-4-geth-lodestar] Mar-04 15:19:04.708[]                 [32minfo[39m: Published SyncCommitteeMessage slot=136, count=128
+[vc-4-geth-lodestar] Mar-04 15:19:10.061[]                 [32minfo[39m: Published SyncCommitteeContribution slot=136, index=1, count=4
+[vc-4-geth-lodestar] Mar-04 15:19:10.064[]                 [32minfo[39m: Published aggregateAndProofs slot=136, index=0, participants=4, count=4
+[vc-4-geth-lodestar] Mar-04 15:19:10.071[]                 [32minfo[39m: Published SyncCommitteeContribution slot=136, index=2, count=5
+[vc-4-geth-lodestar] Mar-04 15:19:10.072[]                 [32minfo[39m: Published SyncCommitteeContribution slot=136, index=0, count=7
+[vc-4-geth-lodestar] Mar-04 15:19:10.095[]                 [32minfo[39m: Published SyncCommitteeContribution slot=136, index=3, count=5
+[vc-4-geth-lodestar] Mar-04 15:19:16.679[]                 [32minfo[39m: Published SyncCommitteeMessage slot=137, count=128
+[vc-4-geth-lodestar] Mar-04 15:19:16.717[]                 [32minfo[39m: Published attestations slot=137, head=0xd318…c4ff, count=5
+[vc-4-geth-lodestar] Mar-04 15:19:22.056[]                 [32minfo[39m: Published SyncCommitteeContribution slot=137, index=1, count=3
+[vc-4-geth-lodestar] Mar-04 15:19:22.063[]                 [32minfo[39m: Published SyncCommitteeContribution slot=137, index=2, count=6
+[vc-4-geth-lodestar] Mar-04 15:19:22.093[]                 [32minfo[39m: Published SyncCommitteeContribution slot=137, index=0, count=4
+[vc-4-geth-lodestar] Mar-04 15:19:22.093[]                 [32minfo[39m: Published SyncCommitteeContribution slot=137, index=3, count=3
+[vc-4-geth-lodestar] Mar-04 15:19:22.098[]                 [32minfo[39m: Published aggregateAndProofs slot=137, index=0, participants=9, count=5
+[vc-4-geth-lodestar] Mar-04 15:19:28.710[]                 [32minfo[39m: Published SyncCommitteeMessage slot=138, count=128
+[vc-4-geth-lodestar] Mar-04 15:19:28.766[]                 [32minfo[39m: Published attestations slot=138, head=0xd68c…b4f0, count=7
+[vc-4-geth-lodestar] Mar-04 15:19:34.054[]                 [32minfo[39m: Published SyncCommitteeContribution slot=138, index=1, count=3
+[vc-4-geth-lodestar] Mar-04 15:19:34.054[]                 [32minfo[39m: Published SyncCommitteeContribution slot=138, index=2, count=3
+[vc-4-geth-lodestar] Mar-04 15:19:34.055[]                 [32minfo[39m: Published SyncCommitteeContribution slot=138, index=0, count=4
+[vc-4-geth-lodestar] Mar-04 15:19:34.056[]                 [32minfo[39m: Published SyncCommitteeContribution slot=138, index=3, count=5
+[vc-4-geth-lodestar] Mar-04 15:19:34.059[]                 [32minfo[39m: Published aggregateAndProofs slot=138, index=0, participants=7, count=7
+[vc-4-geth-lodestar] Mar-04 15:19:43.227[]                 [32minfo[39m: Published SyncCommitteeMessage slot=139, count=128
+[vc-4-geth-lodestar] Mar-04 15:19:43.227[]                 [32minfo[39m: Published attestations slot=139, head=0xd68c…b4f0, count=5
+[vc-4-geth-lodestar] Mar-04 15:19:46.062[]                 [32minfo[39m: Published SyncCommitteeContribution slot=139, index=1, count=2
+[vc-4-geth-lodestar] Mar-04 15:19:46.062[]                 [32minfo[39m: Published SyncCommitteeContribution slot=139, index=2, count=1
+[vc-4-geth-lodestar] Mar-04 15:19:46.062[]                 [32minfo[39m: Published SyncCommitteeContribution slot=139, index=0, count=3
+[vc-4-geth-lodestar] Mar-04 15:19:46.062[]                 [32minfo[39m: Published SyncCommitteeContribution slot=139, index=3, count=2
+[vc-4-geth-lodestar] Mar-04 15:19:46.080[]                 [32minfo[39m: Published aggregateAndProofs slot=139, index=0, participants=9, count=5
+[vc-4-geth-lodestar] Mar-04 15:19:55.157[]                 [32minfo[39m: Published attestations slot=140, head=0xd68c…b4f0, count=4
+[vc-4-geth-lodestar] Mar-04 15:19:55.230[]                 [32minfo[39m: Published SyncCommitteeMessage slot=140, count=128
+[vc-4-geth-lodestar] Mar-04 15:19:58.049[]                 [32minfo[39m: Published SyncCommitteeContribution slot=140, index=1, count=2
+[vc-4-geth-lodestar] Mar-04 15:19:58.049[]                 [32minfo[39m: Published SyncCommitteeContribution slot=140, index=2, count=2
+[vc-4-geth-lodestar] Mar-04 15:19:58.051[]                 [32minfo[39m: Published aggregateAndProofs slot=140, index=0, participants=4, count=4
+[vc-4-geth-lodestar] Mar-04 15:19:58.083[]                 [32minfo[39m: Published SyncCommitteeContribution slot=140, index=0, count=6
+[vc-4-geth-lodestar] Mar-04 15:19:58.083[]                 [32minfo[39m: Published SyncCommitteeContribution slot=140, index=3, count=2
+[vc-4-geth-lodestar] Mar-04 15:20:07.201[]                 [32minfo[39m: Published attestations slot=141, head=0xd68c…b4f0, count=2
+[vc-4-geth-lodestar] Mar-04 15:20:07.235[]                 [32minfo[39m: Published SyncCommitteeMessage slot=141, count=128
+[vc-4-geth-lodestar] Mar-04 15:20:10.054[]                 [32minfo[39m: Published SyncCommitteeContribution slot=141, index=1, count=1
+[vc-4-geth-lodestar] Mar-04 15:20:10.056[]                 [32minfo[39m: Published SyncCommitteeContribution slot=141, index=2, count=5
+[vc-4-geth-lodestar] Mar-04 15:20:10.057[]                 [32minfo[39m: Published SyncCommitteeContribution slot=141, index=0, count=3
+[vc-4-geth-lodestar] Mar-04 15:20:10.059[]                 [32minfo[39m: Published aggregateAndProofs slot=141, index=0, participants=6, count=2
+[vc-4-geth-lodestar] Mar-04 15:20:10.090[]                 [32minfo[39m: Published SyncCommitteeContribution slot=141, index=3, count=6
+[vc-4-geth-lodestar] Mar-04 15:20:19.284[]                 [32minfo[39m: Published SyncCommitteeMessage slot=142, count=128
+[vc-4-geth-lodestar] Mar-04 15:20:19.295[]                 [32minfo[39m: Published attestations slot=142, head=0xd68c…b4f0, count=6
+[vc-4-geth-lodestar] Mar-04 15:20:22.060[]                 [32minfo[39m: Published SyncCommitteeContribution slot=142, index=1, count=6
+[vc-4-geth-lodestar] Mar-04 15:20:22.060[]                 [32minfo[39m: Published SyncCommitteeContribution slot=142, index=2, count=4
+[vc-4-geth-lodestar] Mar-04 15:20:22.061[]                 [32minfo[39m: Published SyncCommitteeContribution slot=142, index=0, count=4
+[vc-4-geth-lodestar] Mar-04 15:20:22.065[]                 [32minfo[39m: Published SyncCommitteeContribution slot=142, index=3, count=8
+[vc-4-geth-lodestar] Mar-04 15:20:22.152[]                 [32minfo[39m: Published aggregateAndProofs slot=142, index=0, participants=6, count=6
+[vc-4-geth-lodestar] Mar-04 15:20:31.215[]                 [32minfo[39m: Published attestations slot=143, head=0xd68c…b4f0, count=2
+[vc-4-geth-lodestar] Mar-04 15:20:31.253[]                 [32minfo[39m: Published SyncCommitteeMessage slot=143, count=128
+[vc-4-geth-lodestar] Mar-04 15:20:34.053[]                 [32minfo[39m: Published SyncCommitteeContribution slot=143, index=1, count=1
+[vc-4-geth-lodestar] Mar-04 15:20:34.053[]                 [32minfo[39m: Published SyncCommitteeContribution slot=143, index=2, count=3
+[vc-4-geth-lodestar] Mar-04 15:20:34.057[]                 [32minfo[39m: Published aggregateAndProofs slot=143, index=0, participants=6, count=2
+[vc-4-geth-lodestar] Mar-04 15:20:34.096[]                 [32minfo[39m: Published SyncCommitteeContribution slot=143, index=0, count=6
+[vc-4-geth-lodestar] Mar-04 15:20:34.097[]                 [32minfo[39m: Published SyncCommitteeContribution slot=143, index=3, count=6
+[vc-4-geth-lodestar] Mar-04 15:20:43.262[]                 [32minfo[39m: Published SyncCommitteeMessage slot=144, count=128
+[vc-4-geth-lodestar] Mar-04 15:20:43.273[]                 [32minfo[39m: Published attestations slot=144, head=0xd68c…b4f0, count=6
+[vc-4-geth-lodestar] Mar-04 15:20:46.062[]                 [32minfo[39m: Published SyncCommitteeContribution slot=144, index=1, count=3
+[vc-4-geth-lodestar] Mar-04 15:20:46.068[]                 [32minfo[39m: Published aggregateAndProofs slot=144, index=0, participants=10, count=6
+[vc-4-geth-lodestar] Mar-04 15:20:46.075[]                 [32minfo[39m: Published SyncCommitteeContribution slot=144, index=2, count=6
+[vc-4-geth-lodestar] Mar-04 15:20:46.076[]                 [32minfo[39m: Published SyncCommitteeContribution slot=144, index=0, count=5
+[vc-4-geth-lodestar] Mar-04 15:20:46.079[]                 [32minfo[39m: Published SyncCommitteeContribution slot=144, index=3, count=4
+[vc-4-geth-lodestar] Mar-04 15:20:55.216[]                 [32minfo[39m: Published attestations slot=145, head=0xd68c…b4f0, count=3
+[vc-4-geth-lodestar] Mar-04 15:20:55.222[]                 [32minfo[39m: Published SyncCommitteeMessage slot=145, count=128
+[vc-4-geth-lodestar] Mar-04 15:20:58.070[]                 [32minfo[39m: Published SyncCommitteeContribution slot=145, index=1, count=3
+[vc-4-geth-lodestar] Mar-04 15:20:58.071[]                 [32minfo[39m: Published aggregateAndProofs slot=145, index=0, participants=7, count=3
+[vc-4-geth-lodestar] Mar-04 15:20:58.093[]                 [32minfo[39m: Published SyncCommitteeContribution slot=145, index=2, count=9
+[vc-4-geth-lodestar] Mar-04 15:20:58.095[]                 [32minfo[39m: Published SyncCommitteeContribution slot=145, index=0, count=2
+[vc-4-geth-lodestar] Mar-04 15:20:58.095[]                 [32minfo[39m: Published SyncCommitteeContribution slot=145, index=3, count=3
+[vc-4-geth-lodestar] Mar-04 15:21:07.177[]                 [32minfo[39m: Published attestations slot=146, head=0xd68c…b4f0, count=3
+[vc-4-geth-lodestar] Mar-04 15:21:07.213[]                 [32minfo[39m: Published SyncCommitteeMessage slot=146, count=128
+[vc-4-geth-lodestar] Mar-04 15:21:10.052[]                 [32minfo[39m: Published SyncCommitteeContribution slot=146, index=1, count=1
+[vc-4-geth-lodestar] Mar-04 15:21:10.054[]                 [32minfo[39m: Published SyncCommitteeContribution slot=146, index=2, count=4
+[vc-4-geth-lodestar] Mar-04 15:21:10.057[]                 [32minfo[39m: Published aggregateAndProofs slot=146, index=0, participants=7, count=3
+[vc-4-geth-lodestar] Mar-04 15:21:10.115[]                 [32minfo[39m: Published SyncCommitteeContribution slot=146, index=0, count=7
+[vc-4-geth-lodestar] Mar-04 15:21:10.116[]                 [32minfo[39m: Published SyncCommitteeContribution slot=146, index=3, count=5
+[vc-4-geth-lodestar] Mar-04 15:21:19.240[]                 [32minfo[39m: Published attestations slot=147, head=0xd68c…b4f0, count=3
+[vc-4-geth-lodestar] Mar-04 15:21:19.250[]                 [32minfo[39m: Published SyncCommitteeMessage slot=147, count=128
+[vc-4-geth-lodestar] Mar-04 15:21:22.052[]                 [32minfo[39m: Published SyncCommitteeContribution slot=147, index=1, count=4
+[vc-4-geth-lodestar] Mar-04 15:21:22.052[]                 [32minfo[39m: Published aggregateAndProofs slot=147, index=0, participants=7, count=3
+[vc-4-geth-lodestar] Mar-04 15:21:22.089[]                 [32minfo[39m: Published SyncCommitteeContribution slot=147, index=2, count=6
+[vc-4-geth-lodestar] Mar-04 15:21:22.089[]                 [32minfo[39m: Published SyncCommitteeContribution slot=147, index=0, count=2
+[vc-4-geth-lodestar] Mar-04 15:21:31.227[]                 [32minfo[39m: Published attestations slot=148, head=0xd68c…b4f0, count=2
+[vc-4-geth-lodestar] Mar-04 15:21:31.284[]                 [32minfo[39m: Published SyncCommitteeMessage slot=148, count=128
+[vc-4-geth-lodestar] Mar-04 15:21:34.078[]                 [32minfo[39m: Published SyncCommitteeContribution slot=148, index=1, count=3
+[vc-4-geth-lodestar] Mar-04 15:21:34.078[]                 [32minfo[39m: Published SyncCommitteeContribution slot=148, index=2, count=5
+[vc-4-geth-lodestar] Mar-04 15:21:34.100[]                 [32minfo[39m: Published aggregateAndProofs slot=148, index=0, participants=6, count=2
+[vc-4-geth-lodestar] Mar-04 15:21:34.135[]                 [32minfo[39m: Published SyncCommitteeContribution slot=148, index=0, count=6
+[vc-4-geth-lodestar] Mar-04 15:21:34.138[]                 [32minfo[39m: Published SyncCommitteeContribution slot=148, index=3, count=5
+[vc-4-geth-lodestar] Mar-04 15:21:40.600[]                 [32minfo[39m: Published block and execution payload envelope slot=149, validator=0xa3a5…cb7f, graffiti=undefined, consensusBlockValue=0.00248 ETH, blockRoot=0xbc2e65499a83c5ba5bffba9d86f9e7114b9f6298271473e3c63fb1e91f215c3d
+[vc-4-geth-lodestar] Mar-04 15:21:40.745[]                 [32minfo[39m: Published attestations slot=149, head=0xbc2e…5c3d, count=1
+[vc-4-geth-lodestar] Mar-04 15:21:40.747[]                 [32minfo[39m: Published SyncCommitteeMessage slot=149, count=128
+[vc-4-geth-lodestar] Mar-04 15:21:46.040[]                 [32minfo[39m: Published SyncCommitteeContribution slot=149, index=1, count=4
+[vc-4-geth-lodestar] Mar-04 15:21:46.040[]                 [32minfo[39m: Published SyncCommitteeContribution slot=149, index=2, count=3
+[vc-4-geth-lodestar] Mar-04 15:21:46.090[]                 [32minfo[39m: Published SyncCommitteeContribution slot=149, index=0, count=5
+[vc-4-geth-lodestar] Mar-04 15:21:46.090[]                 [32minfo[39m: Published SyncCommitteeContribution slot=149, index=3, count=5
+[vc-4-geth-lodestar] Mar-04 15:21:46.091[]                 [32minfo[39m: Published aggregateAndProofs slot=149, index=0, participants=5, count=1
+[vc-4-geth-lodestar] Mar-04 15:21:52.669[]                 [32minfo[39m: Published attestations slot=150, head=0x5458…c248, count=4
+[vc-4-geth-lodestar] Mar-04 15:21:52.739[]                 [32minfo[39m: Published SyncCommitteeMessage slot=150, count=128
+[vc-4-geth-lodestar] Mar-04 15:21:58.050[]                 [32minfo[39m: Published SyncCommitteeContribution slot=150, index=1, count=1
+[vc-4-geth-lodestar] Mar-04 15:21:58.051[]                 [32minfo[39m: Published SyncCommitteeContribution slot=150, index=2, count=6
+[vc-4-geth-lodestar] Mar-04 15:21:58.052[]                 [32minfo[39m: Published aggregateAndProofs slot=150, index=0, participants=8, count=4
+[vc-4-geth-lodestar] Mar-04 15:21:58.078[]                 [32minfo[39m: Published SyncCommitteeContribution slot=150, index=0, count=3
+[vc-4-geth-lodestar] Mar-04 15:21:58.078[]                 [32minfo[39m: Published SyncCommitteeContribution slot=150, index=3, count=5
+[vc-4-geth-lodestar] Mar-04 15:22:07.230[]                 [32minfo[39m: Published attestations slot=151, head=0x5458…c248, count=2
+[vc-4-geth-lodestar] Mar-04 15:22:07.243[]                 [32minfo[39m: Published SyncCommitteeMessage slot=151, count=128
+[vc-4-geth-lodestar] Mar-04 15:22:10.162[]                 [32minfo[39m: Published SyncCommitteeContribution slot=151, index=1, count=2
+[vc-4-geth-lodestar] Mar-04 15:22:10.162[]                 [32minfo[39m: Published SyncCommitteeContribution slot=151, index=2, count=7
+[vc-4-geth-lodestar] Mar-04 15:22:10.162[]                 [32minfo[39m: Published aggregateAndProofs slot=151, index=0, participants=6, count=2
+[vc-4-geth-lodestar] Mar-04 15:22:10.216[]                 [32minfo[39m: Published SyncCommitteeContribution slot=151, index=0, count=4
+[vc-4-geth-lodestar] Mar-04 15:22:10.217[]                 [32minfo[39m: Published SyncCommitteeContribution slot=151, index=3, count=1

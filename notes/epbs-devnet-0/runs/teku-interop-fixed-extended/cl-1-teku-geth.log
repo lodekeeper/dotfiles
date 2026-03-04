@@ -1,0 +1,200 @@
+[cl-1-teku-geth] 2026-03-04 15:16:34.099 INFO  - [34mValidator   *** Published sync_contribution    Count: 21, Slot: 123, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:16:37.081 INFO  - [34mValidator   *** Published payload_attestation  Count: 4, Slot: 123, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:16:43.008 INFO  - [37mSlot Event  *** Slot: 124, Block:                                                        ... empty, Justified: 1, Finalized: 0, Peers: 3[0m
+[cl-1-teku-geth] 2026-03-04 15:16:43.016 ERROR - [31mValidator   *** Failed to produce attestation  Slot: 124 Validator: a62c020, 958c269, afa10af, 99377a4, 8723142[0m
+[cl-1-teku-geth] 2026-03-04 15:16:43.061 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 124, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:16:46.039 ERROR - [31mValidator   *** Failed to produce aggregate  Slot: 124 Validator: a62c020[0m
+[cl-1-teku-geth] 2026-03-04 15:16:46.090 INFO  - [34mValidator   *** Published sync_contribution    Count: 15, Slot: 124, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:16:49.050 INFO  - [34mValidator   *** Published payload_attestation  Count: 5, Slot: 124, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:16:55.001 INFO  - [37mSlot Event  *** Slot: 125, Block:                                                        ... empty, Justified: 1, Finalized: 0, Peers: 3[0m
+[cl-1-teku-geth] 2026-03-04 15:16:55.018 ERROR - [31mValidator   *** Failed to produce attestation  Slot: 125 Validator: a7ed4d8, ae2dd5d, 896a51e, a90dab7[0m
+[cl-1-teku-geth] 2026-03-04 15:16:55.059 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 125, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:16:58.038 ERROR - [31mValidator   *** Failed to produce aggregate  Slot: 125 Validator: ae2dd5d[0m
+[cl-1-teku-geth] 2026-03-04 15:16:58.088 INFO  - [34mValidator   *** Published sync_contribution    Count: 12, Slot: 125, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:17:01.069 INFO  - [34mValidator   *** Published payload_attestation  Count: 4, Slot: 125, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:17:07.001 INFO  - [37mSlot Event  *** Slot: 126, Block:                                                        ... empty, Justified: 1, Finalized: 0, Peers: 3[0m
+[cl-1-teku-geth] 2026-03-04 15:17:07.032 ERROR - [31mValidator   *** Failed to produce attestation  Slot: 126 Validator: a8fa358, 8e8d4d3, 961a7d8, abd3280, b0b263c[0m
+[cl-1-teku-geth] 2026-03-04 15:17:07.099 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 126, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:17:10.001 ERROR - [31mValidator   *** Failed to produce aggregate  Slot: 126 Validator: a8fa358[0m
+[cl-1-teku-geth] 2026-03-04 15:17:10.103 INFO  - [34mValidator   *** Published sync_contribution    Count: 16, Slot: 126, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:17:13.047 INFO  - [34mValidator   *** Published payload_attestation  Count: 5, Slot: 126, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:17:19.001 INFO  - [37mSlot Event  *** Slot: 127, Block:                                                        ... empty, Justified: 1, Finalized: 0, Peers: 3[0m
+[cl-1-teku-geth] 2026-03-04 15:17:19.030 ERROR - [31mValidator   *** Failed to produce attestation  Slot: 127 Validator: 9583309, a35c600[0m
+[cl-1-teku-geth] 2026-03-04 15:17:19.075 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 127, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:17:22.001 ERROR - [31mValidator   *** Failed to produce aggregate  Slot: 127 Validator: 9583309[0m
+[cl-1-teku-geth] 2026-03-04 15:17:22.072 INFO  - [34mValidator   *** Published sync_contribution    Count: 10, Slot: 127, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:17:25.020 INFO  - [34mValidator   *** Published payload_attestation  Count: 2, Slot: 127, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:17:28.001 INFO  - [32mEpoch Event *** Epoch: 4, Justified checkpoint: 1, Finalized checkpoint: 0, Finalized root: 0ea44ce55341ea44fb14dd58c4889c557211f574e35e1bcdef94a8ce8ccaaca4[0m
+[cl-1-teku-geth] 2026-03-04 15:17:28.014 INFO  - Attestation performance: epoch 2, expected 128, produced 69, included 69 (100%), distance 1 / 3.20 / 10, correct target 69 (100%), correct head 63 (91%)
+[cl-1-teku-geth] 2026-03-04 15:17:28.014 INFO  - Block performance: epoch 3, expected 9, produced 9, included 9 (100%)
+[cl-1-teku-geth] 2026-03-04 15:17:28.020 INFO  - Sync committee performance: epoch 3, expected 4096, produced 4096, correct 4096, included 1152 (28%)
+[cl-1-teku-geth] 2026-03-04 15:17:31.002 INFO  - [37mSlot Event  *** Slot: 128, Block:                                                        ... empty, Justified: 1, Finalized: 0, Peers: 3[0m
+[cl-1-teku-geth] 2026-03-04 15:17:31.032 ERROR - [31mValidator   *** Failed to produce attestation  Slot: 128 Validator: b27ad13, 8d9dc5d[0m
+[cl-1-teku-geth] 2026-03-04 15:17:31.090 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 128, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:17:34.002 ERROR - [31mValidator   *** Failed to produce aggregate  Slot: 128 Validator: b27ad13[0m
+[cl-1-teku-geth] 2026-03-04 15:17:34.079 INFO  - [34mValidator   *** Published sync_contribution    Count: 9, Slot: 128, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:17:37.022 INFO  - [34mValidator   *** Published payload_attestation  Count: 2, Slot: 128, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:17:43.001 INFO  - [37mSlot Event  *** Slot: 129, Block:                                                        ... empty, Justified: 1, Finalized: 0, Peers: 3[0m
+[cl-1-teku-geth] 2026-03-04 15:17:43.001 ERROR - [31mValidator   *** Failed to produce attestation  Slot: 129 Validator: b5e898a, 81b6765, b3faeeb, a7ed4d8[0m
+[cl-1-teku-geth] 2026-03-04 15:17:43.069 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 129, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:17:46.001 ERROR - [31mValidator   *** Failed to produce aggregate  Slot: 129 Validator: b3faeeb[0m
+[cl-1-teku-geth] 2026-03-04 15:17:46.102 INFO  - [34mValidator   *** Published sync_contribution    Count: 19, Slot: 129, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:17:49.067 INFO  - [34mValidator   *** Published payload_attestation  Count: 4, Slot: 129, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:17:55.001 INFO  - [37mSlot Event  *** Slot: 130, Block:                                                        ... empty, Justified: 1, Finalized: 0, Peers: 3[0m
+[cl-1-teku-geth] 2026-03-04 15:17:55.034 ERROR - [31mValidator   *** Failed to produce attestation  Slot: 130 Validator: b3a1fbf[0m
+[cl-1-teku-geth] 2026-03-04 15:17:55.094 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 130, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:17:58.001 ERROR - [31mValidator   *** Failed to produce aggregate  Slot: 130 Validator: b3a1fbf[0m
+[cl-1-teku-geth] 2026-03-04 15:17:58.125 INFO  - [34mValidator   *** Published sync_contribution    Count: 19, Slot: 130, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:18:01.012 INFO  - [34mValidator   *** Published payload_attestation  Count: 1, Slot: 130, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:18:07.001 INFO  - [37mSlot Event  *** Slot: 131, Block:                                                        ... empty, Justified: 1, Finalized: 0, Peers: 3[0m
+[cl-1-teku-geth] 2026-03-04 15:18:07.026 ERROR - [31mValidator   *** Failed to produce attestation  Slot: 131 Validator: 8109382, 86e0147, 8d028a0, ac97a57, abd3280, ab40dc1, 8419cf0[0m
+[cl-1-teku-geth] 2026-03-04 15:18:07.067 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 131, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:18:10.002 ERROR - [31mValidator   *** Failed to produce aggregate  Slot: 131 Validator: 8419cf0[0m
+[cl-1-teku-geth] 2026-03-04 15:18:10.092 INFO  - [34mValidator   *** Published sync_contribution    Count: 14, Slot: 131, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:18:13.071 INFO  - [34mValidator   *** Published payload_attestation  Count: 7, Slot: 131, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:18:19.001 INFO  - [37mSlot Event  *** Slot: 132, Block:                                                        ... empty, Justified: 1, Finalized: 0, Peers: 3[0m
+[cl-1-teku-geth] 2026-03-04 15:18:19.020 ERROR - [31mValidator   *** Failed to produce attestation  Slot: 132 Validator: b8c6663, a75ca94, b26fae5, b0b263c[0m
+[cl-1-teku-geth] 2026-03-04 15:18:19.064 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 132, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:18:22.000 ERROR - [31mValidator   *** Failed to produce aggregate  Slot: 132 Validator: a75ca94[0m
+[cl-1-teku-geth] 2026-03-04 15:18:22.083 INFO  - [34mValidator   *** Published sync_contribution    Count: 17, Slot: 132, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:18:25.039 INFO  - [34mValidator   *** Published payload_attestation  Count: 4, Slot: 132, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:18:31.005 INFO  - [37mSlot Event  *** Slot: 133, Block:                                                        ... empty, Justified: 1, Finalized: 0, Peers: 3[0m
+[cl-1-teku-geth] 2026-03-04 15:18:31.032 ERROR - [31mValidator   *** Failed to produce attestation  Slot: 133 Validator: af89ab0, aa080af[0m
+[cl-1-teku-geth] 2026-03-04 15:18:31.084 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 133, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:18:34.002 ERROR - [31mValidator   *** Failed to produce aggregate  Slot: 133 Validator: aa080af[0m
+[cl-1-teku-geth] 2026-03-04 15:18:34.098 INFO  - [34mValidator   *** Published sync_contribution    Count: 21, Slot: 133, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:18:37.019 INFO  - [34mValidator   *** Published payload_attestation  Count: 2, Slot: 133, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:18:43.001 INFO  - [37mSlot Event  *** Slot: 134, Block:                                                        ... empty, Justified: 1, Finalized: 0, Peers: 3[0m
+[cl-1-teku-geth] 2026-03-04 15:18:43.013 ERROR - [31mValidator   *** Failed to produce attestation  Slot: 134 Validator: ac2d58a, 9583309, 8d46e9a, ab64f90[0m
+[cl-1-teku-geth] 2026-03-04 15:18:43.095 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 134, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:18:46.002 ERROR - [31mValidator   *** Failed to produce aggregate  Slot: 134 Validator: 8d46e9a[0m
+[cl-1-teku-geth] 2026-03-04 15:18:46.086 INFO  - [34mValidator   *** Published sync_contribution    Count: 16, Slot: 134, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:18:49.069 INFO  - [34mValidator   *** Published payload_attestation  Count: 4, Slot: 134, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:18:55.001 INFO  - [37mSlot Event  *** Slot: 135, Block:                                                        ... empty, Justified: 1, Finalized: 0, Peers: 3[0m
+[cl-1-teku-geth] 2026-03-04 15:18:55.031 ERROR - [31mValidator   *** Failed to produce attestation  Slot: 135 Validator: 8c0d15b, ac69ae9, 91709ee, b6cd229, a90dab7[0m
+[cl-1-teku-geth] 2026-03-04 15:18:55.087 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 135, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:18:58.002 ERROR - [31mValidator   *** Failed to produce aggregate  Slot: 135 Validator: 91709ee[0m
+[cl-1-teku-geth] 2026-03-04 15:18:58.079 INFO  - [34mValidator   *** Published sync_contribution    Count: 14, Slot: 135, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:19:01.084 INFO  - [34mValidator   *** Published payload_attestation  Count: 5, Slot: 135, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:19:07.002 INFO  - [37mSlot Event  *** Slot: 136, Block:                                                        ... empty, Justified: 1, Finalized: 0, Peers: 3[0m
+[cl-1-teku-geth] 2026-03-04 15:19:07.025 ERROR - [31mValidator   *** Failed to produce attestation  Slot: 136 Validator: b63f327, 958c269, b320e18[0m
+[cl-1-teku-geth] 2026-03-04 15:19:07.068 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 136, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:19:10.002 ERROR - [31mValidator   *** Failed to produce aggregate  Slot: 136 Validator: b63f327[0m
+[cl-1-teku-geth] 2026-03-04 15:19:10.108 INFO  - [34mValidator   *** Published sync_contribution    Count: 16, Slot: 136, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:19:13.031 INFO  - [34mValidator   *** Published payload_attestation  Count: 3, Slot: 136, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:19:19.001 INFO  - [37mSlot Event  *** Slot: 137, Block:                                                        ... empty, Justified: 1, Finalized: 0, Peers: 3[0m
+[cl-1-teku-geth] 2026-03-04 15:19:19.015 ERROR - [31mValidator   *** Failed to produce attestation  Slot: 137 Validator: b9e03b9, 9918433, ae53027, 8aa5bbe[0m
+[cl-1-teku-geth] 2026-03-04 15:19:19.068 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 137, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:19:22.000 ERROR - [31mValidator   *** Failed to produce aggregate  Slot: 137 Validator: ae53027[0m
+[cl-1-teku-geth] 2026-03-04 15:19:22.114 INFO  - [34mValidator   *** Published sync_contribution    Count: 16, Slot: 137, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:19:25.078 INFO  - [34mValidator   *** Published payload_attestation  Count: 4, Slot: 137, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:19:31.000 INFO  - [37mSlot Event  *** Slot: 138, Block:                                                        ... empty, Justified: 1, Finalized: 0, Peers: 1[0m
+[cl-1-teku-geth] 2026-03-04 15:19:31.011 ERROR - [31mValidator   *** Failed to produce attestation  Slot: 138 Validator: b97ecbc, b24391a, 889dbdf, 958b57a[0m
+[cl-1-teku-geth] 2026-03-04 15:19:31.056 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 138, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:19:34.002 ERROR - [31mValidator   *** Failed to produce aggregate  Slot: 138 Validator: 889dbdf[0m
+[cl-1-teku-geth] 2026-03-04 15:19:34.086 INFO  - [34mValidator   *** Published sync_contribution    Count: 12, Slot: 138, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:19:37.038 INFO  - [34mValidator   *** Published payload_attestation  Count: 4, Slot: 138, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:19:43.004 INFO  - [37mSlot Event  *** Slot: 139, Block:                                                        ... empty, Justified: 1, Finalized: 0, Peers: 1[0m
+[cl-1-teku-geth] 2026-03-04 15:19:43.017 ERROR - [31mValidator   *** Failed to produce attestation  Slot: 139 Validator: b414739, b43ccb0, 896a51e[0m
+[cl-1-teku-geth] 2026-03-04 15:19:43.078 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 139, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:19:46.002 ERROR - [31mValidator   *** Failed to produce aggregate  Slot: 139 Validator: b414739[0m
+[cl-1-teku-geth] 2026-03-04 15:19:46.105 INFO  - [34mValidator   *** Published sync_contribution    Count: 18, Slot: 139, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:19:49.033 INFO  - [34mValidator   *** Published payload_attestation  Count: 3, Slot: 139, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:19:55.005 INFO  - [37mSlot Event  *** Slot: 140, Block:                                                        ... empty, Justified: 1, Finalized: 0, Peers: 1[0m
+[cl-1-teku-geth] 2026-03-04 15:19:55.030 ERROR - [31mValidator   *** Failed to produce attestation  Slot: 140 Validator: 85fc722, 8548d74, b9882d1, 8aec512[0m
+[cl-1-teku-geth] 2026-03-04 15:19:55.087 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 140, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:19:58.002 ERROR - [31mValidator   *** Failed to produce aggregate  Slot: 140 Validator: b9882d1[0m
+[cl-1-teku-geth] 2026-03-04 15:19:58.099 INFO  - [34mValidator   *** Published sync_contribution    Count: 19, Slot: 140, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:20:01.059 INFO  - [34mValidator   *** Published payload_attestation  Count: 4, Slot: 140, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:20:07.008 INFO  - [37mSlot Event  *** Slot: 141, Block:                                                        ... empty, Justified: 1, Finalized: 0, Peers: 1[0m
+[cl-1-teku-geth] 2026-03-04 15:20:07.029 ERROR - [31mValidator   *** Failed to produce attestation  Slot: 141 Validator: b165f7e, 8dfa86c, 996323a, 95d7b5b, b1f2588[0m
+[cl-1-teku-geth] 2026-03-04 15:20:07.093 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 141, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:20:10.003 ERROR - [31mValidator   *** Failed to produce aggregate  Slot: 141 Validator: 95d7b5b[0m
+[cl-1-teku-geth] 2026-03-04 15:20:10.097 INFO  - [34mValidator   *** Published sync_contribution    Count: 14, Slot: 141, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:20:13.053 INFO  - [34mValidator   *** Published payload_attestation  Count: 5, Slot: 141, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:20:19.009 INFO  - [37mSlot Event  *** Slot: 142, Block:                                                        ... empty, Justified: 1, Finalized: 0, Peers: 1[0m
+[cl-1-teku-geth] 2026-03-04 15:20:19.022 ERROR - [31mValidator   *** Failed to produce attestation  Slot: 142 Validator: a804e4f, affdd64, ab72cbc, b4cb3c1[0m
+[cl-1-teku-geth] 2026-03-04 15:20:19.075 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 142, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:20:22.001 ERROR - [31mValidator   *** Failed to produce aggregate  Slot: 142 Validator: a804e4f[0m
+[cl-1-teku-geth] 2026-03-04 15:20:22.107 INFO  - [34mValidator   *** Published sync_contribution    Count: 17, Slot: 142, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:20:25.075 INFO  - [34mValidator   *** Published payload_attestation  Count: 4, Slot: 142, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:20:31.000 INFO  - [37mSlot Event  *** Slot: 143, Block:                                                        ... empty, Justified: 1, Finalized: 0, Peers: 1[0m
+[cl-1-teku-geth] 2026-03-04 15:20:31.039 ERROR - [31mValidator   *** Failed to produce attestation  Slot: 143 Validator: 91da49d, 966c488, 92b6871, 996d10c, b8f404f, 99377a4[0m
+[cl-1-teku-geth] 2026-03-04 15:20:31.112 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 143, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:20:34.002 ERROR - [31mValidator   *** Failed to produce aggregate  Slot: 143 Validator: b8f404f[0m
+[cl-1-teku-geth] 2026-03-04 15:20:34.083 INFO  - [34mValidator   *** Published sync_contribution    Count: 12, Slot: 143, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:20:37.058 INFO  - [34mValidator   *** Published payload_attestation  Count: 6, Slot: 143, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:20:43.005 INFO  - [37mSlot Event  *** Slot: 144, Block:                                                        ... empty, Justified: 1, Finalized: 0, Peers: 1[0m
+[cl-1-teku-geth] 2026-03-04 15:20:43.024 ERROR - [31mValidator   *** Failed to produce attestation  Slot: 144 Validator: b4c9e24, a2e2d83, ae2dd5d, a0485d7[0m
+[cl-1-teku-geth] 2026-03-04 15:20:43.071 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 144, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:20:46.000 ERROR - [31mValidator   *** Failed to produce aggregate  Slot: 144 Validator: ae2dd5d[0m
+[cl-1-teku-geth] 2026-03-04 15:20:46.093 INFO  - [34mValidator   *** Published sync_contribution    Count: 14, Slot: 144, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:20:49.037 INFO  - [34mValidator   *** Published payload_attestation  Count: 4, Slot: 144, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:20:55.019 INFO  - [37mSlot Event  *** Slot: 145, Block:                                                        ... empty, Justified: 1, Finalized: 0, Peers: 1[0m
+[cl-1-teku-geth] 2026-03-04 15:20:55.028 ERROR - [31mValidator   *** Failed to produce attestation  Slot: 145 Validator: b8f3af1, b09cb15, aa8ec70, 8723142[0m
+[cl-1-teku-geth] 2026-03-04 15:20:55.083 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 145, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:20:58.001 ERROR - [31mValidator   *** Failed to produce aggregate  Slot: 145 Validator: b09cb15[0m
+[cl-1-teku-geth] 2026-03-04 15:20:58.105 INFO  - [34mValidator   *** Published sync_contribution    Count: 15, Slot: 145, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:21:01.057 INFO  - [34mValidator   *** Published payload_attestation  Count: 4, Slot: 145, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:21:07.011 INFO  - [37mSlot Event  *** Slot: 146, Block:                                                        ... empty, Justified: 1, Finalized: 0, Peers: 1[0m
+[cl-1-teku-geth] 2026-03-04 15:21:07.052 ERROR - [31mValidator   *** Failed to produce attestation  Slot: 146 Validator: a54fe5c, aaddb0c, a62c020, a11c83b[0m
+[cl-1-teku-geth] 2026-03-04 15:21:07.092 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 146, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:21:10.001 ERROR - [31mValidator   *** Failed to produce aggregate  Slot: 146 Validator: a62c020[0m
+[cl-1-teku-geth] 2026-03-04 15:21:10.108 INFO  - [34mValidator   *** Published sync_contribution    Count: 14, Slot: 146, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:21:13.037 INFO  - [34mValidator   *** Published payload_attestation  Count: 4, Slot: 146, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:21:19.005 INFO  - [37mSlot Event  *** Slot: 147, Block:                                                        ... empty, Justified: 1, Finalized: 0, Peers: 1[0m
+[cl-1-teku-geth] 2026-03-04 15:21:19.039 ERROR - [31mValidator   *** Failed to produce attestation  Slot: 147 Validator: b97dbe4, a4ee6d3[0m
+[cl-1-teku-geth] 2026-03-04 15:21:19.098 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 147, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:21:22.001 ERROR - [31mValidator   *** Failed to produce aggregate  Slot: 147 Validator: a4ee6d3[0m
+[cl-1-teku-geth] 2026-03-04 15:21:22.069 INFO  - [34mValidator   *** Published sync_contribution    Count: 9, Slot: 147, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:21:25.021 INFO  - [34mValidator   *** Published payload_attestation  Count: 2, Slot: 147, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:21:31.001 INFO  - Calling local execution layer to start block production (block slot: 149)
+[cl-1-teku-geth] 2026-03-04 15:21:31.001 INFO  - [37mSlot Event  *** Slot: 148, Block:                                                        ... empty, Justified: 1, Finalized: 0, Peers: 1[0m
+[cl-1-teku-geth] 2026-03-04 15:21:31.010 ERROR - [31mValidator   *** Failed to produce attestation  Slot: 148 Validator: abd1267[0m
+[cl-1-teku-geth] 2026-03-04 15:21:31.095 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 148, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:21:34.004 ERROR - [31mValidator   *** Failed to produce aggregate  Slot: 148 Validator: abd1267[0m
+[cl-1-teku-geth] 2026-03-04 15:21:34.139 INFO  - [34mValidator   *** Published sync_contribution    Count: 14, Slot: 148, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:21:37.019 INFO  - [34mValidator   *** Published payload_attestation  Count: 1, Slot: 148, Root: a98557545f7e86035d8c89468ee23af92d140fb2f60dd0ef1b9a68d83b050204[0m
+[cl-1-teku-geth] 2026-03-04 15:21:39.500 INFO  - Preparing block production for slot 149
+[cl-1-teku-geth] 2026-03-04 15:21:40.002 INFO  - Creating unsigned block for slot 149
+[cl-1-teku-geth] 2026-03-04 15:21:40.008 INFO  - Considering self-built bid (value: 0.000000 ETH, EL block: ace9e5..ed23) for block at slot 149
+[cl-1-teku-geth] 2026-03-04 15:21:40.032 INFO  - Validator client received block for slot 149, block rewards 0.008299 ETH, execution payload value 0.000000 ETH
+[cl-1-teku-geth] 2026-03-04 15:21:40.038 INFO  - starting to publish block at slot 149
+[cl-1-teku-geth] 2026-03-04 15:21:40.097 INFO  - [36mValidator   *** Published block                Count: 1, Slot: 149, Root: 8d1482b5101788fc5a3d78047fe971cfce002c2566ab37ec473175b0c466ee39, Blobs: 0, Builder: 18446744073709551615, Bid gas limit: 60000000, Bid EL block: ace9e5..ed23[0m
+[cl-1-teku-geth] 2026-03-04 15:21:40.133 INFO  - [34mValidator   *** Published attestation          Count: 5, Slot: 149, Root: 8d1482b5101788fc5a3d78047fe971cfce002c2566ab37ec473175b0c466ee39[0m
+[cl-1-teku-geth] 2026-03-04 15:21:40.597 INFO  - Producing unsigned execution payload for slot 149 and block 0x8d1482b5101788fc5a3d78047fe971cfce002c2566ab37ec473175b0c466ee39
+[cl-1-teku-geth] 2026-03-04 15:21:40.602 INFO  - [35mBuilder     *** Published execution_payload    Slot: 149, Builder: 18446744073709551615, Block Root: 8d1482b5101788fc5a3d78047fe971cfce002c2566ab37ec473175b0c466ee39, 0 (0%) gas, EL block: ace9e534923bf88e57c0dce81f1b7b044d2679c00fb11e6d95cdee9a6f0aed23 (88)[0m
+[cl-1-teku-geth] 2026-03-04 15:21:40.607 INFO  - Calling local execution layer to start block production (block slot: 150)
+[cl-1-teku-geth] 2026-03-04 15:21:43.001 INFO  - [37mSlot Event  *** Slot: 149, Block: 8d1482b5101788fc5a3d78047fe971cfce002c2566ab37ec473175b0c466ee39, Justified: 1, Finalized: 0, Peers: 1[0m
+[cl-1-teku-geth] 2026-03-04 15:21:43.073 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 149, Root: 8d1482b5101788fc5a3d78047fe971cfce002c2566ab37ec473175b0c466ee39[0m
+[cl-1-teku-geth] 2026-03-04 15:21:46.050 INFO  - [34mValidator   *** Published aggregate            Count: 1, Slot: 149, Root: 8d1482b5101788fc5a3d78047fe971cfce002c2566ab37ec473175b0c466ee39[0m
+[cl-1-teku-geth] 2026-03-04 15:21:46.085 INFO  - [34mValidator   *** Published sync_contribution    Count: 17, Slot: 149, Root: 8d1482b5101788fc5a3d78047fe971cfce002c2566ab37ec473175b0c466ee39[0m
+[cl-1-teku-geth] 2026-03-04 15:21:49.050 INFO  - [34mValidator   *** Published payload_attestation  Count: 5, Slot: 149, Root: 8d1482b5101788fc5a3d78047fe971cfce002c2566ab37ec473175b0c466ee39[0m
+[cl-1-teku-geth] 2026-03-04 15:21:51.500 INFO  - Preparing block production for slot 150
+[cl-1-teku-geth] 2026-03-04 15:21:52.002 INFO  - Creating unsigned block for slot 150
+[cl-1-teku-geth] 2026-03-04 15:21:52.006 INFO  - Considering self-built bid (value: 0.000000 ETH, EL block: 4a118c..7825) for block at slot 150
+[cl-1-teku-geth] 2026-03-04 15:21:52.056 INFO  - Validator client received block for slot 150, block rewards 0.008613 ETH, execution payload value 0.000000 ETH
+[cl-1-teku-geth] 2026-03-04 15:21:52.062 INFO  - starting to publish block at slot 150
+[cl-1-teku-geth] 2026-03-04 15:21:52.077 INFO  - [36mValidator   *** Published block                Count: 1, Slot: 150, Root: c0134350b70a7d4bf7e37087d4d7818e3640bc223bf1aecfa3cb4287836db760, Blobs: 0, Builder: 18446744073709551615, Bid gas limit: 60000000, Bid EL block: 4a118c..7825[0m
+[cl-1-teku-geth] 2026-03-04 15:21:52.112 INFO  - [34mValidator   *** Published attestation          Count: 5, Slot: 150, Root: c0134350b70a7d4bf7e37087d4d7818e3640bc223bf1aecfa3cb4287836db760[0m
+[cl-1-teku-geth] 2026-03-04 15:21:52.578 INFO  - Producing unsigned execution payload for slot 150 and block 0xc0134350b70a7d4bf7e37087d4d7818e3640bc223bf1aecfa3cb4287836db760
+[cl-1-teku-geth] 2026-03-04 15:21:52.581 INFO  - [35mBuilder     *** Published execution_payload    Slot: 150, Builder: 18446744073709551615, Block Root: c0134350b70a7d4bf7e37087d4d7818e3640bc223bf1aecfa3cb4287836db760, 0 (0%) gas, EL block: 4a118c563a38de21893e2af40be706a805cf16519f077fdb5fe5ab8f04347825 (89)[0m
+[cl-1-teku-geth] 2026-03-04 15:21:52.585 INFO  - Calling local execution layer to start block production (block slot: 151)
+[cl-1-teku-geth] 2026-03-04 15:21:55.001 INFO  - [37mSlot Event  *** Slot: 150, Block: c0134350b70a7d4bf7e37087d4d7818e3640bc223bf1aecfa3cb4287836db760, Justified: 1, Finalized: 0, Peers: 1[0m
+[cl-1-teku-geth] 2026-03-04 15:21:55.072 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 150, Root: c0134350b70a7d4bf7e37087d4d7818e3640bc223bf1aecfa3cb4287836db760[0m
+[cl-1-teku-geth] 2026-03-04 15:21:58.057 INFO  - [34mValidator   *** Published aggregate            Count: 1, Slot: 150, Root: c0134350b70a7d4bf7e37087d4d7818e3640bc223bf1aecfa3cb4287836db760[0m
+[cl-1-teku-geth] 2026-03-04 15:21:58.096 INFO  - [34mValidator   *** Published sync_contribution    Count: 20, Slot: 150, Root: c0134350b70a7d4bf7e37087d4d7818e3640bc223bf1aecfa3cb4287836db760[0m
+[cl-1-teku-geth] 2026-03-04 15:22:01.054 INFO  - [34mValidator   *** Published payload_attestation  Count: 5, Slot: 150, Root: c0134350b70a7d4bf7e37087d4d7818e3640bc223bf1aecfa3cb4287836db760[0m
+[cl-1-teku-geth] 2026-03-04 15:22:03.501 INFO  - Preparing block production for slot 151
+[cl-1-teku-geth] 2026-03-04 15:22:04.001 INFO  - Creating unsigned block for slot 151
+[cl-1-teku-geth] 2026-03-04 15:22:04.007 INFO  - Considering self-built bid (value: 0.000000 ETH, EL block: 54ed55..df33) for block at slot 151
+[cl-1-teku-geth] 2026-03-04 15:22:04.037 INFO  - Validator client received block for slot 151, block rewards 0.008927 ETH, execution payload value 0.000000 ETH
+[cl-1-teku-geth] 2026-03-04 15:22:04.043 INFO  - starting to publish block at slot 151
+[cl-1-teku-geth] 2026-03-04 15:22:04.064 INFO  - [36mValidator   *** Published block                Count: 1, Slot: 151, Root: 81f245744c2b587af4e6f5546514ee4ae9c9a03d8d9ce3da337c41c3d3223cca, Blobs: 0, Builder: 18446744073709551615, Bid gas limit: 60000000, Bid EL block: 54ed55..df33[0m
+[cl-1-teku-geth] 2026-03-04 15:22:04.103 INFO  - [34mValidator   *** Published attestation          Count: 5, Slot: 151, Root: 81f245744c2b587af4e6f5546514ee4ae9c9a03d8d9ce3da337c41c3d3223cca[0m
+[cl-1-teku-geth] 2026-03-04 15:22:04.564 INFO  - Producing unsigned execution payload for slot 151 and block 0x81f245744c2b587af4e6f5546514ee4ae9c9a03d8d9ce3da337c41c3d3223cca
+[cl-1-teku-geth] 2026-03-04 15:22:04.566 INFO  - [35mBuilder     *** Published execution_payload    Slot: 151, Builder: 18446744073709551615, Block Root: 81f245744c2b587af4e6f5546514ee4ae9c9a03d8d9ce3da337c41c3d3223cca, 0 (0%) gas, EL block: 54ed55bcb4fc9448e7c58175ec278754cc83e8975fdbd83588c2312ab3dadf33 (90)[0m
+[cl-1-teku-geth] 2026-03-04 15:22:07.004 INFO  - [37mSlot Event  *** Slot: 151, Block: 81f245744c2b587af4e6f5546514ee4ae9c9a03d8d9ce3da337c41c3d3223cca, Justified: 1, Finalized: 0, Peers: 1[0m
+[cl-1-teku-geth] 2026-03-04 15:22:07.109 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 151, Root: 81f245744c2b587af4e6f5546514ee4ae9c9a03d8d9ce3da337c41c3d3223cca[0m
+[cl-1-teku-geth] 2026-03-04 15:22:10.123 INFO  - [34mValidator   *** Published aggregate            Count: 1, Slot: 151, Root: 81f245744c2b587af4e6f5546514ee4ae9c9a03d8d9ce3da337c41c3d3223cca[0m
+[cl-1-teku-geth] 2026-03-04 15:22:10.208 INFO  - [34mValidator   *** Published sync_contribution    Count: 8, Slot: 151, Root: 81f245744c2b587af4e6f5546514ee4ae9c9a03d8d9ce3da337c41c3d3223cca[0m

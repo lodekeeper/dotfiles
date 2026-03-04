@@ -1,0 +1,200 @@
+[cl-3-teku-geth] at tech.pegasys.teku.infrastructure.async.ScheduledExecutorAsyncRunner.lambda$createRunnableForAction$1(ScheduledExecutorAsyncRunner.java:124)
+[cl-3-teku-geth] at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+[cl-3-teku-geth] at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+[cl-3-teku-geth] at java.base/java.lang.Thread.run(Unknown Source)
+[cl-3-teku-geth] Caused by: java.lang.IllegalStateException: Unable to produce state for block at slot 33 (0x519ccb99c22c8a684cd153891c185e234e8bb2fd6ec1f92711723d96348e4a47)
+[cl-3-teku-geth] at tech.pegasys.teku.dataproviders.generators.BlockProcessor.process(BlockProcessor.java:32)
+[cl-3-teku-geth] at tech.pegasys.teku.dataproviders.generators.ChainStateGenerator.generateStates(ChainStateGenerator.java:76)
+[cl-3-teku-geth] at tech.pegasys.teku.dataproviders.generators.AsyncChainStateGenerator.lambda$processBlockBatch$8(AsyncChainStateGenerator.java:173)
+[cl-3-teku-geth] ... 16 more
+[cl-3-teku-geth] Caused by: tech.pegasys.teku.spec.logic.common.statetransition.exceptions.StateTransitionException: tech.pegasys.teku.spec.logic.common.statetransition.exceptions.BlockProcessingException: Bid is not for the right parent block
+[cl-3-teku-geth] at tech.pegasys.teku.spec.Spec.replayValidatedBlock(Spec.java:1055)
+[cl-3-teku-geth] at tech.pegasys.teku.dataproviders.generators.BlockProcessor.process(BlockProcessor.java:30)
+[cl-3-teku-geth] ... 18 more
+[cl-3-teku-geth] Caused by: tech.pegasys.teku.spec.logic.common.statetransition.exceptions.BlockProcessingException: Bid is not for the right parent block
+[cl-3-teku-geth] at tech.pegasys.teku.spec.logic.versions.gloas.block.BlockProcessorGloas.processExecutionPayloadBid(BlockProcessorGloas.java:191)
+[cl-3-teku-geth] at tech.pegasys.teku.spec.logic.versions.gloas.block.BlockProcessorGloas.lambda$executionProcessing$0(BlockProcessorGloas.java:117)
+[cl-3-teku-geth] at tech.pegasys.teku.spec.logic.common.block.AbstractBlockProcessor.safelyProcess(AbstractBlockProcessor.java:856)
+[cl-3-teku-geth] at tech.pegasys.teku.spec.logic.versions.gloas.block.BlockProcessorGloas.executionProcessing(BlockProcessorGloas.java:117)
+[cl-3-teku-geth] at tech.pegasys.teku.spec.logic.versions.bellatrix.block.BlockProcessorBellatrix.processBlock(BlockProcessorBellatrix.java:99)
+[cl-3-teku-geth] at tech.pegasys.teku.spec.logic.common.block.AbstractBlockProcessor.lambda$processUnsignedBlock$7(AbstractBlockProcessor.java:325)
+[cl-3-teku-geth] at tech.pegasys.teku.spec.datastructures.state.beaconstate.common.AbstractBeaconState.updated(AbstractBeaconState.java:69)
+[cl-3-teku-geth] at tech.pegasys.teku.spec.logic.common.block.AbstractBlockProcessor.processUnsignedBlock(AbstractBlockProcessor.java:323)
+[cl-3-teku-geth] at tech.pegasys.teku.spec.Spec.replayValidatedBlock(Spec.java:1048)
+[cl-3-teku-geth] ... 19 more
+[cl-3-teku-geth] 2026-03-04 15:50:19.005 INFO  - [37mSlot Event  *** Slot: 56, Block:                                                        ... empty, Justified: 0, Finalized: 0, Peers: 3[0m
+[cl-3-teku-geth] 2026-03-04 15:50:19.048 ERROR - [31mValidator   *** Failed to produce attestation  Slot: 56 Validator: 83425e1, 976998a, aa42692, 98bf255, 985d643, 8ca9eb2, adacae4[0m
+[cl-3-teku-geth] 2026-03-04 15:50:19.156 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 56, Root: 50fb1ca62e322bb7cd99dfea3ad09390564575f2e1e98a1e99d67bb87e3671a1[0m
+[cl-3-teku-geth] 2026-03-04 15:50:21.154 WARN  - State transition error while importing block 56 (0x91779cb5ddf867d49908dc5599c6fc47341bfba9bc0c3077e94242c2ac669f05)
+[cl-3-teku-geth] tech.pegasys.teku.spec.logic.common.statetransition.exceptions.BlockProcessingException: Bid is not for the right parent block
+[cl-3-teku-geth] at tech.pegasys.teku.spec.logic.versions.gloas.block.BlockProcessorGloas.processExecutionPayloadBid(BlockProcessorGloas.java:191)
+[cl-3-teku-geth] at tech.pegasys.teku.spec.logic.versions.gloas.block.BlockProcessorGloas.lambda$executionProcessing$0(BlockProcessorGloas.java:117)
+[cl-3-teku-geth] at tech.pegasys.teku.spec.logic.common.block.AbstractBlockProcessor.safelyProcess(AbstractBlockProcessor.java:856)
+[cl-3-teku-geth] at tech.pegasys.teku.spec.logic.versions.gloas.block.BlockProcessorGloas.executionProcessing(BlockProcessorGloas.java:117)
+[cl-3-teku-geth] at tech.pegasys.teku.spec.logic.versions.bellatrix.block.BlockProcessorBellatrix.processBlock(BlockProcessorBellatrix.java:99)
+[cl-3-teku-geth] at tech.pegasys.teku.spec.logic.common.block.AbstractBlockProcessor.lambda$processUnsignedBlock$7(AbstractBlockProcessor.java:325)
+[cl-3-teku-geth] at tech.pegasys.teku.spec.datastructures.state.beaconstate.common.AbstractBeaconState.updated(AbstractBeaconState.java:69)
+[cl-3-teku-geth] at tech.pegasys.teku.spec.logic.common.block.AbstractBlockProcessor.processUnsignedBlock(AbstractBlockProcessor.java:323)
+[cl-3-teku-geth] at tech.pegasys.teku.spec.logic.common.block.AbstractBlockProcessor.processAndValidateBlock(AbstractBlockProcessor.java:169)
+[cl-3-teku-geth] at tech.pegasys.teku.spec.logic.common.block.AbstractBlockProcessor.processAndValidateBlock(AbstractBlockProcessor.java:139)
+[cl-3-teku-geth] at tech.pegasys.teku.statetransition.forkchoice.ForkChoice.onBlock(ForkChoice.java:471)
+[cl-3-teku-geth] at tech.pegasys.teku.statetransition.forkchoice.ForkChoice.lambda$onBlock$3(ForkChoice.java:228)
+[cl-3-teku-geth] at java.base/java.util.concurrent.CompletableFuture$UniCompose.tryFire(Unknown Source)
+[cl-3-teku-geth] at java.base/java.util.concurrent.CompletableFuture.postComplete(Unknown Source)
+[cl-3-teku-geth] at java.base/java.util.concurrent.CompletableFuture.complete(Unknown Source)
+[cl-3-teku-geth] at tech.pegasys.teku.dataproviders.generators.CachingTaskQueue.lambda$completePendingTask$9(CachingTaskQueue.java:199)
+[cl-3-teku-geth] at tech.pegasys.teku.infrastructure.async.SafeFuture.fromRunnable(SafeFuture.java:157)
+[cl-3-teku-geth] at tech.pegasys.teku.infrastructure.async.AsyncRunner.lambda$runAsync$0(AsyncRunner.java:23)
+[cl-3-teku-geth] at tech.pegasys.teku.infrastructure.async.SafeFuture.of(SafeFuture.java:74)
+[cl-3-teku-geth] at tech.pegasys.teku.infrastructure.async.ScheduledExecutorAsyncRunner.lambda$createRunnableForAction$1(ScheduledExecutorAsyncRunner.java:124)
+[cl-3-teku-geth] at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+[cl-3-teku-geth] at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+[cl-3-teku-geth] at java.base/java.lang.Thread.run(Unknown Source)
+[cl-3-teku-geth] 2026-03-04 15:50:22.001 ERROR - [31mValidator   *** Failed to produce aggregate  Slot: 56 Validator: 8ca9eb2[0m
+[cl-3-teku-geth] 2026-03-04 15:50:22.177 INFO  - [34mValidator   *** Published sync_contribution    Count: 26, Slot: 56, Root: 50fb1ca62e322bb7cd99dfea3ad09390564575f2e1e98a1e99d67bb87e3671a1[0m
+[cl-3-teku-geth] 2026-03-04 15:50:25.096 INFO  - [34mValidator   *** Published payload_attestation  Count: 7, Slot: 56, Root: 50fb1ca62e322bb7cd99dfea3ad09390564575f2e1e98a1e99d67bb87e3671a1[0m
+[cl-3-teku-geth] 2026-03-04 15:50:28.110 INFO  - [33mReorg Event *** New Head: 3c3da269319180fe29cbe740d72b0c87f8c70b8de849c9fc0fcbfe0225fc3edb (57), Previous Head: 50fb1ca62e322bb7cd99dfea3ad09390564575f2e1e98a1e99d67bb87e3671a1 (55), Common Ancestor: 86fa6a3bee30f3edbc51ab298bdb308310da715f5f4d38d54961e1c3761fc1a5 (54)[0m
+[cl-3-teku-geth] 2026-03-04 15:50:28.148 INFO  - [34mValidator   *** Published attestation          Count: 3, Slot: 57, Root: 3c3da269319180fe29cbe740d72b0c87f8c70b8de849c9fc0fcbfe0225fc3edb[0m
+[cl-3-teku-geth] 2026-03-04 15:50:31.004 INFO  - [37mSlot Event  *** Slot: 57, Block: 3c3da269319180fe29cbe740d72b0c87f8c70b8de849c9fc0fcbfe0225fc3edb, Justified: 0, Finalized: 0, Peers: 3[0m
+[cl-3-teku-geth] 2026-03-04 15:50:31.110 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 57, Root: 3c3da269319180fe29cbe740d72b0c87f8c70b8de849c9fc0fcbfe0225fc3edb[0m
+[cl-3-teku-geth] 2026-03-04 15:50:34.110 INFO  - [34mValidator   *** Published aggregate            Count: 1, Slot: 57, Root: 3c3da269319180fe29cbe740d72b0c87f8c70b8de849c9fc0fcbfe0225fc3edb[0m
+[cl-3-teku-geth] 2026-03-04 15:50:34.162 INFO  - [34mValidator   *** Published sync_contribution    Count: 18, Slot: 57, Root: 3c3da269319180fe29cbe740d72b0c87f8c70b8de849c9fc0fcbfe0225fc3edb[0m
+[cl-3-teku-geth] 2026-03-04 15:50:37.067 INFO  - [34mValidator   *** Published payload_attestation  Count: 3, Slot: 57, Root: 3c3da269319180fe29cbe740d72b0c87f8c70b8de849c9fc0fcbfe0225fc3edb[0m
+[cl-3-teku-geth] 2026-03-04 15:50:43.004 INFO  - [37mSlot Event  *** Slot: 58, Block:                                                        ... empty, Justified: 0, Finalized: 0, Peers: 3[0m
+[cl-3-teku-geth] 2026-03-04 15:50:43.068 ERROR - [31mValidator   *** Failed to produce attestation  Slot: 58 Validator: 97be30a, b9d0f2f, 84af2d3[0m
+[cl-3-teku-geth] 2026-03-04 15:50:43.227 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 58, Root: 3c3da269319180fe29cbe740d72b0c87f8c70b8de849c9fc0fcbfe0225fc3edb[0m
+[cl-3-teku-geth] 2026-03-04 15:50:46.040 ERROR - [31mValidator   *** Failed to produce aggregate  Slot: 58 Validator: 84af2d3[0m
+[cl-3-teku-geth] 2026-03-04 15:50:46.128 INFO  - [34mValidator   *** Published sync_contribution    Count: 13, Slot: 58, Root: 3c3da269319180fe29cbe740d72b0c87f8c70b8de849c9fc0fcbfe0225fc3edb[0m
+[cl-3-teku-geth] 2026-03-04 15:50:49.050 INFO  - [34mValidator   *** Published payload_attestation  Count: 3, Slot: 58, Root: 3c3da269319180fe29cbe740d72b0c87f8c70b8de849c9fc0fcbfe0225fc3edb[0m
+[cl-3-teku-geth] 2026-03-04 15:50:55.002 ERROR - [31mValidator   *** Failed to produce attestation  Slot: 59 Validator: 84a47be[0m
+[cl-3-teku-geth] 2026-03-04 15:50:55.002 INFO  - [37mSlot Event  *** Slot: 59, Block:                                                        ... empty, Justified: 0, Finalized: 0, Peers: 3[0m
+[cl-3-teku-geth] 2026-03-04 15:50:55.175 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 59, Root: 3c3da269319180fe29cbe740d72b0c87f8c70b8de849c9fc0fcbfe0225fc3edb[0m
+[cl-3-teku-geth] 2026-03-04 15:50:58.125 INFO  - [34mValidator   *** Published sync_contribution    Count: 13, Slot: 59, Root: 3c3da269319180fe29cbe740d72b0c87f8c70b8de849c9fc0fcbfe0225fc3edb[0m
+[cl-3-teku-geth] 2026-03-04 15:51:01.031 INFO  - [34mValidator   *** Published payload_attestation  Count: 1, Slot: 59, Root: a9731f28208a2a03b69f317137d61c0f48fc66b7c601db83653bd91493761bb0[0m
+[cl-3-teku-geth] 2026-03-04 15:51:07.005 INFO  - [37mSlot Event  *** Slot: 60, Block:                                                        ... empty, Justified: 0, Finalized: 0, Peers: 3[0m
+[cl-3-teku-geth] 2026-03-04 15:51:07.039 ERROR - [31mValidator   *** Failed to produce attestation  Slot: 60 Validator: af08f68, b02b9ed, 8f73de3, aa72d9f[0m
+[cl-3-teku-geth] 2026-03-04 15:51:07.144 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 60, Root: a9731f28208a2a03b69f317137d61c0f48fc66b7c601db83653bd91493761bb0[0m
+[cl-3-teku-geth] 2026-03-04 15:51:10.002 ERROR - [31mValidator   *** Failed to produce aggregate  Slot: 60 Validator: b02b9ed[0m
+[cl-3-teku-geth] 2026-03-04 15:51:10.113 INFO  - [34mValidator   *** Published sync_contribution    Count: 17, Slot: 60, Root: a9731f28208a2a03b69f317137d61c0f48fc66b7c601db83653bd91493761bb0[0m
+[cl-3-teku-geth] 2026-03-04 15:51:13.115 INFO  - [34mValidator   *** Published payload_attestation  Count: 4, Slot: 60, Root: a9731f28208a2a03b69f317137d61c0f48fc66b7c601db83653bd91493761bb0[0m
+[cl-3-teku-geth] 2026-03-04 15:51:19.003 INFO  - [37mSlot Event  *** Slot: 61, Block:                                                        ... empty, Justified: 0, Finalized: 0, Peers: 3[0m
+[cl-3-teku-geth] 2026-03-04 15:51:19.070 ERROR - [31mValidator   *** Failed to produce attestation  Slot: 61 Validator: 83eeb77, 91118aa, a017794, aec4dfd[0m
+[cl-3-teku-geth] 2026-03-04 15:51:19.208 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 61, Root: a9731f28208a2a03b69f317137d61c0f48fc66b7c601db83653bd91493761bb0[0m
+[cl-3-teku-geth] 2026-03-04 15:51:22.008 ERROR - [31mValidator   *** Failed to produce aggregate  Slot: 61 Validator: aec4dfd[0m
+[cl-3-teku-geth] 2026-03-04 15:51:22.122 INFO  - [34mValidator   *** Published sync_contribution    Count: 20, Slot: 61, Root: a9731f28208a2a03b69f317137d61c0f48fc66b7c601db83653bd91493761bb0[0m
+[cl-3-teku-geth] 2026-03-04 15:51:25.091 INFO  - [34mValidator   *** Published payload_attestation  Count: 4, Slot: 61, Root: a9731f28208a2a03b69f317137d61c0f48fc66b7c601db83653bd91493761bb0[0m
+[cl-3-teku-geth] 2026-03-04 15:51:31.005 INFO  - [33mReorg Event *** New Head: ab3fa8d742930dec5b10e344b6ec2bbf84db6a7cd95d1e56b1404b9e34e41df4 (60), Previous Head: a9731f28208a2a03b69f317137d61c0f48fc66b7c601db83653bd91493761bb0 (58), Common Ancestor: 3c3da269319180fe29cbe740d72b0c87f8c70b8de849c9fc0fcbfe0225fc3edb (57)[0m
+[cl-3-teku-geth] 2026-03-04 15:51:31.012 INFO  - [37mSlot Event  *** Slot: 62, Block:                                                        ... empty, Justified: 0, Finalized: 0, Peers: 3[0m
+[cl-3-teku-geth] 2026-03-04 15:51:31.012 INFO  - Calling local execution layer to start block production (block slot: 63)
+[cl-3-teku-geth] 2026-03-04 15:51:31.059 ERROR - [31mValidator   *** Failed to produce attestation  Slot: 62 Validator: 85ca569, 80da837, af27849, b235c81, b8a4bcd, abc6acd[0m
+[cl-3-teku-geth] 2026-03-04 15:51:31.219 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 62, Root: a9731f28208a2a03b69f317137d61c0f48fc66b7c601db83653bd91493761bb0[0m
+[cl-3-teku-geth] 2026-03-04 15:51:34.128 INFO  - [34mValidator   *** Published sync_contribution    Count: 16, Slot: 62, Root: a9731f28208a2a03b69f317137d61c0f48fc66b7c601db83653bd91493761bb0[0m
+[cl-3-teku-geth] 2026-03-04 15:51:37.118 INFO  - [34mValidator   *** Published payload_attestation  Count: 6, Slot: 62, Root: ab3fa8d742930dec5b10e344b6ec2bbf84db6a7cd95d1e56b1404b9e34e41df4[0m
+[cl-3-teku-geth] 2026-03-04 15:51:39.501 INFO  - Preparing block production for slot 63
+[cl-3-teku-geth] 2026-03-04 15:51:40.001 INFO  - Creating unsigned block for slot 63
+[cl-3-teku-geth] 2026-03-04 15:51:40.004 INFO  - Considering self-built bid (value: 0.000000 ETH, EL block: 369c92..882a) for block at slot 63
+[cl-3-teku-geth] 2026-03-04 15:51:40.051 INFO  - Validator client received block for slot 63, block rewards 0.011331 ETH, execution payload value 0.000000 ETH
+[cl-3-teku-geth] 2026-03-04 15:51:40.057 INFO  - starting to publish block at slot 63
+[cl-3-teku-geth] 2026-03-04 15:51:40.074 INFO  - [36mValidator   *** Published block                Count: 1, Slot: 63, Root: d939b29ffde6acb6269cf8e77b9cebe35a071c7bfb1198cc318b06346985cec1, Blobs: 0, Builder: 18446744073709551615, Bid gas limit: 60000000, Bid EL block: 369c92..882a[0m
+[cl-3-teku-geth] 2026-03-04 15:51:40.136 INFO  - [34mValidator   *** Published attestation          Count: 7, Slot: 63, Root: d939b29ffde6acb6269cf8e77b9cebe35a071c7bfb1198cc318b06346985cec1[0m
+[cl-3-teku-geth] 2026-03-04 15:51:40.574 INFO  - Producing unsigned execution payload for slot 63 and block 0xd939b29ffde6acb6269cf8e77b9cebe35a071c7bfb1198cc318b06346985cec1
+[cl-3-teku-geth] 2026-03-04 15:51:40.577 INFO  - [35mBuilder     *** Published execution_payload    Slot: 63, Builder: 18446744073709551615, Block Root: d939b29ffde6acb6269cf8e77b9cebe35a071c7bfb1198cc318b06346985cec1, 0 (0%) gas, EL block: 369c92c3d47e19089c6494c96307308363bf076518ab9de0a410200f8288882a (50)[0m
+[cl-3-teku-geth] 2026-03-04 15:51:43.004 INFO  - [37mSlot Event  *** Slot: 63, Block: d939b29ffde6acb6269cf8e77b9cebe35a071c7bfb1198cc318b06346985cec1, Justified: 0, Finalized: 0, Peers: 3[0m
+[cl-3-teku-geth] 2026-03-04 15:51:43.208 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 63, Root: d939b29ffde6acb6269cf8e77b9cebe35a071c7bfb1198cc318b06346985cec1[0m
+[cl-3-teku-geth] 2026-03-04 15:51:46.082 INFO  - [34mValidator   *** Published aggregate            Count: 1, Slot: 63, Root: d939b29ffde6acb6269cf8e77b9cebe35a071c7bfb1198cc318b06346985cec1[0m
+[cl-3-teku-geth] 2026-03-04 15:51:46.132 INFO  - [34mValidator   *** Published sync_contribution    Count: 12, Slot: 63, Root: d939b29ffde6acb6269cf8e77b9cebe35a071c7bfb1198cc318b06346985cec1[0m
+[cl-3-teku-geth] 2026-03-04 15:51:49.161 INFO  - [34mValidator   *** Published payload_attestation  Count: 7, Slot: 63, Root: d939b29ffde6acb6269cf8e77b9cebe35a071c7bfb1198cc318b06346985cec1[0m
+[cl-3-teku-geth] 2026-03-04 15:51:52.001 INFO  - [32mEpoch Event *** Epoch: 2, Justified checkpoint: 0, Finalized checkpoint: 0, Finalized root: 848c310ffca177591dbcb15243612ee20327b5fa0adbe991ab0e11b584e003ca[0m
+[cl-3-teku-geth] 2026-03-04 15:51:52.014 INFO  - Block performance: epoch 1, expected 7, produced 7, included 7 (100%)
+[cl-3-teku-geth] 2026-03-04 15:51:52.020 INFO  - Sync committee performance: epoch 1, expected 4096, produced 4096, correct 2432, included 1664 (41%)
+[cl-3-teku-geth] 2026-03-04 15:51:52.155 INFO  - Attestation performance: epoch 0, expected 128, produced 120, included 117 (98%), distance 1 / 1.02 / 2, correct target 117 (98%), correct head 117 (98%)
+[cl-3-teku-geth] 2026-03-04 15:51:55.003 INFO  - [37mSlot Event  *** Slot: 64, Block:                                                        ... empty, Justified: 0, Finalized: 0, Peers: 3[0m
+[cl-3-teku-geth] 2026-03-04 15:51:55.052 ERROR - [31mValidator   *** Failed to produce attestation  Slot: 64 Validator: 906b0b8, 844b19c[0m
+[cl-3-teku-geth] 2026-03-04 15:51:55.157 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 64, Root: d939b29ffde6acb6269cf8e77b9cebe35a071c7bfb1198cc318b06346985cec1[0m
+[cl-3-teku-geth] 2026-03-04 15:51:58.000 ERROR - [31mValidator   *** Failed to produce aggregate  Slot: 64 Validator: 906b0b8[0m
+[cl-3-teku-geth] 2026-03-04 15:51:58.109 INFO  - [34mValidator   *** Published sync_contribution    Count: 15, Slot: 64, Root: d939b29ffde6acb6269cf8e77b9cebe35a071c7bfb1198cc318b06346985cec1[0m
+[cl-3-teku-geth] 2026-03-04 15:52:01.039 INFO  - [34mValidator   *** Published payload_attestation  Count: 2, Slot: 64, Root: d939b29ffde6acb6269cf8e77b9cebe35a071c7bfb1198cc318b06346985cec1[0m
+[cl-3-teku-geth] 2026-03-04 15:52:07.001 INFO  - [37mSlot Event  *** Slot: 65, Block:                                                        ... empty, Justified: 0, Finalized: 0, Peers: 3[0m
+[cl-3-teku-geth] 2026-03-04 15:52:07.071 ERROR - [31mValidator   *** Failed to produce attestation  Slot: 65 Validator: 970f623, 82e090b, 9582a9c, 9629467, a03f713, a1c7313, 93d7241, a4ff5e1, a2d0dd8[0m
+[cl-3-teku-geth] 2026-03-04 15:52:07.197 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 65, Root: d939b29ffde6acb6269cf8e77b9cebe35a071c7bfb1198cc318b06346985cec1[0m
+[cl-3-teku-geth] 2026-03-04 15:52:07.475 WARN  - State transition error while importing block 65 (0x3a4db19ece07563fa55162071c8251b05052352133430565758e58551cb1b64c)
+[cl-3-teku-geth] tech.pegasys.teku.spec.logic.common.statetransition.exceptions.BlockProcessingException: Bid is not for the right parent block
+[cl-3-teku-geth] at tech.pegasys.teku.spec.logic.versions.gloas.block.BlockProcessorGloas.processExecutionPayloadBid(BlockProcessorGloas.java:191)
+[cl-3-teku-geth] at tech.pegasys.teku.spec.logic.versions.gloas.block.BlockProcessorGloas.lambda$executionProcessing$0(BlockProcessorGloas.java:117)
+[cl-3-teku-geth] at tech.pegasys.teku.spec.logic.common.block.AbstractBlockProcessor.safelyProcess(AbstractBlockProcessor.java:856)
+[cl-3-teku-geth] at tech.pegasys.teku.spec.logic.versions.gloas.block.BlockProcessorGloas.executionProcessing(BlockProcessorGloas.java:117)
+[cl-3-teku-geth] at tech.pegasys.teku.spec.logic.versions.bellatrix.block.BlockProcessorBellatrix.processBlock(BlockProcessorBellatrix.java:99)
+[cl-3-teku-geth] at tech.pegasys.teku.spec.logic.common.block.AbstractBlockProcessor.lambda$processUnsignedBlock$7(AbstractBlockProcessor.java:325)
+[cl-3-teku-geth] at tech.pegasys.teku.spec.datastructures.state.beaconstate.common.AbstractBeaconState.updated(AbstractBeaconState.java:69)
+[cl-3-teku-geth] at tech.pegasys.teku.spec.logic.common.block.AbstractBlockProcessor.processUnsignedBlock(AbstractBlockProcessor.java:323)
+[cl-3-teku-geth] at tech.pegasys.teku.spec.logic.common.block.AbstractBlockProcessor.processAndValidateBlock(AbstractBlockProcessor.java:169)
+[cl-3-teku-geth] at tech.pegasys.teku.spec.logic.common.block.AbstractBlockProcessor.processAndValidateBlock(AbstractBlockProcessor.java:139)
+[cl-3-teku-geth] at tech.pegasys.teku.statetransition.forkchoice.ForkChoice.onBlock(ForkChoice.java:471)
+[cl-3-teku-geth] at tech.pegasys.teku.statetransition.forkchoice.ForkChoice.lambda$onBlock$3(ForkChoice.java:228)
+[cl-3-teku-geth] at java.base/java.util.concurrent.CompletableFuture$UniCompose.tryFire(Unknown Source)
+[cl-3-teku-geth] at java.base/java.util.concurrent.CompletableFuture.postComplete(Unknown Source)
+[cl-3-teku-geth] at java.base/java.util.concurrent.CompletableFuture.complete(Unknown Source)
+[cl-3-teku-geth] at tech.pegasys.teku.dataproviders.generators.CachingTaskQueue.lambda$completePendingTask$9(CachingTaskQueue.java:199)
+[cl-3-teku-geth] at tech.pegasys.teku.infrastructure.async.SafeFuture.fromRunnable(SafeFuture.java:157)
+[cl-3-teku-geth] at tech.pegasys.teku.infrastructure.async.AsyncRunner.lambda$runAsync$0(AsyncRunner.java:23)
+[cl-3-teku-geth] at tech.pegasys.teku.infrastructure.async.SafeFuture.of(SafeFuture.java:74)
+[cl-3-teku-geth] at tech.pegasys.teku.infrastructure.async.ScheduledExecutorAsyncRunner.lambda$createRunnableForAction$1(ScheduledExecutorAsyncRunner.java:124)
+[cl-3-teku-geth] at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+[cl-3-teku-geth] at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+[cl-3-teku-geth] at java.base/java.lang.Thread.run(Unknown Source)
+[cl-3-teku-geth] 2026-03-04 15:52:10.001 ERROR - [31mValidator   *** Failed to produce aggregate  Slot: 65 Validator: 82e090b[0m
+[cl-3-teku-geth] 2026-03-04 15:52:10.135 INFO  - [34mValidator   *** Published sync_contribution    Count: 17, Slot: 65, Root: d939b29ffde6acb6269cf8e77b9cebe35a071c7bfb1198cc318b06346985cec1[0m
+[cl-3-teku-geth] 2026-03-04 15:52:13.106 INFO  - [34mValidator   *** Published payload_attestation  Count: 9, Slot: 65, Root: 5f6a25dd80feaaa261203d1f320e9f5cecbcb24f9a31317f58855f8c3bd27d1c[0m
+[cl-3-teku-geth] 2026-03-04 15:52:19.008 INFO  - [37mSlot Event  *** Slot: 66, Block:                                                        ... empty, Justified: 0, Finalized: 0, Peers: 3[0m
+[cl-3-teku-geth] 2026-03-04 15:52:19.042 ERROR - [31mValidator   *** Failed to produce attestation  Slot: 66 Validator: b8a4bcd, ac37871, 943f983, 8c176d1[0m
+[cl-3-teku-geth] 2026-03-04 15:52:19.157 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 66, Root: 5f6a25dd80feaaa261203d1f320e9f5cecbcb24f9a31317f58855f8c3bd27d1c[0m
+[cl-3-teku-geth] 2026-03-04 15:52:22.001 ERROR - [31mValidator   *** Failed to produce aggregate  Slot: 66 Validator: b8a4bcd[0m
+[cl-3-teku-geth] 2026-03-04 15:52:22.135 INFO  - [34mValidator   *** Published sync_contribution    Count: 18, Slot: 66, Root: 5f6a25dd80feaaa261203d1f320e9f5cecbcb24f9a31317f58855f8c3bd27d1c[0m
+[cl-3-teku-geth] 2026-03-04 15:52:25.074 INFO  - [34mValidator   *** Published payload_attestation  Count: 4, Slot: 66, Root: 5f6a25dd80feaaa261203d1f320e9f5cecbcb24f9a31317f58855f8c3bd27d1c[0m
+[cl-3-teku-geth] 2026-03-04 15:52:31.002 INFO  - Calling local execution layer to start block production (block slot: 68)
+[cl-3-teku-geth] 2026-03-04 15:52:31.012 INFO  - [37mSlot Event  *** Slot: 67, Block:                                                        ... empty, Justified: 0, Finalized: 0, Peers: 3[0m
+[cl-3-teku-geth] 2026-03-04 15:52:31.021 ERROR - [31mValidator   *** Failed to produce attestation  Slot: 67 Validator: aa72d9f, a03d318, b9aed9a, aec4dfd, 9531099[0m
+[cl-3-teku-geth] 2026-03-04 15:52:31.112 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 67, Root: 5f6a25dd80feaaa261203d1f320e9f5cecbcb24f9a31317f58855f8c3bd27d1c[0m
+[cl-3-teku-geth] 2026-03-04 15:52:31.241 WARN  - State transition error while importing block 67 (0xe62302ce824c4748ab736b274aa0540f46c6ceb591aa54e934bf929aa3d45580)
+[cl-3-teku-geth] tech.pegasys.teku.spec.logic.common.statetransition.exceptions.BlockProcessingException: Bid is not for the right parent block
+[cl-3-teku-geth] at tech.pegasys.teku.spec.logic.versions.gloas.block.BlockProcessorGloas.processExecutionPayloadBid(BlockProcessorGloas.java:191)
+[cl-3-teku-geth] at tech.pegasys.teku.spec.logic.versions.gloas.block.BlockProcessorGloas.lambda$executionProcessing$0(BlockProcessorGloas.java:117)
+[cl-3-teku-geth] at tech.pegasys.teku.spec.logic.common.block.AbstractBlockProcessor.safelyProcess(AbstractBlockProcessor.java:856)
+[cl-3-teku-geth] at tech.pegasys.teku.spec.logic.versions.gloas.block.BlockProcessorGloas.executionProcessing(BlockProcessorGloas.java:117)
+[cl-3-teku-geth] at tech.pegasys.teku.spec.logic.versions.bellatrix.block.BlockProcessorBellatrix.processBlock(BlockProcessorBellatrix.java:99)
+[cl-3-teku-geth] at tech.pegasys.teku.spec.logic.common.block.AbstractBlockProcessor.lambda$processUnsignedBlock$7(AbstractBlockProcessor.java:325)
+[cl-3-teku-geth] at tech.pegasys.teku.spec.datastructures.state.beaconstate.common.AbstractBeaconState.updated(AbstractBeaconState.java:69)
+[cl-3-teku-geth] at tech.pegasys.teku.spec.logic.common.block.AbstractBlockProcessor.processUnsignedBlock(AbstractBlockProcessor.java:323)
+[cl-3-teku-geth] at tech.pegasys.teku.spec.logic.common.block.AbstractBlockProcessor.processAndValidateBlock(AbstractBlockProcessor.java:169)
+[cl-3-teku-geth] at tech.pegasys.teku.spec.logic.common.block.AbstractBlockProcessor.processAndValidateBlock(AbstractBlockProcessor.java:139)
+[cl-3-teku-geth] at tech.pegasys.teku.statetransition.forkchoice.ForkChoice.onBlock(ForkChoice.java:471)
+[cl-3-teku-geth] at tech.pegasys.teku.statetransition.forkchoice.ForkChoice.lambda$onBlock$3(ForkChoice.java:228)
+[cl-3-teku-geth] at java.base/java.util.concurrent.CompletableFuture$UniCompose.tryFire(Unknown Source)
+[cl-3-teku-geth] at java.base/java.util.concurrent.CompletableFuture.postComplete(Unknown Source)
+[cl-3-teku-geth] at java.base/java.util.concurrent.CompletableFuture.complete(Unknown Source)
+[cl-3-teku-geth] at tech.pegasys.teku.dataproviders.generators.CachingTaskQueue.lambda$completePendingTask$9(CachingTaskQueue.java:199)
+[cl-3-teku-geth] at tech.pegasys.teku.infrastructure.async.SafeFuture.fromRunnable(SafeFuture.java:157)
+[cl-3-teku-geth] at tech.pegasys.teku.infrastructure.async.AsyncRunner.lambda$runAsync$0(AsyncRunner.java:23)
+[cl-3-teku-geth] at tech.pegasys.teku.infrastructure.async.SafeFuture.of(SafeFuture.java:74)
+[cl-3-teku-geth] at tech.pegasys.teku.infrastructure.async.ScheduledExecutorAsyncRunner.lambda$createRunnableForAction$1(ScheduledExecutorAsyncRunner.java:124)
+[cl-3-teku-geth] at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+[cl-3-teku-geth] at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+[cl-3-teku-geth] at java.base/java.lang.Thread.run(Unknown Source)
+[cl-3-teku-geth] 2026-03-04 15:52:31.280 INFO  - Calling local execution layer to start block production (block slot: 68)
+[cl-3-teku-geth] 2026-03-04 15:52:34.003 ERROR - [31mValidator   *** Failed to produce aggregate  Slot: 67 Validator: aec4dfd[0m
+[cl-3-teku-geth] 2026-03-04 15:52:34.135 INFO  - [34mValidator   *** Published sync_contribution    Count: 20, Slot: 67, Root: 5f6a25dd80feaaa261203d1f320e9f5cecbcb24f9a31317f58855f8c3bd27d1c[0m
+[cl-3-teku-geth] 2026-03-04 15:52:37.066 INFO  - [34mValidator   *** Published payload_attestation  Count: 5, Slot: 67, Root: 6845416f232b3c70ac59626e3b4e21d87a5f5e6e62b74ec54649b7e8dddd5e1a[0m
+[cl-3-teku-geth] 2026-03-04 15:52:39.501 INFO  - Preparing block production for slot 68
+[cl-3-teku-geth] 2026-03-04 15:52:40.001 INFO  - Creating unsigned block for slot 68
+[cl-3-teku-geth] 2026-03-04 15:52:40.005 INFO  - Considering self-built bid (value: 0.000000 ETH, EL block: c553f8..7ae4) for block at slot 68
+[cl-3-teku-geth] 2026-03-04 15:52:40.034 INFO  - Validator client received block for slot 68, block rewards 0.012751 ETH, execution payload value 0.000000 ETH
+[cl-3-teku-geth] 2026-03-04 15:52:40.040 INFO  - starting to publish block at slot 68
+[cl-3-teku-geth] 2026-03-04 15:52:40.060 INFO  - [36mValidator   *** Published block                Count: 1, Slot: 68, Root: 3da6011888d7d5c3d2c80b59d6267fa62149bac278d18202cc27c2167d4f199e, Blobs: 0, Builder: 18446744073709551615, Bid gas limit: 60000000, Bid EL block: c553f8..7ae4[0m
+[cl-3-teku-geth] 2026-03-04 15:52:40.078 INFO  - [34mValidator   *** Published attestation          Count: 2, Slot: 68, Root: 3da6011888d7d5c3d2c80b59d6267fa62149bac278d18202cc27c2167d4f199e[0m
+[cl-3-teku-geth] 2026-03-04 15:52:40.561 INFO  - Producing unsigned execution payload for slot 68 and block 0x3da6011888d7d5c3d2c80b59d6267fa62149bac278d18202cc27c2167d4f199e
+[cl-3-teku-geth] 2026-03-04 15:52:40.565 INFO  - [35mBuilder     *** Published execution_payload    Slot: 68, Builder: 18446744073709551615, Block Root: 3da6011888d7d5c3d2c80b59d6267fa62149bac278d18202cc27c2167d4f199e, 0 (0%) gas, EL block: c553f8897bd828a0f859d449755b15d2162efcc65ae0391368bc165759907ae4 (53)[0m
+[cl-3-teku-geth] 2026-03-04 15:52:43.003 INFO  - [37mSlot Event  *** Slot: 68, Block: 3da6011888d7d5c3d2c80b59d6267fa62149bac278d18202cc27c2167d4f199e, Justified: 0, Finalized: 0, Peers: 3[0m
+[cl-3-teku-geth] 2026-03-04 15:52:43.122 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 68, Root: 3da6011888d7d5c3d2c80b59d6267fa62149bac278d18202cc27c2167d4f199e[0m
+[cl-3-teku-geth] 2026-03-04 15:52:46.112 INFO  - [34mValidator   *** Published aggregate            Count: 1, Slot: 68, Root: 3da6011888d7d5c3d2c80b59d6267fa62149bac278d18202cc27c2167d4f199e[0m
+[cl-3-teku-geth] 2026-03-04 15:52:46.163 INFO  - [34mValidator   *** Published sync_contribution    Count: 17, Slot: 68, Root: 3da6011888d7d5c3d2c80b59d6267fa62149bac278d18202cc27c2167d4f199e[0m
+[cl-3-teku-geth] 2026-03-04 15:52:49.042 INFO  - [34mValidator   *** Published payload_attestation  Count: 2, Slot: 68, Root: 3da6011888d7d5c3d2c80b59d6267fa62149bac278d18202cc27c2167d4f199e[0m
