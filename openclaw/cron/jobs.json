@@ -7,7 +7,7 @@
       "name": "daily-summary",
       "enabled": true,
       "createdAtMs": 1769895413579,
-      "updatedAtMs": 1772492562841,
+      "updatedAtMs": 1772578886476,
       "schedule": {
         "kind": "cron",
         "expr": "0 23 * * *",
@@ -20,10 +20,10 @@
         "message": "End of day. Write a summary of today's work to memory/YYYY-MM-DD.md (use today's date). Include: PRs reviewed, PRs opened/updated, code written, issues found, lessons learned. Keep it concise but complete."
       },
       "state": {
-        "nextRunAtMs": 1772578800000,
-        "lastRunAtMs": 1772492486391,
+        "nextRunAtMs": 1772665200000,
+        "lastRunAtMs": 1772578828153,
         "lastStatus": "ok",
-        "lastDurationMs": 76450,
+        "lastDurationMs": 58323,
         "lastRunStatus": "ok",
         "lastDelivered": true,
         "lastDeliveryStatus": "delivered",
@@ -115,7 +115,8 @@
         "lastDurationMs": 167246,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-requested",
-        "consecutiveErrors": 0
+        "consecutiveErrors": 0,
+        "runningAtMs": 1772582598976
       }
     },
     {
@@ -190,7 +191,7 @@
       "name": "eth-rnd-archive-hourly",
       "enabled": true,
       "createdAtMs": 1772034567300,
-      "updatedAtMs": 1772576167528,
+      "updatedAtMs": 1772579777190,
       "schedule": {
         "kind": "cron",
         "expr": "15 * * * *",
@@ -207,13 +208,13 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1772576117610,
+        "lastRunAtMs": 1772579739158,
         "lastStatus": "ok",
-        "lastDurationMs": 49918,
+        "lastDurationMs": 38032,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1772579700000,
+        "nextRunAtMs": 1772583300000,
         "lastDelivered": false
       }
     },
@@ -293,7 +294,7 @@
       "name": "github-notifications",
       "enabled": true,
       "createdAtMs": 1772107716625,
-      "updatedAtMs": 1772576839424,
+      "updatedAtMs": 1772582587027,
       "schedule": {
         "kind": "every",
         "everyMs": 180000,
@@ -311,14 +312,14 @@
         "mode": "announce"
       },
       "state": {
-        "nextRunAtMs": 1772576928348,
-        "lastRunAtMs": 1772576748348,
+        "nextRunAtMs": 1772582688496,
+        "lastRunAtMs": 1772582508496,
         "lastStatus": "ok",
-        "lastDurationMs": 91076,
+        "lastDurationMs": 78531,
         "lastRunStatus": "ok",
-        "lastDeliveryStatus": "delivered",
+        "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "lastDelivered": true
+        "lastDelivered": false
       }
     },
     {
