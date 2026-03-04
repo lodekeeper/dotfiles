@@ -96,7 +96,7 @@
       "name": "Sync dotfiles repo",
       "enabled": true,
       "createdAtMs": 1771362496423,
-      "updatedAtMs": 1772604242168,
+      "updatedAtMs": 1772625857359,
       "schedule": {
         "kind": "cron",
         "expr": "0 */6 * * *",
@@ -109,14 +109,13 @@
         "text": "Reminder: Run ~/dotfiles/scripts/sync-dotfiles.sh to sync local files to the dotfiles repo (github.com/lodekeeper/dotfiles). Gists are no longer the source of truth — the repo is."
       },
       "state": {
-        "nextRunAtMs": 1772625798972,
-        "lastRunAtMs": 1772604198977,
+        "nextRunAtMs": 1772647398972,
+        "lastRunAtMs": 1772625798976,
         "lastStatus": "ok",
-        "lastDurationMs": 43191,
+        "lastDurationMs": 58383,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-requested",
-        "consecutiveErrors": 0,
-        "runningAtMs": 1772625798974
+        "consecutiveErrors": 0
       }
     },
     {
@@ -125,7 +124,7 @@
       "name": "beacon-log-monitor",
       "enabled": true,
       "createdAtMs": 1771513454598,
-      "updatedAtMs": 1772540532197,
+      "updatedAtMs": 1772626922114,
       "schedule": {
         "kind": "every",
         "everyMs": 86400000,
@@ -142,10 +141,10 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1772626875260,
-        "lastRunAtMs": 1772540475260,
+        "nextRunAtMs": 1772713275263,
+        "lastRunAtMs": 1772626875263,
         "lastStatus": "ok",
-        "lastDurationMs": 56937,
+        "lastDurationMs": 46851,
         "lastRunStatus": "ok",
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
@@ -158,7 +157,7 @@
       "name": "daily-meme",
       "enabled": true,
       "createdAtMs": 1771753595377,
-      "updatedAtMs": 1772575308303,
+      "updatedAtMs": 1772626251055,
       "schedule": {
         "kind": "cron",
         "expr": "0 22 * * *",
@@ -176,9 +175,9 @@
       },
       "state": {
         "nextRunAtMs": 1772661600000,
-        "lastRunAtMs": 1772575200003,
+        "lastRunAtMs": 1772626138475,
         "lastStatus": "ok",
-        "lastDurationMs": 108300,
+        "lastDurationMs": 112580,
         "lastRunStatus": "ok",
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
@@ -191,7 +190,7 @@
       "name": "eth-rnd-archive-hourly",
       "enabled": true,
       "createdAtMs": 1772034567300,
-      "updatedAtMs": 1772622943127,
+      "updatedAtMs": 1772633738228,
       "schedule": {
         "kind": "cron",
         "expr": "15 * * * *",
@@ -208,13 +207,13 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1772622900004,
+        "lastRunAtMs": 1772633700003,
         "lastStatus": "ok",
-        "lastDurationMs": 43123,
+        "lastDurationMs": 38225,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1772626500000,
+        "nextRunAtMs": 1772637300000,
         "lastDelivered": false
       }
     },
@@ -294,7 +293,7 @@
       "name": "github-notifications",
       "enabled": true,
       "createdAtMs": 1772107716625,
-      "updatedAtMs": 1772625711795,
+      "updatedAtMs": 1772636150991,
       "schedule": {
         "kind": "every",
         "everyMs": 180000,
@@ -312,10 +311,10 @@
         "mode": "announce"
       },
       "state": {
-        "nextRunAtMs": 1772625864111,
-        "lastRunAtMs": 1772625684111,
+        "nextRunAtMs": 1772636304377,
+        "lastRunAtMs": 1772636124377,
         "lastStatus": "ok",
-        "lastDurationMs": 27684,
+        "lastDurationMs": 26614,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
@@ -339,7 +338,7 @@
       "wakeMode": "now",
       "payload": {
         "kind": "agentTurn",
-        "message": "Run: bash ~/.openclaw/workspace/scripts/memory/nightly_memory_cycle.sh. Report what was consolidated and indexed.",
+        "message": "Run: bash ~/.openclaw/workspace/scripts/memory/nightly_memory_cycle.sh. Then summarize consolidation/indexing results briefly. Do NOT edit BACKLOG.md in this cron; this job is memory-pipeline only.",
         "model": "anthropic/claude-sonnet-4-5",
         "timeoutSeconds": 300
       },
@@ -399,7 +398,7 @@
       "name": "aztec-sequencer-health",
       "enabled": true,
       "createdAtMs": 1772373812089,
-      "updatedAtMs": 1772618839001,
+      "updatedAtMs": 1772633226710,
       "schedule": {
         "kind": "every",
         "everyMs": 14400000,
@@ -417,14 +416,139 @@
         "channel": "last"
       },
       "state": {
-        "nextRunAtMs": 1772633197828,
-        "lastRunAtMs": 1772618797828,
+        "nextRunAtMs": 1772647597834,
+        "lastRunAtMs": 1772633197834,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 41173,
+        "lastDurationMs": 28876,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0
+      }
+    },
+    {
+      "id": "92fa6d55-4abe-47d4-b0a6-3b9af366b444",
+      "agentId": "main",
+      "name": "workspace-periodic-cleanup",
+      "enabled": true,
+      "createdAtMs": 1772634832403,
+      "updatedAtMs": 1772634832403,
+      "schedule": {
+        "kind": "every",
+        "everyMs": 21600000,
+        "anchorMs": 1772634832403
+      },
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "Run periodic workspace cleanup (every 6 hours). Keep files lean without spamming Nico.\\n\\nRequired steps:\\n1) BACKLOG cleanup:\\n   - Move completed top-level items (`### ✅`) from `~/.openclaw/workspace/BACKLOG.md` to `~/.openclaw/workspace/BACKLOG_ARCHIVE.md`.\\n   - Keep only active/passive/on-hold items in BACKLOG.md.\\n   - Do NOT add backlog entries for empty cleanup runs.\\n2) HEARTBEAT cleanup:\\n   - Keep `~/.openclaw/workspace/HEARTBEAT.md` lean; remove stale completed checklist lines if any.\\n3) Daily notes hygiene:\\n   - Review `~/.openclaw/workspace/memory/` daily notes older than 7 days.\\n   - Before removing or archiving anything, ensure durable key info is reflected in `MEMORY.md` or memory bank outputs.\\n   - Prefer safe archiving/moving over deletion.\\n\\nReporting rules:\\n- If no actionable changes were needed, reply exactly `NO_REPLY`.\\n- If changes were made, send only a concise summary with file paths and counts."
+      },
+      "delivery": {
+        "mode": "announce"
+      },
+      "state": {
+        "nextRunAtMs": 1772656432403
+      }
+    },
+    {
+      "id": "a478b397-c185-4fe7-b1e5-097d1e3e4b94",
+      "agentId": "main",
+      "name": "monitor-open-pr-ci",
+      "enabled": true,
+      "createdAtMs": 1772635128553,
+      "updatedAtMs": 1772635128553,
+      "schedule": {
+        "kind": "every",
+        "everyMs": 1800000,
+        "anchorMs": 1772635128553
+      },
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "Check CI status for all open PRs authored by `lodekeeper` in `ChainSafe/lodestar`.\\nRun the standard check-runs sweep and only report actionable failures.\\n\\nRules:\\n- If no failing checks are found, reply exactly `NO_REPLY`.\\n- If failures exist, send a concise alert with PR number, failing checks, and first triage hint.\\n- Create/update BACKLOG entry only when a real failing PR exists (no empty-sweep backlog entries)."
+      },
+      "delivery": {
+        "mode": "announce"
+      },
+      "state": {
+        "nextRunAtMs": 1772636928553
+      }
+    },
+    {
+      "id": "a173b373-84de-41ac-97a0-66e441e0514a",
+      "agentId": "main",
+      "name": "review-identity-files",
+      "enabled": true,
+      "createdAtMs": 1772635128553,
+      "updatedAtMs": 1772635128553,
+      "schedule": {
+        "kind": "every",
+        "everyMs": 259200000,
+        "anchorMs": 1772635128553
+      },
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "Periodic identity-file review (every 3 days): read `SOUL.md`, `IDENTITY.md`, and `MEMORY.md`.\\nIf updates are needed, apply concise edits and summarize what changed.\\nIf everything is still accurate, reply exactly `NO_REPLY`."
+      },
+      "delivery": {
+        "mode": "announce"
+      },
+      "state": {
+        "nextRunAtMs": 1772894328553
+      }
+    },
+    {
+      "id": "d7f95873-f30c-4f41-b944-3345542c5261",
+      "agentId": "main",
+      "name": "self-improvement-audit-weekly",
+      "enabled": true,
+      "createdAtMs": 1772635128553,
+      "updatedAtMs": 1772635128553,
+      "schedule": {
+        "kind": "every",
+        "everyMs": 604800000,
+        "anchorMs": 1772635128553
+      },
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "Weekly self-improvement audit.\\nReview autonomy gaps for: PR review, CI fix, spec implementation, devnet debugging.\\nUpdate `notes/autonomy-gaps.md` with concrete blockers and proposed fixes (scripts/crons/skills).\\nIf no meaningful change from last audit, reply exactly `NO_REPLY`; otherwise send concise summary."
+      },
+      "delivery": {
+        "mode": "announce"
+      },
+      "state": {
+        "nextRunAtMs": 1773239928553
+      }
+    },
+    {
+      "id": "55c58b83-775d-4e13-bece-925df80d7761",
+      "agentId": "main",
+      "name": "cron-health-watchdog",
+      "enabled": true,
+      "createdAtMs": 1772636078136,
+      "updatedAtMs": 1772636078136,
+      "schedule": {
+        "kind": "every",
+        "everyMs": 600000,
+        "anchorMs": 1772636078136
+      },
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "Run: python3 ~/.openclaw/workspace/scripts/cron/check_cron_health.py\\n- If output is exactly `NO_REPLY`, reply exactly `NO_REPLY`.\\n- Otherwise send the output as-is (it contains failing cron details and action guidance).\\n- Do not create empty-sweep backlog entries.\\n"
+      },
+      "delivery": {
+        "mode": "announce"
+      },
+      "state": {
+        "nextRunAtMs": 1772636678136
       }
     }
   ]

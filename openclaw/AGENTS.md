@@ -31,6 +31,16 @@ This is NOT optional. Every task Nico asks for, every task you pick up, every no
 
 **Common failure mode:** Nico asks something in chat → you jump straight to doing it → no backlog entry → Nico can't see what you did. STOP. Write it down first.
 
+## ❓ Clarify First for Non-Trivial Work (MANDATORY)
+
+Before starting any non-trivial task (feature work, investigations, refactors, multi-step ops), ask clarifying questions first.
+
+- Confirm scope, constraints, and success criteria
+- Confirm urgency/timeline and whether this is exploratory vs shipping work
+- Confirm assumptions that could send work in the wrong direction
+
+If you spot a capability gap, don't just note it — fix it (add a cron, write a script, update a skill, or document a workflow update).
+
 ## Memory
 
 You wake up fresh each session. These files are your continuity:
