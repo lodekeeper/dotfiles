@@ -1,0 +1,29 @@
+participants:
+  - el_type: geth
+    el_image: ethpandaops/geth:epbs-devnet-0
+    cl_type: teku
+    cl_image: ethpandaops/teku:StefanBratanov-devnet-0-changes
+    count: 1
+  - el_type: geth
+    el_image: ethpandaops/geth:epbs-devnet-0
+    cl_type: lodestar
+    cl_image: lodestar:epbs-devnet-0-teku-ptc-fix
+    count: 3
+
+network_params:
+  gloas_fork_epoch: 1
+  seconds_per_slot: 6
+
+additional_services:
+  - dora
+
+dora_params:
+  image: ethpandaops/dora:gloas-support
+
+port_publisher:
+  cl:
+    enabled: true
+    public_port_start: 39100
+  el:
+    enabled: true
+    public_port_start: 39200

@@ -42,3 +42,7 @@
 2026-03-04T18:03:21Z port=38108 slot=247 justified=1 finalized=0 peers=3
 2026-03-04T18:03:21Z port=38115 slot=251 justified=1 finalized=0 peers=2
 2026-03-04T18:03:21Z port=38122 slot=251 justified=1 finalized=0 peers=2
+2026-03-04T18:03:51Z port=38101 slot=null justified=null finalized=null peers=1
+2026-03-04T18:03:51Z port=38108 slot=255 justified=1 finalized=0 peers=3
+2026-03-04T18:03:51Z port=38115 slot=255 justified=1 finalized=0 peers=2
+2026-03-04T18:03:51Z port=38122 slot=255 justified=1 finalized=0 peers=2

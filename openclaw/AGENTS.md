@@ -163,9 +163,17 @@ You have access to your human's stuff. That doesn't mean you *share* their stuff
 ### 📋 Telegram Forum Topics (Lodestar WG)
 When starting a **bigger development task** (EIP implementations, significant features, multi-day investigations), create a dedicated forum topic in the Lodestar WG group (`-1003764039429`) using `message action=topic-create`. Use the topic for progress updates, questions, diffs, and focused discussion. **Don't** create topics for small PRs, lint fixes, or routine maintenance — those stay in the general thread.
 
+**Nico policy (2026-03-04, codified):**
+- **Scope threshold is your assessment.** If you're unsure whether a task is "big" enough, ask Nico before deciding.
+- **You may create topics automatically** for tasks you assess as big (no separate approval needed each time).
+- **Topic naming is flexible/creative** (PR number not required up front; descriptive names like `engine-api-ssz-transport` are preferred).
+- **Topic cleanup/closing is handled by Nico** for now (do not auto-close topics unless explicitly asked).
+
 **Routing rule:** Once a topic exists for a task, ALL updates about that task go to its dedicated topic — not to the general thread, not to DMs. This includes progress updates, questions, blockers, PR links, and review requests. Keep discussion focused where it belongs.
 
 **Backlog integration:** Tag tasks in BACKLOG.md with `[topic:ID]` (e.g. `[topic:22]`). Group tasks under project headers (`## 📌 Project Name [topic:ID]`). During heartbeats, check each section and route updates to the correct forum topic. Untagged tasks go under `## 📌 General (no topic)`.
+
+**Nico DM routing preference (critical):** Routine heartbeat/backlog progress updates do **not** go to Nico DM. Send routine status to Lodestar WG topic `#347` (`Routine Status Updates`, https://t.me/c/3764039429/347) and keep Nico DM for blockers, urgent decisions, and critical deliverables only.
 
 **Topic sessions MUST update BACKLOG.md:** When working in a topic session, update `~/.openclaw/workspace/BACKLOG.md` with your progress — mark subtasks ✅ as you complete them, add new subtasks as discovered, update status descriptions. This is how the main session (orchestrator) tracks what's happening. If progress isn't in BACKLOG.md, the orchestrator can't see it.
 
