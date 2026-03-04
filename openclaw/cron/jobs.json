@@ -96,7 +96,7 @@
       "name": "Sync dotfiles repo",
       "enabled": true,
       "createdAtMs": 1771362496423,
-      "updatedAtMs": 1772582660030,
+      "updatedAtMs": 1772604242168,
       "schedule": {
         "kind": "cron",
         "expr": "0 */6 * * *",
@@ -109,14 +109,14 @@
         "text": "Reminder: Run ~/dotfiles/scripts/sync-dotfiles.sh to sync local files to the dotfiles repo (github.com/lodekeeper/dotfiles). Gists are no longer the source of truth — the repo is."
       },
       "state": {
-        "nextRunAtMs": 1772604198972,
-        "lastRunAtMs": 1772582598976,
+        "nextRunAtMs": 1772625798972,
+        "lastRunAtMs": 1772604198977,
         "lastStatus": "ok",
-        "lastDurationMs": 61054,
+        "lastDurationMs": 43191,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-requested",
         "consecutiveErrors": 0,
-        "runningAtMs": 1772604198976
+        "runningAtMs": 1772625798974
       }
     },
     {
@@ -191,7 +191,7 @@
       "name": "eth-rnd-archive-hourly",
       "enabled": true,
       "createdAtMs": 1772034567300,
-      "updatedAtMs": 1772601347237,
+      "updatedAtMs": 1772622943127,
       "schedule": {
         "kind": "cron",
         "expr": "15 * * * *",
@@ -208,13 +208,13 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1772601315208,
+        "lastRunAtMs": 1772622900004,
         "lastStatus": "ok",
-        "lastDurationMs": 32029,
+        "lastDurationMs": 43123,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1772604900000,
+        "nextRunAtMs": 1772626500000,
         "lastDelivered": false
       }
     },
@@ -224,7 +224,7 @@
       "name": "eth-rnd-daily-digest",
       "enabled": true,
       "createdAtMs": 1772034576175,
-      "updatedAtMs": 1772531352039,
+      "updatedAtMs": 1772611283533,
       "schedule": {
         "kind": "cron",
         "expr": "0 8 * * *",
@@ -244,14 +244,14 @@
         "bestEffort": true
       },
       "state": {
-        "lastRunAtMs": 1772531266782,
+        "lastRunAtMs": 1772611200003,
         "lastStatus": "ok",
-        "lastDurationMs": 85257,
+        "lastDurationMs": 83530,
         "lastRunStatus": "ok",
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1772611200000
+        "nextRunAtMs": 1772697600000
       }
     },
     {
@@ -294,7 +294,7 @@
       "name": "github-notifications",
       "enabled": true,
       "createdAtMs": 1772107716625,
-      "updatedAtMs": 1772604141011,
+      "updatedAtMs": 1772625711795,
       "schedule": {
         "kind": "every",
         "everyMs": 180000,
@@ -304,7 +304,7 @@
       "wakeMode": "now",
       "payload": {
         "kind": "agentTurn",
-        "message": "Check GitHub notifications for lodekeeper. Keep it fast and deterministic.\n\nState file (absolute path): /home/openclaw/gh-notif-state.json\n\n1) Load state from /home/openclaw/gh-notif-state.json (if missing, use {}).\n2) Fetch participating notifications with new activity:\n   gh api notifications?participating=true --jq '.[] | select(.unread or (.updated_at > .last_read_at)) | {id, title: .subject.title, type: .subject.type, url: .subject.url}'\n3) For each PR notification, fetch latest review comments and issue comments; ignore only lodekeeper comments. DO NOT ignore reviewer-bot comments (e.g., gemini-code-assist, codex reviewers).\n4) Compare comment IDs to state; only report IDs newer than saved.\n5) If new comments are found from humans OR reviewer bots (Gemini/Codex): report them and update BACKLOG only if PR task is not already present.\n6) Always write updated state to /home/openclaw/gh-notif-state.json (absolute path, not ~).\n7) If no new comments, reply HEARTBEAT_OK.\n\nDo NOT perform actions on PRs; detect + report only.",
+        "message": "Check GitHub notifications for lodekeeper using deterministic checklist dedupe.\n\nRun:\npython3 /home/openclaw/.openclaw/workspace/scripts/github/github_notifications_sweep.py --state /home/openclaw/gh-notif-state.json --checklist /home/openclaw/gh-notif-checklist.json --backlog /home/openclaw/.openclaw/workspace/BACKLOG.md\n\nBehavior:\n1) If script output is exactly HEARTBEAT_OK, reply HEARTBEAT_OK.\n2) Otherwise, convert script output into concise user-facing summary.\n3) Ensure BACKLOG has a matching task for each newly reported PR only if missing (no duplicate/empty-sweep entries).\n4) Do NOT perform code changes on PRs here (detect/report + checklist only).\n5) Keep reviewer-bot comments included; ignore only lodekeeper self comments.\n",
         "model": "openai-codex/gpt-5.3-codex",
         "timeoutSeconds": 120
       },
@@ -312,10 +312,10 @@
         "mode": "announce"
       },
       "state": {
-        "nextRunAtMs": 1772604255263,
-        "lastRunAtMs": 1772604075263,
+        "nextRunAtMs": 1772625864111,
+        "lastRunAtMs": 1772625684111,
         "lastStatus": "ok",
-        "lastDurationMs": 65748,
+        "lastDurationMs": 27684,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
@@ -364,7 +364,7 @@
       "name": "ci-autofix-unstable",
       "enabled": true,
       "createdAtMs": 1772326513772,
-      "updatedAtMs": 1772570649657,
+      "updatedAtMs": 1772611607864,
       "schedule": {
         "kind": "every",
         "everyMs": 43200000,
@@ -383,11 +383,11 @@
         "to": "-1003764039429:52"
       },
       "state": {
-        "nextRunAtMs": 1772611582580,
-        "lastRunAtMs": 1772568382580,
+        "nextRunAtMs": 1772654782586,
+        "lastRunAtMs": 1772611582586,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 81934,
+        "lastDurationMs": 25278,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0
@@ -399,7 +399,7 @@
       "name": "aztec-sequencer-health",
       "enabled": true,
       "createdAtMs": 1772373812089,
-      "updatedAtMs": 1772590029395,
+      "updatedAtMs": 1772618839001,
       "schedule": {
         "kind": "every",
         "everyMs": 14400000,
@@ -417,13 +417,13 @@
         "channel": "last"
       },
       "state": {
-        "nextRunAtMs": 1772604397822,
-        "lastRunAtMs": 1772589997822,
+        "nextRunAtMs": 1772633197828,
+        "lastRunAtMs": 1772618797828,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 31573,
-        "lastDelivered": true,
-        "lastDeliveryStatus": "delivered",
+        "lastDurationMs": 41173,
+        "lastDelivered": false,
+        "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0
       }
     }
