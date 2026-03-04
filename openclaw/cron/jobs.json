@@ -96,7 +96,7 @@
       "name": "Sync dotfiles repo",
       "enabled": true,
       "createdAtMs": 1771362496423,
-      "updatedAtMs": 1772571071983,
+      "updatedAtMs": 1772582660030,
       "schedule": {
         "kind": "cron",
         "expr": "0 */6 * * *",
@@ -109,14 +109,13 @@
         "text": "Reminder: Run ~/dotfiles/scripts/sync-dotfiles.sh to sync local files to the dotfiles repo (github.com/lodekeeper/dotfiles). Gists are no longer the source of truth — the repo is."
       },
       "state": {
-        "nextRunAtMs": 1772582598972,
-        "lastRunAtMs": 1772570904737,
+        "nextRunAtMs": 1772604198972,
+        "lastRunAtMs": 1772582598976,
         "lastStatus": "ok",
-        "lastDurationMs": 167246,
+        "lastDurationMs": 61054,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-requested",
-        "consecutiveErrors": 0,
-        "runningAtMs": 1772582598976
+        "consecutiveErrors": 0
       }
     },
     {
@@ -191,7 +190,7 @@
       "name": "eth-rnd-archive-hourly",
       "enabled": true,
       "createdAtMs": 1772034567300,
-      "updatedAtMs": 1772579777190,
+      "updatedAtMs": 1772594170969,
       "schedule": {
         "kind": "cron",
         "expr": "15 * * * *",
@@ -208,13 +207,13 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1772579739158,
+        "lastRunAtMs": 1772594134988,
         "lastStatus": "ok",
-        "lastDurationMs": 38032,
+        "lastDurationMs": 35981,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1772583300000,
+        "nextRunAtMs": 1772597700000,
         "lastDelivered": false
       }
     },
@@ -294,7 +293,7 @@
       "name": "github-notifications",
       "enabled": true,
       "createdAtMs": 1772107716625,
-      "updatedAtMs": 1772582587027,
+      "updatedAtMs": 1772595042657,
       "schedule": {
         "kind": "every",
         "everyMs": 180000,
@@ -312,14 +311,15 @@
         "mode": "announce"
       },
       "state": {
-        "nextRunAtMs": 1772582688496,
-        "lastRunAtMs": 1772582508496,
+        "nextRunAtMs": 1772595108844,
+        "lastRunAtMs": 1772594928844,
         "lastStatus": "ok",
-        "lastDurationMs": 78531,
+        "lastDurationMs": 113813,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "lastDelivered": false
+        "lastDelivered": false,
+        "runningAtMs": 1772595255048
       }
     },
     {
@@ -328,7 +328,7 @@
       "name": "nightly-memory-consolidation",
       "enabled": true,
       "createdAtMs": 1772320910346,
-      "updatedAtMs": 1772422251018,
+      "updatedAtMs": 1772595255033,
       "schedule": {
         "kind": "cron",
         "expr": "30 3 * * *",
@@ -348,14 +348,15 @@
         "channel": "last"
       },
       "state": {
-        "nextRunAtMs": 1772595000000,
-        "lastRunAtMs": 1772422200003,
-        "lastRunStatus": "ok",
-        "lastStatus": "ok",
-        "lastDurationMs": 51015,
+        "nextRunAtMs": 1772681400000,
+        "lastRunAtMs": 1772595042971,
+        "lastRunStatus": "error",
+        "lastStatus": "error",
+        "lastDurationMs": 212062,
         "lastDelivered": true,
         "lastDeliveryStatus": "delivered",
-        "consecutiveErrors": 0
+        "consecutiveErrors": 1,
+        "lastError": "⚠️ 📝 Edit: `in ~/.openclaw/workspace/BACKLOG.md (785 chars)` failed"
       }
     },
     {
@@ -398,7 +399,7 @@
       "name": "aztec-sequencer-health",
       "enabled": true,
       "createdAtMs": 1772373812089,
-      "updatedAtMs": 1772575618044,
+      "updatedAtMs": 1772590029395,
       "schedule": {
         "kind": "every",
         "everyMs": 14400000,
@@ -416,13 +417,13 @@
         "channel": "last"
       },
       "state": {
-        "nextRunAtMs": 1772589997816,
-        "lastRunAtMs": 1772575597816,
+        "nextRunAtMs": 1772604397822,
+        "lastRunAtMs": 1772589997822,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 20228,
-        "lastDelivered": false,
-        "lastDeliveryStatus": "not-delivered",
+        "lastDurationMs": 31573,
+        "lastDelivered": true,
+        "lastDeliveryStatus": "delivered",
         "consecutiveErrors": 0
       }
     }
