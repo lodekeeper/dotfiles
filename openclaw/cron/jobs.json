@@ -115,7 +115,8 @@
         "lastDurationMs": 61054,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-requested",
-        "consecutiveErrors": 0
+        "consecutiveErrors": 0,
+        "runningAtMs": 1772604198976
       }
     },
     {
@@ -190,7 +191,7 @@
       "name": "eth-rnd-archive-hourly",
       "enabled": true,
       "createdAtMs": 1772034567300,
-      "updatedAtMs": 1772594170969,
+      "updatedAtMs": 1772601347237,
       "schedule": {
         "kind": "cron",
         "expr": "15 * * * *",
@@ -207,13 +208,13 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1772594134988,
+        "lastRunAtMs": 1772601315208,
         "lastStatus": "ok",
-        "lastDurationMs": 35981,
+        "lastDurationMs": 32029,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1772597700000,
+        "nextRunAtMs": 1772604900000,
         "lastDelivered": false
       }
     },
@@ -293,7 +294,7 @@
       "name": "github-notifications",
       "enabled": true,
       "createdAtMs": 1772107716625,
-      "updatedAtMs": 1772595042657,
+      "updatedAtMs": 1772604141011,
       "schedule": {
         "kind": "every",
         "everyMs": 180000,
@@ -311,15 +312,14 @@
         "mode": "announce"
       },
       "state": {
-        "nextRunAtMs": 1772595108844,
-        "lastRunAtMs": 1772594928844,
+        "nextRunAtMs": 1772604255263,
+        "lastRunAtMs": 1772604075263,
         "lastStatus": "ok",
-        "lastDurationMs": 113813,
+        "lastDurationMs": 65748,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "lastDelivered": false,
-        "runningAtMs": 1772595255048
+        "lastDelivered": false
       }
     },
     {
