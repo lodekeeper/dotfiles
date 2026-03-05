@@ -96,7 +96,7 @@
       "name": "Sync dotfiles repo",
       "enabled": true,
       "createdAtMs": 1771362496423,
-      "updatedAtMs": 1772705882325,
+      "updatedAtMs": 1772705989432,
       "schedule": {
         "kind": "cron",
         "expr": "0 */6 * * *",
@@ -111,13 +111,14 @@
       },
       "state": {
         "nextRunAtMs": 1772712198972,
-        "lastRunAtMs": 1772705572282,
+        "lastRunAtMs": 1772705967211,
         "lastStatus": "ok",
-        "lastDurationMs": 18862,
+        "lastDurationMs": 22221,
         "lastRunStatus": "ok",
-        "lastDeliveryStatus": "not-requested",
+        "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "runningAtMs": 1772705967211
+        "runningAtMs": 1772706041343,
+        "lastDelivered": false
       },
       "delivery": {
         "mode": "none"
