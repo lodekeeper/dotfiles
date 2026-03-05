@@ -42,6 +42,12 @@ Skills are shared. Your setup is yours. Keeping them apart means you can update 
   3. Push to `fork`
   4. Create PR via API
 
+### PR Metadata Hygiene (MANDATORY)
+- If PR scope changes after review feedback (or any follow-up commits), re-check that **PR title + description still match the actual diff**.
+- If they drift, update both immediately (`gh pr edit <pr> --title "..." --body-file ...`).
+- Do this before requesting re-review/merge.
+- Example lesson: PR #8986 title/body said pin to `ethspecify 0.3.7` while code was updated to `0.3.9`.
+
 ## Lodestar Dev
 - **Main repo:** ~/lodestar (always on `unstable`, kept clean)
 - **Node:** v24 (use `source ~/.nvm/nvm.sh && nvm use 24`)
