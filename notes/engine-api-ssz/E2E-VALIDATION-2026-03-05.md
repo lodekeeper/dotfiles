@@ -97,4 +97,4 @@ Note: this target currently uses legacy EIP-8161 route naming (`get_client_versi
   - erigon PR #19551 (`f1bba864`) also registers legacy `/engine/v1/get_*` route names.
 - Detailed evidence: `notes/engine-api-ssz/DRAFT-PATH-TARGET-SEARCH-2026-03-05.md`.
 
-Result: blocked from adding a positive negotiated live-success assertion on current draft paths until an EL implementation exposes those routes in a runnable target.
+Result: no compatible runnable EL target yet for draft-path positive negotiated assertion. Non-blocking because implementation falls back to JSON-RPC when SSZ endpoints are unsupported.

@@ -65,8 +65,8 @@ Global code-search hits for exact draft route strings are currently documentatio
 ## Conclusion
 As of 2026-03-05, there is **no identified runnable EL target** with active handlers for the current draft SSZ REST route schema used by Lodestar (`client/version`, `payloads/bodies/by-*`).
 
-## Hard blocker
-Cannot yet add a **positive negotiated live success assertion on current draft routes** against a real EL implementation, because no compatible EL target is currently available.
+## Current status (non-blocking)
+No compatible EL target is currently available for **positive negotiated live success assertions on current draft routes**. This is **not release-blocking** because Lodestar already uses SSZ-first transport with automatic JSON fallback on unsupported endpoints.
 
 ## Recommended next step
-Track upstream EL implementations for draft-route adoption (geth/erigon/reth/nethermind). Once one exists, add an env-gated live negotiated-success test that exercises `ExecutionEngineHttp.fetchWithSelectedTransport()` over draft routes without fallback.
+Treat draft-route positive live assertion as a follow-up enhancement: track upstream EL implementations (geth/erigon/reth/nethermind) and add an env-gated live negotiated-success test once a compatible target exists.
