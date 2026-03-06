@@ -1,11 +1,11 @@
 {
-  "general":      {"primary": ["brave"],              "fallback": ["duckduckgo"]},
-  "code":         {"primary": ["github_code", "brave"], "fallback": ["duckduckgo"]},
-  "academic":     {"primary": ["semantic_scholar"],    "fallback": ["brave"]},
-  "ethereum":     {"primary": ["ethresearch", "github_code"], "fallback": ["brave"]},
-  "social":       {"primary": ["hn_algolia"],          "fallback": ["brave"]},
-  "qa":           {"primary": ["stack_exchange", "brave"], "fallback": ["duckduckgo"]},
-  "encyclopedia": {"primary": ["wikipedia"],           "fallback": ["brave"]},
-  "news":         {"primary": ["brave"],               "fallback": ["duckduckgo"]},
-  "package":      {"primary": ["brave"],               "fallback": ["duckduckgo"]}
+  "general":      {"primary": ["duckduckgo"],                      "fallback": ["brave"]},
+  "code":         {"primary": ["github_code", "stack_exchange"],   "fallback": ["duckduckgo"]},
+  "academic":     {"primary": ["semantic_scholar"],                "fallback": ["duckduckgo"]},
+  "ethereum":     {"primary": ["ethresearch", "github_code"],      "fallback": ["duckduckgo"]},
+  "social":       {"primary": ["hn_algolia"],                      "fallback": ["duckduckgo"]},
+  "qa":           {"primary": ["stack_exchange"],                  "fallback": ["duckduckgo"]},
+  "encyclopedia": {"primary": ["wikipedia"],                       "fallback": ["duckduckgo"]},
+  "news":         {"primary": ["duckduckgo"],                      "fallback": ["brave"]},
+  "package":      {"primary": ["duckduckgo"],                      "fallback": ["brave"]}
 }
