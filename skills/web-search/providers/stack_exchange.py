@@ -14,7 +14,7 @@ def search(query: str, params: dict) -> list[dict]:
     qparams = {
         "order": "desc",
         "sort": "relevance",
-        "intitle": query,
+        "q": query,  # Full-text search (not just intitle)
         "site": "stackoverflow",
         "pagesize": str(max_results),
         "filter": "!nNPvSNdWme",  # Include body excerpt
