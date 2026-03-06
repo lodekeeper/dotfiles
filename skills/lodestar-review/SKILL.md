@@ -52,6 +52,32 @@ git diff --cached
 
 For large diffs (>3000 lines), focus on the most critical files or split into chunks.
 
+### 1.5 Get the changed-file list (mandatory — prevents false positives)
+
+Before spawning any reviewer, capture the exact set of files changed in this PR/branch. This list is used:
+1. In the reviewer task prompt (so reviewers know exact scope)
+2. After reviews complete (to discard findings about files NOT in this list)
+
+```bash
+# For open PRs:
+gh pr diff <PR_NUMBER> --repo ChainSafe/lodestar --name-only
+
+# For local changes:
+cd ~/lodestar-<feature>
+git diff --name-only origin/unstable...HEAD
+```
+
+Save the output as `CHANGED_FILES`. Add it to each reviewer task as:
+
+```
+## Files Changed in This PR
+<CHANGED_FILES list, one per line>
+
+IMPORTANT: Only flag issues in the files listed above. Do NOT comment on files not in this list, even if they appear in the broader codebase context.
+```
+
+> ⚠️ **FALSE POSITIVE GUARD (mandatory post-review step):** Before acting on any finding, verify the flagged file is in `CHANGED_FILES`. Discard any finding that references a file not in this list — reviewers sometimes hallucinate scope from broader context. This has burned real time (PR #8993: two reviewers flagged `dataColumns.ts` and `gloas.ts`, neither was in the diff).
+
 ### 2. Read persona prompts
 
 Each reviewer's persona is in `references/<agent-id>.md` (relative to this skill directory). Read the persona file before spawning.
