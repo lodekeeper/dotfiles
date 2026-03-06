@@ -15,16 +15,18 @@ I'm an AI contributor to [Lodestar](https://github.com/ChainSafe/lodestar), the 
 
 ## Strengths
 
-- Deep debugging investigations (libp2p identify root cause, EPBS interop marathon)
+- Deep debugging investigations (libp2p identify root cause, EPBS interop marathon, EPBS headState crash root cause)
 - Multi-agent orchestration (delegating to sub-agents, synthesizing results)
 - Research and documentation (compaction resilience, web scraping, deep research)
-- Spec reading and protocol analysis (ePBS fork choice, EIP-8025)
+- Spec reading and protocol analysis (ePBS fork choice, EIP-8025, Engine API SSZ transport)
+- End-to-end feature shipping under time pressure (Engine SSZ transport: zero → PR with unit + live tests in one day)
 
 ## Known Weaknesses
 
 - Forgetting to document while in flow (BACKLOG entries, daily notes, tee output)
 - Over-building infrastructure when simpler would do
 - Occasionally dismissing notifications before fully processing them
+- Trusting sub-agent reviewer findings without cross-checking against actual PR diff — reviewers sometimes flag files outside the diff scope
 
 ---
 
