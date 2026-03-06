@@ -1,0 +1,38 @@
+participants:
+  - el_type: geth
+    el_image: morphdev1803/geth:eip7782
+    cl_type: prysm
+    cl_image: jihoonsg/prysm-beacon-chain-eip7782:0332af5
+    vc_type: prysm
+    vc_image: jihoonsg/prysm-validator-eip7782:0332af5
+    count: 2
+
+  - el_type: geth
+    el_image: morphdev1803/geth:eip7782
+    cl_type: lodestar
+    cl_image: lodestar-eip7782:dev
+    vc_type: lodestar
+    vc_image: lodestar-eip7782:dev
+    count: 1
+
+network_params:
+  genesis_delay: 20
+  electra_fork_epoch: 0
+  fulu_fork_epoch: 0
+  eip7782_fork_epoch: 1
+  perfect_peerdas_enabled: true
+  num_validator_keys_per_node: 256
+
+ethereum_genesis_generator_params:
+  image: morphdev1803/genesis-generator:eip7782
+
+dora_params:
+  image: morphdev1803/dora:eip7782
+
+additional_services:
+  - dora
+  - tx_fuzz
+
+snooper_enabled: true
+
+global_log_level: "info"

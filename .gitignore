@@ -1,0 +1,16 @@
+tmp/
+memes/
+.memory/
+*.png
+*.jpg
+*.zip
+*.log
+*.pid
+*.diff
+*.skill
+research/cf-bypass-*.py
+research/cf-bypass-*.json
+research/oracle-bridge-cdp.py
+research/oracle-stealth-bridge.py
+research/oracle-remote-chrome-test.py
+research/chatgpt-camoufox.py

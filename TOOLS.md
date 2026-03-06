@@ -42,24 +42,41 @@ Skills are shared. Your setup is yours. Keeping them apart means you can update 
   3. Push to `fork`
   4. Create PR via API
 
+### PR Metadata Hygiene (MANDATORY)
+- If PR scope changes after review feedback (or any follow-up commits), re-check that **PR title + description still match the actual diff**.
+- If they drift, update both immediately (`gh pr edit <pr> --title "..." --body-file ...`).
+- Do this before requesting re-review/merge.
+- Example lesson: PR #8986 title/body said pin to `ethspecify 0.3.7` while code was updated to `0.3.9`.
+
 ## Lodestar Dev
 - **Main repo:** ~/lodestar (always on `unstable`, kept clean)
 - **Node:** v24 (use `source ~/.nvm/nvm.sh && nvm use 24`)
 - **Build:** `pnpm build`
 - **Test:** `pnpm test:unit`
-- **Lint:** `pnpm lint`
+- **Lint:** `pnpm lint` ⚠️ **MANDATORY before every commit/push — no exceptions!**
+- **Lint autofix:** `pnpm lint --write`
 - **Type check:** `pnpm check-types`
 - **Benchmark:** `pnpm benchmark:files <file>`
+
+### File Editing in Worktrees (IMPORTANT)
+The `Write` and `Edit` tools are sandboxed to `~/.openclaw/workspace`. For ANY file outside that path (worktrees, ~/lodestar, ~/consensus-specs, etc.), use `exec` directly:
+- **Create/overwrite:** `cat > path/to/file << 'EOF' ... EOF`
+- **Patch:** `sed -i` for simple replacements
+- **Never** attempt `Write`/`Edit` tools on worktree files — it just fails with a noisy error.
 
 ### Git Worktrees (IMPORTANT)
 Use worktrees to work on multiple branches without cross-contamination:
 
 **Current layout:**
 ```
-~/lodestar               → unstable (main repo, stays clean)
-~/lodestar-lazy-slasher  → feat/lazy-slasher-clean (PR #8874)
-~/lodestar-graffiti      → feat/graffiti-append (PR #8839)
-~/lodestar-eip8025       → feat/eip8025-optional-proofs (EIP-8025, based on optional-proofs)
+~/lodestar                      → unstable (main repo, stays clean)
+~/lodestar-6s-slots             → feat/eip7782-6s-slots
+~/lodestar-eip8025              → feat/proof-driven-execution (EIP-8025, ON HOLD)
+~/lodestar-epbs-devnet-0        → epbs-devnet-0
+~/lodestar-lazy-slasher         → feat/lazy-slasher-clean
+~/lodestar-proposer-preferences → feat/proposer-preferences
+~/lodestar-ptr-compress         → feat/pointer-compression
+~/lodestar-rate-limit-fix       → fix/sync-rate-limit-backoff (PR #8924)
 ```
 
 **Commands:**
@@ -98,17 +115,26 @@ git branch -d <branch-name>  # optional: delete local branch
 - **Test:** `make test`
 
 ## Code Review Workflow
-- **Before opening PRs:** Run diff through sub-agents
-- **codex-reviewer:** GPT-5.3-Codex (deep code review)
-- **gemini-reviewer:** Gemini 2.5 Pro (different perspective)
-- **gpt-advisor:** GPT-5.3-Codex, **thinking: "high"** (complex decisions)
-- **Usage:** `sessions_spawn(agentId: "codex-reviewer", task: "Review this diff briefly...")`
-- **gpt-advisor:** Always spawn with `thinking: "high"` for better reasoning
-- **⚠️ WAIT for all sub-agents to finish before posting PR reviews!** Don't approve then backtrack with critical findings.
+- **Skill:** `skills/lodestar-review/SKILL.md` — full instructions, Lodestar-specific persona prompts
+- **Before opening PRs:** Run diff through persona-based reviewers
+- **⚠️ WAIT for all sub-agents to finish before posting PR reviews!**
+- **Persona prompts:** `skills/lodestar-review/references/<agent-id>.md` — Lodestar-tailored
+- See skill SKILL.md for reviewer selection matrix and workflow
+
+### Legacy Reviewers (still available)
+- **codex-reviewer:** GPT-5.3-Codex — general code review
+- **gemini-reviewer:** Gemini 2.5 Pro — second perspective
+- **gpt-advisor:** GPT-5.3-Codex, **thinking: "xhigh"** — architecture & deep reasoning
+  - ⚠️ `thinking` is NOT a valid agent config key — MUST pass `thinking: "xhigh"` at spawn time via `sessions_spawn`
 
 ## Coding Agents (Implementation)
 - **Codex CLI:** `codex exec --full-auto "..."` — best for focused implementation tasks
 - **Claude CLI:** `claude "..."` — best for tasks needing broader reasoning
+- **lodeloop:** `~/lodeloop/lodeloop.sh` — autonomous loop for multi-story features
+  - Repo: https://github.com/lodekeeper/lodeloop
+  - Default to Codex (`-a codex`)
+  - Creates task.json → loops agent → verification gates → circuit breaker
+  - Use for features with 2+ stories; use direct CLI for single tasks
 - **Context file:** Always point them to `~/.openclaw/workspace/CODING_CONTEXT.md`
 - **Always use PTY:** `exec pty:true workdir:~/lodestar-<feature> command:"codex ..."`
 - **Parallel OK:** Spawn multiple in separate worktrees
@@ -130,6 +156,23 @@ git branch -d <branch-name>  # optional: delete local branch
 ---
 
 Add whatever helps you do your job. This is your cheat sheet.
+
+## CI Auto-Fix Pipeline
+- **Cron ID:** `573d18ec` (hourly, Codex GPT-5.3)
+- **Detector:** `scripts/ci/auto_fix_flaky.py` — scans unstable CI for flaky sim/e2e failures
+- **Prompt:** `scripts/ci/CRON_PROMPT.md` — instructions for the cron agent
+- **Tracker:** `memory/unstable-ci-tracker.json` — avoids re-investigating known failures
+- **Scope:** Tests (E2E, Browser), Sim tests, Kurtosis sim tests on `unstable` only
+- **Auto-fixable patterns:** shutdown-race, peer-count-flaky, timeout, vitest-crash
+- **Flow:** detect → classify → Codex fixes → PR against unstable → announce
+
+## Grafana (Lodestar Monitoring)
+- **URL:** https://grafana-lodestar.chainsafe.io
+- **Token:** stored in `$GRAFANA_TOKEN` (set in `~/.bashrc`)
+- **Role:** Read-only Viewer
+- **Prometheus datasource ID:** 1
+- **Loki datasource ID:** 4
+- **Skills:** `skills/release-metrics/` (Prometheus), `skills/grafana-loki/` (Loki logs)
 
 ## Discord
 - **Bot:** @lodekeeper (ID: 1467247836117860547)

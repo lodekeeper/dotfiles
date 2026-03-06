@@ -1,0 +1,71 @@
+# EIP-7782 mixed-client interop check: Lodestar + Prysm
+# Goal: verify cross-client behavior across Fulu(12s) -> EIP-7782(6s) transition.
+
+participants:
+  - el_type: geth
+    el_image: morphdev1803/geth:eip7782
+    cl_type: lodestar
+    cl_image: lodestar-eip7782:dev
+    count: 1
+    supernode: true
+    cl_extra_params:
+      - "--params.EIP7782_FORK_EPOCH=1"
+      - "--params.SLOT_DURATION_MS_EIP7782=6000"
+      - "--params.EIP7782_FORK_VERSION=0x0b000001"
+      - "--params.ATTESTATION_DUE_BPS_EIP7782=5000"
+      - "--params.AGGREGRATE_DUE_BPS_EIP7782=7500"
+      - "--params.SYNC_MESSAGE_DUE_BPS_EIP7782=3333"
+      - "--params.CONTRIBUTION_DUE_BPS_EIP7782=6667"
+      - "--params.PROPOSER_REORG_CUTOFF_BPS_EIP7782=1667"
+      - "--params.PAYLOAD_ATTESTATION_DUE_BPS_EIP7782=7500"
+      - "--params.VIEW_FREEZE_CUTOFF_BPS_EIP7782=7500"
+      - "--params.INCLUSION_LIST_SUBMISSION_DUE_BPS_EIP7782=6667"
+      - "--params.PROPOSER_INCLUSION_LIST_CUTOFF_BPS_EIP7782=9167"
+      - "--params.EPOCHS_PER_SYNC_COMMITTEE_PERIOD_EIP7782=512"
+      - "--params.MAX_PER_EPOCH_ACTIVATION_EXIT_CHURN_LIMIT_EIP7782=128000000000"
+      - "--params.MIN_PER_EPOCH_CHURN_LIMIT_EIP7782=64000000000"
+    # Keep VC fork schedule aligned with BN for domain correctness.
+    vc_extra_params:
+      - "--params.EIP7782_FORK_EPOCH=1"
+      - "--params.SLOT_DURATION_MS_EIP7782=6000"
+      - "--params.EIP7782_FORK_VERSION=0x0b000001"
+      - "--params.ATTESTATION_DUE_BPS_EIP7782=5000"
+      - "--params.AGGREGRATE_DUE_BPS_EIP7782=7500"
+      - "--params.SYNC_MESSAGE_DUE_BPS_EIP7782=3333"
+      - "--params.CONTRIBUTION_DUE_BPS_EIP7782=6667"
+      - "--params.PROPOSER_REORG_CUTOFF_BPS_EIP7782=1667"
+      - "--params.PAYLOAD_ATTESTATION_DUE_BPS_EIP7782=7500"
+      - "--params.VIEW_FREEZE_CUTOFF_BPS_EIP7782=7500"
+      - "--params.INCLUSION_LIST_SUBMISSION_DUE_BPS_EIP7782=6667"
+      - "--params.PROPOSER_INCLUSION_LIST_CUTOFF_BPS_EIP7782=9167"
+      - "--params.EPOCHS_PER_SYNC_COMMITTEE_PERIOD_EIP7782=512"
+      - "--params.MAX_PER_EPOCH_ACTIVATION_EXIT_CHURN_LIMIT_EIP7782=128000000000"
+      - "--params.MIN_PER_EPOCH_CHURN_LIMIT_EIP7782=64000000000"
+
+  - el_type: geth
+    el_image: morphdev1803/geth:eip7782
+    cl_type: prysm
+    cl_image: jihoonsg/prysm-beacon-chain-eip7782:0332af5
+    vc_type: prysm
+    vc_image: jihoonsg/prysm-validator-eip7782:0332af5
+    count: 1
+
+network_params:
+  genesis_delay: 20
+  electra_fork_epoch: 0
+  fulu_fork_epoch: 0
+  eip7782_fork_epoch: 1
+  perfect_peerdas_enabled: true
+  num_validator_keys_per_node: 64
+
+port_publisher:
+  cl:
+    enabled: true
+    public_port_start: 35000
+  el:
+    enabled: true
+    public_port_start: 36000
+
+additional_services: []
+
+global_log_level: "info"

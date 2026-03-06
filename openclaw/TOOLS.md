@@ -115,6 +115,7 @@ git branch -d <branch-name>  # optional: delete local branch
 - **Test:** `make test`
 
 ## Code Review Workflow
+<<<<<<< Updated upstream
 - **Skill:** `skills/lodestar-review/SKILL.md` — full instructions, Lodestar-specific persona prompts
 - **Before opening PRs:** Run diff through persona-based reviewers
 - **⚠️ WAIT for all sub-agents to finish before posting PR reviews!**
@@ -126,6 +127,15 @@ git branch -d <branch-name>  # optional: delete local branch
 - **gemini-reviewer:** Gemini 2.5 Pro — second perspective
 - **gpt-advisor:** GPT-5.3-Codex, **thinking: "xhigh"** — architecture & deep reasoning
   - ⚠️ `thinking` is NOT a valid agent config key — MUST pass `thinking: "xhigh"` at spawn time via `sessions_spawn`
+=======
+- **Before opening PRs:** Run diff through sub-agents
+- **codex-reviewer:** GPT-5.3-Codex (deep code review)
+- **gemini-reviewer:** Gemini 2.5 Pro (different perspective)
+- **gpt-advisor:** GPT-5.3-Codex, **thinking: "high"** (complex decisions)
+- **Usage:** `sessions_spawn(agentId: "codex-reviewer", task: "Review this diff briefly...")`
+- **gpt-advisor:** Always spawn with `thinking: "high"` for better reasoning
+- **⚠️ WAIT for all sub-agents to finish before posting PR reviews!** Don't approve then backtrack with critical findings.
+>>>>>>> Stashed changes
 
 ## Coding Agents (Implementation)
 - **Codex CLI:** `codex exec --full-auto "..."` — best for focused implementation tasks
@@ -157,6 +167,7 @@ git branch -d <branch-name>  # optional: delete local branch
 
 Add whatever helps you do your job. This is your cheat sheet.
 
+<<<<<<< Updated upstream
 ## CI Auto-Fix Pipeline
 - **Cron ID:** `573d18ec` (hourly, Codex GPT-5.3)
 - **Detector:** `scripts/ci/auto_fix_flaky.py` — scans unstable CI for flaky sim/e2e failures
@@ -174,6 +185,8 @@ Add whatever helps you do your job. This is your cheat sheet.
 - **Loki datasource ID:** 4
 - **Skills:** `skills/release-metrics/` (Prometheus), `skills/grafana-loki/` (Loki logs)
 
+=======
+>>>>>>> Stashed changes
 ## Discord
 - **Bot:** @lodekeeper (ID: 1467247836117860547)
 - **Server:** ChainSafe (593655374469660673)

@@ -1,136 +1,128 @@
----
-name: oracle-bridge
-description: Run ChatGPT browser automation from this headless server using a hybrid Camoufox→Chromium CDP bridge. Use when `oracle --engine browser` is needed, and fall back to direct CDP CLI when Oracle UI automation is flaky.
----
+# Oracle Browser Bridge Skill
 
-# Oracle Browser Bridge Skill (v4 hybrid)
-
-Use this when browser-mode ChatGPT access is required on the headless server.
-
-## Current Reality (important)
-
-- Plain headless Chromium often fails Cloudflare/Turnstile.
-- **Hybrid v4 works** for authentication:
-  1. Camoufox (Firefox stealth) passes CF and collects fresh cookies.
-  2. Cookies are injected into rebrowser Chromium.
-  3. Chromium exposes CDP for automation clients.
-- Oracle CLI browser automation can still be flaky with ChatGPT UI/model-picker changes.
-- A direct CDP client (`chatgpt-direct.py`) is currently the most reliable execution path.
-
----
+**description:** Query ChatGPT GPT-5.4 Pro from this headless server using Camoufox (Firefox stealth browser). Bypasses Cloudflare Turnstile automatically.
 
 ## Architecture
 
-```text
-Camoufox (stealth Firefox) --passes CF--> chatgpt.com
-        │
-        └─extract cookies (session + cf_clearance...)
-                │
-                ▼
-Rebrowser Chromium (CDP port 9222, authenticated tab)
-        │
-        ├─ Oracle CLI --engine browser --remote-chrome localhost:9222
-        └─ Direct CDP CLI (chatgpt-direct)
+```
+Camoufox (headless Firefox)
+├─ Bypasses CF Turnstile natively
+├─ Loads ChatGPT with auth cookies
+├─ Types prompt + clicks send
+└─ Polls for response (handles extended thinking)
 ```
 
----
+**Why Camoufox, not Chrome?** Cloudflare blocks Chrome/Chromium headless browsers at the API level (all `/backend-api/*` calls return 403). Camoufox (Firefox-based stealth browser) passes CF checks and allows full ChatGPT interaction.
 
 ## Prerequisites
 
-- `~/camoufox-env` virtualenv with:
-  - `camoufox`
-  - `rebrowser-playwright`
-  - `websocket-client`
-- Oracle CLI installed (nvm node 22): `@steipete/oracle`
-- Cookie file: `~/.oracle/chatgpt-cookies.json`
-  - must include `__Secure-next-auth.session-token`
-
----
+- `~/camoufox-env` virtualenv with `camoufox` and `playwright`
+- `~/.oracle/chatgpt-cookies.json` — ChatGPT auth cookies (from Nico's browser)
+- No Xvfb needed (runs headless)
 
 ## Quick Start
 
-## 1) Start hybrid bridge (v4)
-
 ```bash
-source ~/camoufox-env/bin/activate
-python3 ~/.openclaw/workspace/research/oracle-bridge-v4.py \
-  --cookies ~/.oracle/chatgpt-cookies.json \
-  --port 9222
+# Simple query
+scripts/oracle/chatgpt-direct --prompt "Your question here"
+
+# With file input
+scripts/oracle/chatgpt-direct --prompt "Review this:" --file doc.md
+
+# Pipe from stdin
+echo "What is RRF?" | scripts/oracle/chatgpt-direct
+
+# JSON output + save to file
+scripts/oracle/chatgpt-direct --prompt "..." --json --output response.md
+
+# Verbose mode (shows thinking progress)
+scripts/oracle/chatgpt-direct --prompt "..." --verbose
 ```
 
-Expected: `Oracle Bridge v4 READY` and `localhost:9222`.
+## Key Options
 
-## 2) Preferred query path: direct CDP CLI
+| Flag | Default | Description |
+|------|---------|-------------|
+| `--prompt` / `-p` | — | Prompt text |
+| `--file` / `-f` | — | Append file contents to prompt |
+| `--timeout` / `-t` | 3600 | Response timeout (GPT-5.4 Pro can think up to 1 hour) |
+| `--output` / `-o` | — | Write response text to file |
+| `--json` | off | JSON output with status/text/elapsed |
+| `--verbose` / `-v` | off | Show progress (thinking/generating) |
+| `--cookies` | `~/.oracle/chatgpt-cookies.json` | Cookie file path |
 
-Use the stable wrapper:
+## GPT-5.4 Pro Thinking Behavior
 
-```bash
-~/.openclaw/workspace/scripts/oracle/chatgpt-direct --prompt "Your question" --timeout 180
+GPT-5.4 Pro uses **extended thinking** mode:
+- Simple questions: 10-30 seconds
+- Complex design reviews: 2-5 minutes
+- Deep analysis: can think up to 60 minutes
+
+During thinking, the tool shows:
+```
+[10s] thinking md=0 text='(empty)'
+[20s] thinking md=0 text='(empty)'
+...
+[192s] done md=865 text='Response starts here...'
 ```
 
-Pipe mode also works:
+The `md=0` indicates the model is still thinking. Once `md > 0`, the actual response is arriving.
 
-```bash
-echo "Summarize this in 3 bullets" | ~/.openclaw/workspace/scripts/oracle/chatgpt-direct
-```
+## Response Detection
 
-## 3) Oracle browser mode (experimental)
-
-```bash
-source ~/.nvm/nvm.sh && nvm use 22
-ORACLE_REUSE_TAB=1 oracle --engine browser \
-  --remote-chrome localhost:9222 \
-  --model gpt-5.2-pro \
-  --prompt "Your question" --wait
-```
-
-If Oracle stalls on assistant capture, use the direct CDP CLI above.
-
----
-
-## Output Durability Rule
-
-For long Oracle runs, always persist output with `tee`:
-
-```bash
-oracle ... --wait 2>&1 | tee ~/research/<topic>/oracle-output.md
-```
-
-Never rely on transient stdout alone.
-
----
+The tool distinguishes thinking from response by checking:
+1. **Stop button visible** + **empty `.markdown`** → still thinking
+2. **Stop button visible** + **non-empty `.markdown`** → streaming response
+3. **No stop button** + **non-empty `.markdown`** → done (stable check: 2 consecutive polls)
+4. **Error keywords detected** → error (retries once automatically)
 
 ## Troubleshooting
 
-### `backend-api/*` returns 403
+### "Cloudflare challenge not bypassed"
+- Auth cookies may have expired → get fresh cookies from Nico's browser
+- Export from browser DevTools: Application → Cookies → chatgpt.com → copy all
 
-- This means CF/API protection is still active for the current browser path.
-- Restart the hybrid bridge and verify authenticated tab before querying.
-- Validate quickly with direct CLI first (`chatgpt-direct`) before blaming Oracle.
+### "Session expired — need fresh cookies"
+- Same fix: refresh `~/.oracle/chatgpt-cookies.json`
 
-### `Session token expired` / login page appears
+### Response times out after extended thinking
+- Increase `--timeout` (default is 3600s = 1 hour)
+- Some queries genuinely take GPT-5.4 Pro 10+ minutes to think through
+- If consistently stuck, the model may have hit a generation error — retry
 
-- Refresh `~/.oracle/chatgpt-cookies.json` from a live ChatGPT browser session.
+### "Something went wrong" error
+- Transient ChatGPT error — tool retries automatically (new chat + resend)
 
-### Oracle says assistant timed out but prompt was sent
+## Files
 
-- Known Oracle UI-capture issue in this setup.
-- Use `scripts/oracle/chatgpt-direct` for reliable completion capture.
+| File | Purpose |
+|------|---------|
+| `research/chatgpt-direct.py` | Main Camoufox-based ChatGPT client |
+| `scripts/oracle/chatgpt-direct` | CLI wrapper (activates venv) |
+| `research/oracle-bridge-v4.py` | Legacy Chrome CDP bridge (deprecated — Chrome gets 403) |
+| `research/camoufox-direct.py` | Standalone test script (proof of concept) |
 
-### No ChatGPT tab found
+## Integration with OpenClaw
 
-- Bridge is not running or CDP port mismatched.
-- Check bridge logs and ensure `--port` matches the client command.
+From agent code / skill scripts:
+```bash
+# Query GPT-5.4 Pro for research review
+~/.openclaw/workspace/scripts/oracle/chatgpt-direct \
+  --prompt "Review this research:" \
+  --file ~/research/topic/FINAL-REPORT.md \
+  --output ~/research/topic/gpt54-review.md \
+  --timeout 3600
+```
 
----
+## Cookie Format
 
-## Key Files
+`~/.oracle/chatgpt-cookies.json` — array of cookie objects:
+```json
+[
+  {"name": "__Secure-next-auth.session-token", "value": "...", "domain": ".chatgpt.com", ...},
+  {"name": "cf_clearance", "value": "...", "domain": ".chatgpt.com", ...},
+  ...
+]
+```
 
-- Bridge v4: `research/oracle-bridge-v4.py`
-- Direct CDP client: `research/chatgpt-direct.py`
-- Stable wrapper: `scripts/oracle/chatgpt-direct`
-- Oracle patched files (when needed):
-  - `.../oracle/dist/src/browser/index.js`
-  - `.../oracle/dist/src/browser/actions/navigation.js`
-
-If Oracle is updated, re-validate patched behavior before assuming regressions are external.
+Export all cookies from chatgpt.com domain (including HttpOnly). The `cf_clearance` cookie is helpful but not required — Camoufox obtains its own CF clearance.
