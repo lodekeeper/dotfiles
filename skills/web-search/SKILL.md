@@ -1,3 +1,8 @@
+---
+name: web-search
+description: Multi-source web search orchestrator. Use when `web_search`/`web_fetch` are insufficient and you need query classification, parallel provider search, ranking, deduplication, and optional synthesis across web/code/academic/social sources.
+---
+
 # web-search
 
 Multi-source web search orchestrator. Classifies queries, routes to optimal providers in parallel, ranks via RRF + quality signals, deduplicates, and optionally synthesizes results with citations.

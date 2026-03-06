@@ -1,6 +1,9 @@
-# Oracle Browser Bridge Skill
+---
+name: oracle-bridge
+description: Query ChatGPT GPT-5.4 Pro from this headless server using Camoufox (Firefox stealth browser). Use when Oracle browser mode is needed under Cloudflare Turnstile constraints and Chrome/Chromium headless paths fail.
+---
 
-**description:** Query ChatGPT GPT-5.4 Pro from this headless server using Camoufox (Firefox stealth browser). Bypasses Cloudflare Turnstile automatically.
+# Oracle Browser Bridge Skill
 
 ## Architecture
 

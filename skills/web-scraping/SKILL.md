@@ -1,6 +1,6 @@
 ---
 name: web-scraping
-description: Universal web scraping for AI agents using free/open-source tools. Use when `web_fetch` is blocked or incomplete, when scraping JS-rendered SPAs, Cloudflare-protected pages, structured data, or login-gated pages. Provides tiered escalation: curl_cffi → DynamicFetcher → Camoufox → authenticated sessions.
+description: "Universal web scraping for AI agents using free/open-source tools. Use when `web_fetch` is blocked or incomplete, including JS-rendered SPAs, Cloudflare-protected pages, structured data extraction, and login-gated pages. Tiered escalation: curl_cffi → DynamicFetcher → Camoufox → authenticated sessions."
 ---
 
 # Web Scraping Skill
