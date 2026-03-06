@@ -17,7 +17,8 @@
       "wakeMode": "next-heartbeat",
       "payload": {
         "kind": "agentTurn",
-        "message": "End of day. Write a summary of today's work to memory/YYYY-MM-DD.md (use today's date). Include: PRs reviewed, PRs opened/updated, code written, issues found, lessons learned. Keep it concise but complete."
+        "message": "End of day. Write a summary of today's work to memory/YYYY-MM-DD.md (use today's date). Include: PRs reviewed, PRs opened/updated, code written, issues found, lessons learned. Keep it concise but complete.",
+        "model": "anthropic/claude-sonnet-4-6"
       },
       "state": {
         "nextRunAtMs": 1772838000000,
@@ -49,7 +50,8 @@
       "wakeMode": "now",
       "payload": {
         "kind": "systemEvent",
-        "text": "Reminder: If no active PRs or urgent work, continue the consensus specs study plan. Check notes/specs/PROGRESS.md for where you left off. Read a spec section, find the Lodestar implementation, document learnings, and open PRs for any issues found."
+        "text": "Reminder: If no active PRs or urgent work, continue the consensus specs study plan. Check notes/specs/PROGRESS.md for where you left off. Read a spec section, find the Lodestar implementation, document learnings, and open PRs for any issues found.",
+        "model": "anthropic/claude-sonnet-4-6"
       },
       "state": {
         "lastRunAtMs": 1771540366871,
@@ -73,11 +75,12 @@
       "wakeMode": "now",
       "payload": {
         "kind": "agentTurn",
-        "message": "Check for updates on EIP-8025 (optional execution proofs) across other clients and research discussions. Do the following:\n\n1. Check ethereum/consensus-specs repo for any new commits/PRs related to EIP-8025, optional proofs, or zkvm\n2. Check Lighthouse repo (sigp/lighthouse) for commits on their optional-proofs branch\n3. Check ethpandaops/prysm repo (NOT prysmaticlabs/prysm) for any optional-proofs related branches\n4. Check ethereum/pm repo for updates to zkEVM planning\n5. Check the Eth R&D Archive for recent discussions in zkEVM-related channels:\n   - Run: bash skills/eth-rnd-archive/check-updates.sh\n   - Read recent JSON files from ~/eth-rnd-archive/l1-zkevm/ and ~/eth-rnd-archive/l1-zkevm-protocol/ (last 3 days)\n   - Also check their _threads/ subdirectories for thread discussions\n   - Look for mentions of EIP-8025, optional proofs, proof orchestration, zkEVM protocol changes\n6. If any changes found that affect our implementation in lodestar (branch feat/eip8025-optional-proofs in ~/lodestar-eip8025), summarize what we need to update\n7. Report findings to Nico via Telegram (chat ID 5774760693) — only if there are actual updates, stay silent otherwise\n\nOur current implementation: PR #8918 merged + PR #8923 ready on ChainSafe/lodestar optional-proofs branch. 3-client interop validated.",
-        "timeoutSeconds": 300
+        "message": "Check for updates on EIP-8025 (optional execution proofs) across other clients and research discussions. Do the following:\n\n1. Check ethereum/consensus-specs repo for any new commits/PRs related to EIP-8025, optional proofs, or zkvm\n2. Check Lighthouse repo (sigp/lighthouse) for commits on their optional-proofs branch\n3. Check ethpandaops/prysm repo (NOT prysmaticlabs/prysm) for any optional-proofs related branches\n4. Check ethereum/pm repo for updates to zkEVM planning\n5. Check the Eth R&D Archive for recent discussions in zkEVM-related channels:\n   - Run: bash skills/eth-rnd-archive/check-updates.sh\n   - Read recent JSON files from ~/eth-rnd-archive/l1-zkevm/ and ~/eth-rnd-archive/l1-zkevm-protocol/ (last 3 days)\n   - Also check their _threads/ subdirectories for thread discussions\n   - Look for mentions of EIP-8025, optional proofs, proof orchestration, zkEVM protocol changes\n6. If any changes found that affect our implementation in lodestar (branch feat/eip8025-optional-proofs in ~/lodestar-eip8025), summarize what we need to update\n7. Report findings to Nico via Telegram (chat ID 5774760693) — only if there are actual updates, stay silent otherwise\n\nOur current implementation: PR #8918 merged + PR #8923 ready on ChainSafe/lodestar optional-proofs branch. 3-client interop validated.\n\nOutput routing:\n- If meaningful updates found: post summary to Lodestar WG topic #347 via message tool (action=send target=-1003764039429 threadId=347).\n- If no updates: reply HEARTBEAT_OK (no output anywhere).\n- If something critical/breaking (spec change affecting Lodestar, urgent action needed): DM Nico directly (target=5774760693).\n- Never DM for routine research updates.",
+        "timeoutSeconds": 300,
+        "model": "anthropic/claude-sonnet-4-6"
       },
       "delivery": {
-        "mode": "announce"
+        "mode": "none"
       },
       "state": {
         "nextRunAtMs": 1772818562804,
@@ -96,7 +99,7 @@
       "name": "Sync dotfiles repo",
       "enabled": true,
       "createdAtMs": 1771362496423,
-      "updatedAtMs": 1772755421523,
+      "updatedAtMs": 1772777027267,
       "schedule": {
         "kind": "cron",
         "expr": "0 */6 * * *",
@@ -107,18 +110,19 @@
       "payload": {
         "kind": "agentTurn",
         "message": "Run ~/dotfiles/scripts/sync-dotfiles.sh now to sync local files into ~/dotfiles and push to github.com/lodekeeper/dotfiles.\nDo this directly (do not send a reminder message).\nOutput policy:\n- If sync succeeded and there were meaningful changes pushed: send a short routine update to Telegram topic #347 via message tool (target=-1003764039429, threadId=347).\n- If no changes were needed: NO_REPLY.\n- If sync fails: send an actionable error summary to Telegram topic #347; DM Nico only if urgent/manual intervention is required.",
-        "timeoutSeconds": 300
+        "timeoutSeconds": 300,
+        "model": "anthropic/claude-sonnet-4-6"
       },
       "state": {
-        "nextRunAtMs": 1772776998972,
-        "lastRunAtMs": 1772755398976,
+        "nextRunAtMs": 1772798598972,
+        "lastRunAtMs": 1772776998978,
         "lastStatus": "ok",
-        "lastDurationMs": 22547,
+        "lastDurationMs": 28289,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false,
-        "runningAtMs": 1772776998976
+        "runningAtMs": 1772797182822
       },
       "delivery": {
         "mode": "none"
@@ -141,7 +145,8 @@
       "payload": {
         "kind": "agentTurn",
         "message": "Run the beacon log monitor script: `bash ~/.openclaw/workspace/scripts/monitor-beacon.sh`. If the output is empty, reply with just HEARTBEAT_OK. If there are alerts, send them to Nico on Telegram with context about what each alert means and whether it needs action.",
-        "timeoutSeconds": 60
+        "timeoutSeconds": 60,
+        "model": "anthropic/claude-sonnet-4-6"
       },
       "delivery": {
         "mode": "none"
@@ -174,7 +179,8 @@
       "payload": {
         "kind": "agentTurn",
         "message": "It's end of day — time for the daily meme! Read memory/$(date -u +%Y-%m-%d).md (today's daily notes) and BACKLOG.md to understand what happened today. Then generate ONE meme image using the openai-image-gen skill (NOT nano-banana-pro). Run:\n\npython3 /home/openclaw/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/skills/openai-image-gen/scripts/gen.py --model gpt-image-1 --quality high --size 1024x1024 --count 1 --out-dir /tmp/daily-meme --prompt \"<your meme prompt>\"\n\nMake the prompt a funny programming meme that summarizes today's work — inside jokes about PRs, CI, code reviews, EPBS debugging, etc. If nothing notable happened, use general Lodestar/Ethereum humor.\n\nThen send the generated image to Nico on Telegram:\nmessage action=send channel=telegram message=\"<funny caption>\" media=\"/tmp/daily-meme/001-*.png\" target=\"5774760693\"",
-        "timeoutSeconds": 600
+        "timeoutSeconds": 600,
+        "model": "anthropic/claude-sonnet-4-6"
       },
       "delivery": {
         "mode": "none"
@@ -196,7 +202,7 @@
       "name": "eth-rnd-archive-hourly",
       "enabled": true,
       "createdAtMs": 1772034567300,
-      "updatedAtMs": 1772774203323,
+      "updatedAtMs": 1772792113215,
       "schedule": {
         "kind": "cron",
         "expr": "15 * * * *",
@@ -207,19 +213,20 @@
       "payload": {
         "kind": "agentTurn",
         "message": "HOURLY CHECK: Eth R&D Archive.\n\n1. Read skill: skills/eth-rnd-archive/SKILL.md\n2. Run: bash skills/eth-rnd-archive/check-updates.sh\n3. If new messages in tracked channels: read the JSON files listed, summarize key discussions, save notes to ~/eth-rnd-archive-notes/YYYY-MM-DD.md\n4. If something CRITICAL for Lodestar (spec changes, breaking decisions, action items): alert Nico immediately via Telegram\n5. Otherwise just log the summary to the notes file silently\n\nDo NOT send anything to Nico unless it's genuinely important. Most checks will just be quiet logging.",
-        "timeoutSeconds": 180
+        "timeoutSeconds": 180,
+        "model": "anthropic/claude-sonnet-4-6"
       },
       "delivery": {
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1772774169534,
+        "lastRunAtMs": 1772792100006,
         "lastStatus": "ok",
-        "lastDurationMs": 33789,
+        "lastDurationMs": 13209,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1772777700000,
+        "nextRunAtMs": 1772799300000,
         "lastDelivered": false
       }
     },
@@ -229,7 +236,7 @@
       "name": "eth-rnd-daily-digest",
       "enabled": true,
       "createdAtMs": 1772034576175,
-      "updatedAtMs": 1772697683252,
+      "updatedAtMs": 1772789935308,
       "schedule": {
         "kind": "cron",
         "expr": "0 8 * * *",
@@ -240,7 +247,8 @@
       "payload": {
         "kind": "agentTurn",
         "message": "DAILY DIGEST: Eth R&D Archive.\n\n1. Read skill: skills/eth-rnd-archive/SKILL.md\n2. Run: bash skills/eth-rnd-archive/check-updates.sh\n3. Read raw JSON files from tracked channels for the past 2 days (today + yesterday). Check both main channel files and _threads/ subdirectories.\n4. Create a concise daily digest covering:\n   - Key decisions made across channels\n   - Action items for Lodestar\n   - Interesting discussions worth following up\n   - Notable participants driving topics\n   - Any spec changes or breaking API changes\n5. SEND FIRST — Use the message tool IMMEDIATELY: action=send, channel=telegram, target=-1003764039429, threadId=59. Do this BEFORE any file writes.\n6. Keep it concise — TL;DR style, grouped by channel/topic. Use emoji headers.\n7. If no activity in tracked channels, still send a short \"no activity\" note to the topic.\n8. Optional logging: ONLY if convenient, append a short summary to `/home/openclaw/.openclaw/workspace/memory/eth-rnd-archive-notes/YYYY-MM-DD.md`.\n   - Do NOT use `~/eth-rnd-archive-notes/...`.\n   - If logging fails, ignore it and continue (job should still succeed).\n9. Reply with NO_REPLY",
-        "timeoutSeconds": 300
+        "timeoutSeconds": 300,
+        "model": "anthropic/claude-sonnet-4-6"
       },
       "delivery": {
         "mode": "none",
@@ -249,48 +257,14 @@
         "bestEffort": true
       },
       "state": {
-        "lastRunAtMs": 1772697619815,
+        "lastRunAtMs": 1772789876815,
         "lastStatus": "ok",
-        "lastDurationMs": 63437,
+        "lastDurationMs": 58493,
         "lastRunStatus": "ok",
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1772784000000
-      }
-    },
-    {
-      "id": "b5863a09-ee40-4381-8be4-9ee1246bcc5f",
-      "agentId": "main",
-      "name": "Check libp2p npm publish",
-      "enabled": false,
-      "createdAtMs": 1772048380834,
-      "updatedAtMs": 1772450014987,
-      "schedule": {
-        "kind": "every",
-        "everyMs": 21600000,
-        "anchorMs": 1772300401847
-      },
-      "sessionTarget": "isolated",
-      "wakeMode": "now",
-      "payload": {
-        "kind": "agentTurn",
-        "message": "Check if @libp2p/identify@4.0.11 and @libp2p/utils@7.0.11 have been published to npm yet. Run: npm view @libp2p/identify version && npm view @libp2p/utils version. If either shows 4.0.11 / 7.0.11 respectively, the packages are live — create a PR upgrading libp2p deps in ~/lodestar (branch from unstable, pnpm update the @libp2p/* packages, commit, push to fork, open PR). Then disable this cron job. If still on 4.0.10/7.0.10, reply with 'Still waiting for libp2p publish' and do nothing else.",
-        "timeoutSeconds": 120
-      },
-      "delivery": {
-        "mode": "announce",
-        "to": "1471515015671709962",
-        "channel": "discord"
-      },
-      "state": {
-        "lastRunAtMs": 1772445264070,
-        "lastStatus": "error",
-        "lastDurationMs": 120000,
-        "lastRunStatus": "error",
-        "lastDeliveryStatus": "unknown",
-        "consecutiveErrors": 5,
-        "lastError": "cron: job execution timed out"
+        "nextRunAtMs": 1772870400000
       }
     },
     {
@@ -299,7 +273,7 @@
       "name": "github-notifications",
       "enabled": true,
       "createdAtMs": 1772107716625,
-      "updatedAtMs": 1772776789366,
+      "updatedAtMs": 1772797201490,
       "schedule": {
         "kind": "every",
         "everyMs": 300000,
@@ -309,23 +283,21 @@
       "wakeMode": "now",
       "payload": {
         "kind": "agentTurn",
-        "message": "Check GitHub notifications for lodekeeper using deterministic checklist dedupe.\n\nRun:\npython3 /home/openclaw/.openclaw/workspace/scripts/github/github_notifications_sweep.py --state /home/openclaw/gh-notif-state.json --checklist /home/openclaw/gh-notif-checklist.json --backlog /home/openclaw/.openclaw/workspace/BACKLOG.md\n\nBehavior:\n1) If script output is exactly HEARTBEAT_OK, reply HEARTBEAT_OK.\n2) Otherwise, convert script output into concise user-facing summary.\n3) Ensure BACKLOG has a matching task for each newly reported PR only if missing (no duplicate/empty-sweep entries).\n4) Do NOT perform code changes on PRs here (detect/report + checklist only).\n5) Keep reviewer-bot comments included; ignore only lodekeeper self comments.",
-        "model": "openai-codex/gpt-5.3-codex",
+        "message": "Check GitHub notifications for lodekeeper using deterministic checklist dedupe.\n\nRun:\npython3 /home/openclaw/.openclaw/workspace/scripts/github/github_notifications_sweep.py --state /home/openclaw/gh-notif-state.json --checklist /home/openclaw/gh-notif-checklist.json --backlog /home/openclaw/.openclaw/workspace/BACKLOG.md\n\nBehavior:\n1) If script output is exactly HEARTBEAT_OK, reply HEARTBEAT_OK (no delivery anywhere).\n2) Otherwise:\n   a) Post a concise summary to Lodestar WG topic #347 using: message action=send target=-1003764039429 threadId=347\n   b) Ensure BACKLOG has a matching task for each newly reported PR only if missing (no duplicate/empty-sweep entries).\n3) Do NOT perform code changes on PRs here (detect/report + checklist only).\n4) Keep reviewer-bot comments included; ignore only lodekeeper self comments.\n5) Routine notifications (bot comments, codecov, non-blocking reviews) → post to topic #347 only.\n6) Urgent items (Nico requesting changes on my PR, blocking reviewer feedback needing Nico's decision) → DM Nico directly (target=5774760693). CI failures on my own PRs are NOT urgent — fix them myself.\n7) If nothing new → HEARTBEAT_OK (no output anywhere).",
+        "model": "anthropic/claude-sonnet-4-6",
         "timeoutSeconds": 120
       },
       "delivery": {
-        "mode": "announce",
-        "channel": "last",
-        "bestEffort": false
+        "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1772776749251,
+        "lastRunAtMs": 1772797180868,
         "lastStatus": "ok",
-        "lastDurationMs": 40115,
+        "lastDurationMs": 20622,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1772777049251,
+        "nextRunAtMs": 1772797480868,
         "lastDelivered": false
       },
       "deleteAfterRun": false
@@ -348,12 +320,11 @@
       "payload": {
         "kind": "agentTurn",
         "message": "Run: bash ~/.openclaw/workspace/scripts/memory/nightly_memory_cycle.sh. Then summarize consolidation/indexing results briefly. Do NOT edit BACKLOG.md in this cron; this job is memory-pipeline only.",
-        "model": "anthropic/claude-sonnet-4-5",
+        "model": "anthropic/claude-sonnet-4-6",
         "timeoutSeconds": 300
       },
       "delivery": {
-        "mode": "announce",
-        "channel": "last"
+        "mode": "none"
       },
       "state": {
         "nextRunAtMs": 1772854200000,
@@ -371,7 +342,7 @@
       "name": "ci-autofix-unstable",
       "enabled": true,
       "createdAtMs": 1772326513772,
-      "updatedAtMs": 1772741218312,
+      "updatedAtMs": 1772784480383,
       "schedule": {
         "kind": "every",
         "everyMs": 43200000,
@@ -381,8 +352,8 @@
       "wakeMode": "now",
       "payload": {
         "kind": "agentTurn",
-        "message": "Read ~/.openclaw/workspace/scripts/ci/CRON_PROMPT.md and follow the instructions. Run the detector, act on actionable findings, report results.",
-        "model": "openai-codex/gpt-5.3-codex"
+        "message": "Read ~/.openclaw/workspace/scripts/ci/CRON_PROMPT.md and follow the instructions. Run the detector, act on actionable findings, report results.\n\nOutput routing:\n- Routine (no failures, or auto-fixed): post to Lodestar WG topic #347 (action=send target=-1003764039429 threadId=347) or HEARTBEAT_OK.\n- CI failure on lodekeeper's PRs: fix it directly, no DM.\n- Broader unstable/infra issue Nico needs to know about: DM Nico (target=5774760693).",
+        "model": "anthropic/claude-sonnet-4-6"
       },
       "delivery": {
         "mode": "none",
@@ -390,11 +361,11 @@
         "to": "-1003764039429:52"
       },
       "state": {
-        "nextRunAtMs": 1772784387222,
-        "lastRunAtMs": 1772741187222,
+        "nextRunAtMs": 1772827587225,
+        "lastRunAtMs": 1772784387225,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 31090,
+        "lastDurationMs": 93158,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0
@@ -406,7 +377,7 @@
       "name": "aztec-sequencer-health",
       "enabled": true,
       "createdAtMs": 1772373812089,
-      "updatedAtMs": 1772762820075,
+      "updatedAtMs": 1772791611365,
       "schedule": {
         "kind": "every",
         "everyMs": 14400000,
@@ -416,19 +387,18 @@
       "wakeMode": "now",
       "payload": {
         "kind": "agentTurn",
-        "message": "Check the Aztec sequencer Docker container for errors.\n\n1. Run: docker logs aztec-sequencer --since 4h 2>&1 | grep -iE 'error|fatal|panic|crash|failed|restart|killed|oom' | tail -50\n2. Also check if the container is running: docker ps --filter name=aztec-sequencer --format '{{.Status}}'\n3. If there are ANY errors, fatal messages, or the container is not running/restarting:\n   - Send a notification using the message tool: action=send, channel=telegram, target=5774760693, message=<concise summary of errors found>\n   - Include the most relevant error lines (up to 10)\n4. If everything looks healthy (no errors, container running fine):\n   - Reply with just NO_REPLY (do NOT notify Nico)\n5. Do NOT send messages for routine INFO/WARN logs — only actual errors, crashes, or container issues",
-        "model": "gpt-5.3-codex"
+        "message": "Check the Aztec sequencer Docker container for errors.\n\n1. Run: docker logs aztec-sequencer --since 4h 2>&1 | grep -iE 'error|fatal|panic|crash|failed|restart|killed|oom' | tail -50\n2. Also check if the container is running: docker ps --filter name=aztec-sequencer --format '{{.Status}}'\n3. If there are ANY errors, fatal messages, or the container is not running/restarting:\n   - Send a notification using the message tool: action=send, channel=telegram, target=5774760693, message=<concise summary of errors found>\n   - Include the most relevant error lines (up to 10)\n4. If everything looks healthy (no errors, container running fine):\n   - Reply with just NO_REPLY (do NOT notify Nico)\n5. Do NOT send messages for routine INFO/WARN logs — only actual errors, crashes, or container issues\n\nOutput routing:\n- If healthy/no issues: reply HEARTBEAT_OK (no output anywhere).\n- If errors found (container down, crash loops, OOM, persistent errors): DM Nico directly via message tool (action=send target=5774760693) with a concise alert. This is always urgent.\n- Do NOT post to topic #347 for this cron — sequencer issues go straight to DM.",
+        "model": "anthropic/claude-sonnet-4-6"
       },
       "delivery": {
-        "mode": "announce",
-        "channel": "last"
+        "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1772777197954,
-        "lastRunAtMs": 1772762797954,
+        "nextRunAtMs": 1772805997964,
+        "lastRunAtMs": 1772791597964,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 22121,
+        "lastDurationMs": 13401,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -440,7 +410,7 @@
       "name": "workspace-periodic-cleanup",
       "enabled": true,
       "createdAtMs": 1772634832403,
-      "updatedAtMs": 1772769391944,
+      "updatedAtMs": 1772790954777,
       "schedule": {
         "kind": "every",
         "everyMs": 21600000,
@@ -450,17 +420,18 @@
       "wakeMode": "now",
       "payload": {
         "kind": "agentTurn",
-        "message": "Run periodic workspace cleanup (every 6 hours). Keep files lean without spamming Nico.\\n\\nRequired steps:\\n1) BACKLOG cleanup:\\n   - Move completed top-level items (`### ✅`) from `~/.openclaw/workspace/BACKLOG.md` to `~/.openclaw/workspace/BACKLOG_ARCHIVE.md`.\\n   - Keep only active/passive/on-hold items in BACKLOG.md.\\n   - Do NOT add backlog entries for empty cleanup runs.\\n2) HEARTBEAT cleanup:\\n   - Keep `~/.openclaw/workspace/HEARTBEAT.md` lean; remove stale completed checklist lines if any.\\n3) Daily notes hygiene:\\n   - Review `~/.openclaw/workspace/memory/` daily notes older than 7 days.\\n   - Before removing or archiving anything, ensure durable key info is reflected in `MEMORY.md` or memory bank outputs.\\n   - Prefer safe archiving/moving over deletion.\\n\\nReporting rules:\\n- If no actionable changes were needed, reply exactly `NO_REPLY`.\\n- If changes were made, send only a concise summary with file paths and counts."
+        "message": "Run periodic workspace cleanup (every 6 hours). Keep files lean without spamming Nico.\\n\\nRequired steps:\\n1) BACKLOG cleanup:\\n   - Move completed top-level items (`### ✅`) from `~/.openclaw/workspace/BACKLOG.md` to `~/.openclaw/workspace/BACKLOG_ARCHIVE.md`.\\n   - Keep only active/passive/on-hold items in BACKLOG.md.\\n   - Do NOT add backlog entries for empty cleanup runs.\\n2) HEARTBEAT cleanup:\\n   - Keep `~/.openclaw/workspace/HEARTBEAT.md` lean; remove stale completed checklist lines if any.\\n3) Daily notes hygiene:\\n   - Review `~/.openclaw/workspace/memory/` daily notes older than 7 days.\\n   - Before removing or archiving anything, ensure durable key info is reflected in `MEMORY.md` or memory bank outputs.\\n   - Prefer safe archiving/moving over deletion.\\n\\nReporting rules:\\n- If no actionable changes were needed, reply exactly `NO_REPLY`.\\n- If changes were made, send only a concise summary with file paths and counts.",
+        "model": "anthropic/claude-sonnet-4-6"
       },
       "delivery": {
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1772790883478,
-        "lastRunAtMs": 1772769283478,
+        "nextRunAtMs": 1772812483482,
+        "lastRunAtMs": 1772790883482,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 108466,
+        "lastDurationMs": 71295,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0
@@ -472,7 +443,7 @@
       "name": "monitor-open-pr-ci",
       "enabled": true,
       "createdAtMs": 1772635128553,
-      "updatedAtMs": 1772775675006,
+      "updatedAtMs": 1772795466590,
       "schedule": {
         "kind": "every",
         "everyMs": 1800000,
@@ -482,17 +453,18 @@
       "wakeMode": "now",
       "payload": {
         "kind": "agentTurn",
-        "message": "Run: python3 ~/.openclaw/workspace/scripts/github/monitor_open_pr_ci.py\n- If output is exactly `NO_REPLY`, reply exactly `NO_REPLY`.\n- Otherwise send the output as a concise CI alert summary.\n- Do NOT edit BACKLOG.md in this cron; backlog updates are handled in main session triage."
+        "message": "Run: python3 ~/.openclaw/workspace/scripts/github/monitor_open_pr_ci.py\n- If output is exactly `NO_REPLY`, reply exactly `NO_REPLY`.\n- Otherwise send the output as a concise CI alert summary.\n- Do NOT edit BACKLOG.md in this cron; backlog updates are handled in main session triage.\n\nOutput routing:\n- Routine CI status: post to topic #347 (action=send target=-1003764039429 threadId=347) or NO_REPLY.\n- CI failure on MY PRs: do NOT DM Nico — instead create a task to fix it (update BACKLOG.md, post to topic #347).\n- CI failure that's a general/infra issue (flaky upstream, unstable breakage affecting multiple PRs): DM Nico (target=5774760693).",
+        "model": "anthropic/claude-sonnet-4-6"
       },
       "delivery": {
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1772777450702,
-        "lastRunAtMs": 1772775650702,
+        "nextRunAtMs": 1772797250761,
+        "lastRunAtMs": 1772795450761,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 24304,
+        "lastDurationMs": 15829,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -514,10 +486,11 @@
       "wakeMode": "now",
       "payload": {
         "kind": "agentTurn",
-        "message": "Periodic identity-file review (every 3 days).\n1) Re-read `SOUL.md`, `IDENTITY.md`, and `MEMORY.md` for drift.\n2) Add new lessons, update strengths/weaknesses, and refine personality notes where warranted.\n3) If you made edits, sync via `~/dotfiles/scripts/sync-dotfiles.sh` (non-sensitive files only).\n4) Report only when meaningful changes were made.\nIf no updates are needed, reply exactly `NO_REPLY`."
+        "message": "Periodic identity-file review (every 3 days).\n1) Re-read `SOUL.md`, `IDENTITY.md`, and `MEMORY.md` for drift.\n2) Add new lessons, update strengths/weaknesses, and refine personality notes where warranted.\n3) If you made edits, sync via `~/dotfiles/scripts/sync-dotfiles.sh` (non-sensitive files only).\n4) Report only when meaningful changes were made.\nIf no updates are needed, reply exactly `NO_REPLY`.",
+        "model": "anthropic/claude-sonnet-4-6"
       },
       "delivery": {
-        "mode": "announce"
+        "mode": "none"
       },
       "state": {
         "nextRunAtMs": 1772894328553
@@ -539,10 +512,11 @@
       "wakeMode": "now",
       "payload": {
         "kind": "agentTurn",
-        "message": "Weekly self-improvement audit.\nAsk: 'What would I need to do this autonomously?' for PR review, CI fix, spec implementation, and devnet debugging.\nUpdate `notes/autonomy-gaps.md` with concrete blockers and proposed fixes.\nDo not only note gaps: implement at least one practical improvement when feasible (new cron/script/skill/workflow update).\nIf no meaningful change from last audit, reply exactly `NO_REPLY`; otherwise send concise summary."
+        "message": "Weekly self-improvement audit.\nAsk: 'What would I need to do this autonomously?' for PR review, CI fix, spec implementation, and devnet debugging.\nUpdate `notes/autonomy-gaps.md` with concrete blockers and proposed fixes.\nDo not only note gaps: implement at least one practical improvement when feasible (new cron/script/skill/workflow update).\nIf no meaningful change from last audit, reply exactly `NO_REPLY`; otherwise send concise summary.",
+        "model": "anthropic/claude-sonnet-4-6"
       },
       "delivery": {
-        "mode": "announce"
+        "mode": "none"
       },
       "state": {
         "nextRunAtMs": 1773239928553
@@ -554,7 +528,7 @@
       "name": "cron-health-watchdog",
       "enabled": true,
       "createdAtMs": 1772636078136,
-      "updatedAtMs": 1772775315417,
+      "updatedAtMs": 1772796916103,
       "schedule": {
         "kind": "every",
         "everyMs": 1800000,
@@ -564,17 +538,18 @@
       "wakeMode": "now",
       "payload": {
         "kind": "agentTurn",
-        "message": "Run: python3 ~/.openclaw/workspace/scripts/cron/check_cron_health.py\\n- If output is exactly `NO_REPLY`, reply exactly `NO_REPLY`.\\n- Otherwise send the output as-is (it contains failing cron details and action guidance).\\n- Do not create empty-sweep backlog entries.\\n"
+        "message": "Run: python3 ~/.openclaw/workspace/scripts/cron/check_cron_health.py\\n- If output is exactly `NO_REPLY`, reply exactly `NO_REPLY`.\\n- Otherwise send the output as-is (it contains failing cron details and action guidance).\\n- Do not create empty-sweep backlog entries.\\n",
+        "model": "anthropic/claude-sonnet-4-6"
       },
       "delivery": {
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1772777102087,
-        "lastRunAtMs": 1772775302087,
+        "nextRunAtMs": 1772798710570,
+        "lastRunAtMs": 1772796910570,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 13330,
+        "lastDurationMs": 5533,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false

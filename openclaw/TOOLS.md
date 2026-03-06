@@ -58,6 +58,12 @@ Skills are shared. Your setup is yours. Keeping them apart means you can update 
 - **Type check:** `pnpm check-types`
 - **Benchmark:** `pnpm benchmark:files <file>`
 
+### File Editing in Worktrees (IMPORTANT)
+The `Write` and `Edit` tools are sandboxed to `~/.openclaw/workspace`. For ANY file outside that path (worktrees, ~/lodestar, ~/consensus-specs, etc.), use `exec` directly:
+- **Create/overwrite:** `cat > path/to/file << 'EOF' ... EOF`
+- **Patch:** `sed -i` for simple replacements
+- **Never** attempt `Write`/`Edit` tools on worktree files — it just fails with a noisy error.
+
 ### Git Worktrees (IMPORTANT)
 Use worktrees to work on multiple branches without cross-contamination:
 
@@ -119,6 +125,7 @@ git branch -d <branch-name>  # optional: delete local branch
 - **codex-reviewer:** GPT-5.3-Codex — general code review
 - **gemini-reviewer:** Gemini 2.5 Pro — second perspective
 - **gpt-advisor:** GPT-5.3-Codex, **thinking: "xhigh"** — architecture & deep reasoning
+  - ⚠️ `thinking` is NOT a valid agent config key — MUST pass `thinking: "xhigh"` at spawn time via `sessions_spawn`
 
 ## Coding Agents (Implementation)
 - **Codex CLI:** `codex exec --full-auto "..."` — best for focused implementation tasks
