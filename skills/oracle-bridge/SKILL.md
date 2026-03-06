@@ -1,192 +1,136 @@
 ---
 name: oracle-bridge
-description: Run Oracle CLI browser mode on this headless server by connecting to a stealth Chromium CDP bridge with ChatGPT auth cookies. Use when `oracle --engine browser` is needed (GPT-5.2-pro/o-series via ChatGPT Pro), including troubleshooting bridge, token expiry, and Cloudflare/Turnstile issues.
+description: Run ChatGPT browser automation from this headless server using a hybrid Camoufox→Chromium CDP bridge. Use when `oracle --engine browser` is needed, and fall back to direct CDP CLI when Oracle UI automation is flaky.
 ---
 
-# Oracle Browser Bridge Skill
+# Oracle Browser Bridge Skill (v4 hybrid)
 
-Run Oracle CLI in browser mode on a headless Linux server by routing through a stealth Chromium instance that bypasses Cloudflare Turnstile.
+Use this when browser-mode ChatGPT access is required on the headless server.
+
+## Current Reality (important)
+
+- Plain headless Chromium often fails Cloudflare/Turnstile.
+- **Hybrid v4 works** for authentication:
+  1. Camoufox (Firefox stealth) passes CF and collects fresh cookies.
+  2. Cookies are injected into rebrowser Chromium.
+  3. Chromium exposes CDP for automation clients.
+- Oracle CLI browser automation can still be flaky with ChatGPT UI/model-picker changes.
+- A direct CDP client (`chatgpt-direct.py`) is currently the most reliable execution path.
 
 ---
 
-## How It Works
+## Architecture
 
-Oracle's browser mode uses Chrome DevTools Protocol (CDP) to automate ChatGPT. On this server, two things block it:
-1. **No usable Chrome** — snap chromium is blocked by AppArmor
-2. **Cloudflare Turnstile** — blocks automated Chrome
-
-The bridge solves both: it launches a stealth Chromium (rebrowser-playwright) that bypasses CF, logs into ChatGPT with auth cookies, and exposes a CDP port. Oracle connects via `--remote-chrome` and reuses the authenticated tab.
-
-```
-┌─────────────┐    CDP     ┌──────────────────┐    HTTPS    ┌──────────┐
-│   Oracle    │ ─────────► │  Stealth Bridge  │ ──────────► │ ChatGPT  │
-│ --remote-   │  port 9222 │  (rebrowser-pw)  │  CF bypass  │          │
-│   chrome    │            │  + auth cookies   │             │          │
-└─────────────┘            └──────────────────┘             └──────────┘
+```text
+Camoufox (stealth Firefox) --passes CF--> chatgpt.com
+        │
+        └─extract cookies (session + cf_clearance...)
+                │
+                ▼
+Rebrowser Chromium (CDP port 9222, authenticated tab)
+        │
+        ├─ Oracle CLI --engine browser --remote-chrome localhost:9222
+        └─ Direct CDP CLI (chatgpt-direct)
 ```
 
 ---
 
 ## Prerequisites
 
-- **Python venv:** `~/camoufox-env` with `rebrowser-playwright` installed
-- **Oracle CLI:** `@steipete/oracle` (v0.8.6+) installed globally via nvm 22
-- **Oracle patch:** `ORACLE_REUSE_TAB=1` env var (patched in `chromeLifecycle.js`)
-- **Auth cookies:** `~/.oracle/chatgpt-cookies.json` with ChatGPT session token
-
-## Related Skills
-
-- `skills/deep-research/SKILL.md` — primary consumer of this bridge (default browser-mode reasoning path).
-- `skills/web-scraping/SKILL.md` — companion skill when research requires robust source collection before Oracle synthesis.
-
-### Cookie Format
-
-```json
-[
-  {
-    "name": "__Secure-next-auth.session-token",
-    "value": "<JWT token from Nico's browser>",
-    "domain": ".chatgpt.com",
-    "path": "/",
-    "secure": true,
-    "httpOnly": true,
-    "sameSite": "Lax"
-  }
-]
-```
-
-**To refresh:** Ask Nico to export the cookie from chatgpt.com → DevTools → Application → Cookies.
+- `~/camoufox-env` virtualenv with:
+  - `camoufox`
+  - `rebrowser-playwright`
+  - `websocket-client`
+- Oracle CLI installed (nvm node 22): `@steipete/oracle`
+- Cookie file: `~/.oracle/chatgpt-cookies.json`
+  - must include `__Secure-next-auth.session-token`
 
 ---
 
-## Usage
+## Quick Start
 
-### ⚠️ CRITICAL: Always Save Output to File
-
-Oracle runs can take minutes. If context compacts mid-run, stdout is lost. **Always pipe output to a file via `tee`:**
-
-```bash
-# WRONG — output lost if context compacts
-oracle ... --wait 2>&1
-
-# RIGHT — output saved to disk regardless
-oracle ... --wait 2>&1 | tee ~/research/<topic>/oracle-output.md
-```
-
-This is non-negotiable. Every Oracle invocation must write to a file.
-
----
-
-### Option 1: One-shot (recommended for single queries)
+## 1) Start hybrid bridge (v4)
 
 ```bash
 source ~/camoufox-env/bin/activate
-python3 ~/.openclaw/workspace/research/oracle-bridge-v3.py \
+python3 ~/.openclaw/workspace/research/oracle-bridge-v4.py \
   --cookies ~/.oracle/chatgpt-cookies.json \
-  --oneshot \
-  --prompt "Your question here" \
-  --model gpt-5.2-pro
+  --port 9222
 ```
 
-### Option 2: Persistent bridge (for multiple queries)
+Expected: `Oracle Bridge v4 READY` and `localhost:9222`.
+
+## 2) Preferred query path: direct CDP CLI
+
+Use the stable wrapper:
 
 ```bash
-# Terminal 1: Start bridge (stays running)
-source ~/camoufox-env/bin/activate
-python3 ~/.openclaw/workspace/research/oracle-bridge-v3.py \
-  --cookies ~/.oracle/chatgpt-cookies.json
+~/.openclaw/workspace/scripts/oracle/chatgpt-direct --prompt "Your question" --timeout 180
+```
 
-# Terminal 2: Run Oracle queries
+Pipe mode also works:
+
+```bash
+echo "Summarize this in 3 bullets" | ~/.openclaw/workspace/scripts/oracle/chatgpt-direct
+```
+
+## 3) Oracle browser mode (experimental)
+
+```bash
 source ~/.nvm/nvm.sh && nvm use 22
 ORACLE_REUSE_TAB=1 oracle --engine browser \
   --remote-chrome localhost:9222 \
   --model gpt-5.2-pro \
-  --prompt "Your question here" --wait
+  --prompt "Your question" --wait
 ```
 
-### Option 3: API fallback (no bridge needed)
+If Oracle stalls on assistant capture, use the direct CDP CLI above.
+
+---
+
+## Output Durability Rule
+
+For long Oracle runs, always persist output with `tee`:
 
 ```bash
-source ~/.nvm/nvm.sh && nvm use 22
-oracle --engine api --model gpt-5.2-pro --prompt "Your question" --wait
+oracle ... --wait 2>&1 | tee ~/research/<topic>/oracle-output.md
 ```
 
----
-
-## Error Handling
-
-### Token Expired
-
-**Symptom:** Bridge reports "⚠️ Not logged in (login page)" or Oracle says "Login button detected"
-
-**Action:**
-1. **Do NOT silently fall back to API mode** — alert the user
-2. Message Nico: "ChatGPT session token expired — need a fresh `__Secure-next-auth.session-token` from chatgpt.com"
-3. Only use `--engine api` if Nico explicitly approves the API cost
-
-### Cloudflare Challenge
-
-**Symptom:** Oracle says "Cloudflare challenge detected"
-
-**Action:** This shouldn't happen with the bridge (stealth browser handles CF). If it does:
-1. Check that `ORACLE_REUSE_TAB=1` is set
-2. Verify the bridge is running and chatgpt.com loaded successfully
-3. Kill stale chromium processes: `pkill -f "chromium.*headless"`
-4. Restart the bridge
-
-### Bridge Launch Failure
-
-**Symptom:** Python errors about missing modules or browser binary
-
-**Action:**
-```bash
-source ~/camoufox-env/bin/activate
-pip install rebrowser-playwright websocket-client
-python3 -m rebrowser_playwright install chromium
-```
+Never rely on transient stdout alone.
 
 ---
 
-## Implementation Details
+## Troubleshooting
 
-### Oracle Patch
+### `backend-api/*` returns 403
 
-The `ORACLE_REUSE_TAB=1` environment variable triggers two behaviors patched into Oracle v0.8.6:
+- This means CF/API protection is still active for the current browser path.
+- Restart the hybrid bridge and verify authenticated tab before querying.
+- Validate quickly with direct CLI first (`chatgpt-direct`) before blaming Oracle.
 
-1. **`chromeLifecycle.js`**: Skips `CDP.New()` (creating a new tab) and instead connects to the first existing target
-2. **`index.js`**: Skips `navigateToChatGPT()` since the page is already loaded
+### `Session token expired` / login page appears
 
-Backup of original files: `*.js.bak` alongside the patched files.
+- Refresh `~/.oracle/chatgpt-cookies.json` from a live ChatGPT browser session.
 
-**Location:** `~/.nvm/versions/node/v22.22.0/lib/node_modules/@steipete/oracle/dist/src/browser/`
+### Oracle says assistant timed out but prompt was sent
 
-**⚠️ After Oracle updates:** Re-apply the patch or check if `ORACLE_REUSE_TAB` is supported natively.
+- Known Oracle UI-capture issue in this setup.
+- Use `scripts/oracle/chatgpt-direct` for reliable completion capture.
 
-### Bridge Script
+### No ChatGPT tab found
 
-**Location:** `~/.openclaw/workspace/research/oracle-bridge-v3.py`
-
-Key behaviors:
-- Launches rebrowser-playwright Chromium with `--remote-debugging-port=9222` and `--remote-allow-origins=*`
-- Injects auth cookies via Playwright context
-- Navigates to chatgpt.com through the stealth browser (CF bypass)
-- Keeps the tab open for Oracle to reuse
+- Bridge is not running or CDP port mismatched.
+- Check bridge logs and ensure `--port` matches the client command.
 
 ---
 
-## Cookie Lifecycle
+## Key Files
 
-- **Session tokens** typically last days to weeks
-- **CF clearance cookies** are handled automatically by the stealth browser (no manual refresh needed)
-- When the session token expires, ChatGPT redirects to login → bridge detects this → alerts user
-- **Never store multiple users' tokens** — only Nico's
+- Bridge v4: `research/oracle-bridge-v4.py`
+- Direct CDP client: `research/chatgpt-direct.py`
+- Stable wrapper: `scripts/oracle/chatgpt-direct`
+- Oracle patched files (when needed):
+  - `.../oracle/dist/src/browser/index.js`
+  - `.../oracle/dist/src/browser/actions/navigation.js`
 
----
-
-## Notes
-
-- Bridge uses port 9222 by default. Use `--port` to change.
-- Only one bridge instance at a time (port conflict otherwise)
-- Kill stale processes before restarting: `pkill -f "chromium.*remote-debugging"`
-- The stealth browser profile is stored at `~/.oracle/stealth-profile/`
-- API mode (`oracle --engine api`) works independently — no bridge needed, but costs per query
+If Oracle is updated, re-validate patched behavior before assuming regressions are external.

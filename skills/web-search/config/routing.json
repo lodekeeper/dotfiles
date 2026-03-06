@@ -1,0 +1,11 @@
+{
+  "general":      {"primary": ["brave"],              "fallback": ["duckduckgo"]},
+  "code":         {"primary": ["github_code", "brave"], "fallback": ["duckduckgo"]},
+  "academic":     {"primary": ["semantic_scholar"],    "fallback": ["brave"]},
+  "ethereum":     {"primary": ["ethresearch", "github_code"], "fallback": ["brave"]},
+  "social":       {"primary": ["hn_algolia"],          "fallback": ["brave"]},
+  "qa":           {"primary": ["stack_exchange", "brave"], "fallback": ["duckduckgo"]},
+  "encyclopedia": {"primary": ["wikipedia"],           "fallback": ["brave"]},
+  "news":         {"primary": ["brave"],               "fallback": ["duckduckgo"]},
+  "package":      {"primary": ["brave"],               "fallback": ["duckduckgo"]}
+}

@@ -1,0 +1,82 @@
+{
+  "brave": {
+    "enabled": true,
+    "module": "providers.brave",
+    "domains": ["general", "news", "qa", "encyclopedia"],
+    "priority": 1,
+    "api_key_env": "BRAVE_API_KEY",
+    "rate_limit": {"rpm": 60, "rpd": 2000},
+    "timeout_ms": 5000,
+    "cost_per_1k": 3.0
+  },
+  "duckduckgo": {
+    "enabled": true,
+    "module": "providers.duckduckgo",
+    "domains": ["general", "news"],
+    "priority": 3,
+    "api_key_env": null,
+    "rate_limit": {"rpm": 20, "rpd": 500},
+    "timeout_ms": 5000,
+    "cost_per_1k": 0
+  },
+  "github_code": {
+    "enabled": true,
+    "module": "providers.github_code",
+    "domains": ["code"],
+    "priority": 1,
+    "api_key_env": "GITHUB_TOKEN",
+    "rate_limit": {"rpm": 10, "rpd": 1000},
+    "timeout_ms": 5000,
+    "cost_per_1k": 0
+  },
+  "hn_algolia": {
+    "enabled": true,
+    "module": "providers.hn_algolia",
+    "domains": ["social"],
+    "priority": 1,
+    "api_key_env": null,
+    "rate_limit": {"rpm": 600, "rpd": 10000},
+    "timeout_ms": 4000,
+    "cost_per_1k": 0
+  },
+  "semantic_scholar": {
+    "enabled": true,
+    "module": "providers.semantic_scholar",
+    "domains": ["academic"],
+    "priority": 1,
+    "api_key_env": "SEMANTIC_SCHOLAR_KEY",
+    "rate_limit": {"rpm": 100, "rpd": 5000},
+    "timeout_ms": 5000,
+    "cost_per_1k": 0
+  },
+  "wikipedia": {
+    "enabled": true,
+    "module": "providers.wikipedia",
+    "domains": ["encyclopedia"],
+    "priority": 1,
+    "api_key_env": null,
+    "rate_limit": {"rpm": 200, "rpd": null},
+    "timeout_ms": 3000,
+    "cost_per_1k": 0
+  },
+  "stack_exchange": {
+    "enabled": true,
+    "module": "providers.stack_exchange",
+    "domains": ["qa", "code"],
+    "priority": 1,
+    "api_key_env": "STACKEXCHANGE_KEY",
+    "rate_limit": {"rpm": 30, "rpd": 10000},
+    "timeout_ms": 5000,
+    "cost_per_1k": 0
+  },
+  "ethresearch": {
+    "enabled": true,
+    "module": "providers.ethresearch",
+    "domains": ["ethereum"],
+    "priority": 1,
+    "api_key_env": null,
+    "rate_limit": {"rpm": 60, "rpd": 2000},
+    "timeout_ms": 5000,
+    "cost_per_1k": 0
+  }
+}
