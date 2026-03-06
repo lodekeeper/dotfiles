@@ -1,0 +1,897 @@
+[cl-4-lodestar-geth] Mar-04 18:09:18.751[]                 [33mwarn[39m: --nat flag is set with no purpose
+[cl-4-lodestar-geth] Mar-04 18:09:18.772[]                 [32minfo[39m: Lodestar network=testnet, version=v1.40.0, commit=
+[cl-4-lodestar-geth] Mar-04 18:09:18.802[]                 [32minfo[39m: Connected to LevelDB database path=/data/lodestar/beacon-data/chain-db
+[cl-4-lodestar-geth] Mar-04 18:09:18.804[]                 [32minfo[39m: Loading genesis state genesisStateFile=/network-configs/genesis.ssz
+[cl-4-lodestar-geth] Mar-04 18:09:18.809[]                 [32minfo[39m: Loaded genesis state size=2.68 MB
+[cl-4-lodestar-geth] Mar-04 18:09:18.906[]                 [32minfo[39m: Initializing beacon from a valid checkpoint state slot=0, epoch=0, stateRoot=0xc8615079b149371ae96da40d49ec2b71de326370c3d13120fffe5abc775b6c52, isWithinWeakSubjectivityPeriod=true
+[cl-4-lodestar-geth] Mar-04 18:09:18.926[]                 [32minfo[39m: Initialized genesis state slot=0, stateRoot=0xc8615079b149371ae96da40d49ec2b71de326370c3d13120fffe5abc775b6c52, isFinalized=true
+[cl-4-lodestar-geth] Mar-04 18:09:19.001[execution]        [32minfo[39m: Execution client urls=http://el-4-geth-lodestar:8551
+[cl-4-lodestar-geth] Mar-04 18:09:19.041[chain]            [32minfo[39m: Removed persisted checkpoint states from the last run count=0, maxEpochsInMemory=3
+[cl-4-lodestar-geth] Mar-04 18:09:19.046[network]          [32minfo[39m: running libp2p instance in worker thread
+[cl-4-lodestar-geth] Mar-04 18:09:22.328[network]          [32minfo[39m: libp2p worker started peer=16Uiu2HAmDNEYrzH6gQFkufciK1Gdhf5Lp9Pyjz1monHJmcJL3YVU
+[cl-4-lodestar-geth] Mar-04 18:09:26.000[network]          [32minfo[39m: Bootstrapped already-open libp2p peers bootstrapped=1
+[cl-4-lodestar-geth] Mar-04 18:09:26.022[network]          [32minfo[39m: PeerId 16Uiu2HAmDNEYrzH6gQFkufciK1Gdhf5Lp9Pyjz1monHJmcJL3YVU, Multiaddrs /ip4/0.0.0.0/tcp/39121,/ip6/::/tcp/39121
+[cl-4-lodestar-geth] Mar-04 18:09:26.047[metrics]          [32minfo[39m: Started metrics HTTP server address=http://0.0.0.0:8008
+[cl-4-lodestar-geth] Mar-04 18:09:26.313[rest]             [32minfo[39m: Started REST API server address=http://0.0.0.0:4000
+[cl-4-lodestar-geth] Mar-04 18:09:26.313[rest]             [33mwarn[39m: REST API server is exposed, ensure untrusted traffic cannot reach this API
+[cl-4-lodestar-geth] Mar-04 18:09:26.315[]                 [32minfo[39m: Searching peers - peers: 0 - slot: 0 - head: 0x86b2…67f4 - exec-block: valid/full(0 0x1168…) - finalized: 0x0000…0000:0
+[cl-4-lodestar-geth] Mar-04 18:09:25.978[network]          [32minfo[39m: discv5 worker started peerId=16Uiu2HAmDNEYrzH6gQFkufciK1Gdhf5Lp9Pyjz1monHJmcJL3YVU, initialENR=enr:-Ju4QIsxAU0HBbSZA19wevuA1i-dHZb6XMGAXRitNs1HB6JSM6w4vcYzmQe_O_jJdnaCQU5-Rgi-METl82hsb3jqehEBgmlkgnY0gmlwhKwQBBGJc2VjcDI1NmsxoQMKkN5eub0a42cWeAR2j3xxT8TNC8wp4UTV24tkjijXr4N0Y3CCmNGEdGNwNoKY0YN1ZHCCmNGEdWRwNoKY0Q, bindAddr4=/ip4/0.0.0.0/udp/39121, bindAddr6=/ip6/::/udp/39121
+[cl-4-lodestar-geth] Mar-04 18:09:26.323[sync]             [32minfo[39m: Subscribed gossip core topics
+[cl-4-lodestar-geth] Mar-04 18:09:26.317[network]          [32minfo[39m: Subscribed gossip core topics
+[cl-4-lodestar-geth] Mar-04 18:09:26.329[sync]             [32minfo[39m: Subscribed gossip core topics
+[cl-4-lodestar-geth] Mar-04 18:09:31.000[]                 [32minfo[39m: Synced - slot: 1 - head: (slot -1) 0x86b2…67f4 - exec-block: valid/full(0 0x1168…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:09:34.716[execution]        [32minfo[39m: Execution client is synced oldState=ONLINE, newState=SYNCED
+[cl-4-lodestar-geth] Mar-04 18:09:35.385[rest]             [33mwarn[39m: Req req-10 submitPoolAttestationsV2 failed reason=Error processing attestations
+[cl-4-lodestar-geth] Mar-04 18:09:37.001[]                 [32minfo[39m: Synced - slot: 2 - head: 0x18da…52e5 - exec-block: valid/full(1 0xc201…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:09:43.010[]                 [32minfo[39m: Synced - slot: 3 - head: (slot -1) 0x18da…52e5 - exec-block: valid/full(1 0xc201…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:09:44.204[rest]             [33mwarn[39m: Req req-1t getExecutionPayloadEnvelope failed reason=Execution payload envelopes not available for pre-gloas fork=fulu
+[cl-4-lodestar-geth] Mar-04 18:09:44.212[rest]             [33mwarn[39m: Req req-1u getBlockHeader failed reason=Block not found for id '0x0000000000000000000000000000000000000000000000000000000000000000'
+[cl-4-lodestar-geth] Mar-04 18:09:49.000[]                 [32minfo[39m: Synced - slot: 4 - head: 0xfd3c…1e44 - exec-block: valid/full(3 0xa082…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:09:55.001[]                 [32minfo[39m: Synced - slot: 5 - head: 0x219a…3ede - exec-block: valid/full(4 0xff94…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:10:01.001[]                 [32minfo[39m: Synced - slot: 6 - head: 0xe986…b324 - exec-block: valid/full(5 0xdcf5…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:10:07.000[]                 [32minfo[39m: Synced - slot: 7 - head: 0xfe38…b0cd - exec-block: valid/full(6 0xd65a…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:10:13.001[]                 [32minfo[39m: Synced - slot: 8 - head: 0xf60f…6e8a - exec-block: valid/full(7 0x3b91…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:10:19.000[]                 [32minfo[39m: Synced - slot: 9 - head: 0x6174…4d7f - exec-block: valid/full(8 0x169b…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:10:25.000[]                 [32minfo[39m: Synced - slot: 10 - head: 0xc20b…fc98 - exec-block: valid/full(9 0x255c…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:10:31.000[]                 [32minfo[39m: Synced - slot: 11 - head: 0x9a5a…7e27 - exec-block: valid/full(10 0x50b5…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:10:37.000[]                 [32minfo[39m: Synced - slot: 12 - head: 0x2e20…c78b - exec-block: valid/full(11 0x7f44…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:10:43.000[]                 [32minfo[39m: Synced - slot: 13 - head: 0x8379…84df - exec-block: valid/full(12 0x5d27…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:10:49.000[]                 [32minfo[39m: Synced - slot: 14 - head: 0xff4f…3507 - exec-block: valid/full(13 0x2dd5…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:10:55.001[]                 [32minfo[39m: Synced - slot: 15 - head: 0xff96…3e59 - exec-block: valid/full(14 0xddd6…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:11:01.000[]                 [32minfo[39m: Synced - slot: 16 - head: 0x2132…a7a1 - exec-block: valid/full(15 0x1d3e…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:11:07.000[]                 [32minfo[39m: Synced - slot: 17 - head: 0xe704…71f4 - exec-block: valid/full(16 0x9b8c…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:11:13.000[]                 [32minfo[39m: Synced - slot: 18 - head: 0xec81…06fc - exec-block: valid/full(17 0xdb0b…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:11:19.000[]                 [32minfo[39m: Synced - slot: 19 - head: 0xf997…d3bb - exec-block: valid/full(18 0x1471…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:11:22.039[api]              [32minfo[39m: Selected engine block: no builder block produced reason=builder_disabled, slot=20, parentSlot=19, parentBlockRoot=0xf99731e2097d5938dcacc930be5b799671673d021f76a18589bd9d7ba12ad3bb, fork=fulu, builderSelection=executiononly, isBuilderEnabled=false, isEngineEnabled=true, strictFeeRecipientCheck=false, builderBoostFactor=0, durationMs=24, executionPayloadValue=0.00000 ETH, consensusBlockValue=0.00101 ETH, blockTotalValue=0.00101 ETH
+[cl-4-lodestar-geth] Mar-04 18:11:22.078[chain]            [32minfo[39m: Publishing block slot=20, blockRoot=0x2bf87d5b96b5293c2d8156377fea21fd53cc84ca7ff5094926f0ab957551f5e1, bodyRoot=0x769c4c8cec598619142ea85f565116a42ddc2fa3c0c8c7b42f2556e348d937e3, broadcastValidation=gossip, blockLocallyProduced=true
+[cl-4-lodestar-geth] Mar-04 18:11:25.000[]                 [32minfo[39m: Synced - slot: 20 - head: 0x2bf8…f5e1 - exec-block: valid/full(19 0x0fc5…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:11:31.000[]                 [32minfo[39m: Synced - slot: 21 - head: 0x286f…4772 - exec-block: valid/full(20 0x89d3…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:11:37.000[]                 [32minfo[39m: Synced - slot: 22 - head: 0x3570…df19 - exec-block: valid/full(21 0xfcdb…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:11:43.000[]                 [32minfo[39m: Synced - slot: 23 - head: 0x68fd…5a02 - exec-block: valid/full(22 0x00e0…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:11:49.000[]                 [32minfo[39m: Synced - slot: 24 - head: 0xa628…dca6 - exec-block: valid/full(23 0x04fd…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:11:55.000[]                 [32minfo[39m: Synced - slot: 25 - head: 0x54a0…2538 - exec-block: valid/full(24 0x1823…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:11:58.023[api]              [32minfo[39m: Selected engine block: no builder block produced reason=builder_disabled, slot=26, parentSlot=25, parentBlockRoot=0x54a0e065168d84b7fc11f931b9db78935a84aad7c08a34f964a2d0007c6d2538, fork=fulu, builderSelection=executiononly, isBuilderEnabled=false, isEngineEnabled=true, strictFeeRecipientCheck=false, builderBoostFactor=0, durationMs=8, executionPayloadValue=0.00000 ETH, consensusBlockValue=0.00101 ETH, blockTotalValue=0.00101 ETH
+[cl-4-lodestar-geth] Mar-04 18:11:58.067[chain]            [32minfo[39m: Publishing block slot=26, blockRoot=0x30d3e81fec8bb2c639c58f6f163a6748abe7202bb528782558c8345c45c2522d, bodyRoot=0xcf1a385e9966e645b4799b31e5cae985f24760a8ce6a9d4a21e3c6ce95135636, broadcastValidation=gossip, blockLocallyProduced=true
+[cl-4-lodestar-geth] Mar-04 18:12:01.000[]                 [32minfo[39m: Synced - slot: 26 - head: 0x30d3…522d - exec-block: valid/full(25 0x3eb3…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:12:07.000[]                 [32minfo[39m: Synced - slot: 27 - head: 0x5a44…5a83 - exec-block: valid/full(26 0x6f4f…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:12:13.001[]                 [32minfo[39m: Synced - slot: 28 - head: 0xaf0c…d94a - exec-block: valid/full(27 0x3624…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:12:19.000[]                 [32minfo[39m: Synced - slot: 29 - head: 0xe138…32e9 - exec-block: valid/full(28 0x1e0a…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:12:22.013[api]              [32minfo[39m: Selected engine block: no builder block produced reason=builder_disabled, slot=30, parentSlot=29, parentBlockRoot=0xe13815e0bf185906c2b0995203c18576903cc0c23c6df2211ae35da0108532e9, fork=fulu, builderSelection=executiononly, isBuilderEnabled=false, isEngineEnabled=true, strictFeeRecipientCheck=false, builderBoostFactor=0, durationMs=7, executionPayloadValue=0.00000 ETH, consensusBlockValue=0.00101 ETH, blockTotalValue=0.00101 ETH
+[cl-4-lodestar-geth] Mar-04 18:12:22.065[chain]            [32minfo[39m: Publishing block slot=30, blockRoot=0x874915ed8faee514158f102db24b6582df6ef1739c43cdfcd59e0eeb51e16604, bodyRoot=0x41c0294c79fae428a1690c73e16888c8d6140a290aa06dbadcdd8fdf55354c64, broadcastValidation=gossip, blockLocallyProduced=true
+[cl-4-lodestar-geth] Mar-04 18:12:25.000[]                 [32minfo[39m: Synced - slot: 30 - head: 0x8749…6604 - exec-block: valid/full(29 0xfa06…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:12:31.001[]                 [32minfo[39m: Synced - slot: 31 - head: 0x64b4…cd41 - exec-block: valid/full(30 0x632e…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:12:37.007[]                 [32minfo[39m: Synced - slot: 32 - head: 0x7f89…d26a - exec-block: valid/full(31 0xe81b… bid:0xe81b…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:12:43.005[]                 [32minfo[39m: Synced - slot: 33 - head: 0xb0db…ef1d - exec-block: valid/full(32 0x69dc… bid:0x69dc…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:12:49.001[]                 [32minfo[39m: Synced - slot: 34 - head: 0x651e…ed9b - exec-block: valid/full(33 0xd458… bid:0xd458…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:12:55.003[]                 [32minfo[39m: Synced - slot: 35 - head: 0xd220…e3ea - exec-block: valid/full(34 0xb255… bid:0xb255…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:12:58.525[chain]            [32minfo[39m: Publishing block slot=36, blockRoot=0x222e4a3e202488d590635a750bc4a6e603c028bdafa5dfcc1204b12f3db78dc8, bodyRoot=0xaed1e62905d552f8b9da7b3752898bfa40dd2db6bf89ae4242d274bcadade91d, broadcastValidation=gossip, blockLocallyProduced=true
+[cl-4-lodestar-geth] Mar-04 18:12:58.594[api]              [32minfo[39m: Produced execution payload envelope slot=36, blockRoot=0x222e4a3e202488d590635a750bc4a6e603c028bdafa5dfcc1204b12f3db78dc8, transactions=0, blockHash=0xfa7d3171a202c66fde9caf924c7a3d8b0da16f9e23ef57a86ee92ef77c27b82f
+[cl-4-lodestar-geth] Mar-04 18:12:58.609[chain]            [32minfo[39m: Publishing execution payload envelope slot=36, blockRoot=0x222e4a3e202488d590635a750bc4a6e603c028bdafa5dfcc1204b12f3db78dc8, builderIndex=Infinity, isSelfBuild=true, dataColumns=0
+[cl-4-lodestar-geth] Mar-04 18:12:58.611[chain]            [32minfo[39m: Published execution payload envelope slot=36, blockRoot=0x222e4a3e202488d590635a750bc4a6e603c028bdafa5dfcc1204b12f3db78dc8, builderIndex=Infinity, isSelfBuild=true, dataColumns=0, delaySec=0.5989999771118164, sentPeers=3
+[cl-4-lodestar-geth] Mar-04 18:13:01.000[]                 [32minfo[39m: Synced - slot: 36 - head: 0x222e…8dc8 - exec-block: valid/full(35 0xfa7d… bid:0xfa7d…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:13:07.000[]                 [32minfo[39m: Synced - slot: 37 - head: 0xa900…8647 - exec-block: valid/full(36 0xbd39… bid:0xbd39…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:13:13.002[]                 [32minfo[39m: Synced - slot: 38 - head: 0xf506…28b8 - exec-block: valid/full(37 0x5fa2… bid:0x5fa2…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:13:19.000[]                 [32minfo[39m: Synced - slot: 39 - head: 0x73a3…9d04 - exec-block: valid/full(38 0x244e… bid:0x244e…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:13:25.000[]                 [32minfo[39m: Synced - slot: 40 - head: 0x4c26…df7e - exec-block: valid/full(39 0xb876… bid:0xb876…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:13:28.522[chain]            [32minfo[39m: Publishing block slot=41, blockRoot=0x18753c2b4c2b0dda2d1657515ed379a7bbdd64d169082f7e354dafc3d11f4bdd, bodyRoot=0xf4829c8c177fb65097d3d78b1f8d1f66ef325c18ac65564b712cd4f9bba09f8f, broadcastValidation=gossip, blockLocallyProduced=true
+[cl-4-lodestar-geth] Mar-04 18:13:28.618[api]              [32minfo[39m: Produced execution payload envelope slot=41, blockRoot=0x18753c2b4c2b0dda2d1657515ed379a7bbdd64d169082f7e354dafc3d11f4bdd, transactions=0, blockHash=0x78b0c3e6b2f5257d96fc546e3955cc8038dd251647d6b5c522c44f5158fe607a
+[cl-4-lodestar-geth] Mar-04 18:13:28.629[chain]            [32minfo[39m: Publishing execution payload envelope slot=41, blockRoot=0x18753c2b4c2b0dda2d1657515ed379a7bbdd64d169082f7e354dafc3d11f4bdd, builderIndex=Infinity, isSelfBuild=true, dataColumns=0
+[cl-4-lodestar-geth] Mar-04 18:13:28.630[chain]            [32minfo[39m: Published execution payload envelope slot=41, blockRoot=0x18753c2b4c2b0dda2d1657515ed379a7bbdd64d169082f7e354dafc3d11f4bdd, builderIndex=Infinity, isSelfBuild=true, dataColumns=0, delaySec=0.619999885559082, sentPeers=3
+[cl-4-lodestar-geth] Mar-04 18:13:31.004[]                 [32minfo[39m: Synced - slot: 41 - head: 0x1875…4bdd - exec-block: valid/full(40 0x78b0… bid:0x78b0…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:13:37.001[]                 [32minfo[39m: Synced - slot: 42 - head: 0x1f8a…a664 - exec-block: valid/full(41 0x3c11… bid:0x3c11…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:13:43.002[]                 [32minfo[39m: Synced - slot: 43 - head: 0xb09f…9840 - exec-block: valid/full(42 0x4457… bid:0x4457…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:13:49.000[]                 [32minfo[39m: Synced - slot: 44 - head: 0x9581…b03f - exec-block: valid/full(43 0x99e0… bid:0x99e0…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:13:52.516[chain]            [32minfo[39m: Publishing block slot=45, blockRoot=0xa79889c2857742b648e2687e1c3e5cf75e68acd1f1a3ffe4c9711f00a29d7aac, bodyRoot=0xbfc09be320229a2a0881113623f0e486830683a6580d4f79cd0ad5459c50d0b9, broadcastValidation=gossip, blockLocallyProduced=true
+[cl-4-lodestar-geth] Mar-04 18:13:52.582[api]              [32minfo[39m: Produced execution payload envelope slot=45, blockRoot=0xa79889c2857742b648e2687e1c3e5cf75e68acd1f1a3ffe4c9711f00a29d7aac, transactions=0, blockHash=0xf4390303c01650a9ead84b813085f31d06d159e59de3e8797f6699ebb4b4ecbe
+[cl-4-lodestar-geth] Mar-04 18:13:52.599[chain]            [32minfo[39m: Publishing execution payload envelope slot=45, blockRoot=0xa79889c2857742b648e2687e1c3e5cf75e68acd1f1a3ffe4c9711f00a29d7aac, builderIndex=Infinity, isSelfBuild=true, dataColumns=0
+[cl-4-lodestar-geth] Mar-04 18:13:52.606[chain]            [32minfo[39m: Published execution payload envelope slot=45, blockRoot=0xa79889c2857742b648e2687e1c3e5cf75e68acd1f1a3ffe4c9711f00a29d7aac, builderIndex=Infinity, isSelfBuild=true, dataColumns=0, delaySec=0.5889999866485596, sentPeers=3
+[cl-4-lodestar-geth] Mar-04 18:13:55.000[]                 [32minfo[39m: Synced - slot: 45 - head: 0xa798…7aac - exec-block: valid/full(44 0xf439… bid:0xf439…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:13:58.526[chain]            [32minfo[39m: Publishing block slot=46, blockRoot=0xe21e6e2521b70907c398daeab25d356d6a5ca6740499aa0242a3702dab3e778d, bodyRoot=0x7ca10b88df0b66fb2bc1af3529019aaeb698021c3bac1694fd288a9813396ceb, broadcastValidation=gossip, blockLocallyProduced=true
+[cl-4-lodestar-geth] Mar-04 18:13:58.590[api]              [32minfo[39m: Produced execution payload envelope slot=46, blockRoot=0xe21e6e2521b70907c398daeab25d356d6a5ca6740499aa0242a3702dab3e778d, transactions=0, blockHash=0x58d32a69547f945be9286f4127054051f1116ffd9078e2b3af850ca23702dd3b
+[cl-4-lodestar-geth] Mar-04 18:13:58.597[chain]            [32minfo[39m: Publishing execution payload envelope slot=46, blockRoot=0xe21e6e2521b70907c398daeab25d356d6a5ca6740499aa0242a3702dab3e778d, builderIndex=Infinity, isSelfBuild=true, dataColumns=0
+[cl-4-lodestar-geth] Mar-04 18:13:58.599[chain]            [32minfo[39m: Published execution payload envelope slot=46, blockRoot=0xe21e6e2521b70907c398daeab25d356d6a5ca6740499aa0242a3702dab3e778d, builderIndex=Infinity, isSelfBuild=true, dataColumns=0, delaySec=0.5920000076293945, sentPeers=3
+[cl-4-lodestar-geth] Mar-04 18:14:01.000[]                 [32minfo[39m: Synced - slot: 46 - head: 0xe21e…778d - exec-block: valid/full(45 0x58d3… bid:0x58d3…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:14:07.000[]                 [32minfo[39m: Synced - slot: 47 - head: 0xb737…96a7 - exec-block: valid/full(46 0x7948… bid:0x7948…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:14:13.000[]                 [32minfo[39m: Synced - slot: 48 - head: 0x3649…6ae2 - exec-block: valid/full(47 0x2b0c… bid:0x2b0c…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:14:19.000[]                 [32minfo[39m: Synced - slot: 49 - head: 0x00fc…b961 - exec-block: valid/full(48 0x214f… bid:0x214f…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:14:25.000[]                 [32minfo[39m: Synced - slot: 50 - head: 0xc900…1ae8 - exec-block: valid/full(49 0x6d25… bid:0x6d25…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:14:31.001[]                 [32minfo[39m: Synced - slot: 51 - head: 0x42a1…c498 - exec-block: valid/full(50 0x7104… bid:0x7104…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:14:37.000[]                 [32minfo[39m: Synced - slot: 52 - head: 0xd62a…3623 - exec-block: valid/full(51 0x12a4… bid:0x12a4…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:14:43.003[]                 [32minfo[39m: Synced - slot: 53 - head: 0x752d…42d9 - exec-block: valid/full(52 0x594e… bid:0x594e…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:14:49.000[]                 [32minfo[39m: Synced - slot: 54 - head: 0xb123…2524 - exec-block: valid/full(53 0xf31a… bid:0xf31a…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:14:55.000[]                 [32minfo[39m: Synced - slot: 55 - head: 0x92d2…9bcc - exec-block: valid/full(54 0xaa2e… bid:0xaa2e…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:15:01.000[]                 [32minfo[39m: Synced - slot: 56 - head: 0xd0cd…b751 - exec-block: valid/full(55 0xec0e… bid:0xec0e…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:15:07.001[]                 [32minfo[39m: Synced - slot: 57 - head: 0xfdf3…4c70 - exec-block: valid/full(56 0xb9d7… bid:0xb9d7…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:15:13.001[]                 [32minfo[39m: Synced - slot: 58 - head: 0x0bb1…3036 - exec-block: valid/full(57 0xb0f2… bid:0xb0f2…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:15:16.518[chain]            [32minfo[39m: Publishing block slot=59, blockRoot=0x6b3c1b8fc1f2b781d7f169d86547b21fc22acc08c0b49796e16997ad66a74032, bodyRoot=0x3dbe1e4452020a805e0b055fa5908122a812246a0f19f74b742f734efbd763c8, broadcastValidation=gossip, blockLocallyProduced=true
+[cl-4-lodestar-geth] Mar-04 18:15:16.603[api]              [32minfo[39m: Produced execution payload envelope slot=59, blockRoot=0x6b3c1b8fc1f2b781d7f169d86547b21fc22acc08c0b49796e16997ad66a74032, transactions=0, blockHash=0xec2e709333a850b3408f0b9ef33da9b47a3a9b19776d9b122231242ed0daa8c2
+[cl-4-lodestar-geth] Mar-04 18:15:16.615[chain]            [32minfo[39m: Publishing execution payload envelope slot=59, blockRoot=0x6b3c1b8fc1f2b781d7f169d86547b21fc22acc08c0b49796e16997ad66a74032, builderIndex=Infinity, isSelfBuild=true, dataColumns=0
+[cl-4-lodestar-geth] Mar-04 18:15:16.618[chain]            [32minfo[39m: Published execution payload envelope slot=59, blockRoot=0x6b3c1b8fc1f2b781d7f169d86547b21fc22acc08c0b49796e16997ad66a74032, builderIndex=Infinity, isSelfBuild=true, dataColumns=0, delaySec=0.6099998950958252, sentPeers=3
+[cl-4-lodestar-geth] Mar-04 18:15:19.000[]                 [32minfo[39m: Synced - slot: 59 - head: 0x6b3c…4032 - exec-block: valid/full(58 0xec2e… bid:0xec2e…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:15:22.526[chain]            [32minfo[39m: Publishing block slot=60, blockRoot=0x1ad309b00ab65898f55a825749cd3bdacb0f07ebcb5c10f581057b6b4b2b2443, bodyRoot=0xe8d59aa04563858cfa9bfdf30aeb5514eb8868e9aa80230a89ee8eaf1e2b82bc, broadcastValidation=gossip, blockLocallyProduced=true
+[cl-4-lodestar-geth] Mar-04 18:15:22.599[api]              [32minfo[39m: Produced execution payload envelope slot=60, blockRoot=0x1ad309b00ab65898f55a825749cd3bdacb0f07ebcb5c10f581057b6b4b2b2443, transactions=0, blockHash=0x67da6faf0b08a7b2d6eeebd803b5c61bbc0d1adabfddc285f1fac6965a4959c4
+[cl-4-lodestar-geth] Mar-04 18:15:22.612[chain]            [32minfo[39m: Publishing execution payload envelope slot=60, blockRoot=0x1ad309b00ab65898f55a825749cd3bdacb0f07ebcb5c10f581057b6b4b2b2443, builderIndex=Infinity, isSelfBuild=true, dataColumns=0
+[cl-4-lodestar-geth] Mar-04 18:15:22.613[chain]            [32minfo[39m: Published execution payload envelope slot=60, blockRoot=0x1ad309b00ab65898f55a825749cd3bdacb0f07ebcb5c10f581057b6b4b2b2443, builderIndex=Infinity, isSelfBuild=true, dataColumns=0, delaySec=0.6029999256134033, sentPeers=3
+[cl-4-lodestar-geth] Mar-04 18:15:25.002[]                 [32minfo[39m: Synced - slot: 60 - head: 0x1ad3…2443 - exec-block: valid/full(59 0x67da… bid:0x67da…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:15:31.000[]                 [32minfo[39m: Synced - slot: 61 - head: 0xe353…615a - exec-block: valid/full(60 0x64c3… bid:0x64c3…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:15:37.000[]                 [32minfo[39m: Synced - slot: 62 - head: 0x0583…0503 - exec-block: valid/full(61 0xf447… bid:0xf447…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:15:43.000[]                 [32minfo[39m: Synced - slot: 63 - head: 0xda04…b50c - exec-block: valid/full(62 0xd241… bid:0xd241…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:15:49.003[]                 [32minfo[39m: Synced - slot: 64 - head: 0x363e…f0f6 - exec-block: valid/full(63 0xf9a7… bid:0xf9a7…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:15:55.000[]                 [32minfo[39m: Synced - slot: 65 - head: 0xc6e1…75a3 - exec-block: valid/full(64 0xcf6d… bid:0xcf6d…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:15:58.519[chain]            [32minfo[39m: Publishing block slot=66, blockRoot=0x6be80993ba7f8126bfb035faa4955a5cbb278d1b6050336bb428327ecd382665, bodyRoot=0x8e7e683ddde4d91413394e14c77ccd9e18a637c4940674072934e6d430c669f3, broadcastValidation=gossip, blockLocallyProduced=true
+[cl-4-lodestar-geth] Mar-04 18:15:58.583[api]              [32minfo[39m: Produced execution payload envelope slot=66, blockRoot=0x6be80993ba7f8126bfb035faa4955a5cbb278d1b6050336bb428327ecd382665, transactions=0, blockHash=0xe1d1031c219e6adea9e3a6642824c759e510df82197dd05d687d6c08899e5f1d
+[cl-4-lodestar-geth] Mar-04 18:15:58.600[chain]            [32minfo[39m: Publishing execution payload envelope slot=66, blockRoot=0x6be80993ba7f8126bfb035faa4955a5cbb278d1b6050336bb428327ecd382665, builderIndex=Infinity, isSelfBuild=true, dataColumns=0
+[cl-4-lodestar-geth] Mar-04 18:15:58.601[chain]            [32minfo[39m: Published execution payload envelope slot=66, blockRoot=0x6be80993ba7f8126bfb035faa4955a5cbb278d1b6050336bb428327ecd382665, builderIndex=Infinity, isSelfBuild=true, dataColumns=0, delaySec=0.5869998931884766, sentPeers=3
+[cl-4-lodestar-geth] Mar-04 18:16:01.001[]                 [32minfo[39m: Synced - slot: 66 - head: 0x6be8…2665 - exec-block: valid/full(65 0xe1d1… bid:0xe1d1…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:16:07.000[]                 [32minfo[39m: Synced - slot: 67 - head: 0x7cf2…0f8d - exec-block: valid/full(66 0x65e0… bid:0x65e0…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:16:10.526[chain]            [32minfo[39m: Publishing block slot=68, blockRoot=0x57fb9f236b320964ec4421adf69a84f5ac4ea27141294ed6d4b61644332bdb53, bodyRoot=0xcccbb8b94fcf98f4418d014d53ac85792403c848f876c3b6e74c3ac67ca467d1, broadcastValidation=gossip, blockLocallyProduced=true
+[cl-4-lodestar-geth] Mar-04 18:16:10.625[api]              [32minfo[39m: Produced execution payload envelope slot=68, blockRoot=0x57fb9f236b320964ec4421adf69a84f5ac4ea27141294ed6d4b61644332bdb53, transactions=0, blockHash=0xe653cd43cd6e7135a6dae72b4ec9259847d12923ff8926c05dcf7419eb869550
+[cl-4-lodestar-geth] Mar-04 18:16:10.634[chain]            [32minfo[39m: Publishing execution payload envelope slot=68, blockRoot=0x57fb9f236b320964ec4421adf69a84f5ac4ea27141294ed6d4b61644332bdb53, builderIndex=Infinity, isSelfBuild=true, dataColumns=0
+[cl-4-lodestar-geth] Mar-04 18:16:10.636[chain]            [32minfo[39m: Published execution payload envelope slot=68, blockRoot=0x57fb9f236b320964ec4421adf69a84f5ac4ea27141294ed6d4b61644332bdb53, builderIndex=Infinity, isSelfBuild=true, dataColumns=0, delaySec=0.628000020980835, sentPeers=3
+[cl-4-lodestar-geth] Mar-04 18:16:13.007[]                 [32minfo[39m: Synced - slot: 68 - head: 0x57fb…db53 - exec-block: valid/full(67 0xe653… bid:0xe653…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:16:19.000[]                 [32minfo[39m: Synced - slot: 69 - head: 0x6fba…54de - exec-block: valid/full(68 0xa255… bid:0xa255…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:16:25.001[]                 [32minfo[39m: Synced - slot: 70 - head: 0xa9cf…b5a5 - exec-block: valid/full(69 0x47da… bid:0x47da…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:16:31.000[]                 [32minfo[39m: Synced - slot: 71 - head: 0xdb7a…2311 - exec-block: valid/full(70 0x66f7… bid:0x66f7…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:16:34.516[chain]            [32minfo[39m: Publishing block slot=72, blockRoot=0x51d42cd187d6b049e54331b500a181286fcaa89000212ee215d9f4830e220de1, bodyRoot=0x28276f049851a48a9e087cc77bbf84b6baca4d60f3787aaac465daf653ef6337, broadcastValidation=gossip, blockLocallyProduced=true
+[cl-4-lodestar-geth] Mar-04 18:16:34.601[api]              [32minfo[39m: Produced execution payload envelope slot=72, blockRoot=0x51d42cd187d6b049e54331b500a181286fcaa89000212ee215d9f4830e220de1, transactions=0, blockHash=0x7a9103916a1bfa0ba4d2babbf93df88a1ada3f1aef7f2e3496e5817d9dc2be23
+[cl-4-lodestar-geth] Mar-04 18:16:34.619[chain]            [32minfo[39m: Publishing execution payload envelope slot=72, blockRoot=0x51d42cd187d6b049e54331b500a181286fcaa89000212ee215d9f4830e220de1, builderIndex=Infinity, isSelfBuild=true, dataColumns=0
+[cl-4-lodestar-geth] Mar-04 18:16:34.623[chain]            [32minfo[39m: Published execution payload envelope slot=72, blockRoot=0x51d42cd187d6b049e54331b500a181286fcaa89000212ee215d9f4830e220de1, builderIndex=Infinity, isSelfBuild=true, dataColumns=0, delaySec=0.6070001125335693, sentPeers=3
+[cl-4-lodestar-geth] Mar-04 18:16:37.000[]                 [32minfo[39m: Synced - slot: 72 - head: 0x51d4…0de1 - exec-block: valid/full(71 0x7a91… bid:0x7a91…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:16:43.000[]                 [32minfo[39m: Synced - slot: 73 - head: 0x21ed…a924 - exec-block: valid/full(72 0xc758… bid:0xc758…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:16:49.001[]                 [32minfo[39m: Synced - slot: 74 - head: 0xa430…6977 - exec-block: valid/full(73 0x3767… bid:0x3767…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:16:52.518[chain]            [32minfo[39m: Publishing block slot=75, blockRoot=0x05a370770181f8aac37b4ac58b44c9c0a93f0af8b98a7098925f6d195954982a, bodyRoot=0x7e305095b9fb22ab0b074cf954fb9b0fad87cfc17d1b47a7ca0ec84891f798fe, broadcastValidation=gossip, blockLocallyProduced=true
+[cl-4-lodestar-geth] Mar-04 18:16:52.598[api]              [32minfo[39m: Produced execution payload envelope slot=75, blockRoot=0x05a370770181f8aac37b4ac58b44c9c0a93f0af8b98a7098925f6d195954982a, transactions=0, blockHash=0x975cad5b117215f8e587dda9a8a931b8cbe9bf296d44519aa83ed147e0016752
+[cl-4-lodestar-geth] Mar-04 18:16:52.611[chain]            [32minfo[39m: Publishing execution payload envelope slot=75, blockRoot=0x05a370770181f8aac37b4ac58b44c9c0a93f0af8b98a7098925f6d195954982a, builderIndex=Infinity, isSelfBuild=true, dataColumns=0
+[cl-4-lodestar-geth] Mar-04 18:16:52.614[chain]            [32minfo[39m: Published execution payload envelope slot=75, blockRoot=0x05a370770181f8aac37b4ac58b44c9c0a93f0af8b98a7098925f6d195954982a, builderIndex=Infinity, isSelfBuild=true, dataColumns=0, delaySec=0.6019999980926514, sentPeers=3
+[cl-4-lodestar-geth] Mar-04 18:16:55.000[]                 [32minfo[39m: Synced - slot: 75 - head: 0x05a3…982a - exec-block: valid/full(74 0x975c… bid:0x975c…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:16:58.516[chain]            [32minfo[39m: Publishing block slot=76, blockRoot=0xf77256a141725560d74b70e112452fcb5d98965b2e43ef9321b32d274a8f418d, bodyRoot=0x278c5f8306906b7b56cc7a75abb69f14406455f46191f602c4e7521bb5d6e781, broadcastValidation=gossip, blockLocallyProduced=true
+[cl-4-lodestar-geth] Mar-04 18:16:58.601[api]              [32minfo[39m: Produced execution payload envelope slot=76, blockRoot=0xf77256a141725560d74b70e112452fcb5d98965b2e43ef9321b32d274a8f418d, transactions=0, blockHash=0x015d9584cec5844579196b7acff3564b4a788aaf207717c106518a982a3ef29b
+[cl-4-lodestar-geth] Mar-04 18:16:58.621[chain]            [32minfo[39m: Publishing execution payload envelope slot=76, blockRoot=0xf77256a141725560d74b70e112452fcb5d98965b2e43ef9321b32d274a8f418d, builderIndex=Infinity, isSelfBuild=true, dataColumns=0
+[cl-4-lodestar-geth] Mar-04 18:16:58.623[chain]            [32minfo[39m: Published execution payload envelope slot=76, blockRoot=0xf77256a141725560d74b70e112452fcb5d98965b2e43ef9321b32d274a8f418d, builderIndex=Infinity, isSelfBuild=true, dataColumns=0, delaySec=0.6110000610351562, sentPeers=3
+[cl-4-lodestar-geth] Mar-04 18:17:01.001[]                 [32minfo[39m: Synced - slot: 76 - head: 0xf772…418d - exec-block: valid/full(75 0x015d… bid:0x015d…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:17:07.000[]                 [32minfo[39m: Synced - slot: 77 - head: 0x667f…8352 - exec-block: valid/full(76 0x5404… bid:0x5404…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:17:10.607[chain]            [32minfo[39m: Publishing block slot=78, blockRoot=0xef37918d33fabacf782dd91bf328048fc7caf863ebfff844a406e8d77bd265cf, bodyRoot=0x2604cd39ec1c26c17a24ea4a8144ee53eff3720a71020c8c4425a5a493a1112d, broadcastValidation=gossip, blockLocallyProduced=true
+[cl-4-lodestar-geth] Mar-04 18:17:10.702[api]              [32minfo[39m: Produced execution payload envelope slot=78, blockRoot=0xef37918d33fabacf782dd91bf328048fc7caf863ebfff844a406e8d77bd265cf, transactions=0, blockHash=0xed41502264c44520cf48e165147c4200ae06626d039c10d6eb2a4dc82fcd5acd
+[cl-4-lodestar-geth] Mar-04 18:17:10.724[chain]            [32minfo[39m: Publishing execution payload envelope slot=78, blockRoot=0xef37918d33fabacf782dd91bf328048fc7caf863ebfff844a406e8d77bd265cf, builderIndex=Infinity, isSelfBuild=true, dataColumns=0
+[cl-4-lodestar-geth] Mar-04 18:17:10.726[chain]            [32minfo[39m: Published execution payload envelope slot=78, blockRoot=0xef37918d33fabacf782dd91bf328048fc7caf863ebfff844a406e8d77bd265cf, builderIndex=Infinity, isSelfBuild=true, dataColumns=0, delaySec=0.7060000896453857, sentPeers=3
+[cl-4-lodestar-geth] Mar-04 18:17:13.004[]                 [32minfo[39m: Synced - slot: 78 - head: 0xef37…65cf - exec-block: valid/full(77 0xed41… bid:0xed41…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:17:19.000[]                 [32minfo[39m: Synced - slot: 79 - head: 0x483a…f682 - exec-block: valid/full(78 0x2688… bid:0x2688…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:17:22.529[chain]            [32minfo[39m: Publishing block slot=80, blockRoot=0x58fb4a1412e110fcf89bb76ef8174552c23938110805e29bf1babddeb6c2a16d, bodyRoot=0xcb2bdc2543bcb6c45d301d11ca5f97f0e9453822450e649b8c57ab250c847e57, broadcastValidation=gossip, blockLocallyProduced=true
+[cl-4-lodestar-geth] Mar-04 18:17:22.608[api]              [32minfo[39m: Produced execution payload envelope slot=80, blockRoot=0x58fb4a1412e110fcf89bb76ef8174552c23938110805e29bf1babddeb6c2a16d, transactions=0, blockHash=0x91cdfc143c63ab515e411dc1137b1c926dc89d8d01f962430e0b1f9be1fe8160
+[cl-4-lodestar-geth] Mar-04 18:17:22.626[chain]            [32minfo[39m: Publishing execution payload envelope slot=80, blockRoot=0x58fb4a1412e110fcf89bb76ef8174552c23938110805e29bf1babddeb6c2a16d, builderIndex=Infinity, isSelfBuild=true, dataColumns=0
+[cl-4-lodestar-geth] Mar-04 18:17:22.629[chain]            [32minfo[39m: Published execution payload envelope slot=80, blockRoot=0x58fb4a1412e110fcf89bb76ef8174552c23938110805e29bf1babddeb6c2a16d, builderIndex=Infinity, isSelfBuild=true, dataColumns=0, delaySec=0.6150000095367432, sentPeers=3
+[cl-4-lodestar-geth] Mar-04 18:17:25.000[]                 [32minfo[39m: Synced - slot: 80 - head: 0x58fb…a16d - exec-block: valid/full(79 0x91cd… bid:0x91cd…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:17:31.000[]                 [32minfo[39m: Synced - slot: 81 - head: 0xfb9b…8d1f - exec-block: valid/full(80 0x6f53… bid:0x6f53…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:17:34.526[chain]            [32minfo[39m: Publishing block slot=82, blockRoot=0x4b70d40fdf436fae91703bbeea80358d96d92f1e3d76c30677adb0a87ef64c63, bodyRoot=0x70e99250cd21d76b7e6fbf06216a5ab85175833f52b2c02c78204e9495e5fd69, broadcastValidation=gossip, blockLocallyProduced=true
+[cl-4-lodestar-geth] Mar-04 18:17:34.617[api]              [32minfo[39m: Produced execution payload envelope slot=82, blockRoot=0x4b70d40fdf436fae91703bbeea80358d96d92f1e3d76c30677adb0a87ef64c63, transactions=0, blockHash=0x78f571f9644bdafaffdafdca576cf98aed4dcf7d13e9f4a805ffa8d6e0c6ca6b
+[cl-4-lodestar-geth] Mar-04 18:17:34.654[chain]            [32minfo[39m: Publishing execution payload envelope slot=82, blockRoot=0x4b70d40fdf436fae91703bbeea80358d96d92f1e3d76c30677adb0a87ef64c63, builderIndex=Infinity, isSelfBuild=true, dataColumns=0
+[cl-4-lodestar-geth] Mar-04 18:17:34.667[chain]            [32minfo[39m: Published execution payload envelope slot=82, blockRoot=0x4b70d40fdf436fae91703bbeea80358d96d92f1e3d76c30677adb0a87ef64c63, builderIndex=Infinity, isSelfBuild=true, dataColumns=0, delaySec=0.624000072479248, sentPeers=3
+[cl-4-lodestar-geth] Mar-04 18:17:37.000[]                 [32minfo[39m: Synced - slot: 82 - head: 0x4b70…4c63 - exec-block: valid/full(81 0x78f5… bid:0x78f5…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:17:43.000[]                 [32minfo[39m: Synced - slot: 83 - head: 0x282e…8963 - exec-block: valid/full(82 0x78ca… bid:0x78ca…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:17:49.000[]                 [32minfo[39m: Synced - slot: 84 - head: 0x4ed9…eb94 - exec-block: valid/full(83 0xec00… bid:0xec00…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:17:52.514[chain]            [32minfo[39m: Publishing block slot=85, blockRoot=0x06a0635b210972dd88ea5ec9406a48ef32e1b946ffa73b6a6f90a947f5c9358f, bodyRoot=0x676363e059f762016b58b867c12c36cd47451d141a8d50f6b185b4de2991b216, broadcastValidation=gossip, blockLocallyProduced=true
+[cl-4-lodestar-geth] Mar-04 18:17:52.578[api]              [32minfo[39m: Produced execution payload envelope slot=85, blockRoot=0x06a0635b210972dd88ea5ec9406a48ef32e1b946ffa73b6a6f90a947f5c9358f, transactions=0, blockHash=0x2fd3140181e3bc005115c99f706e3b5722688394650ec4b5449d599e048a8cdd
+[cl-4-lodestar-geth] Mar-04 18:17:52.586[chain]            [32minfo[39m: Publishing execution payload envelope slot=85, blockRoot=0x06a0635b210972dd88ea5ec9406a48ef32e1b946ffa73b6a6f90a947f5c9358f, builderIndex=Infinity, isSelfBuild=true, dataColumns=0
+[cl-4-lodestar-geth] Mar-04 18:17:52.587[chain]            [32minfo[39m: Published execution payload envelope slot=85, blockRoot=0x06a0635b210972dd88ea5ec9406a48ef32e1b946ffa73b6a6f90a947f5c9358f, builderIndex=Infinity, isSelfBuild=true, dataColumns=0, delaySec=0.5810000896453857, sentPeers=3
+[cl-4-lodestar-geth] Mar-04 18:17:55.005[]                 [32minfo[39m: Synced - slot: 85 - head: 0x06a0…358f - exec-block: valid/full(84 0x2fd3… bid:0x2fd3…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:18:01.006[]                 [32minfo[39m: Synced - slot: 86 - head: 0x1943…e6f3 - exec-block: valid/full(85 0xe166… bid:0xe166…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:18:07.000[]                 [32minfo[39m: Synced - slot: 87 - head: 0xdc79…4a80 - exec-block: valid/full(86 0xabf0… bid:0xabf0…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:18:10.531[chain]            [32minfo[39m: Publishing block slot=88, blockRoot=0xff590167a589e39cea0212b9918e2231408b68f963eeb6d00524277c31962e62, bodyRoot=0x919c34bebea68c787df8c25fc65541440ae2e90f0ab84c5e2c54efbf438e3ec8, broadcastValidation=gossip, blockLocallyProduced=true
+[cl-4-lodestar-geth] Mar-04 18:18:10.606[api]              [32minfo[39m: Produced execution payload envelope slot=88, blockRoot=0xff590167a589e39cea0212b9918e2231408b68f963eeb6d00524277c31962e62, transactions=0, blockHash=0xdab808b57c41dcffb6ac8cbd2787fe10a2f16520c9a09bbc2a725dd5c65b8a0c
+[cl-4-lodestar-geth] Mar-04 18:18:10.635[chain]            [32minfo[39m: Publishing execution payload envelope slot=88, blockRoot=0xff590167a589e39cea0212b9918e2231408b68f963eeb6d00524277c31962e62, builderIndex=Infinity, isSelfBuild=true, dataColumns=0
+[cl-4-lodestar-geth] Mar-04 18:18:10.637[chain]            [32minfo[39m: Published execution payload envelope slot=88, blockRoot=0xff590167a589e39cea0212b9918e2231408b68f963eeb6d00524277c31962e62, builderIndex=Infinity, isSelfBuild=true, dataColumns=0, delaySec=0.6129999160766602, sentPeers=3
+[cl-4-lodestar-geth] Mar-04 18:18:13.000[]                 [32minfo[39m: Synced - slot: 88 - head: 0xff59…2e62 - exec-block: valid/full(87 0xdab8… bid:0xdab8…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:18:19.000[]                 [32minfo[39m: Synced - slot: 89 - head: 0x019c…e94f - exec-block: valid/full(88 0x2e02… bid:0x2e02…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:18:25.006[]                 [32minfo[39m: Synced - slot: 90 - head: 0x343e…89b3 - exec-block: valid/full(89 0x45cf… bid:0x45cf…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:18:31.007[]                 [32minfo[39m: Synced - slot: 91 - head: 0x9224…6242 - exec-block: valid/full(90 0x3951… bid:0x3951…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:18:37.002[]                 [32minfo[39m: Synced - slot: 92 - head: 0x736c…ba0c - exec-block: valid/full(91 0x4cd8… bid:0x4cd8…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:18:40.521[chain]            [32minfo[39m: Publishing block slot=93, blockRoot=0xa7e9cadd908dd03cb82f81c50c23960e357cd5e42225a79ceca327b6db164868, bodyRoot=0x1320fd7fcd9527fa2a8660951dd4519e090a729f3674ed4ff786792e4639a683, broadcastValidation=gossip, blockLocallyProduced=true
+[cl-4-lodestar-geth] Mar-04 18:18:40.601[api]              [32minfo[39m: Produced execution payload envelope slot=93, blockRoot=0xa7e9cadd908dd03cb82f81c50c23960e357cd5e42225a79ceca327b6db164868, transactions=0, blockHash=0x20accb30cd3e778cc19ab8e2faf50c927d4a6bbc20bd840ea514f172fb34ae12
+[cl-4-lodestar-geth] Mar-04 18:18:40.627[chain]            [32minfo[39m: Publishing execution payload envelope slot=93, blockRoot=0xa7e9cadd908dd03cb82f81c50c23960e357cd5e42225a79ceca327b6db164868, builderIndex=Infinity, isSelfBuild=true, dataColumns=0
+[cl-4-lodestar-geth] Mar-04 18:18:40.630[chain]            [32minfo[39m: Published execution payload envelope slot=93, blockRoot=0xa7e9cadd908dd03cb82f81c50c23960e357cd5e42225a79ceca327b6db164868, builderIndex=Infinity, isSelfBuild=true, dataColumns=0, delaySec=0.6099998950958252, sentPeers=3
+[cl-4-lodestar-geth] Mar-04 18:18:43.000[]                 [32minfo[39m: Synced - slot: 93 - head: 0xa7e9…4868 - exec-block: valid/full(92 0x20ac… bid:0x20ac…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:18:49.000[]                 [32minfo[39m: Synced - slot: 94 - head: 0x7c5d…90b3 - exec-block: valid/full(93 0x9d78… bid:0x9d78…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:18:52.521[chain]            [32minfo[39m: Publishing block slot=95, blockRoot=0xfbfafe13fdd34563a74b1855d95392e7794ef8d3eca992f01a7415a7aa30ec92, bodyRoot=0xaed2f20bfeb76bda0e14f69cd9fdf2932cc959a16e52b48844eb6adf2005974f, broadcastValidation=gossip, blockLocallyProduced=true
+[cl-4-lodestar-geth] Mar-04 18:18:52.590[api]              [32minfo[39m: Produced execution payload envelope slot=95, blockRoot=0xfbfafe13fdd34563a74b1855d95392e7794ef8d3eca992f01a7415a7aa30ec92, transactions=0, blockHash=0x26e2a5c061f9544bd686a23a162e957b1a361fd86d22a2edca42b45b7762623e
+[cl-4-lodestar-geth] Mar-04 18:18:52.604[chain]            [32minfo[39m: Publishing execution payload envelope slot=95, blockRoot=0xfbfafe13fdd34563a74b1855d95392e7794ef8d3eca992f01a7415a7aa30ec92, builderIndex=Infinity, isSelfBuild=true, dataColumns=0
+[cl-4-lodestar-geth] Mar-04 18:18:52.605[chain]            [32minfo[39m: Published execution payload envelope slot=95, blockRoot=0xfbfafe13fdd34563a74b1855d95392e7794ef8d3eca992f01a7415a7aa30ec92, builderIndex=Infinity, isSelfBuild=true, dataColumns=0, delaySec=0.5929999351501465, sentPeers=3
+[cl-4-lodestar-geth] Mar-04 18:18:55.000[]                 [32minfo[39m: Synced - slot: 95 - head: 0xfbfa…ec92 - exec-block: valid/full(94 0x26e2… bid:0x26e2…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:18:58.001[network]          [32minfo[39m: Unsubscribing gossip topics of previous fork boundary fork=fulu, epoch=0
+[cl-4-lodestar-geth] Mar-04 18:18:58.028[network]          [32minfo[39m: Unsubscribing from long lived attnets of previous fork boundary fork=fulu, epoch=0
+[cl-4-lodestar-geth] Mar-04 18:18:58.029[network]          [32minfo[39m: Unsubscribing from random attnets of previous fork boundary fork=fulu, epoch=0
+[cl-4-lodestar-geth] Mar-04 18:19:00.318[rest]            [31merror[39m: Req req-1ak getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:19:01.002[]                 [32minfo[39m: Synced - slot: 96 - head: (slot -1) 0xfbfa…ec92 - exec-block: valid/full(94 0x26e2… bid:0x26e2…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:19:04.319[rest]            [31merror[39m: Req req-1ax getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:19:07.000[]                 [32minfo[39m: Synced - slot: 97 - head: 0x8e17…8e6d - exec-block: valid/full(95 0xf834… bid:0xf834…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:19:10.320[rest]            [31merror[39m: Req req-1bh getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:19:13.001[]                 [32minfo[39m: Synced - slot: 98 - head: 0xc5bc…9fd5 - exec-block: valid/full(96 0x6d16… bid:0x6d16…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:19:14.321[rest]            [31merror[39m: Req req-1bv getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:19:18.322[rest]            [31merror[39m: Req req-1c4 getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:19:19.000[]                 [32minfo[39m: Synced - slot: 99 - head: (slot -1) 0xc5bc…9fd5 - exec-block: valid/full(96 0x6d16… bid:0x6d16…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:19:22.322[rest]            [31merror[39m: Req req-1ch getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:19:25.001[]                 [32minfo[39m: Synced - slot: 100 - head: (slot -2) 0xc5bc…9fd5 - exec-block: valid/full(96 0x6d16… bid:0x6d16…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:19:26.324[rest]            [31merror[39m: Req req-1cv getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:19:30.325[rest]            [31merror[39m: Req req-1d1 getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:19:31.000[]                 [32minfo[39m: Synced - slot: 101 - head: 0x67c2…28b8 - exec-block: valid/full(97 0xc78b… bid:0xc78b…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:19:34.326[rest]            [31merror[39m: Req req-1df getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:19:34.517[chain]            [32minfo[39m: Publishing block slot=102, blockRoot=0x8bbe35cabd66fb625acc3011c68a87dba90010eaf674721e9175a1f408969d5a, bodyRoot=0x9cac5da6a8719ed9b498e120ddd66c8560b369c44dbdf1d06477378020391c80, broadcastValidation=gossip, blockLocallyProduced=true
+[cl-4-lodestar-geth] Mar-04 18:19:34.614[api]              [32minfo[39m: Produced execution payload envelope slot=102, blockRoot=0x8bbe35cabd66fb625acc3011c68a87dba90010eaf674721e9175a1f408969d5a, transactions=0, blockHash=0x979d8441eb7f374c108833206923a295b392a04eb588d7a966dd88cc433dec4e
+[cl-4-lodestar-geth] Mar-04 18:19:34.626[chain]            [32minfo[39m: Publishing execution payload envelope slot=102, blockRoot=0x8bbe35cabd66fb625acc3011c68a87dba90010eaf674721e9175a1f408969d5a, builderIndex=Infinity, isSelfBuild=true, dataColumns=0
+[cl-4-lodestar-geth] Mar-04 18:19:34.629[chain]            [32minfo[39m: Published execution payload envelope slot=102, blockRoot=0x8bbe35cabd66fb625acc3011c68a87dba90010eaf674721e9175a1f408969d5a, builderIndex=Infinity, isSelfBuild=true, dataColumns=0, delaySec=0.6180000305175781, sentPeers=3
+[cl-4-lodestar-geth] Mar-04 18:19:37.000[]                 [32minfo[39m: Synced - slot: 102 - head: 0x8bbe…9d5a - exec-block: valid/full(98 0x979d… bid:0x979d…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:19:38.327[rest]            [31merror[39m: Req req-1dz getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:19:42.329[rest]            [31merror[39m: Req req-1e5 getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:19:43.000[]                 [32minfo[39m: Synced - slot: 103 - head: 0xf0ad…9222 - exec-block: valid/full(99 0xa34a… bid:0xa34a…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:19:46.330[rest]            [31merror[39m: Req req-1ei getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:19:49.000[]                 [32minfo[39m: Synced - slot: 104 - head: (slot -1) 0xf0ad…9222 - exec-block: valid/full(99 0xa34a… bid:0xa34a…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:19:50.332[rest]            [31merror[39m: Req req-1ew getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:19:52.519[chain]            [32minfo[39m: Publishing block slot=105, blockRoot=0xf1cd6fa0a209c88af1417cc53407311485347332d0eef9d5a705e2c31f0dccdf, bodyRoot=0x05edd2bdb6333fe2d2377589aa0cedacf3fbaab3f58ee4225f1b918f97462959, broadcastValidation=gossip, blockLocallyProduced=true
+[cl-4-lodestar-geth] Mar-04 18:19:52.599[api]              [32minfo[39m: Produced execution payload envelope slot=105, blockRoot=0xf1cd6fa0a209c88af1417cc53407311485347332d0eef9d5a705e2c31f0dccdf, transactions=0, blockHash=0x8cdf63ebf19a48d282c5ea12f4fe1f57b440472c88e0bc94784ce7b46e894fe1
+[cl-4-lodestar-geth] Mar-04 18:19:52.622[chain]            [32minfo[39m: Publishing execution payload envelope slot=105, blockRoot=0xf1cd6fa0a209c88af1417cc53407311485347332d0eef9d5a705e2c31f0dccdf, builderIndex=Infinity, isSelfBuild=true, dataColumns=0
+[cl-4-lodestar-geth] Mar-04 18:19:52.624[chain]            [32minfo[39m: Published execution payload envelope slot=105, blockRoot=0xf1cd6fa0a209c88af1417cc53407311485347332d0eef9d5a705e2c31f0dccdf, builderIndex=Infinity, isSelfBuild=true, dataColumns=0, delaySec=0.6040000915527344, sentPeers=3
+[cl-4-lodestar-geth] Mar-04 18:19:54.333[rest]            [31merror[39m: Req req-1fb getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:19:55.006[]                 [32minfo[39m: Synced - slot: 105 - head: 0xf1cd…ccdf - exec-block: valid/full(100 0x8cdf… bid:0x8cdf…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:19:58.333[rest]            [31merror[39m: Req req-1fq getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:20:01.000[]                 [32minfo[39m: Synced - slot: 106 - head: 0xfc46…3b5d - exec-block: valid/full(101 0x3628… bid:0x3628…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:20:02.334[rest]            [31merror[39m: Req req-1g4 getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:20:06.336[rest]            [31merror[39m: Req req-1ga getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:20:07.002[]                 [32minfo[39m: Synced - slot: 107 - head: 0xf3dc…3cb7 - exec-block: valid/full(102 0x24ac… bid:0x24ac…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:20:10.336[rest]            [31merror[39m: Req req-1gn getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:20:13.000[]                 [32minfo[39m: Synced - slot: 108 - head: 0xb550…ac87 - exec-block: valid/full(103 0x3502… bid:0x3502…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:20:14.338[rest]            [31merror[39m: Req req-1h1 getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:20:18.338[rest]            [31merror[39m: Req req-1h7 getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:20:19.001[]                 [32minfo[39m: Synced - slot: 109 - head: 0x9511…5168 - exec-block: valid/full(104 0xe8ba… bid:0xe8ba…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:20:22.340[rest]            [31merror[39m: Req req-1hl getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:20:22.525[chain]            [32minfo[39m: Publishing block slot=110, blockRoot=0xa5ecd1e7c0a0ee2d8456d7a895366e2555263212ba63f2311271750aa8628a57, bodyRoot=0x07f9fe5a9348b21d6e874b3d0746a33a4a4e84598d41a92e3f48236d9bad43a7, broadcastValidation=gossip, blockLocallyProduced=true
+[cl-4-lodestar-geth] Mar-04 18:20:22.592[api]              [32minfo[39m: Produced execution payload envelope slot=110, blockRoot=0xa5ecd1e7c0a0ee2d8456d7a895366e2555263212ba63f2311271750aa8628a57, transactions=0, blockHash=0x81061495fd2f7493e47d0219662c7a9f4a4b1619bd8e0d857c4649dbb86444b0
+[cl-4-lodestar-geth] Mar-04 18:20:22.599[chain]            [32minfo[39m: Publishing execution payload envelope slot=110, blockRoot=0xa5ecd1e7c0a0ee2d8456d7a895366e2555263212ba63f2311271750aa8628a57, builderIndex=Infinity, isSelfBuild=true, dataColumns=0
+[cl-4-lodestar-geth] Mar-04 18:20:22.601[chain]            [32minfo[39m: Published execution payload envelope slot=110, blockRoot=0xa5ecd1e7c0a0ee2d8456d7a895366e2555263212ba63f2311271750aa8628a57, builderIndex=Infinity, isSelfBuild=true, dataColumns=0, delaySec=0.5940001010894775, sentPeers=3
+[cl-4-lodestar-geth] Mar-04 18:20:25.000[]                 [32minfo[39m: Synced - slot: 110 - head: 0xa5ec…8a57 - exec-block: valid/full(105 0x8106… bid:0x8106…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:20:26.342[rest]            [31merror[39m: Req req-1i5 getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:20:30.343[rest]            [31merror[39m: Req req-1id getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:20:31.000[]                 [32minfo[39m: Synced - slot: 111 - head: 0x2763…d51b - exec-block: valid/full(106 0x105b… bid:0x105b…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:20:34.343[rest]            [31merror[39m: Req req-1iq getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:20:37.000[]                 [32minfo[39m: Synced - slot: 112 - head: 0x9bda…49f5 - exec-block: valid/full(107 0xb8a4… bid:0xb8a4…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:20:38.344[rest]            [31merror[39m: Req req-1j4 getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:20:42.345[rest]            [31merror[39m: Req req-1ja getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:20:43.000[]                 [32minfo[39m: Synced - slot: 113 - head: 0xac15…7de5 - exec-block: valid/full(108 0x14eb… bid:0x14eb…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:20:46.346[rest]            [31merror[39m: Req req-1jo getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:20:46.516[chain]            [32minfo[39m: Publishing block slot=114, blockRoot=0x1dc7fbc39b380d0ac3192c7f40bd48361c704c0815f3cc535ac4744db279e79d, bodyRoot=0x76d27e572f1fcb4f03257fb4256ccd43a64febc227bb29ada171260e009b5f5b, broadcastValidation=gossip, blockLocallyProduced=true
+[cl-4-lodestar-geth] Mar-04 18:20:46.593[api]              [32minfo[39m: Produced execution payload envelope slot=114, blockRoot=0x1dc7fbc39b380d0ac3192c7f40bd48361c704c0815f3cc535ac4744db279e79d, transactions=0, blockHash=0x4fb0e1999468d00a2352a863b9678165bea68b2c4ef42334500dd32f16021441
+[cl-4-lodestar-geth] Mar-04 18:20:46.624[chain]            [32minfo[39m: Publishing execution payload envelope slot=114, blockRoot=0x1dc7fbc39b380d0ac3192c7f40bd48361c704c0815f3cc535ac4744db279e79d, builderIndex=Infinity, isSelfBuild=true, dataColumns=0
+[cl-4-lodestar-geth] Mar-04 18:20:46.636[chain]            [32minfo[39m: Published execution payload envelope slot=114, blockRoot=0x1dc7fbc39b380d0ac3192c7f40bd48361c704c0815f3cc535ac4744db279e79d, builderIndex=Infinity, isSelfBuild=true, dataColumns=0, delaySec=0.6029999256134033, sentPeers=3
+[cl-4-lodestar-geth] Mar-04 18:20:49.003[]                 [32minfo[39m: Synced - slot: 114 - head: 0x1dc7…e79d - exec-block: valid/full(109 0x4fb0… bid:0x4fb0…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:20:50.347[rest]            [31merror[39m: Req req-1k8 getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:20:54.349[rest]            [31merror[39m: Req req-1ke getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:20:55.004[]                 [32minfo[39m: Synced - slot: 115 - head: 0x2966…7e0b - exec-block: valid/full(110 0x14be… bid:0x14be…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:20:58.350[rest]            [31merror[39m: Req req-1kp getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:21:01.001[]                 [32minfo[39m: Synced - slot: 116 - head: 0x22c8…f79a - exec-block: valid/full(111 0xe37f… bid:0xe37f…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:21:02.352[rest]            [31merror[39m: Req req-1l3 getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:21:06.354[rest]            [31merror[39m: Req req-1l9 getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:21:07.000[]                 [32minfo[39m: Synced - slot: 117 - head: (slot -1) 0x22c8…f79a - exec-block: valid/full(111 0xe37f… bid:0xe37f…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:21:10.356[rest]            [31merror[39m: Req req-1lk getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:21:13.000[]                 [32minfo[39m: Synced - slot: 118 - head: (slot -2) 0x22c8…f79a - exec-block: valid/full(111 0xe37f… bid:0xe37f…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:21:14.357[rest]            [31merror[39m: Req req-1lu getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:21:18.357[rest]            [31merror[39m: Req req-1m0 getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:21:19.000[]                 [32minfo[39m: Synced - slot: 119 - head: 0x2e1a…29a9 - exec-block: valid/full(112 0x89d0… bid:0x89d0…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:21:22.358[rest]            [31merror[39m: Req req-1md getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:21:25.002[]                 [32minfo[39m: Synced - slot: 120 - head: 0x66f2…2bd6 - exec-block: valid/full(113 0x62bb… bid:0x62bb…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:21:26.359[rest]            [31merror[39m: Req req-1mr getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:21:30.361[rest]            [31merror[39m: Req req-1mz getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:21:31.000[]                 [32minfo[39m: Synced - slot: 121 - head: (slot -1) 0x66f2…2bd6 - exec-block: valid/full(113 0x62bb… bid:0x62bb…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:21:34.363[rest]            [31merror[39m: Req req-1nc getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:21:37.000[]                 [32minfo[39m: Synced - slot: 122 - head: 0xa8ad…5ed9 - exec-block: valid/full(114 0xc642… bid:0xc642…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:21:38.364[rest]            [31merror[39m: Req req-1nq getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:21:40.534[chain]            [32minfo[39m: Publishing block slot=123, blockRoot=0xc8498e3523d523c10b44e7e869f8959abb951c7b112bbe25176a650d5dffe87b, bodyRoot=0xc56e781ac15d0fbc92fd702b0ce222ef2c0d786737ce1c948a6047428ffef0f8, broadcastValidation=gossip, blockLocallyProduced=true
+[cl-4-lodestar-geth] Mar-04 18:21:40.615[api]              [32minfo[39m: Produced execution payload envelope slot=123, blockRoot=0xc8498e3523d523c10b44e7e869f8959abb951c7b112bbe25176a650d5dffe87b, transactions=0, blockHash=0xb0b524f303b97d467ccd0aa86a1bcc6d6db4ef53193bb932e75f5049c2a5d1b1
+[cl-4-lodestar-geth] Mar-04 18:21:40.642[chain]            [32minfo[39m: Publishing execution payload envelope slot=123, blockRoot=0xc8498e3523d523c10b44e7e869f8959abb951c7b112bbe25176a650d5dffe87b, builderIndex=Infinity, isSelfBuild=true, dataColumns=0
+[cl-4-lodestar-geth] Mar-04 18:21:40.644[chain]            [32minfo[39m: Published execution payload envelope slot=123, blockRoot=0xc8498e3523d523c10b44e7e869f8959abb951c7b112bbe25176a650d5dffe87b, builderIndex=Infinity, isSelfBuild=true, dataColumns=0, delaySec=0.619999885559082, sentPeers=3
+[cl-4-lodestar-geth] Mar-04 18:21:42.365[rest]            [31merror[39m: Req req-1o3 getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:21:43.004[]                 [32minfo[39m: Synced - slot: 123 - head: 0xc849…e87b - exec-block: valid/full(115 0xb0b5… bid:0xb0b5…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:21:46.366[rest]            [31merror[39m: Req req-1og getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:21:49.000[]                 [32minfo[39m: Synced - slot: 124 - head: 0x1afd…5ba8 - exec-block: valid/full(116 0x8437… bid:0x8437…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:21:50.368[rest]            [31merror[39m: Req req-1ou getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:21:52.516[chain]            [32minfo[39m: Publishing block slot=125, blockRoot=0x7fc6f8617107636e7c0284bbea0ca5ee3942ca30596f9a0ceee1023795252318, bodyRoot=0x01d353afa3d2163b0513b41d3c015552f25db4d5c59f7a01df6f22dc0cfca5dd, broadcastValidation=gossip, blockLocallyProduced=true
+[cl-4-lodestar-geth] Mar-04 18:21:52.579[api]              [32minfo[39m: Produced execution payload envelope slot=125, blockRoot=0x7fc6f8617107636e7c0284bbea0ca5ee3942ca30596f9a0ceee1023795252318, transactions=0, blockHash=0x86318e68a1871020a644459d6aea47d6960610ef99dff1723207a32202719ecc
+[cl-4-lodestar-geth] Mar-04 18:21:52.600[chain]            [32minfo[39m: Publishing execution payload envelope slot=125, blockRoot=0x7fc6f8617107636e7c0284bbea0ca5ee3942ca30596f9a0ceee1023795252318, builderIndex=Infinity, isSelfBuild=true, dataColumns=0
+[cl-4-lodestar-geth] Mar-04 18:21:52.601[chain]            [32minfo[39m: Published execution payload envelope slot=125, blockRoot=0x7fc6f8617107636e7c0284bbea0ca5ee3942ca30596f9a0ceee1023795252318, builderIndex=Infinity, isSelfBuild=true, dataColumns=0, delaySec=0.5850000381469727, sentPeers=3
+[cl-4-lodestar-geth] Mar-04 18:21:54.369[rest]            [31merror[39m: Req req-1p7 getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:21:55.000[]                 [32minfo[39m: Synced - slot: 125 - head: 0x7fc6…2318 - exec-block: valid/full(117 0x8631… bid:0x8631…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:21:58.370[rest]            [31merror[39m: Req req-1pk getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:22:01.001[]                 [32minfo[39m: Synced - slot: 126 - head: 0xa541…d13c - exec-block: valid/full(118 0xf9d2… bid:0xf9d2…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:22:02.371[rest]            [31merror[39m: Req req-1q0 getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:22:06.372[rest]            [31merror[39m: Req req-1q6 getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:22:07.001[]                 [32minfo[39m: Synced - slot: 127 - head: (slot -1) 0xa541…d13c - exec-block: valid/full(118 0xf9d2… bid:0xf9d2…) - finalized: 0x0000…0000:0 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:22:10.373[rest]            [31merror[39m: Req req-1qr getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:22:13.000[]                 [32minfo[39m: Synced - slot: 128 - head: 0xbccf…003a - exec-block: valid/full(119 0xb5ff… bid:0xb5ff…) - finalized: 0x363e…f0f6:2 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:22:16.375[rest]            [31merror[39m: Req req-1r7 getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:22:19.000[]                 [32minfo[39m: Synced - slot: 129 - head: (slot -1) 0xbccf…003a - exec-block: valid/full(119 0xb5ff… bid:0xb5ff…) - finalized: 0x363e…f0f6:2 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:22:20.377[rest]            [31merror[39m: Req req-1rl getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:22:22.514[chain]            [32minfo[39m: Publishing block slot=130, blockRoot=0xc16e4c0631fbf8800524107ea8fb96fd7f8e52b54fa7cde1abb5438aa4642ea6, bodyRoot=0x1e89eb036a3540900bfefdff5ac6a6bc58a0bcdec41806c31360fff9391108c1, broadcastValidation=gossip, blockLocallyProduced=true
+[cl-4-lodestar-geth] Mar-04 18:22:22.578[api]              [32minfo[39m: Produced execution payload envelope slot=130, blockRoot=0xc16e4c0631fbf8800524107ea8fb96fd7f8e52b54fa7cde1abb5438aa4642ea6, transactions=0, blockHash=0xe40320aa0e8b81ab2d63468c93fbd896025044b5dd867ff44a250c388d5ab5b8
+[cl-4-lodestar-geth] Mar-04 18:22:22.596[chain]            [32minfo[39m: Publishing execution payload envelope slot=130, blockRoot=0xc16e4c0631fbf8800524107ea8fb96fd7f8e52b54fa7cde1abb5438aa4642ea6, builderIndex=Infinity, isSelfBuild=true, dataColumns=0
+[cl-4-lodestar-geth] Mar-04 18:22:22.598[chain]            [32minfo[39m: Published execution payload envelope slot=130, blockRoot=0xc16e4c0631fbf8800524107ea8fb96fd7f8e52b54fa7cde1abb5438aa4642ea6, builderIndex=Infinity, isSelfBuild=true, dataColumns=0, delaySec=0.5810000896453857, sentPeers=3
+[cl-4-lodestar-geth] Mar-04 18:22:24.378[rest]            [31merror[39m: Req req-1ry getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:22:25.000[]                 [32minfo[39m: Synced - slot: 130 - head: 0xc16e…2ea6 - exec-block: valid/full(120 0xe403… bid:0xe403…) - finalized: 0x363e…f0f6:2 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:22:28.379[rest]            [31merror[39m: Req req-1sb getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:22:31.001[]                 [32minfo[39m: Synced - slot: 131 - head: (slot -1) 0xc16e…2ea6 - exec-block: valid/full(120 0xe403… bid:0xe403…) - finalized: 0x363e…f0f6:2 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:22:32.380[rest]            [31merror[39m: Req req-1sr getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:22:36.382[rest]            [31merror[39m: Req req-1sx getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:22:37.000[]                 [32minfo[39m: Synced - slot: 132 - head: 0xe5e2…1008 - exec-block: valid/full(121 0xa8e4… bid:0xa8e4…) - finalized: 0x363e…f0f6:2 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:22:40.383[rest]            [31merror[39m: Req req-1ta getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:22:43.000[]                 [32minfo[39m: Synced - slot: 133 - head: (slot -1) 0xe5e2…1008 - exec-block: valid/full(121 0xa8e4… bid:0xa8e4…) - finalized: 0x363e…f0f6:2 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:22:44.384[rest]            [31merror[39m: Req req-1to getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:22:48.386[rest]            [31merror[39m: Req req-1tu getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:22:49.000[]                 [32minfo[39m: Synced - slot: 134 - head: 0xbb83…98ac - exec-block: valid/full(122 0xd424… bid:0xd424…) - finalized: 0x363e…f0f6:2 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:22:52.388[rest]            [31merror[39m: Req req-1u7 getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:22:55.002[]                 [32minfo[39m: Synced - slot: 135 - head: 0xf243…bca7 - exec-block: valid/full(123 0xf90f… bid:0xf90f…) - finalized: 0x363e…f0f6:2 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:22:56.389[rest]            [31merror[39m: Req req-1uj getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:22:58.516[chain]            [32minfo[39m: Publishing block slot=136, blockRoot=0x8bd52063b5a3e48a5e9beb757b7a19eebeefbedfcff2ca149e1c7aac93278e4e, bodyRoot=0xb428b64b6092bd3141a765e5fe9eeb2c1830ff558d5cb206a8dbe9afda45d6e4, broadcastValidation=gossip, blockLocallyProduced=true
+[cl-4-lodestar-geth] Mar-04 18:22:58.583[api]              [32minfo[39m: Produced execution payload envelope slot=136, blockRoot=0x8bd52063b5a3e48a5e9beb757b7a19eebeefbedfcff2ca149e1c7aac93278e4e, transactions=0, blockHash=0x06c10884a299deeda1e814b7258e691bf468d2854cd74398031f75521fbbcf2f
+[cl-4-lodestar-geth] Mar-04 18:22:58.593[chain]            [32minfo[39m: Publishing execution payload envelope slot=136, blockRoot=0x8bd52063b5a3e48a5e9beb757b7a19eebeefbedfcff2ca149e1c7aac93278e4e, builderIndex=Infinity, isSelfBuild=true, dataColumns=0
+[cl-4-lodestar-geth] Mar-04 18:22:58.596[chain]            [32minfo[39m: Published execution payload envelope slot=136, blockRoot=0x8bd52063b5a3e48a5e9beb757b7a19eebeefbedfcff2ca149e1c7aac93278e4e, builderIndex=Infinity, isSelfBuild=true, dataColumns=0, delaySec=0.5869998931884766, sentPeers=3
+[cl-4-lodestar-geth] Mar-04 18:23:00.390[rest]            [31merror[39m: Req req-1uy getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:23:01.000[]                 [32minfo[39m: Synced - slot: 136 - head: 0x8bd5…8e4e - exec-block: valid/full(124 0x06c1… bid:0x06c1…) - finalized: 0x363e…f0f6:2 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:23:06.393[rest]            [31merror[39m: Req req-1ve getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:23:07.006[]                 [32minfo[39m: Synced - slot: 137 - head: (slot -1) 0x8bd5…8e4e - exec-block: valid/full(124 0x06c1… bid:0x06c1…) - finalized: 0x363e…f0f6:2 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:23:10.394[rest]            [31merror[39m: Req req-1vr getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:23:13.000[]                 [32minfo[39m: Synced - slot: 138 - head: (slot -2) 0x8bd5…8e4e - exec-block: valid/full(124 0x06c1… bid:0x06c1…) - finalized: 0x363e…f0f6:2 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:23:14.395[rest]            [31merror[39m: Req req-1w5 getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:23:18.397[rest]            [31merror[39m: Req req-1wb getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:23:19.004[]                 [32minfo[39m: Synced - slot: 139 - head: (slot -3) 0x8bd5…8e4e - exec-block: valid/full(124 0x06c1… bid:0x06c1…) - finalized: 0x363e…f0f6:2 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:23:22.397[rest]            [31merror[39m: Req req-1wo getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:23:25.000[]                 [32minfo[39m: Synced - slot: 140 - head: 0x0dc4…8c82 - exec-block: valid/full(125 0x4b01… bid:0x4b01…) - finalized: 0x363e…f0f6:2 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:23:26.399[rest]            [31merror[39m: Req req-1x2 getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:23:30.400[rest]            [31merror[39m: Req req-1xa getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:23:31.001[]                 [32minfo[39m: Synced - slot: 141 - head: 0x8698…0534 - exec-block: valid/full(126 0xf58b… bid:0xf58b…) - finalized: 0x363e…f0f6:2 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:23:34.401[rest]            [31merror[39m: Req req-1xn getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:23:37.000[]                 [32minfo[39m: Synced - slot: 142 - head: (slot -1) 0x8698…0534 - exec-block: valid/full(126 0xf58b… bid:0xf58b…) - finalized: 0x363e…f0f6:2 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:23:38.402[rest]            [31merror[39m: Req req-1y1 getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:23:42.404[rest]            [31merror[39m: Req req-1y7 getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:23:43.000[]                 [32minfo[39m: Synced - slot: 143 - head: 0x5adb…75df - exec-block: valid/full(127 0x2a3c… bid:0x2a3c…) - finalized: 0x363e…f0f6:2 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:23:46.405[rest]            [31merror[39m: Req req-1yi getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:23:49.000[]                 [32minfo[39m: Synced - slot: 144 - head: (slot -1) 0x5adb…75df - exec-block: valid/full(127 0x2a3c… bid:0x2a3c…) - finalized: 0x363e…f0f6:2 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:23:50.407[rest]            [31merror[39m: Req req-1yw getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:23:54.408[rest]            [31merror[39m: Req req-1z2 getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:23:55.001[]                 [32minfo[39m: Synced - slot: 145 - head: 0xce3f…83a0 - exec-block: valid/full(128 0xcab9… bid:0xcab9…) - finalized: 0x363e…f0f6:2 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:23:58.408[rest]            [31merror[39m: Req req-1zf getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:24:01.002[]                 [32minfo[39m: Synced - slot: 146 - head: 0xbfb1…5ce6 - exec-block: valid/full(129 0x3230… bid:0x3230…) - finalized: 0x363e…f0f6:2 - peers: 3
+[cl-4-lodestar-geth] Mar-04 18:24:02.409[rest]            [31merror[39m: Req req-1zt getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:24:04.516[chain]            [32minfo[39m: Publishing block slot=147, blockRoot=0x9c0b5564c723b452aa9cb11a3748f8ceea3c9b3ef8d11edfba43af0500c40bd7, bodyRoot=0x7c3ec4da9f86fda9810ecd384777b6208ef02609b793265c807446c121d4ba52, broadcastValidation=gossip, blockLocallyProduced=true
+[cl-4-lodestar-geth] Mar-04 18:24:04.585[api]              [32minfo[39m: Produced execution payload envelope slot=147, blockRoot=0x9c0b5564c723b452aa9cb11a3748f8ceea3c9b3ef8d11edfba43af0500c40bd7, transactions=0, blockHash=0x7f27e8afc8f6d987eb9297a51fc35b2bb05280c19b2be86280d8881004d4669a
+[cl-4-lodestar-geth] Mar-04 18:24:04.595[chain]            [32minfo[39m: Publishing execution payload envelope slot=147, blockRoot=0x9c0b5564c723b452aa9cb11a3748f8ceea3c9b3ef8d11edfba43af0500c40bd7, builderIndex=Infinity, isSelfBuild=true, dataColumns=0
+[cl-4-lodestar-geth] Mar-04 18:24:04.600[chain]            [32minfo[39m: Published execution payload envelope slot=147, blockRoot=0x9c0b5564c723b452aa9cb11a3748f8ceea3c9b3ef8d11edfba43af0500c40bd7, builderIndex=Infinity, isSelfBuild=true, dataColumns=0, delaySec=0.5899999141693115, sentPeers=3
+[cl-4-lodestar-geth] Mar-04 18:24:06.410[rest]            [31merror[39m: Req req-206 getStateV2 error - REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth] Error: REGEN_ERROR_STATE_NOT_IN_FORKCHOICE
+[cl-4-lodestar-geth]     at StateRegenerator.findFirstStateBlock (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:327:11)
+[cl-4-lodestar-geth]     at StateRegenerator.getState (file:///usr/app/packages/beacon-node/src/chain/regen/regen.ts:176:24)
+[cl-4-lodestar-geth]     at JobItemQueue.jobQueueProcessor [as itemProcessor] (file:///usr/app/packages/beacon-node/src/chain/regen/queued.ts:310:35)
+[cl-4-lodestar-geth]     at Timeout.runJob [as _onTimeout] (file:///usr/app/packages/beacon-node/src/util/queue/itemQueue.ts:149:33)
+[cl-4-lodestar-geth]     at listOnTimeout (node:internal/timers:605:17)
+[cl-4-lodestar-geth]     at processTimers (node:internal/timers:541:7)
+[cl-4-lodestar-geth] Mar-04 18:24:07.000[]                 [32minfo[39m: Synced - slot: 147 - head: 0x9c0b…0bd7 - exec-block: valid/full(130 0x7f27… bid:0x7f27…) - finalized: 0x363e…f0f6:2 - peers: 3

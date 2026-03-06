@@ -28,7 +28,8 @@ source ~/.nvm/nvm.sh && nvm use 24
 # Build (required before tests)
 pnpm build
 
-# Lint (biome — run BEFORE committing)
+# Lint (biome — MANDATORY before every commit/push, fast check)
+# ⚠️ DO NOT commit or push without passing lint! No exceptions.
 pnpm lint
 
 # Type check
@@ -81,10 +82,19 @@ export const MyType = new ContainerType({
 - **Async patterns:** Prefer `async/await`, use `wrapError()` for error-or-result patterns
 - **State access:** Via `chain.getHeadState()`, never hold references to old states
 
+## ⚠️ Pre-Push Checklist (MANDATORY)
+
+Before EVERY commit and push, run these in order:
+1. `pnpm lint` — fast, catches formatting/import issues. **Must pass. No exceptions.**
+2. `pnpm check-types` — catches type errors
+3. Build if you changed exports: `pnpm build`
+
+If lint fails, fix it before committing. `pnpm lint --write` auto-fixes most issues.
+
 ## Important: What NOT to do
 
 - Don't modify files outside your worktree
 - Don't run `pnpm install` unless told to (already done in worktree setup)
 - Don't reformat files you didn't change (biome might want to, resist)
 - Don't add dependencies without explicit approval
-- Don't skip `pnpm lint` before committing
+- **Don't commit or push without passing `pnpm lint`** — this is a hard rule from Nico

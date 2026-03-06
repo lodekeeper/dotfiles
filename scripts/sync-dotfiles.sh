@@ -12,10 +12,20 @@ echo "Syncing agent files to dotfiles repo..."
 # These are already symlinked, no sync needed
 
 # OpenClaw workspace files
+# NOTE: The dotfiles repo versions (openclaw/) are the source of truth.
+# They contain more content than the runtime workspace versions.
+# Only sync if the dotfiles version doesn't exist yet.
 mkdir -p "$DOTFILES_DIR/openclaw"
-for f in AGENTS.md HEARTBEAT.md IDENTITY.md SOUL.md TOOLS.md USER.md; do
-  cp "$WORKSPACE/$f" "$DOTFILES_DIR/openclaw/$f" 2>/dev/null || true
+for f in AGENTS.md HEARTBEAT.md IDENTITY.md SOUL.md TOOLS.md; do
+  # Always overwrite — workspace is source of truth
+  if true; then
+    cp "$WORKSPACE/$f" "$DOTFILES_DIR/openclaw/$f" 2>/dev/null || true
+  fi
 done
+
+# Cron job configurations (backup)
+mkdir -p "$DOTFILES_DIR/openclaw/cron"
+cp ~/.openclaw/cron/jobs.json "$DOTFILES_DIR/openclaw/cron/jobs.json" 2>/dev/null || true
 
 # Codex config
 cp ~/.codex/config.toml "$DOTFILES_DIR/config/codex-config.toml" 2>/dev/null || true
@@ -49,6 +59,26 @@ done
 
 # Lodestar ai-config
 cp "$WORKSPACE/lodestar-ai-config.md" "$DOTFILES_DIR/lodestar/ai-config.md" 2>/dev/null || true
+
+# Research artifacts (~/research/ → dotfiles/research/)
+if [ -d "$HOME/research" ]; then
+  for research_dir in "$HOME/research"/*/; do
+    research_name=$(basename "$research_dir")
+    mkdir -p "$DOTFILES_DIR/research/$research_name"
+    # Sync markdown and plan files (skip large raw JSON, Python scripts, venvs)
+    find "$research_dir" -maxdepth 2 -name "*.md" -exec cp {} "$DOTFILES_DIR/research/$research_name/" \; 2>/dev/null || true
+  done
+fi
+
+# Memory scripts
+mkdir -p "$DOTFILES_DIR/openclaw/scripts/memory"
+for f in "$WORKSPACE/scripts/memory"/*.py "$WORKSPACE/scripts/memory"/*.sh; do
+  [ -f "$f" ] && cp "$f" "$DOTFILES_DIR/openclaw/scripts/memory/" 2>/dev/null || true
+done
+
+# Docs
+mkdir -p "$DOTFILES_DIR/openclaw/docs"
+cp "$WORKSPACE/docs"/*.md "$DOTFILES_DIR/openclaw/docs/" 2>/dev/null || true
 
 # Scripts
 cp ~/lodekeeper-dash/scripts/update-status.sh "$DOTFILES_DIR/scripts/update-status.sh" 2>/dev/null || true

@@ -1,0 +1,200 @@
+[cl-2-teku-geth] 2026-03-04 15:08:22.108 INFO  - [34mValidator   *** Published sync_contribution    Count: 19, Slot: 82, Root: fe97b0f6f614e56711212c1e68603fec049c46da3a733d783fef6396a438d365[0m
+[cl-2-teku-geth] 2026-03-04 15:08:25.011 WARN  - Failed to publish payload_attestation_message(s) for slot 82; No peers for message topics [/eth2/2317d2c3/payload_attestation_message/ssz_snappy] found
+[cl-2-teku-geth] 2026-03-04 15:08:25.037 INFO  - [34mValidator   *** Published payload_attestation  Count: 3, Slot: 82, Root: fe97b0f6f614e56711212c1e68603fec049c46da3a733d783fef6396a438d365[0m
+[cl-2-teku-geth] 2026-03-04 15:08:28.717 INFO  - [33mReorg Event *** New Head: ca13c4ee0ba55c3cd6f6aa1d8db11991d292197691ea030228c5b54a0827fbc5 (83), Previous Head: fe97b0f6f614e56711212c1e68603fec049c46da3a733d783fef6396a438d365 (79), Common Ancestor: 4c41c8b4a5cc4cc499c787a151d7583af0dc0ef68e6f5eb80196a8c2f72c8f1f (74)[0m
+[cl-2-teku-geth] 2026-03-04 15:08:28.788 WARN  - Failed to publish attestation(s) for slot 83; No peers for message topics [/eth2/2317d2c3/beacon_attestation_19/ssz_snappy] found
+[cl-2-teku-geth] 2026-03-04 15:08:28.789 INFO  - [34mValidator   *** Published attestation          Count: 6, Slot: 83, Root: ca13c4ee0ba55c3cd6f6aa1d8db11991d292197691ea030228c5b54a0827fbc5[0m
+[cl-2-teku-geth] 2026-03-04 15:08:31.000 INFO  - [37mSlot Event  *** Slot: 83, Block: ca13c4ee0ba55c3cd6f6aa1d8db11991d292197691ea030228c5b54a0827fbc5, Justified: 0, Finalized: 0, Peers: 3[0m
+[cl-2-teku-geth] 2026-03-04 15:08:31.038 WARN  - Failed to publish sync_committee_message(s) for slot 83; No peers for message topics [/eth2/2317d2c3/sync_committee_1/ssz_snappy] found
+[cl-2-teku-geth] 2026-03-04 15:08:31.066 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 83, Root: ca13c4ee0ba55c3cd6f6aa1d8db11991d292197691ea030228c5b54a0827fbc5[0m
+[cl-2-teku-geth] 2026-03-04 15:08:34.028 WARN  - Failed to publish beacon_aggregate_and_proof(s) for slot 83; No peers for message topics [/eth2/2317d2c3/beacon_aggregate_and_proof/ssz_snappy] found
+[cl-2-teku-geth] 2026-03-04 15:08:34.033 INFO  - [34mValidator   *** Published aggregate            Count: 1, Slot: 83, Root: ca13c4ee0ba55c3cd6f6aa1d8db11991d292197691ea030228c5b54a0827fbc5[0m
+[cl-2-teku-geth] 2026-03-04 15:08:34.210 WARN  - Failed to publish sync_committee_contribution_and_proof(s) for slot 83; No peers for message topics [/eth2/2317d2c3/sync_committee_contribution_and_proof/ssz_snappy] found
+[cl-2-teku-geth] 2026-03-04 15:08:34.218 INFO  - [34mValidator   *** Published sync_contribution    Count: 22, Slot: 83, Root: ca13c4ee0ba55c3cd6f6aa1d8db11991d292197691ea030228c5b54a0827fbc5[0m
+[cl-2-teku-geth] 2026-03-04 15:08:37.010 WARN  - Failed to publish payload_attestation_message(s) for slot 83; No peers for message topics [/eth2/2317d2c3/payload_attestation_message/ssz_snappy] found
+[cl-2-teku-geth] 2026-03-04 15:08:37.054 INFO  - [34mValidator   *** Published payload_attestation  Count: 6, Slot: 83, Root: ca13c4ee0ba55c3cd6f6aa1d8db11991d292197691ea030228c5b54a0827fbc5[0m
+[cl-2-teku-geth] 2026-03-04 15:08:43.005 INFO  - Calling local execution layer to start block production (block slot: 85)
+[cl-2-teku-geth] 2026-03-04 15:08:43.005 INFO  - [37mSlot Event  *** Slot: 84, Block:                                                        ... empty, Justified: 0, Finalized: 0, Peers: 3[0m
+[cl-2-teku-geth] 2026-03-04 15:08:43.029 ERROR - [31mValidator   *** Failed to produce attestation  Slot: 84 Validator: 88ce4d8, a609429, 9824952[0m
+[cl-2-teku-geth] 2026-03-04 15:08:43.061 WARN  - Failed to publish sync_committee_message(s) for slot 84; No peers for message topics [/eth2/2317d2c3/sync_committee_1/ssz_snappy] found
+[cl-2-teku-geth] 2026-03-04 15:08:43.076 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 84, Root: ca13c4ee0ba55c3cd6f6aa1d8db11991d292197691ea030228c5b54a0827fbc5[0m
+[cl-2-teku-geth] 2026-03-04 15:08:45.640 INFO  - Calling local execution layer to start block production (block slot: 85)
+[cl-2-teku-geth] 2026-03-04 15:08:46.005 ERROR - [31mValidator   *** Failed to produce aggregate  Slot: 84 Validator: 88ce4d8[0m
+[cl-2-teku-geth] 2026-03-04 15:08:46.097 WARN  - Failed to publish sync_committee_contribution_and_proof(s) for slot 84; No peers for message topics [/eth2/2317d2c3/sync_committee_contribution_and_proof/ssz_snappy] found
+[cl-2-teku-geth] 2026-03-04 15:08:46.103 INFO  - [34mValidator   *** Published sync_contribution    Count: 17, Slot: 84, Root: ca13c4ee0ba55c3cd6f6aa1d8db11991d292197691ea030228c5b54a0827fbc5[0m
+[cl-2-teku-geth] 2026-03-04 15:08:49.021 WARN  - Failed to publish payload_attestation_message(s) for slot 84; No peers for message topics [/eth2/2317d2c3/payload_attestation_message/ssz_snappy] found
+[cl-2-teku-geth] 2026-03-04 15:08:49.058 INFO  - [34mValidator   *** Published payload_attestation  Count: 3, Slot: 84, Root: 79785620b362e9b7f525b96aae4ce6caffb6d4bc2e76c7cd148c5d0a9c866408[0m
+[cl-2-teku-geth] 2026-03-04 15:08:51.500 INFO  - Preparing block production for slot 85
+[cl-2-teku-geth] 2026-03-04 15:08:52.003 INFO  - Creating unsigned block for slot 85
+[cl-2-teku-geth] 2026-03-04 15:08:52.008 INFO  - Considering self-built bid (value: 0.000000 ETH, EL block: b9c7b9..8bd3) for block at slot 85
+[cl-2-teku-geth] 2026-03-04 15:08:52.067 INFO  - Validator client received block for slot 85, block rewards 0.005901 ETH, execution payload value 0.000000 ETH
+[cl-2-teku-geth] 2026-03-04 15:08:52.073 INFO  - starting to publish block at slot 85
+[cl-2-teku-geth] 2026-03-04 15:08:52.074 WARN  - Failed to publish beacon_block for slot 85; No peers for message topics [/eth2/2317d2c3/beacon_block/ssz_snappy] found
+[cl-2-teku-geth] 2026-03-04 15:08:52.093 INFO  - [36mValidator   *** Published block                Count: 1, Slot: 85, Root: 14f729930d27c0bfaa9ff7a45d644211617b6cb31422575720ecfe17a2697245, Blobs: 0, Builder: 18446744073709551615, Bid gas limit: 60000000, Bid EL block: b9c7b9..8bd3[0m
+[cl-2-teku-geth] 2026-03-04 15:08:52.122 WARN  - Failed to publish attestation(s) for slot 85; No peers for message topics [/eth2/2317d2c3/beacon_attestation_21/ssz_snappy] found
+[cl-2-teku-geth] 2026-03-04 15:08:52.122 INFO  - [34mValidator   *** Published attestation          Count: 4, Slot: 85, Root: 14f729930d27c0bfaa9ff7a45d644211617b6cb31422575720ecfe17a2697245[0m
+[cl-2-teku-geth] 2026-03-04 15:08:52.593 INFO  - Producing unsigned execution payload for slot 85 and block 0x14f729930d27c0bfaa9ff7a45d644211617b6cb31422575720ecfe17a2697245
+[cl-2-teku-geth] 2026-03-04 15:08:52.596 INFO  - [35mBuilder     *** Published execution_payload    Slot: 85, Builder: 18446744073709551615, Block Root: 14f729930d27c0bfaa9ff7a45d644211617b6cb31422575720ecfe17a2697245, 0 (0%) gas, EL block: b9c7b950da7481d76d16fd69ec45b088cb20e117dde073b41a57744d58fd8bd3 (77)[0m
+[cl-2-teku-geth] 2026-03-04 15:08:52.596 WARN  - Failed to publish execution_payload(s) for slot 85; No peers for message topics [/eth2/2317d2c3/execution_payload/ssz_snappy] found
+[cl-2-teku-geth] 2026-03-04 15:08:55.001 INFO  - [37mSlot Event  *** Slot: 85, Block: 14f729930d27c0bfaa9ff7a45d644211617b6cb31422575720ecfe17a2697245, Justified: 0, Finalized: 0, Peers: 3[0m
+[cl-2-teku-geth] 2026-03-04 15:08:55.088 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 85, Root: 14f729930d27c0bfaa9ff7a45d644211617b6cb31422575720ecfe17a2697245[0m
+[cl-2-teku-geth] 2026-03-04 15:08:55.088 WARN  - Failed to publish sync_committee_message(s) for slot 85; No peers for message topics [/eth2/2317d2c3/sync_committee_1/ssz_snappy] found
+[cl-2-teku-geth] 2026-03-04 15:08:58.070 INFO  - [34mValidator   *** Published aggregate            Count: 1, Slot: 85, Root: 14f729930d27c0bfaa9ff7a45d644211617b6cb31422575720ecfe17a2697245[0m
+[cl-2-teku-geth] 2026-03-04 15:08:58.070 WARN  - Failed to publish beacon_aggregate_and_proof(s) for slot 85; No peers for message topics [/eth2/2317d2c3/beacon_aggregate_and_proof/ssz_snappy] found
+[cl-2-teku-geth] 2026-03-04 15:08:58.124 WARN  - Failed to publish sync_committee_contribution_and_proof(s) for slot 85; No peers for message topics [/eth2/2317d2c3/sync_committee_contribution_and_proof/ssz_snappy] found
+[cl-2-teku-geth] 2026-03-04 15:08:58.130 INFO  - [34mValidator   *** Published sync_contribution    Count: 11, Slot: 85, Root: 14f729930d27c0bfaa9ff7a45d644211617b6cb31422575720ecfe17a2697245[0m
+[cl-2-teku-geth] 2026-03-04 15:09:01.010 WARN  - Failed to publish payload_attestation_message(s) for slot 85; No peers for message topics [/eth2/2317d2c3/payload_attestation_message/ssz_snappy] found
+[cl-2-teku-geth] 2026-03-04 15:09:01.040 INFO  - [34mValidator   *** Published payload_attestation  Count: 4, Slot: 85, Root: 14f729930d27c0bfaa9ff7a45d644211617b6cb31422575720ecfe17a2697245[0m
+[cl-2-teku-geth] 2026-03-04 15:09:07.001 INFO  - [37mSlot Event  *** Slot: 86, Block:                                                        ... empty, Justified: 0, Finalized: 0, Peers: 3[0m
+[cl-2-teku-geth] 2026-03-04 15:09:07.020 ERROR - [31mValidator   *** Failed to produce attestation  Slot: 86 Validator: 8eeeef4, 8bf6583, 8b1748a, 95e8e9e, 944a351[0m
+[cl-2-teku-geth] 2026-03-04 15:09:07.028 WARN  - Failed to publish sync_committee_message(s) for slot 86; No peers for message topics [/eth2/2317d2c3/sync_committee_1/ssz_snappy] found
+[cl-2-teku-geth] 2026-03-04 15:09:07.062 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 86, Root: 14f729930d27c0bfaa9ff7a45d644211617b6cb31422575720ecfe17a2697245[0m
+[cl-2-teku-geth] 2026-03-04 15:09:09.685 INFO  - [33mReorg Event *** New Head: 43db4349a582cb9c2520001e6b85eb04ccf8afe44f0c3b57b1ff4c31ca90c20b (86), Previous Head: 14f729930d27c0bfaa9ff7a45d644211617b6cb31422575720ecfe17a2697245 (85), Common Ancestor: 79785620b362e9b7f525b96aae4ce6caffb6d4bc2e76c7cd148c5d0a9c866408 (84)[0m
+[cl-2-teku-geth] 2026-03-04 15:09:10.000 ERROR - [31mValidator   *** Failed to produce aggregate  Slot: 86 Validator: 95e8e9e[0m
+[cl-2-teku-geth] 2026-03-04 15:09:10.150 WARN  - Failed to publish sync_committee_contribution_and_proof(s) for slot 86; No peers for message topics [/eth2/2317d2c3/sync_committee_contribution_and_proof/ssz_snappy] found
+[cl-2-teku-geth] 2026-03-04 15:09:10.150 INFO  - [34mValidator   *** Published sync_contribution    Count: 21, Slot: 86, Root: 14f729930d27c0bfaa9ff7a45d644211617b6cb31422575720ecfe17a2697245[0m
+[cl-2-teku-geth] 2026-03-04 15:09:13.012 WARN  - Failed to publish payload_attestation_message(s) for slot 86; No peers for message topics [/eth2/2317d2c3/payload_attestation_message/ssz_snappy] found
+[cl-2-teku-geth] 2026-03-04 15:09:13.059 INFO  - [34mValidator   *** Published payload_attestation  Count: 5, Slot: 86, Root: 43db4349a582cb9c2520001e6b85eb04ccf8afe44f0c3b57b1ff4c31ca90c20b[0m
+[cl-2-teku-geth] 2026-03-04 15:09:19.005 INFO  - [37mSlot Event  *** Slot: 87, Block:                                                        ... empty, Justified: 0, Finalized: 0, Peers: 3[0m
+[cl-2-teku-geth] 2026-03-04 15:09:19.029 ERROR - [31mValidator   *** Failed to produce attestation  Slot: 87 Validator: 94ef22c, 8f14d19[0m
+[cl-2-teku-geth] 2026-03-04 15:09:19.037 WARN  - Failed to publish sync_committee_message(s) for slot 87; No peers for message topics [/eth2/2317d2c3/sync_committee_1/ssz_snappy] found
+[cl-2-teku-geth] 2026-03-04 15:09:19.082 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 87, Root: 43db4349a582cb9c2520001e6b85eb04ccf8afe44f0c3b57b1ff4c31ca90c20b[0m
+[cl-2-teku-geth] 2026-03-04 15:09:22.000 ERROR - [31mValidator   *** Failed to produce aggregate  Slot: 87 Validator: 94ef22c[0m
+[cl-2-teku-geth] 2026-03-04 15:09:22.172 WARN  - Failed to publish sync_committee_contribution_and_proof(s) for slot 87; No peers for message topics [/eth2/2317d2c3/sync_committee_contribution_and_proof/ssz_snappy] found
+[cl-2-teku-geth] 2026-03-04 15:09:22.174 INFO  - [34mValidator   *** Published sync_contribution    Count: 18, Slot: 87, Root: 43db4349a582cb9c2520001e6b85eb04ccf8afe44f0c3b57b1ff4c31ca90c20b[0m
+[cl-2-teku-geth] 2026-03-04 15:09:25.014 WARN  - Failed to publish payload_attestation_message(s) for slot 87; No peers for message topics [/eth2/2317d2c3/payload_attestation_message/ssz_snappy] found
+[cl-2-teku-geth] 2026-03-04 15:09:25.030 INFO  - [34mValidator   *** Published payload_attestation  Count: 2, Slot: 87, Root: 43db4349a582cb9c2520001e6b85eb04ccf8afe44f0c3b57b1ff4c31ca90c20b[0m
+[cl-2-teku-geth] 2026-03-04 15:09:31.004 INFO  - [37mSlot Event  *** Slot: 88, Block:                                                        ... empty, Justified: 0, Finalized: 0, Peers: 3[0m
+[cl-2-teku-geth] 2026-03-04 15:09:31.007 INFO  - Calling local execution layer to start block production (block slot: 89)
+[cl-2-teku-geth] 2026-03-04 15:09:31.028 ERROR - [31mValidator   *** Failed to produce attestation  Slot: 88 Validator: b586ce5, 87c10f9, a4bacbd[0m
+[cl-2-teku-geth] 2026-03-04 15:09:31.052 WARN  - Failed to publish sync_committee_message(s) for slot 88; No peers for message topics [/eth2/2317d2c3/sync_committee_1/ssz_snappy] found
+[cl-2-teku-geth] 2026-03-04 15:09:31.070 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 88, Root: 43db4349a582cb9c2520001e6b85eb04ccf8afe44f0c3b57b1ff4c31ca90c20b[0m
+[cl-2-teku-geth] 2026-03-04 15:09:33.664 INFO  - Calling local execution layer to start block production (block slot: 89)
+[cl-2-teku-geth] 2026-03-04 15:09:34.002 ERROR - [31mValidator   *** Failed to produce aggregate  Slot: 88 Validator: b586ce5[0m
+[cl-2-teku-geth] 2026-03-04 15:09:34.102 WARN  - Failed to publish sync_committee_contribution_and_proof(s) for slot 88; No peers for message topics [/eth2/2317d2c3/sync_committee_contribution_and_proof/ssz_snappy] found
+[cl-2-teku-geth] 2026-03-04 15:09:34.106 INFO  - [34mValidator   *** Published sync_contribution    Count: 20, Slot: 88, Root: 43db4349a582cb9c2520001e6b85eb04ccf8afe44f0c3b57b1ff4c31ca90c20b[0m
+[cl-2-teku-geth] 2026-03-04 15:09:37.011 WARN  - Failed to publish payload_attestation_message(s) for slot 88; No peers for message topics [/eth2/2317d2c3/payload_attestation_message/ssz_snappy] found
+[cl-2-teku-geth] 2026-03-04 15:09:37.033 INFO  - [34mValidator   *** Published payload_attestation  Count: 3, Slot: 88, Root: 57b27b010044a13e6ef0b94eed2c59f8f2ce6649d27aa6e21277335c119b5853[0m
+[cl-2-teku-geth] 2026-03-04 15:09:39.500 INFO  - Preparing block production for slot 89
+[cl-2-teku-geth] 2026-03-04 15:09:40.002 INFO  - Creating unsigned block for slot 89
+[cl-2-teku-geth] 2026-03-04 15:09:40.007 INFO  - Considering self-built bid (value: 0.000000 ETH, EL block: 260dde..b294) for block at slot 89
+[cl-2-teku-geth] 2026-03-04 15:09:40.039 INFO  - Validator client received block for slot 89, block rewards 0.008171 ETH, execution payload value 0.000000 ETH
+[cl-2-teku-geth] 2026-03-04 15:09:40.046 INFO  - starting to publish block at slot 89
+[cl-2-teku-geth] 2026-03-04 15:09:40.047 WARN  - Failed to publish beacon_block for slot 89; No peers for message topics [/eth2/2317d2c3/beacon_block/ssz_snappy] found
+[cl-2-teku-geth] 2026-03-04 15:09:40.066 INFO  - [36mValidator   *** Published block                Count: 1, Slot: 89, Root: 89541fd982cab63220d4946f5a778a15b92138ee4ea092358322741c374e022e, Blobs: 0, Builder: 18446744073709551615, Bid gas limit: 60000000, Bid EL block: 260dde..b294[0m
+[cl-2-teku-geth] 2026-03-04 15:09:40.116 WARN  - Failed to publish attestation(s) for slot 89; No peers for message topics [/eth2/2317d2c3/beacon_attestation_25/ssz_snappy] found
+[cl-2-teku-geth] 2026-03-04 15:09:40.118 INFO  - [34mValidator   *** Published attestation          Count: 8, Slot: 89, Root: 89541fd982cab63220d4946f5a778a15b92138ee4ea092358322741c374e022e[0m
+[cl-2-teku-geth] 2026-03-04 15:09:40.566 INFO  - Producing unsigned execution payload for slot 89 and block 0x89541fd982cab63220d4946f5a778a15b92138ee4ea092358322741c374e022e
+[cl-2-teku-geth] 2026-03-04 15:09:40.569 INFO  - [35mBuilder     *** Published execution_payload    Slot: 89, Builder: 18446744073709551615, Block Root: 89541fd982cab63220d4946f5a778a15b92138ee4ea092358322741c374e022e, 0 (0%) gas, EL block: 260ddeb3e891caf315adffada40f4e1da19e0333201e59e1d224fa081fd9b294 (79)[0m
+[cl-2-teku-geth] 2026-03-04 15:09:40.569 WARN  - Failed to publish execution_payload(s) for slot 89; No peers for message topics [/eth2/2317d2c3/execution_payload/ssz_snappy] found
+[cl-2-teku-geth] 2026-03-04 15:09:40.572 INFO  - Calling local execution layer to start block production (block slot: 90)
+[cl-2-teku-geth] 2026-03-04 15:09:43.001 INFO  - [37mSlot Event  *** Slot: 89, Block: 89541fd982cab63220d4946f5a778a15b92138ee4ea092358322741c374e022e, Justified: 0, Finalized: 0, Peers: 3[0m
+[cl-2-teku-geth] 2026-03-04 15:09:43.102 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 89, Root: 89541fd982cab63220d4946f5a778a15b92138ee4ea092358322741c374e022e[0m
+[cl-2-teku-geth] 2026-03-04 15:09:43.118 WARN  - Failed to publish sync_committee_message(s) for slot 89; No peers for message topics [/eth2/2317d2c3/sync_committee_1/ssz_snappy] found
+[cl-2-teku-geth] 2026-03-04 15:09:46.072 INFO  - [34mValidator   *** Published aggregate            Count: 1, Slot: 89, Root: 89541fd982cab63220d4946f5a778a15b92138ee4ea092358322741c374e022e[0m
+[cl-2-teku-geth] 2026-03-04 15:09:46.073 WARN  - Failed to publish beacon_aggregate_and_proof(s) for slot 89; No peers for message topics [/eth2/2317d2c3/beacon_aggregate_and_proof/ssz_snappy] found
+[cl-2-teku-geth] 2026-03-04 15:09:46.103 WARN  - Failed to publish sync_committee_contribution_and_proof(s) for slot 89; No peers for message topics [/eth2/2317d2c3/sync_committee_contribution_and_proof/ssz_snappy] found
+[cl-2-teku-geth] 2026-03-04 15:09:46.109 INFO  - [34mValidator   *** Published sync_contribution    Count: 19, Slot: 89, Root: 89541fd982cab63220d4946f5a778a15b92138ee4ea092358322741c374e022e[0m
+[cl-2-teku-geth] 2026-03-04 15:09:49.019 WARN  - Failed to publish payload_attestation_message(s) for slot 89; No peers for message topics [/eth2/2317d2c3/payload_attestation_message/ssz_snappy] found
+[cl-2-teku-geth] 2026-03-04 15:09:49.117 INFO  - [34mValidator   *** Published payload_attestation  Count: 8, Slot: 89, Root: 89541fd982cab63220d4946f5a778a15b92138ee4ea092358322741c374e022e[0m
+[cl-2-teku-geth] 2026-03-04 15:09:51.501 INFO  - Preparing block production for slot 90
+[cl-2-teku-geth] 2026-03-04 15:09:52.001 INFO  - Creating unsigned block for slot 90
+[cl-2-teku-geth] 2026-03-04 15:09:52.006 INFO  - Considering self-built bid (value: 0.000000 ETH, EL block: 58e804..28d4) for block at slot 90
+[cl-2-teku-geth] 2026-03-04 15:09:52.061 INFO  - Validator client received block for slot 90, block rewards 0.008894 ETH, execution payload value 0.000000 ETH
+[cl-2-teku-geth] 2026-03-04 15:09:52.068 INFO  - starting to publish block at slot 90
+[cl-2-teku-geth] 2026-03-04 15:09:52.068 WARN  - Failed to publish beacon_block for slot 90; No peers for message topics [/eth2/2317d2c3/beacon_block/ssz_snappy] found
+[cl-2-teku-geth] 2026-03-04 15:09:52.085 INFO  - [36mValidator   *** Published block                Count: 1, Slot: 90, Root: d3640147c668096f1cb281f41fa13891871a388199643b35025a264f323fc28a, Blobs: 0, Builder: 18446744073709551615, Bid gas limit: 60000000, Bid EL block: 58e804..28d4[0m
+[cl-2-teku-geth] 2026-03-04 15:09:52.124 WARN  - Failed to publish attestation(s) for slot 90; No peers for message topics [/eth2/2317d2c3/beacon_attestation_26/ssz_snappy] found
+[cl-2-teku-geth] 2026-03-04 15:09:52.125 INFO  - [34mValidator   *** Published attestation          Count: 6, Slot: 90, Root: d3640147c668096f1cb281f41fa13891871a388199643b35025a264f323fc28a[0m
+[cl-2-teku-geth] 2026-03-04 15:09:52.585 INFO  - Producing unsigned execution payload for slot 90 and block 0xd3640147c668096f1cb281f41fa13891871a388199643b35025a264f323fc28a
+[cl-2-teku-geth] 2026-03-04 15:09:52.588 INFO  - [35mBuilder     *** Published execution_payload    Slot: 90, Builder: 18446744073709551615, Block Root: d3640147c668096f1cb281f41fa13891871a388199643b35025a264f323fc28a, 0 (0%) gas, EL block: 58e804d8f9d1ffb2eeb988beb3391b22c79b208d8e7eb7be52f8011bad5128d4 (80)[0m
+[cl-2-teku-geth] 2026-03-04 15:09:52.589 WARN  - Failed to publish execution_payload(s) for slot 90; No peers for message topics [/eth2/2317d2c3/execution_payload/ssz_snappy] found
+[cl-2-teku-geth] 2026-03-04 15:09:55.003 INFO  - [37mSlot Event  *** Slot: 90, Block: d3640147c668096f1cb281f41fa13891871a388199643b35025a264f323fc28a, Justified: 0, Finalized: 0, Peers: 3[0m
+[cl-2-teku-geth] 2026-03-04 15:09:55.047 WARN  - Failed to publish sync_committee_message(s) for slot 90; No peers for message topics [/eth2/2317d2c3/sync_committee_1/ssz_snappy] found
+[cl-2-teku-geth] 2026-03-04 15:09:55.098 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 90, Root: d3640147c668096f1cb281f41fa13891871a388199643b35025a264f323fc28a[0m
+[cl-2-teku-geth] 2026-03-04 15:09:58.078 WARN  - Failed to publish beacon_aggregate_and_proof(s) for slot 90; No peers for message topics [/eth2/2317d2c3/beacon_aggregate_and_proof/ssz_snappy] found
+[cl-2-teku-geth] 2026-03-04 15:09:58.080 INFO  - [34mValidator   *** Published aggregate            Count: 1, Slot: 90, Root: d3640147c668096f1cb281f41fa13891871a388199643b35025a264f323fc28a[0m
+[cl-2-teku-geth] 2026-03-04 15:09:58.111 WARN  - Failed to publish sync_committee_contribution_and_proof(s) for slot 90; No peers for message topics [/eth2/2317d2c3/sync_committee_contribution_and_proof/ssz_snappy] found
+[cl-2-teku-geth] 2026-03-04 15:09:58.112 INFO  - [34mValidator   *** Published sync_contribution    Count: 17, Slot: 90, Root: d3640147c668096f1cb281f41fa13891871a388199643b35025a264f323fc28a[0m
+[cl-2-teku-geth] 2026-03-04 15:10:01.011 WARN  - Failed to publish payload_attestation_message(s) for slot 90; No peers for message topics [/eth2/2317d2c3/payload_attestation_message/ssz_snappy] found
+[cl-2-teku-geth] 2026-03-04 15:10:01.066 INFO  - [34mValidator   *** Published payload_attestation  Count: 6, Slot: 90, Root: d3640147c668096f1cb281f41fa13891871a388199643b35025a264f323fc28a[0m
+[cl-2-teku-geth] 2026-03-04 15:10:07.002 INFO  - [37mSlot Event  *** Slot: 91, Block:                                                        ... empty, Justified: 0, Finalized: 0, Peers: 3[0m
+[cl-2-teku-geth] 2026-03-04 15:10:07.012 ERROR - [31mValidator   *** Failed to produce attestation  Slot: 91 Validator: af49927, a1c646e, 8ff47ed[0m
+[cl-2-teku-geth] 2026-03-04 15:10:07.069 WARN  - Failed to publish sync_committee_message(s) for slot 91; No peers for message topics [/eth2/2317d2c3/sync_committee_1/ssz_snappy] found
+[cl-2-teku-geth] 2026-03-04 15:10:07.069 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 91, Root: d3640147c668096f1cb281f41fa13891871a388199643b35025a264f323fc28a[0m
+[cl-2-teku-geth] 2026-03-04 15:10:10.002 ERROR - [31mValidator   *** Failed to produce aggregate  Slot: 91 Validator: 8ff47ed[0m
+[cl-2-teku-geth] 2026-03-04 15:10:10.111 WARN  - Failed to publish sync_committee_contribution_and_proof(s) for slot 91; No peers for message topics [/eth2/2317d2c3/sync_committee_contribution_and_proof/ssz_snappy] found
+[cl-2-teku-geth] 2026-03-04 15:10:10.125 INFO  - [34mValidator   *** Published sync_contribution    Count: 21, Slot: 91, Root: d3640147c668096f1cb281f41fa13891871a388199643b35025a264f323fc28a[0m
+[cl-2-teku-geth] 2026-03-04 15:10:13.012 WARN  - Failed to publish payload_attestation_message(s) for slot 91; No peers for message topics [/eth2/2317d2c3/payload_attestation_message/ssz_snappy] found
+[cl-2-teku-geth] 2026-03-04 15:10:13.032 INFO  - [34mValidator   *** Published payload_attestation  Count: 3, Slot: 91, Root: d3640147c668096f1cb281f41fa13891871a388199643b35025a264f323fc28a[0m
+[cl-2-teku-geth] 2026-03-04 15:10:19.003 INFO  - Calling local execution layer to start block production (block slot: 93)
+[cl-2-teku-geth] 2026-03-04 15:10:19.003 INFO  - [37mSlot Event  *** Slot: 92, Block:                                                        ... empty, Justified: 0, Finalized: 0, Peers: 3[0m
+[cl-2-teku-geth] 2026-03-04 15:10:19.027 ERROR - [31mValidator   *** Failed to produce attestation  Slot: 92 Validator: 8d1df9e, 863fb35, 870342e, ae4dc08, b44a24c, b7e03f2[0m
+[cl-2-teku-geth] 2026-03-04 15:10:19.050 WARN  - Failed to publish sync_committee_message(s) for slot 92; No peers for message topics [/eth2/2317d2c3/sync_committee_1/ssz_snappy] found
+[cl-2-teku-geth] 2026-03-04 15:10:19.067 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 92, Root: d3640147c668096f1cb281f41fa13891871a388199643b35025a264f323fc28a[0m
+[cl-2-teku-geth] 2026-03-04 15:10:22.000 ERROR - [31mValidator   *** Failed to produce aggregate  Slot: 92 Validator: 870342e[0m
+[cl-2-teku-geth] 2026-03-04 15:10:22.075 WARN  - Failed to publish sync_committee_contribution_and_proof(s) for slot 92; No peers for message topics [/eth2/2317d2c3/sync_committee_contribution_and_proof/ssz_snappy] found
+[cl-2-teku-geth] 2026-03-04 15:10:22.086 INFO  - [34mValidator   *** Published sync_contribution    Count: 16, Slot: 92, Root: d3640147c668096f1cb281f41fa13891871a388199643b35025a264f323fc28a[0m
+[cl-2-teku-geth] 2026-03-04 15:10:25.014 WARN  - Failed to publish payload_attestation_message(s) for slot 92; No peers for message topics [/eth2/2317d2c3/payload_attestation_message/ssz_snappy] found
+[cl-2-teku-geth] 2026-03-04 15:10:25.061 INFO  - [34mValidator   *** Published payload_attestation  Count: 6, Slot: 92, Root: d3640147c668096f1cb281f41fa13891871a388199643b35025a264f323fc28a[0m
+[cl-2-teku-geth] 2026-03-04 15:10:27.500 INFO  - Preparing block production for slot 93
+[cl-2-teku-geth] 2026-03-04 15:10:28.002 INFO  - Creating unsigned block for slot 93
+[cl-2-teku-geth] 2026-03-04 15:10:28.008 INFO  - Considering self-built bid (value: 0.000000 ETH, EL block: 5500e5..0ad2) for block at slot 93
+[cl-2-teku-geth] 2026-03-04 15:10:28.056 INFO  - Validator client received block for slot 93, block rewards 0.009445 ETH, execution payload value 0.000000 ETH
+[cl-2-teku-geth] 2026-03-04 15:10:28.064 INFO  - starting to publish block at slot 93
+[cl-2-teku-geth] 2026-03-04 15:10:28.064 WARN  - Failed to publish beacon_block for slot 93; No peers for message topics [/eth2/2317d2c3/beacon_block/ssz_snappy] found
+[cl-2-teku-geth] 2026-03-04 15:10:28.081 INFO  - [36mValidator   *** Published block                Count: 1, Slot: 93, Root: 771beab8c63dc9bf2993f23681672a6d5dd26016906965c6465b29a04b2a2d64, Blobs: 0, Builder: 18446744073709551615, Bid gas limit: 60000000, Bid EL block: 5500e5..0ad2[0m
+[cl-2-teku-geth] 2026-03-04 15:10:28.098 INFO  - [34mValidator   *** Published attestation          Count: 2, Slot: 93, Root: 771beab8c63dc9bf2993f23681672a6d5dd26016906965c6465b29a04b2a2d64[0m
+[cl-2-teku-geth] 2026-03-04 15:10:28.098 WARN  - Failed to publish attestation(s) for slot 93; No peers for message topics [/eth2/2317d2c3/beacon_attestation_29/ssz_snappy] found
+[cl-2-teku-geth] 2026-03-04 15:10:28.581 INFO  - Producing unsigned execution payload for slot 93 and block 0x771beab8c63dc9bf2993f23681672a6d5dd26016906965c6465b29a04b2a2d64
+[cl-2-teku-geth] 2026-03-04 15:10:28.583 INFO  - [35mBuilder     *** Published execution_payload    Slot: 93, Builder: 18446744073709551615, Block Root: 771beab8c63dc9bf2993f23681672a6d5dd26016906965c6465b29a04b2a2d64, 0 (0%) gas, EL block: 5500e59aff51f000fc1fdea2edbb367ec2a10dafa5e9f70b66492ebc60900ad2 (81)[0m
+[cl-2-teku-geth] 2026-03-04 15:10:28.584 WARN  - Failed to publish execution_payload(s) for slot 93; No peers for message topics [/eth2/2317d2c3/execution_payload/ssz_snappy] found
+[cl-2-teku-geth] 2026-03-04 15:10:31.001 INFO  - [37mSlot Event  *** Slot: 93, Block: 771beab8c63dc9bf2993f23681672a6d5dd26016906965c6465b29a04b2a2d64, Justified: 0, Finalized: 0, Peers: 3[0m
+[cl-2-teku-geth] 2026-03-04 15:10:31.096 WARN  - Failed to publish sync_committee_message(s) for slot 93; No peers for message topics [/eth2/2317d2c3/sync_committee_1/ssz_snappy] found
+[cl-2-teku-geth] 2026-03-04 15:10:31.097 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 93, Root: 771beab8c63dc9bf2993f23681672a6d5dd26016906965c6465b29a04b2a2d64[0m
+[cl-2-teku-geth] 2026-03-04 15:10:34.054 INFO  - [34mValidator   *** Published aggregate            Count: 1, Slot: 93, Root: 771beab8c63dc9bf2993f23681672a6d5dd26016906965c6465b29a04b2a2d64[0m
+[cl-2-teku-geth] 2026-03-04 15:10:34.054 WARN  - Failed to publish beacon_aggregate_and_proof(s) for slot 93; No peers for message topics [/eth2/2317d2c3/beacon_aggregate_and_proof/ssz_snappy] found
+[cl-2-teku-geth] 2026-03-04 15:10:34.079 WARN  - Failed to publish sync_committee_contribution_and_proof(s) for slot 93; No peers for message topics [/eth2/2317d2c3/sync_committee_contribution_and_proof/ssz_snappy] found
+[cl-2-teku-geth] 2026-03-04 15:10:34.086 INFO  - [34mValidator   *** Published sync_contribution    Count: 14, Slot: 93, Root: 771beab8c63dc9bf2993f23681672a6d5dd26016906965c6465b29a04b2a2d64[0m
+[cl-2-teku-geth] 2026-03-04 15:10:37.011 WARN  - Failed to publish payload_attestation_message(s) for slot 93; No peers for message topics [/eth2/2317d2c3/payload_attestation_message/ssz_snappy] found
+[cl-2-teku-geth] 2026-03-04 15:10:37.019 INFO  - [34mValidator   *** Published payload_attestation  Count: 2, Slot: 93, Root: 771beab8c63dc9bf2993f23681672a6d5dd26016906965c6465b29a04b2a2d64[0m
+[cl-2-teku-geth] 2026-03-04 15:10:43.008 INFO  - [37mSlot Event  *** Slot: 94, Block:                                                        ... empty, Justified: 0, Finalized: 0, Peers: 3[0m
+[cl-2-teku-geth] 2026-03-04 15:10:43.040 ERROR - [31mValidator   *** Failed to produce attestation  Slot: 94 Validator: 93641e8, a09202a[0m
+[cl-2-teku-geth] 2026-03-04 15:10:43.099 WARN  - Failed to publish sync_committee_message(s) for slot 94; No peers for message topics [/eth2/2317d2c3/sync_committee_1/ssz_snappy] found
+[cl-2-teku-geth] 2026-03-04 15:10:43.100 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 94, Root: 771beab8c63dc9bf2993f23681672a6d5dd26016906965c6465b29a04b2a2d64[0m
+[cl-2-teku-geth] 2026-03-04 15:10:46.002 ERROR - [31mValidator   *** Failed to produce aggregate  Slot: 94 Validator: 93641e8[0m
+[cl-2-teku-geth] 2026-03-04 15:10:46.072 WARN  - Failed to publish sync_committee_contribution_and_proof(s) for slot 94; No peers for message topics [/eth2/2317d2c3/sync_committee_contribution_and_proof/ssz_snappy] found
+[cl-2-teku-geth] 2026-03-04 15:10:46.078 INFO  - [34mValidator   *** Published sync_contribution    Count: 14, Slot: 94, Root: 771beab8c63dc9bf2993f23681672a6d5dd26016906965c6465b29a04b2a2d64[0m
+[cl-2-teku-geth] 2026-03-04 15:10:49.011 WARN  - Failed to publish payload_attestation_message(s) for slot 94; No peers for message topics [/eth2/2317d2c3/payload_attestation_message/ssz_snappy] found
+[cl-2-teku-geth] 2026-03-04 15:10:49.021 INFO  - [34mValidator   *** Published payload_attestation  Count: 2, Slot: 94, Root: 771beab8c63dc9bf2993f23681672a6d5dd26016906965c6465b29a04b2a2d64[0m
+[cl-2-teku-geth] 2026-03-04 15:10:55.001 INFO  - [37mSlot Event  *** Slot: 95, Block:                                                        ... empty, Justified: 0, Finalized: 0, Peers: 3[0m
+[cl-2-teku-geth] 2026-03-04 15:10:55.018 ERROR - [31mValidator   *** Failed to produce attestation  Slot: 95 Validator: 84b2c52, ab22c3c, b1748de, 9784402[0m
+[cl-2-teku-geth] 2026-03-04 15:10:55.068 WARN  - Failed to publish sync_committee_message(s) for slot 95; No peers for message topics [/eth2/2317d2c3/sync_committee_1/ssz_snappy] found
+[cl-2-teku-geth] 2026-03-04 15:10:55.069 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 95, Root: 771beab8c63dc9bf2993f23681672a6d5dd26016906965c6465b29a04b2a2d64[0m
+[cl-2-teku-geth] 2026-03-04 15:10:58.001 ERROR - [31mValidator   *** Failed to produce aggregate  Slot: 95 Validator: 84b2c52[0m
+[cl-2-teku-geth] 2026-03-04 15:10:58.088 WARN  - Failed to publish sync_committee_contribution_and_proof(s) for slot 95; No peers for message topics [/eth2/2317d2c3/sync_committee_contribution_and_proof/ssz_snappy] found
+[cl-2-teku-geth] 2026-03-04 15:10:58.092 INFO  - [34mValidator   *** Published sync_contribution    Count: 18, Slot: 95, Root: 771beab8c63dc9bf2993f23681672a6d5dd26016906965c6465b29a04b2a2d64[0m
+[cl-2-teku-geth] 2026-03-04 15:11:01.012 WARN  - Failed to publish payload_attestation_message(s) for slot 95; No peers for message topics [/eth2/2317d2c3/payload_attestation_message/ssz_snappy] found
+[cl-2-teku-geth] 2026-03-04 15:11:01.039 INFO  - [34mValidator   *** Published payload_attestation  Count: 4, Slot: 95, Root: 771beab8c63dc9bf2993f23681672a6d5dd26016906965c6465b29a04b2a2d64[0m
+[cl-2-teku-geth] 2026-03-04 15:11:04.005 INFO  - [32mEpoch Event *** Epoch: 3, Justified checkpoint: 2, Finalized checkpoint: 0, Finalized root: 0ea44ce55341ea44fb14dd58c4889c557211f574e35e1bcdef94a8ce8ccaaca4[0m
+[cl-2-teku-geth] 2026-03-04 15:11:04.010 INFO  - Block performance: epoch 2, expected 8, produced 8, included 5 (63%)
+[cl-2-teku-geth] 2026-03-04 15:11:04.018 INFO  - Sync committee performance: epoch 2, expected 4096, produced 4096, correct 2176, included 1280 (31%)
+[cl-2-teku-geth] 2026-03-04 15:11:04.168 INFO  - Attestation performance: epoch 1, expected 128, produced 109, included 109 (100%), distance 1 / 1.00 / 1, correct target 109 (100%), correct head 109 (100%)
+[cl-2-teku-geth] 2026-03-04 15:11:07.004 INFO  - [37mSlot Event  *** Slot: 96, Block:                                                        ... empty, Justified: 2, Finalized: 0, Peers: 3[0m
+[cl-2-teku-geth] 2026-03-04 15:11:07.036 ERROR - [31mValidator   *** Failed to produce attestation  Slot: 96 Validator: b05cafe, adc1c39, 8faadcf, b7ec2f4[0m
+[cl-2-teku-geth] 2026-03-04 15:11:07.095 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 96, Root: 771beab8c63dc9bf2993f23681672a6d5dd26016906965c6465b29a04b2a2d64[0m
+[cl-2-teku-geth] 2026-03-04 15:11:07.098 WARN  - Failed to publish sync_committee_message(s) for slot 96; No peers for message topics [/eth2/2317d2c3/sync_committee_1/ssz_snappy] found
+[cl-2-teku-geth] 2026-03-04 15:11:10.006 ERROR - [31mValidator   *** Failed to produce aggregate  Slot: 96 Validator: adc1c39[0m
+[cl-2-teku-geth] 2026-03-04 15:11:10.110 WARN  - Failed to publish sync_committee_contribution_and_proof(s) for slot 96; No peers for message topics [/eth2/2317d2c3/sync_committee_contribution_and_proof/ssz_snappy] found
+[cl-2-teku-geth] 2026-03-04 15:11:10.122 INFO  - [34mValidator   *** Published sync_contribution    Count: 22, Slot: 96, Root: 771beab8c63dc9bf2993f23681672a6d5dd26016906965c6465b29a04b2a2d64[0m
+[cl-2-teku-geth] 2026-03-04 15:11:13.019 WARN  - Failed to publish payload_attestation_message(s) for slot 96; No peers for message topics [/eth2/2317d2c3/payload_attestation_message/ssz_snappy] found
+[cl-2-teku-geth] 2026-03-04 15:11:13.044 INFO  - [34mValidator   *** Published payload_attestation  Count: 4, Slot: 96, Root: 771beab8c63dc9bf2993f23681672a6d5dd26016906965c6465b29a04b2a2d64[0m
+[cl-2-teku-geth] 2026-03-04 15:11:19.011 INFO  - [37mSlot Event  *** Slot: 97, Block:                                                        ... empty, Justified: 2, Finalized: 0, Peers: 3[0m
+[cl-2-teku-geth] 2026-03-04 15:11:19.026 ERROR - [31mValidator   *** Failed to produce attestation  Slot: 97 Validator: 84189ef, 876df26, ae4dc08, 9784402, b92e525, 84c1b3e, 9218096[0m
+[cl-2-teku-geth] 2026-03-04 15:11:19.062 WARN  - Failed to publish sync_committee_message(s) for slot 97; No peers for message topics [/eth2/2317d2c3/sync_committee_1/ssz_snappy] found
+[cl-2-teku-geth] 2026-03-04 15:11:19.062 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 97, Root: 771beab8c63dc9bf2993f23681672a6d5dd26016906965c6465b29a04b2a2d64[0m
+[cl-2-teku-geth] 2026-03-04 15:11:22.000 ERROR - [31mValidator   *** Failed to produce aggregate  Slot: 97 Validator: 84189ef[0m
+[cl-2-teku-geth] 2026-03-04 15:11:22.081 WARN  - Failed to publish sync_committee_contribution_and_proof(s) for slot 97; No peers for message topics [/eth2/2317d2c3/sync_committee_contribution_and_proof/ssz_snappy] found
+[cl-2-teku-geth] 2026-03-04 15:11:22.085 INFO  - [34mValidator   *** Published sync_contribution    Count: 12, Slot: 97, Root: 771beab8c63dc9bf2993f23681672a6d5dd26016906965c6465b29a04b2a2d64[0m
+[cl-2-teku-geth] 2026-03-04 15:11:25.020 WARN  - Failed to publish payload_attestation_message(s) for slot 97; No peers for message topics [/eth2/2317d2c3/payload_attestation_message/ssz_snappy] found
+[cl-2-teku-geth] 2026-03-04 15:11:25.101 INFO  - [34mValidator   *** Published payload_attestation  Count: 7, Slot: 97, Root: 771beab8c63dc9bf2993f23681672a6d5dd26016906965c6465b29a04b2a2d64[0m

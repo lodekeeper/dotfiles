@@ -13,12 +13,13 @@
     "networking",
     "client-development",
     "execution-dev",
+    "payload-builders",
     "ai-workflows"
   ],
   "digestTimeWET": "08:00",
   "digestTimeUTC": "08:00",
   "timezone": "Europe/Lisbon",
   "checkIntervalMinutes": 60,
-  "repoPath": "~/eth-rnd-archive",
-  "notesPath": "~/eth-rnd-archive-notes"
+  "repoPath": "~/ethereum-repos/eth-rnd-archive",
+  "notesPath": "/home/openclaw/.openclaw/workspace/memory/eth-rnd-archive-notes"
 }

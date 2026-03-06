@@ -1,0 +1,200 @@
+[cl-1-teku-geth] 2026-03-04 14:42:53.220 INFO  - [34mValidator   *** Published aggregate            Count: 1, Slot: 27, Root: 71890a7314dc3c0cd6cadffb4ae674f463ca1551f1b0299f140d610804d31214[0m
+[cl-1-teku-geth] 2026-03-04 14:42:53.277 INFO  - [34mValidator   *** Published sync_contribution    Count: 15, Slot: 27, Root: 71890a7314dc3c0cd6cadffb4ae674f463ca1551f1b0299f140d610804d31214[0m
+[cl-1-teku-geth] 2026-03-04 14:42:57.129 INFO  - [34mValidator   *** Published attestation          Count: 3, Slot: 28, Root: 4f50f62df7fcfb2a780edd21c164316b14f4393264ef7d6bfdd99b04b67ccf80[0m
+[cl-1-teku-geth] 2026-03-04 14:43:01.002 INFO  - [37mSlot Event  *** Slot: 28, Block: 4f50f62df7fcfb2a780edd21c164316b14f4393264ef7d6bfdd99b04b67ccf80, Justified: 0, Finalized: 0, Peers: 3[0m
+[cl-1-teku-geth] 2026-03-04 14:43:01.077 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 28, Root: 4f50f62df7fcfb2a780edd21c164316b14f4393264ef7d6bfdd99b04b67ccf80[0m
+[cl-1-teku-geth] 2026-03-04 14:43:05.148 INFO  - [34mValidator   *** Published aggregate            Count: 1, Slot: 28, Root: 4f50f62df7fcfb2a780edd21c164316b14f4393264ef7d6bfdd99b04b67ccf80[0m
+[cl-1-teku-geth] 2026-03-04 14:43:05.215 INFO  - [34mValidator   *** Published sync_contribution    Count: 13, Slot: 28, Root: 4f50f62df7fcfb2a780edd21c164316b14f4393264ef7d6bfdd99b04b67ccf80[0m
+[cl-1-teku-geth] 2026-03-04 14:43:09.124 INFO  - [34mValidator   *** Published attestation          Count: 2, Slot: 29, Root: 918dcd745b6e5981106182d681d14fedcb1d2f3a641e18c6ca89aad0e41b07af[0m
+[cl-1-teku-geth] 2026-03-04 14:43:13.004 INFO  - [37mSlot Event  *** Slot: 29, Block: 918dcd745b6e5981106182d681d14fedcb1d2f3a641e18c6ca89aad0e41b07af, Justified: 0, Finalized: 0, Peers: 3[0m
+[cl-1-teku-geth] 2026-03-04 14:43:13.117 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 29, Root: 918dcd745b6e5981106182d681d14fedcb1d2f3a641e18c6ca89aad0e41b07af[0m
+[cl-1-teku-geth] 2026-03-04 14:43:17.197 INFO  - [34mValidator   *** Published aggregate            Count: 1, Slot: 29, Root: 918dcd745b6e5981106182d681d14fedcb1d2f3a641e18c6ca89aad0e41b07af[0m
+[cl-1-teku-geth] 2026-03-04 14:43:17.256 INFO  - [34mValidator   *** Published sync_contribution    Count: 22, Slot: 29, Root: 918dcd745b6e5981106182d681d14fedcb1d2f3a641e18c6ca89aad0e41b07af[0m
+[cl-1-teku-geth] 2026-03-04 14:43:21.165 INFO  - [34mValidator   *** Published attestation          Count: 8, Slot: 30, Root: 80493ed2d3c8650705228cc5da3a69ae7162625744a8c7abd10be5b812fb45d7[0m
+[cl-1-teku-geth] 2026-03-04 14:43:25.005 INFO  - [37mSlot Event  *** Slot: 30, Block: 80493ed2d3c8650705228cc5da3a69ae7162625744a8c7abd10be5b812fb45d7, Justified: 0, Finalized: 0, Peers: 3[0m
+[cl-1-teku-geth] 2026-03-04 14:43:25.119 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 30, Root: 80493ed2d3c8650705228cc5da3a69ae7162625744a8c7abd10be5b812fb45d7[0m
+[cl-1-teku-geth] 2026-03-04 14:43:29.155 INFO  - [34mValidator   *** Published aggregate            Count: 1, Slot: 30, Root: 80493ed2d3c8650705228cc5da3a69ae7162625744a8c7abd10be5b812fb45d7[0m
+[cl-1-teku-geth] 2026-03-04 14:43:29.212 INFO  - [34mValidator   *** Published sync_contribution    Count: 15, Slot: 30, Root: 80493ed2d3c8650705228cc5da3a69ae7162625744a8c7abd10be5b812fb45d7[0m
+[cl-1-teku-geth] 2026-03-04 14:43:33.182 INFO  - [34mValidator   *** Published attestation          Count: 2, Slot: 31, Root: 9cbfdfb678f835c4d0894c0469cacffc42d32c537bc5e7a6f03a8f0aa354185b[0m
+[cl-1-teku-geth] 2026-03-04 14:43:33.435 INFO  - Calling local execution layer to start block production (block slot: 32)
+[cl-1-teku-geth] 2026-03-04 14:43:37.004 INFO  - [37mSlot Event  *** Slot: 31, Block: 9cbfdfb678f835c4d0894c0469cacffc42d32c537bc5e7a6f03a8f0aa354185b, Justified: 0, Finalized: 0, Peers: 3[0m
+[cl-1-teku-geth] 2026-03-04 14:43:37.052 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 31, Root: 9cbfdfb678f835c4d0894c0469cacffc42d32c537bc5e7a6f03a8f0aa354185b[0m
+[cl-1-teku-geth] 2026-03-04 14:43:41.162 INFO  - [34mValidator   *** Published aggregate            Count: 1, Slot: 31, Root: 9cbfdfb678f835c4d0894c0469cacffc42d32c537bc5e7a6f03a8f0aa354185b[0m
+[cl-1-teku-geth] 2026-03-04 14:43:41.254 INFO  - [34mValidator   *** Published sync_contribution    Count: 15, Slot: 31, Root: 9cbfdfb678f835c4d0894c0469cacffc42d32c537bc5e7a6f03a8f0aa354185b[0m
+[cl-1-teku-geth] 2026-03-04 14:43:44.501 INFO  - Preparing block production for slot 32
+[cl-1-teku-geth] 2026-03-04 14:43:45.009 INFO  - Creating unsigned block for slot 32
+[cl-1-teku-geth] 2026-03-04 14:43:45.044 INFO  - Considering self-built bid (value: 0.000000 ETH, EL block: 9b25a6..7ff7) for block at slot 32
+[cl-1-teku-geth] 2026-03-04 14:43:45.129 INFO  - Validator client received block for slot 32, block rewards 0.001012 ETH, execution payload value 0.000000 ETH
+[cl-1-teku-geth] 2026-03-04 14:43:45.105 INFO  - [32mMilestone   *** Epoch: 1, Activating network upgrade: GLOAS
+[cl-1-teku-geth]                   ____ _
+[cl-1-teku-geth]                  / ___| | ___   __ _ ___
+[cl-1-teku-geth]                 | |  _| |/ _ \ / _` / __|
+[cl-1-teku-geth]                 | |_| | | (_) | (_| \__ \
+[cl-1-teku-geth]                  \____|_|\___/ \__,_|___/[0m
+[cl-1-teku-geth] 2026-03-04 14:43:45.130 INFO  - [32mEpoch Event *** Epoch: 1, Justified checkpoint: 0, Finalized checkpoint: 0, Finalized root: 6225790b9fbaedf477ab06c4f60e3849b7f3f2deada474f617c9c2e2d2c5146c[0m
+[cl-1-teku-geth] 2026-03-04 14:43:45.147 INFO  - starting to publish block at slot 32
+[cl-1-teku-geth] 2026-03-04 14:43:45.153 INFO  - Block performance: epoch 0, expected 6, produced 6, included 6 (100%)
+[cl-1-teku-geth] 2026-03-04 14:43:45.310 INFO  - Sync committee performance: epoch 0, expected 4096, produced 3584, correct 3584, included 3584 (100%)
+[cl-1-teku-geth] 2026-03-04 14:43:45.327 INFO  - [36mValidator   *** Published block                Count: 1, Slot: 32, Root: a617ee7e32defd297e24a64764fe3bda9960935ec6705be82f47b082a68682e7, Blobs: 0, Builder: 18446744073709551615, Bid gas limit: 60000000, Bid EL block: 9b25a6..7ff7[0m
+[cl-1-teku-geth] 2026-03-04 14:43:45.841 INFO  - Producing unsigned execution payload for slot 32 and block 0xa617ee7e32defd297e24a64764fe3bda9960935ec6705be82f47b082a68682e7
+[cl-1-teku-geth] 2026-03-04 14:43:45.854 INFO  - [35mBuilder     *** Published execution_payload    Slot: 32, Builder: 18446744073709551615, Block Root: a617ee7e32defd297e24a64764fe3bda9960935ec6705be82f47b082a68682e7, 0 (0%) gas, EL block: 9b25a62f5e12028a2ff2faefe5ed0345e0770d1f74832233dac87ebe5b1c7ff7 (30)[0m
+[cl-1-teku-geth] 2026-03-04 14:43:48.000 INFO  - [37mSlot Event  *** Slot: 32, Block: a617ee7e32defd297e24a64764fe3bda9960935ec6705be82f47b082a68682e7, Justified: 0, Finalized: 0, Peers: 3[0m
+[cl-1-teku-geth] 2026-03-04 14:43:48.075 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 32, Root: a617ee7e32defd297e24a64764fe3bda9960935ec6705be82f47b082a68682e7[0m
+[cl-1-teku-geth] 2026-03-04 14:43:51.228 INFO  - [34mValidator   *** Published sync_contribution    Count: 11, Slot: 32, Root: a617ee7e32defd297e24a64764fe3bda9960935ec6705be82f47b082a68682e7[0m
+[cl-1-teku-geth] 2026-03-04 14:43:57.992 INFO  - [34mValidator   *** Published attestation          Count: 6, Slot: 33, Root: 9593e340a1344d13580460652166a306d6398351f28926cb119c939fe8a8e719[0m
+[cl-1-teku-geth] 2026-03-04 14:44:00.001 INFO  - [37mSlot Event  *** Slot: 33, Block: 9593e340a1344d13580460652166a306d6398351f28926cb119c939fe8a8e719, Justified: 0, Finalized: 0, Peers: 3[0m
+[cl-1-teku-geth] 2026-03-04 14:44:00.149 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 33, Root: 9593e340a1344d13580460652166a306d6398351f28926cb119c939fe8a8e719[0m
+[cl-1-teku-geth] 2026-03-04 14:44:03.066 INFO  - [34mValidator   *** Published aggregate            Count: 1, Slot: 33, Root: 9593e340a1344d13580460652166a306d6398351f28926cb119c939fe8a8e719[0m
+[cl-1-teku-geth] 2026-03-04 14:44:03.144 INFO  - [34mValidator   *** Published sync_contribution    Count: 11, Slot: 33, Root: 9593e340a1344d13580460652166a306d6398351f28926cb119c939fe8a8e719[0m
+[cl-1-teku-geth] 2026-03-04 14:44:06.075 INFO  - [34mValidator   *** Published payload_attestation  Count: 6, Slot: 33, Root: 9593e340a1344d13580460652166a306d6398351f28926cb119c939fe8a8e719[0m
+[cl-1-teku-geth] 2026-03-04 14:44:09.248 INFO  - Calling local execution layer to start block production (block slot: 35)
+[cl-1-teku-geth] 2026-03-04 14:44:09.330 INFO  - [34mValidator   *** Published attestation          Count: 3, Slot: 34, Root: 7587f298f785afe14b1ab3b02b2d8ac98fa502f0e71fb74bd31f173a0ca6d55d[0m
+[cl-1-teku-geth] 2026-03-04 14:44:09.655 INFO  - Calling local execution layer to start block production (block slot: 35)
+[cl-1-teku-geth] 2026-03-04 14:44:12.000 INFO  - [37mSlot Event  *** Slot: 34, Block: 7587f298f785afe14b1ab3b02b2d8ac98fa502f0e71fb74bd31f173a0ca6d55d, Justified: 0, Finalized: 0, Peers: 3[0m
+[cl-1-teku-geth] 2026-03-04 14:44:12.063 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 34, Root: 7587f298f785afe14b1ab3b02b2d8ac98fa502f0e71fb74bd31f173a0ca6d55d[0m
+[cl-1-teku-geth] 2026-03-04 14:44:15.139 INFO  - [34mValidator   *** Published aggregate            Count: 1, Slot: 34, Root: 7587f298f785afe14b1ab3b02b2d8ac98fa502f0e71fb74bd31f173a0ca6d55d[0m
+[cl-1-teku-geth] 2026-03-04 14:44:15.193 INFO  - [34mValidator   *** Published sync_contribution    Count: 16, Slot: 34, Root: 7587f298f785afe14b1ab3b02b2d8ac98fa502f0e71fb74bd31f173a0ca6d55d[0m
+[cl-1-teku-geth] 2026-03-04 14:44:18.038 INFO  - [34mValidator   *** Published payload_attestation  Count: 3, Slot: 34, Root: 7587f298f785afe14b1ab3b02b2d8ac98fa502f0e71fb74bd31f173a0ca6d55d[0m
+[cl-1-teku-geth] 2026-03-04 14:44:20.500 INFO  - Preparing block production for slot 35
+[cl-1-teku-geth] 2026-03-04 14:44:21.005 INFO  - Creating unsigned block for slot 35
+[cl-1-teku-geth] 2026-03-04 14:44:21.010 INFO  - Considering self-built bid (value: 0.000000 ETH, EL block: 38d5a0..17e0) for block at slot 35
+[cl-1-teku-geth] 2026-03-04 14:44:21.043 INFO  - Validator client received block for slot 35, block rewards 0.003794 ETH, execution payload value 0.000000 ETH
+[cl-1-teku-geth] 2026-03-04 14:44:21.049 INFO  - starting to publish block at slot 35
+[cl-1-teku-geth] 2026-03-04 14:44:21.073 INFO  - [36mValidator   *** Published block                Count: 1, Slot: 35, Root: fd950c911e9b89f5c216292c7d854277f743c2a28549550220aa7b129855f2a2, Blobs: 0, Builder: 18446744073709551615, Bid gas limit: 60000000, Bid EL block: 38d5a0..17e0[0m
+[cl-1-teku-geth] 2026-03-04 14:44:21.116 INFO  - [34mValidator   *** Published attestation          Count: 4, Slot: 35, Root: fd950c911e9b89f5c216292c7d854277f743c2a28549550220aa7b129855f2a2[0m
+[cl-1-teku-geth] 2026-03-04 14:44:21.573 INFO  - Producing unsigned execution payload for slot 35 and block 0xfd950c911e9b89f5c216292c7d854277f743c2a28549550220aa7b129855f2a2
+[cl-1-teku-geth] 2026-03-04 14:44:21.576 INFO  - [35mBuilder     *** Published execution_payload    Slot: 35, Builder: 18446744073709551615, Block Root: fd950c911e9b89f5c216292c7d854277f743c2a28549550220aa7b129855f2a2, 0 (0%) gas, EL block: 38d5a0baa466850409f5217abd1697da9463d0e7e00437534b16475379d017e0 (33)[0m
+[cl-1-teku-geth] 2026-03-04 14:44:24.001 INFO  - [37mSlot Event  *** Slot: 35, Block: fd950c911e9b89f5c216292c7d854277f743c2a28549550220aa7b129855f2a2, Justified: 0, Finalized: 0, Peers: 3[0m
+[cl-1-teku-geth] 2026-03-04 14:44:24.111 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 35, Root: fd950c911e9b89f5c216292c7d854277f743c2a28549550220aa7b129855f2a2[0m
+[cl-1-teku-geth] 2026-03-04 14:44:27.154 INFO  - [34mValidator   *** Published aggregate            Count: 1, Slot: 35, Root: fd950c911e9b89f5c216292c7d854277f743c2a28549550220aa7b129855f2a2[0m
+[cl-1-teku-geth] 2026-03-04 14:44:27.216 INFO  - [34mValidator   *** Published sync_contribution    Count: 17, Slot: 35, Root: fd950c911e9b89f5c216292c7d854277f743c2a28549550220aa7b129855f2a2[0m
+[cl-1-teku-geth] 2026-03-04 14:44:30.076 INFO  - [34mValidator   *** Published payload_attestation  Count: 4, Slot: 35, Root: fd950c911e9b89f5c216292c7d854277f743c2a28549550220aa7b129855f2a2[0m
+[cl-1-teku-geth] 2026-03-04 14:44:36.001 INFO  - [37mSlot Event  *** Slot: 36, Block:                                                        ... empty, Justified: 0, Finalized: 0, Peers: 3[0m
+[cl-1-teku-geth] 2026-03-04 14:44:36.003 INFO  - Calling local execution layer to start block production (block slot: 37)
+[cl-1-teku-geth] 2026-03-04 14:44:36.026 ERROR - [31mValidator   *** Failed to produce attestation  Slot: 36 Validator: b3faeeb, 84dc37c, 9918433, aa080af, 99d83a0[0m
+[cl-1-teku-geth] 2026-03-04 14:44:36.087 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 36, Root: fd950c911e9b89f5c216292c7d854277f743c2a28549550220aa7b129855f2a2[0m
+[cl-1-teku-geth] 2026-03-04 14:44:38.693 INFO  - Calling local execution layer to start block production (block slot: 37)
+[cl-1-teku-geth] 2026-03-04 14:44:39.239 INFO  - [34mValidator   *** Published sync_contribution    Count: 13, Slot: 36, Root: fd950c911e9b89f5c216292c7d854277f743c2a28549550220aa7b129855f2a2[0m
+[cl-1-teku-geth] 2026-03-04 14:44:42.076 INFO  - [34mValidator   *** Published payload_attestation  Count: 5, Slot: 36, Root: 818e8e26be5ce0cf819d7ec9525fc9b88bc19346b101c78846c64dc7a94efd5b[0m
+[cl-1-teku-geth] 2026-03-04 14:44:44.501 INFO  - Preparing block production for slot 37
+[cl-1-teku-geth] 2026-03-04 14:44:45.003 INFO  - Creating unsigned block for slot 37
+[cl-1-teku-geth] 2026-03-04 14:44:45.011 INFO  - Considering self-built bid (value: 0.000000 ETH, EL block: 4279de..7fdb) for block at slot 37
+[cl-1-teku-geth] 2026-03-04 14:44:45.075 INFO  - Validator client received block for slot 37, block rewards 0.005189 ETH, execution payload value 0.000000 ETH
+[cl-1-teku-geth] 2026-03-04 14:44:45.081 INFO  - starting to publish block at slot 37
+[cl-1-teku-geth] 2026-03-04 14:44:45.103 INFO  - [36mValidator   *** Published block                Count: 1, Slot: 37, Root: f3edd77bad674a3b4f45fcb2cf48a63b507fd47fd5f2be6f7e2e18d329cb63ff, Blobs: 0, Builder: 18446744073709551615, Bid gas limit: 60000000, Bid EL block: 4279de..7fdb[0m
+[cl-1-teku-geth] 2026-03-04 14:44:45.179 INFO  - [34mValidator   *** Published attestation          Count: 6, Slot: 37, Root: f3edd77bad674a3b4f45fcb2cf48a63b507fd47fd5f2be6f7e2e18d329cb63ff[0m
+[cl-1-teku-geth] 2026-03-04 14:44:45.604 INFO  - Producing unsigned execution payload for slot 37 and block 0xf3edd77bad674a3b4f45fcb2cf48a63b507fd47fd5f2be6f7e2e18d329cb63ff
+[cl-1-teku-geth] 2026-03-04 14:44:45.609 INFO  - [35mBuilder     *** Published execution_payload    Slot: 37, Builder: 18446744073709551615, Block Root: f3edd77bad674a3b4f45fcb2cf48a63b507fd47fd5f2be6f7e2e18d329cb63ff, 0 (0%) gas, EL block: 4279de813660a007270e8aee2c8bf1ae44f967ce7088571b4e44d30a0f337fdb (35)[0m
+[cl-1-teku-geth] 2026-03-04 14:44:48.000 INFO  - [37mSlot Event  *** Slot: 37, Block: f3edd77bad674a3b4f45fcb2cf48a63b507fd47fd5f2be6f7e2e18d329cb63ff, Justified: 0, Finalized: 0, Peers: 3[0m
+[cl-1-teku-geth] 2026-03-04 14:44:48.059 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 37, Root: f3edd77bad674a3b4f45fcb2cf48a63b507fd47fd5f2be6f7e2e18d329cb63ff[0m
+[cl-1-teku-geth] 2026-03-04 14:44:51.156 INFO  - [34mValidator   *** Published aggregate            Count: 1, Slot: 37, Root: f3edd77bad674a3b4f45fcb2cf48a63b507fd47fd5f2be6f7e2e18d329cb63ff[0m
+[cl-1-teku-geth] 2026-03-04 14:44:51.208 INFO  - [34mValidator   *** Published sync_contribution    Count: 18, Slot: 37, Root: f3edd77bad674a3b4f45fcb2cf48a63b507fd47fd5f2be6f7e2e18d329cb63ff[0m
+[cl-1-teku-geth] 2026-03-04 14:44:54.082 INFO  - [34mValidator   *** Published payload_attestation  Count: 6, Slot: 37, Root: f3edd77bad674a3b4f45fcb2cf48a63b507fd47fd5f2be6f7e2e18d329cb63ff[0m
+[cl-1-teku-geth] 2026-03-04 14:44:57.473 INFO  - [34mValidator   *** Published attestation          Count: 7, Slot: 38, Root: 14dc078c9856a367a02bb549cd147368f1e22ac386b79f1a5881ac0ede0b2318[0m
+[cl-1-teku-geth] 2026-03-04 14:45:00.000 INFO  - [37mSlot Event  *** Slot: 38, Block: 14dc078c9856a367a02bb549cd147368f1e22ac386b79f1a5881ac0ede0b2318, Justified: 0, Finalized: 0, Peers: 3[0m
+[cl-1-teku-geth] 2026-03-04 14:45:00.117 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 38, Root: 14dc078c9856a367a02bb549cd147368f1e22ac386b79f1a5881ac0ede0b2318[0m
+[cl-1-teku-geth] 2026-03-04 14:45:03.177 INFO  - [34mValidator   *** Published aggregate            Count: 1, Slot: 38, Root: 14dc078c9856a367a02bb549cd147368f1e22ac386b79f1a5881ac0ede0b2318[0m
+[cl-1-teku-geth] 2026-03-04 14:45:03.229 INFO  - [34mValidator   *** Published sync_contribution    Count: 22, Slot: 38, Root: 14dc078c9856a367a02bb549cd147368f1e22ac386b79f1a5881ac0ede0b2318[0m
+[cl-1-teku-geth] 2026-03-04 14:45:06.072 INFO  - [34mValidator   *** Published payload_attestation  Count: 7, Slot: 38, Root: 14dc078c9856a367a02bb549cd147368f1e22ac386b79f1a5881ac0ede0b2318[0m
+[cl-1-teku-geth] 2026-03-04 14:45:10.002 INFO  - [34mValidator   *** Published attestation          Count: 2, Slot: 39, Root: b78f95548acc6525ba70b5e150f662a2957a0bd7d81f1a72d7df8e456793c6d3[0m
+[cl-1-teku-geth] 2026-03-04 14:45:12.001 INFO  - [37mSlot Event  *** Slot: 39, Block: b78f95548acc6525ba70b5e150f662a2957a0bd7d81f1a72d7df8e456793c6d3, Justified: 0, Finalized: 0, Peers: 3[0m
+[cl-1-teku-geth] 2026-03-04 14:45:12.085 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 39, Root: b78f95548acc6525ba70b5e150f662a2957a0bd7d81f1a72d7df8e456793c6d3[0m
+[cl-1-teku-geth] 2026-03-04 14:45:15.166 INFO  - [34mValidator   *** Published aggregate            Count: 1, Slot: 39, Root: b78f95548acc6525ba70b5e150f662a2957a0bd7d81f1a72d7df8e456793c6d3[0m
+[cl-1-teku-geth] 2026-03-04 14:45:15.224 INFO  - [34mValidator   *** Published sync_contribution    Count: 17, Slot: 39, Root: b78f95548acc6525ba70b5e150f662a2957a0bd7d81f1a72d7df8e456793c6d3[0m
+[cl-1-teku-geth] 2026-03-04 14:45:18.020 INFO  - [34mValidator   *** Published payload_attestation  Count: 2, Slot: 39, Root: b78f95548acc6525ba70b5e150f662a2957a0bd7d81f1a72d7df8e456793c6d3[0m
+[cl-1-teku-geth] 2026-03-04 14:45:24.001 INFO  - [37mSlot Event  *** Slot: 40, Block:                                                        ... empty, Justified: 0, Finalized: 0, Peers: 3[0m
+[cl-1-teku-geth] 2026-03-04 14:45:24.029 ERROR - [31mValidator   *** Failed to produce attestation  Slot: 40 Validator: b09cb15, 889dbdf, 81fa222, 996323a, ab72cbc, 8419cf0, b0b263c[0m
+[cl-1-teku-geth] 2026-03-04 14:45:24.111 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 40, Root: b78f95548acc6525ba70b5e150f662a2957a0bd7d81f1a72d7df8e456793c6d3[0m
+[cl-1-teku-geth] 2026-03-04 14:45:27.144 INFO  - [34mValidator   *** Published sync_contribution    Count: 17, Slot: 40, Root: b78f95548acc6525ba70b5e150f662a2957a0bd7d81f1a72d7df8e456793c6d3[0m
+[cl-1-teku-geth] 2026-03-04 14:45:30.110 INFO  - [34mValidator   *** Published payload_attestation  Count: 7, Slot: 40, Root: 758943877876d2568fc62f115958af6c8549d9df2ac33cb1ad9a970a26b5ee68[0m
+[cl-1-teku-geth] 2026-03-04 14:45:33.846 INFO  - [34mValidator   *** Published attestation          Count: 3, Slot: 41, Root: a17de93fd23bdced6856192855fc48d44e75ed1e9d32296ed0632c7b2a01e4b0[0m
+[cl-1-teku-geth] 2026-03-04 14:45:36.000 INFO  - [37mSlot Event  *** Slot: 41, Block: a17de93fd23bdced6856192855fc48d44e75ed1e9d32296ed0632c7b2a01e4b0, Justified: 0, Finalized: 0, Peers: 3[0m
+[cl-1-teku-geth] 2026-03-04 14:45:36.062 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 41, Root: a17de93fd23bdced6856192855fc48d44e75ed1e9d32296ed0632c7b2a01e4b0[0m
+[cl-1-teku-geth] 2026-03-04 14:45:39.051 INFO  - [34mValidator   *** Published aggregate            Count: 1, Slot: 41, Root: a17de93fd23bdced6856192855fc48d44e75ed1e9d32296ed0632c7b2a01e4b0[0m
+[cl-1-teku-geth] 2026-03-04 14:45:39.154 INFO  - [34mValidator   *** Published sync_contribution    Count: 10, Slot: 41, Root: a17de93fd23bdced6856192855fc48d44e75ed1e9d32296ed0632c7b2a01e4b0[0m
+[cl-1-teku-geth] 2026-03-04 14:45:42.039 INFO  - [34mValidator   *** Published payload_attestation  Count: 3, Slot: 41, Root: a17de93fd23bdced6856192855fc48d44e75ed1e9d32296ed0632c7b2a01e4b0[0m
+[cl-1-teku-geth] 2026-03-04 14:45:45.862 INFO  - [34mValidator   *** Published attestation          Count: 3, Slot: 42, Root: 1f95289f582178e4b501b194c9b43c94014d9919dce3f156be603fa62e766630[0m
+[cl-1-teku-geth] 2026-03-04 14:45:48.001 INFO  - [37mSlot Event  *** Slot: 42, Block: 1f95289f582178e4b501b194c9b43c94014d9919dce3f156be603fa62e766630, Justified: 0, Finalized: 0, Peers: 3[0m
+[cl-1-teku-geth] 2026-03-04 14:45:48.063 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 42, Root: 1f95289f582178e4b501b194c9b43c94014d9919dce3f156be603fa62e766630[0m
+[cl-1-teku-geth] 2026-03-04 14:45:51.160 INFO  - [34mValidator   *** Published aggregate            Count: 1, Slot: 42, Root: 1f95289f582178e4b501b194c9b43c94014d9919dce3f156be603fa62e766630[0m
+[cl-1-teku-geth] 2026-03-04 14:45:51.218 INFO  - [34mValidator   *** Published sync_contribution    Count: 14, Slot: 42, Root: 1f95289f582178e4b501b194c9b43c94014d9919dce3f156be603fa62e766630[0m
+[cl-1-teku-geth] 2026-03-04 14:45:54.040 INFO  - [34mValidator   *** Published payload_attestation  Count: 3, Slot: 42, Root: 1f95289f582178e4b501b194c9b43c94014d9919dce3f156be603fa62e766630[0m
+[cl-1-teku-geth] 2026-03-04 14:45:57.904 INFO  - [34mValidator   *** Published attestation          Count: 6, Slot: 43, Root: 098a19a242f3bb3100dcea7a38e44a2e3f9adedaf1c75692d1ca8935a8f99a1e[0m
+[cl-1-teku-geth] 2026-03-04 14:46:00.007 INFO  - [37mSlot Event  *** Slot: 43, Block: 098a19a242f3bb3100dcea7a38e44a2e3f9adedaf1c75692d1ca8935a8f99a1e, Justified: 0, Finalized: 0, Peers: 3[0m
+[cl-1-teku-geth] 2026-03-04 14:46:00.088 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 43, Root: 098a19a242f3bb3100dcea7a38e44a2e3f9adedaf1c75692d1ca8935a8f99a1e[0m
+[cl-1-teku-geth] 2026-03-04 14:46:03.099 INFO  - [34mValidator   *** Published aggregate            Count: 1, Slot: 43, Root: 098a19a242f3bb3100dcea7a38e44a2e3f9adedaf1c75692d1ca8935a8f99a1e[0m
+[cl-1-teku-geth] 2026-03-04 14:46:03.178 INFO  - [34mValidator   *** Published sync_contribution    Count: 11, Slot: 43, Root: 098a19a242f3bb3100dcea7a38e44a2e3f9adedaf1c75692d1ca8935a8f99a1e[0m
+[cl-1-teku-geth] 2026-03-04 14:46:06.074 INFO  - [34mValidator   *** Published payload_attestation  Count: 6, Slot: 43, Root: 098a19a242f3bb3100dcea7a38e44a2e3f9adedaf1c75692d1ca8935a8f99a1e[0m
+[cl-1-teku-geth] 2026-03-04 14:46:09.963 INFO  - [34mValidator   *** Published attestation          Count: 5, Slot: 44, Root: 78403f23fd5ea8da3a100fc3c21f4758bf3597db90faaaa9adc336c72c64e85e[0m
+[cl-1-teku-geth] 2026-03-04 14:46:12.000 INFO  - [37mSlot Event  *** Slot: 44, Block: 78403f23fd5ea8da3a100fc3c21f4758bf3597db90faaaa9adc336c72c64e85e, Justified: 0, Finalized: 0, Peers: 3[0m
+[cl-1-teku-geth] 2026-03-04 14:46:12.072 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 44, Root: 78403f23fd5ea8da3a100fc3c21f4758bf3597db90faaaa9adc336c72c64e85e[0m
+[cl-1-teku-geth] 2026-03-04 14:46:15.051 INFO  - [34mValidator   *** Published aggregate            Count: 1, Slot: 44, Root: 78403f23fd5ea8da3a100fc3c21f4758bf3597db90faaaa9adc336c72c64e85e[0m
+[cl-1-teku-geth] 2026-03-04 14:46:15.199 INFO  - [34mValidator   *** Published sync_contribution    Count: 14, Slot: 44, Root: 78403f23fd5ea8da3a100fc3c21f4758bf3597db90faaaa9adc336c72c64e85e[0m
+[cl-1-teku-geth] 2026-03-04 14:46:18.077 INFO  - [34mValidator   *** Published payload_attestation  Count: 5, Slot: 44, Root: 78403f23fd5ea8da3a100fc3c21f4758bf3597db90faaaa9adc336c72c64e85e[0m
+[cl-1-teku-geth] 2026-03-04 14:46:21.829 INFO  - [34mValidator   *** Published attestation          Count: 3, Slot: 45, Root: 8d59d45f15e990f620fe3ae4259141d5b6a4805435923e50c869e9773e3016ee[0m
+[cl-1-teku-geth] 2026-03-04 14:46:24.001 INFO  - [37mSlot Event  *** Slot: 45, Block: 8d59d45f15e990f620fe3ae4259141d5b6a4805435923e50c869e9773e3016ee, Justified: 0, Finalized: 0, Peers: 3[0m
+[cl-1-teku-geth] 2026-03-04 14:46:24.066 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 45, Root: 8d59d45f15e990f620fe3ae4259141d5b6a4805435923e50c869e9773e3016ee[0m
+[cl-1-teku-geth] 2026-03-04 14:46:27.220 INFO  - [34mValidator   *** Published aggregate            Count: 1, Slot: 45, Root: 8d59d45f15e990f620fe3ae4259141d5b6a4805435923e50c869e9773e3016ee[0m
+[cl-1-teku-geth] 2026-03-04 14:46:27.292 INFO  - [34mValidator   *** Published sync_contribution    Count: 21, Slot: 45, Root: 8d59d45f15e990f620fe3ae4259141d5b6a4805435923e50c869e9773e3016ee[0m
+[cl-1-teku-geth] 2026-03-04 14:46:30.052 INFO  - [34mValidator   *** Published payload_attestation  Count: 3, Slot: 45, Root: 8d59d45f15e990f620fe3ae4259141d5b6a4805435923e50c869e9773e3016ee[0m
+[cl-1-teku-geth] 2026-03-04 14:46:33.849 INFO  - [34mValidator   *** Published attestation          Count: 6, Slot: 46, Root: b21d47a17f1e57d0d5a38329caffa1f47f0fa356912b071c8921b5f499ac745e[0m
+[cl-1-teku-geth] 2026-03-04 14:46:36.000 INFO  - [37mSlot Event  *** Slot: 46, Block: b21d47a17f1e57d0d5a38329caffa1f47f0fa356912b071c8921b5f499ac745e, Justified: 0, Finalized: 0, Peers: 3[0m
+[cl-1-teku-geth] 2026-03-04 14:46:36.066 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 46, Root: b21d47a17f1e57d0d5a38329caffa1f47f0fa356912b071c8921b5f499ac745e[0m
+[cl-1-teku-geth] 2026-03-04 14:46:39.251 INFO  - [34mValidator   *** Published aggregate            Count: 1, Slot: 46, Root: b21d47a17f1e57d0d5a38329caffa1f47f0fa356912b071c8921b5f499ac745e[0m
+[cl-1-teku-geth] 2026-03-04 14:46:39.380 INFO  - [34mValidator   *** Published sync_contribution    Count: 20, Slot: 46, Root: b21d47a17f1e57d0d5a38329caffa1f47f0fa356912b071c8921b5f499ac745e[0m
+[cl-1-teku-geth] 2026-03-04 14:46:42.067 INFO  - [34mValidator   *** Published payload_attestation  Count: 6, Slot: 46, Root: b21d47a17f1e57d0d5a38329caffa1f47f0fa356912b071c8921b5f499ac745e[0m
+[cl-1-teku-geth] 2026-03-04 14:46:48.017 INFO  - [37mSlot Event  *** Slot: 47, Block: e311cb4c202200df98fcf5cbc9bed564796fabe7b3093857e307809cb2b2e428, Justified: 0, Finalized: 0, Peers: 3[0m
+[cl-1-teku-geth] 2026-03-04 14:46:48.089 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 47, Root: e311cb4c202200df98fcf5cbc9bed564796fabe7b3093857e307809cb2b2e428[0m
+[cl-1-teku-geth] 2026-03-04 14:46:51.224 INFO  - [34mValidator   *** Published sync_contribution    Count: 22, Slot: 47, Root: e311cb4c202200df98fcf5cbc9bed564796fabe7b3093857e307809cb2b2e428[0m
+[cl-1-teku-geth] 2026-03-04 14:46:57.854 INFO  - [34mValidator   *** Published attestation          Count: 4, Slot: 48, Root: 5e2acf8e127cd7f2800312842a535248fd4551aa1034f2bcd2325c299175be25[0m
+[cl-1-teku-geth] 2026-03-04 14:47:00.001 INFO  - [37mSlot Event  *** Slot: 48, Block: 5e2acf8e127cd7f2800312842a535248fd4551aa1034f2bcd2325c299175be25, Justified: 0, Finalized: 0, Peers: 3[0m
+[cl-1-teku-geth] 2026-03-04 14:47:00.083 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 48, Root: 5e2acf8e127cd7f2800312842a535248fd4551aa1034f2bcd2325c299175be25[0m
+[cl-1-teku-geth] 2026-03-04 14:47:03.107 INFO  - [34mValidator   *** Published aggregate            Count: 1, Slot: 48, Root: 5e2acf8e127cd7f2800312842a535248fd4551aa1034f2bcd2325c299175be25[0m
+[cl-1-teku-geth] 2026-03-04 14:47:03.156 INFO  - [34mValidator   *** Published sync_contribution    Count: 15, Slot: 48, Root: 5e2acf8e127cd7f2800312842a535248fd4551aa1034f2bcd2325c299175be25[0m
+[cl-1-teku-geth] 2026-03-04 14:47:06.043 INFO  - [34mValidator   *** Published payload_attestation  Count: 4, Slot: 48, Root: 5e2acf8e127cd7f2800312842a535248fd4551aa1034f2bcd2325c299175be25[0m
+[cl-1-teku-geth] 2026-03-04 14:47:09.247 INFO  - [34mValidator   *** Published attestation          Count: 4, Slot: 49, Root: 4ba3f3b1fa21240ad8916d9ec6b748c130c5ac294c6ae7f69bc7ffe04ddd9f1a[0m
+[cl-1-teku-geth] 2026-03-04 14:47:12.001 INFO  - [37mSlot Event  *** Slot: 49, Block: 4ba3f3b1fa21240ad8916d9ec6b748c130c5ac294c6ae7f69bc7ffe04ddd9f1a, Justified: 0, Finalized: 0, Peers: 3[0m
+[cl-1-teku-geth] 2026-03-04 14:47:12.138 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 49, Root: 4ba3f3b1fa21240ad8916d9ec6b748c130c5ac294c6ae7f69bc7ffe04ddd9f1a[0m
+[cl-1-teku-geth] 2026-03-04 14:47:15.195 INFO  - [34mValidator   *** Published aggregate            Count: 1, Slot: 49, Root: 4ba3f3b1fa21240ad8916d9ec6b748c130c5ac294c6ae7f69bc7ffe04ddd9f1a[0m
+[cl-1-teku-geth] 2026-03-04 14:47:15.250 INFO  - [34mValidator   *** Published sync_contribution    Count: 20, Slot: 49, Root: 4ba3f3b1fa21240ad8916d9ec6b748c130c5ac294c6ae7f69bc7ffe04ddd9f1a[0m
+[cl-1-teku-geth] 2026-03-04 14:47:18.045 INFO  - [34mValidator   *** Published payload_attestation  Count: 4, Slot: 49, Root: 4ba3f3b1fa21240ad8916d9ec6b748c130c5ac294c6ae7f69bc7ffe04ddd9f1a[0m
+[cl-1-teku-geth] 2026-03-04 14:47:21.856 INFO  - [34mValidator   *** Published attestation          Count: 3, Slot: 50, Root: c0ddb71e1111800ed5a194ffb7829eb554daaf0a1c1c3795e73a2fc67cfce03f[0m
+[cl-1-teku-geth] 2026-03-04 14:47:24.001 INFO  - [37mSlot Event  *** Slot: 50, Block: c0ddb71e1111800ed5a194ffb7829eb554daaf0a1c1c3795e73a2fc67cfce03f, Justified: 0, Finalized: 0, Peers: 3[0m
+[cl-1-teku-geth] 2026-03-04 14:47:24.063 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 50, Root: c0ddb71e1111800ed5a194ffb7829eb554daaf0a1c1c3795e73a2fc67cfce03f[0m
+[cl-1-teku-geth] 2026-03-04 14:47:27.137 INFO  - [34mValidator   *** Published aggregate            Count: 1, Slot: 50, Root: c0ddb71e1111800ed5a194ffb7829eb554daaf0a1c1c3795e73a2fc67cfce03f[0m
+[cl-1-teku-geth] 2026-03-04 14:47:27.182 INFO  - [34mValidator   *** Published sync_contribution    Count: 15, Slot: 50, Root: c0ddb71e1111800ed5a194ffb7829eb554daaf0a1c1c3795e73a2fc67cfce03f[0m
+[cl-1-teku-geth] 2026-03-04 14:47:30.049 INFO  - [34mValidator   *** Published payload_attestation  Count: 3, Slot: 50, Root: c0ddb71e1111800ed5a194ffb7829eb554daaf0a1c1c3795e73a2fc67cfce03f[0m
+[cl-1-teku-geth] 2026-03-04 14:47:33.334 INFO  - [34mValidator   *** Published attestation          Count: 6, Slot: 51, Root: 1fd55908e32de0f59e371cde25b54ee6e701b56ecd60bb819b2b69e70da06da0[0m
+[cl-1-teku-geth] 2026-03-04 14:47:36.001 INFO  - [37mSlot Event  *** Slot: 51, Block: 1fd55908e32de0f59e371cde25b54ee6e701b56ecd60bb819b2b69e70da06da0, Justified: 0, Finalized: 0, Peers: 3[0m
+[cl-1-teku-geth] 2026-03-04 14:47:36.078 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 51, Root: 1fd55908e32de0f59e371cde25b54ee6e701b56ecd60bb819b2b69e70da06da0[0m
+[cl-1-teku-geth] 2026-03-04 14:47:39.169 INFO  - [34mValidator   *** Published aggregate            Count: 1, Slot: 51, Root: 1fd55908e32de0f59e371cde25b54ee6e701b56ecd60bb819b2b69e70da06da0[0m
+[cl-1-teku-geth] 2026-03-04 14:47:39.226 INFO  - [34mValidator   *** Published sync_contribution    Count: 16, Slot: 51, Root: 1fd55908e32de0f59e371cde25b54ee6e701b56ecd60bb819b2b69e70da06da0[0m
+[cl-1-teku-geth] 2026-03-04 14:47:42.087 INFO  - [34mValidator   *** Published payload_attestation  Count: 6, Slot: 51, Root: 1fd55908e32de0f59e371cde25b54ee6e701b56ecd60bb819b2b69e70da06da0[0m
+[cl-1-teku-geth] 2026-03-04 14:47:45.225 INFO  - Calling local execution layer to start block production (block slot: 53)
+[cl-1-teku-geth] 2026-03-04 14:47:45.288 INFO  - [34mValidator   *** Published attestation          Count: 5, Slot: 52, Root: 38ab4ab6d68b4b78b26eaf55a114fdbbd5e15fa3338cbb540d96020f3c12b93f[0m
+[cl-1-teku-geth] 2026-03-04 14:47:45.603 INFO  - Calling local execution layer to start block production (block slot: 53)
+[cl-1-teku-geth] 2026-03-04 14:47:48.000 INFO  - [37mSlot Event  *** Slot: 52, Block: 38ab4ab6d68b4b78b26eaf55a114fdbbd5e15fa3338cbb540d96020f3c12b93f, Justified: 0, Finalized: 0, Peers: 3[0m
+[cl-1-teku-geth] 2026-03-04 14:47:48.092 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 52, Root: 38ab4ab6d68b4b78b26eaf55a114fdbbd5e15fa3338cbb540d96020f3c12b93f[0m
+[cl-1-teku-geth] 2026-03-04 14:47:51.303 INFO  - [34mValidator   *** Published aggregate            Count: 1, Slot: 52, Root: 38ab4ab6d68b4b78b26eaf55a114fdbbd5e15fa3338cbb540d96020f3c12b93f[0m
+[cl-1-teku-geth] 2026-03-04 14:47:51.396 INFO  - [34mValidator   *** Published sync_contribution    Count: 22, Slot: 52, Root: 38ab4ab6d68b4b78b26eaf55a114fdbbd5e15fa3338cbb540d96020f3c12b93f[0m
+[cl-1-teku-geth] 2026-03-04 14:47:54.057 INFO  - [34mValidator   *** Published payload_attestation  Count: 5, Slot: 52, Root: 38ab4ab6d68b4b78b26eaf55a114fdbbd5e15fa3338cbb540d96020f3c12b93f[0m
+[cl-1-teku-geth] 2026-03-04 14:47:56.502 INFO  - Preparing block production for slot 53
+[cl-1-teku-geth] 2026-03-04 14:47:57.001 INFO  - Creating unsigned block for slot 53
+[cl-1-teku-geth] 2026-03-04 14:47:57.006 INFO  - Considering self-built bid (value: 0.000000 ETH, EL block: 22068f..f129) for block at slot 53
+[cl-1-teku-geth] 2026-03-04 14:47:57.040 INFO  - Validator client received block for slot 53, block rewards 0.020040 ETH, execution payload value 0.000000 ETH
+[cl-1-teku-geth] 2026-03-04 14:47:57.046 INFO  - starting to publish block at slot 53
+[cl-1-teku-geth] 2026-03-04 14:47:57.075 INFO  - [36mValidator   *** Published block                Count: 1, Slot: 53, Root: ea1703f6699755210acf907bbac6b05177778917d36ed76d7be54fcb57025ccf, Blobs: 0, Builder: 18446744073709551615, Bid gas limit: 60000000, Bid EL block: 22068f..f129[0m
+[cl-1-teku-geth] 2026-03-04 14:47:57.117 INFO  - [34mValidator   *** Published attestation          Count: 4, Slot: 53, Root: ea1703f6699755210acf907bbac6b05177778917d36ed76d7be54fcb57025ccf[0m
+[cl-1-teku-geth] 2026-03-04 14:47:57.576 INFO  - Producing unsigned execution payload for slot 53 and block 0xea1703f6699755210acf907bbac6b05177778917d36ed76d7be54fcb57025ccf
+[cl-1-teku-geth] 2026-03-04 14:47:57.579 INFO  - [35mBuilder     *** Published execution_payload    Slot: 53, Builder: 18446744073709551615, Block Root: ea1703f6699755210acf907bbac6b05177778917d36ed76d7be54fcb57025ccf, 0 (0%) gas, EL block: 22068f0ac4e9fb679a4f810fe1d9a13fc4abc2ead1adb5167bbec1534dcbf129 (51)[0m
+[cl-1-teku-geth] 2026-03-04 14:48:00.003 INFO  - [37mSlot Event  *** Slot: 53, Block: ea1703f6699755210acf907bbac6b05177778917d36ed76d7be54fcb57025ccf, Justified: 0, Finalized: 0, Peers: 3[0m
+[cl-1-teku-geth] 2026-03-04 14:48:00.067 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 53, Root: ea1703f6699755210acf907bbac6b05177778917d36ed76d7be54fcb57025ccf[0m
+[cl-1-teku-geth] 2026-03-04 14:48:03.151 INFO  - [34mValidator   *** Published aggregate            Count: 1, Slot: 53, Root: ea1703f6699755210acf907bbac6b05177778917d36ed76d7be54fcb57025ccf[0m
+[cl-1-teku-geth] 2026-03-04 14:48:03.202 INFO  - [34mValidator   *** Published sync_contribution    Count: 17, Slot: 53, Root: ea1703f6699755210acf907bbac6b05177778917d36ed76d7be54fcb57025ccf[0m
+[cl-1-teku-geth] 2026-03-04 14:48:06.052 INFO  - [34mValidator   *** Published payload_attestation  Count: 4, Slot: 53, Root: ea1703f6699755210acf907bbac6b05177778917d36ed76d7be54fcb57025ccf[0m
+[cl-1-teku-geth] 2026-03-04 14:48:09.870 INFO  - [34mValidator   *** Published attestation          Count: 4, Slot: 54, Root: 9f592762fe867d52a0c3423730a9fc650eb7a30de60ad946ce0102f9e8df6592[0m
+[cl-1-teku-geth] 2026-03-04 14:48:12.008 INFO  - [37mSlot Event  *** Slot: 54, Block: 9f592762fe867d52a0c3423730a9fc650eb7a30de60ad946ce0102f9e8df6592, Justified: 0, Finalized: 0, Peers: 3[0m
+[cl-1-teku-geth] 2026-03-04 14:48:12.120 INFO  - [34mValidator   *** Published sync_signature       Count: 128, Slot: 54, Root: 9f592762fe867d52a0c3423730a9fc650eb7a30de60ad946ce0102f9e8df6592[0m
+[cl-1-teku-geth] 2026-03-04 14:48:15.164 INFO  - [34mValidator   *** Published aggregate            Count: 1, Slot: 54, Root: 9f592762fe867d52a0c3423730a9fc650eb7a30de60ad946ce0102f9e8df6592[0m
+[cl-1-teku-geth] 2026-03-04 14:48:15.252 INFO  - [34mValidator   *** Published sync_contribution    Count: 14, Slot: 54, Root: 9f592762fe867d52a0c3423730a9fc650eb7a30de60ad946ce0102f9e8df6592[0m
+[cl-1-teku-geth] 2026-03-04 14:48:18.052 INFO  - [34mValidator   *** Published payload_attestation  Count: 4, Slot: 54, Root: 9f592762fe867d52a0c3423730a9fc650eb7a30de60ad946ce0102f9e8df6592[0m

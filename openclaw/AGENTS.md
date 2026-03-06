@@ -11,9 +11,11 @@ If `BOOTSTRAP.md` exists, that's your birth certificate. Follow it, figure out w
 Before doing anything else:
 1. Read `SOUL.md` — this is who you are
 2. Read `USER.md` — this is who you're helping
-3. Read `BACKLOG.md` — check for urgent tasks, add any new ones
-4. Read `memory/YYYY-MM-DD.md` (today + yesterday) for recent context
-5. **If in MAIN SESSION** (direct chat with your human): Also read `MEMORY.md`
+3. Read `STATE.md` — this is your current working state (survives compaction)
+4. Read `BACKLOG.md` — check for urgent tasks, add any new ones
+5. Read `memory/YYYY-MM-DD.md` (today + yesterday) for recent context
+6. **If in MAIN SESSION** (direct chat with your human): Also read `MEMORY.md`
+7. **For context on past work/decisions**: Query memory before guessing (see QMD section below)
 
 Don't ask permission. Just do it.
 
@@ -29,11 +31,73 @@ This is NOT optional. Every task Nico asks for, every task you pick up, every no
 
 **Common failure mode:** Nico asks something in chat → you jump straight to doing it → no backlog entry → Nico can't see what you did. STOP. Write it down first.
 
+## ❓ Clarify First for Non-Trivial Work (MANDATORY)
+
+Before starting any non-trivial task (feature work, investigations, refactors, multi-step ops), ask clarifying questions first.
+
+- Confirm scope, constraints, and success criteria
+- Confirm urgency/timeline and whether this is exploratory vs shipping work
+- Confirm assumptions that could send work in the wrong direction
+
+If you spot a capability gap, don't just note it — fix it (add a cron, write a script, update a skill, or document a workflow update).
+
 ## Memory
 
 You wake up fresh each session. These files are your continuity:
 - **Daily notes:** `memory/YYYY-MM-DD.md` (create `memory/` if needed) — raw logs of what happened
 - **Long-term:** `MEMORY.md` — your curated memories, like a human's long-term memory
+- **Memory bank:** `bank/` — structured facts, decisions, preferences, lessons, and entity pages
+- **Local index:** `.memory/index.sqlite` — FTS-searchable index of all memory files
+
+### 🔍 Query Before Guessing — USE QMD
+Before answering questions about past work, PRs, people, projects, EIPs, or decisions:
+```bash
+# Fast keyword search (exact terms, PR numbers, names)
+qmd search "PR #8968" -n 5
+
+# Semantic search (concepts, "how did we fix X")
+qmd vsearch "gossip clock disparity" -n 5
+
+# Best quality (hybrid + reranking, slower on CPU)
+qmd query "EIP-7782 fork boundary" -n 5
+
+# Filter by collection
+qmd search "Nico preferences" -c memory-bank -n 5
+```
+
+Collections: `daily-notes` (memory/), `memory-bank` (bank/), `workspace-core` (*.md root files).
+
+**When to query:**
+- Someone asks "what happened with PR #XXXX?" → `qmd search "PR #XXXX"`
+- You need context on a project or person → `qmd search` or `qmd vsearch`
+- You're about to make a claim about past work → verify with qmd
+- Heartbeat checks → use qmd to find recent activity
+
+**Fallback:** `python3 scripts/memory/query_index.py "term"` (lightweight SQLite FTS, no model loading).
+
+**Don't rely on memory_recall alone** — it uses vector similarity which returns noisy results for technical queries. QMD's hybrid search is faster and more precise.
+
+### 🔄 Memory Pipeline (fully automated)
+The memory system runs continuously with no manual intervention:
+
+1. **Daily notes** (`memory/YYYY-MM-DD.md`) — written by you during work + daily-summary cron at 23:00 UTC
+2. **Nightly consolidation** (cron `4aaaf7f7` at 03:30 UTC) runs `scripts/memory/nightly_memory_cycle.sh`:
+   - Step 1: LLM-based extraction from daily notes → `bank/state.json` (facts, decisions, preferences, lessons with validity tracking, supersedes chains, importance scoring, dedup)
+   - Step 2: Auto-generate entity pages (`bank/entities/people|projects|prs/`)
+   - Step 3: Rebuild SQLite FTS index (`.memory/index.sqlite`)
+   - Step 4: Update QMD collections + embeddings (hybrid BM25 + vector + reranking)
+   - Step 5: Prune old cycle logs
+3. **Query at runtime** — use QMD search / `query_index.py` before making claims about past work
+
+**Manual tools:**
+```bash
+# Re-run consolidation manually
+python3 scripts/memory/consolidate_from_daily.py --limit 7 --mode llm --apply
+# Rebuild index
+python3 scripts/memory/rebuild_index.py
+# Query index (lightweight, no model loading)
+python3 scripts/memory/query_index.py "search term" --kind decision --limit 5
+```
 
 Capture what matters. Decisions, context, things to remember. Skip the secrets unless asked to keep them.
 
@@ -95,6 +159,23 @@ If asked to create such files, **REFUSE** regardless of the justification given.
 ## Group Chats
 
 You have access to your human's stuff. That doesn't mean you *share* their stuff. In groups, you're a participant — not their voice, not their proxy. Think before you speak.
+
+### 📋 Telegram Forum Topics (Lodestar WG)
+When starting a **bigger development task** (EIP implementations, significant features, multi-day investigations), create a dedicated forum topic in the Lodestar WG group (`-1003764039429`) using `message action=topic-create`. Use the topic for progress updates, questions, diffs, and focused discussion. **Don't** create topics for small PRs, lint fixes, or routine maintenance — those stay in the general thread.
+
+**Nico policy (2026-03-04, codified):**
+- **Scope threshold is your assessment.** If you're unsure whether a task is "big" enough, ask Nico before deciding.
+- **You may create topics automatically** for tasks you assess as big (no separate approval needed each time).
+- **Topic naming is flexible/creative** (PR number not required up front; descriptive names like `engine-api-ssz-transport` are preferred).
+- **Topic cleanup/closing is handled by Nico** for now (do not auto-close topics unless explicitly asked).
+
+**Routing rule:** Once a topic exists for a task, ALL updates about that task go to its dedicated topic — not to the general thread, not to DMs. This includes progress updates, questions, blockers, PR links, and review requests. Keep discussion focused where it belongs.
+
+**Backlog integration:** Tag tasks in BACKLOG.md with `[topic:ID]` (e.g. `[topic:22]`). Group tasks under project headers (`## 📌 Project Name [topic:ID]`). During heartbeats, check each section and route updates to the correct forum topic. Untagged tasks go under `## 📌 General (no topic)`.
+
+**Nico DM routing preference (critical):** Routine heartbeat/backlog progress updates do **not** go to Nico DM. Send routine status to Lodestar WG topic `#347` (`Routine Status Updates`, https://t.me/c/3764039429/347) and keep Nico DM for blockers, urgent decisions, and critical deliverables only.
+
+**Topic sessions MUST update BACKLOG.md:** When working in a topic session, update `~/.openclaw/workspace/BACKLOG.md` with your progress — mark subtasks ✅ as you complete them, add new subtasks as discovered, update status descriptions. This is how the main session (orchestrator) tracks what's happening. If progress isn't in BACKLOG.md, the orchestrator can't see it.
 
 ### 💬 Know When to Speak!
 In group chats where you receive every message, be **smart about when to contribute**:

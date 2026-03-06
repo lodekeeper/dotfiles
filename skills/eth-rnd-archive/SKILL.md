@@ -1,3 +1,8 @@
+---
+name: eth-rnd-archive
+description: Track and summarize discussions from ethereum/eth-rnd-archive across selected Discord channels, with hourly monitoring and daily digest outputs. Use for protocol/R&D intelligence, spotting spec changes, and surfacing Lodestar-relevant action items from Eth R&D chatter.
+---
+
 # Eth R&D Archive Tracker
 
 Track discussions from the [Ethereum R&D Discord Archive](https://github.com/ethereum/eth-rnd-archive) and surface important research conversations relevant to Lodestar development.
@@ -6,9 +11,14 @@ Track discussions from the [Ethereum R&D Discord Archive](https://github.com/eth
 
 The archive repo contains daily JSON exports of every Eth R&D Discord channel. Updated hourly by EF DevOps. Each channel is a directory with `YYYY-MM-DD.json` files containing messages.
 
+## Related Skills
+
+- `skills/deep-research/SKILL.md` — use when an archive thread needs full analysis/design synthesis (not just monitoring summary).
+- `skills/web-scraping/SKILL.md` — use to fetch linked external sources (spec posts, blogs, docs) when `web_fetch` is blocked/incomplete.
+
 ## Repo Location
 
-- **Local clone:** `~/eth-rnd-archive`
+- **Local clone:** `~/ethereum-repos/eth-rnd-archive`
 - **Remote:** `https://github.com/ethereum/eth-rnd-archive`
 
 ## Tracked Channels
@@ -29,6 +39,9 @@ Configured in `config.json` (this skill directory). Only these channels are moni
 - `l1-zkevm-protocol` — CK EVM protocol details (EIP-8025)
 - `data-availability-sampling` — DAS / PeerDAS
 - `apis` — Beacon/Engine API discussions
+
+### Infrastructure
+- `payload-builders` — MEV/PBS/builder discussions
 
 ### Networking & Testing
 - `networking` — general networking
@@ -85,12 +98,12 @@ bash skills/eth-rnd-archive/check-updates.sh 2026-02-25
 1. Run `check-updates.sh`
 2. If new messages found in tracked channels:
    - Summarize key discussions per channel
-   - Log to `~/eth-rnd-archive-notes/YYYY-MM-DD.md`
+   - Log to `/home/openclaw/.openclaw/workspace/memory/eth-rnd-archive-notes/YYYY-MM-DD.md`
    - If something critical (spec changes, breaking decisions, action items for Lodestar): alert Nico immediately
 3. If no new messages: no action
 
 ### Daily Digest (8 AM CET via cron)
-1. Read all notes from the past 24h (`~/eth-rnd-archive-notes/`)
+1. Read all notes from the past 24h (`/home/openclaw/.openclaw/workspace/memory/eth-rnd-archive-notes/`)
 2. Create a concise digest:
    - **Key decisions** made across channels
    - **Action items** for Lodestar
