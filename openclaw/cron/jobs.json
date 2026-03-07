@@ -99,7 +99,7 @@
       "name": "Sync dotfiles repo",
       "enabled": true,
       "createdAtMs": 1771362496423,
-      "updatedAtMs": 1772863469098,
+      "updatedAtMs": 1772885013695,
       "schedule": {
         "kind": "cron",
         "expr": "0 */6 * * *",
@@ -114,15 +114,14 @@
         "model": "anthropic/claude-sonnet-4-6"
       },
       "state": {
-        "lastRunAtMs": 1772863398975,
+        "lastRunAtMs": 1772884998982,
         "lastStatus": "ok",
-        "lastDurationMs": 70123,
+        "lastDurationMs": 14713,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false,
-        "nextRunAtMs": 1772884998972,
-        "runningAtMs": 1772884998982
+        "nextRunAtMs": 1772906598972
       },
       "delivery": {
         "mode": "none"
@@ -274,7 +273,7 @@
       "name": "github-notifications",
       "enabled": true,
       "createdAtMs": 1772107716625,
-      "updatedAtMs": 1772884781803,
+      "updatedAtMs": 1772885381370,
       "schedule": {
         "kind": "every",
         "everyMs": 300000,
@@ -292,13 +291,13 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1772884771472,
+        "lastRunAtMs": 1772885371483,
         "lastStatus": "ok",
-        "lastDurationMs": 10331,
+        "lastDurationMs": 9887,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1772885071472,
+        "nextRunAtMs": 1772885671483,
         "lastDelivered": false
       },
       "deleteAfterRun": false
