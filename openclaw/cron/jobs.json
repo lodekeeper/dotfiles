@@ -99,7 +99,7 @@
       "name": "Sync dotfiles repo",
       "enabled": true,
       "createdAtMs": 1771362496423,
-      "updatedAtMs": 1772835774212,
+      "updatedAtMs": 1772841164548,
       "schedule": {
         "kind": "cron",
         "expr": "0 */6 * * *",
@@ -115,14 +115,14 @@
       },
       "state": {
         "nextRunAtMs": 1772841798972,
-        "lastRunAtMs": 1772835698523,
+        "lastRunAtMs": 1772841153196,
         "lastStatus": "ok",
-        "lastDurationMs": 75689,
+        "lastDurationMs": 11352,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false,
-        "runningAtMs": 1772841153196
+        "runningAtMs": 1772841798975
       },
       "delivery": {
         "mode": "none"
@@ -273,7 +273,7 @@
       "name": "github-notifications",
       "enabled": true,
       "createdAtMs": 1772107716625,
-      "updatedAtMs": 1772841019419,
+      "updatedAtMs": 1772841623032,
       "schedule": {
         "kind": "every",
         "everyMs": 300000,
@@ -291,13 +291,13 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1772840990316,
+        "lastRunAtMs": 1772841590325,
         "lastStatus": "ok",
-        "lastDurationMs": 29103,
+        "lastDurationMs": 32707,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1772841290316,
+        "nextRunAtMs": 1772841890325,
         "lastDelivered": false
       },
       "deleteAfterRun": false
@@ -410,7 +410,7 @@
       "name": "workspace-periodic-cleanup",
       "enabled": true,
       "createdAtMs": 1772634832403,
-      "updatedAtMs": 1772838782888,
+      "updatedAtMs": 1772841525197,
       "schedule": {
         "kind": "every",
         "everyMs": 21600000,
@@ -420,7 +420,7 @@
       "wakeMode": "now",
       "payload": {
         "kind": "agentTurn",
-        "message": "Run periodic workspace cleanup (every 6 hours). Keep files lean without spamming Nico.\\n\\nRequired steps:\\n1) BACKLOG cleanup:\\n   - Move completed top-level items (`### ✅`) from `~/.openclaw/workspace/BACKLOG.md` to `~/.openclaw/workspace/BACKLOG_ARCHIVE.md`.\\n   - Keep only active/passive/on-hold items in BACKLOG.md.\\n   - Do NOT add backlog entries for empty cleanup runs.\\n2) HEARTBEAT cleanup:\\n   - Keep `~/.openclaw/workspace/HEARTBEAT.md` lean; remove stale completed checklist lines if any.\\n3) Daily notes hygiene:\\n   - Review `~/.openclaw/workspace/memory/` daily notes older than 7 days.\\n   - Before removing or archiving anything, ensure durable key info is reflected in `MEMORY.md` or memory bank outputs.\\n   - Prefer safe archiving/moving over deletion.\\n\\nReporting rules:\\n- If no actionable changes were needed, reply exactly `NO_REPLY`.\\n- If changes were made, send only a concise summary with file paths and counts.",
+        "message": "Run periodic workspace cleanup (every 6 hours). Keep files lean without spamming Nico.\n\nRequired steps:\n1) BACKLOG cleanup:\n   - Move completed top-level items (`### ✅`) from `~/.openclaw/workspace/BACKLOG.md` to `~/.openclaw/workspace/BACKLOG_ARCHIVE.md`.\n   - **Condense verbose active items:** If any `### 🟡` or `### 🔴` or `### ⏸️` item has more than 30 lines of subtasks/findings, condense it:\n     - Keep the header, status line, PR/issue link, and current blocker/next-step (max ~10 lines per item)\n     - Move the verbose subtask tree to `BACKLOG_ARCHIVE.md` under a dated batch header\n     - Replace with a one-line summary like: `- **Full investigation log:** archived 2026-03-06 (150 lines → BACKLOG_ARCHIVE.md)`\n   - Target: BACKLOG.md should stay under ~150 lines total. If it exceeds 200 lines, aggressively condense.\n   - Keep only active/passive/on-hold items in BACKLOG.md.\n   - Do NOT add backlog entries for empty cleanup runs.\n2) HEARTBEAT cleanup:\n   - Keep `~/.openclaw/workspace/HEARTBEAT.md` lean; remove stale completed checklist lines if any.\n3) Daily notes hygiene:\n   - Review `~/.openclaw/workspace/memory/` daily notes older than 7 days.\n   - Before removing or archiving anything, ensure durable key info is reflected in `MEMORY.md` or memory bank outputs.\n   - Prefer safe archiving/moving over deletion.\n\nReporting rules:\n- If no actionable changes were needed, reply exactly `NO_REPLY`.\n- If changes were made, send only a concise summary with file paths and counts.",
         "model": "anthropic/claude-sonnet-4-6"
       },
       "delivery": {
