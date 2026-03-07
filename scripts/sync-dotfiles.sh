@@ -10,7 +10,7 @@ WORKSPACE="$HOME/.openclaw/workspace"
 # - keep research/** and kurtosis/** (explicitly allowed by Nico)
 # - block backlog artifacts, memory/personas, bank snapshots, local state dumps,
 #   and temporary/archive payloads that should not be published.
-SENSITIVE_REGEX='^(BACKLOG\.md|BACKLOG\.md\.bak-.*|BACKLOG_ARCHIVE\.md|STATE\.md|memory/|personas/|bank/|\.openclaw/|\.tmp-.*|tmp_.*|.*\.tgz$)'
+SENSITIVE_REGEX='^(BACKLOG\.md|BACKLOG\.md\.bak-.*|BACKLOG_ARCHIVE\.md|STATE\.md|memory/|bank/|\.openclaw/|\.tmp-.*|tmp_.*|.*\.tgz$)'
 
 assert_no_sensitive_changes() {
   local staged unstaged untracked combined
@@ -60,6 +60,12 @@ done
 # Notes/specs
 [ -d "$WORKSPACE/notes" ] && rsync -a "$WORKSPACE/notes/" "$DOTFILES_DIR/notes/"
 [ -d "$WORKSPACE/specs" ] && rsync -a "$WORKSPACE/specs/" "$DOTFILES_DIR/specs/"
+
+# Personas (PR review personas)
+if [ -d "$WORKSPACE/personas" ]; then
+  mkdir -p "$DOTFILES_DIR/personas"
+  rsync -a --exclude '__pycache__' "$WORKSPACE/personas/" "$DOTFILES_DIR/personas/"
+fi
 
 # Research markdown only
 if [ -d "$HOME/research" ]; then
