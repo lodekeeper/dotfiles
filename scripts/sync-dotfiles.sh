@@ -5,8 +5,12 @@ set -euo pipefail
 DOTFILES_DIR="$HOME/dotfiles"
 WORKSPACE="$HOME/.openclaw/workspace"
 
-# Sensitive path policy (must never be committed)
-SENSITIVE_REGEX='^(BACKLOG\.md|HEARTBEAT\.md|MEMORY\.md|SOUL\.md|STATE\.md|USER\.md|memory/|personas/|openclaw/(HEARTBEAT|SOUL|USER)\.md$)'
+# Sensitive/unwanted path policy (must never be committed)
+# Notes:
+# - keep research/** and kurtosis/** (explicitly allowed by Nico)
+# - block backlog artifacts, memory/personas, bank snapshots, local state dumps,
+#   and temporary/archive payloads that should not be published.
+SENSITIVE_REGEX='^(BACKLOG\.md|BACKLOG\.md\.bak-.*|BACKLOG_ARCHIVE\.md|HEARTBEAT\.md|MEMORY\.md|SOUL\.md|STATE\.md|USER\.md|memory/|personas/|bank/|\.openclaw/|\.tmp-.*|tmp_.*|.*\.tgz$|openclaw/(HEARTBEAT|SOUL|USER)\.md$)'
 
 assert_no_sensitive_changes() {
   local staged unstaged untracked combined
