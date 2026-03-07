@@ -145,8 +145,20 @@ Created `notes/fork-implementation-checklist.md`:
 
 ---
 
+### ✅ Debug session template created
+Created `notes/debug-session-template.md` (2026-03-07):
+- Structured header (date, topic, linked PR, environment, time budget)
+- Hypothesis-first section (list before looking at evidence)
+- Timestamped evidence log with bash command blocks
+- "Ruled out" table to track eliminated hypotheses
+- Working theory + root cause + fix sections
+- Lessons learned → feeds back into skill updates
+- Quick-reference bash snippets for common starting points
+
+---
+
 ## Next Audit Priorities (next daily cycles)
 
-1. Add LLM fallback classification for unknown CI failure patterns
+1. Add LLM fallback classification for unknown CI failure patterns (`auto_fix_flaky.py`)
 2. Add confidence scoring/check in CI autofix outputs (root-cause vs masking)
-3. Create `notes/debug-session-template.md` and standardize usage in investigations
+3. Codify EPBS devnet-0 startup into `scripts/devnet/start-epbs-devnet.sh`
