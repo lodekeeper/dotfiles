@@ -1,103 +1,93 @@
 #!/bin/bash
-# Sync local agent files to the dotfiles repo
-# Run periodically or after making local changes
-set -e
+# Sync local non-sensitive agent files to dotfiles repo
+set -euo pipefail
 
 DOTFILES_DIR="$HOME/dotfiles"
 WORKSPACE="$HOME/.openclaw/workspace"
 
-echo "Syncing agent files to dotfiles repo..."
+# Sensitive path policy (must never be committed)
+SENSITIVE_REGEX='^(BACKLOG\.md|HEARTBEAT\.md|MEMORY\.md|SOUL\.md|STATE\.md|USER\.md|memory/|personas/|openclaw/(HEARTBEAT|SOUL|USER)\.md$)'
 
-# Global agent instructions (source of truth: dotfiles repo via symlinks)
-# These are already symlinked, no sync needed
-
-# OpenClaw workspace files
-# NOTE: The dotfiles repo versions (openclaw/) are the source of truth.
-# They contain more content than the runtime workspace versions.
-# Only sync if the dotfiles version doesn't exist yet.
-mkdir -p "$DOTFILES_DIR/openclaw"
-for f in AGENTS.md HEARTBEAT.md IDENTITY.md SOUL.md TOOLS.md; do
-  # Always overwrite — workspace is source of truth
-  if true; then
-    cp "$WORKSPACE/$f" "$DOTFILES_DIR/openclaw/$f" 2>/dev/null || true
+assert_no_sensitive_changes() {
+  local staged unstaged untracked combined
+  staged=$(git diff --cached --name-only || true)
+  unstaged=$(git diff --name-only || true)
+  untracked=$(git ls-files --others --exclude-standard || true)
+  combined=$(printf "%s\n%s\n%s\n" "$staged" "$unstaged" "$untracked" | sed '/^$/d' | sort -u)
+  if echo "$combined" | grep -E "$SENSITIVE_REGEX" >/dev/null; then
+    echo "❌ ABORT: sensitive paths detected in changes:" >&2
+    echo "$combined" | grep -E "$SENSITIVE_REGEX" >&2 || true
+    exit 1
   fi
+}
+
+echo "Syncing non-sensitive files to dotfiles repo..."
+
+mkdir -p "$DOTFILES_DIR/openclaw" "$DOTFILES_DIR/config" "$DOTFILES_DIR/lodestar" "$DOTFILES_DIR/scripts"
+
+# Workspace files (explicit allowlist)
+for f in AGENTS.md IDENTITY.md TOOLS.md CODING_CONTEXT.md; do
+  [ -f "$WORKSPACE/$f" ] && cp "$WORKSPACE/$f" "$DOTFILES_DIR/openclaw/$f"
 done
 
-# Cron job configurations (backup)
+# Cron config backup
 mkdir -p "$DOTFILES_DIR/openclaw/cron"
-cp ~/.openclaw/cron/jobs.json "$DOTFILES_DIR/openclaw/cron/jobs.json" 2>/dev/null || true
+[ -f "$HOME/.openclaw/cron/jobs.json" ] && cp "$HOME/.openclaw/cron/jobs.json" "$DOTFILES_DIR/openclaw/cron/jobs.json"
 
-# Codex config
-cp ~/.codex/config.toml "$DOTFILES_DIR/config/codex-config.toml" 2>/dev/null || true
+# Config/context
+[ -f "$HOME/.codex/config.toml" ] && cp "$HOME/.codex/config.toml" "$DOTFILES_DIR/config/codex-config.toml"
+[ -f "$HOME/lodestar/AGENTS.md" ] && cp "$HOME/lodestar/AGENTS.md" "$DOTFILES_DIR/lodestar/AGENTS.md"
+[ -f "$WORKSPACE/lodestar-ai-config.md" ] && cp "$WORKSPACE/lodestar-ai-config.md" "$DOTFILES_DIR/lodestar/ai-config.md"
 
-# Coding context
-cp "$WORKSPACE/CODING_CONTEXT.md" "$DOTFILES_DIR/CODING_CONTEXT.md" 2>/dev/null || true
-
-# Lodestar project AGENTS.md
-cp ~/lodestar/AGENTS.md "$DOTFILES_DIR/lodestar/AGENTS.md" 2>/dev/null || true
-
-# Skills
+# Skills (exclude runtime/state artifacts)
+mkdir -p "$DOTFILES_DIR/skills"
 for skill_dir in "$WORKSPACE/skills"/*/; do
+  [ -d "$skill_dir" ] || continue
   skill_name=$(basename "$skill_dir")
   mkdir -p "$DOTFILES_DIR/skills/$skill_name"
-  cp -r "$skill_dir"* "$DOTFILES_DIR/skills/$skill_name/" 2>/dev/null || true
+  rsync -a --delete \
+    --exclude '__pycache__' \
+    --exclude 'state' \
+    --exclude '*.db' \
+    --exclude '*.pyc' \
+    "$skill_dir" "$DOTFILES_DIR/skills/"
 done
 
-# All notes (specs, eip8025, epbs, lodekeeper-dash, etc.)
-for notes_dir in "$WORKSPACE/notes"/*/; do
-  notes_name=$(basename "$notes_dir")
-  mkdir -p "$DOTFILES_DIR/notes/$notes_name"
-  cp -r "$notes_dir"* "$DOTFILES_DIR/notes/$notes_name/" 2>/dev/null || true
-done
+# Notes/specs
+[ -d "$WORKSPACE/notes" ] && rsync -a "$WORKSPACE/notes/" "$DOTFILES_DIR/notes/"
+[ -d "$WORKSPACE/specs" ] && rsync -a "$WORKSPACE/specs/" "$DOTFILES_DIR/specs/"
 
-# Specs (gloas, peerdas, etc.)
-for spec_dir in "$WORKSPACE/specs"/*/; do
-  spec_name=$(basename "$spec_dir")
-  mkdir -p "$DOTFILES_DIR/specs/$spec_name"
-  cp -r "$spec_dir"* "$DOTFILES_DIR/specs/$spec_name/" 2>/dev/null || true
-done
-
-# Lodestar ai-config
-cp "$WORKSPACE/lodestar-ai-config.md" "$DOTFILES_DIR/lodestar/ai-config.md" 2>/dev/null || true
-
-# Research artifacts (~/research/ → dotfiles/research/)
+# Research markdown only
 if [ -d "$HOME/research" ]; then
-  for research_dir in "$HOME/research"/*/; do
-    research_name=$(basename "$research_dir")
-    mkdir -p "$DOTFILES_DIR/research/$research_name"
-    # Sync markdown and plan files (skip large raw JSON, Python scripts, venvs)
-    find "$research_dir" -maxdepth 2 -name "*.md" -exec cp {} "$DOTFILES_DIR/research/$research_name/" \; 2>/dev/null || true
-  done
+  mkdir -p "$DOTFILES_DIR/research"
+  while IFS= read -r -d '' f; do
+    rel="${f#$HOME/research/}"
+    mkdir -p "$DOTFILES_DIR/research/$(dirname "$rel")"
+    cp "$f" "$DOTFILES_DIR/research/$rel"
+  done < <(find "$HOME/research" -type f -name '*.md' -print0)
 fi
 
-# Memory scripts
-mkdir -p "$DOTFILES_DIR/openclaw/scripts/memory"
-for f in "$WORKSPACE/scripts/memory"/*.py "$WORKSPACE/scripts/memory"/*.sh; do
-  [ -f "$f" ] && cp "$f" "$DOTFILES_DIR/openclaw/scripts/memory/" 2>/dev/null || true
-done
+# Scripts (explicit)
+[ -f "$HOME/lodekeeper-dash/scripts/update-status.sh" ] && cp "$HOME/lodekeeper-dash/scripts/update-status.sh" "$DOTFILES_DIR/scripts/update-status.sh"
+[ -f "$HOME/lodekeeper-dash/scripts/deploy.sh" ] && cp "$HOME/lodekeeper-dash/scripts/deploy.sh" "$DOTFILES_DIR/scripts/deploy.sh"
 
-# Docs
-mkdir -p "$DOTFILES_DIR/openclaw/docs"
-cp "$WORKSPACE/docs"/*.md "$DOTFILES_DIR/openclaw/docs/" 2>/dev/null || true
-
-# Scripts
-cp ~/lodekeeper-dash/scripts/update-status.sh "$DOTFILES_DIR/scripts/update-status.sh" 2>/dev/null || true
-cp ~/lodekeeper-dash/scripts/deploy.sh "$DOTFILES_DIR/scripts/deploy.sh" 2>/dev/null || true
-
-# Check for changes
 cd "$DOTFILES_DIR"
+assert_no_sensitive_changes
+
 if git diff --quiet && git diff --cached --quiet && [ -z "$(git ls-files --others --exclude-standard)" ]; then
   echo "No changes to sync."
   exit 0
 fi
 
-# Commit and push
 git add -A
+assert_no_sensitive_changes
+
 CHANGED=$(git diff --cached --stat | tail -1)
-git commit -S -m "chore: sync local changes
+git commit -S -m "chore: sync non-sensitive local changes
 
 $CHANGED
 
 🤖 Generated with AI assistance"
 git push origin main
-echo "Synced and pushed."
+
+echo "Synced and pushed (non-sensitive only)."
