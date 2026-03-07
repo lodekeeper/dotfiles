@@ -10,7 +10,7 @@ WORKSPACE="$HOME/.openclaw/workspace"
 # - keep research/** and kurtosis/** (explicitly allowed by Nico)
 # - block backlog artifacts, memory/personas, bank snapshots, local state dumps,
 #   and temporary/archive payloads that should not be published.
-SENSITIVE_REGEX='^(BACKLOG\.md|BACKLOG\.md\.bak-.*|BACKLOG_ARCHIVE\.md|MEMORY\.md|STATE\.md|memory/|personas/|bank/|\.openclaw/|\.tmp-.*|tmp_.*|.*\.tgz$)'
+SENSITIVE_REGEX='^(BACKLOG\.md|BACKLOG\.md\.bak-.*|BACKLOG_ARCHIVE\.md|STATE\.md|memory/|personas/|bank/|\.openclaw/|\.tmp-.*|tmp_.*|.*\.tgz$)'
 
 assert_no_sensitive_changes() {
   local staged unstaged untracked combined
@@ -30,7 +30,7 @@ echo "Syncing non-sensitive files to dotfiles repo..."
 mkdir -p "$DOTFILES_DIR/openclaw" "$DOTFILES_DIR/config" "$DOTFILES_DIR/lodestar" "$DOTFILES_DIR/scripts"
 
 # Workspace files (explicit allowlist)
-for f in AGENTS.md IDENTITY.md TOOLS.md CODING_CONTEXT.md SOUL.md USER.md HEARTBEAT.md; do
+for f in AGENTS.md IDENTITY.md TOOLS.md CODING_CONTEXT.md SOUL.md USER.md HEARTBEAT.md MEMORY.md; do
   [ -f "$WORKSPACE/$f" ] && cp "$WORKSPACE/$f" "$DOTFILES_DIR/openclaw/$f"
 done
 
