@@ -14,3 +14,13 @@ research/oracle-bridge-cdp.py
 research/oracle-stealth-bridge.py
 research/oracle-remote-chrome-test.py
 research/chatgpt-camoufox.py
+
+# 1) Generated Kurtosis artifact dumps (keep configs, ignore tmp generated payloads)
+kurtosis/tmp-*/
+
+# 2) Python bytecode/cache artifacts
+**/__pycache__/
+*.pyc
+
+# 3) Runtime state DBs (example: web-search cache/rate-limit state)
+skills/web-search/state/*.db
