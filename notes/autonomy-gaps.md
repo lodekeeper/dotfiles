@@ -1,7 +1,7 @@
-# Autonomy Gaps — Weekly Audit
+# Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-03-06
+> Updated: 2026-03-07
 
 ---
 
@@ -120,7 +120,7 @@ Added Step 1.5 between "Get the diff" and "Read persona prompts":
 
 ---
 
-## Next Audit Priorities (for next week)
+## Next Audit Priorities (next daily cycles)
 
 1. Write `scripts/spec/extract-spec-section.sh` — spec lookup automation
 2. Write `scripts/debug/devnet-triage.sh` — first-5-minutes diagnostic
