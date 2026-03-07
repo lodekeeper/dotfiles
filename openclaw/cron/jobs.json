@@ -99,7 +99,7 @@
       "name": "Sync dotfiles repo",
       "enabled": true,
       "createdAtMs": 1771362496423,
-      "updatedAtMs": 1772848417300,
+      "updatedAtMs": 1772851186253,
       "schedule": {
         "kind": "cron",
         "expr": "0 */6 * * *",
@@ -114,15 +114,15 @@
         "model": "anthropic/claude-sonnet-4-6"
       },
       "state": {
-        "lastRunAtMs": 1772848282126,
+        "lastRunAtMs": 1772851133175,
         "lastStatus": "ok",
-        "lastDurationMs": 135174,
+        "lastDurationMs": 53078,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false,
         "nextRunAtMs": 1772863398972,
-        "runningAtMs": 1772851133175
+        "runningAtMs": 1772853352808
       },
       "delivery": {
         "mode": "none"
@@ -203,7 +203,7 @@
       "name": "eth-rnd-archive-hourly",
       "enabled": true,
       "createdAtMs": 1772034567300,
-      "updatedAtMs": 1772849758502,
+      "updatedAtMs": 1772853361252,
       "schedule": {
         "kind": "cron",
         "expr": "15 * * * *",
@@ -221,13 +221,13 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1772849700011,
+        "lastRunAtMs": 1772853300004,
         "lastStatus": "ok",
-        "lastDurationMs": 58491,
+        "lastDurationMs": 61248,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1772853300000,
+        "nextRunAtMs": 1772856900000,
         "lastDelivered": false
       }
     },
@@ -274,7 +274,7 @@
       "name": "github-notifications",
       "enabled": true,
       "createdAtMs": 1772107716625,
-      "updatedAtMs": 1772851044644,
+      "updatedAtMs": 1772853149428,
       "schedule": {
         "kind": "every",
         "everyMs": 300000,
@@ -292,14 +292,15 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1772850977484,
+        "lastRunAtMs": 1772853077515,
         "lastStatus": "ok",
-        "lastDurationMs": 67160,
+        "lastDurationMs": 71913,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1772851277484,
-        "lastDelivered": false
+        "nextRunAtMs": 1772853377515,
+        "lastDelivered": false,
+        "runningAtMs": 1772853377524
       },
       "deleteAfterRun": false
     },
@@ -444,7 +445,7 @@
       "name": "monitor-open-pr-ci",
       "enabled": true,
       "createdAtMs": 1772635128553,
-      "updatedAtMs": 1772849683865,
+      "updatedAtMs": 1772853291223,
       "schedule": {
         "kind": "every",
         "everyMs": 1800000,
@@ -461,11 +462,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1772851436803,
-        "lastRunAtMs": 1772849636803,
+        "nextRunAtMs": 1772855036812,
+        "lastRunAtMs": 1772853236812,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 47062,
+        "lastDurationMs": 54411,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -507,27 +508,27 @@
     {
       "id": "d7f95873-f30c-4f41-b944-3345542c5261",
       "agentId": "main",
-      "name": "self-improvement-audit-weekly",
+      "name": "self-improvement-audit-daily",
       "enabled": true,
       "createdAtMs": 1772635128553,
-      "updatedAtMs": 1772840846254,
+      "updatedAtMs": 1772853405968,
       "schedule": {
         "kind": "every",
-        "everyMs": 604800000,
-        "anchorMs": 1772635128553
+        "everyMs": 86400000,
+        "anchorMs": 1772853389684
       },
       "sessionTarget": "isolated",
       "wakeMode": "now",
       "payload": {
         "kind": "agentTurn",
-        "message": "Weekly self-improvement audit.\nAsk: 'What would I need to do this autonomously?' for PR review, CI fix, spec implementation, and devnet debugging.\nUpdate `notes/autonomy-gaps.md` with concrete blockers and proposed fixes.\nDo not only note gaps: implement at least one practical improvement when feasible (new cron/script/skill/workflow update).\nIf no meaningful change from last audit, reply exactly `NO_REPLY`; otherwise send concise summary.",
+        "message": "Daily self-improvement audit.\nAsk: \"What would I need to do this autonomously?\" for PR review, CI fix, spec implementation, and devnet debugging.\nUpdate `notes/autonomy-gaps.md` with concrete blockers and proposed fixes.\nDo not only note gaps: implement at least one practical improvement when feasible (new cron/script/skill/workflow update).\nIf no meaningful change from last audit, reply exactly `NO_REPLY`; otherwise send concise summary.",
         "model": "anthropic/claude-sonnet-4-6"
       },
       "delivery": {
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1773445485705,
+        "nextRunAtMs": 1772927085705,
         "lastRunAtMs": 1772840685705,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
@@ -543,7 +544,7 @@
       "name": "cron-health-watchdog",
       "enabled": true,
       "createdAtMs": 1772636078136,
-      "updatedAtMs": 1772849623603,
+      "updatedAtMs": 1772853222409,
       "schedule": {
         "kind": "every",
         "everyMs": 1800000,
@@ -560,11 +561,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1772851386367,
-        "lastRunAtMs": 1772849586367,
+        "nextRunAtMs": 1772854986380,
+        "lastRunAtMs": 1772853186380,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 37236,
+        "lastDurationMs": 36029,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
