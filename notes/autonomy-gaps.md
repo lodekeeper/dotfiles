@@ -118,11 +118,35 @@ Added Step 1.5 between "Get the diff" and "Read persona prompts":
 
 **Rationale:** PR #8993 — two reviewer sub-agents flagged `dataColumns.ts` and `gloas.ts`, which were not in the diff. I spent time verifying these before discovering they were noise. This is a repeating failure mode.
 
+### ✅ Spec section extractor script implemented
+Created `scripts/spec/extract-spec-section.sh`:
+- supports query + `--spec-root`
+- extracts primary pseudocode matches from specs markdown
+- follows import chains for related symbol definitions
+- emits markdown report to stdout or `--output`
+- supports `rg` with `grep` fallback
+
+### ✅ Devnet first-5-minutes triage script implemented
+Created `scripts/debug/devnet-triage.sh`:
+- process/uptime snapshot for matching local node processes
+- listener/zombie check over configurable ports (default 9000/9596/5052)
+- Loki error snapshot via Grafana datasource proxy (configurable window + query)
+- Prometheus peer/attestation probes with fallback query candidates
+- startup/restart hint count from logs
+- markdown report output (`--output`) for easy sharing
+
+### ✅ Fork implementation checklist template added
+Created `notes/fork-implementation-checklist.md`:
+- end-to-end fork coverage checklist (spec intake → types/state transition → fork choice → networking → API → storage)
+- explicit test matrix (unit/integration/e2e/spec vectors)
+- interop/devnet validation gates
+- PR hygiene/review flow checks
+- merge readiness/exit criteria summary block for PR descriptions
+
 ---
 
 ## Next Audit Priorities (next daily cycles)
 
-1. Write `scripts/spec/extract-spec-section.sh` — spec lookup automation
-2. Write `scripts/debug/devnet-triage.sh` — first-5-minutes diagnostic
-3. Add issue-linkage step to CI autofix cron prompt
-4. Create `notes/fork-implementation-checklist.md`
+1. Add LLM fallback classification for unknown CI failure patterns
+2. Add confidence scoring/check in CI autofix outputs (root-cause vs masking)
+3. Create `notes/debug-session-template.md` and standardize usage in investigations
