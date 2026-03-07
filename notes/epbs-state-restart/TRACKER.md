@@ -9,9 +9,9 @@ Fix restart crash (`headState does not exist`) and make Lodestar finalized state
 - [x] Phase 0: Research (code paths + potuz guidance + screenshot analysis)
 - [x] Phase 1: Spec/architecture draft
 - [x] Phase 2: Worktree setup from latest `epbs-devnet-0`
-- [x] Phase 3: Implementation
+- [~] Phase 3: Implementation
 - [ ] Phase 4: Quality gate + multi-reviewer pass
-- [~] Phase 5: Live-devnet validation complete, PR + handoff pending
+- [ ] Phase 5: Live-devnet validation, PR, and handoff
 
 ## Completed Work
 - Worktree: `~/lodestar-epbs-state-restart` from `origin/epbs-devnet-0` (`be0b39f6b7`)
