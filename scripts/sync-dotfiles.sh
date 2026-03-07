@@ -45,12 +45,12 @@ for skill_dir in "$WORKSPACE/skills"/*/; do
   [ -d "$skill_dir" ] || continue
   skill_name=$(basename "$skill_dir")
   mkdir -p "$DOTFILES_DIR/skills/$skill_name"
-  rsync -a --delete \
+  rsync -a \
     --exclude '__pycache__' \
     --exclude 'state' \
     --exclude '*.db' \
     --exclude '*.pyc' \
-    "$skill_dir" "$DOTFILES_DIR/skills/"
+    "$skill_dir/" "$DOTFILES_DIR/skills/$skill_name/"
 done
 
 # Notes/specs
