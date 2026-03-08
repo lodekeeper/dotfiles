@@ -1,7 +1,7 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-03-07
+> Updated: 2026-03-07 (2nd pass)
 
 ---
 
@@ -42,13 +42,15 @@ When CI autofix opens a fix PR, it doesn't check whether an open issue already t
 
 **Proposed fix:** In `CRON_PROMPT.md`, add step: after opening fix PR, search for related issues via `gh issue list --search "<test name> is:open"` and comment/reference from the PR.
 
-#### 🟡 Pattern-based classifier misses semantic failures
-The classifier matches keyword patterns. Failures with novel error messages or new test paths fall through unclassified.
+#### ~~🟡 Pattern-based classifier misses semantic failures~~ ✅ FIXED (2026-03-07)
+~~The classifier matches keyword patterns. Failures with novel error messages or new test paths fall through unclassified.~~
 
-**Proposed fix:** Add LLM-based fallback classification for unmatched patterns. After keyword classifier returns `unknown`, ask GPT to classify based on full error context.
+**Fix applied:** Added `classify_with_llm()` to `auto_fix_flaky.py`. When keyword classifier returns `unknown-failure`, it now calls `gpt-4o-mini` with a structured system prompt and 13-category taxonomy. Returns `classification`, `confidence`, `fixable`, and `fix_hint`. Falls back gracefully if OPENAI_API_KEY is missing or call fails. `--no-llm` flag available for offline use.
 
-#### 🟢 No confidence score in fix quality
-Codex applies fixes but there's no check on whether the fix actually addresses root cause vs. masking (e.g., bumping timeout). This leads to PRs that merge but don't fix the underlying issue.
+#### ~~🟢 No confidence score in fix quality~~ ✅ FIXED (2026-03-07)
+~~Codex applies fixes but there's no check on whether the fix actually addresses root cause vs. masking (e.g., bumping timeout). This leads to PRs that merge but don't fix the underlying issue.~~
+
+**Fix applied:** Added `confidence` field (high/medium/low based on classification source) and `fix_confidence` field (`root-cause` | `likely-root-cause` | `masking-risk` | `unknown`) to all findings in `auto_fix_flaky.py`. `CRON_PROMPT.md` updated: if `fix_confidence` is `masking-risk`/`unknown`, cron agent must add PR comment flagging it for human review.
 
 ---
 
@@ -135,6 +137,16 @@ Created `scripts/debug/devnet-triage.sh`:
 - startup/restart hint count from logs
 - markdown report output (`--output`) for easy sharing
 
+### ✅ LLM fallback classification added to CI autofix detector
+Updated `scripts/ci/auto_fix_flaky.py`:
+- `classify_with_llm(job_name, logs)` using `gpt-4o-mini` + JSON response format
+- 13-category taxonomy in system prompt; validated against known categories
+- Graceful fallback if API key missing or call fails; `--no-llm` flag for offline
+- `confidence` field on every finding: `high` (keyword), `medium` (LLM), `low` (no match)
+- `fix_confidence` field: `root-cause` | `likely-root-cause` | `masking-risk` | `unknown`
+- `fix_hint` field: LLM-generated short fix suggestion passed to cron agent
+- `CRON_PROMPT.md` updated with guidance: flag masking-risk fixes for human review
+
 ### ✅ Fork implementation checklist template added
 Created `notes/fork-implementation-checklist.md`:
 - end-to-end fork coverage checklist (spec intake → types/state transition → fork choice → networking → API → storage)
@@ -159,6 +171,8 @@ Created `notes/debug-session-template.md` (2026-03-07):
 
 ## Next Audit Priorities (next daily cycles)
 
-1. Add LLM fallback classification for unknown CI failure patterns (`auto_fix_flaky.py`)
-2. Add confidence scoring/check in CI autofix outputs (root-cause vs masking)
+1. ~~Add LLM fallback classification for unknown CI failure patterns (`auto_fix_flaky.py`)~~ ✅ done
+2. ~~Add confidence scoring/check in CI autofix outputs (root-cause vs masking)~~ ✅ done
 3. Codify EPBS devnet-0 startup into `scripts/devnet/start-epbs-devnet.sh`
+4. Add LLM-based fix *quality* check post-Codex: send the diff to GPT and ask "does this fix the root cause or is it masking?" before opening the PR
+5. Add reviewer file-scope injection to `lodestar-review` SKILL.md (prepend `## Files Changed` block to every reviewer task)
