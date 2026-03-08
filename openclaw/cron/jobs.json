@@ -99,7 +99,7 @@
       "name": "Sync dotfiles repo",
       "enabled": true,
       "createdAtMs": 1771362496423,
-      "updatedAtMs": 1772983380662,
+      "updatedAtMs": 1772993298985,
       "schedule": {
         "kind": "cron",
         "expr": "0 */6 * * *",
@@ -111,18 +111,17 @@
         "kind": "agentTurn",
         "message": "Run ~/dotfiles/scripts/sync-dotfiles.sh now to sync local files into ~/dotfiles and push to github.com/lodekeeper/dotfiles.\nDo this directly (do not send a reminder message).\nOutput policy:\n- If sync succeeded and there were meaningful changes pushed: send a short routine update to Telegram topic #347 via message tool (target=-1003764039429, threadId=347).\n- If no changes were needed: NO_REPLY.\n- If sync fails: send an actionable error summary to Telegram topic #347; DM Nico only if urgent/manual intervention is required.",
         "timeoutSeconds": 300,
-        "model": "openai-codex/gpt-5.3-codex-spark"
+        "model": "openai-codex/gpt-5.3-codex"
       },
       "state": {
-        "lastRunAtMs": 1772971398977,
-        "lastStatus": "ok",
-        "lastDurationMs": 15310,
-        "lastRunStatus": "ok",
-        "lastDeliveryStatus": "not-delivered",
-        "consecutiveErrors": 0,
-        "lastDelivered": false,
-        "nextRunAtMs": 1772992998972,
-        "runningAtMs": 1772983792196
+        "lastRunAtMs": 1772992998977,
+        "lastStatus": "error",
+        "lastDurationMs": 300008,
+        "lastRunStatus": "error",
+        "lastDeliveryStatus": "not-requested",
+        "consecutiveErrors": 1,
+        "nextRunAtMs": 1773014598972,
+        "runningAtMs": 1773000095123
       },
       "delivery": {
         "mode": "none"
@@ -135,7 +134,7 @@
       "name": "beacon-log-monitor",
       "enabled": true,
       "createdAtMs": 1771513454598,
-      "updatedAtMs": 1772983301505,
+      "updatedAtMs": 1772984192580,
       "schedule": {
         "kind": "every",
         "everyMs": 86400000,
@@ -147,7 +146,7 @@
         "kind": "agentTurn",
         "message": "Run the beacon log monitor script: `bash ~/.openclaw/workspace/scripts/monitor-beacon.sh`. If the output is empty, reply with just HEARTBEAT_OK. If there are alerts, send them to Nico on Telegram with context about what each alert means and whether it needs action.",
         "timeoutSeconds": 180,
-        "model": "openai-codex/gpt-5.3-codex-spark"
+        "model": "openai-codex/gpt-5.3-codex"
       },
       "delivery": {
         "mode": "none"
@@ -169,7 +168,7 @@
       "name": "daily-meme",
       "enabled": true,
       "createdAtMs": 1771753595377,
-      "updatedAtMs": 1772920909437,
+      "updatedAtMs": 1772995375675,
       "schedule": {
         "kind": "cron",
         "expr": "0 22 * * *",
@@ -188,9 +187,9 @@
       },
       "state": {
         "nextRunAtMs": 1773007200000,
-        "lastRunAtMs": 1772920800007,
+        "lastRunAtMs": 1772995091450,
         "lastStatus": "ok",
-        "lastDurationMs": 109430,
+        "lastDurationMs": 284225,
         "lastRunStatus": "ok",
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
@@ -203,7 +202,7 @@
       "name": "eth-rnd-archive-hourly",
       "enabled": true,
       "createdAtMs": 1772034567300,
-      "updatedAtMs": 1772982911022,
+      "updatedAtMs": 1772999003308,
       "schedule": {
         "kind": "cron",
         "expr": "15 * * * *",
@@ -221,13 +220,13 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1772982900003,
+        "lastRunAtMs": 1772998987636,
         "lastStatus": "ok",
-        "lastDurationMs": 11019,
+        "lastDurationMs": 15672,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1772986500000,
+        "nextRunAtMs": 1773000900000,
         "lastDelivered": false
       }
     },
@@ -274,7 +273,7 @@
       "name": "github-notifications",
       "enabled": true,
       "createdAtMs": 1772107716625,
-      "updatedAtMs": 1772983797887,
+      "updatedAtMs": 1773000085033,
       "schedule": {
         "kind": "every",
         "everyMs": 300000,
@@ -285,20 +284,20 @@
       "payload": {
         "kind": "agentTurn",
         "message": "Check GitHub notifications for lodekeeper using deterministic checklist dedupe.\n\nRun:\npython3 /home/openclaw/.openclaw/workspace/scripts/github/github_notifications_sweep.py --state /home/openclaw/gh-notif-state.json --checklist /home/openclaw/gh-notif-checklist.json --backlog /home/openclaw/.openclaw/workspace/BACKLOG.md\n\nBehavior:\n1) If script output is exactly HEARTBEAT_OK, reply HEARTBEAT_OK (no delivery anywhere).\n2) Otherwise:\n   a) Post a concise summary to Lodestar WG topic #347 using: message action=send target=-1003764039429 threadId=347\n   b) Ensure BACKLOG has a matching task for each newly reported PR only if missing (no duplicate/empty-sweep entries).\n3) Do NOT perform code changes on PRs here (detect/report + checklist only).\n4) Keep reviewer-bot comments included; ignore only lodekeeper self comments.\n5) Routine notifications (bot comments, codecov, non-blocking reviews) → post to topic #347 only.\n6) Urgent items (Nico requesting changes on my PR, blocking reviewer feedback needing Nico's decision) → DM Nico directly (target=5774760693). CI failures on my own PRs are NOT urgent — fix them myself.\n7) If nothing new → HEARTBEAT_OK (no output anywhere).",
-        "model": "openai-codex/gpt-5.3-codex-spark",
+        "model": "openai-codex/gpt-5.3-codex",
         "timeoutSeconds": 120
       },
       "delivery": {
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1772983788720,
+        "lastRunAtMs": 1773000047274,
         "lastStatus": "ok",
-        "lastDurationMs": 9167,
+        "lastDurationMs": 37759,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1772984088720,
+        "nextRunAtMs": 1773000347274,
         "lastDelivered": false
       },
       "deleteAfterRun": false
@@ -343,7 +342,7 @@
       "name": "ci-autofix-unstable",
       "enabled": true,
       "createdAtMs": 1772326513772,
-      "updatedAtMs": 1772946044120,
+      "updatedAtMs": 1772989256037,
       "schedule": {
         "kind": "every",
         "everyMs": 43200000,
@@ -362,11 +361,11 @@
         "to": "-1003764039429:52"
       },
       "state": {
-        "nextRunAtMs": 1772989232052,
-        "lastRunAtMs": 1772946032052,
+        "nextRunAtMs": 1773032432058,
+        "lastRunAtMs": 1772989232058,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 12068,
+        "lastDurationMs": 23979,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0
@@ -378,7 +377,7 @@
       "name": "aztec-sequencer-health",
       "enabled": true,
       "createdAtMs": 1772373812089,
-      "updatedAtMs": 1772970085330,
+      "updatedAtMs": 1772998892962,
       "schedule": {
         "kind": "every",
         "everyMs": 14400000,
@@ -395,11 +394,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1772984478177,
-        "lastRunAtMs": 1772970078177,
+        "nextRunAtMs": 1773013278188,
+        "lastRunAtMs": 1772998878188,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 7153,
+        "lastDurationMs": 14774,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -411,7 +410,7 @@
       "name": "workspace-periodic-cleanup",
       "enabled": true,
       "createdAtMs": 1772634832403,
-      "updatedAtMs": 1772968286630,
+      "updatedAtMs": 1772999773670,
       "schedule": {
         "kind": "every",
         "everyMs": 21600000,
@@ -428,11 +427,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1772989848327,
-        "lastRunAtMs": 1772968248327,
+        "nextRunAtMs": 1773011448337,
+        "lastRunAtMs": 1772999698454,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 38303,
+        "lastDurationMs": 75216,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0
@@ -444,7 +443,7 @@
       "name": "monitor-open-pr-ci",
       "enabled": true,
       "createdAtMs": 1772635128553,
-      "updatedAtMs": 1772983297993,
+      "updatedAtMs": 1772999086510,
       "schedule": {
         "kind": "every",
         "everyMs": 1800000,
@@ -455,17 +454,17 @@
       "payload": {
         "kind": "agentTurn",
         "message": "Run: python3 ~/.openclaw/workspace/scripts/github/monitor_open_pr_ci.py\n- If output is exactly `NO_REPLY`, reply exactly `NO_REPLY`.\n- Otherwise send the output as a concise CI alert summary.\n- Do NOT edit BACKLOG.md in this cron; backlog updates are handled in main session triage.\n\nOutput routing:\n- Routine CI status: post to topic #347 (action=send target=-1003764039429 threadId=347) or NO_REPLY.\n- CI failure on MY PRs: do NOT DM Nico — instead create a task to fix it (update BACKLOG.md, post to topic #347).\n- CI failure that's a general/infra issue (flaky upstream, unstable breakage affecting multiple PRs): DM Nico (target=5774760693).",
-        "model": "openai-codex/gpt-5.3-codex-spark"
+        "model": "openai-codex/gpt-5.3-codex"
       },
       "delivery": {
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1772984871778,
-        "lastRunAtMs": 1772983071778,
+        "nextRunAtMs": 1773000804291,
+        "lastRunAtMs": 1772999004291,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 14157,
+        "lastDurationMs": 82219,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -543,7 +542,7 @@
       "name": "cron-health-watchdog",
       "enabled": true,
       "createdAtMs": 1772636078136,
-      "updatedAtMs": 1772983299896,
+      "updatedAtMs": 1772998332768,
       "schedule": {
         "kind": "every",
         "everyMs": 1800000,
@@ -554,20 +553,21 @@
       "payload": {
         "kind": "agentTurn",
         "message": "Run: python3 ~/.openclaw/workspace/scripts/cron/check_cron_health.py\\n- If output is exactly `NO_REPLY`, reply exactly `NO_REPLY`.\\n- Otherwise send the output as-is (it contains failing cron details and action guidance).\\n- Do not create empty-sweep backlog entries.\\n",
-        "model": "openai-codex/gpt-5.3-codex-spark"
+        "model": "openai-codex/gpt-5.3-codex"
       },
       "delivery": {
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1772984604085,
-        "lastRunAtMs": 1772982804085,
+        "nextRunAtMs": 1773000111213,
+        "lastRunAtMs": 1772998311213,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 5024,
+        "lastDurationMs": 21555,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "lastDelivered": false
+        "lastDelivered": false,
+        "runningAtMs": 1773000111217
       }
     },
     {
