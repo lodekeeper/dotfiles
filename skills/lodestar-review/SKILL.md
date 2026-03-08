@@ -84,12 +84,12 @@ Each reviewer's persona is in `references/<agent-id>.md` (relative to this skill
 
 ### 3. Spawn reviewers
 
-For each selected reviewer, spawn with the persona prepended to the diff:
+For each selected reviewer, spawn with the persona prepended to the diff. **Always include the `## Files Changed` block** (from Step 1.5) between the persona and the diff — this is the primary mechanism that prevents false positives:
 
 ```
 sessions_spawn(
   agentId: "<agent-id>",
-  task: "<persona prompt>\n\n---\n\nReview this diff for ChainSafe/lodestar PR #<number> (<title>):\n\n```diff\n<diff>\n```",
+  task: "<persona prompt>\n\n---\n\n## Files Changed in This PR\n<CHANGED_FILES, one per line>\n\nIMPORTANT: Only flag issues in the files listed above. Do NOT comment on files not in this list, even if they appear in the broader codebase context.\n\n---\n\nReview this diff for ChainSafe/lodestar PR #<number> (<title>):\n\n```diff\n<diff>\n```",
   label: "pr<number>-<reviewer-short-name>"
 )
 ```

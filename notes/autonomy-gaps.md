@@ -20,10 +20,10 @@ Sub-agents sometimes flag files **not in the PR diff** (confirmed on PR #8993: `
 - Include actual changed-file list in reviewer task prompt
 - Discard any finding referencing a file not in that list
 
-#### 🟡 No reviewer task pre-injection of changed-file scope
-Reviewer prompts don't currently include the file list — so reviewers have to infer scope from the diff content, which they sometimes miss.
+#### ~~🟡 No reviewer task pre-injection of changed-file scope~~ ✅ FIXED (2026-03-08)
+~~Reviewer prompts don't currently include the file list — so reviewers have to infer scope from the diff content, which they sometimes miss.~~
 
-**Proposed fix:** Prepend `## Files Changed\n<list>` block to every reviewer task. Low-effort, high-ROI.
+**Fix applied:** `lodestar-review/SKILL.md` Step 3 spawn task template now explicitly includes the `## Files Changed in This PR` block (from Step 1.5) between the persona and the diff, with the "IMPORTANT: Only flag issues in the files listed above" instruction baked into the template literal.
 
 #### 🟢 No automated convergence triage
 When multiple reviewers flag the same issue, I manually merge. A simple post-processing step that groups findings by file+line range would save synthesis time.
@@ -37,10 +37,10 @@ CI autofix cron (`573d18ec`) runs hourly, classifies flaky failures, applies pat
 
 ### Gaps
 
-#### 🟡 No auto-linkage to existing GitHub issues
-When CI autofix opens a fix PR, it doesn't check whether an open issue already tracks that failure, and doesn't reference/close it.
+#### ~~🟡 No auto-linkage to existing GitHub issues~~ ✅ FIXED (2026-03-07)
+~~When CI autofix opens a fix PR, it doesn't check whether an open issue already tracks that failure, and doesn't reference/close it.~~
 
-**Proposed fix:** In `CRON_PROMPT.md`, add step: after opening fix PR, search for related issues via `gh issue list --search "<test name> is:open"` and comment/reference from the PR.
+**Fix applied:** `CRON_PROMPT.md` Step 2 now has an "Issue linkage (mandatory)" step (Step 4): search `gh issue list --search "<test-name> in:title,in:body is:issue state:open"`, if hits found post a PR comment linking them, log linked issue IDs in the tracker update.
 
 #### ~~🟡 Pattern-based classifier misses semantic failures~~ ✅ FIXED (2026-03-07)
 ~~The classifier matches keyword patterns. Failures with novel error messages or new test paths fall through unclassified.~~
@@ -173,6 +173,7 @@ Created `notes/debug-session-template.md` (2026-03-07):
 
 1. ~~Add LLM fallback classification for unknown CI failure patterns (`auto_fix_flaky.py`)~~ ✅ done
 2. ~~Add confidence scoring/check in CI autofix outputs (root-cause vs masking)~~ ✅ done
-3. Codify EPBS devnet-0 startup into `scripts/devnet/start-epbs-devnet.sh`
-4. Add LLM-based fix *quality* check post-Codex: send the diff to GPT and ask "does this fix the root cause or is it masking?" before opening the PR
-5. Add reviewer file-scope injection to `lodestar-review` SKILL.md (prepend `## Files Changed` block to every reviewer task)
+3. ~~Add issue-linkage step to CI autofix cron prompt~~ ✅ done (2026-03-07, already in CRON_PROMPT.md Step 2.4)
+4. ~~Add reviewer file-scope injection to `lodestar-review` SKILL.md~~ ✅ done (2026-03-08, Step 3 template now includes `## Files Changed` block)
+5. ~~Codify EPBS devnet-0 startup into `scripts/devnet/start-epbs-devnet.sh`~~ ✅ done (2026-03-08)
+6. ~~Add LLM-based fix *quality* check post-Codex: send the diff to GPT and ask "does this fix the root cause or is it masking?" before opening the PR~~ ✅ done (2026-03-08)
