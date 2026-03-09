@@ -99,7 +99,7 @@
       "name": "Sync dotfiles repo",
       "enabled": true,
       "createdAtMs": 1771362496423,
-      "updatedAtMs": 1773036262857,
+      "updatedAtMs": 1773058195225,
       "schedule": {
         "kind": "cron",
         "expr": "0 */6 * * *",
@@ -114,15 +114,14 @@
         "model": "openai-codex/gpt-5.3-codex"
       },
       "state": {
-        "lastRunAtMs": 1773036198976,
-        "lastStatus": "ok",
-        "lastDurationMs": 63881,
-        "lastRunStatus": "ok",
-        "lastDeliveryStatus": "not-delivered",
-        "consecutiveErrors": 0,
-        "nextRunAtMs": 1773057798972,
-        "lastDelivered": false,
-        "runningAtMs": 1773057895214
+        "lastRunAtMs": 1773057895215,
+        "lastStatus": "error",
+        "lastDurationMs": 300010,
+        "lastRunStatus": "error",
+        "lastDeliveryStatus": "not-requested",
+        "consecutiveErrors": 1,
+        "nextRunAtMs": 1773079398972,
+        "lastError": "cron: job execution timed out"
       },
       "delivery": {
         "mode": "none"
@@ -135,7 +134,7 @@
       "name": "beacon-log-monitor",
       "enabled": true,
       "createdAtMs": 1771513454598,
-      "updatedAtMs": 1773001117186,
+      "updatedAtMs": 1773059182884,
       "schedule": {
         "kind": "every",
         "everyMs": 86400000,
@@ -153,10 +152,10 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1773058875278,
-        "lastRunAtMs": 1773000972900,
+        "nextRunAtMs": 1773145523936,
+        "lastRunAtMs": 1773059123936,
         "lastStatus": "ok",
-        "lastDurationMs": 144286,
+        "lastDurationMs": 58948,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
@@ -203,7 +202,7 @@
       "name": "eth-rnd-archive-hourly",
       "enabled": true,
       "createdAtMs": 1772034567300,
-      "updatedAtMs": 1773054917780,
+      "updatedAtMs": 1773058632521,
       "schedule": {
         "kind": "cron",
         "expr": "15 * * * *",
@@ -221,13 +220,13 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1773054900004,
+        "lastRunAtMs": 1773058500006,
         "lastStatus": "ok",
-        "lastDurationMs": 17776,
+        "lastDurationMs": 132515,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1773058500000,
+        "nextRunAtMs": 1773062100000,
         "lastDelivered": false
       }
     },
@@ -444,7 +443,7 @@
       "name": "monitor-open-pr-ci",
       "enabled": true,
       "createdAtMs": 1772635128553,
-      "updatedAtMs": 1773057653612,
+      "updatedAtMs": 1773059121594,
       "schedule": {
         "kind": "every",
         "everyMs": 1800000,
@@ -461,11 +460,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1773058802087,
-        "lastRunAtMs": 1773057002087,
+        "nextRunAtMs": 1773060602091,
+        "lastRunAtMs": 1773058802091,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 651525,
+        "lastDurationMs": 319503,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -543,7 +542,7 @@
       "name": "cron-health-watchdog",
       "enabled": true,
       "createdAtMs": 1772636078136,
-      "updatedAtMs": 1773056239830,
+      "updatedAtMs": 1773058475080,
       "schedule": {
         "kind": "every",
         "everyMs": 1800000,
@@ -560,15 +559,14 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1773057865118,
-        "lastRunAtMs": 1773056065118,
+        "nextRunAtMs": 1773059995225,
+        "lastRunAtMs": 1773058195225,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 174712,
+        "lastDurationMs": 279855,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "lastDelivered": false,
-        "runningAtMs": 1773057895214
+        "lastDelivered": false
       }
     },
     {
