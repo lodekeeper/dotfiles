@@ -76,7 +76,7 @@ I manually grep `~/consensus-specs` for relevant pseudocode when implementing. T
 - Outputs relevant pseudocode blocks in a format suitable for Codex context injection
 - Follows import chains to pull related types
 
-#### 🔴 No LLM spec compliance check (new — 2026-03-08)
+#### ~~🔴 No LLM spec compliance check (new — 2026-03-08)~~ ✅ FIXED (2026-03-09)
 After implementing a spec function in TypeScript, before opening a PR, I don't run a systematic check: "does this TS code faithfully implement the pseudocode?" I verify manually by reading both, which is slow and error-prone.
 
 **Proposed fix:** `scripts/spec/check-compliance.py <spec-function> <ts-file> <ts-function>` that:
@@ -103,11 +103,11 @@ Each fork (Gloas, Fulu, etc.) has different patterns: new SSZ types, new gossip 
 
 ### Gaps
 
-#### 🔴 No multi-node log correlator (new — 2026-03-08)
+#### ~~🔴 No multi-node log correlator~~ ✅ FIXED (2026-03-09)
 When debugging consensus failures across a devnet, logs from 4-8 nodes all matter. Today I query Loki once per node and manually cross-reference timestamps. A script that fetches logs from multiple nodes in parallel, merges + sorts by timestamp, and highlights consensus-relevant events (proposal, attestation, fork-choice updates) would turn a 30-min investigation into a 5-min one.
 
-**Proposed fix:** `scripts/debug/correlate-logs.sh [node1] [node2...] --from <ts> --to <ts>` that:
-- Queries Loki for each node in parallel using the `grafana-loki` skill API
+**Fix applied:** `scripts/debug/correlate-logs.sh [node1] [node2...] --from <ts> --to <ts>` now:
+- Queries Loki for each node in parallel
 - Merges results sorted by timestamp
 - Highlights lines matching `/fork_choice|attestation|proposal|head_block|finalized/`
 - Outputs a unified timeline with node-prefixed lines
@@ -181,6 +181,13 @@ Created `notes/fork-implementation-checklist.md`:
 
 ---
 
+### ✅ Multi-node log correlator implemented (2026-03-09)
+Created `scripts/debug/correlate-logs.sh`:
+- accepts multiple node names + `--from/--to` range
+- runs per-node Loki queries in parallel and merges results into a single timestamp-sorted timeline
+- prefixes each line with node name and marks consensus-relevant lines (`fork_choice`, `attestation`, `proposal`, `head_block`, `finalized`)
+- supports `--highlights-only`, custom query template (`{{NODE}}` placeholder), and markdown file output
+
 ### ✅ Review finding resolution tracker implemented (2026-03-08)
 Created `scripts/review/track-findings.py`:
 - `add <pr>` — store a finding (file, line, severity, reviewer, body)
@@ -220,6 +227,6 @@ Created `notes/debug-session-template.md` (2026-03-07):
 6. ~~Add LLM-based fix *quality* check post-Codex~~ ✅ done (2026-03-08)
 7. ~~Review finding resolution tracker~~ ✅ done (2026-03-08)
 8. ~~CI auto-fix `auto-fix` label~~ ✅ done (2026-03-08)
-9. **Implement multi-node log correlator** (`scripts/debug/correlate-logs.sh`) — biggest remaining devnet debugging gap
-10. **Implement spec compliance checker** (`scripts/spec/check-compliance.py`) — LLM-based "does this TS faithfully implement the pseudocode?"
+9. ~~**Implement multi-node log correlator** (`scripts/debug/correlate-logs.sh`)~~ ✅ done (2026-03-09)
+10. ~~**Implement spec compliance checker** (`scripts/spec/check-compliance.py`) — LLM-based "does this TS faithfully implement the pseudocode?"~~ ✅ done (2026-03-09)
 11. **Test-vector auto-check** — add `pnpm test:spec` gate to dev-workflow skill before PR opening
