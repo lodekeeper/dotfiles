@@ -65,7 +65,7 @@
       "name": "Monitor EIP-8025 / zkEVM updates",
       "enabled": true,
       "createdAtMs": 1771320800043,
-      "updatedAtMs": 1772818829439,
+      "updatedAtMs": 1773077830126,
       "schedule": {
         "kind": "every",
         "everyMs": 259200000,
@@ -83,10 +83,10 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1773077762808,
-        "lastRunAtMs": 1772818562808,
+        "nextRunAtMs": 1773336962813,
+        "lastRunAtMs": 1773077762813,
         "lastStatus": "ok",
-        "lastDurationMs": 266631,
+        "lastDurationMs": 67313,
         "lastRunStatus": "ok",
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
@@ -99,7 +99,7 @@
       "name": "Sync dotfiles repo",
       "enabled": true,
       "createdAtMs": 1771362496423,
-      "updatedAtMs": 1773077427290,
+      "updatedAtMs": 1773079547373,
       "schedule": {
         "kind": "cron",
         "expr": "0 */6 * * *",
@@ -114,14 +114,14 @@
         "model": "openai-codex/gpt-5.3-codex-spark"
       },
       "state": {
-        "lastRunAtMs": 1773077127288,
+        "lastRunAtMs": 1773079055781,
         "lastStatus": "error",
         "lastDurationMs": 300002,
         "lastRunStatus": "error",
         "lastDeliveryStatus": "not-requested",
-        "consecutiveErrors": 2,
-        "nextRunAtMs": 1773079398972,
-        "lastError": "Error: cron: job execution timed out"
+        "consecutiveErrors": 4,
+        "nextRunAtMs": 1773080255783,
+        "runningAtMs": 1773079548913
       },
       "delivery": {
         "mode": "none"
@@ -273,7 +273,7 @@
       "name": "github-notifications",
       "enabled": true,
       "createdAtMs": 1772107716625,
-      "updatedAtMs": 1773077447460,
+      "updatedAtMs": 1773079549257,
       "schedule": {
         "kind": "every",
         "everyMs": 300000,
@@ -291,13 +291,13 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1773077433044,
+        "lastRunAtMs": 1773079533072,
         "lastStatus": "ok",
-        "lastDurationMs": 14416,
+        "lastDurationMs": 16185,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1773077733044,
+        "nextRunAtMs": 1773079833072,
         "lastDelivered": false
       },
       "deleteAfterRun": false
@@ -443,7 +443,7 @@
       "name": "monitor-open-pr-ci",
       "enabled": true,
       "createdAtMs": 1772635128553,
-      "updatedAtMs": 1773076594188,
+      "updatedAtMs": 1773078408669,
       "schedule": {
         "kind": "every",
         "everyMs": 1800000,
@@ -460,11 +460,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1773078380757,
-        "lastRunAtMs": 1773076580757,
+        "nextRunAtMs": 1773080180762,
+        "lastRunAtMs": 1773078380762,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 13431,
+        "lastDurationMs": 27907,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -542,7 +542,7 @@
       "name": "cron-health-watchdog",
       "enabled": true,
       "createdAtMs": 1772636078136,
-      "updatedAtMs": 1773077431034,
+      "updatedAtMs": 1773079025698,
       "schedule": {
         "kind": "every",
         "everyMs": 1800000,
@@ -559,11 +559,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1773079022046,
-        "lastRunAtMs": 1773077222046,
+        "nextRunAtMs": 1773080822050,
+        "lastRunAtMs": 1773079022050,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 208988,
+        "lastDurationMs": 3648,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
