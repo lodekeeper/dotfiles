@@ -240,7 +240,7 @@
       "name": "github-notifications",
       "enabled": true,
       "createdAtMs": 1772107716625,
-      "updatedAtMs": 1773091076306,
+      "updatedAtMs": 1773091635867,
       "schedule": {
         "kind": "every",
         "everyMs": 300000,
@@ -259,13 +259,13 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1773091016584,
+        "lastRunAtMs": 1773091616595,
         "lastStatus": "ok",
-        "lastDurationMs": 59722,
+        "lastDurationMs": 19272,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1773091316584,
+        "nextRunAtMs": 1773091916595,
         "lastDelivered": false
       },
       "deleteAfterRun": false
@@ -510,7 +510,7 @@
       "name": "cron-health-watchdog",
       "enabled": true,
       "createdAtMs": 1772636078136,
-      "updatedAtMs": 1773090234035,
+      "updatedAtMs": 1773091641173,
       "schedule": {
         "kind": "every",
         "everyMs": 1800000,
@@ -527,11 +527,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1773091636958,
-        "lastRunAtMs": 1773089836958,
+        "nextRunAtMs": 1773093436962,
+        "lastRunAtMs": 1773091636962,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 162989,
+        "lastDurationMs": 4211,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
