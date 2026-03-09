@@ -1,7 +1,7 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-03-07 (2nd pass)
+> Updated: 2026-03-08 (3rd pass)
 
 ---
 
@@ -25,8 +25,15 @@ Sub-agents sometimes flag files **not in the PR diff** (confirmed on PR #8993: `
 
 **Fix applied:** `lodestar-review/SKILL.md` Step 3 spawn task template now explicitly includes the `## Files Changed in This PR` block (from Step 1.5) between the persona and the diff, with the "IMPORTANT: Only flag issues in the files listed above" instruction baked into the template literal.
 
-#### 🟢 No automated convergence triage
-When multiple reviewers flag the same issue, I manually merge. A simple post-processing step that groups findings by file+line range would save synthesis time.
+#### ~~🟢 No automated convergence triage~~ ✅ FIXED (2026-03-08)
+~~When multiple reviewers flag the same issue, I manually merge.~~
+
+**Fix applied:** `scripts/review/track-findings.py dedup <PR>` groups open findings by file+line proximity (±5 lines), showing which locations are flagged by multiple reviewers. Also added `import --markdown` to parse free-form reviewer output into structured findings, and `check --changed-files` to flag findings on files touched by a new commit.
+
+#### 🔴 No review finding resolution tracking
+After posting a review, when the author pushes new commits, I have no system for tracking which findings got addressed. I manually re-read everything.
+
+**Status:** ✅ FIXED this cycle — see "Improvements Implemented This Cycle" below.
 
 ---
 
@@ -69,6 +76,14 @@ I manually grep `~/consensus-specs` for relevant pseudocode when implementing. T
 - Outputs relevant pseudocode blocks in a format suitable for Codex context injection
 - Follows import chains to pull related types
 
+#### 🔴 No LLM spec compliance check (new — 2026-03-08)
+After implementing a spec function in TypeScript, before opening a PR, I don't run a systematic check: "does this TS code faithfully implement the pseudocode?" I verify manually by reading both, which is slow and error-prone.
+
+**Proposed fix:** `scripts/spec/check-compliance.py <spec-function> <ts-file> <ts-function>` that:
+- Extracts the pseudocode block from `~/consensus-specs`
+- Sends it + the TS implementation to GPT/Codex: "do these match? what's missing?"
+- Outputs a diff-style compliance report: implemented ✅ / missing ⚠️ / diverged ❌
+
 #### 🟡 No test-vector auto-download awareness
 When implementing spec functions, I sometimes forget to run against official test vectors. The vectors live in `~/consensus-specs/tests/` but need a separate download step.
 
@@ -87,6 +102,15 @@ Each fork (Gloas, Fulu, etc.) has different patterns: new SSZ types, new gossip 
 `grafana-loki` skill for log queries. `join-devnet` skill for local beacon node. `kurtosis-devnet` skill for full multi-client devnets. `local-mainnet-debug` skill for mainnet simulation. Good tooling, but each debugging session starts from scratch.
 
 ### Gaps
+
+#### 🔴 No multi-node log correlator (new — 2026-03-08)
+When debugging consensus failures across a devnet, logs from 4-8 nodes all matter. Today I query Loki once per node and manually cross-reference timestamps. A script that fetches logs from multiple nodes in parallel, merges + sorts by timestamp, and highlights consensus-relevant events (proposal, attestation, fork-choice updates) would turn a 30-min investigation into a 5-min one.
+
+**Proposed fix:** `scripts/debug/correlate-logs.sh [node1] [node2...] --from <ts> --to <ts>` that:
+- Queries Loki for each node in parallel using the `grafana-loki` skill API
+- Merges results sorted by timestamp
+- Highlights lines matching `/fork_choice|attestation|proposal|head_block|finalized/`
+- Outputs a unified timeline with node-prefixed lines
 
 #### 🔴 No scripted first-5-minutes diagnostic
 Every devnet debugging session starts with the same manual sequence: check zombie processes, check ports, check Loki for recent errors, compare Grafana metrics, check peer count. This takes 10-15 minutes every time.
@@ -157,6 +181,23 @@ Created `notes/fork-implementation-checklist.md`:
 
 ---
 
+### ✅ Review finding resolution tracker implemented (2026-03-08)
+Created `scripts/review/track-findings.py`:
+- `add <pr>` — store a finding (file, line, severity, reviewer, body)
+- `list <pr> [--open-only]` — show findings sorted by severity
+- `resolve <pr> <id> [--commit <sha>]` — mark as addressed/acknowledged/wontfix
+- `check <pr> --changed-files <...>` — given new commit's file list, flag findings on changed files as "needs verification" vs. still-untouched
+- `dump <pr>` — markdown summary for GitHub comment copy-paste
+- `import <pr> --markdown <file>` — parse free-form reviewer output into structured findings
+- `dedup <pr>` — group by file+line proximity (±5 lines), showing multi-reviewer overlap
+
+Updated `lodestar-review/SKILL.md` with "Finding Resolution Tracking" section explaining the workflow.
+
+**Rationale:** When PR authors push follow-up commits, I currently re-read my entire review and the new diff manually (10-15 min per follow-up). `check --changed-files` reduces this to <1 min: it immediately shows which of my findings are on changed files (go verify) vs. still-untouched (still open).
+
+### ✅ CI auto-fix PRs now labeled `auto-fix` (2026-03-08)
+Updated `CRON_PROMPT.md` Step 4 `gh pr create` command to include `--label "auto-fix"`, with a comment showing how to create the label if it doesn't exist yet. Makes auto-fix PRs instantly filterable in the ChainSafe/lodestar PR queue.
+
 ### ✅ Debug session template created
 Created `notes/debug-session-template.md` (2026-03-07):
 - Structured header (date, topic, linked PR, environment, time budget)
@@ -173,7 +214,12 @@ Created `notes/debug-session-template.md` (2026-03-07):
 
 1. ~~Add LLM fallback classification for unknown CI failure patterns (`auto_fix_flaky.py`)~~ ✅ done
 2. ~~Add confidence scoring/check in CI autofix outputs (root-cause vs masking)~~ ✅ done
-3. ~~Add issue-linkage step to CI autofix cron prompt~~ ✅ done (2026-03-07, already in CRON_PROMPT.md Step 2.4)
-4. ~~Add reviewer file-scope injection to `lodestar-review` SKILL.md~~ ✅ done (2026-03-08, Step 3 template now includes `## Files Changed` block)
+3. ~~Add issue-linkage step to CI autofix cron prompt~~ ✅ done (2026-03-07)
+4. ~~Add reviewer file-scope injection to `lodestar-review` SKILL.md~~ ✅ done (2026-03-08)
 5. ~~Codify EPBS devnet-0 startup into `scripts/devnet/start-epbs-devnet.sh`~~ ✅ done (2026-03-08)
-6. ~~Add LLM-based fix *quality* check post-Codex: send the diff to GPT and ask "does this fix the root cause or is it masking?" before opening the PR~~ ✅ done (2026-03-08)
+6. ~~Add LLM-based fix *quality* check post-Codex~~ ✅ done (2026-03-08)
+7. ~~Review finding resolution tracker~~ ✅ done (2026-03-08)
+8. ~~CI auto-fix `auto-fix` label~~ ✅ done (2026-03-08)
+9. **Implement multi-node log correlator** (`scripts/debug/correlate-logs.sh`) — biggest remaining devnet debugging gap
+10. **Implement spec compliance checker** (`scripts/spec/check-compliance.py`) — LLM-based "does this TS faithfully implement the pseudocode?"
+11. **Test-vector auto-check** — add `pnpm test:spec` gate to dev-workflow skill before PR opening

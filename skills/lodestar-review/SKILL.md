@@ -261,6 +261,36 @@ Read `references/review-patterns.md` for patterns mined from ~2000 real Lodestar
 
 Use these patterns to calibrate reviewer expectations — e.g., the architect reviewer should flag missing metrics (wemeetagain pattern), and the wisdom reviewer should flag stale comments (nflaig pattern).
 
+## Finding Resolution Tracking
+
+Use `scripts/review/track-findings.py` to track which findings get addressed in follow-up commits.
+
+**Workflow:**
+1. After synthesizing reviewer outputs, store key findings:
+   ```bash
+   python3 ~/.openclaw/workspace/scripts/review/track-findings.py add <PR> \
+     --file src/sync/range/chain.ts --line 142 --severity major \
+     --reviewer review-bugs --body "Race condition in batch completion..."
+   ```
+2. When the author pushes a new commit, check coverage:
+   ```bash
+   # Get changed files from the new commit
+   gh pr diff <PR> --repo ChainSafe/lodestar --name-only > /tmp/changed-files.txt
+   python3 ~/.openclaw/workspace/scripts/review/track-findings.py check <PR> \
+     --changed-files $(cat /tmp/changed-files.txt | tr '\n' ' ')
+   ```
+   Output: which findings are on changed files (→ verify!) vs. still-untouched files (→ still open).
+3. Mark resolved findings:
+   ```bash
+   python3 ~/.openclaw/workspace/scripts/review/track-findings.py resolve <PR> <id> --commit <sha>
+   ```
+4. Generate a markdown summary for a GitHub follow-up comment:
+   ```bash
+   python3 ~/.openclaw/workspace/scripts/review/track-findings.py dump <PR>
+   ```
+
+Also available: `import --markdown <file>` (parse free-form reviewer output), `dedup` (group by file+proximity).
+
 ## Tips
 
 - For consensus-spec-related changes, cross-reference `~/consensus-specs` for correctness
