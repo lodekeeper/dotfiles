@@ -1,0 +1,25 @@
+participants:
+  - el_type: geth
+    el_image: ethpandaops/geth:epbs-devnet-0
+    cl_type: lodestar
+    cl_image: lodestar:epbs-index-fix
+    count: 2
+
+  - el_type: geth
+    el_image: ethpandaops/geth:epbs-devnet-0
+    cl_type: prysm
+    count: 2
+
+network_params:
+  preset: minimal
+  gloas_fork_epoch: 1
+  seconds_per_slot: 6
+  genesis_delay: 30
+
+port_publisher:
+  cl:
+    enabled: true
+    public_port_start: 39300
+  el:
+    enabled: true
+    public_port_start: 39400

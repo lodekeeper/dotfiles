@@ -34,7 +34,7 @@
 - **gpt-advisor:** GPT-5.3-Codex, thinking: xhigh — architecture & deep reasoning
 - **Codex CLI:** GPT-5.3-Codex — implementation in worktrees (focused tasks, structured code)
 - **Claude CLI:** Claude — implementation in worktrees (broader reasoning, refactoring, debugging)
-- **Me (main):** Claude Opus 4.6 — **orchestrator**: coordination, delegation, quality control, communication
+- **Me (main):** GPT-5.3 Codex (default) with Claude Opus fallback — **orchestrator**: coordination, delegation, quality control, communication
 - **Context file:** `CODING_CONTEXT.md` — always provide to coding agents for project conventions
 
 ## Channels
@@ -80,3 +80,4 @@
 - 2026-03-06: **Chrome CDP for ChatGPT is permanently dead.** Cloudflare blocks all ChatGPT backend-api POSTs at a layer above user-agent. Camoufox (Firefox stealth) works natively. Use `scripts/oracle/chatgpt-direct` CLI for any ChatGPT automation going forward.
 - 2026-03-06: **Sub-agent reviewers return false positives.** Reviewers sometimes flag files that aren't in the PR diff at all. Always cross-check reviewer findings against `git diff --name-only origin/unstable...HEAD` before committing follow-up patches — acting on false positives pollutes commit history for no gain.
 - 2026-03-08: **Reply to review comments = reply + code push, never reply-only.** Matt left 3 review comments on PR #8924 asking for implementation changes. I replied with text ("Good idea, will implement") but didn't push code for 50+ minutes until Nico called me out. The notification cron replied conversationally but didn't drive the implementation. Fix: (1) When replying to review comments requesting changes, ALWAYS push code in the same session. If you say "will fix" — fix it RIGHT THEN. (2) If implementation can't happen immediately, add to BACKLOG.md as 🔴 urgent so the next heartbeat picks it up. Words without code are not "addressing" review feedback.
+- 2026-03-09: **Model truth lives in both config and session overrides.** `openclaw models` / config can say one thing while active sessions still run another model. For any model-audit or routing check, verify both `openclaw` config and live session state via `session_status` before concluding anything.

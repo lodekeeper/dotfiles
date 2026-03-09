@@ -7,7 +7,7 @@
       "name": "daily-summary",
       "enabled": true,
       "createdAtMs": 1769895413579,
-      "updatedAtMs": 1773090840665,
+      "updatedAtMs": 1773097278438,
       "schedule": {
         "kind": "cron",
         "expr": "0 23 * * *",
@@ -21,10 +21,10 @@
         "model": "openai-codex/gpt-5.3-codex"
       },
       "state": {
-        "nextRunAtMs": 1773097200000,
-        "lastRunAtMs": 1773010800004,
+        "nextRunAtMs": 1773183600000,
+        "lastRunAtMs": 1773097214856,
         "lastStatus": "ok",
-        "lastDurationMs": 38561,
+        "lastDurationMs": 63582,
         "lastRunStatus": "ok",
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
@@ -133,7 +133,7 @@
       "name": "daily-meme",
       "enabled": true,
       "createdAtMs": 1771753595377,
-      "updatedAtMs": 1773091123498,
+      "updatedAtMs": 1773093851605,
       "schedule": {
         "kind": "cron",
         "expr": "0 22 * * *",
@@ -151,14 +151,16 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1773093600000,
-        "lastRunAtMs": 1773007200004,
-        "lastStatus": "ok",
-        "lastDurationMs": 175549,
-        "lastRunStatus": "ok",
+        "nextRunAtMs": 1773180000000,
+        "lastRunAtMs": 1773093600005,
+        "lastStatus": "error",
+        "lastDurationMs": 251600,
+        "lastRunStatus": "error",
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
-        "consecutiveErrors": 0
+        "consecutiveErrors": 1,
+        "lastError": "⚠️ 📝 Edit: `in ~/.openclaw/workspace/memory/2026-03-09.md (491 chars)` failed",
+        "lastDeliveryError": "⚠️ 📝 Edit: `in ~/.openclaw/workspace/memory/2026-03-09.md (491 chars)` failed"
       }
     },
     {
@@ -167,7 +169,7 @@
       "name": "eth-rnd-archive-hourly",
       "enabled": true,
       "createdAtMs": 1772034567300,
-      "updatedAtMs": 1773090972093,
+      "updatedAtMs": 1773098214049,
       "schedule": {
         "kind": "cron",
         "expr": "15 * * * *",
@@ -185,16 +187,14 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1773090900004,
-        "lastStatus": "error",
-        "lastDurationMs": 72089,
-        "lastRunStatus": "error",
+        "lastRunAtMs": 1773098100004,
+        "lastStatus": "ok",
+        "lastDurationMs": 114045,
+        "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
-        "consecutiveErrors": 1,
-        "nextRunAtMs": 1773094500000,
-        "lastDelivered": false,
-        "lastError": "⚠️ 📝 Edit: `in ~/.openclaw/workspace/memory/2026-03-09.md (1096 chars)` failed",
-        "lastDeliveryError": "⚠️ 📝 Edit: `in ~/.openclaw/workspace/memory/2026-03-09.md (1096 chars)` failed"
+        "consecutiveErrors": 0,
+        "nextRunAtMs": 1773101700000,
+        "lastDelivered": false
       }
     },
     {
@@ -240,7 +240,7 @@
       "name": "github-notifications",
       "enabled": true,
       "createdAtMs": 1772107716625,
-      "updatedAtMs": 1773091635867,
+      "updatedAtMs": 1773099570532,
       "schedule": {
         "kind": "every",
         "everyMs": 300000,
@@ -259,13 +259,13 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1773091616595,
+        "lastRunAtMs": 1773099554231,
         "lastStatus": "ok",
-        "lastDurationMs": 19272,
+        "lastDurationMs": 16301,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1773091916595,
+        "nextRunAtMs": 1773099854231,
         "lastDelivered": false
       },
       "deleteAfterRun": false
@@ -378,7 +378,7 @@
       "name": "workspace-periodic-cleanup",
       "enabled": true,
       "createdAtMs": 1772634832403,
-      "updatedAtMs": 1773091124928,
+      "updatedAtMs": 1773098007490,
       "schedule": {
         "kind": "every",
         "everyMs": 21600000,
@@ -395,11 +395,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1773097863285,
-        "lastRunAtMs": 1773076263285,
+        "nextRunAtMs": 1773119463292,
+        "lastRunAtMs": 1773097863292,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 108586,
+        "lastDurationMs": 144198,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0
@@ -411,7 +411,7 @@
       "name": "monitor-open-pr-ci",
       "enabled": true,
       "createdAtMs": 1772635128553,
-      "updatedAtMs": 1773091253797,
+      "updatedAtMs": 1773098503974,
       "schedule": {
         "kind": "every",
         "everyMs": 1800000,
@@ -428,11 +428,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1773093027297,
-        "lastRunAtMs": 1773091227297,
+        "nextRunAtMs": 1773100276073,
+        "lastRunAtMs": 1773098476073,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 26500,
+        "lastDurationMs": 27901,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -468,7 +468,8 @@
         "lastDurationMs": 103418,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
-        "consecutiveErrors": 0
+        "consecutiveErrors": 0,
+        "runningAtMs": 1773099663024
       }
     },
     {
@@ -510,7 +511,7 @@
       "name": "cron-health-watchdog",
       "enabled": true,
       "createdAtMs": 1772636078136,
-      "updatedAtMs": 1773091641173,
+      "updatedAtMs": 1773098870133,
       "schedule": {
         "kind": "every",
         "everyMs": 1800000,
@@ -527,11 +528,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1773093436962,
-        "lastRunAtMs": 1773091636962,
+        "nextRunAtMs": 1773100662131,
+        "lastRunAtMs": 1773098862131,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 4211,
+        "lastDurationMs": 8002,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -607,6 +608,35 @@
         "lastDeliveryStatus": "not-requested",
         "consecutiveErrors": 3,
         "lastError": "Error: cron: job execution timed out"
+      }
+    },
+    {
+      "id": "117efc3f-5e51-43b8-8f63-6829532a26bd",
+      "agentId": "main",
+      "name": "check-openclaw-release",
+      "description": "Check openclaw/openclaw latest release every 12h and alert Nico on new tag",
+      "enabled": true,
+      "createdAtMs": 1773093482865,
+      "updatedAtMs": 1773093613825,
+      "schedule": {
+        "kind": "every",
+        "everyMs": 43200000,
+        "anchorMs": 1773093482865
+      },
+      "sessionTarget": "main",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "systemEvent",
+        "text": "Check for new OpenClaw release by running /home/openclaw/.openclaw/workspace/scripts/cron/check_openclaw_release.sh. If output is NEW_OPENCLAW_RELEASE|..., alert Nico via sessions_send to agent:main:telegram:direct:5774760693 with tag/url/published/previous. If HEARTBEAT_OK, do nothing and reply HEARTBEAT_OK. Do not edit BACKLOG."
+      },
+      "state": {
+        "nextRunAtMs": 1773136682865,
+        "lastRunAtMs": 1773093493600,
+        "lastRunStatus": "ok",
+        "lastStatus": "ok",
+        "lastDurationMs": 120225,
+        "lastDeliveryStatus": "not-requested",
+        "consecutiveErrors": 0
       }
     }
   ]
