@@ -2,6 +2,12 @@
 # Sync local non-sensitive agent files to dotfiles repo
 set -euo pipefail
 
+# Prevent git from hanging on auth prompts in non-TTY (cron) context
+export GIT_TERMINAL_PROMPT=0
+export GIT_HTTP_CONNECT_TIMEOUT=30
+export GIT_HTTP_LOW_SPEED_TIME=30
+export GIT_HTTP_LOW_SPEED_LIMIT=1
+
 DOTFILES_DIR="$HOME/dotfiles"
 WORKSPACE="$HOME/.openclaw/workspace"
 
