@@ -52,10 +52,10 @@ scp -P <ssh-port> user@host:/tmp/network_thread_*.heapsnapshot ./tmp/
 Take at least 2 snapshots separated by meaningful runtime (e.g. 10–60 min).
 
 ## 4) Fast diff (type/count/self-size)
-Use the local helper (if present):
+Use the bundled helper script:
 
 ```bash
-node --max-old-space-size=24576 /home/openclaw/lodestar-debug-8969/analyze-heap.mjs \
+node --max-old-space-size=24576 scripts/analyze-heap.mjs \
   <older.heapsnapshot> <newer.heapsnapshot>
 ```
 
