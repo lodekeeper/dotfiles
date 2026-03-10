@@ -1,7 +1,27 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-03-08 (3rd pass)
+> Updated: 2026-03-09 (4th pass)
+
+---
+
+## Daily Audit Snapshot — 2026-03-09 (self-improvement-audit-daily)
+
+### PR review
+- **Blocker:** findings tracker is still manual-entry first; I don't yet ingest GitHub review comments directly into `track-findings.py`.
+- **Proposed fix:** add `scripts/review/import-gh-review-comments.py <owner/repo> <pr>` (or `track-findings.py import-gh`) to bootstrap findings automatically from API output.
+
+### CI fix
+- **Blocker:** CI LLM calls have fallback models but no explicit `Retry-After` handling + bounded retry policy when rate-limited.
+- **Proposed fix:** add shared OpenAI client helper with exponential backoff, 429/5xx retry budget, and attempt telemetry in `scripts/ci/`.
+
+### Spec implementation
+- **Blocker:** pre-PR workflow did not hard-gate on spec vectors (`pnpm test:spec`), so this step could be skipped accidentally.
+- **Fix applied this cycle:** added a **Spec-vector gate** to `skills/dev-workflow/SKILL.md` Phase 4 local verification with explicit run-or-document-skip rule.
+
+### Devnet debugging
+- **Blocker:** we can correlate logs now, but incident packaging is still manual (logs + metrics + timeline + environment metadata in one bundle).
+- **Proposed fix:** add `scripts/debug/build-incident-bundle.sh` to produce one timestamped markdown bundle for sharing in topic threads/PRs.
 
 ---
 
@@ -205,6 +225,13 @@ Updated `lodestar-review/SKILL.md` with "Finding Resolution Tracking" section ex
 ### ✅ CI auto-fix PRs now labeled `auto-fix` (2026-03-08)
 Updated `CRON_PROMPT.md` Step 4 `gh pr create` command to include `--label "auto-fix"`, with a comment showing how to create the label if it doesn't exist yet. Makes auto-fix PRs instantly filterable in the ChainSafe/lodestar PR queue.
 
+### ✅ Dev-workflow spec-vector gate added (2026-03-09)
+Updated `skills/dev-workflow/SKILL.md` Phase 4 (Quality Gate) with an explicit **Spec-vector gate**:
+- run `pnpm test:spec` when available before PR on spec/protocol-facing changes
+- if unavailable/skipped, document reason in PR body
+
+**Rationale:** test-vector checks were a known recurring omission risk in spec work. Making it a codified gate reduces regressions from "looks right" implementations that diverge from official vectors.
+
 ### ✅ Debug session template created
 Created `notes/debug-session-template.md` (2026-03-07):
 - Structured header (date, topic, linked PR, environment, time budget)
@@ -229,4 +256,5 @@ Created `notes/debug-session-template.md` (2026-03-07):
 8. ~~CI auto-fix `auto-fix` label~~ ✅ done (2026-03-08)
 9. ~~**Implement multi-node log correlator** (`scripts/debug/correlate-logs.sh`)~~ ✅ done (2026-03-09)
 10. ~~**Implement spec compliance checker** (`scripts/spec/check-compliance.py`) — LLM-based "does this TS faithfully implement the pseudocode?"~~ ✅ done (2026-03-09)
-11. **Test-vector auto-check** — add `pnpm test:spec` gate to dev-workflow skill before PR opening
+11. ~~**Test-vector auto-check** — add `pnpm test:spec` gate to dev-workflow skill before PR opening~~ ✅ done (2026-03-09)
+12. **GitHub review-comment ingestion for finding tracker** — add API import path so `track-findings.py` can bootstrap from PR review comments without manual entry

@@ -271,6 +271,17 @@ process action:list
    pnpm build
    # Run targeted unit tests for changed packages
    ```
+
+   **Spec-vector gate (required for spec/protocol-facing changes before PR):**
+   ```bash
+   cd ~/lodestar-<feature-name>
+   if pnpm run | grep -q "test:spec"; then
+     pnpm test:spec
+   else
+     echo "No test:spec script in this checkout; run the relevant consensus-spec tests manually and note it in PR body"
+   fi
+   ```
+   If this gate is skipped, record why in the PR description (e.g., non-spec refactor).
 3. **Multi-persona review:** Use the `lodestar-review` skill (`skills/lodestar-review/SKILL.md`):
    - Get the local diff: `git diff unstable...HEAD` in the worktree
    - Read the skill for reviewer selection matrix and Lodestar-tailored persona prompts
