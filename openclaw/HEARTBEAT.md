@@ -15,6 +15,14 @@ If this heartbeat is running from Nico's DM (`telegram:5774760693`):
 3. Is this a critical deliverable Nico explicitly needs in DM?
 - If all answers are **no** → output `NO_REPLY`.
 
+## 📣 Output Routing (Lodestar WG topic #1 / General)
+If this heartbeat/routine-status flow is running in Lodestar WG **topic #1** (`agent:main:telegram:group:-1003764039429:topic:1`):
+- Treat this thread like a control/chat thread, **not** routine-status output.
+- Route routine heartbeat/backlog updates to topic `#347` via `sessions_send` to session key `agent:main:telegram:group:-1003764039429:topic:347`.
+- For blockers, urgent decisions, or critical deliverables, route to Nico DM via `sessions_send` to session key `agent:main:telegram:direct:5774760693`.
+- Do **not** post heartbeat/status outputs in topic #1 (routine or urgent). Keep topic #1 silent for heartbeat flows.
+- Final output in topic #1 for heartbeat/routine-status flows must be `NO_REPLY`.
+
 ## ⚠️ STEP 1: BACKLOG — DO THIS FIRST, BEFORE ANYTHING ELSE
 1. Read `BACKLOG.md` right now
 2. Look for any task that is NOT marked ✅ and is NOT a passive "monitor/watch" item
