@@ -1,27 +1,26 @@
 # HEARTBEAT.md
 
-## 📣 Output Routing (Nico DM)
-If this heartbeat is running from Nico's DM (`telegram:5774760693`):
-- Route routine heartbeat/backlog updates to Lodestar WG topic `#347` **via `sessions_send`** to session key `agent:main:telegram:group:-1003764039429:topic:347`.
-- **Do NOT use `message action=send` from the DM session for routine heartbeat updates.**
-- **Never echo/mirror/summarize routine updates in DM.**
-- DM is allowed **only** for: blockers, urgent decisions, or critical deliverables requiring Nico's attention.
-- For routine/no-critical heartbeat outcomes in DM, final output must be **exactly** `NO_REPLY`.
-- **Hard guard:** if this is a heartbeat/reminder/routine-status flow, DM output is always `NO_REPLY` (no exceptions, no acknowledgements, no recap).
+## 📣 Output Routing (single source of truth)
+Use this routing for **all heartbeat / routine-status flows**.
 
-### DM send gate (mandatory before any DM heartbeat reply)
+### Destinations
+- **Routine updates** (heartbeat/backlog/status, non-urgent) → send to Lodestar WG **topic #347** via `sessions_send`:
+  - `agent:main:telegram:group:-1003764039429:topic:347`
+- **Urgent/blocker/critical deliverable** → send to Nico DM via `sessions_send`:
+  - `agent:main:telegram:direct:5774760693`
+
+### Hard guards
+- Never post routine heartbeat output in Nico DM.
+- Never post heartbeat output in Lodestar WG topic #1 (General/control thread).
+- In DM or topic #1 heartbeat contexts, final local output must be exactly `NO_REPLY`.
+- Do **not** use `message action=send` from DM heartbeat flows; use `sessions_send` routing only.
+
+### DM send gate (mandatory)
+Before sending anything to Nico DM from a heartbeat flow, all of these must be checked:
 1. Is this a blocker?
 2. Is this an urgent decision request?
 3. Is this a critical deliverable Nico explicitly needs in DM?
-- If all answers are **no** → output `NO_REPLY`.
-
-## 📣 Output Routing (Lodestar WG topic #1 / General)
-If this heartbeat/routine-status flow is running in Lodestar WG **topic #1** (`agent:main:telegram:group:-1003764039429:topic:1`):
-- Treat this thread like a control/chat thread, **not** routine-status output.
-- Route routine heartbeat/backlog updates to topic `#347` via `sessions_send` to session key `agent:main:telegram:group:-1003764039429:topic:347`.
-- For blockers, urgent decisions, or critical deliverables, route to Nico DM via `sessions_send` to session key `agent:main:telegram:direct:5774760693`.
-- Do **not** post heartbeat/status outputs in topic #1 (routine or urgent). Keep topic #1 silent for heartbeat flows.
-- Final output in topic #1 for heartbeat/routine-status flows must be `NO_REPLY`.
+- If **all answers are no** → output `NO_REPLY`.
 
 ## ⚠️ STEP 1: BACKLOG — DO THIS FIRST, BEFORE ANYTHING ELSE
 1. Read `BACKLOG.md` right now

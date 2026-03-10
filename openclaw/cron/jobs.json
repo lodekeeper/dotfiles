@@ -169,7 +169,7 @@
       "name": "eth-rnd-archive-hourly",
       "enabled": true,
       "createdAtMs": 1772034567300,
-      "updatedAtMs": 1773134280015,
+      "updatedAtMs": 1773137880014,
       "schedule": {
         "kind": "cron",
         "expr": "15 * * * *",
@@ -187,13 +187,13 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1773134100006,
+        "lastRunAtMs": 1773137700004,
         "lastStatus": "error",
-        "lastDurationMs": 180009,
+        "lastDurationMs": 180010,
         "lastRunStatus": "error",
         "lastDeliveryStatus": "not-requested",
-        "consecutiveErrors": 1,
-        "nextRunAtMs": 1773137700000,
+        "consecutiveErrors": 2,
+        "nextRunAtMs": 1773141300000,
         "lastError": "cron: job execution timed out"
       }
     },
@@ -240,7 +240,7 @@
       "name": "github-notifications",
       "enabled": true,
       "createdAtMs": 1772107716625,
-      "updatedAtMs": 1773137118733,
+      "updatedAtMs": 1773138493614,
       "schedule": {
         "kind": "every",
         "everyMs": 300000,
@@ -259,13 +259,13 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1773137106199,
+        "lastRunAtMs": 1773138482195,
         "lastStatus": "ok",
-        "lastDurationMs": 12534,
+        "lastDurationMs": 11419,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1773137406199,
+        "nextRunAtMs": 1773138782195,
         "lastDelivered": false
       },
       "deleteAfterRun": false
@@ -411,7 +411,7 @@
       "name": "monitor-open-pr-ci",
       "enabled": true,
       "createdAtMs": 1772635128553,
-      "updatedAtMs": 1773136305433,
+      "updatedAtMs": 1773138110078,
       "schedule": {
         "kind": "every",
         "everyMs": 1800000,
@@ -428,11 +428,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1773138081353,
-        "lastRunAtMs": 1773136281353,
+        "nextRunAtMs": 1773139881357,
+        "lastRunAtMs": 1773138081357,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 24080,
+        "lastDurationMs": 28721,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -510,7 +510,7 @@
       "name": "cron-health-watchdog",
       "enabled": true,
       "createdAtMs": 1772636078136,
-      "updatedAtMs": 1773136715923,
+      "updatedAtMs": 1773138515819,
       "schedule": {
         "kind": "every",
         "everyMs": 1800000,
@@ -527,11 +527,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1773138511891,
-        "lastRunAtMs": 1773136711891,
+        "nextRunAtMs": 1773140311895,
+        "lastRunAtMs": 1773138511895,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 4032,
+        "lastDurationMs": 3924,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
