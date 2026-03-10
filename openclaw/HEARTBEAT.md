@@ -11,8 +11,8 @@ Use this routing for **all heartbeat / routine-status flows**.
 
 ### Hard guards
 - Never post routine heartbeat output in Nico DM.
-- Never post heartbeat output in Lodestar WG topic #1 (General/control thread).
-- In DM or topic #1 heartbeat contexts, final local output must be exactly `NO_REPLY`.
+- Never mirror the same update to both DM and topic #347.
+- In DM heartbeat contexts, final local output must be exactly `NO_REPLY`.
 - Do **not** use `message action=send` from DM heartbeat flows; use `sessions_send` routing only.
 
 ### DM send gate (mandatory)
