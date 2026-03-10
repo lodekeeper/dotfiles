@@ -242,6 +242,13 @@ Created `notes/debug-session-template.md` (2026-03-07):
 - Lessons learned → feeds back into skill updates
 - Quick-reference bash snippets for common starting points
 
+### ✅ GitHub review-comment ingestion added to finding tracker (2026-03-10)
+Updated `scripts/review/track-findings.py` with `import-gh` command:
+- Fetches PR review comments via `gh api repos/<owner>/<repo>/pulls/<pr>/comments`
+- Imports comments as structured findings with source metadata (`kind: github-review-comment`, comment id/url)
+- Skips already-imported comments using source-id dedup
+- Optional `--include-replies` to include in-thread reply comments
+
 ---
 
 ## Next Audit Priorities (next daily cycles)
@@ -257,4 +264,4 @@ Created `notes/debug-session-template.md` (2026-03-07):
 9. ~~**Implement multi-node log correlator** (`scripts/debug/correlate-logs.sh`)~~ ✅ done (2026-03-09)
 10. ~~**Implement spec compliance checker** (`scripts/spec/check-compliance.py`) — LLM-based "does this TS faithfully implement the pseudocode?"~~ ✅ done (2026-03-09)
 11. ~~**Test-vector auto-check** — add `pnpm test:spec` gate to dev-workflow skill before PR opening~~ ✅ done (2026-03-09)
-12. **GitHub review-comment ingestion for finding tracker** — add API import path so `track-findings.py` can bootstrap from PR review comments without manual entry
+12. ~~**GitHub review-comment ingestion for finding tracker** — add API import path so `track-findings.py` can bootstrap from PR review comments without manual entry~~ ✅ done (2026-03-10)
