@@ -1,26 +1,26 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-03-09 (4th pass)
+> Updated: 2026-03-10 (5th pass)
 
 ---
 
-## Daily Audit Snapshot — 2026-03-09 (self-improvement-audit-daily)
+## Daily Audit Snapshot — 2026-03-10 (self-improvement-audit-daily)
 
 ### PR review
-- **Blocker:** findings tracker is still manual-entry first; I don't yet ingest GitHub review comments directly into `track-findings.py`.
-- **Proposed fix:** add `scripts/review/import-gh-review-comments.py <owner/repo> <pr>` (or `track-findings.py import-gh`) to bootstrap findings automatically from API output.
+- **Blocker:** finding-tracker import exists, but no "delta sync" command to re-ingest only new review comments since last sweep and auto-mark matching findings as re-verified.
+- **Proposed fix:** add `track-findings.py sync-gh <owner/repo> <pr>` with `--since-comment-id` checkpointing.
 
 ### CI fix
-- **Blocker:** CI LLM calls have fallback models but no explicit `Retry-After` handling + bounded retry policy when rate-limited.
-- **Proposed fix:** add shared OpenAI client helper with exponential backoff, 429/5xx retry budget, and attempt telemetry in `scripts/ci/`.
+- **Blocker:** CI LLM calls had model fallback but no explicit `Retry-After` / bounded retry behavior, and LLM `fixable` signals were not wired into `is_fixable()`.
+- **Fix applied this cycle:** updated `scripts/ci/auto_fix_flaky.py` with retryable OpenAI error handling (429/5xx + `Retry-After` aware backoff) and proper propagation of LLM fixability into actionable classification.
 
 ### Spec implementation
-- **Blocker:** pre-PR workflow did not hard-gate on spec vectors (`pnpm test:spec`), so this step could be skipped accidentally.
-- **Fix applied this cycle:** added a **Spec-vector gate** to `skills/dev-workflow/SKILL.md` Phase 4 local verification with explicit run-or-document-skip rule.
+- **Blocker:** compliance checker exists but is not yet an explicit dev-workflow gate for spec-facing PRs.
+- **Proposed fix:** add a mandatory "spec-compliance check" step in `skills/dev-workflow/SKILL.md` (run checker or document skip reason).
 
 ### Devnet debugging
-- **Blocker:** we can correlate logs now, but incident packaging is still manual (logs + metrics + timeline + environment metadata in one bundle).
+- **Blocker:** incident packaging is still manual (logs + metrics + timeline + environment metadata in one bundle).
 - **Proposed fix:** add `scripts/debug/build-incident-bundle.sh` to produce one timestamped markdown bundle for sharing in topic threads/PRs.
 
 ---
@@ -249,6 +249,14 @@ Updated `scripts/review/track-findings.py` with `import-gh` command:
 - Skips already-imported comments using source-id dedup
 - Optional `--include-replies` to include in-thread reply comments
 
+### ✅ CI LLM retry/backoff + fixability wiring in autofix detector (2026-03-10)
+Updated `scripts/ci/auto_fix_flaky.py`:
+- Added bounded retry behavior for OpenAI calls in `_openai_completion()`
+- Added retryability detection for 429/5xx + transient errors
+- Added `Retry-After` header/message parsing and exponential backoff fallback
+- Fixed LLM fixability propagation: `classify_failure()` now returns `llm_fixable`, and `scan()` passes it to `is_fixable()`
+- Persisted `llm_fixable` into findings/tracker entries for auditability
+
 ---
 
 ## Next Audit Priorities (next daily cycles)
@@ -265,3 +273,5 @@ Updated `scripts/review/track-findings.py` with `import-gh` command:
 10. ~~**Implement spec compliance checker** (`scripts/spec/check-compliance.py`) — LLM-based "does this TS faithfully implement the pseudocode?"~~ ✅ done (2026-03-09)
 11. ~~**Test-vector auto-check** — add `pnpm test:spec` gate to dev-workflow skill before PR opening~~ ✅ done (2026-03-09)
 12. ~~**GitHub review-comment ingestion for finding tracker** — add API import path so `track-findings.py` can bootstrap from PR review comments without manual entry~~ ✅ done (2026-03-10)
+13. ~~**CI LLM retry + `Retry-After` handling in autofix detector** — bounded retry budget for 429/5xx and propagate LLM `fixable` verdict into actionable selection~~ ✅ done (2026-03-10)
+14. **Finding tracker delta-sync from GitHub** — add `track-findings.py sync-gh` with checkpointed import + optional auto-reverify of touched findings
