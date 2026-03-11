@@ -126,3 +126,48 @@ Deploy patched branch/build to feat1-super and monitor old-space slope for sever
   - `tmp/feat1-super-heap/postfix-verify/re-escalated-1h-gate-decision-2026-03-11T11-09Z.md`
   - `tmp/feat1-super-heap/postfix-verify/silent-monitor-super-2026-03-11T11-09Z-checkpoint.log`
   - reason: old-space slope `+38.70MB/h` and median drift `+29.384MB` (opposite of downgrade condition).
+- Full >=1h gate at 12:09 UTC also remained re-escalated:
+  - `tmp/feat1-super-heap/postfix-verify/re-escalated-1h-gate-decision-2026-03-11T12-09Z.md`
+  - `tmp/feat1-super-heap/postfix-verify/silent-monitor-super-2026-03-11T12-09Z-checkpoint.log`
+  - reason: endpoint slope only `-1.93MB/h` with positive median drift `+15.572MB`, so sustained sharp mean-reversion criterion failed.
+- Full >=1h gate at 13:10 UTC also remained re-escalated:
+  - `tmp/feat1-super-heap/postfix-verify/re-escalated-1h-gate-decision-2026-03-11T13-10Z.md`
+  - `tmp/feat1-super-heap/postfix-verify/silent-monitor-super-2026-03-11T13-10Z-checkpoint.log`
+  - reason: slope `-10.83MB/h` and median drift `-4.215MB` indicate mild reversion, but not sharp enough for downgrade threshold.
+- Full >=1h gate at 14:10 UTC remained re-escalated:
+  - `tmp/feat1-super-heap/postfix-verify/re-escalated-1h-gate-decision-2026-03-11T14-10Z.md`
+  - `tmp/feat1-super-heap/postfix-verify/silent-monitor-super-2026-03-11T14-10Z-checkpoint.log`
+  - reason: slope turned positive (`+5.97MB/h`), so sustained sharp mean-reversion downgrade criterion clearly failed.
+- Local instrumented repro track: full-process `T0/T+20m/T+40m/T+60m` captured; analysis pivoted to network-thread-only snapshots due full-snapshot parser limits, and network-thread series now completed (`T0/T+20/T+40/T+60`).
+- Network-thread constructor/retainer analysis completed on quiet-meadow series:
+  - Diff artifacts: `tmp/feat1-super-heap/local-repro/network-thread/analysis/diff-T0-T20.txt`, `diff-T20-T40.txt`, `diff-T40-T60.txt`, `diff-T0-T60.txt`
+  - Retainer/chains artifacts: `retainers-WeakRef.txt`, `retainers-Listener.txt`, `retainers-MplexStream.txt`, `retainers-AbortSignal.txt`, `retainers-AbortController.txt`, `chains-WeakRef.txt`, `chains-Listener.txt`, `chains-MplexStream.txt`, `chains-AbortSignal.txt`, `chains-AbortController.txt`
+  - Consolidated memo: `tmp/feat1-super-heap/local-repro/network-thread/analysis/constructor-retention-analysis-2026-03-11.md`
+  - Main signal: post-warmup growth is WeakRef/WeakCell-heavy (`WeakRef +17252`, `WeakCell +8664` over 60m), while Listener/MplexStream are near-flat after warmup.
+  - Retainer signature: large `sourceSignalRef/composedSignalRef -> WeakRef` fanout suggests residual AbortSignal composition retention path; candidate code path is req/resp timeout composition using `AbortSignal.any` (`@lodestar/reqresp/src/request/index.ts`).
+- Full >=1h gate at 15:10 UTC remained re-escalated:
+  - `tmp/feat1-super-heap/postfix-verify/re-escalated-1h-gate-decision-2026-03-11T15-10Z.md`
+  - `tmp/feat1-super-heap/postfix-verify/silent-monitor-super-2026-03-11T15-10Z-checkpoint.log`
+  - reason: `old` slope only `-1.02MB/h` (median drift `-6.893MB`) — reversion exists but does not meet sustained **sharp** downgrade threshold.
+- Full >=1h gate at 16:10 UTC also remained re-escalated:
+  - `tmp/feat1-super-heap/postfix-verify/re-escalated-1h-gate-decision-2026-03-11T16-10Z.md`
+  - `tmp/feat1-super-heap/postfix-verify/silent-monitor-super-2026-03-11T16-10Z-checkpoint.log`
+  - note: sampler stalled after `16:06`; recovered with one-shot manual sample at `16:31` to close a valid `>=1h` window.
+  - reason: `old` slope `+17.55MB/h` and median drift `+1.973MB` (no mean-reversion; runaway classification reinforced).
+- Full >=1h gate at 17:31 UTC remained re-escalated:
+  - `tmp/feat1-super-heap/postfix-verify/re-escalated-1h-gate-decision-2026-03-11T17-31Z.md`
+  - `tmp/feat1-super-heap/postfix-verify/silent-monitor-super-2026-03-11T17-31Z-checkpoint.log`
+  - reason: `old` slope `+14.17MB/h`, median drift `+14.825MB` (still no reversion).
+- Patched req/resp clearable-signal A/B run (`good-kelp`) completed checkpoints `T0/T+20/T+40/T+60`:
+  - snapshots: `tmp/feat1-super-heap/local-repro/network-thread-patched-ab1/heap-network/`
+  - constructor comparison vs quiet-meadow baseline:
+    - `WeakRef`: `+17252` (baseline) → `+7` (patched)
+    - `WeakCell`: `+8664` (baseline) → `+7` (patched)
+    - post-warmup (`T+20→T+60`): `WeakRef +10475 → -187`, `WeakCell +5019 → -187`
+  - retainer comparison: baseline `sourceSignalRef/composedSignalRef` fanout signatures are absent in patched `T+60` retainers.
+  - summary artifact: `tmp/feat1-super-heap/local-repro/network-thread-patched-ab1/analysis/ab1-vs-quiet-meadow-summary-2026-03-11T17-38Z.md`
+- Deployment-candidate branch published for feat1 canary:
+  - branch: `fix/8969-reqresp-clearable-signal`
+  - commit: `c583edf543` (`fix(reqresp): clear composed response timeout signals`)
+  - remote: `fork/fix/8969-reqresp-clearable-signal`
+  - compare: `https://github.com/lodekeeper/lodestar/compare/unstable...fix/8969-reqresp-clearable-signal`
