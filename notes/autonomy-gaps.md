@@ -249,6 +249,14 @@ Updated `scripts/review/track-findings.py` with `import-gh` command:
 - Skips already-imported comments using source-id dedup
 - Optional `--include-replies` to include in-thread reply comments
 
+### ✅ Finding-tracker GitHub delta-sync added (2026-03-11)
+Updated `scripts/review/track-findings.py` with `sync-gh` command:
+- Checkpointed delta sync via persisted state (`data.sync.github[repo].last_comment_id`)
+- Imports only new comments (`id > checkpoint`), with optional `--since-comment-id` override
+- Optional `--include-replies` and configurable `--match-window-lines`
+- Adds re-verification metadata to matching existing findings (`needs_reverify`, `reverify.events`)
+- Supports `--dry-run` for safe validation
+
 ### ✅ CI LLM retry/backoff + fixability wiring in autofix detector (2026-03-10)
 Updated `scripts/ci/auto_fix_flaky.py`:
 - Added bounded retry behavior for OpenAI calls in `_openai_completion()`
@@ -274,4 +282,4 @@ Updated `scripts/ci/auto_fix_flaky.py`:
 11. ~~**Test-vector auto-check** — add `pnpm test:spec` gate to dev-workflow skill before PR opening~~ ✅ done (2026-03-09)
 12. ~~**GitHub review-comment ingestion for finding tracker** — add API import path so `track-findings.py` can bootstrap from PR review comments without manual entry~~ ✅ done (2026-03-10)
 13. ~~**CI LLM retry + `Retry-After` handling in autofix detector** — bounded retry budget for 429/5xx and propagate LLM `fixable` verdict into actionable selection~~ ✅ done (2026-03-10)
-14. **Finding tracker delta-sync from GitHub** — add `track-findings.py sync-gh` with checkpointed import + optional auto-reverify of touched findings
+14. ~~**Finding tracker delta-sync from GitHub** — add `track-findings.py sync-gh` with checkpointed import + optional auto-reverify of touched findings~~ ✅ done (2026-03-11)

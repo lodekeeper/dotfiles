@@ -89,3 +89,40 @@ Deploy patched branch/build to feat1-super and monitor old-space slope for sever
 - First full post-gate >=30m window (05:31 UTC) is positive and now a re-escalation candidate, pending consecutive confirmation:
   - `tmp/feat1-super-heap/postfix-verify/post-gate-window1-2026-03-11T05-31Z.md`
   - `tmp/feat1-super-heap/postfix-verify/silent-monitor-super-2026-03-11T05-31Z-checkpoint.log`
+- Second consecutive >=30m decision window (06:02 UTC) did not confirm a sustained upward regime; classification remains `STILL_NOISY`:
+  - `tmp/feat1-super-heap/postfix-verify/post-gate-window2-decision-2026-03-11T06-02Z.md`
+  - `tmp/feat1-super-heap/postfix-verify/silent-monitor-super-2026-03-11T06-02Z-checkpoint.log`
+- Follow-up corroboration at 06:12 UTC remained short-window/noise-only and did not meet re-escalation criteria:
+  - `tmp/feat1-super-heap/postfix-verify/post-gate-corroboration-2026-03-11T06-12Z.md`
+  - `tmp/feat1-super-heap/postfix-verify/silent-monitor-super-2026-03-11T06-12Z-checkpoint.log`
+- First fresh post-06:02 >=30m window at 06:40 UTC is a qualifying up-window (+33.87MB/h), but classification remains `STILL_NOISY` pending consecutive confirmation:
+  - `tmp/feat1-super-heap/postfix-verify/post-gate-fresh-window1-2026-03-11T06-32Z.md`
+  - `tmp/feat1-super-heap/postfix-verify/silent-monitor-super-2026-03-11T06-40Z-checkpoint.log`
+- Second fresh >=30m confirmation window at 07:10 UTC also exceeded threshold (+90.46MB/h), satisfying consecutive-window criteria and re-escalating state to `SUSTAINED_RUNAWAY_CONFIRMED`:
+  - `tmp/feat1-super-heap/postfix-verify/post-gate-fresh-window2-decision-2026-03-11T07-02Z.md`
+  - `tmp/feat1-super-heap/postfix-verify/silent-monitor-super-2026-03-11T07-10Z-checkpoint.log`
+- Re-escalated-state checkpoint at 07:20 UTC shows a short-window dip, but downgrade gate remains pending until full >=1h window from re-escalation anchor:
+  - `tmp/feat1-super-heap/postfix-verify/re-escalated-corroboration-2026-03-11T07-20Z.md`
+  - `tmp/feat1-super-heap/postfix-verify/silent-monitor-super-2026-03-11T07-20Z-checkpoint.log`
+- First full >=1h post-re-escalation gate (08:08 UTC decision sample) **did not** satisfy downgrade criteria; state remains `SUSTAINED_RUNAWAY_CONFIRMED`:
+  - `tmp/feat1-super-heap/postfix-verify/re-escalated-1h-gate-decision-2026-03-11T08-02Z.md`
+  - `tmp/feat1-super-heap/postfix-verify/silent-monitor-super-2026-03-11T08-02Z-checkpoint.log`
+- Operational note: collector stream had a gap after `07:57:37Z`; restarted collector session (`ember-cedar`) and resumed samples (`08:08:44Z`) before evaluating the gate.
+- Follow-up corroboration at 08:19 UTC showed short-window upward bounce (no decision-state change):
+  - `tmp/feat1-super-heap/postfix-verify/re-escalated-corroboration-2026-03-11T08-19Z.md`
+  - `tmp/feat1-super-heap/postfix-verify/silent-monitor-super-2026-03-11T08-19Z-checkpoint.log`
+- Next full >=1h post-decision gate (09:09 UTC decision sample) also stayed in re-escalated state:
+  - `tmp/feat1-super-heap/postfix-verify/re-escalated-1h-gate-decision-2026-03-11T09-08Z.md`
+  - `tmp/feat1-super-heap/postfix-verify/silent-monitor-super-2026-03-11T09-08Z-checkpoint.log`
+  - reason: endpoint old-space slope was negative, but robust median drift was positive (`+11.841MB`), so sustained sharp mean-reversion downgrade gate failed.
+- Following full >=1h gate (10:09 UTC decision sample) also remained re-escalated:
+  - `tmp/feat1-super-heap/postfix-verify/re-escalated-1h-gate-decision-2026-03-11T10-09Z.md`
+  - `tmp/feat1-super-heap/postfix-verify/silent-monitor-super-2026-03-11T10-09Z-checkpoint.log`
+  - reason: old-space slope was mildly positive (`+1.30MB/h`), so sharp mean-reversion downgrade criterion was not met.
+- Periodic corroboration at 10:37 UTC shows short-window upward pressure and no state change:
+  - `tmp/feat1-super-heap/postfix-verify/re-escalated-corroboration-2026-03-11T10-37Z.md`
+  - `tmp/feat1-super-heap/postfix-verify/silent-monitor-super-2026-03-11T10-37Z-checkpoint.log`
+- Full >=1h gate at 11:09 UTC remained re-escalated with clear upward pressure:
+  - `tmp/feat1-super-heap/postfix-verify/re-escalated-1h-gate-decision-2026-03-11T11-09Z.md`
+  - `tmp/feat1-super-heap/postfix-verify/silent-monitor-super-2026-03-11T11-09Z-checkpoint.log`
+  - reason: old-space slope `+38.70MB/h` and median drift `+29.384MB` (opposite of downgrade condition).
