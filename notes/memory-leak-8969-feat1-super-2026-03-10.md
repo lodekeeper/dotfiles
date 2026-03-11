@@ -69,3 +69,23 @@ Conclusion: fix eliminates steady-state listener accumulation in repeating tasks
 
 ## Next ops step
 Deploy patched branch/build to feat1-super and monitor old-space slope for several hours to verify regression is gone under real traffic.
+
+## Overnight corroboration checkpoint (2026-03-11 04:03 UTC)
+- Collector (`silent-monitor-super-2026-03-10-night.log`) remained live through post-3h trigger window.
+- Backlog decision state moved to `SUSTAINED_RUNAWAY_CONFIRMED` at 04:01 UTC (two consecutive ≥30m post-3h windows above +15MB/h).
+- Evidence preserved for morning handoff:
+  - `tmp/feat1-super-heap/postfix-verify/silent-monitor-super-2026-03-10-night-2026-03-11T04-03Z-checkpoint.log`
+  - `tmp/feat1-super-heap/postfix-verify/morning-handoff-2026-03-11T04-03Z.md`
+- Mean-reversion downgrade gate still pending until first full ≥1h post-trigger window is available.
+- Additional corroboration addendum captured at 04:11 UTC:
+  - `tmp/feat1-super-heap/postfix-verify/silent-monitor-super-2026-03-10-night-2026-03-11T04-11Z-checkpoint.log`
+  - `tmp/feat1-super-heap/postfix-verify/morning-handoff-2026-03-11T04-11Z-addendum.md`
+- First full ≥1h post-trigger gate (05:01 UTC) indicated sustained mean reversion and triggered state downgrade back to `STILL_NOISY`:
+  - `tmp/feat1-super-heap/postfix-verify/post-trigger-1h-gate-2026-03-11T05-01Z.md`
+  - `tmp/feat1-super-heap/postfix-verify/silent-monitor-super-2026-03-10-night-2026-03-11T05-01Z-checkpoint.log`
+- Post-gate corroboration checkpoint (05:24 UTC) shows early upward pressure but remains below re-escalation threshold:
+  - `tmp/feat1-super-heap/postfix-verify/post-gate-corroboration-2026-03-11T05-24Z.md`
+  - `tmp/feat1-super-heap/postfix-verify/silent-monitor-super-2026-03-10-night-2026-03-11T05-24Z-checkpoint.log`
+- First full post-gate >=30m window (05:31 UTC) is positive and now a re-escalation candidate, pending consecutive confirmation:
+  - `tmp/feat1-super-heap/postfix-verify/post-gate-window1-2026-03-11T05-31Z.md`
+  - `tmp/feat1-super-heap/postfix-verify/silent-monitor-super-2026-03-11T05-31Z-checkpoint.log`
