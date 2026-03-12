@@ -171,3 +171,28 @@ Deploy patched branch/build to feat1-super and monitor old-space slope for sever
   - commit: `c583edf543` (`fix(reqresp): clear composed response timeout signals`)
   - remote: `fork/fix/8969-reqresp-clearable-signal`
   - compare: `https://github.com/lodekeeper/lodestar/compare/unstable...fix/8969-reqresp-clearable-signal`
+- Full >=1h gate at 18:34 UTC remained re-escalated:
+  - `tmp/feat1-super-heap/postfix-verify/re-escalated-1h-gate-decision-2026-03-11T18-34Z.md`
+  - `tmp/feat1-super-heap/postfix-verify/silent-monitor-super-2026-03-11T18-34Z-checkpoint.log`
+  - reason: `old` slope `+5.32MB/h`, median drift `+5.319MB` (no sustained sharp mean-reversion).
+- Full >=1h gate at 19:34 UTC **downgraded to STILL_NOISY**:
+  - `tmp/feat1-super-heap/postfix-verify/re-escalated-1h-gate-decision-2026-03-11T19-34Z.md`
+  - `tmp/feat1-super-heap/postfix-verify/silent-monitor-super-2026-03-11T19-34Z-checkpoint.log`
+  - reason: `old` slope `-16.09MB/h`, median drift `-16.094MB` (meets sustained sharp mean-reversion downgrade criterion).
+- Full >=1h corroboration gate at 20:34 UTC **re-escalated to SUSTAINED_RUNAWAY_CONFIRMED**:
+  - `tmp/feat1-super-heap/postfix-verify/still-noisy-corroboration-gate-2026-03-11T20-34Z.md`
+  - `tmp/feat1-super-heap/postfix-verify/silent-monitor-super-2026-03-11T20-34Z-checkpoint.log`
+  - reason: `old` slope `+8.82MB/h`, median drift `+8.819MB` (sustained positive old-space drift returned).
+- feat1 deploy confirmed live at ~20:58 UTC on `fix/8969-reqresp-clearable-signal`; immediate anchor sample at 21:00 shows hard baseline reset (`old 236.188 -> 35.267`, sockets `208 -> 21`), likely restart/reconnect effect:
+  - `tmp/feat1-super-heap/postfix-verify/feat1-deploy-anchor-2026-03-11T21-00Z.md`
+  - implication: use deploy-anchored gate (>=1h from 21:00) for clean post-deploy effectiveness signal.
+- First clean deploy-anchored >=1h gate at 22:00 UTC reports **NOT IMPROVED**:
+  - `tmp/feat1-super-heap/postfix-verify/feat1-post-deploy-gate-2026-03-11T22-00Z.md`
+  - `tmp/feat1-super-heap/postfix-verify/silent-monitor-super-2026-03-11T22-00Z-checkpoint.log`
+  - metrics: `old 35.267 -> 112.151` (`+76.884MB`, `+76.84MB/h`), sockets `21 -> 203`
+  - interpretation: memory growth resumed under live rollout; req/resp patch is likely partial-path only, not primary driver.
+- Deploy-anchored follow-up gate at 23:00 UTC remains **NOT IMPROVED**, but with much smaller positive drift:
+  - `tmp/feat1-super-heap/postfix-verify/feat1-post-deploy-gate-2026-03-11T23-00Z.md`
+  - `tmp/feat1-super-heap/postfix-verify/silent-monitor-super-2026-03-11T23-00Z-checkpoint.log`
+  - metrics: `old 112.151 -> 116.030` (`+3.879MB`, `+3.88MB/h`), sockets `203 -> 200`
+  - interpretation: still positive residual drift (no closure), but now near low-drift/noise boundary; needs corroboration window.

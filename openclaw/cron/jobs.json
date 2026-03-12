@@ -7,7 +7,7 @@
       "name": "daily-summary",
       "enabled": true,
       "createdAtMs": 1769895413579,
-      "updatedAtMs": 1773183704217,
+      "updatedAtMs": 1773270106815,
       "schedule": {
         "kind": "cron",
         "expr": "0 23 * * *",
@@ -21,10 +21,10 @@
         "model": "openai-codex/gpt-5.3-codex"
       },
       "state": {
-        "nextRunAtMs": 1773270000000,
-        "lastRunAtMs": 1773183600005,
+        "nextRunAtMs": 1773356400000,
+        "lastRunAtMs": 1773270000004,
         "lastStatus": "ok",
-        "lastDurationMs": 104212,
+        "lastDurationMs": 106811,
         "lastRunStatus": "ok",
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
@@ -133,7 +133,7 @@
       "name": "daily-meme",
       "enabled": true,
       "createdAtMs": 1771753595377,
-      "updatedAtMs": 1773180244418,
+      "updatedAtMs": 1773266683413,
       "schedule": {
         "kind": "cron",
         "expr": "0 22 * * *",
@@ -151,16 +151,14 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1773266400000,
-        "lastRunAtMs": 1773180023513,
-        "lastStatus": "error",
-        "lastDurationMs": 220905,
-        "lastRunStatus": "error",
+        "nextRunAtMs": 1773352800000,
+        "lastRunAtMs": 1773266488797,
+        "lastStatus": "ok",
+        "lastDurationMs": 194616,
+        "lastRunStatus": "ok",
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
-        "consecutiveErrors": 2,
-        "lastDeliveryError": "⚠️ 📝 Edit: `in ~/.openclaw/workspace/BACKLOG.md (576 chars)` failed",
-        "lastError": "⚠️ 📝 Edit: `in ~/.openclaw/workspace/BACKLOG.md (576 chars)` failed"
+        "consecutiveErrors": 0
       }
     },
     {
@@ -169,7 +167,7 @@
       "name": "eth-rnd-archive-hourly",
       "enabled": true,
       "createdAtMs": 1772034567300,
-      "updatedAtMs": 1773249552077,
+      "updatedAtMs": 1773271043256,
       "schedule": {
         "kind": "cron",
         "expr": "15 * * * *",
@@ -187,13 +185,13 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1773249409903,
+        "lastRunAtMs": 1773270900004,
         "lastStatus": "ok",
-        "lastDurationMs": 142174,
+        "lastDurationMs": 143252,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1773252900000,
+        "nextRunAtMs": 1773274500000,
         "lastDelivered": false
       }
     },
@@ -240,7 +238,7 @@
       "name": "github-notifications",
       "enabled": true,
       "createdAtMs": 1772107716625,
-      "updatedAtMs": 1773251963054,
+      "updatedAtMs": 1773273593088,
       "schedule": {
         "kind": "every",
         "everyMs": 300000,
@@ -259,13 +257,13 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1773251952115,
+        "lastRunAtMs": 1773273585524,
         "lastStatus": "ok",
-        "lastDurationMs": 10939,
+        "lastDurationMs": 7564,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1773252252115,
+        "nextRunAtMs": 1773273885524,
         "lastDelivered": false
       },
       "deleteAfterRun": false
@@ -345,7 +343,7 @@
       "name": "aztec-sequencer-health",
       "enabled": true,
       "createdAtMs": 1772373812089,
-      "updatedAtMs": 1773243900015,
+      "updatedAtMs": 1773272635510,
       "schedule": {
         "kind": "every",
         "everyMs": 14400000,
@@ -362,11 +360,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1773258208794,
-        "lastRunAtMs": 1773243808794,
+        "nextRunAtMs": 1773287008806,
+        "lastRunAtMs": 1773272608806,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 91221,
+        "lastDurationMs": 26704,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -378,7 +376,7 @@
       "name": "workspace-periodic-cleanup",
       "enabled": true,
       "createdAtMs": 1772634832403,
-      "updatedAtMs": 1773249407483,
+      "updatedAtMs": 1773270810663,
       "schedule": {
         "kind": "every",
         "everyMs": 21600000,
@@ -395,11 +393,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1773270663327,
-        "lastRunAtMs": 1773249063327,
+        "nextRunAtMs": 1773292308340,
+        "lastRunAtMs": 1773270708340,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 344156,
+        "lastDurationMs": 102323,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0
@@ -411,7 +409,7 @@
       "name": "monitor-open-pr-ci",
       "enabled": true,
       "createdAtMs": 1772635128553,
-      "updatedAtMs": 1773251550434,
+      "updatedAtMs": 1773273132482,
       "schedule": {
         "kind": "every",
         "everyMs": 1800000,
@@ -428,11 +426,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1773253302159,
-        "lastRunAtMs": 1773251502159,
+        "nextRunAtMs": 1773274902217,
+        "lastRunAtMs": 1773273102217,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 48275,
+        "lastDurationMs": 30265,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -477,7 +475,7 @@
       "name": "self-improvement-audit-daily",
       "enabled": true,
       "createdAtMs": 1772635128553,
-      "updatedAtMs": 1773186617101,
+      "updatedAtMs": 1773272882835,
       "schedule": {
         "kind": "every",
         "everyMs": 86400000,
@@ -494,11 +492,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1773272713335,
-        "lastRunAtMs": 1773186313335,
+        "nextRunAtMs": 1773359113361,
+        "lastRunAtMs": 1773272713361,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 303766,
+        "lastDurationMs": 169474,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0
@@ -510,7 +508,7 @@
       "name": "cron-health-watchdog",
       "enabled": true,
       "createdAtMs": 1772636078136,
-      "updatedAtMs": 1773251926281,
+      "updatedAtMs": 1773273527794,
       "schedule": {
         "kind": "every",
         "everyMs": 1800000,
@@ -527,11 +525,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1773253718937,
-        "lastRunAtMs": 1773251918937,
+        "nextRunAtMs": 1773275318992,
+        "lastRunAtMs": 1773273518992,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 7344,
+        "lastDurationMs": 8802,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -580,7 +578,7 @@
       "description": "Sync dotfiles repo (safe mode: non-sensitive allowlist + sensitive-path guard)",
       "enabled": true,
       "createdAtMs": 1773087050715,
-      "updatedAtMs": 1773230534463,
+      "updatedAtMs": 1773252123525,
       "schedule": {
         "kind": "cron",
         "expr": "0 */6 * * *",
@@ -599,15 +597,15 @@
         "channel": "last"
       },
       "state": {
-        "nextRunAtMs": 1773252093107,
-        "lastRunAtMs": 1773230493111,
+        "nextRunAtMs": 1773273693107,
+        "lastRunAtMs": 1773252093111,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 41352,
+        "lastDurationMs": 30414,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false,
-        "runningAtMs": 1773252093111
+        "runningAtMs": 1773273693111
       }
     },
     {
@@ -617,7 +615,7 @@
       "description": "Check openclaw/openclaw latest release every 12h and alert Nico on new tag",
       "enabled": true,
       "createdAtMs": 1773093482865,
-      "updatedAtMs": 1773223116301,
+      "updatedAtMs": 1773266304913,
       "schedule": {
         "kind": "every",
         "everyMs": 43200000,
@@ -630,11 +628,11 @@
         "text": "Check for new OpenClaw release by running /home/openclaw/.openclaw/workspace/scripts/cron/check_openclaw_release.sh. If output is NEW_OPENCLAW_RELEASE|..., alert Nico via sessions_send to agent:main:telegram:direct:5774760693 with tag/url/published/previous. If HEARTBEAT_OK, do nothing and reply HEARTBEAT_OK. Do not edit BACKLOG."
       },
       "state": {
-        "nextRunAtMs": 1773266282877,
-        "lastRunAtMs": 1773223082877,
+        "nextRunAtMs": 1773309482890,
+        "lastRunAtMs": 1773266282890,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 33424,
+        "lastDurationMs": 22023,
         "lastDeliveryStatus": "not-requested",
         "consecutiveErrors": 0
       }

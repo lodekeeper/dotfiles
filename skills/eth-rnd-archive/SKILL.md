@@ -98,12 +98,12 @@ bash skills/eth-rnd-archive/check-updates.sh 2026-02-25
 1. Run `check-updates.sh`
 2. If new messages found in tracked channels:
    - Summarize key discussions per channel
-   - Log to `/home/openclaw/.openclaw/workspace/memory/eth-rnd-archive-notes/YYYY-MM-DD.md`
+   - Log to `/home/openclaw/eth-rnd-archive-notes/YYYY-MM-DD.md`
    - If something critical (spec changes, breaking decisions, action items for Lodestar): alert Nico immediately
 3. If no new messages: no action
 
 ### Daily Digest (8 AM CET via cron)
-1. Read all notes from the past 24h (`/home/openclaw/.openclaw/workspace/memory/eth-rnd-archive-notes/`)
+1. Read all notes from the past 24h (`/home/openclaw/eth-rnd-archive-notes/`)
 2. Create a concise digest:
    - **Key decisions** made across channels
    - **Action items** for Lodestar

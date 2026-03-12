@@ -1,23 +1,24 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-03-10 (5th pass)
+> Updated: 2026-03-11 (6th pass)
 
 ---
 
-## Daily Audit Snapshot — 2026-03-10 (self-improvement-audit-daily)
+## Daily Audit Snapshot — 2026-03-11 (self-improvement-audit-daily)
 
 ### PR review
-- **Blocker:** finding-tracker import exists, but no "delta sync" command to re-ingest only new review comments since last sweep and auto-mark matching findings as re-verified.
-- **Proposed fix:** add `track-findings.py sync-gh <owner/repo> <pr>` with `--since-comment-id` checkpointing.
+- **Blocker:** `track-findings.py sync-gh` exists, but it is not yet wired into the default review loop, so delta sync/reverify is still easy to skip.
+- **Proposed fix:** add an explicit post-review follow-up step in `skills/lodestar-review/SKILL.md` that runs `sync-gh` on subsequent review rounds.
 
 ### CI fix
-- **Blocker:** CI LLM calls had model fallback but no explicit `Retry-After` / bounded retry behavior, and LLM `fixable` signals were not wired into `is_fixable()`.
-- **Fix applied this cycle:** updated `scripts/ci/auto_fix_flaky.py` with retryable OpenAI error handling (429/5xx + `Retry-After` aware backoff) and proper propagation of LLM fixability into actionable classification.
+- **Blocker:** retry/backoff behavior now works, but retry telemetry is not summarized in tracker output, making flaky API periods hard to audit.
+- **Proposed fix:** add `retry_count` / backoff summary fields to CI findings/tracker records and cron summary output.
 
 ### Spec implementation
-- **Blocker:** compliance checker exists but is not yet an explicit dev-workflow gate for spec-facing PRs.
-- **Proposed fix:** add a mandatory "spec-compliance check" step in `skills/dev-workflow/SKILL.md` (run checker or document skip reason).
+- **Blocker:** spec-compliance reports are still easy to lose because they are not yet linked from PR templates/tracker checkpoints by default.
+- **Fix applied this cycle:** codified a mandatory "spec-compliance gate" in `skills/dev-workflow/SKILL.md` Phase 4 (run checker for spec/protocol changes or explicitly document skip reason).
+- **Proposed next fix:** add a PR-template/tracker field that requires linking the generated compliance report artifact.
 
 ### Devnet debugging
 - **Blocker:** incident packaging is still manual (logs + metrics + timeline + environment metadata in one bundle).
@@ -156,6 +157,13 @@ Spinning up a mixed-peer devnet (e.g., Lodestar B2 + C2 nodes against ePBS devne
 
 ## Improvements Implemented This Cycle
 
+### ✅ Dev-workflow spec-compliance gate codified (2026-03-11)
+Updated `skills/dev-workflow/SKILL.md` Phase 4 with an explicit **Spec-compliance gate** for spec/protocol-facing changes:
+- run `python3 scripts/spec/check-compliance.py --spec-query ... --ts-file ... --ts-symbol ... --output ...`
+- if skipped, document reason in PR description
+
+**Rationale:** the checker existed, but without an explicit workflow gate it was easy to omit during fast iterations.
+
 ### ✅ PR review false-positive guard added to lodestar-review SKILL.md
 Added Step 1.5 between "Get the diff" and "Read persona prompts":
 - Get `git diff --name-only origin/unstable...HEAD` before spawning reviewers
@@ -283,3 +291,5 @@ Updated `scripts/ci/auto_fix_flaky.py`:
 12. ~~**GitHub review-comment ingestion for finding tracker** — add API import path so `track-findings.py` can bootstrap from PR review comments without manual entry~~ ✅ done (2026-03-10)
 13. ~~**CI LLM retry + `Retry-After` handling in autofix detector** — bounded retry budget for 429/5xx and propagate LLM `fixable` verdict into actionable selection~~ ✅ done (2026-03-10)
 14. ~~**Finding tracker delta-sync from GitHub** — add `track-findings.py sync-gh` with checkpointed import + optional auto-reverify of touched findings~~ ✅ done (2026-03-11)
+15. **Review-loop integration for finding delta sync** — add a codified follow-up step in `skills/lodestar-review/SKILL.md` to run `track-findings.py sync-gh` whenever new review comments land on a PR.
+16. **Spec compliance artifact traceability** — add PR-template/tracker field that links generated `spec-compliance-*.md` reports for spec/protocol PRs.

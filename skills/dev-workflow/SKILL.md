@@ -281,7 +281,17 @@ process action:list
      echo "No test:spec script in this checkout; run the relevant consensus-spec tests manually and note it in PR body"
    fi
    ```
-   If this gate is skipped, record why in the PR description (e.g., non-spec refactor).
+
+   **Spec-compliance gate (required for spec/protocol-facing changes before PR):**
+   ```bash
+   cd ~/.openclaw/workspace
+   python3 scripts/spec/check-compliance.py \
+     --spec-query "<spec function or section>" \
+     --ts-file "~/lodestar-<feature-name>/<path/to/file>.ts" \
+     --ts-symbol "<functionName>" \
+     --output "notes/<feature>/spec-compliance-<function>.md"
+   ```
+   If the compliance gate is skipped, record the reason in the PR description (e.g., non-spec refactor or missing stable spec target).
 3. **Multi-persona review:** Use the `lodestar-review` skill (`skills/lodestar-review/SKILL.md`):
    - Get the local diff: `git diff unstable...HEAD` in the worktree
    - Read the skill for reviewer selection matrix and Lodestar-tailored persona prompts
