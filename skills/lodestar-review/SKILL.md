@@ -272,7 +272,13 @@ Use `scripts/review/track-findings.py` to track which findings get addressed in 
      --file src/sync/range/chain.ts --line 142 --severity major \
      --reviewer review-bugs --body "Race condition in batch completion..."
    ```
-2. When the author pushes a new commit, check coverage:
+2. **Follow-up rounds (mandatory when revisiting a PR with new review comments):** sync GitHub deltas before re-reviewing so newly landed comments are imported and matched to existing findings.
+   ```bash
+   python3 ~/.openclaw/workspace/scripts/review/track-findings.py sync-gh <PR> \
+     --repo ChainSafe/lodestar
+   ```
+   Optional: add `--include-replies` when maintainer discussion in reply threads matters for re-verification.
+3. When the author pushes a new commit, check coverage:
    ```bash
    # Get changed files from the new commit
    gh pr diff <PR> --repo ChainSafe/lodestar --name-only > /tmp/changed-files.txt
@@ -280,16 +286,16 @@ Use `scripts/review/track-findings.py` to track which findings get addressed in 
      --changed-files $(cat /tmp/changed-files.txt | tr '\n' ' ')
    ```
    Output: which findings are on changed files (→ verify!) vs. still-untouched files (→ still open).
-3. Mark resolved findings:
+4. Mark resolved findings:
    ```bash
    python3 ~/.openclaw/workspace/scripts/review/track-findings.py resolve <PR> <id> --commit <sha>
    ```
-4. Generate a markdown summary for a GitHub follow-up comment:
+5. Generate a markdown summary for a GitHub follow-up comment:
    ```bash
    python3 ~/.openclaw/workspace/scripts/review/track-findings.py dump <PR>
    ```
 
-Also available: `import --markdown <file>` (parse free-form reviewer output), `dedup` (group by file+proximity).
+Also available: `import --markdown <file>` (parse free-form reviewer output), `import-gh` (one-shot bootstrap from GitHub review comments), `dedup` (group by file+proximity).
 
 ## Tips
 

@@ -157,6 +157,13 @@ Spinning up a mixed-peer devnet (e.g., Lodestar B2 + C2 nodes against ePBS devne
 
 ## Improvements Implemented This Cycle
 
+### ✅ Review-loop delta-sync step codified in lodestar-review skill (2026-03-12)
+Updated `skills/lodestar-review/SKILL.md` finding-tracking workflow with a mandatory follow-up round step:
+- run `python3 ~/.openclaw/workspace/scripts/review/track-findings.py sync-gh <PR> --repo ChainSafe/lodestar` whenever revisiting a PR with new review comments
+- optional `--include-replies` guidance when reviewer discussion happens in threaded replies
+
+**Rationale:** `sync-gh` existed, but without being part of the default loop it was easy to skip delta imports and miss re-verification handoffs.
+
 ### ✅ Dev-workflow spec-compliance gate codified (2026-03-11)
 Updated `skills/dev-workflow/SKILL.md` Phase 4 with an explicit **Spec-compliance gate** for spec/protocol-facing changes:
 - run `python3 scripts/spec/check-compliance.py --spec-query ... --ts-file ... --ts-symbol ... --output ...`
@@ -291,5 +298,5 @@ Updated `scripts/ci/auto_fix_flaky.py`:
 12. ~~**GitHub review-comment ingestion for finding tracker** — add API import path so `track-findings.py` can bootstrap from PR review comments without manual entry~~ ✅ done (2026-03-10)
 13. ~~**CI LLM retry + `Retry-After` handling in autofix detector** — bounded retry budget for 429/5xx and propagate LLM `fixable` verdict into actionable selection~~ ✅ done (2026-03-10)
 14. ~~**Finding tracker delta-sync from GitHub** — add `track-findings.py sync-gh` with checkpointed import + optional auto-reverify of touched findings~~ ✅ done (2026-03-11)
-15. **Review-loop integration for finding delta sync** — add a codified follow-up step in `skills/lodestar-review/SKILL.md` to run `track-findings.py sync-gh` whenever new review comments land on a PR.
+15. ~~**Review-loop integration for finding delta sync** — add a codified follow-up step in `skills/lodestar-review/SKILL.md` to run `track-findings.py sync-gh` whenever new review comments land on a PR.~~ ✅ done (2026-03-12)
 16. **Spec compliance artifact traceability** — add PR-template/tracker field that links generated `spec-compliance-*.md` reports for spec/protocol PRs.
