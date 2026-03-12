@@ -196,3 +196,25 @@ Deploy patched branch/build to feat1-super and monitor old-space slope for sever
   - `tmp/feat1-super-heap/postfix-verify/silent-monitor-super-2026-03-11T23-00Z-checkpoint.log`
   - metrics: `old 112.151 -> 116.030` (`+3.879MB`, `+3.88MB/h`), sockets `203 -> 200`
   - interpretation: still positive residual drift (no closure), but now near low-drift/noise boundary; needs corroboration window.
+- Corroboration gate at 00:00 UTC confirms drift re-expanded (**CORROBORATED_POSITIVE_DRIFT**):
+  - `tmp/feat1-super-heap/postfix-verify/feat1-post-deploy-corroboration-gate-2026-03-12T00-00Z.md`
+  - `tmp/feat1-super-heap/postfix-verify/silent-monitor-super-2026-03-12T00-00Z-checkpoint.log`
+  - metrics: `old 116.030 -> 131.343` (`+15.313MB`, `+15.31MB/h`), sockets `200 -> 200`
+  - interpretation: low-drift at 23:00 was transient/noise; positive old-space growth remains sustained post-rollout.
+- Hourly confirmation gate at 01:00 UTC flips to negative drift (**CONFIRMATION_IMPROVED_OR_FLAT**):
+  - `tmp/feat1-super-heap/postfix-verify/feat1-post-deploy-confirmation-gate-2026-03-12T01-00Z.md`
+  - `tmp/feat1-super-heap/postfix-verify/silent-monitor-super-2026-03-12T01-00Z-checkpoint.log`
+  - metrics: `old 131.343 -> 114.837` (`-16.506MB`, `-16.51MB/h`), sockets `200 -> 206`
+  - note: parallel collectors produced duplicate `01:00:21Z` rows; decision was computed against the latest in-window sample and still resolves negative.
+  - interpretation: possible short-term reversion, but needs 02:00 corroboration to distinguish sustained improvement from noise.
+- Corroboration gate at 02:00 UTC stays negative (**CORROBORATED_REVERSAL_OR_FLAT**):
+  - `tmp/feat1-super-heap/postfix-verify/feat1-post-deploy-corroboration-gate-2026-03-12T02-00Z.md`
+  - `tmp/feat1-super-heap/postfix-verify/silent-monitor-super-2026-03-12T02-00Z-checkpoint.log`
+  - metrics: `old 114.768 -> 100.412` (`-14.356MB`, `-14.36MB/h`), sockets `206 -> 202`
+  - interpretation: second consecutive negative-drift window; indicates short-term reversal is currently holding, but still requires another confirmation hour before closure.
+- Hourly confirmation gate at 03:00 UTC snaps back positive (**CONFIRMATION_POSITIVE_DRIFT**):
+  - `tmp/feat1-super-heap/postfix-verify/feat1-post-deploy-confirmation-gate-2026-03-12T03-00Z.md`
+  - `tmp/feat1-super-heap/postfix-verify/silent-monitor-super-2026-03-12T03-00Z-checkpoint.log`
+  - metrics: `old 100.412 -> 129.003` (`+28.591MB`, `+28.59MB/h`), sockets `202 -> 203`
+  - note: duplicate `03:00:21Z` rows were produced by parallel runners (`quick-wharf` + `salty-falcon`); latest sample used in classification.
+  - interpretation: the 01:00/02:00 reversal was transient; positive drift returned.
