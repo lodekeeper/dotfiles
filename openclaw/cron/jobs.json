@@ -40,26 +40,28 @@
       "id": "601e11a3-dd92-4a77-b301-ccefdaa2cc86",
       "agentId": "main",
       "name": "specs-study-reminder",
-      "enabled": false,
+      "enabled": true,
       "createdAtMs": 1771194766869,
-      "updatedAtMs": 1773091137727,
+      "updatedAtMs": 1773439707813,
       "schedule": {
         "kind": "every",
-        "everyMs": 14400000,
-        "anchorMs": 1771194766869
+        "everyMs": 604800000,
+        "anchorMs": 1773439705463
       },
       "sessionTarget": "main",
       "wakeMode": "now",
       "payload": {
         "kind": "systemEvent",
         "text": "Reminder: If no active PRs or urgent work, continue the consensus specs study plan. Check notes/specs/PROGRESS.md for where you left off. Read a spec section, find the Lodestar implementation, document learnings, and open PRs for any issues found.",
-        "model": "openai-codex/gpt-5.3-codex"
+        "model": "openai-codex/gpt-5.4"
       },
       "state": {
         "lastRunAtMs": 1771540366871,
         "lastStatus": "ok",
-        "lastDurationMs": 29463
-      }
+        "lastDurationMs": 29463,
+        "nextRunAtMs": 1774044505463
+      },
+      "deleteAfterRun": false
     },
     {
       "id": "6e703342-d57b-4fa0-9ba3-69f225de3cd5",
@@ -67,7 +69,7 @@
       "name": "Monitor EIP-8025 / zkEVM updates",
       "enabled": true,
       "createdAtMs": 1771320800043,
-      "updatedAtMs": 1773397036772,
+      "updatedAtMs": 1773431367674,
       "schedule": {
         "kind": "every",
         "everyMs": 259200000,
@@ -77,22 +79,22 @@
       "wakeMode": "now",
       "payload": {
         "kind": "agentTurn",
-        "message": "Check for updates on EIP-8025 (optional execution proofs) across other clients and research discussions. Do the following:\n\n1. Check ethereum/consensus-specs repo for any new commits/PRs related to EIP-8025, optional proofs, or zkvm\n2. Check Lighthouse repo (sigp/lighthouse) for commits on their optional-proofs branch\n3. Check ethpandaops/prysm repo (NOT prysmaticlabs/prysm) for any optional-proofs related branches\n4. Check ethereum/pm repo for updates to zkEVM planning\n5. Check the Eth R&D Archive for recent discussions in zkEVM-related channels:\n   - Run: bash skills/eth-rnd-archive/check-updates.sh\n   - Read recent JSON files from ~/eth-rnd-archive/l1-zkevm/ and ~/eth-rnd-archive/l1-zkevm-protocol/ (last 3 days)\n   - Also check their _threads/ subdirectories for thread discussions\n   - Look for mentions of EIP-8025, optional proofs, proof orchestration, zkEVM protocol changes\n6. If any changes found that affect our implementation in lodestar (branch feat/eip8025-optional-proofs in ~/lodestar-eip8025), summarize what we need to update\n7. Report findings to Nico via Telegram (chat ID 5774760693) — only if there are actual updates, stay silent otherwise\n\nOur current implementation: PR #8918 merged + PR #8923 ready on ChainSafe/lodestar optional-proofs branch. 3-client interop validated.\n\nOutput routing:\n- If meaningful updates found: post summary to Lodestar WG topic #347 via message tool (action=send target=-1003764039429 threadId=347).\n- If no updates: reply HEARTBEAT_OK (no output anywhere).\n- If something critical/breaking (spec change affecting Lodestar, urgent action needed): DM Nico directly (target=5774760693).\n- Never DM for routine research updates.",
-        "timeoutSeconds": 600,
+        "message": "Check for updates on EIP-8025 (optional execution proofs) across other clients and research discussions. Do the following:\n\n1. Check ethereum/consensus-specs repo for any new commits/PRs related to EIP-8025, optional proofs, or zkvm\n2. Check Lighthouse repo (sigp/lighthouse) for commits on their optional-proofs branch\n3. Check ethpandaops/prysm repo (NOT prysmaticlabs/prysm) for any optional-proofs related branches\n4. Check ethereum/pm repo for updates to zkEVM planning\n5. Check the Eth R&D Archive for recent discussions in zkEVM-related channels:\n   - Run: bash skills/eth-rnd-archive/check-updates.sh\n   - Read recent JSON files from ~/eth-rnd-archive/l1-zkevm/ and ~/eth-rnd-archive/l1-zkevm-protocol/ (last 3 days)\n   - Also check their _threads/ subdirectories for thread discussions\n   - Look for mentions of EIP-8025, optional proofs, proof orchestration, zkEVM protocol changes\n6. If any changes found that affect our implementation in lodestar (branch feat/eip8025-optional-proofs in ~/lodestar-eip8025), summarize what we need to update\n\nOur current implementation: PR #8918 merged + PR #8923 ready on ChainSafe/lodestar optional-proofs branch. 3-client interop validated.\n\nOutput routing — use exec + OpenClaw CLI for ALL Telegram delivery (NOT sessions_send):\n- ALWAYS post a summary to Lodestar WG topic #347:\n  /home/openclaw/.nvm/versions/node/v22.22.0/bin/openclaw message send --channel telegram --target -1003764039429 --thread-id 347 --message \"<your summary>\"\n  Even if no updates found, post a brief \"No EIP-8025 movement\" note.\n- If something critical/breaking (spec change affecting Lodestar, urgent action needed): ALSO DM Nico:\n  /home/openclaw/.nvm/versions/node/v22.22.0/bin/openclaw message send --channel telegram --target 5774760693 --message \"<urgent summary>\"\n- Do NOT use sessions_send for Telegram delivery.",
+        "timeoutSeconds": 900,
         "model": "openai-codex/gpt-5.3-codex"
       },
       "delivery": {
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1773596162817,
-        "lastRunAtMs": 1773336962817,
-        "lastStatus": "error",
-        "lastDurationMs": 300011,
-        "lastRunStatus": "error",
-        "lastDeliveryStatus": "not-requested",
-        "consecutiveErrors": 1,
-        "lastError": "cron: job execution timed out"
+        "nextRunAtMs": 1773688944481,
+        "lastRunAtMs": 1773431017575,
+        "lastStatus": "ok",
+        "lastDurationMs": 350099,
+        "lastRunStatus": "ok",
+        "lastDeliveryStatus": "not-delivered",
+        "consecutiveErrors": 0,
+        "lastDelivered": false
       }
     },
     {
@@ -153,7 +155,7 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1773439200000,
+        "nextRunAtMs": 1773525600000,
         "lastRunAtMs": 1773352805455,
         "lastStatus": "ok",
         "lastDurationMs": 487557,
@@ -169,7 +171,7 @@
       "name": "eth-rnd-archive-hourly",
       "enabled": true,
       "createdAtMs": 1772034567300,
-      "updatedAtMs": 1773422155935,
+      "updatedAtMs": 1773440183818,
       "schedule": {
         "kind": "cron",
         "expr": "15 * * * *",
@@ -179,7 +181,7 @@
       "wakeMode": "now",
       "payload": {
         "kind": "agentTurn",
-        "message": "HOURLY CHECK: Eth R&D Archive.\n\n1. Read skill: skills/eth-rnd-archive/SKILL.md\n2. Run: bash skills/eth-rnd-archive/check-updates.sh\n3. If new messages in tracked channels: read the JSON files listed, summarize key discussions, save notes to ~/eth-rnd-archive-notes/YYYY-MM-DD.md\n4. If something CRITICAL for Lodestar (spec changes, breaking decisions, action items): alert Nico immediately via Telegram\n5. Otherwise just log the summary to the notes file silently\n\nDo NOT send anything to Nico unless it's genuinely important. Most checks will just be quiet logging.\n\n⚠️ STALENESS ALERT:\nIf check-updates.sh shows NO new data for 24+ hours (check the last commit date or latest JSON file date):\n1. Use sessions_send to sessionKey \"agent:main:discord:channel:1473573717857800356\" with a message like:\n   \"Hey <@731289513942450317> — the eth-rnd-archive hasn't updated in 24+ hours (last data: [date]). Looks like it may have desynced again.\"\n2. Make sure to include the <@731289513942450317> mention (nixo's Discord ID) so they get notified.\n3. Only send this alert ONCE per staleness event (check memory/eth-rnd-archive-notes/ for whether you already alerted).",
+        "message": "HOURLY CHECK: Eth R&D Archive.\n\n1. Read skill: skills/eth-rnd-archive/SKILL.md\n2. Run: bash skills/eth-rnd-archive/check-updates.sh\n3. If new messages in tracked channels: read the JSON files listed, summarize key discussions, save notes to ~/eth-rnd-archive-notes/YYYY-MM-DD.md\n4. If something CRITICAL for Lodestar (spec changes, breaking decisions, action items): alert Nico immediately via Telegram\n5. Otherwise just log the summary to the notes file silently\n\nDo NOT send anything to Nico unless it is genuinely important. Most checks will just be quiet logging.\n\n⚠️ STALENESS ALERT:\nIf check-updates.sh shows NO new data for 24+ hours (check the last commit date or latest JSON file date):\n1. Send a Discord ping using exec + OpenClaw CLI:\n   /home/openclaw/.nvm/versions/node/v22.22.0/bin/openclaw message send --channel discord --target channel:1473573717857800356 --message \"Hey <@731289513942450317> — the eth-rnd-archive has not updated in 24+ hours (last data: [date]). Looks like it may have desynced again.\"\n2. Make sure to include the <@731289513942450317> mention so they get notified.\n3. Only send this alert ONCE per staleness event (check memory/eth-rnd-archive-notes/ for whether you already alerted).\n4. Do NOT use sessions_send for Discord/Telegram delivery.",
         "timeoutSeconds": 600,
         "model": "anthropic/claude-sonnet-4-6"
       },
@@ -187,13 +189,13 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1773422100005,
+        "lastRunAtMs": 1773440100005,
         "lastStatus": "ok",
-        "lastDurationMs": 55930,
+        "lastDurationMs": 83813,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1773425700000,
+        "nextRunAtMs": 1773443700000,
         "lastDelivered": false
       }
     },
@@ -240,7 +242,7 @@
       "name": "github-notifications",
       "enabled": true,
       "createdAtMs": 1772107716625,
-      "updatedAtMs": 1773424626313,
+      "updatedAtMs": 1773442082324,
       "schedule": {
         "kind": "every",
         "everyMs": 300000,
@@ -259,13 +261,13 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1773424616577,
+        "lastRunAtMs": 1773442071849,
         "lastStatus": "ok",
-        "lastDurationMs": 9736,
+        "lastDurationMs": 10475,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1773424916577,
+        "nextRunAtMs": 1773442371849,
         "lastDelivered": false
       },
       "deleteAfterRun": false
@@ -345,7 +347,7 @@
       "name": "aztec-sequencer-health",
       "enabled": true,
       "createdAtMs": 1772373812089,
-      "updatedAtMs": 1773417926790,
+      "updatedAtMs": 1773431980205,
       "schedule": {
         "kind": "every",
         "everyMs": 14400000,
@@ -362,11 +364,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1773431689848,
-        "lastRunAtMs": 1773417289848,
+        "nextRunAtMs": 1773446089856,
+        "lastRunAtMs": 1773431689856,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 636942,
+        "lastDurationMs": 290349,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -411,7 +413,7 @@
       "name": "monitor-open-pr-ci",
       "enabled": true,
       "createdAtMs": 1772635128553,
-      "updatedAtMs": 1773424189001,
+      "updatedAtMs": 1773440465090,
       "schedule": {
         "kind": "every",
         "everyMs": 1800000,
@@ -428,11 +430,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1773425969912,
-        "lastRunAtMs": 1773424169912,
+        "nextRunAtMs": 1773442245642,
+        "lastRunAtMs": 1773440445642,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 19089,
+        "lastDurationMs": 19448,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -510,7 +512,7 @@
       "name": "cron-health-watchdog",
       "enabled": true,
       "createdAtMs": 1772636078136,
-      "updatedAtMs": 1773423351112,
+      "updatedAtMs": 1773440502778,
       "schedule": {
         "kind": "every",
         "everyMs": 1800000,
@@ -527,11 +529,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1773425144724,
-        "lastRunAtMs": 1773423344724,
+        "nextRunAtMs": 1773442296899,
+        "lastRunAtMs": 1773440496899,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 6388,
+        "lastDurationMs": 5879,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -544,7 +546,7 @@
       "description": "Daily nudge to execute autonomy audit priorities",
       "enabled": true,
       "createdAtMs": 1772853540767,
-      "updatedAtMs": 1773394598607,
+      "updatedAtMs": 1773430963265,
       "schedule": {
         "kind": "cron",
         "expr": "30 9 * * *",
@@ -554,7 +556,7 @@
       "wakeMode": "now",
       "payload": {
         "kind": "agentTurn",
-        "message": "Daily reminder: execute one \"Next Audit Priorities\" item from notes/autonomy-gaps.md (or BACKLOG) if still pending.\n\nPriority list:\n1) scripts/spec/extract-spec-section.sh\n2) scripts/debug/devnet-triage.sh\n3) add issue-linkage step to CI autofix cron prompt\n4) notes/fork-implementation-checklist.md\n\nProcess:\n- Update BACKLOG.md status first\n- Do one concrete item (or advance nearest blocker)\n- If routine/non-urgent, route status to Lodestar WG topic #347 via sessions_send\n- DM Nico only for blocker/urgent decision/critical deliverable\n- If nothing actionable, reply exactly NO_REPLY",
+        "message": "Daily reminder: execute one \"Next Audit Priorities\" item from notes/autonomy-gaps.md (or BACKLOG) if still pending.\n\nPriority list:\n1) scripts/spec/extract-spec-section.sh\n2) scripts/debug/devnet-triage.sh\n3) add issue-linkage step to CI autofix cron prompt\n4) notes/fork-implementation-checklist.md\n\nProcess:\n- Update BACKLOG.md status first\n- Do one concrete item (or advance nearest blocker)\n- If routine/non-urgent, post status to Lodestar WG topic #347 using exec + OpenClaw CLI:\n  /home/openclaw/.nvm/versions/node/v22.22.0/bin/openclaw message send --channel telegram --target -1003764039429 --thread-id 347 --message \"<status>\"\n- DM Nico only for blocker/urgent decision/critical deliverable:\n  /home/openclaw/.nvm/versions/node/v22.22.0/bin/openclaw message send --channel telegram --target 5774760693 --message \"<urgent>\"\n- Do NOT use sessions_send for Telegram delivery.\n- If nothing actionable, reply exactly NO_REPLY",
         "model": "openai-codex/gpt-5.3-codex",
         "timeoutSeconds": 900
       },
@@ -580,7 +582,7 @@
       "description": "Sync dotfiles repo (safe mode: non-sensitive allowlist + sensitive-path guard)",
       "enabled": true,
       "createdAtMs": 1773087050715,
-      "updatedAtMs": 1773403593113,
+      "updatedAtMs": 1773424941236,
       "schedule": {
         "kind": "cron",
         "expr": "0 */6 * * *",
@@ -599,15 +601,15 @@
         "channel": "last"
       },
       "state": {
-        "nextRunAtMs": 1773424893107,
-        "lastRunAtMs": 1773403293112,
-        "lastRunStatus": "error",
-        "lastStatus": "error",
-        "lastDurationMs": 300001,
-        "lastDeliveryStatus": "not-requested",
-        "consecutiveErrors": 1,
-        "lastErrorReason": "timeout",
-        "runningAtMs": 1773424893112
+        "nextRunAtMs": 1773446493107,
+        "lastRunAtMs": 1773424893114,
+        "lastRunStatus": "ok",
+        "lastStatus": "ok",
+        "lastDurationMs": 48122,
+        "lastDeliveryStatus": "not-delivered",
+        "consecutiveErrors": 0,
+        "lastDelivered": false,
+        "runningAtMs": 1773442236592
       }
     },
     {
@@ -617,7 +619,7 @@
       "description": "Check openclaw/openclaw latest release every 12h and alert Nico on new tag",
       "enabled": true,
       "createdAtMs": 1773093482865,
-      "updatedAtMs": 1773397081273,
+      "updatedAtMs": 1773440259778,
       "schedule": {
         "kind": "every",
         "everyMs": 43200000,
@@ -631,11 +633,11 @@
         "model": "anthropic/claude-sonnet-4-6"
       },
       "state": {
-        "nextRunAtMs": 1773440243519,
-        "lastRunAtMs": 1773397043519,
+        "nextRunAtMs": 1773483443527,
+        "lastRunAtMs": 1773440243527,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 37754,
+        "lastDurationMs": 16251,
         "lastDeliveryStatus": "not-requested",
         "consecutiveErrors": 0
       }
