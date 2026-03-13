@@ -138,6 +138,10 @@ One-line success criteria.
 
 ## Interop/Validation Target
 - What must pass before PR
+
+## Spec Compliance Artifacts (for spec/protocol changes)
+- `notes/<feature>/spec-compliance-<symbol>.md` — status: pending/pass/diverged
+- If not applicable, write: `N/A (reason)`
 ```
 
 **Why:** Context gets compacted between sessions. The tracker is a single file that tells future-you exactly where you left off, what's done, and what's next. Update it after each commit.
@@ -291,7 +295,8 @@ process action:list
      --ts-symbol "<functionName>" \
      --output "notes/<feature>/spec-compliance-<function>.md"
    ```
-   If the compliance gate is skipped, record the reason in the PR description (e.g., non-spec refactor or missing stable spec target).
+   After generating the report, immediately log the artifact path + verdict in `notes/<feature>/TRACKER.md` under **Spec Compliance Artifacts**.
+   If the compliance gate is skipped, record the reason in both the tracker and the PR description (e.g., non-spec refactor or missing stable spec target).
 3. **Multi-persona review:** Use the `lodestar-review` skill (`skills/lodestar-review/SKILL.md`):
    - Get the local diff: `git diff unstable...HEAD` in the worktree
    - Read the skill for reviewer selection matrix and Lodestar-tailored persona prompts
@@ -309,7 +314,15 @@ process action:list
 1. Commit with clear message, sign with GPG
 2. Push to fork
 3. Open PR with description referencing the spec
-4. Standard review process
+4. For spec/protocol-facing changes, include a **Spec Compliance** block in the PR body:
+   ```markdown
+   ## Spec Compliance
+   - Artifact: `notes/<feature>/spec-compliance-<function>.md`
+   - Verdict: pass | partial | diverged
+   - Notes: <key mismatches or N/A>
+   ```
+   If no compliance artifact exists, explicitly write why (e.g., pure refactor, no spec pseudocode touched).
+5. Standard review process
 
 ## Small Fixes Exception
 

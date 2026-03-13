@@ -240,7 +240,7 @@
       "name": "github-notifications",
       "enabled": true,
       "createdAtMs": 1772107716625,
-      "updatedAtMs": 1773356461138,
+      "updatedAtMs": 1773360124419,
       "schedule": {
         "kind": "every",
         "everyMs": 300000,
@@ -259,15 +259,16 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1773356341132,
+        "lastRunAtMs": 1773360061142,
         "lastStatus": "error",
-        "lastDurationMs": 120006,
+        "lastDurationMs": 63277,
         "lastRunStatus": "error",
-        "lastDeliveryStatus": "not-requested",
-        "consecutiveErrors": 5,
-        "nextRunAtMs": 1773360061138,
-        "lastErrorReason": "timeout",
-        "lastError": "cron: job execution timed out"
+        "lastDeliveryStatus": "not-delivered",
+        "consecutiveErrors": 6,
+        "nextRunAtMs": 1773363724419,
+        "lastError": "Codex error: {\"type\":\"error\",\"error\":{\"type\":\"server_error\",\"code\":\"server_error\",\"message\":\"An error occurred while processing your request. You can retry your request, or contact us through our help center at help.openai.com if the error persists. Please include the request ID a0ababd1-600e-4346-a1ef-e95f7c338281 in your message.\",\"param\":null},\"sequence_number\":2}",
+        "lastDelivered": false,
+        "lastDeliveryError": "Codex error: {\"type\":\"error\",\"error\":{\"type\":\"server_error\",\"code\":\"server_error\",\"message\":\"An error occurred while processing your request. You can retry your request, or contact us through our help center at help.openai.com if the error persists. Please include the request ID a0ababd1-600e-4346-a1ef-e95f7c338281 in your message.\",\"param\":null},\"sequence_number\":2}"
       },
       "deleteAfterRun": false
     },
@@ -346,7 +347,7 @@
       "name": "aztec-sequencer-health",
       "enabled": true,
       "createdAtMs": 1772373812089,
-      "updatedAtMs": 1773344641207,
+      "updatedAtMs": 1773359203498,
       "schedule": {
         "kind": "every",
         "everyMs": 14400000,
@@ -363,11 +364,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1773359017451,
-        "lastRunAtMs": 1773344617451,
+        "nextRunAtMs": 1773373491144,
+        "lastRunAtMs": 1773359091144,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 23756,
+        "lastDurationMs": 112354,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -445,7 +446,7 @@
       "name": "review-identity-files",
       "enabled": true,
       "createdAtMs": 1772635128553,
-      "updatedAtMs": 1773099806715,
+      "updatedAtMs": 1773359088729,
       "schedule": {
         "kind": "every",
         "everyMs": 259200000,
@@ -462,15 +463,14 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1773358863025,
-        "lastRunAtMs": 1773099663025,
+        "nextRunAtMs": 1773618106808,
+        "lastRunAtMs": 1773358906808,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 143690,
+        "lastDurationMs": 181921,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
-        "consecutiveErrors": 0,
-        "runningAtMs": 1773358906807
+        "consecutiveErrors": 0
       }
     },
     {
@@ -479,7 +479,7 @@
       "name": "self-improvement-audit-daily",
       "enabled": true,
       "createdAtMs": 1772635128553,
-      "updatedAtMs": 1773272882835,
+      "updatedAtMs": 1773359424311,
       "schedule": {
         "kind": "every",
         "everyMs": 86400000,
@@ -496,11 +496,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1773359113361,
-        "lastRunAtMs": 1773272713361,
+        "nextRunAtMs": 1773445605508,
+        "lastRunAtMs": 1773359205508,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 169474,
+        "lastDurationMs": 218803,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0
@@ -608,7 +608,8 @@
         "lastDurationMs": 80327,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "lastDelivered": false
+        "lastDelivered": false,
+        "runningAtMs": 1773360126433
       }
     },
     {
