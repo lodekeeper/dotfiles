@@ -67,7 +67,7 @@
       "name": "Monitor EIP-8025 / zkEVM updates",
       "enabled": true,
       "createdAtMs": 1771320800043,
-      "updatedAtMs": 1773337262828,
+      "updatedAtMs": 1773397036772,
       "schedule": {
         "kind": "every",
         "everyMs": 259200000,
@@ -78,7 +78,7 @@
       "payload": {
         "kind": "agentTurn",
         "message": "Check for updates on EIP-8025 (optional execution proofs) across other clients and research discussions. Do the following:\n\n1. Check ethereum/consensus-specs repo for any new commits/PRs related to EIP-8025, optional proofs, or zkvm\n2. Check Lighthouse repo (sigp/lighthouse) for commits on their optional-proofs branch\n3. Check ethpandaops/prysm repo (NOT prysmaticlabs/prysm) for any optional-proofs related branches\n4. Check ethereum/pm repo for updates to zkEVM planning\n5. Check the Eth R&D Archive for recent discussions in zkEVM-related channels:\n   - Run: bash skills/eth-rnd-archive/check-updates.sh\n   - Read recent JSON files from ~/eth-rnd-archive/l1-zkevm/ and ~/eth-rnd-archive/l1-zkevm-protocol/ (last 3 days)\n   - Also check their _threads/ subdirectories for thread discussions\n   - Look for mentions of EIP-8025, optional proofs, proof orchestration, zkEVM protocol changes\n6. If any changes found that affect our implementation in lodestar (branch feat/eip8025-optional-proofs in ~/lodestar-eip8025), summarize what we need to update\n7. Report findings to Nico via Telegram (chat ID 5774760693) — only if there are actual updates, stay silent otherwise\n\nOur current implementation: PR #8918 merged + PR #8923 ready on ChainSafe/lodestar optional-proofs branch. 3-client interop validated.\n\nOutput routing:\n- If meaningful updates found: post summary to Lodestar WG topic #347 via message tool (action=send target=-1003764039429 threadId=347).\n- If no updates: reply HEARTBEAT_OK (no output anywhere).\n- If something critical/breaking (spec change affecting Lodestar, urgent action needed): DM Nico directly (target=5774760693).\n- Never DM for routine research updates.",
-        "timeoutSeconds": 300,
+        "timeoutSeconds": 600,
         "model": "openai-codex/gpt-5.3-codex"
       },
       "delivery": {
@@ -126,7 +126,8 @@
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "lastDelivered": false
+        "lastDelivered": false,
+        "runningAtMs": 1773404759541
       }
     },
     {
@@ -169,7 +170,7 @@
       "name": "eth-rnd-archive-hourly",
       "enabled": true,
       "createdAtMs": 1772034567300,
-      "updatedAtMs": 1773378951958,
+      "updatedAtMs": 1773400701560,
       "schedule": {
         "kind": "cron",
         "expr": "15 * * * *",
@@ -187,14 +188,15 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1773378900004,
+        "lastRunAtMs": 1773400645755,
         "lastStatus": "ok",
-        "lastDurationMs": 51954,
+        "lastDurationMs": 55805,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1773382500000,
-        "lastDelivered": false
+        "nextRunAtMs": 1773404100000,
+        "lastDelivered": false,
+        "runningAtMs": 1773404759541
       }
     },
     {
@@ -203,7 +205,7 @@
       "name": "eth-rnd-daily-digest",
       "enabled": true,
       "createdAtMs": 1772034576175,
-      "updatedAtMs": 1773355981804,
+      "updatedAtMs": 1773388998296,
       "schedule": {
         "kind": "cron",
         "expr": "0 8 * * *",
@@ -224,13 +226,13 @@
         "bestEffort": true
       },
       "state": {
-        "lastRunAtMs": 1773355703895,
+        "lastRunAtMs": 1773388925031,
         "lastStatus": "ok",
-        "lastDurationMs": 277909,
+        "lastDurationMs": 73265,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1773388800000,
+        "nextRunAtMs": 1773475200000,
         "lastDelivered": false
       }
     },
@@ -240,7 +242,7 @@
       "name": "github-notifications",
       "enabled": true,
       "createdAtMs": 1772107716625,
-      "updatedAtMs": 1773381566648,
+      "updatedAtMs": 1773403934091,
       "schedule": {
         "kind": "every",
         "everyMs": 300000,
@@ -252,21 +254,22 @@
         "kind": "agentTurn",
         "message": "Check GitHub notifications for lodekeeper using deterministic checklist dedupe.\n\nRun:\npython3 /home/openclaw/.openclaw/workspace/scripts/github/github_notifications_sweep.py --state /home/openclaw/gh-notif-state.json --checklist /home/openclaw/gh-notif-checklist.json --backlog /home/openclaw/.openclaw/workspace/BACKLOG.md\n\nBehavior:\n1) If script output is exactly HEARTBEAT_OK, reply HEARTBEAT_OK (no delivery anywhere).\n2) Otherwise:\n   a) Post a concise summary to Lodestar WG topic #347 using: message action=send target=-1003764039429 threadId=347\n   b) Ensure BACKLOG has a matching task for each newly reported PR only if missing (no duplicate/empty-sweep entries).\n3) Do NOT perform code changes on PRs here (detect/report + checklist only).\n4) Keep reviewer-bot comments included; ignore only lodekeeper self comments.\n5) Routine notifications (bot comments, codecov, non-blocking reviews) → post to topic #347 only.\n6) Urgent items (Nico requesting changes on my PR, blocking reviewer feedback needing Nico's decision) → DM Nico directly (target=5774760693). CI failures on my own PRs are NOT urgent — fix them myself.\n7) If nothing new → HEARTBEAT_OK (no output anywhere).",
         "model": "anthropic/claude-sonnet-4-6",
-        "timeoutSeconds": 300,
+        "timeoutSeconds": 600,
         "lightContext": false
       },
       "delivery": {
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1773381527286,
+        "lastRunAtMs": 1773403595543,
         "lastStatus": "ok",
-        "lastDurationMs": 39362,
+        "lastDurationMs": 338548,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1773381827286,
-        "lastDelivered": false
+        "nextRunAtMs": 1773404216564,
+        "lastDelivered": false,
+        "runningAtMs": 1773404759541
       },
       "deleteAfterRun": false
     },
@@ -345,7 +348,7 @@
       "name": "aztec-sequencer-health",
       "enabled": true,
       "createdAtMs": 1772373812089,
-      "updatedAtMs": 1773373963554,
+      "updatedAtMs": 1773402744515,
       "schedule": {
         "kind": "every",
         "everyMs": 14400000,
@@ -362,11 +365,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1773388326996,
-        "lastRunAtMs": 1773373926996,
+        "nextRunAtMs": 1773417127006,
+        "lastRunAtMs": 1773402727006,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 36558,
+        "lastDurationMs": 17509,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -378,7 +381,7 @@
       "name": "workspace-periodic-cleanup",
       "enabled": true,
       "createdAtMs": 1772634832403,
-      "updatedAtMs": 1773379853913,
+      "updatedAtMs": 1773401286882,
       "schedule": {
         "kind": "every",
         "everyMs": 21600000,
@@ -395,11 +398,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1773401152990,
-        "lastRunAtMs": 1773379552990,
+        "nextRunAtMs": 1773422752997,
+        "lastRunAtMs": 1773401152997,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 300923,
+        "lastDurationMs": 133885,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0
@@ -411,7 +414,7 @@
       "name": "monitor-open-pr-ci",
       "enabled": true,
       "createdAtMs": 1772635128553,
-      "updatedAtMs": 1773381225271,
+      "updatedAtMs": 1773404757099,
       "schedule": {
         "kind": "every",
         "everyMs": 1800000,
@@ -428,11 +431,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1773382979361,
-        "lastRunAtMs": 1773381179361,
+        "nextRunAtMs": 1773405736517,
+        "lastRunAtMs": 1773403936517,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 45910,
+        "lastDurationMs": 820582,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -510,7 +513,7 @@
       "name": "cron-health-watchdog",
       "enabled": true,
       "createdAtMs": 1772636078136,
-      "updatedAtMs": 1773380921321,
+      "updatedAtMs": 1773402581523,
       "schedule": {
         "kind": "every",
         "everyMs": 1800000,
@@ -527,14 +530,15 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1773382558750,
-        "lastRunAtMs": 1773380758750,
+        "nextRunAtMs": 1773404348752,
+        "lastRunAtMs": 1773402548752,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 162571,
+        "lastDurationMs": 32771,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "lastDelivered": false
+        "lastDelivered": false,
+        "runningAtMs": 1773404759541
       }
     },
     {
@@ -544,7 +548,7 @@
       "description": "Daily nudge to execute autonomy audit priorities",
       "enabled": true,
       "createdAtMs": 1772853540767,
-      "updatedAtMs": 1773308019892,
+      "updatedAtMs": 1773394598607,
       "schedule": {
         "kind": "cron",
         "expr": "30 9 * * *",
@@ -563,11 +567,11 @@
         "channel": "last"
       },
       "state": {
-        "nextRunAtMs": 1773394200000,
-        "lastRunAtMs": 1773307800010,
+        "nextRunAtMs": 1773480600000,
+        "lastRunAtMs": 1773394200005,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 219882,
+        "lastDurationMs": 398602,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -580,7 +584,7 @@
       "description": "Sync dotfiles repo (safe mode: non-sensitive allowlist + sensitive-path guard)",
       "enabled": true,
       "createdAtMs": 1773087050715,
-      "updatedAtMs": 1773360302222,
+      "updatedAtMs": 1773403593113,
       "schedule": {
         "kind": "cron",
         "expr": "0 */6 * * *",
@@ -599,16 +603,15 @@
         "channel": "last"
       },
       "state": {
-        "nextRunAtMs": 1773381693107,
-        "lastRunAtMs": 1773360126433,
+        "nextRunAtMs": 1773424893107,
+        "lastRunAtMs": 1773403293112,
         "lastRunStatus": "error",
         "lastStatus": "error",
-        "lastDurationMs": 175789,
-        "lastDeliveryStatus": "not-delivered",
+        "lastDurationMs": 300001,
+        "lastDeliveryStatus": "not-requested",
         "consecutiveErrors": 1,
-        "lastDelivered": false,
-        "lastDeliveryError": "Codex error: {\"type\":\"error\",\"error\":{\"type\":\"server_error\",\"code\":\"server_error\",\"message\":\"An error occurred while processing your request. You can retry your request, or contact us through our help center at help.openai.com if the error persists. Please include the request ID c112a1de-1fe2-4615-b34b-38108a2cd14e in your message.\",\"param\":null},\"sequence_number\":2}",
-        "runningAtMs": 1773381693111
+        "lastError": "cron: job execution timed out",
+        "lastErrorReason": "timeout"
       }
     },
     {
@@ -618,7 +621,7 @@
       "description": "Check openclaw/openclaw latest release every 12h and alert Nico on new tag",
       "enabled": true,
       "createdAtMs": 1773093482865,
-      "updatedAtMs": 1773352802965,
+      "updatedAtMs": 1773397081273,
       "schedule": {
         "kind": "every",
         "everyMs": 43200000,
@@ -632,13 +635,48 @@
         "model": "anthropic/claude-sonnet-4-6"
       },
       "state": {
-        "nextRunAtMs": 1773395882900,
-        "lastRunAtMs": 1773352682900,
+        "nextRunAtMs": 1773440243519,
+        "lastRunAtMs": 1773397043519,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 120065,
+        "lastDurationMs": 37754,
         "lastDeliveryStatus": "not-requested",
         "consecutiveErrors": 0
+      }
+    },
+    {
+      "id": "b4d82930-1976-4334-8d49-e057e24e6d5c",
+      "name": "weekly-standup-digest",
+      "enabled": true,
+      "createdAtMs": 1773398833675,
+      "updatedAtMs": 1773400854148,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 4 * * 2",
+        "tz": "UTC"
+      },
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "WEEKLY STANDUP DIGEST — Post to Discord #lodestar-developer before Tuesday standup.\n\nGenerate a weekly digest of all Lodestar-related work for the past 7 days and post it to Discord channel 1197575814494035968.\n\n## Data Sources\n1. Read `memory/` daily notes for the last 7 days (memory/YYYY-MM-DD.md)\n2. Read BACKLOG.md for active/completed tasks\n3. Run: gh pr list --author lodekeeper --state all --limit 20 --json number,title,state,mergedAt,createdAt,updatedAt\n4. Run: gh api notifications --jq \"[.[] | select(.updated_at > \\\"$(date -d \\\"7 days ago\\\" -u +%Y-%m-%dT%H:%M:%SZ)\\\")]\" 2>/dev/null | head -50\n\n## Digest Format (Discord-friendly, NO markdown tables)\nPost as a single message. Use bullet lists, bold headers, and concise descriptions. Structure:\n\n**🌟 Lodekeeper Weekly Digest — Week of [date range]**\n\n**PRs Opened/Updated**\n- PR #XXXX: title (status) — one-line summary\n\n**PRs Reviewed**\n- PR #XXXX by @author: title — key feedback given\n\n**Upstream Work**\n- Any libp2p, consensus-specs, or other upstream PRs/issues\n\n**Investigations & Debugging**\n- Notable debugging, root cause analyses, or research\n\n**Infrastructure & Tooling**\n- Cron improvements, skill updates, monitoring changes\n\n**EPBS / Devnet Work**\n- ePBS-specific progress if any\n\n**Next Week Focus**\n- What is planned or expected\n\n## Rules\n- Include ONLY Lodestar-related work (PRs, reviews, investigations, upstream, devnet, specs)\n- Do NOT include private/personal info, Oracle bridge, internal tooling details, meme generation, or non-Lodestar tasks\n- Keep each item to 1-2 lines max\n- Use Discord mentions for team members where relevant (e.g. <@USER_ID>)\n- Wrap links in <> to suppress embeds when there are multiple\n\n## Posting\nSend to Discord using: message action=send channel=discord to=channel:1197575814494035968\nDo NOT use embeds or components — just a plain text message with Discord markdown formatting.",
+        "model": "anthropic/claude-sonnet-4-6",
+        "timeoutSeconds": 900
+      },
+      "delivery": {
+        "mode": "none",
+        "channel": "last"
+      },
+      "state": {
+        "nextRunAtMs": 1773720000000,
+        "lastRunAtMs": 1773399265424,
+        "lastRunStatus": "error",
+        "lastStatus": "error",
+        "lastDurationMs": 600008,
+        "lastError": "Error: cron: job execution timed out",
+        "lastErrorReason": "timeout",
+        "lastDeliveryStatus": "not-requested",
+        "consecutiveErrors": 1
       }
     }
   ]

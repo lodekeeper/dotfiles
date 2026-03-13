@@ -157,6 +157,15 @@ Spinning up a mixed-peer devnet (e.g., Lodestar B2 + C2 nodes against ePBS devne
 
 ## Improvements Implemented This Cycle
 
+### ✅ Compliance artifact presence check script + workflow gate added (2026-03-13)
+Created `scripts/spec/check-compliance-artifacts.sh` and wired it into `skills/dev-workflow/SKILL.md` Phase 5:
+- verifies `notes/<feature>/TRACKER.md` has a populated `## Spec Compliance Artifacts` section
+- verifies PR body has a populated `## Spec Compliance` section
+- enforces either `spec-compliance-*.md` references **or** explicit `N/A` + reason
+- enforces `Verdict:` when an artifact file is referenced
+
+**Rationale:** this closes the final traceability gap between generating compliance artifacts and actually surfacing them in both tracker + PR metadata.
+
 ### ✅ Spec-compliance artifact traceability codified in dev-workflow (2026-03-12)
 Updated `skills/dev-workflow/SKILL.md` so spec/protocol work now has explicit artifact linkage requirements:
 - `TRACKER.md` template now includes **Spec Compliance Artifacts** section
@@ -309,4 +318,4 @@ Updated `scripts/ci/auto_fix_flaky.py`:
 14. ~~**Finding tracker delta-sync from GitHub** — add `track-findings.py sync-gh` with checkpointed import + optional auto-reverify of touched findings~~ ✅ done (2026-03-11)
 15. ~~**Review-loop integration for finding delta sync** — add a codified follow-up step in `skills/lodestar-review/SKILL.md` to run `track-findings.py sync-gh` whenever new review comments land on a PR.~~ ✅ done (2026-03-12)
 16. ~~**Spec compliance artifact traceability** — add PR-template/tracker field that links generated `spec-compliance-*.md` reports for spec/protocol PRs.~~ ✅ done (2026-03-12)
-17. **Compliance artifact presence check** — add a lightweight pre-PR check that verifies tracker + PR body include spec-compliance artifact references for spec/protocol changes.
+17. ~~**Compliance artifact presence check** — add a lightweight pre-PR check that verifies tracker + PR body include spec-compliance artifact references for spec/protocol changes.~~ ✅ done (2026-03-13)

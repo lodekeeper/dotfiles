@@ -322,7 +322,14 @@ process action:list
    - Notes: <key mismatches or N/A>
    ```
    If no compliance artifact exists, explicitly write why (e.g., pure refactor, no spec pseudocode touched).
-5. Standard review process
+5. Run the compliance-reference presence check before posting/re-requesting review:
+   ```bash
+   bash ~/.openclaw/workspace/scripts/spec/check-compliance-artifacts.sh \
+     --tracker "notes/<feature>/TRACKER.md" \
+     --pr-body "/tmp/pr-<feature>.md"
+   ```
+   This validates that tracker + PR body both include the expected spec-compliance references (or explicit N/A reasons).
+6. Standard review process
 
 ## Small Fixes Exception
 
