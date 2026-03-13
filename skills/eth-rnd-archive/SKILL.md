@@ -39,15 +39,11 @@ Configured in `config.json` (this skill directory). Only these channels are moni
 - `l1-zkevm-protocol` — CK EVM protocol details (EIP-8025)
 - `data-availability-sampling` — DAS / PeerDAS
 - `apis` — Beacon/Engine API discussions
+- `ai-workflows` — AI tooling / workflow discussions relevant to protocol engineering
 
 ### Infrastructure
 - `payload-builders` — MEV/PBS/builder discussions
-
-### Networking & Testing
 - `networking` — general networking
-- `libp2p` — libp2p protocol
-- `peerdas-testing` — PeerDAS test coordination
-- `peerdas-devnet-alerts` — PeerDAS devnet status
 - `client-development` — client team discussions
 
 ## Thread Support
@@ -98,12 +94,14 @@ bash skills/eth-rnd-archive/check-updates.sh 2026-02-25
 1. Run `check-updates.sh`
 2. If new messages found in tracked channels:
    - Summarize key discussions per channel
-   - Log to `/home/openclaw/eth-rnd-archive-notes/YYYY-MM-DD.md`
+   - Log to `/home/openclaw/.openclaw/workspace/memory/eth-rnd-archive-notes/YYYY-MM-DD.md`
+   - If compatibility mirrors are in use, also append the same summary to `/home/openclaw/eth-rnd-archive-notes/YYYY-MM-DD.md`
    - If something critical (spec changes, breaking decisions, action items for Lodestar): alert Nico immediately
-3. If no new messages: no action
+3. If no tracked-channel messages changed but the repo advanced, log the no-delta result silently so freshness/staleness checks stay auditable.
+4. If no repo changes at all: no action.
 
-### Daily Digest (8 AM CET via cron)
-1. Read all notes from the past 24h (`/home/openclaw/eth-rnd-archive-notes/`)
+### Daily Digest (08:00 Europe/Lisbon / 08:00 UTC while WET is active)
+1. Read all notes from the past 24h (primary path: `/home/openclaw/.openclaw/workspace/memory/eth-rnd-archive-notes/`; optional compatibility mirror: `/home/openclaw/eth-rnd-archive-notes/`)
 2. Create a concise digest:
    - **Key decisions** made across channels
    - **Action items** for Lodestar
@@ -132,12 +130,16 @@ bash skills/eth-rnd-archive/check-updates.sh 2026-02-25
 
 ## Adding/Removing Channels
 
-Edit `config.json` in this skill directory. Format:
+Edit `config.json` in this skill directory. Current shape:
 ```json
 {
-  "channels": ["epbs", "consensus-dev", ...],
-  "digestTime": "07:00",
-  "checkIntervalMinutes": 60
+  "channels": ["epbs", "consensus-dev", "allcoredevs", "apis", ...],
+  "digestTimeWET": "08:00",
+  "digestTimeUTC": "08:00",
+  "timezone": "Europe/Lisbon",
+  "checkIntervalMinutes": 60,
+  "repoPath": "~/ethereum-repos/eth-rnd-archive",
+  "notesPath": "/home/openclaw/.openclaw/workspace/memory/eth-rnd-archive-notes"
 }
 ```
 
