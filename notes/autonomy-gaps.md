@@ -185,6 +185,14 @@ Spinning up a mixed-peer devnet (e.g., Lodestar B2 + C2 nodes against ePBS devne
 
 ## Improvements Implemented This Cycle
 
+### ✅ CI retry telemetry surfaced in detector output + tracker entries (2026-03-14)
+Updated `scripts/ci/auto_fix_flaky.py` to expose retry/backoff health signals directly in the detector JSON and per-finding tracker line items:
+- top-level summary now includes `llm_retry_count`, `llm_retry_wait_s`, and `llm_retry_after_seen`
+- each finding + persisted tracker entry now carries per-classification retry telemetry (`llm_retry_*` fields)
+- `--apply` runs now persist `last_scan.llm_retry_telemetry` in `memory/unstable-ci-tracker.json`
+
+**Rationale:** makes degraded LLM/API health visible in concise cron summaries instead of hiding retries in stderr-only logs.
+
 ### ✅ Stale unresolved-finding escalation command added (2026-03-13)
 Updated `scripts/review/track-findings.py` with `stale` command:
 - lists open findings older than a threshold (default: `critical|major`, `updated >= 7d`)
@@ -357,6 +365,6 @@ Updated `scripts/ci/auto_fix_flaky.py`:
 16. ~~**Spec compliance artifact traceability** — add PR-template/tracker field that links generated `spec-compliance-*.md` reports for spec/protocol PRs.~~ ✅ done (2026-03-12)
 17. ~~**Compliance artifact presence check** — add a lightweight pre-PR check that verifies tracker + PR body include spec-compliance artifact references for spec/protocol changes.~~ ✅ done (2026-03-13)
 18. ~~**Stale unresolved-review escalation** — add `track-findings.py stale` command and wire into review workflow.~~ ✅ done (2026-03-13)
-19. **CI retry telemetry surfacing** — include retry/backoff counters in cron detector summary output.
+19. ~~**CI retry telemetry surfacing** — include retry/backoff counters in cron detector summary output.~~ ✅ done (2026-03-14)
 20. **Spec pre-PR compliance wrapper** — one command to run compliance checker + artifact-presence checks with a single pass/fail summary.
 21. **Devnet incident bundle script** — package logs + metrics + timeline + env metadata into one shareable markdown artifact.
