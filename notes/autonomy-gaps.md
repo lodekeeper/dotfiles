@@ -1,7 +1,27 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-03-12 (7th pass)
+> Updated: 2026-03-13 (8th pass)
+
+---
+
+## Daily Audit Snapshot — 2026-03-13 (self-improvement-audit-daily)
+
+### PR review
+- **Blocker (previous cycle):** no explicit escalation query for stale unresolved findings.
+- **Fix applied this cycle:** added `python3 scripts/review/track-findings.py stale <PR>` (+ `--severity`, `--days`, `--use-created`, `--fail-on-match`) and documented it in `skills/lodestar-review/SKILL.md`.
+
+### CI fix
+- **Blocker:** retry/backoff exists, but concise cron summaries still do not surface retry telemetry (hard to spot degraded API health quickly).
+- **Proposed fix:** include `retry_count`, `retry_wait_s`, and `retry_after_seen` in detector summary/tracker line items.
+
+### Spec implementation
+- **Blocker:** compliance artifact checks now exist for tracker + PR body, but there is no single pre-PR wrapper that runs the full compliance bundle and emits one pass/fail summary.
+- **Proposed fix:** add `scripts/spec/prepr-compliance-gate.sh` to run checker + artifact-presence check and produce one markdown summary block for PR descriptions.
+
+### Devnet debugging
+- **Blocker:** incident packaging is still manual (logs + metrics + timeline + environment metadata in one bundle).
+- **Proposed fix:** add `scripts/debug/build-incident-bundle.sh` to produce one timestamped markdown bundle for sharing in topic threads/PRs.
 
 ---
 
@@ -50,6 +70,14 @@ Sub-agents sometimes flag files **not in the PR diff** (confirmed on PR #8993: `
 ~~When multiple reviewers flag the same issue, I manually merge.~~
 
 **Fix applied:** `scripts/review/track-findings.py dedup <PR>` groups open findings by file+line proximity (±5 lines), showing which locations are flagged by multiple reviewers. Also added `import --markdown` to parse free-form reviewer output into structured findings, and `check --changed-files` to flag findings on files touched by a new commit.
+
+#### ~~🟡 No stale unresolved-finding escalation query~~ ✅ FIXED (2026-03-13)
+~~Reviewer findings are tracked, but there was no fast way to answer: "which open critical/major findings are stale (>7d)?"~~
+
+**Fix applied:** extended `scripts/review/track-findings.py` with `stale` command:
+- `track-findings.py stale <PR>` defaults to open `critical|major` findings older than 7 days (`updated` timestamp)
+- supports `--severity`, `--days`, `--use-created`, and `--fail-on-match` (for cron/automation wrappers)
+- wired usage into `skills/lodestar-review/SKILL.md` follow-up workflow
 
 #### 🔴 No review finding resolution tracking
 After posting a review, when the author pushes new commits, I have no system for tracking which findings got addressed. I manually re-read everything.
@@ -156,6 +184,15 @@ Spinning up a mixed-peer devnet (e.g., Lodestar B2 + C2 nodes against ePBS devne
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Stale unresolved-finding escalation command added (2026-03-13)
+Updated `scripts/review/track-findings.py` with `stale` command:
+- lists open findings older than a threshold (default: `critical|major`, `updated >= 7d`)
+- supports severity/age tuning (`--severity`, `--days`) and timestamp mode (`--use-created`)
+- supports automation mode (`--fail-on-match`) for non-zero exit when stale findings exist
+- updated `skills/lodestar-review/SKILL.md` workflow to run this in follow-up rounds
+
+**Rationale:** converts stale-review escalation from a manual judgment call into a one-command query that can be scripted and monitored.
 
 ### ✅ Compliance artifact presence check script + workflow gate added (2026-03-13)
 Created `scripts/spec/check-compliance-artifacts.sh` and wired it into `skills/dev-workflow/SKILL.md` Phase 5:
@@ -319,3 +356,7 @@ Updated `scripts/ci/auto_fix_flaky.py`:
 15. ~~**Review-loop integration for finding delta sync** — add a codified follow-up step in `skills/lodestar-review/SKILL.md` to run `track-findings.py sync-gh` whenever new review comments land on a PR.~~ ✅ done (2026-03-12)
 16. ~~**Spec compliance artifact traceability** — add PR-template/tracker field that links generated `spec-compliance-*.md` reports for spec/protocol PRs.~~ ✅ done (2026-03-12)
 17. ~~**Compliance artifact presence check** — add a lightweight pre-PR check that verifies tracker + PR body include spec-compliance artifact references for spec/protocol changes.~~ ✅ done (2026-03-13)
+18. ~~**Stale unresolved-review escalation** — add `track-findings.py stale` command and wire into review workflow.~~ ✅ done (2026-03-13)
+19. **CI retry telemetry surfacing** — include retry/backoff counters in cron detector summary output.
+20. **Spec pre-PR compliance wrapper** — one command to run compliance checker + artifact-presence checks with a single pass/fail summary.
+21. **Devnet incident bundle script** — package logs + metrics + timeline + env metadata into one shareable markdown artifact.

@@ -294,8 +294,13 @@ Use `scripts/review/track-findings.py` to track which findings get addressed in 
    ```bash
    python3 ~/.openclaw/workspace/scripts/review/track-findings.py dump <PR>
    ```
+6. Escalate stale unresolved findings (default: open critical/major older than 7 days by `updated` timestamp):
+   ```bash
+   python3 ~/.openclaw/workspace/scripts/review/track-findings.py stale <PR>
+   # Use --fail-on-match in automation wrappers to raise non-zero exit when stale items exist
+   ```
 
-Also available: `import --markdown <file>` (parse free-form reviewer output), `import-gh` (one-shot bootstrap from GitHub review comments), `dedup` (group by file+proximity).
+Also available: `import --markdown <file>` (parse free-form reviewer output), `import-gh` (one-shot bootstrap from GitHub review comments), `dedup` (group by file+proximity), `stale` (age/severity stale-finding report).
 
 ## Tips
 
