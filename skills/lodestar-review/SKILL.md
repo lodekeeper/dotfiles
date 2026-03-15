@@ -9,7 +9,7 @@ Multi-persona review system for ChainSafe/lodestar PRs. Each reviewer has a narr
 
 ## Reviewers
 
-| Agent ID | Role | Model | Focus |
+| Agent ID (use as `agentId`!) | Role | Model | Focus |
 |---|---|---|---|
 | `review-bugs` | Bug Hunter | GPT-5.3-Codex | Functional errors, logic flaws, off-by-one. Only ACTUAL broken behavior. |
 | `review-defender` | Defender | GPT-5.3-Codex | Malicious code, backdoors, supply chain threats. |
@@ -17,6 +17,9 @@ Multi-persona review system for ChainSafe/lodestar PRs. Each reviewer has a narr
 | `review-security` | Security Engineer | GPT-5.3-Codex | DoS vectors, peer manipulation, validation bypasses, crypto misuse. |
 | `review-wisdom` | Wise Senior | Claude Opus 4.6 | Clean code principles, maintainability, readability. |
 | `reviewer-architect` | Architect | GPT-5.3-Codex (thinking: xhigh) | Package boundaries, consensus spec alignment, module coupling. |
+
+> ⚠️ **Always pass the Agent ID as `agentId` in `sessions_spawn`.** Omitting it routes to your default model
+> instead of the reviewer's configured model. This is a mandatory field, not optional.
 
 ## Reviewer Selection
 
@@ -88,13 +91,28 @@ For each selected reviewer, spawn with the persona prepended to the diff. **Alwa
 
 ```
 sessions_spawn(
-  agentId: "<agent-id>",
+  agentId: "<agent-id>",   // ⚠️ MANDATORY — always pass agentId to route to the correct model!
   task: "<persona prompt>\n\n---\n\n## Files Changed in This PR\n<CHANGED_FILES, one per line>\n\nIMPORTANT: Only flag issues in the files listed above. Do NOT comment on files not in this list, even if they appear in the broader codebase context.\n\n---\n\nReview this diff for ChainSafe/lodestar PR #<number> (<title>):\n\n```diff\n<diff>\n```",
-  label: "pr<number>-<reviewer-short-name>"
+  label: "pr<number>-<reviewer-short-name>",
+  runTimeoutSeconds: <timeout>   // Scale by diff size (see below)
 )
 ```
 
 Spawn all selected reviewers in parallel (no dependencies between them).
+
+> ⚠️ **`agentId` is MANDATORY for every reviewer spawn.** Without it, the subagent inherits the parent's
+> default model instead of the reviewer's configured model. This caused bugs+security reviewers to run on
+> Claude Opus instead of GPT-5.3-Codex, leading to timeouts on PR #8962 (105KB diff).
+
+> ⚠️ **Timeout scaling by diff size:**
+> | Diff size | `runTimeoutSeconds` |
+> |---|---|
+> | < 30KB (~800 lines) | 180 |
+> | 30–80KB (~800–2000 lines) | 300 |
+> | > 80KB (~2000+ lines) | 420 |
+>
+> The default 300s is too short for large diffs. PR #8962 (105KB) timed out 2 reviewers at 300s;
+> retries succeeded at 420s (bugs: 6m7s, security: 4m12s).
 
 **Note:** For `reviewer-architect`, always pass `thinking: "xhigh"` in the spawn call for deep architectural reasoning.
 
