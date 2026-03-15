@@ -222,6 +222,7 @@ EOF
     [[ -n "$pid" ]] || continue
     [[ "$pid" == "$$" || "$pid" == "$PPID" ]] && continue
     [[ "$cmd" == *"devnet-triage.sh"* ]] && continue
+    [[ "$cmd" == *"build-incident-bundle.sh"* ]] && continue
     [[ "$cmd" == *"pgrep -fa"* ]] && continue
 
     pids+="$pid"$'\n'

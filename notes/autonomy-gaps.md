@@ -5,6 +5,25 @@
 
 ---
 
+## Daily Audit Snapshot — 2026-03-15 (self-improvement-audit-daily)
+
+### PR review
+- **Blocker (previous cycle):** stale-finding detection required manual invocation per PR.
+- **Fix applied this cycle:** added `scripts/review/stale-findings-report.sh` — batch scanner across all tracked PRs with cron-friendly exit codes and markdown report output.
+- **Next:** wire as a cron job on a weekly cadence (low urgency while PR tracking volume is low).
+
+### CI fix
+- **Blocker:** retry telemetry is surfaced in output, but no threshold-based escalation policy exists for sustained degradation detection.
+- **Proposed fix:** add rolling-window threshold check for `llm_retry_count`/`llm_retry_wait_s` in tracker.
+
+### Spec implementation
+- **Status:** compliance gate, artifact checks, and pre-PR wrapper all operational. No new gaps.
+
+### Devnet debugging
+- **Status:** incident bundle, triage, and correlator scripts operational. No new gaps.
+
+---
+
 ## Daily Audit Snapshot — 2026-03-14 (self-improvement-audit-daily)
 
 ### PR review
@@ -205,6 +224,25 @@ Spinning up a mixed-peer devnet (e.g., Lodestar B2 + C2 nodes against ePBS devne
 
 ## Improvements Implemented This Cycle
 
+### ✅ PR stale-finding cron wrapper added (2026-03-15)
+Created `scripts/review/stale-findings-report.sh`:
+- Scans all tracked PRs in findings directory for stale unresolved findings
+- Supports `--days`, `--severity`, `--prs`, and `--output` options
+- Exit code 2 when stale findings detected; writes timestamped markdown report to `notes/review-reports/`
+- Reports include per-PR sections with stale finding details and resolution instructions
+- Designed for cron usage: zero output (exit 0) when clean, actionable report when stale
+
+**Rationale:** converts a manual "remember to check old findings" task into an automatable health signal that can feed into backlog or topic escalation.
+
+### ✅ Devnet incident bundle script added (2026-03-15)
+Created `scripts/debug/build-incident-bundle.sh` to produce one timestamped markdown artifact combining:
+- environment metadata (host/tooling + repo branch/commit)
+- `devnet-triage.sh` output (process, ports, logs, metrics, restart hints)
+- optional multi-node timeline via `correlate-logs.sh` when peers + Grafana token are available
+- structured incident-notes checklist for root-cause write-up
+
+Also tightened `scripts/debug/devnet-triage.sh` process filtering so bundle generation commands are not misreported as node processes.
+
 ### ✅ One-command pre-PR compliance gate added (2026-03-14)
 Created `scripts/spec/prepr-compliance-gate.sh` and wired usage into `skills/dev-workflow/SKILL.md`:
 - accepts repeatable `--check "spec_query|ts_file|ts_symbol|report_out"` tuples
@@ -396,5 +434,7 @@ Updated `scripts/ci/auto_fix_flaky.py`:
 18. ~~**Stale unresolved-review escalation** — add `track-findings.py stale` command and wire into review workflow.~~ ✅ done (2026-03-13)
 19. ~~**CI retry telemetry surfacing** — include retry/backoff counters in cron detector summary output.~~ ✅ done (2026-03-14)
 20. ~~**Spec pre-PR compliance wrapper** — one command to run compliance checker + artifact-presence checks with a single pass/fail summary.~~ ✅ done (2026-03-14)
-21. **Devnet incident bundle script** — package logs + metrics + timeline + env metadata into one shareable markdown artifact.
-22. **PR stale-finding cron wrapper** — automate `track-findings.py stale --fail-on-match` into a backlog-facing report/escalation signal.
+21. ~~**Devnet incident bundle script** — package logs + metrics + timeline + env metadata into one shareable markdown artifact.~~ ✅ done (2026-03-15)
+22. ~~**PR stale-finding cron wrapper** — automate `track-findings.py stale --fail-on-match` into a backlog-facing report/escalation signal.~~ ✅ done (2026-03-15)
+23. **CI retry telemetry threshold-based escalation** — add tracker-level threshold check for `llm_retry_count`/`llm_retry_wait_s` with explicit warning when sustained degradation is detected across rolling runs.
+24. **Spec section auto-extraction** — write `scripts/spec/extract-spec-section.sh <feature>` to search consensus-specs for function/type definitions and follow import chains for related types.
