@@ -322,13 +322,16 @@ process action:list
    - Notes: <key mismatches or N/A>
    ```
    If no compliance artifact exists, explicitly write why (e.g., pure refactor, no spec pseudocode touched).
-5. Run the compliance-reference presence check before posting/re-requesting review:
+5. Run the one-command pre-PR compliance gate before posting/re-requesting review:
    ```bash
-   bash ~/.openclaw/workspace/scripts/spec/check-compliance-artifacts.sh \
+   bash ~/.openclaw/workspace/scripts/spec/prepr-compliance-gate.sh \
      --tracker "notes/<feature>/TRACKER.md" \
-     --pr-body "/tmp/pr-<feature>.md"
+     --pr-body "/tmp/pr-<feature>.md" \
+     --check "<spec_query>|~/lodestar-<feature-name>/<path/to/file>.ts|<functionName>|notes/<feature>/spec-compliance-<function>.md" \
+     --summary-out "/tmp/prepr-spec-compliance-<feature>.md"
    ```
-   This validates that tracker + PR body both include the expected spec-compliance references (or explicit N/A reasons).
+   - This runs report generation + metadata presence validation and emits one pass/fail summary.
+   - If you already generated reports in Phase 4, use `--skip-spec-checks` to run metadata validation + summary only.
 6. Standard review process
 
 ## Small Fixes Exception

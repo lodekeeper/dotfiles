@@ -1,7 +1,27 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-03-13 (8th pass)
+> Updated: 2026-03-14 (9th pass)
+
+---
+
+## Daily Audit Snapshot — 2026-03-14 (self-improvement-audit-daily)
+
+### PR review
+- **Blocker:** stale-finding query exists, but no automation path currently opens/refreshes a follow-up backlog item when stale critical findings are detected.
+- **Proposed fix:** add a lightweight cron wrapper around `track-findings.py stale --fail-on-match` that writes/updates a single backlog-facing report.
+
+### CI fix
+- **Blocker:** retry telemetry now exists in detector output, but no threshold-based escalation policy is codified (e.g., retry_count spikes over rolling runs).
+- **Proposed fix:** add a tracker-level threshold check (`llm_retry_count` / `llm_retry_wait_s`) with explicit warning output when sustained degradation is detected.
+
+### Spec implementation
+- **Blocker (previous cycle):** compliance checks were split across multiple commands and easy to run inconsistently.
+- **Fix applied this cycle:** added one-command wrapper `scripts/spec/prepr-compliance-gate.sh` to run report generation + metadata checks and emit a single pass/fail summary.
+
+### Devnet debugging
+- **Blocker:** incident packaging is still manual (logs + metrics + timeline + environment metadata in one bundle).
+- **Proposed fix:** add `scripts/debug/build-incident-bundle.sh` to produce one timestamped markdown bundle for sharing in topic threads/PRs.
 
 ---
 
@@ -185,6 +205,15 @@ Spinning up a mixed-peer devnet (e.g., Lodestar B2 + C2 nodes against ePBS devne
 
 ## Improvements Implemented This Cycle
 
+### ✅ One-command pre-PR compliance gate added (2026-03-14)
+Created `scripts/spec/prepr-compliance-gate.sh` and wired usage into `skills/dev-workflow/SKILL.md`:
+- accepts repeatable `--check "spec_query|ts_file|ts_symbol|report_out"` tuples
+- runs `check-compliance.py` for each tuple and captures verdict/confidence
+- runs `check-compliance-artifacts.sh` for tracker + PR body metadata enforcement
+- emits one markdown pass/fail summary (stdout + optional `--summary-out`) including a reusable PR block snippet
+
+**Rationale:** replaces a fragile multi-command sequence with one deterministic gate, so spec-compliance evidence is generated and validated consistently before PR/re-review.
+
 ### ✅ CI retry telemetry surfaced in detector output + tracker entries (2026-03-14)
 Updated `scripts/ci/auto_fix_flaky.py` to expose retry/backoff health signals directly in the detector JSON and per-finding tracker line items:
 - top-level summary now includes `llm_retry_count`, `llm_retry_wait_s`, and `llm_retry_after_seen`
@@ -366,5 +395,6 @@ Updated `scripts/ci/auto_fix_flaky.py`:
 17. ~~**Compliance artifact presence check** — add a lightweight pre-PR check that verifies tracker + PR body include spec-compliance artifact references for spec/protocol changes.~~ ✅ done (2026-03-13)
 18. ~~**Stale unresolved-review escalation** — add `track-findings.py stale` command and wire into review workflow.~~ ✅ done (2026-03-13)
 19. ~~**CI retry telemetry surfacing** — include retry/backoff counters in cron detector summary output.~~ ✅ done (2026-03-14)
-20. **Spec pre-PR compliance wrapper** — one command to run compliance checker + artifact-presence checks with a single pass/fail summary.
+20. ~~**Spec pre-PR compliance wrapper** — one command to run compliance checker + artifact-presence checks with a single pass/fail summary.~~ ✅ done (2026-03-14)
 21. **Devnet incident bundle script** — package logs + metrics + timeline + env metadata into one shareable markdown artifact.
+22. **PR stale-finding cron wrapper** — automate `track-findings.py stale --fail-on-match` into a backlog-facing report/escalation signal.
