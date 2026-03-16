@@ -18,9 +18,9 @@ mkdir -p "$NOTES_PATH"
 # Read tracked channels from config
 CHANNELS=$(python3 -c "import json; print('\n'.join(json.load(open('$CONFIG'))['channels']))")
 
-# Pull latest changes
+# Pull latest changes (timeout 30s to prevent hanging the cron budget)
 cd "$REPO_PATH"
-git pull --quiet 2>/dev/null || true
+timeout 30 git pull --quiet 2>/dev/null || true
 
 CURRENT_COMMIT=$(git rev-parse HEAD)
 LAST_COMMIT=$(python3 -c "import json; print(json.load(open('$STATE')).get('lastCommit', ''))" 2>/dev/null || echo "")
