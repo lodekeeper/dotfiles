@@ -242,7 +242,7 @@
       "name": "github-notifications",
       "enabled": true,
       "createdAtMs": 1772107716625,
-      "updatedAtMs": 1773618026899,
+      "updatedAtMs": 1773619038926,
       "schedule": {
         "kind": "every",
         "everyMs": 300000,
@@ -261,13 +261,13 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1773618008780,
+        "lastRunAtMs": 1773619021775,
         "lastStatus": "ok",
-        "lastDurationMs": 18119,
+        "lastDurationMs": 17151,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1773618308780,
+        "nextRunAtMs": 1773619321775,
         "lastDelivered": false
       },
       "deleteAfterRun": false
@@ -347,7 +347,7 @@
       "name": "aztec-sequencer-health",
       "enabled": true,
       "createdAtMs": 1772373812089,
-      "updatedAtMs": 1773604584057,
+      "updatedAtMs": 1773619049709,
       "schedule": {
         "kind": "every",
         "everyMs": 14400000,
@@ -364,11 +364,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1773618964687,
-        "lastRunAtMs": 1773604564687,
+        "nextRunAtMs": 1773633438926,
+        "lastRunAtMs": 1773619038926,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 19370,
+        "lastDurationMs": 10783,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -413,7 +413,7 @@
       "name": "monitor-open-pr-ci",
       "enabled": true,
       "createdAtMs": 1772635128553,
-      "updatedAtMs": 1773617106687,
+      "updatedAtMs": 1773619019150,
       "schedule": {
         "kind": "every",
         "everyMs": 1800000,
@@ -430,11 +430,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1773618878695,
-        "lastRunAtMs": 1773617078695,
+        "nextRunAtMs": 1773620678700,
+        "lastRunAtMs": 1773618878700,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 27992,
+        "lastDurationMs": 140450,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -446,7 +446,7 @@
       "name": "review-identity-files",
       "enabled": true,
       "createdAtMs": 1772635128553,
-      "updatedAtMs": 1773359088729,
+      "updatedAtMs": 1773618225588,
       "schedule": {
         "kind": "every",
         "everyMs": 259200000,
@@ -463,15 +463,14 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1773618106808,
-        "lastRunAtMs": 1773358906808,
+        "nextRunAtMs": 1773877306812,
+        "lastRunAtMs": 1773618106812,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 181921,
+        "lastDurationMs": 118776,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
-        "consecutiveErrors": 0,
-        "runningAtMs": 1773618106811
+        "consecutiveErrors": 0
       }
     },
     {
@@ -480,7 +479,7 @@
       "name": "self-improvement-audit-daily",
       "enabled": true,
       "createdAtMs": 1772635128553,
-      "updatedAtMs": 1773532321268,
+      "updatedAtMs": 1773618691350,
       "schedule": {
         "kind": "every",
         "everyMs": 86400000,
@@ -497,11 +496,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1773618405517,
-        "lastRunAtMs": 1773532005517,
+        "nextRunAtMs": 1773704805521,
+        "lastRunAtMs": 1773618405521,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 315751,
+        "lastDurationMs": 285829,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0
@@ -609,7 +608,8 @@
         "lastDurationMs": 23567,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "lastDelivered": false
+        "lastDelivered": false,
+        "runningAtMs": 1773619293110
       }
     },
     {

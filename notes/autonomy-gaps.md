@@ -1,7 +1,30 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-03-14 (9th pass)
+> Updated: 2026-03-15 (10th pass)
+
+---
+
+## Daily Audit Snapshot — 2026-03-15 (self-improvement-audit-daily, 23:46 UTC)
+
+### PR review
+- **Blocker:** stale-finding report exists, but no scheduled escalation wrapper is wired yet.
+- **Proposed fix:** add a weekly cron around `scripts/review/stale-findings-report.sh` that only emits when stale critical/major findings are present.
+
+### CI fix
+- **Blocker (previous cycle):** retry telemetry existed but no threshold-based sustained-degradation detection.
+- **Fix applied this cycle:** added rolling-window escalation in `scripts/ci/auto_fix_flaky.py`:
+  - persists `scan_history` with retry telemetry per run,
+  - computes `llm_retry_escalation` over configurable window/thresholds,
+  - emits escalation status in clean/failure JSON output,
+  - stores escalation snapshot under `last_scan` for tracker visibility.
+- **Workflow update:** updated `scripts/ci/CRON_PROMPT.md` to require explicit warning when `llm_retry_escalation.degraded=true`.
+
+### Spec implementation
+- **Status:** extraction + compliance gates operational; no new gap discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage, correlator, and incident bundle scripts operational; no new gap discovered this cycle.
 
 ---
 
@@ -224,6 +247,17 @@ Spinning up a mixed-peer devnet (e.g., Lodestar B2 + C2 nodes against ePBS devne
 
 ## Improvements Implemented This Cycle
 
+### ✅ CI retry rolling-window escalation added (2026-03-15)
+Updated `scripts/ci/auto_fix_flaky.py` to convert per-run retry telemetry into a sustained-health signal:
+- persists bounded `scan_history` entries (`scanned_at`, `new_failures`, `llm_retry_telemetry`)
+- computes `llm_retry_escalation` with configurable rolling-window thresholds for retry count, retry wait, and `Retry-After` frequency
+- emits escalation data in detector JSON (`status=clean` and `status=failures_found`)
+- stores escalation snapshot under `last_scan.llm_retry_escalation` when `--apply` is used
+
+Also updated `scripts/ci/CRON_PROMPT.md` so cron summaries must explicitly warn when escalation is degraded.
+
+**Rationale:** turns isolated retry counters into actionable trend detection so persistent API degradation is surfaced automatically instead of being noticed ad hoc.
+
 ### ✅ PR stale-finding cron wrapper added (2026-03-15)
 Created `scripts/review/stale-findings-report.sh`:
 - Scans all tracked PRs in findings directory for stale unresolved findings
@@ -436,5 +470,6 @@ Updated `scripts/ci/auto_fix_flaky.py`:
 20. ~~**Spec pre-PR compliance wrapper** — one command to run compliance checker + artifact-presence checks with a single pass/fail summary.~~ ✅ done (2026-03-14)
 21. ~~**Devnet incident bundle script** — package logs + metrics + timeline + env metadata into one shareable markdown artifact.~~ ✅ done (2026-03-15)
 22. ~~**PR stale-finding cron wrapper** — automate `track-findings.py stale --fail-on-match` into a backlog-facing report/escalation signal.~~ ✅ done (2026-03-15)
-23. **CI retry telemetry threshold-based escalation** — add tracker-level threshold check for `llm_retry_count`/`llm_retry_wait_s` with explicit warning when sustained degradation is detected across rolling runs.
-24. **Spec section auto-extraction** — write `scripts/spec/extract-spec-section.sh <feature>` to search consensus-specs for function/type definitions and follow import chains for related types.
+23. ~~**CI retry telemetry threshold-based escalation** — add tracker-level threshold check for `llm_retry_count`/`llm_retry_wait_s` with explicit warning when sustained degradation is detected across rolling runs.~~ ✅ done (2026-03-15)
+24. ~~**Spec section auto-extraction** — write `scripts/spec/extract-spec-section.sh <feature>` to search consensus-specs for function/type definitions and follow import chains for related types.~~ ✅ done (2026-03-07)
+25. **Wire stale-finding report into scheduled escalation** — add cron wrapper execution cadence (weekly) for `scripts/review/stale-findings-report.sh` and ensure output routes only when stale critical/major findings exist.
