@@ -177,6 +177,19 @@ When starting a **bigger development task** (EIP implementations, significant fe
 
 **Topic sessions MUST update BACKLOG.md:** When working in a topic session, update `~/.openclaw/workspace/BACKLOG.md` with your progress — mark subtasks ✅ as you complete them, add new subtasks as discovered, update status descriptions. This is how the main session (orchestrator) tracks what's happening. If progress isn't in BACKLOG.md, the orchestrator can't see it.
 
+### 💬 Discord Channels/Threads
+The same tagging and routing pattern applies to Discord sessions:
+
+**Backlog integration:** Tag tasks in BACKLOG.md with `[discord:CHANNEL_ID]` (e.g. `[discord:1197575814494035968]`). Group tasks under project headers like Telegram topics.
+
+**Session keys:** Discord sessions use `agent:main:discord:channel:<CHANNEL_ID>`.
+
+**Routing rule:** Once a Discord channel/thread is associated with a task, route updates there — not to Telegram, not to DMs. Use `sessions_send` with sessionKey `agent:main:discord:channel:<CHANNEL_ID>`.
+
+**Discord sessions MUST update BACKLOG.md:** Same rule as Telegram topic sessions — update `~/.openclaw/workspace/BACKLOG.md` with progress. If it's not in BACKLOG.md, the orchestrator can't see it.
+
+**When to use Discord vs Telegram:** Use whichever channel the task originated from. If someone asks for work in Discord, tag it `[discord:]`. If in Telegram, tag it `[topic:]`. Don't cross-route between channels unless explicitly asked.
+
 ### 💬 Know When to Speak!
 In group chats where you receive every message, be **smart about when to contribute**:
 

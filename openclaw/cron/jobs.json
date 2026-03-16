@@ -171,7 +171,7 @@
       "name": "eth-rnd-archive-hourly",
       "enabled": true,
       "createdAtMs": 1772034567300,
-      "updatedAtMs": 1773638129335,
+      "updatedAtMs": 1773660536035,
       "schedule": {
         "kind": "cron",
         "expr": "15 * * * *",
@@ -189,14 +189,15 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1773638100004,
-        "lastStatus": "ok",
-        "lastDurationMs": 29331,
-        "lastRunStatus": "ok",
-        "lastDeliveryStatus": "not-delivered",
-        "consecutiveErrors": 0,
-        "nextRunAtMs": 1773641700000,
-        "lastDelivered": false
+        "lastRunAtMs": 1773659936034,
+        "lastStatus": "error",
+        "lastDurationMs": 600001,
+        "lastRunStatus": "error",
+        "lastDeliveryStatus": "not-requested",
+        "consecutiveErrors": 1,
+        "nextRunAtMs": 1773663300000,
+        "lastError": "cron: job execution timed out",
+        "lastErrorReason": "timeout"
       }
     },
     {
@@ -205,7 +206,7 @@
       "name": "eth-rnd-daily-digest",
       "enabled": true,
       "createdAtMs": 1772034576175,
-      "updatedAtMs": 1773561666709,
+      "updatedAtMs": 1773648125648,
       "schedule": {
         "kind": "cron",
         "expr": "0 8 * * *",
@@ -226,13 +227,13 @@
         "bestEffort": true
       },
       "state": {
-        "lastRunAtMs": 1773561600004,
+        "lastRunAtMs": 1773648000008,
         "lastStatus": "ok",
-        "lastDurationMs": 66705,
+        "lastDurationMs": 125640,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1773648000000,
+        "nextRunAtMs": 1773734400000,
         "lastDelivered": false
       }
     },
@@ -242,7 +243,7 @@
       "name": "github-notifications",
       "enabled": true,
       "createdAtMs": 1772107716625,
-      "updatedAtMs": 1773640763989,
+      "updatedAtMs": 1773662519015,
       "schedule": {
         "kind": "every",
         "everyMs": 300000,
@@ -261,13 +262,13 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1773640745332,
+        "lastRunAtMs": 1773662492457,
         "lastStatus": "ok",
-        "lastDurationMs": 18657,
+        "lastDurationMs": 26558,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1773641045332,
+        "nextRunAtMs": 1773662792457,
         "lastDelivered": false
       },
       "deleteAfterRun": false
@@ -347,7 +348,7 @@
       "name": "aztec-sequencer-health",
       "enabled": true,
       "createdAtMs": 1772373812089,
-      "updatedAtMs": 1773633454654,
+      "updatedAtMs": 1773662251132,
       "schedule": {
         "kind": "every",
         "everyMs": 14400000,
@@ -364,11 +365,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1773647838930,
-        "lastRunAtMs": 1773633438930,
+        "nextRunAtMs": 1773676638940,
+        "lastRunAtMs": 1773662238940,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 15724,
+        "lastDurationMs": 12192,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -380,7 +381,7 @@
       "name": "workspace-periodic-cleanup",
       "enabled": true,
       "createdAtMs": 1772634832403,
-      "updatedAtMs": 1773638880612,
+      "updatedAtMs": 1773660894922,
       "schedule": {
         "kind": "every",
         "everyMs": 21600000,
@@ -397,14 +398,16 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1773660357347,
-        "lastRunAtMs": 1773638757347,
-        "lastRunStatus": "ok",
-        "lastStatus": "ok",
-        "lastDurationMs": 123265,
+        "nextRunAtMs": 1773682275264,
+        "lastRunAtMs": 1773660675264,
+        "lastRunStatus": "error",
+        "lastStatus": "error",
+        "lastDurationMs": 219658,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
-        "consecutiveErrors": 0
+        "consecutiveErrors": 1,
+        "lastError": "⚠️ 📝 Edit: `in ~/.openclaw/workspace/BACKLOG.md` failed",
+        "lastDeliveryError": "⚠️ 📝 Edit: `in ~/.openclaw/workspace/BACKLOG.md` failed"
       }
     },
     {
@@ -413,7 +416,7 @@
       "name": "monitor-open-pr-ci",
       "enabled": true,
       "createdAtMs": 1772635128553,
-      "updatedAtMs": 1773640443622,
+      "updatedAtMs": 1773660927910,
       "schedule": {
         "kind": "every",
         "everyMs": 1800000,
@@ -430,11 +433,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1773642212874,
-        "lastRunAtMs": 1773640412874,
+        "nextRunAtMs": 1773662694922,
+        "lastRunAtMs": 1773660894922,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 30748,
+        "lastDurationMs": 32988,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -512,7 +515,7 @@
       "name": "cron-health-watchdog",
       "enabled": true,
       "createdAtMs": 1772636078136,
-      "updatedAtMs": 1773640689090,
+      "updatedAtMs": 1773662490443,
       "schedule": {
         "kind": "every",
         "everyMs": 1800000,
@@ -529,11 +532,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1773642482636,
-        "lastRunAtMs": 1773640682636,
+        "nextRunAtMs": 1773664136040,
+        "lastRunAtMs": 1773662336040,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 6454,
+        "lastDurationMs": 154403,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -546,7 +549,7 @@
       "description": "Daily nudge to execute autonomy audit priorities",
       "enabled": true,
       "createdAtMs": 1772853540767,
-      "updatedAtMs": 1773567266426,
+      "updatedAtMs": 1773655193561,
       "schedule": {
         "kind": "cron",
         "expr": "30 9 * * *",
@@ -556,7 +559,7 @@
       "wakeMode": "now",
       "payload": {
         "kind": "agentTurn",
-        "message": "Daily reminder: execute one \"Next Audit Priorities\" item from notes/autonomy-gaps.md (or BACKLOG) if still pending.\n\nPriority list:\n1) scripts/spec/extract-spec-section.sh\n2) scripts/debug/devnet-triage.sh\n3) add issue-linkage step to CI autofix cron prompt\n4) notes/fork-implementation-checklist.md\n\nProcess:\n- Update BACKLOG.md status first\n- Do one concrete item (or advance nearest blocker)\n- If routine/non-urgent, post status to Lodestar WG topic #347 using exec + OpenClaw CLI:\n  /home/openclaw/.nvm/versions/node/v22.22.0/bin/openclaw message send --channel telegram --target -1003764039429 --thread-id 347 --message \"<status>\"\n- DM Nico only for blocker/urgent decision/critical deliverable:\n  /home/openclaw/.nvm/versions/node/v22.22.0/bin/openclaw message send --channel telegram --target 5774760693 --message \"<urgent>\"\n- Do NOT use sessions_send for Telegram delivery.\n- If nothing actionable, reply exactly NO_REPLY",
+        "message": "Daily reminder: execute one \"Next Audit Priorities\" item from notes/autonomy-gaps.md (or BACKLOG) if still pending.\n\nPriority list:\n1) scripts/spec/extract-spec-section.sh\n2) scripts/debug/devnet-triage.sh\n3) add issue-linkage step to CI autofix cron prompt\n4) notes/fork-implementation-checklist.md\n\nProcess:\n- Update BACKLOG.md status first\n- Do one concrete item (or advance nearest blocker)\n- If routine/non-urgent, post status to Lodestar WG topic #347 using exec + OpenClaw CLI:\n  /home/openclaw/.nvm/versions/node/v22.22.0/bin/openclaw message send --channel telegram --target -1003764039429 --thread-id 347 --message \"<status>\"\n- DM Nico only for blocker/urgent decision/critical deliverable:\n  /home/openclaw/.nvm/versions/node/v22.22.0/bin/openclaw message send --channel telegram --target 5774760693 --message \"<urgent>\"\n- Do NOT use sessions_send for Telegram delivery.\n- Do NOT edit memory files (memory/*.md) directly — memory updates are handled by the nightly consolidation pipeline.\n- If nothing actionable, reply exactly NO_REPLY",
         "model": "openai-codex/gpt-5.3-codex",
         "timeoutSeconds": 900
       },
@@ -565,14 +568,16 @@
         "channel": "last"
       },
       "state": {
-        "nextRunAtMs": 1773653400000,
-        "lastRunAtMs": 1773567000005,
-        "lastRunStatus": "ok",
-        "lastStatus": "ok",
-        "lastDurationMs": 266421,
+        "nextRunAtMs": 1773739800000,
+        "lastRunAtMs": 1773653400008,
+        "lastRunStatus": "error",
+        "lastStatus": "error",
+        "lastDurationMs": 176551,
         "lastDeliveryStatus": "not-delivered",
-        "consecutiveErrors": 0,
-        "lastDelivered": false
+        "consecutiveErrors": 1,
+        "lastDelivered": false,
+        "lastError": "⚠️ 📝 Edit: `in ~/.openclaw/workspace/memory/2026-03-16.md (1090 chars)` failed",
+        "lastDeliveryError": "⚠️ 📝 Edit: `in ~/.openclaw/workspace/memory/2026-03-16.md (1090 chars)` failed"
       }
     },
     {
@@ -582,7 +587,7 @@
       "description": "Sync dotfiles repo (safe mode: non-sensitive allowlist + sensitive-path guard)",
       "enabled": true,
       "createdAtMs": 1773087050715,
-      "updatedAtMs": 1773619309806,
+      "updatedAtMs": 1773640910134,
       "schedule": {
         "kind": "cron",
         "expr": "0 */6 * * *",
@@ -601,15 +606,15 @@
         "channel": "last"
       },
       "state": {
-        "nextRunAtMs": 1773640893107,
-        "lastRunAtMs": 1773619293114,
+        "nextRunAtMs": 1773662493107,
+        "lastRunAtMs": 1773640893111,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 16692,
+        "lastDurationMs": 17023,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false,
-        "runningAtMs": 1773640893111
+        "runningAtMs": 1773662521575
       }
     },
     {
@@ -619,7 +624,7 @@
       "description": "Check openclaw/openclaw latest release every 12h and alert Nico on new tag",
       "enabled": true,
       "createdAtMs": 1773093482865,
-      "updatedAtMs": 1773613055915,
+      "updatedAtMs": 1773656254891,
       "schedule": {
         "kind": "every",
         "everyMs": 43200000,
@@ -633,11 +638,11 @@
         "model": "anthropic/claude-sonnet-4-6"
       },
       "state": {
-        "nextRunAtMs": 1773656243549,
-        "lastRunAtMs": 1773613043549,
+        "nextRunAtMs": 1773699443554,
+        "lastRunAtMs": 1773656243554,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 12366,
+        "lastDurationMs": 11337,
         "lastDeliveryStatus": "not-requested",
         "consecutiveErrors": 0
       }
@@ -647,7 +652,7 @@
       "name": "weekly-standup-digest",
       "enabled": true,
       "createdAtMs": 1773398833675,
-      "updatedAtMs": 1773622779821,
+      "updatedAtMs": 1773657981477,
       "schedule": {
         "kind": "cron",
         "expr": "0 4 * * 2",
@@ -657,9 +662,9 @@
       "wakeMode": "now",
       "payload": {
         "kind": "agentTurn",
-        "message": "WEEKLY STANDUP DIGEST — Post to Discord #lodestar-developer before Tuesday standup.\n\nGenerate a weekly digest of all Lodestar-related work for the past 7 days and post it to Discord channel 1197575814494035968.\n\n## Data Sources\n1. Read `memory/` daily notes for the last 7 days (memory/YYYY-MM-DD.md)\n2. Read BACKLOG.md for active/completed tasks\n3. Run: gh pr list --author lodekeeper --state all --limit 20 --json number,title,state,mergedAt,createdAt,updatedAt\n4. Run: gh api notifications --jq \"[.[] | select(.updated_at > \\\"$(date -d \\\"7 days ago\\\" -u +%Y-%m-%dT%H:%M:%SZ)\\\")]\" 2>/dev/null | head -50\n\n## Digest Format (Discord-friendly, NO markdown tables)\nPost as a single message. Use bullet lists, bold headers, and concise descriptions. Structure:\n\n**🌟 Lodekeeper Weekly Digest — Week of [date range]**\n\n**PRs Opened/Updated**\n- PR #XXXX: title (status) — one-line summary\n\n**PRs Reviewed**\n- PR #XXXX by @author: title — key feedback given\n\n**Upstream Work**\n- Any libp2p, consensus-specs, or other upstream PRs/issues\n\n**Investigations & Debugging**\n- Notable debugging, root cause analyses, or research\n\n**Infrastructure & Tooling**\n- Cron improvements, skill updates, monitoring changes\n\n**EPBS / Devnet Work**\n- ePBS-specific progress if any\n\n**Next Week Focus**\n- What is planned or expected\n\n## Rules\n- Include ONLY Lodestar-related work (PRs, reviews, investigations, upstream, devnet, specs)\n- Do NOT include private/personal info, Oracle bridge, internal tooling details, meme generation, or non-Lodestar tasks\n- Keep each item to 1-2 lines max\n- Use Discord mentions for team members where relevant (e.g. <@USER_ID>)\n- Wrap links in <> to suppress embeds when there are multiple\n\n## Posting\nSend to Discord using: message action=send channel=discord to=channel:1197575814494035968\nDo NOT use embeds or components — just a plain text message with Discord markdown formatting.",
-        "model": "anthropic/claude-opus-4-6",
-        "timeoutSeconds": 1200
+        "message": "WEEKLY STANDUP DIGEST — Post to Discord #lodestar-developer before Tuesday standup.\n\nGenerate a weekly digest of Lodestar-related work for the past 7 days and post it to Discord channel 1197575814494035968.\n\n## Data Sources (in order — stop if taking too long)\n1. Run: gh pr list --author lodekeeper --state all --limit 20 --json number,title,state,mergedAt,createdAt,updatedAt 2>/dev/null\n2. Read BACKLOG.md for active/completed tasks\n3. Read memory/ daily notes for last 3 days only (memory/YYYY-MM-DD.md for today, yesterday, day before)\n   — Do NOT read all 7 days if the files are large; 3 days of notes is sufficient for the digest\n\n## Digest Format (Discord-friendly, NO markdown tables)\nPost as a single message. Use bullet lists, bold headers, concise descriptions.\n\n**🌟 Lodekeeper Weekly Digest — Week of [date range]**\n\n**PRs Opened/Updated**\n- PR #XXXX: title (status) — one-line summary\n\n**PRs Reviewed**\n- PR #XXXX by @author: title — key feedback given\n\n**Investigations & Debugging**\n- Notable debugging, root cause analyses, or research\n\n**Infrastructure & Tooling**\n- Cron improvements, skill updates, monitoring changes\n\n**Next Week Focus**\n- What is planned\n\n## Rules\n- Include ONLY Lodestar-related work (PRs, reviews, investigations, upstream, devnet, specs)\n- Do NOT include private/personal info, Oracle bridge, internal tooling details, meme generation\n- Keep each item to 1-2 lines max\n- Wrap links in <> to suppress embeds when there are multiple\n- Do NOT edit memory files (memory/*.md) directly\n- If a gh command times out or errors, skip it and use BACKLOG.md as fallback\n\n## Posting\nSend to Discord using: message action=send channel=discord to=channel:1197575814494035968\nDo NOT use embeds or components — just plain text with Discord markdown formatting.\nAfter sending, reply NO_REPLY.",
+        "model": "anthropic/claude-sonnet-4-6",
+        "timeoutSeconds": 540
       },
       "delivery": {
         "mode": "none",
@@ -675,6 +680,41 @@
         "lastErrorReason": "timeout",
         "lastDeliveryStatus": "not-requested",
         "consecutiveErrors": 1
+      }
+    },
+    {
+      "id": "5bdfd724-e806-4ffc-b706-1f02b1da3bee",
+      "agentId": "main",
+      "sessionKey": "agent:main:cron:882f5c1c-6954-40a4-8d18-b77dc8443cce",
+      "name": "weekly-stale-review-findings",
+      "enabled": true,
+      "createdAtMs": 1773653503285,
+      "updatedAtMs": 1773655303046,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 10 * * 1",
+        "tz": "UTC"
+      },
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "agentTurn",
+        "model": "openai-codex/gpt-5.3-codex",
+        "timeoutSeconds": 600,
+        "message": "Run: bash ~/.openclaw/workspace/scripts/review/stale-findings-report.sh --days 7 --severity critical major\n\nRouting rules:\n- If the script exits 0 (no stale findings), reply exactly NO_REPLY.\n- If the script exits 2 (stale findings found), post a concise alert to Lodestar WG topic #347 using message tool:\n  action=send channel=telegram target=-1003764039429 threadId=347\n  Include: stale finding count summary, PR numbers, and the generated report path.\n- If the script errors (exit 1 or unexpected), post a concise error summary to topic #347 (same routing).\n- Do NOT DM Nico unless there is a blocker requiring immediate decision."
+      },
+      "delivery": {
+        "mode": "none"
+      },
+      "state": {
+        "nextRunAtMs": 1774260000000,
+        "lastRunAtMs": 1773655267803,
+        "lastRunStatus": "ok",
+        "lastStatus": "ok",
+        "lastDurationMs": 35243,
+        "lastDelivered": false,
+        "lastDeliveryStatus": "not-delivered",
+        "consecutiveErrors": 0
       }
     }
   ]

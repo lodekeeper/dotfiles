@@ -26,21 +26,29 @@ Before sending anything to Nico DM from a heartbeat flow, all of these must be c
 1. Read `BACKLOG.md` right now
 2. Look for any task that is NOT marked ✅ and is NOT a passive "monitor/watch" item
 3. **If an actionable task exists:**
-   - **If task is tagged `[topic:ID]`** → do NOT work on it here. Instead:
+   - **If task is tagged `[topic:ID]` or `[discord:CHANNEL_ID]`** → do NOT work on it here. Instead:
      1. Check the task status in BACKLOG.md — is it blocked/awaiting input, or ready for more work?
-     2. If ready for work: nudge the topic session via `sessions_send` with sessionKey `agent:main:telegram:group:-1003764039429:topic:<ID>` and a message like "Continue working on <task>. Current status: <status from backlog>. Next step: <next subtask>. IMPORTANT: Update BACKLOG.md (~/.openclaw/workspace/BACKLOG.md) with your progress — mark subtasks ✅ as you complete them, add new subtasks as discovered."
-     3. **Anti-spam guard:** if you already nudged the same topic in the last ~30 minutes and there is no status change/new blocker/new decision point, skip repeat nudges.
+     2. If ready for work: nudge the session via `sessions_send` with the appropriate sessionKey:
+        - `[topic:ID]` → `agent:main:telegram:group:-1003764039429:topic:<ID>`
+        - `[discord:CHANNEL_ID]` → `agent:main:discord:channel:<CHANNEL_ID>`
+        - Message: "Continue working on <task>. Current status: <status from backlog>. Next step: <next subtask>. IMPORTANT: Update BACKLOG.md (~/.openclaw/workspace/BACKLOG.md) with your progress — mark subtasks ✅ as you complete them, add new subtasks as discovered."
+     3. **Anti-spam guard:** if you already nudged the same session in the last ~30 minutes and there is no status change/new blocker/new decision point, skip repeat nudges.
      4. If blocked/awaiting: skip it, just note it's blocked.
      5. Report briefly what you nudged (or why you skipped). NOT HEARTBEAT_OK.
-   - **If task is NOT topic-tagged** → WORK ON IT in this session.
+   - **If task is NOT session-tagged** (no `[topic:]` or `[discord:]`) → WORK ON IT in this session.
    - Set it to "in progress" in BACKLOG.md immediately
    - Update dashboard: `~/lodekeeper-dash/scripts/update-status.sh working "<task>"`
    - Do the work. Reply with what you did. NOT HEARTBEAT_OK.
    
-   **Topic session keys:** `agent:main:telegram:group:-1003764039429:topic:<ID>` (Lodekeeper WG forum)
+   **Session keys by channel:**
+   - Telegram topics: `agent:main:telegram:group:-1003764039429:topic:<ID>` (Lodestar WG forum)
+   - Discord channels: `agent:main:discord:channel:<CHANNEL_ID>`
 4. If the only remaining items are passive monitoring (awaiting review, watching threads) → proceed to Step 2
 5. Add any new tasks discovered from notifications/Discord
-6. If a newly discovered task is a **bigger development task**, create a dedicated Lodestar WG topic automatically (`message action=topic-create`) and tag backlog with `[topic:ID]`. If the scope is borderline, ask Nico.
+6. If a newly discovered task is a **bigger development task**:
+   - If it originated from **Telegram**: create a dedicated Lodestar WG topic (`message action=topic-create`) and tag backlog with `[topic:ID]`
+   - If it originated from **Discord**: tag backlog with `[discord:CHANNEL_ID]` using the channel/thread ID where the task was discussed
+   - If the scope is borderline, ask Nico.
 
 **The failure mode to avoid:** Running all the monitoring checks below, seeing "nothing new", and replying HEARTBEAT_OK while an actionable task sits untouched in the backlog. Monitoring is Step 2. Backlog work is Step 1.
 

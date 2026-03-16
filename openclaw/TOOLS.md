@@ -76,7 +76,6 @@ Use worktrees to work on multiple branches without cross-contamination:
 ~/lodestar-lazy-slasher         → feat/lazy-slasher-clean
 ~/lodestar-proposer-preferences → feat/proposer-preferences
 ~/lodestar-ptr-compress         → feat/pointer-compression
-~/lodestar-rate-limit-fix       → fix/sync-rate-limit-backoff (PR #8924)
 ```
 
 **Commands:**
