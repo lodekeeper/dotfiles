@@ -1,7 +1,27 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-03-15 (10th pass)
+> Updated: 2026-03-16 (11th pass)
+
+---
+
+## Daily Audit Snapshot — 2026-03-16 (self-improvement-audit-daily, 23:46 UTC)
+
+### PR review
+- **Status:** stale-finding weekly escalation cron is now live and reporting correctly; no new blocker discovered this cycle.
+
+### CI fix
+- **Status:** retry telemetry + rolling-window degradation detection are operational; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Blocker (previous cycle):** test-vector freshness checks were implicit (easy to skip).
+- **Fix applied this cycle:** added `scripts/spec/check-test-vector-readiness.sh` and wired it into `skills/dev-workflow/SKILL.md` spec-vector gate.
+  - verifies `~/consensus-specs/tests/` exists and is populated,
+  - reports `tests/` recency based on git history,
+  - supports `--require-fresh` to hard-fail when vectors are stale.
+
+### Devnet debugging
+- **Status:** triage, correlator, incident bundle, and startup helper scripts are operational; no new blocker discovered this cycle.
 
 ---
 
@@ -115,13 +135,13 @@ Multi-persona review via `lodestar-review` skill. Parallel spawning, persona pro
 
 ### Gaps
 
-#### 🔴 Reviewer false positives (FIXED this cycle — see below)
-Sub-agents sometimes flag files **not in the PR diff** (confirmed on PR #8993: `dataColumns.ts`, `gloas.ts` flagged but not changed). This wastes effort and can lead to spurious follow-up commits.
+#### ~~🔴 Reviewer false positives~~ ✅ FIXED (2026-03-08)
+~~Sub-agents sometimes flag files **not in the PR diff** (confirmed on PR #8993: `dataColumns.ts`, `gloas.ts` flagged but not changed). This wastes effort and can lead to spurious follow-up commits.~~
 
-**Fix:** Added mandatory false-positive guard step to `lodestar-review/SKILL.md`:
-- Get `git diff --name-only` before acting on findings
-- Include actual changed-file list in reviewer task prompt
-- Discard any finding referencing a file not in that list
+**Fix applied:** mandatory false-positive guard in `lodestar-review/SKILL.md`:
+- get `git diff --name-only` before acting on findings,
+- include changed-file list in reviewer prompts,
+- discard findings for files outside the diff.
 
 #### ~~🟡 No reviewer task pre-injection of changed-file scope~~ ✅ FIXED (2026-03-08)
 ~~Reviewer prompts don't currently include the file list — so reviewers have to infer scope from the diff content, which they sometimes miss.~~
@@ -141,10 +161,10 @@ Sub-agents sometimes flag files **not in the PR diff** (confirmed on PR #8993: `
 - supports `--severity`, `--days`, `--use-created`, and `--fail-on-match` (for cron/automation wrappers)
 - wired usage into `skills/lodestar-review/SKILL.md` follow-up workflow
 
-#### 🔴 No review finding resolution tracking
-After posting a review, when the author pushes new commits, I have no system for tracking which findings got addressed. I manually re-read everything.
+#### ~~🔴 No review finding resolution tracking~~ ✅ FIXED (2026-03-08)
+~~After posting a review, when the author pushes new commits, I have no system for tracking which findings got addressed. I manually re-read everything.~~
 
-**Status:** ✅ FIXED this cycle — see "Improvements Implemented This Cycle" below.
+**Fix applied:** added `scripts/review/track-findings.py` workflows (`check`, `resolve`, `sync-gh`, `dump`) for explicit re-verification after follow-up commits.
 
 ---
 
@@ -179,13 +199,10 @@ Use `dev-workflow` skill for multi-agent development. Codex/Claude CLI for imple
 
 ### Gaps
 
-#### 🔴 No automated spec section extraction
-I manually grep `~/consensus-specs` for relevant pseudocode when implementing. This is slow and error-prone (easy to miss related functions/types across files).
+#### ~~🔴 No automated spec section extraction~~ ✅ FIXED (2026-03-07)
+~~I manually grep `~/consensus-specs` for relevant pseudocode when implementing. This is slow and error-prone (easy to miss related functions/types across files).~~
 
-**Proposed fix:** Write `scripts/spec/extract-spec-section.sh <feature-name>` that:
-- Searches `~/consensus-specs/specs/` for function/type definitions matching a pattern
-- Outputs relevant pseudocode blocks in a format suitable for Codex context injection
-- Follows import chains to pull related types
+**Fix applied:** added `scripts/spec/extract-spec-section.sh` to search spec markdown and follow symbol-import chains for related definitions.
 
 #### ~~🔴 No LLM spec compliance check (new — 2026-03-08)~~ ✅ FIXED (2026-03-09)
 After implementing a spec function in TypeScript, before opening a PR, I don't run a systematic check: "does this TS code faithfully implement the pseudocode?" I verify manually by reading both, which is slow and error-prone.
@@ -195,15 +212,18 @@ After implementing a spec function in TypeScript, before opening a PR, I don't r
 - Sends it + the TS implementation to GPT/Codex: "do these match? what's missing?"
 - Outputs a diff-style compliance report: implemented ✅ / missing ⚠️ / diverged ❌
 
-#### 🟡 No test-vector auto-download awareness
-When implementing spec functions, I sometimes forget to run against official test vectors. The vectors live in `~/consensus-specs/tests/` but need a separate download step.
+#### ~~🟡 No test-vector auto-download awareness~~ ✅ FIXED (2026-03-16)
+~~When implementing spec functions, I sometimes forget to run against official test vectors. The vectors live in `~/consensus-specs/tests/` but need a separate download step.~~
 
-**Proposed fix:** Add check in dev-workflow skill: before opening PR, run `python3 scripts/pre-validate.mjs --spec-tests` or equivalent to confirm test-vector coverage.
+**Fix applied:** added `scripts/spec/check-test-vector-readiness.sh` and wired it into the `skills/dev-workflow/SKILL.md` spec-vector gate.
+- validates `~/consensus-specs/tests/` exists and has vector files,
+- reports staleness of `tests/` from git history,
+- supports `--require-fresh` to fail fast when vectors are too old.
 
-#### 🟢 No implementation checklist per fork type
-Each fork (Gloas, Fulu, etc.) has different patterns: new SSZ types, new gossip topics, new reqresp methods, new fork-choice fields, new API endpoints. No single checklist ensures all are covered.
+#### ~~🟢 No implementation checklist per fork type~~ ✅ FIXED (2026-03-07)
+~~Each fork (Gloas, Fulu, etc.) has different patterns: new SSZ types, new gossip topics, new reqresp methods, new fork-choice fields, new API endpoints. No single checklist ensures all are covered.~~
 
-**Proposed fix:** Add `notes/fork-implementation-checklist.md` template that covers all surface areas.
+**Fix applied:** added `notes/fork-implementation-checklist.md` covering fork surfaces, test matrix, interop gates, and PR readiness criteria.
 
 ---
 
@@ -223,29 +243,32 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 - Highlights lines matching `/fork_choice|attestation|proposal|head_block|finalized/`
 - Outputs a unified timeline with node-prefixed lines
 
-#### 🔴 No scripted first-5-minutes diagnostic
-Every devnet debugging session starts with the same manual sequence: check zombie processes, check ports, check Loki for recent errors, compare Grafana metrics, check peer count. This takes 10-15 minutes every time.
+#### ~~🔴 No scripted first-5-minutes diagnostic~~ ✅ FIXED (2026-03-09)
+~~Every devnet debugging session starts with the same manual sequence: check zombie processes, check ports, check Loki for recent errors, compare Grafana metrics, check peer count. This takes 10-15 minutes every time.~~
 
-**Proposed fix:** Write `scripts/debug/devnet-triage.sh [node-name]` that:
-1. `lsof -iTCP:<port> -sTCP:LISTEN` — zombie check
-2. Loki: last 10 errors for the target node
-3. Grafana: peer count + attestation effectiveness (last 30m)
-4. Check process uptime + recent restart count
-5. Output a concise triage summary
+**Fix applied:** added `scripts/debug/devnet-triage.sh` for one-command first-pass diagnostics (processes, ports, Loki errors, Prometheus probes, restart hints).
 
-#### 🟡 No structured debugging session template
-When investigating complex issues (like feat4 QUIC crashes), I accumulate evidence across many tool calls without a clear structure. Later it's hard to reconstruct what was ruled out and why.
+#### ~~🟡 No structured debugging session template~~ ✅ FIXED (2026-03-07)
+~~When investigating complex issues (like feat4 QUIC crashes), I accumulate evidence across many tool calls without a clear structure. Later it's hard to reconstruct what was ruled out and why.~~
 
-**Proposed fix:** Create `notes/debug-session-template.md` and use it at the start of each investigation: hypothesis, evidence collected, ruled-out explanations, current working theory, next steps.
+**Fix applied:** created `notes/debug-session-template.md` and integrated it into investigation workflow.
 
-#### 🟡 Mixed-peer devnet startup is still manual
-Spinning up a mixed-peer devnet (e.g., Lodestar B2 + C2 nodes against ePBS devnet) requires multiple manual steps and ad-hoc configuration. I have the `kurtosis-devnet` and `join-devnet` skills but no quick-start path for a specific devnet variant.
+#### ~~🟡 Mixed-peer devnet startup is still manual~~ ✅ FIXED (2026-03-08)
+~~Spinning up a mixed-peer devnet (e.g., Lodestar B2 + C2 nodes against ePBS devnet) requires multiple manual steps and ad-hoc configuration.~~
 
-**Proposed fix:** Codify the EPBS devnet-0 startup sequence into `scripts/devnet/start-epbs-devnet.sh` so I can reproduce the environment in <5 minutes.
+**Fix applied:** codified EPBS devnet-0 startup flow in `scripts/devnet/start-epbs-devnet.sh` for repeatable bring-up.
 
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Spec test-vector readiness gate added (2026-03-16)
+Added `scripts/spec/check-test-vector-readiness.sh` and wired it into `skills/dev-workflow/SKILL.md`.
+- validates local `~/consensus-specs/tests/` presence with a real sample file check,
+- reports `tests/` freshness from git history,
+- supports `--require-fresh` for fail-fast enforcement in pre-PR spec workflows.
+
+**Rationale:** closes the last spec-vector gap where test vectors were available but freshness checks were manual/easy to skip.
 
 ### ✅ CI retry rolling-window escalation added (2026-03-15)
 Updated `scripts/ci/auto_fix_flaky.py` to convert per-run retry telemetry into a sustained-health signal:
@@ -472,4 +495,5 @@ Updated `scripts/ci/auto_fix_flaky.py`:
 22. ~~**PR stale-finding cron wrapper** — automate `track-findings.py stale --fail-on-match` into a backlog-facing report/escalation signal.~~ ✅ done (2026-03-15)
 23. ~~**CI retry telemetry threshold-based escalation** — add tracker-level threshold check for `llm_retry_count`/`llm_retry_wait_s` with explicit warning when sustained degradation is detected across rolling runs.~~ ✅ done (2026-03-15)
 24. ~~**Spec section auto-extraction** — write `scripts/spec/extract-spec-section.sh <feature>` to search consensus-specs for function/type definitions and follow import chains for related types.~~ ✅ done (2026-03-07)
-25. **Wire stale-finding report into scheduled escalation** — add cron wrapper execution cadence (weekly) for `scripts/review/stale-findings-report.sh` and ensure output routes only when stale critical/major findings exist.
+25. ~~**Wire stale-finding report into scheduled escalation** — add cron wrapper execution cadence (weekly) for `scripts/review/stale-findings-report.sh` and ensure output routes only when stale critical/major findings exist.~~ ✅ done (2026-03-16)
+26. **Autonomy-gaps consistency guard** — add a lightweight checker script that flags contradictory states in `notes/autonomy-gaps.md` (e.g., item listed as fixed in improvements but still open in Gaps) before the next audit writes updates.

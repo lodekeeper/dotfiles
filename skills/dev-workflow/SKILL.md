@@ -278,11 +278,17 @@ process action:list
 
    **Spec-vector gate (required for spec/protocol-facing changes before PR):**
    ```bash
+   # 1) Verify consensus-spec test vectors are present/fresh locally
+   bash ~/.openclaw/workspace/scripts/spec/check-test-vector-readiness.sh \
+     --max-age-days 21 \
+     --require-fresh
+
+   # 2) Run Lodestar spec tests when available
    cd ~/lodestar-<feature-name>
    if pnpm run | grep -q "test:spec"; then
      pnpm test:spec
    else
-     echo "No test:spec script in this checkout; run the relevant consensus-spec tests manually and note it in PR body"
+     echo "No test:spec script in this checkout; run relevant consensus-spec tests manually and note it in PR body"
    fi
    ```
 
