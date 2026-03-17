@@ -262,6 +262,15 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 
 ## Improvements Implemented This Cycle
 
+### ✅ Autonomy-gaps consistency guard added (2026-03-17)
+Created `scripts/notes/check-autonomy-gaps-consistency.py`:
+- parses `### Gaps` items and `## Improvements Implemented This Cycle` entries,
+- flags contradictory status when the same gap appears both open and fixed,
+- flags path-level contradictions when a script/doc path appears in both an open gap and an implemented improvement,
+- exits with code `2` on contradictions for cron-friendly enforcement.
+
+**Rationale:** prevents drift where autonomy-gap items are marked implemented but remain open elsewhere in the same file.
+
 ### ✅ Spec test-vector readiness gate added (2026-03-16)
 Added `scripts/spec/check-test-vector-readiness.sh` and wired it into `skills/dev-workflow/SKILL.md`.
 - validates local `~/consensus-specs/tests/` presence with a real sample file check,
@@ -496,4 +505,4 @@ Updated `scripts/ci/auto_fix_flaky.py`:
 23. ~~**CI retry telemetry threshold-based escalation** — add tracker-level threshold check for `llm_retry_count`/`llm_retry_wait_s` with explicit warning when sustained degradation is detected across rolling runs.~~ ✅ done (2026-03-15)
 24. ~~**Spec section auto-extraction** — write `scripts/spec/extract-spec-section.sh <feature>` to search consensus-specs for function/type definitions and follow import chains for related types.~~ ✅ done (2026-03-07)
 25. ~~**Wire stale-finding report into scheduled escalation** — add cron wrapper execution cadence (weekly) for `scripts/review/stale-findings-report.sh` and ensure output routes only when stale critical/major findings exist.~~ ✅ done (2026-03-16)
-26. **Autonomy-gaps consistency guard** — add a lightweight checker script that flags contradictory states in `notes/autonomy-gaps.md` (e.g., item listed as fixed in improvements but still open in Gaps) before the next audit writes updates.
+26. ~~**Autonomy-gaps consistency guard** — add a lightweight checker script that flags contradictory states in `notes/autonomy-gaps.md` (e.g., item listed as fixed in improvements but still open in Gaps) before the next audit writes updates.~~ ✅ done (2026-03-17)
