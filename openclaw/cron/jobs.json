@@ -171,7 +171,7 @@
       "name": "eth-rnd-archive-hourly",
       "enabled": true,
       "createdAtMs": 1772034567300,
-      "updatedAtMs": 1773810929331,
+      "updatedAtMs": 1773832535023,
       "schedule": {
         "kind": "cron",
         "expr": "15 * * * *",
@@ -181,7 +181,7 @@
       "wakeMode": "now",
       "payload": {
         "kind": "agentTurn",
-        "message": "HOURLY CHECK: Eth R&D Archive.\n\n1. Read skill: skills/eth-rnd-archive/SKILL.md\n2. Run: bash skills/eth-rnd-archive/check-updates.sh\n3. If new messages in tracked channels: read the JSON files listed, summarize key discussions, save notes to ~/eth-rnd-archive-notes/YYYY-MM-DD.md\n4. If something CRITICAL for Lodestar (spec changes, breaking decisions, action items): alert Nico immediately via Telegram\n5. Otherwise just log the summary to the notes file silently\n\nDo NOT send anything to Nico unless it is genuinely important. Most checks will just be quiet logging.\n\n⚠️ STALENESS ALERT:\nIf check-updates.sh shows NO new data for 24+ hours (check the last commit date or latest JSON file date):\n1. Send a Discord ping using exec + OpenClaw CLI:\n   /home/openclaw/.nvm/versions/node/v22.22.0/bin/openclaw message send --channel discord --target channel:1473573717857800356 --message \"Hey <@731289513942450317> — the eth-rnd-archive has not updated in 24+ hours (last data: [date]). Looks like it may have desynced again.\"\n2. Make sure to include the <@731289513942450317> mention so they get notified.\n3. Only send this alert ONCE per staleness event (check memory/eth-rnd-archive-notes/ for whether you already alerted).\n4. Do NOT use sessions_send for Discord/Telegram delivery.",
+        "message": "HOURLY CHECK: Eth R&D Archive.\n\n1. Read skill: skills/eth-rnd-archive/SKILL.md\n2. Run: bash skills/eth-rnd-archive/check-updates.sh\n3. If new messages in tracked channels: read the JSON files listed, summarize key discussions\n4. If something CRITICAL for Lodestar (spec changes, breaking decisions, action items): alert Nico immediately via Telegram\n5. Otherwise just log the summary to the notes file silently\n\n⚠️ NOTES FILE WRITE (MANDATORY — use exec only, never Edit/Write tools):\nAlways append a brief log entry for this hourly check using exec bash:\n\nNOTES_FILE=~/.openclaw/workspace/memory/eth-rnd-archive-notes/$(date -u +%Y-%m-%d).md\nmkdir -p ~/.openclaw/workspace/memory/eth-rnd-archive-notes\n# Append via exec — do NOT use the Edit or Write tools for this file\nprintf '\\n## %s UTC — Hourly Check\\n%s\\n' \"$(date -u +%H:%M)\" \"<your log entry here>\" >> $NOTES_FILE\n\nDo NOT send anything to Nico unless it is genuinely important. Most checks will just be quiet logging.\n\n⚠️ STALENESS ALERT:\nIf check-updates.sh shows NO new data for 24+ hours (check the last commit date or latest JSON file date):\n1. Send a Discord ping using exec + OpenClaw CLI:\n   /home/openclaw/.nvm/versions/node/v22.22.0/bin/openclaw message send --channel discord --target channel:1473573717857800356 --message \"Hey <@731289513942450317> — the eth-rnd-archive has not updated in 24+ hours (last data: [date]). Looks like it may have desynced again.\"\n2. Make sure to include the <@731289513942450317> mention so they get notified.\n3. Only send this alert ONCE per staleness event (check memory/eth-rnd-archive-notes/ for whether you already alerted).\n4. Do NOT use sessions_send for Discord/Telegram delivery.",
         "timeoutSeconds": 600,
         "model": "anthropic/claude-sonnet-4-6"
       },
@@ -189,13 +189,13 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1773810900004,
+        "lastRunAtMs": 1773832500005,
         "lastStatus": "ok",
-        "lastDurationMs": 29327,
+        "lastDurationMs": 35018,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1773814500000,
+        "nextRunAtMs": 1773836100000,
         "lastDelivered": false
       }
     },
@@ -205,7 +205,7 @@
       "name": "eth-rnd-daily-digest",
       "enabled": true,
       "createdAtMs": 1772034576175,
-      "updatedAtMs": 1773734575266,
+      "updatedAtMs": 1773821115970,
       "schedule": {
         "kind": "cron",
         "expr": "0 8 * * *",
@@ -226,13 +226,13 @@
         "bestEffort": true
       },
       "state": {
-        "lastRunAtMs": 1773734400004,
+        "lastRunAtMs": 1773820800004,
         "lastStatus": "ok",
-        "lastDurationMs": 175262,
+        "lastDurationMs": 315966,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1773820800000,
+        "nextRunAtMs": 1773907200000,
         "lastDelivered": false
       }
     },
@@ -242,7 +242,7 @@
       "name": "github-notifications",
       "enabled": true,
       "createdAtMs": 1772107716625,
-      "updatedAtMs": 1773813471706,
+      "updatedAtMs": 1773835072116,
       "schedule": {
         "kind": "every",
         "everyMs": 300000,
@@ -261,13 +261,13 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1773813452087,
+        "lastRunAtMs": 1773835051882,
         "lastStatus": "ok",
-        "lastDurationMs": 19619,
+        "lastDurationMs": 20234,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1773813752087,
+        "nextRunAtMs": 1773835351882,
         "lastDelivered": false
       },
       "deleteAfterRun": false
@@ -347,7 +347,7 @@
       "name": "aztec-sequencer-health",
       "enabled": true,
       "createdAtMs": 1772373812089,
-      "updatedAtMs": 1773806311422,
+      "updatedAtMs": 1773835116254,
       "schedule": {
         "kind": "every",
         "everyMs": 14400000,
@@ -364,11 +364,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1773820692873,
-        "lastRunAtMs": 1773806292873,
+        "nextRunAtMs": 1773849492882,
+        "lastRunAtMs": 1773835092882,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 18549,
+        "lastDurationMs": 23372,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -380,7 +380,7 @@
       "name": "workspace-periodic-cleanup",
       "enabled": true,
       "createdAtMs": 1772634832403,
-      "updatedAtMs": 1773811949516,
+      "updatedAtMs": 1773833544625,
       "schedule": {
         "kind": "every",
         "everyMs": 21600000,
@@ -397,11 +397,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1773833477545,
-        "lastRunAtMs": 1773811877545,
+        "nextRunAtMs": 1773855077549,
+        "lastRunAtMs": 1773833477549,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 71971,
+        "lastDurationMs": 67076,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0
@@ -413,7 +413,7 @@
       "name": "monitor-open-pr-ci",
       "enabled": true,
       "createdAtMs": 1772635128553,
-      "updatedAtMs": 1773812331561,
+      "updatedAtMs": 1773833936386,
       "schedule": {
         "kind": "every",
         "everyMs": 1800000,
@@ -430,11 +430,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1773814105377,
-        "lastRunAtMs": 1773812305377,
+        "nextRunAtMs": 1773835705439,
+        "lastRunAtMs": 1773833905439,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 26184,
+        "lastDurationMs": 30947,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -512,7 +512,7 @@
       "name": "cron-health-watchdog",
       "enabled": true,
       "createdAtMs": 1772636078136,
-      "updatedAtMs": 1773813130908,
+      "updatedAtMs": 1773834749864,
       "schedule": {
         "kind": "every",
         "everyMs": 1800000,
@@ -529,11 +529,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1773814924048,
-        "lastRunAtMs": 1773813124048,
+        "nextRunAtMs": 1773836542344,
+        "lastRunAtMs": 1773834742344,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 6860,
+        "lastDurationMs": 7520,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -546,7 +546,7 @@
       "description": "Daily nudge to execute autonomy audit priorities",
       "enabled": true,
       "createdAtMs": 1772853540767,
-      "updatedAtMs": 1773740004801,
+      "updatedAtMs": 1773826499897,
       "schedule": {
         "kind": "cron",
         "expr": "30 9 * * *",
@@ -565,11 +565,11 @@
         "channel": "last"
       },
       "state": {
-        "nextRunAtMs": 1773826200000,
-        "lastRunAtMs": 1773739859472,
+        "nextRunAtMs": 1773912600000,
+        "lastRunAtMs": 1773826200005,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 145329,
+        "lastDurationMs": 299892,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -582,7 +582,7 @@
       "description": "Sync dotfiles repo (safe mode: non-sensitive allowlist + sensitive-path guard)",
       "enabled": true,
       "createdAtMs": 1773087050715,
-      "updatedAtMs": 1773792153696,
+      "updatedAtMs": 1773813715111,
       "schedule": {
         "kind": "cron",
         "expr": "0 */6 * * *",
@@ -601,15 +601,15 @@
         "channel": "last"
       },
       "state": {
-        "nextRunAtMs": 1773813693107,
-        "lastRunAtMs": 1773792128005,
+        "nextRunAtMs": 1773835293107,
+        "lastRunAtMs": 1773813693111,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 25691,
+        "lastDurationMs": 22000,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false,
-        "runningAtMs": 1773813693110
+        "runningAtMs": 1773835293111
       }
     },
     {
@@ -619,7 +619,7 @@
       "description": "Check openclaw/openclaw latest release every 12h and alert Nico on new tag",
       "enabled": true,
       "createdAtMs": 1773093482865,
-      "updatedAtMs": 1773785925416,
+      "updatedAtMs": 1773829054783,
       "schedule": {
         "kind": "every",
         "everyMs": 43200000,
@@ -633,11 +633,11 @@
         "model": "anthropic/claude-sonnet-4-6"
       },
       "state": {
-        "nextRunAtMs": 1773829043570,
-        "lastRunAtMs": 1773785843570,
+        "nextRunAtMs": 1773872243578,
+        "lastRunAtMs": 1773829043578,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 81846,
+        "lastDurationMs": 11205,
         "lastDeliveryStatus": "not-requested",
         "consecutiveErrors": 0
       }

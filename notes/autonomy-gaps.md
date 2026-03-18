@@ -282,6 +282,13 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 
 ## Improvements Implemented This Cycle
 
+### ✅ CI `logs-unavailable` fallback wiring added (2026-03-18)
+Updated `scripts/ci/auto_fix_flaky.py` so `logs-unavailable` findings now automatically trigger `scripts/ci/fetch-run-logs.sh <run-id>` once per run, then:
+- persist fallback metadata (`logs_fallback_status`, `logs_fallback_artifact`, `logs_fallback_command`, `logs_fallback_error`, `logs_fallback_reclassified`) into both detector findings and tracker entries,
+- reuse fetched artifact logs for immediate re-classification when available.
+
+**Rationale:** closes the handoff gap between detection and follow-up triage by attaching the exact log artifact path/command directly to the finding instead of leaving logs retrieval as a separate manual step.
+
 ### ✅ CI run-log fallback fetcher added (2026-03-17)
 Created `scripts/ci/fetch-run-logs.sh`:
 - fetches run logs by run ID with `gh run view --log-failed` first and `--log` fallback,
@@ -535,4 +542,4 @@ Updated `scripts/ci/auto_fix_flaky.py`:
 24. ~~**Spec section auto-extraction** — write `scripts/spec/extract-spec-section.sh <feature>` to search consensus-specs for function/type definitions and follow import chains for related types.~~ ✅ done (2026-03-07)
 25. ~~**Wire stale-finding report into scheduled escalation** — add cron wrapper execution cadence (weekly) for `scripts/review/stale-findings-report.sh` and ensure output routes only when stale critical/major findings exist.~~ ✅ done (2026-03-16)
 26. ~~**Autonomy-gaps consistency guard** — add a lightweight checker script that flags contradictory states in `notes/autonomy-gaps.md` (e.g., item listed as fixed in improvements but still open in Gaps) before the next audit writes updates.~~ ✅ done (2026-03-17)
-27. **Wire CI log fallback into autofix escalation path** — when detector classifies `logs-unavailable`, call `scripts/ci/fetch-run-logs.sh <run-id>` automatically (or emit the exact command) and persist the artifact path in tracker output for faster follow-up triage.
+27. ~~**Wire CI log fallback into autofix escalation path** — when detector classifies `logs-unavailable`, call `scripts/ci/fetch-run-logs.sh <run-id>` automatically (or emit the exact command) and persist the artifact path in tracker output for faster follow-up triage.~~ ✅ done (2026-03-18)
