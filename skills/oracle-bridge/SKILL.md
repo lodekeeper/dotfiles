@@ -53,6 +53,8 @@ scripts/oracle/chatgpt-direct --prompt "..." --verbose
 | `--json` | off | JSON output with status/text/elapsed |
 | `--verbose` / `-v` | off | Show progress (thinking/generating) |
 | `--cookies` | `~/.oracle/chatgpt-cookies.json` | Cookie file path |
+| `--require-auth` | off | Fail unless the session is truly authenticated (not guest/free) |
+| `--require-pro` | off | Fail unless GPT-5.4 Pro is actually available |
 
 ## GPT-5.4 Pro Thinking Behavior
 
