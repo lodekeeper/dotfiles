@@ -1,7 +1,27 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-03-16 (11th pass)
+> Updated: 2026-03-17 (12th pass)
+
+---
+
+## Daily Audit Snapshot — 2026-03-17 (self-improvement-audit-daily, 23:46 UTC)
+
+### PR review
+- **Status:** finding tracker + stale-escalation cron path are operational; no new blocker discovered this cycle.
+
+### CI fix
+- **Blocker:** `logs-unavailable` CI classifications are still slow to triage because there was no one-command fallback to pull failed/full run logs into a local artifact.
+- **Fix applied this cycle:** added `scripts/ci/fetch-run-logs.sh <run-id> [--repo owner/repo] [--output <path>]`.
+  - tries `gh run view --log-failed` first, then falls back to `--log`,
+  - saves logs under `tmp/ci-logs/` by default,
+  - prints fetch mode + line/byte counts for quick auditability.
+
+### Spec implementation
+- **Status:** extraction + compliance + vector-readiness gates are operational; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage, correlator, incident bundle, and startup helper scripts are operational; no new blocker discovered this cycle.
 
 ---
 
@@ -262,6 +282,15 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 
 ## Improvements Implemented This Cycle
 
+### ✅ CI run-log fallback fetcher added (2026-03-17)
+Created `scripts/ci/fetch-run-logs.sh`:
+- fetches run logs by run ID with `gh run view --log-failed` first and `--log` fallback,
+- supports explicit `--repo` and `--output` options,
+- writes local artifacts under `tmp/ci-logs/` by default,
+- prints deterministic output metadata (mode + line/byte counts) for tracker notes.
+
+**Rationale:** closes the CI triage gap for `logs-unavailable` findings by making fallback log acquisition one command instead of ad-hoc/manual command hunting.
+
 ### ✅ Autonomy-gaps consistency guard added (2026-03-17)
 Created `scripts/notes/check-autonomy-gaps-consistency.py`:
 - parses `### Gaps` items and `## Improvements Implemented This Cycle` entries,
@@ -506,3 +535,4 @@ Updated `scripts/ci/auto_fix_flaky.py`:
 24. ~~**Spec section auto-extraction** — write `scripts/spec/extract-spec-section.sh <feature>` to search consensus-specs for function/type definitions and follow import chains for related types.~~ ✅ done (2026-03-07)
 25. ~~**Wire stale-finding report into scheduled escalation** — add cron wrapper execution cadence (weekly) for `scripts/review/stale-findings-report.sh` and ensure output routes only when stale critical/major findings exist.~~ ✅ done (2026-03-16)
 26. ~~**Autonomy-gaps consistency guard** — add a lightweight checker script that flags contradictory states in `notes/autonomy-gaps.md` (e.g., item listed as fixed in improvements but still open in Gaps) before the next audit writes updates.~~ ✅ done (2026-03-17)
+27. **Wire CI log fallback into autofix escalation path** — when detector classifies `logs-unavailable`, call `scripts/ci/fetch-run-logs.sh <run-id>` automatically (or emit the exact command) and persist the artifact path in tracker output for faster follow-up triage.
