@@ -17,6 +17,7 @@ Multi-persona review system for ChainSafe/lodestar PRs. Each reviewer has a narr
 | `review-security` | Security Engineer | GPT-5.3-Codex | DoS vectors, peer manipulation, validation bypasses, crypto misuse. |
 | `review-wisdom` | Wise Senior | Claude Opus 4.6 | Clean code principles, maintainability, readability. |
 | `reviewer-architect` | Architect | GPT-5.3-Codex (thinking: xhigh) | Package boundaries, consensus spec alignment, module coupling. |
+| `review-devils-advocate` | Devil's Advocate | Claude Opus 4.6 (thinking: high) | Challenges premise, simpler alternatives, spec interpretation, necessity. |
 
 > ⚠️ **Always pass the Agent ID as `agentId` in `sessions_spawn`.** Omitting it routes to your default model
 > instead of the reviewer's configured model. This is a mandatory field, not optional.
@@ -29,7 +30,8 @@ Pick reviewers based on PR type:
 |---|---|
 | **Any PR** | `review-bugs` (always) |
 | **>50 lines changed** | + `review-wisdom` |
-| **Feature / new functionality** | + `reviewer-architect` |
+| **Feature / new functionality** | + `reviewer-architect`, + `review-devils-advocate` |
+| **Consensus / spec-related** | + `review-devils-advocate` |
 | **Networking / API / p2p changes** | + `review-security` |
 | **External contributor** | + `review-defender` |
 | **Style-heavy / refactor** | + `review-linter` |

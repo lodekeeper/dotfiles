@@ -125,6 +125,7 @@ git branch -d <branch-name>  # optional: delete local branch
 - **gemini-reviewer:** Gemini 2.5 Pro — second perspective
 - **gpt-advisor:** GPT-5.3-Codex, **thinking: "xhigh"** — architecture & deep reasoning
   - ⚠️ `thinking` is NOT a valid agent config key — MUST pass `thinking: "xhigh"` at spawn time via `sessions_spawn`
+  - ⚠️ **Timeout: always use `runTimeoutSeconds: 600` (10min) minimum.** xhigh thinking on complex tasks routinely takes 5-8 minutes. 300s is too tight — caused timeouts on devil's advocate research (2026-03-19), PTC spec review, and multiple earlier sessions. For deep research tasks, use 900s.
 
 ## Coding Agents (Implementation)
 - **Codex CLI:** `codex exec --full-auto "..."` — best for focused implementation tasks
