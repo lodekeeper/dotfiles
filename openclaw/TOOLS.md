@@ -178,3 +178,11 @@ Add whatever helps you do your job. This is your cheat sheet.
 - **Server:** ChainSafe (593655374469660673)
 - **Channel:** #🖥-lodestar-developer (1197575814494035968)
 - **Mode:** Mention required (@lodekeeper)
+
+### Discord Mentions (IMPORTANT)
+Plain text `@username` does NOT ping users on Discord. Use proper Discord mention format:
+- **Nico:** `<@586161934425128960>` (not `@nflaig`)
+- **Matthew Keil:** `<@931591385545584640>` (not `@matthewkeil`)
+- **MEK (bot):** `<@1484133729092763808>`
+- **lodekeeper-z (bot):** look up ID from channel reads
+Always use `<@USER_ID>` format in message sends to actually ping someone.
