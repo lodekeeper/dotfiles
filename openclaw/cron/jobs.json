@@ -171,7 +171,7 @@
       "name": "eth-rnd-archive-hourly",
       "enabled": true,
       "createdAtMs": 1772034567300,
-      "updatedAtMs": 1773897336639,
+      "updatedAtMs": 1773918944559,
       "schedule": {
         "kind": "cron",
         "expr": "15 * * * *",
@@ -189,13 +189,13 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1773897300316,
+        "lastRunAtMs": 1773918900008,
         "lastStatus": "ok",
-        "lastDurationMs": 36323,
+        "lastDurationMs": 44551,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1773900900000,
+        "nextRunAtMs": 1773922500000,
         "lastDelivered": false
       }
     },
@@ -205,7 +205,7 @@
       "name": "eth-rnd-daily-digest",
       "enabled": true,
       "createdAtMs": 1772034576175,
-      "updatedAtMs": 1773821115970,
+      "updatedAtMs": 1773907281416,
       "schedule": {
         "kind": "cron",
         "expr": "0 8 * * *",
@@ -226,13 +226,13 @@
         "bestEffort": true
       },
       "state": {
-        "lastRunAtMs": 1773820800004,
+        "lastRunAtMs": 1773907204823,
         "lastStatus": "ok",
-        "lastDurationMs": 315966,
+        "lastDurationMs": 76593,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1773907200000,
+        "nextRunAtMs": 1773993600000,
         "lastDelivered": false
       }
     },
@@ -242,7 +242,7 @@
       "name": "github-notifications",
       "enabled": true,
       "createdAtMs": 1772107716625,
-      "updatedAtMs": 1773900000186,
+      "updatedAtMs": 1773921483521,
       "schedule": {
         "kind": "every",
         "everyMs": 300000,
@@ -254,20 +254,20 @@
         "kind": "agentTurn",
         "message": "Check GitHub notifications for lodekeeper using deterministic checklist dedupe.\n\nRun:\npython3 /home/openclaw/.openclaw/workspace/scripts/github/github_notifications_sweep.py --state /home/openclaw/gh-notif-state.json --checklist /home/openclaw/gh-notif-checklist.json --backlog /home/openclaw/.openclaw/workspace/BACKLOG.md\n\nBehavior:\n1) If script output is exactly HEARTBEAT_OK, reply HEARTBEAT_OK (no delivery anywhere).\n2) Otherwise:\n   a) Check if output contains \"TOPIC-ROUTED\" sections. For each topic listed:\n      - Fetch the full review comments for that PR from GitHub (gh api repos/{repo}/pulls/{pr}/comments)\n      - Use sessions_send to nudge the topic session with sessionKey shown in the output (e.g. agent:main:telegram:group:-1003764039429:topic:64)\n      - Include the actual review comment content (author, file, line, body) in the nudge message so the topic session can address them directly\n      - Tell the topic session to: address the comments, push fixes, reply on GitHub, and update BACKLOG.md\n   b) For UNROUTED items (no topic tag in BACKLOG.md):\n      - Fetch the full review comments from GitHub\n      - Use sessions_send to nudge the PR Reviews session: sessionKey \"agent:main:telegram:group:-1003764039429:topic:50\"\n      - Include the actual review comment content and tell it to: address the comments, push fixes, reply on GitHub, and update BACKLOG.md\n   c) Post a concise summary to Lodestar WG topic #347 using: message action=send target=-1003764039429 threadId=347\n      - For topic-routed items: \"Nudged topic:XX to address N comments on repo#PR\"\n      - For unrouted items: \"Nudged topic:50 (PR Reviews) to address N comments on repo#PR\"\n   d) Ensure BACKLOG has a matching task for each newly reported PR only if missing (no duplicate/empty-sweep entries).\n3) Do NOT perform code changes on PRs here (detect/report/route only).\n4) Keep reviewer-bot comments included; ignore only lodekeeper self comments.\n5) Routine notifications (bot comments, codecov, non-blocking reviews) → post to topic #347 only.\n6) Urgent items (Nico requesting changes on my PR, blocking reviewer feedback needing Nico decision) → DM Nico directly (target=5774760693). CI failures on my own PRs are NOT urgent — fix them myself.\n7) If nothing new → HEARTBEAT_OK (no output anywhere).",
         "model": "anthropic/claude-sonnet-4-6",
-        "timeoutSeconds": 600,
+        "timeoutSeconds": 900,
         "lightContext": false
       },
       "delivery": {
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1773899980521,
+        "lastRunAtMs": 1773921460540,
         "lastStatus": "ok",
-        "lastDurationMs": 19665,
+        "lastDurationMs": 22981,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1773900280521,
+        "nextRunAtMs": 1773921760540,
         "lastDelivered": false
       },
       "deleteAfterRun": false
@@ -347,7 +347,7 @@
       "name": "aztec-sequencer-health",
       "enabled": true,
       "createdAtMs": 1772373812089,
-      "updatedAtMs": 1773892896204,
+      "updatedAtMs": 1773921710683,
       "schedule": {
         "kind": "every",
         "everyMs": 14400000,
@@ -364,11 +364,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1773907273052,
-        "lastRunAtMs": 1773892873052,
+        "nextRunAtMs": 1773936084061,
+        "lastRunAtMs": 1773921684061,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 23152,
+        "lastDurationMs": 26622,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -380,7 +380,7 @@
       "name": "workspace-periodic-cleanup",
       "enabled": true,
       "createdAtMs": 1772634832403,
-      "updatedAtMs": 1773898396620,
+      "updatedAtMs": 1773919958492,
       "schedule": {
         "kind": "every",
         "everyMs": 21600000,
@@ -397,11 +397,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1773919877561,
-        "lastRunAtMs": 1773898277561,
+        "nextRunAtMs": 1773941477571,
+        "lastRunAtMs": 1773919877571,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 119059,
+        "lastDurationMs": 80921,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0
@@ -413,7 +413,7 @@
       "name": "monitor-open-pr-ci",
       "enabled": true,
       "createdAtMs": 1772635128553,
-      "updatedAtMs": 1773899170440,
+      "updatedAtMs": 1773920812929,
       "schedule": {
         "kind": "every",
         "everyMs": 1800000,
@@ -430,11 +430,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1773900936644,
-        "lastRunAtMs": 1773899136644,
+        "nextRunAtMs": 1773922575314,
+        "lastRunAtMs": 1773920775314,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 33796,
+        "lastDurationMs": 37615,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -512,7 +512,7 @@
       "name": "cron-health-watchdog",
       "enabled": true,
       "createdAtMs": 1772636078136,
-      "updatedAtMs": 1773899723591,
+      "updatedAtMs": 1773920098940,
       "schedule": {
         "kind": "every",
         "everyMs": 1800000,
@@ -529,11 +529,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1773901516974,
-        "lastRunAtMs": 1773899716974,
+        "nextRunAtMs": 1773921888387,
+        "lastRunAtMs": 1773920088387,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 6617,
+        "lastDurationMs": 10553,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -546,7 +546,7 @@
       "description": "Daily nudge to execute autonomy audit priorities",
       "enabled": true,
       "createdAtMs": 1772853540767,
-      "updatedAtMs": 1773826499897,
+      "updatedAtMs": 1773912883235,
       "schedule": {
         "kind": "cron",
         "expr": "30 9 * * *",
@@ -565,11 +565,11 @@
         "channel": "last"
       },
       "state": {
-        "nextRunAtMs": 1773912600000,
-        "lastRunAtMs": 1773826200005,
+        "nextRunAtMs": 1773999000000,
+        "lastRunAtMs": 1773912606220,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 299892,
+        "lastDurationMs": 277015,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -582,7 +582,7 @@
       "description": "Sync dotfiles repo (safe mode: non-sensitive allowlist + sensitive-path guard)",
       "enabled": true,
       "createdAtMs": 1773087050715,
-      "updatedAtMs": 1773878512007,
+      "updatedAtMs": 1773900134275,
       "schedule": {
         "kind": "cron",
         "expr": "0 */6 * * *",
@@ -601,15 +601,15 @@
         "channel": "last"
       },
       "state": {
-        "nextRunAtMs": 1773900093107,
-        "lastRunAtMs": 1773878496358,
+        "nextRunAtMs": 1773921693107,
+        "lastRunAtMs": 1773900093114,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 15649,
+        "lastDurationMs": 41161,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false,
-        "runningAtMs": 1773900093113
+        "runningAtMs": 1773921713176
       }
     },
     {
@@ -619,7 +619,7 @@
       "description": "Check openclaw/openclaw latest release every 12h and alert Nico on new tag",
       "enabled": true,
       "createdAtMs": 1773093482865,
-      "updatedAtMs": 1773872256296,
+      "updatedAtMs": 1773915455275,
       "schedule": {
         "kind": "every",
         "everyMs": 43200000,
@@ -633,11 +633,11 @@
         "model": "anthropic/claude-sonnet-4-6"
       },
       "state": {
-        "nextRunAtMs": 1773915443587,
-        "lastRunAtMs": 1773872243587,
+        "nextRunAtMs": 1773958643591,
+        "lastRunAtMs": 1773915443591,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 12709,
+        "lastDurationMs": 11684,
         "lastDeliveryStatus": "not-requested",
         "consecutiveErrors": 0
       }

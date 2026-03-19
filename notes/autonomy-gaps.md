@@ -303,6 +303,15 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 
 ## Improvements Implemented This Cycle
 
+### ✅ PR metadata drift guard script added (2026-03-19)
+Created `scripts/github/check-pr-metadata-drift.py`:
+- pulls live PR metadata + file list via `gh pr view --json title,body,changedFiles,files`,
+- scans title/body for stale scope signals (path references not in current diff, narrow-scope wording vs broad file count),
+- compares semver claims in metadata against semvers added/removed in the current patch,
+- emits a concise markdown report and exits `2` on drift signals for cron/review-loop integration.
+
+**Rationale:** catches title/body drift after follow-up commits before re-review, reducing mismatches like stale version claims or outdated scope descriptions.
+
 ### ✅ Spec architecture-consult timeout fallback policy codified (2026-03-18)
 Updated `skills/dev-workflow/SKILL.md` Phase 1 with a required advisor fallback path:
 - start architecture rounds with `gpt-advisor` `thinking: xhigh`,
@@ -574,4 +583,5 @@ Updated `scripts/ci/auto_fix_flaky.py`:
 26. ~~**Autonomy-gaps consistency guard** — add a lightweight checker script that flags contradictory states in `notes/autonomy-gaps.md` (e.g., item listed as fixed in improvements but still open in Gaps) before the next audit writes updates.~~ ✅ done (2026-03-17)
 27. ~~**Wire CI log fallback into autofix escalation path** — when detector classifies `logs-unavailable`, call `scripts/ci/fetch-run-logs.sh <run-id>` automatically (or emit the exact command) and persist the artifact path in tracker output for faster follow-up triage.~~ ✅ done (2026-03-18)
 28. ~~**Codify gpt-advisor timeout fallback in dev workflow** — keep `xhigh` as first pass but force deterministic fallback to `thinking: high` after repeated timeout/empty-output rounds, and require tracker logging of attempt outcomes.~~ ✅ done (2026-03-18)
-29. **PR metadata drift guard** — add a lightweight checker (or scripted checklist) that compares PR title/body claims vs current diff after follow-up commits, so scope/title mismatches are caught before re-review.
+29. ~~**PR metadata drift guard** — add a lightweight checker (or scripted checklist) that compares PR title/body claims vs current diff after follow-up commits, so scope/title mismatches are caught before re-review.~~ ✅ done (2026-03-19)
+30. **Auto-wire metadata drift guard into review loop docs** — add a mandatory re-review step in `skills/lodestar-review/SKILL.md` to run the checker on follow-up commits and record output in review notes.
