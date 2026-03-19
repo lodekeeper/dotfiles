@@ -59,6 +59,12 @@ Phase 5: PR                    (me)
 4. Multiple rounds (3-5 typically) until converged
 5. Output: `/tmp/spec-<feature>.md`
 
+**Advisor timeout fallback policy (required):**
+- Start each architecture consult with `thinking: xhigh`.
+- If the run times out or returns empty/near-empty analysis, do **one** retry max at `thinking: xhigh` with a tighter prompt.
+- If it still times out, immediately fallback to `thinking: high` (shorter prompt, practical focus) instead of looping on `xhigh`.
+- Record each round's outcome (model/thinking/timeout/result) in `notes/<feature>/TRACKER.md` so follow-up sessions know what already failed.
+
 **Spec template:**
 ```markdown
 # Feature: <name>

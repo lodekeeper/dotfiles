@@ -1,7 +1,28 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-03-17 (12th pass)
+> Updated: 2026-03-18 (13th pass)
+
+---
+
+## Daily Audit Snapshot — 2026-03-18 (self-improvement-audit-daily, 23:46 UTC)
+
+### PR review
+- **Status:** finding tracker + stale escalation path are healthy; no new blocker discovered this cycle.
+
+### CI fix
+- **Status:** `logs-unavailable` fallback wiring is operational (auto-fetch + reclassification metadata); no new blocker discovered this cycle.
+
+### Spec implementation
+- **Blocker:** architecture consult loops can stall on repeated `gpt-advisor` `thinking: xhigh` timeouts, delaying convergence and wasting audit cycles.
+- **Fix applied this cycle:** updated `skills/dev-workflow/SKILL.md` with a required timeout fallback policy:
+  - start with `xhigh`,
+  - allow one tighter retry max,
+  - then fallback to `thinking: high` with practical scope,
+  - log each round outcome in `TRACKER.md` for resumable context.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle path remains healthy; no new blocker discovered this cycle.
 
 ---
 
@@ -282,6 +303,15 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 
 ## Improvements Implemented This Cycle
 
+### ✅ Spec architecture-consult timeout fallback policy codified (2026-03-18)
+Updated `skills/dev-workflow/SKILL.md` Phase 1 with a required advisor fallback path:
+- start architecture rounds with `gpt-advisor` `thinking: xhigh`,
+- allow one tighter `xhigh` retry max on timeout/empty output,
+- fallback to `thinking: high` instead of repeated `xhigh` loops,
+- record round outcome metadata in `notes/<feature>/TRACKER.md`.
+
+**Rationale:** converts an ad-hoc timeout workaround into a deterministic workflow rule, reducing stalled spec/design loops and preserving context across sessions.
+
 ### ✅ CI `logs-unavailable` fallback wiring added (2026-03-18)
 Updated `scripts/ci/auto_fix_flaky.py` so `logs-unavailable` findings now automatically trigger `scripts/ci/fetch-run-logs.sh <run-id>` once per run, then:
 - persist fallback metadata (`logs_fallback_status`, `logs_fallback_artifact`, `logs_fallback_command`, `logs_fallback_error`, `logs_fallback_reclassified`) into both detector findings and tracker entries,
@@ -543,3 +573,5 @@ Updated `scripts/ci/auto_fix_flaky.py`:
 25. ~~**Wire stale-finding report into scheduled escalation** — add cron wrapper execution cadence (weekly) for `scripts/review/stale-findings-report.sh` and ensure output routes only when stale critical/major findings exist.~~ ✅ done (2026-03-16)
 26. ~~**Autonomy-gaps consistency guard** — add a lightweight checker script that flags contradictory states in `notes/autonomy-gaps.md` (e.g., item listed as fixed in improvements but still open in Gaps) before the next audit writes updates.~~ ✅ done (2026-03-17)
 27. ~~**Wire CI log fallback into autofix escalation path** — when detector classifies `logs-unavailable`, call `scripts/ci/fetch-run-logs.sh <run-id>` automatically (or emit the exact command) and persist the artifact path in tracker output for faster follow-up triage.~~ ✅ done (2026-03-18)
+28. ~~**Codify gpt-advisor timeout fallback in dev workflow** — keep `xhigh` as first pass but force deterministic fallback to `thinking: high` after repeated timeout/empty-output rounds, and require tracker logging of attempt outcomes.~~ ✅ done (2026-03-18)
+29. **PR metadata drift guard** — add a lightweight checker (or scripted checklist) that compares PR title/body claims vs current diff after follow-up commits, so scope/title mismatches are caught before re-review.
