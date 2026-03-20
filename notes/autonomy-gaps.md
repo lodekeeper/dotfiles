@@ -1,7 +1,27 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-03-18 (13th pass)
+> Updated: 2026-03-19 (14th pass)
+
+---
+
+## Daily Audit Snapshot — 2026-03-19 (self-improvement-audit-daily, 23:46 UTC)
+
+### PR review
+- **Blocker (previous cycle):** PR metadata drift checker existed, but follow-up review workflow docs did not require running it before re-review.
+- **Fix applied this cycle:** wired a mandatory metadata-drift guard step into `skills/lodestar-review/SKILL.md` Finding Resolution Tracking workflow:
+  - run `scripts/github/check-pr-metadata-drift.py` on follow-up commits,
+  - persist report to `notes/review-reports/pr-<PR>-metadata-drift.md`,
+  - update title/body via `gh pr edit` when exit code `2` signals drift.
+
+### CI fix
+- **Status:** retry telemetry + `logs-unavailable` fallback path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** advisor timeout fallback policy remains codified and operational; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle path remains healthy; no new blocker discovered this cycle.
 
 ---
 
@@ -303,6 +323,14 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 
 ## Improvements Implemented This Cycle
 
+### ✅ Review-loop metadata drift guard wired into lodestar-review skill (2026-03-19)
+Updated `skills/lodestar-review/SKILL.md` Finding Resolution Tracking workflow with a mandatory follow-up step:
+- run `scripts/github/check-pr-metadata-drift.py --pr <PR>` before posting re-review,
+- persist output to `notes/review-reports/pr-<PR>-metadata-drift.md`,
+- treat exit code `2` as required metadata update (`gh pr edit`) before requesting re-review.
+
+**Rationale:** closes the process gap between having the checker script and actually enforcing it in follow-up review loops.
+
 ### ✅ PR metadata drift guard script added (2026-03-19)
 Created `scripts/github/check-pr-metadata-drift.py`:
 - pulls live PR metadata + file list via `gh pr view --json title,body,changedFiles,files`,
@@ -584,4 +612,5 @@ Updated `scripts/ci/auto_fix_flaky.py`:
 27. ~~**Wire CI log fallback into autofix escalation path** — when detector classifies `logs-unavailable`, call `scripts/ci/fetch-run-logs.sh <run-id>` automatically (or emit the exact command) and persist the artifact path in tracker output for faster follow-up triage.~~ ✅ done (2026-03-18)
 28. ~~**Codify gpt-advisor timeout fallback in dev workflow** — keep `xhigh` as first pass but force deterministic fallback to `thinking: high` after repeated timeout/empty-output rounds, and require tracker logging of attempt outcomes.~~ ✅ done (2026-03-18)
 29. ~~**PR metadata drift guard** — add a lightweight checker (or scripted checklist) that compares PR title/body claims vs current diff after follow-up commits, so scope/title mismatches are caught before re-review.~~ ✅ done (2026-03-19)
-30. **Auto-wire metadata drift guard into review loop docs** — add a mandatory re-review step in `skills/lodestar-review/SKILL.md` to run the checker on follow-up commits and record output in review notes.
+30. ~~**Auto-wire metadata drift guard into review loop docs** — add a mandatory re-review step in `skills/lodestar-review/SKILL.md` to run the checker on follow-up commits and record output in review notes.~~ ✅ done (2026-03-19)
+31. **Review-loop command wrapper for metadata drift artifacts** — add a small helper (`scripts/review/run-followup-guards.sh` or equivalent) that runs `sync-gh` + metadata drift check together and prints the exact `gh pr edit` reminder when drift is detected.

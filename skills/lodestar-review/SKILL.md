@@ -298,7 +298,17 @@ Use `scripts/review/track-findings.py` to track which findings get addressed in 
      --repo ChainSafe/lodestar
    ```
    Optional: add `--include-replies` when maintainer discussion in reply threads matters for re-verification.
-3. When the author pushes a new commit, check coverage:
+3. **Metadata drift guard (mandatory on follow-up commits before posting re-review):** run the PR metadata checker and persist the output in review notes.
+   ```bash
+   mkdir -p ~/.openclaw/workspace/notes/review-reports
+   python3 ~/.openclaw/workspace/scripts/github/check-pr-metadata-drift.py \
+     --pr <PR> --repo ChainSafe/lodestar \
+     > ~/.openclaw/workspace/notes/review-reports/pr-<PR>-metadata-drift.md
+   ```
+   - Exit `0`: no drift signals.
+   - Exit `2`: potential drift — update PR title/body (`gh pr edit`) before requesting re-review.
+   - Keep the markdown artifact path in your review notes / tracker entry for traceability.
+4. When the author pushes a new commit, check coverage:
    ```bash
    # Get changed files from the new commit
    gh pr diff <PR> --repo ChainSafe/lodestar --name-only > /tmp/changed-files.txt
@@ -306,15 +316,15 @@ Use `scripts/review/track-findings.py` to track which findings get addressed in 
      --changed-files $(cat /tmp/changed-files.txt | tr '\n' ' ')
    ```
    Output: which findings are on changed files (→ verify!) vs. still-untouched files (→ still open).
-4. Mark resolved findings:
+5. Mark resolved findings:
    ```bash
    python3 ~/.openclaw/workspace/scripts/review/track-findings.py resolve <PR> <id> --commit <sha>
    ```
-5. Generate a markdown summary for a GitHub follow-up comment:
+6. Generate a markdown summary for a GitHub follow-up comment:
    ```bash
    python3 ~/.openclaw/workspace/scripts/review/track-findings.py dump <PR>
    ```
-6. Escalate stale unresolved findings (default: open critical/major older than 7 days by `updated` timestamp):
+7. Escalate stale unresolved findings (default: open critical/major older than 7 days by `updated` timestamp):
    ```bash
    python3 ~/.openclaw/workspace/scripts/review/track-findings.py stale <PR>
    # Use --fail-on-match in automation wrappers to raise non-zero exit when stale items exist
