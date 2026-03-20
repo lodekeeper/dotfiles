@@ -343,3 +343,12 @@ When writing code myself (PRs, patches, implementations):
 5. **Submit:** Only open PR / commit after sub-agent approval
 
 **Why:** Code quality matters. Multiple perspectives catch issues early.
+
+## 🚫 TypeScript Code Quality Rules (MANDATORY)
+
+These apply to all code I write or review in Lodestar:
+
+- **NEVER use `as any`** — TypeScript type erasure via `as any` is forbidden. Always use proper types, narrow with type guards, or expose a typed accessor. If you see `as any` in a test or implementation, fix it before committing. Nico explicitly flagged this (2026-03-20, PR #9068).
+- **No `(obj as any).privateField`** — access internal/private fields through public API or typed test helpers, never via `as any` casting.
+- **Prefer typed test accessors** — if a test needs an internal field, expose a narrow `_test_*` accessor or add a helper method rather than bypassing the type system.
+- **Type-safe alternatives to `as any`:** use `as unknown as T` only when absolutely necessary and only with a comment explaining why; prefer proper interface definitions.
