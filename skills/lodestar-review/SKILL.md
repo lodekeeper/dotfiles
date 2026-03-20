@@ -292,22 +292,25 @@ Use `scripts/review/track-findings.py` to track which findings get addressed in 
      --file src/sync/range/chain.ts --line 142 --severity major \
      --reviewer review-bugs --body "Race condition in batch completion..."
    ```
-2. **Follow-up rounds (mandatory when revisiting a PR with new review comments):** sync GitHub deltas before re-reviewing so newly landed comments are imported and matched to existing findings.
+2. **Follow-up rounds (mandatory when revisiting a PR with new review comments):** run the one-command guard wrapper so GitHub delta sync + metadata drift checks happen together.
    ```bash
-   python3 ~/.openclaw/workspace/scripts/review/track-findings.py sync-gh <PR> \
+   bash ~/.openclaw/workspace/scripts/review/run-followup-guards.sh <PR> \
      --repo ChainSafe/lodestar
    ```
    Optional: add `--include-replies` when maintainer discussion in reply threads matters for re-verification.
-3. **Metadata drift guard (mandatory on follow-up commits before posting re-review):** run the PR metadata checker and persist the output in review notes.
+   - Exit `0`: guards passed.
+   - Exit `2`: metadata drift detected; wrapper prints the exact `gh pr edit` reminder command.
+   - Metadata artifact is written to `~/.openclaw/workspace/notes/review-reports/pr-<PR>-metadata-drift.md` by default.
+
+   Manual equivalent (if needed):
    ```bash
+   python3 ~/.openclaw/workspace/scripts/review/track-findings.py sync-gh <PR> --repo ChainSafe/lodestar
    mkdir -p ~/.openclaw/workspace/notes/review-reports
    python3 ~/.openclaw/workspace/scripts/github/check-pr-metadata-drift.py \
      --pr <PR> --repo ChainSafe/lodestar \
      > ~/.openclaw/workspace/notes/review-reports/pr-<PR>-metadata-drift.md
    ```
-   - Exit `0`: no drift signals.
-   - Exit `2`: potential drift — update PR title/body (`gh pr edit`) before requesting re-review.
-   - Keep the markdown artifact path in your review notes / tracker entry for traceability.
+   Keep the markdown artifact path in your review notes / tracker entry for traceability.
 4. When the author pushes a new commit, check coverage:
    ```bash
    # Get changed files from the new commit

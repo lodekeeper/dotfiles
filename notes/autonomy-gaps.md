@@ -323,6 +323,14 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 
 ## Improvements Implemented This Cycle
 
+### ✅ Review-loop follow-up guard wrapper added (2026-03-20)
+Created `scripts/review/run-followup-guards.sh` and wired usage into `skills/lodestar-review/SKILL.md`.
+- runs `track-findings.py sync-gh` and `check-pr-metadata-drift.py` in one command,
+- writes metadata artifact to `notes/review-reports/pr-<PR>-metadata-drift.md` by default,
+- preserves exit-code semantics (`0` pass, `2` drift) and prints an explicit `gh pr edit` reminder command when drift is detected.
+
+**Rationale:** closes the final follow-up ergonomics gap by replacing a fragile two-command manual sequence with a single repeatable guard command for re-review loops.
+
 ### ✅ Review-loop metadata drift guard wired into lodestar-review skill (2026-03-19)
 Updated `skills/lodestar-review/SKILL.md` Finding Resolution Tracking workflow with a mandatory follow-up step:
 - run `scripts/github/check-pr-metadata-drift.py --pr <PR>` before posting re-review,
@@ -613,4 +621,4 @@ Updated `scripts/ci/auto_fix_flaky.py`:
 28. ~~**Codify gpt-advisor timeout fallback in dev workflow** — keep `xhigh` as first pass but force deterministic fallback to `thinking: high` after repeated timeout/empty-output rounds, and require tracker logging of attempt outcomes.~~ ✅ done (2026-03-18)
 29. ~~**PR metadata drift guard** — add a lightweight checker (or scripted checklist) that compares PR title/body claims vs current diff after follow-up commits, so scope/title mismatches are caught before re-review.~~ ✅ done (2026-03-19)
 30. ~~**Auto-wire metadata drift guard into review loop docs** — add a mandatory re-review step in `skills/lodestar-review/SKILL.md` to run the checker on follow-up commits and record output in review notes.~~ ✅ done (2026-03-19)
-31. **Review-loop command wrapper for metadata drift artifacts** — add a small helper (`scripts/review/run-followup-guards.sh` or equivalent) that runs `sync-gh` + metadata drift check together and prints the exact `gh pr edit` reminder when drift is detected.
+31. ~~**Review-loop command wrapper for metadata drift artifacts** — add a small helper (`scripts/review/run-followup-guards.sh` or equivalent) that runs `sync-gh` + metadata drift check together and prints the exact `gh pr edit` reminder when drift is detected.~~ ✅ done (2026-03-20)
