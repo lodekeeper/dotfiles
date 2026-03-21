@@ -10,50 +10,93 @@ Powered by [OpenClaw](https://github.com/openclaw/openclaw).
 
 This is the **public, shareable subset** of my local agent workspace:
 
-- core agent instructions and identity docs
+- Core agent instructions and identity docs
 - OpenClaw-facing config snapshots
-- reusable skills and scripts
-- notes/specs/research markdown
+- Reusable skills and scripts
+- Notes, specs, and research markdown
+- PR review personas
 
 This repo is synced from local files using `scripts/sync-dotfiles.sh` with explicit safety guards.
 
 ---
 
-## Current structure (high-level)
+## Structure
 
 ```text
 .
-├── AGENTS.md
-├── CLAUDE.md
-├── CODING_CONTEXT.md
-├── IDENTITY.md
-├── TOOLS.md
-├── WORKFLOW_AUTO.md
-├── README.md
-│
-├── openclaw/
-│   ├── AGENTS.md
-│   ├── CODING_CONTEXT.md
-│   ├── IDENTITY.md
-│   ├── TOOLS.md
-│   ├── cron/jobs.json
-│   ├── docs/memory-system.md
-│   └── scripts/memory/*
+├── openclaw/                  # OpenClaw workspace files
+│   ├── AGENTS.md              # Agent instructions
+│   ├── CODING_CONTEXT.md      # Lodestar coding conventions
+│   ├── HEARTBEAT.md           # Heartbeat/monitoring config
+│   ├── IDENTITY.md            # Agent identity
+│   ├── MEMORY.md              # Curated long-term memory
+│   ├── SOUL.md                # Personality and values
+│   ├── TOOLS.md               # Tool-specific notes
+│   ├── USER.md                # User context
+│   ├── cron/jobs.json         # Cron job definitions
+│   ├── docs/                  # Agent documentation
+│   └── scripts/               # All workspace scripts
+│       ├── ci/                # CI auto-fix pipeline
+│       ├── cron/              # Cron health checks
+│       ├── debug/             # Debug/triage tooling
+│       ├── devnet/            # Devnet launch scripts
+│       ├── github/            # GitHub notifications/CI monitoring
+│       ├── memory/            # Memory consolidation pipeline
+│       ├── oracle/            # Oracle bridge CLI
+│       ├── review/            # PR review tracking
+│       └── spec/              # Spec compliance checks
 │
 ├── config/
-│   └── codex-config.toml
+│   └── codex-config.toml      # Codex CLI config
 │
 ├── lodestar/
-│   ├── AGENTS.md
-│   └── ai-config.md
+│   └── AGENTS.md              # Lodestar repo AGENTS.md
 │
-├── skills/        # SKILL.md-based capabilities used by OpenClaw
-├── scripts/       # CI/cron/memory/oracle/github helpers
-├── notes/         # working notes
-├── specs/         # spec study notes
-├── research/      # research outputs (markdown)
-├── kurtosis/      # devnet configs/artifacts intended for sharing
-└── avatars/
+├── skills/                    # OpenClaw skill definitions
+│   ├── beacon-node/           # Beacon API queries
+│   ├── consensus-clients/     # Cross-client comparison
+│   ├── deep-research/         # Multi-agent research pipeline
+│   ├── dev-workflow/          # Multi-agent dev workflow
+│   ├── ethereum-rnd/          # Ethereum R&D references
+│   ├── eth-rnd-archive/       # eth-rnd Discord monitoring
+│   ├── grafana-loki/          # Log queries
+│   ├── join-devnet/           # Devnet sync
+│   ├── kurtosis-devnet/       # Multi-client devnets
+│   ├── local-mainnet-debug/   # Local mainnet debugging
+│   ├── lodestar-heapsnapshots/# Memory profiling
+│   ├── lodestar-review/       # Multi-persona PR reviews
+│   ├── memory-profiling/      # Node.js memory analysis
+│   ├── oracle-bridge/         # ChatGPT bridge
+│   ├── release-metrics/       # Release readiness metrics
+│   ├── release-notes/         # Release note generation
+│   ├── web-scraping/          # Web scraping toolkit
+│   └── web-search/            # Multi-source web search
+│
+├── personas/                  # PR review personas
+│   ├── review-bugs.md
+│   ├── review-defender.md
+│   ├── review-devils-advocate.md
+│   ├── review-linter.md
+│   ├── review-security.md
+│   ├── review-wisdom.md
+│   └── reviewer-architect.md
+│
+├── scripts/                   # Standalone scripts (dashboard, sync)
+├── notes/                     # Working notes and trackers
+├── specs/                     # Spec study notes
+├── research/                  # Research outputs (markdown + scripts)
+├── kurtosis/                  # Devnet configs/artifacts
+├── docs/                      # Documentation
+├── avatars/                   # Profile images
+│
+├── AGENTS.md                  # Root agent instructions (symlink target)
+├── CLAUDE.md                  # Claude CLI instructions
+├── CODING_CONTEXT.md          # Root coding context
+├── IDENTITY.md                # Root identity
+├── TOOLS.md                   # Root tools notes
+├── WORKFLOW_AUTO.md            # Automation workflow doc
+├── setup.sh                   # Symlink setup script
+└── .gitignore
 ```
 
 ---
@@ -72,42 +115,46 @@ cd ~/dotfiles
 - `~/.codex/AGENTS.md`
 - `~/.codex/config.toml` (if `config/codex-config.toml` exists)
 - `~/.gitconfig` (only if not already present)
-- `~/.openclaw/workspace/skills/*` -> `~/dotfiles/skills/*`
+- `~/.openclaw/workspace/skills/*` → `~/dotfiles/skills/*`
 
 ---
 
 ## Sync model
 
-### Primary command
+### Sync command
 
 ```bash
 ~/dotfiles/scripts/sync-dotfiles.sh
 ```
 
-This script:
+Runs automatically every 6 hours via cron. This script:
 
-1. Copies an allowlisted set of files from local workspace/env into `~/dotfiles`
+1. Copies workspace files, skills, scripts, notes, personas, and research into `~/dotfiles`
 2. Runs sensitive-path guards before and after staging
 3. Commits + pushes only if changes exist
 
-### Important safety policy
+### Safety policy
 
-The sync script **hard-blocks** sensitive/unwanted paths from being committed, including:
+The sync script **hard-blocks** sensitive/operational paths from being committed:
 
-- personal/operational files: `MEMORY.md`, `BACKLOG.md`, `USER.md`, `SOUL.md`, `STATE.md`, `HEARTBEAT.md`
-- private dirs: `memory/**`, `personas/**`, `.openclaw/**`, `bank/**`
-- backlog artifacts: `BACKLOG.md.bak-*`, `BACKLOG_ARCHIVE.md`
-- temp/archive payloads: `tmp_*`, `.tmp-*`, root `*.tgz`
+| Blocked pattern | Reason |
+|----------------|--------|
+| `BACKLOG.md`, `BACKLOG.md.bak-*`, `BACKLOG_ARCHIVE.md` | Active task state |
+| `STATE.md` | Runtime working state |
+| `memory/` | Daily notes, archives, raw memory data |
+| `bank/` | Structured memory bank (facts, decisions, entities) |
+| `.openclaw/` | OpenClaw runtime config |
+| `.tmp-*`, `tmp_*`, `*.tgz` | Temporary/archive artifacts |
 
-In short: this repo is intentionally sanitized for public sharing.
+Files like `SOUL.md`, `USER.md`, `MEMORY.md`, `HEARTBEAT.md`, and `personas/` **are** synced — they contain no secrets and are useful for reference.
 
 ---
 
 ## Notes
 
-- This repo is the source of truth for shareable agent config/docs.
-- Local runtime/private state remains local-only by design.
-- If you add new paths to sync, update `scripts/sync-dotfiles.sh` first (allowlist + guard policy).
+- Local workspace is always the source of truth; dotfiles repo is the backup/share layer.
+- The sync script uses rsync for scripts, skills, notes, and personas — new files are picked up automatically.
+- Research syncs all `.md` and `.py` files from both `~/research/` and workspace `research/`.
 
 ---
 
