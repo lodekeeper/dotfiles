@@ -1,7 +1,28 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-03-19 (14th pass)
+> Updated: 2026-03-20 (15th pass)
+
+---
+
+## Daily Audit Snapshot — 2026-03-20 (self-improvement-audit-daily, 23:46 UTC)
+
+### PR review
+- **Blocker:** follow-up guard wrapper handled GitHub delta sync + metadata drift, but stale unresolved critical/major findings were still a separate manual command, so reviewers could miss aging blockers in re-review loops.
+- **Fix applied this cycle:** expanded `scripts/review/run-followup-guards.sh` into a 3-step guard:
+  - runs `track-findings.py sync-gh`,
+  - runs `check-pr-metadata-drift.py` and stores `pr-<PR>-metadata-drift.md`,
+  - runs `track-findings.py stale --days 7 --severity critical major` and stores `pr-<PR>-stale-findings.md`.
+- Added `--fail-on-stale`, `--stale-days`, and `--skip-stale-check` controls, and updated `skills/lodestar-review/SKILL.md` so this is the default follow-up path.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
 
 ---
 
@@ -322,6 +343,16 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Follow-up stale-finding guard fused into wrapper + skill docs (2026-03-20)
+Expanded `scripts/review/run-followup-guards.sh` and refreshed `skills/lodestar-review/SKILL.md` so follow-up rounds now run three checks in one command:
+- `track-findings.py sync-gh` delta sync,
+- `check-pr-metadata-drift.py` artifact generation,
+- `track-findings.py stale` artifact generation for unresolved critical/major findings.
+
+Added wrapper controls: `--fail-on-stale`, `--stale-days`, `--skip-stale-check`, `--stale-use-created`, and default stale artifact path `notes/review-reports/pr-<PR>-stale-findings.md`.
+
+**Rationale:** removes the last manual follow-up step where stale blockers could be missed during re-review, while keeping strict mode opt-in for teams that want stale findings to hard-block.
 
 ### ✅ Review-loop follow-up guard wrapper added (2026-03-20)
 Created `scripts/review/run-followup-guards.sh` and wired usage into `skills/lodestar-review/SKILL.md`.

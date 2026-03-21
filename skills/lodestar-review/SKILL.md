@@ -292,15 +292,24 @@ Use `scripts/review/track-findings.py` to track which findings get addressed in 
      --file src/sync/range/chain.ts --line 142 --severity major \
      --reviewer review-bugs --body "Race condition in batch completion..."
    ```
-2. **Follow-up rounds (mandatory when revisiting a PR with new review comments):** run the one-command guard wrapper so GitHub delta sync + metadata drift checks happen together.
+2. **Follow-up rounds (mandatory when revisiting a PR with new review comments):** run the one-command guard wrapper so GitHub delta sync + metadata drift + stale-finding checks happen together.
    ```bash
    bash ~/.openclaw/workspace/scripts/review/run-followup-guards.sh <PR> \
      --repo ChainSafe/lodestar
    ```
-   Optional: add `--include-replies` when maintainer discussion in reply threads matters for re-verification.
-   - Exit `0`: guards passed.
+   Optional flags:
+   - `--include-replies` when maintainer discussion in reply threads matters for re-verification
+   - `--fail-on-stale` to make stale unresolved critical/major findings block the loop
+   - `--stale-days <n>` to tune the stale threshold (default `7`)
+
+   Exit behavior:
+   - Exit `0`: guards passed (or stale findings detected but non-fatal).
    - Exit `2`: metadata drift detected; wrapper prints the exact `gh pr edit` reminder command.
-   - Metadata artifact is written to `~/.openclaw/workspace/notes/review-reports/pr-<PR>-metadata-drift.md` by default.
+   - Exit `3`: stale findings detected when `--fail-on-stale` is set.
+
+   Default artifacts:
+   - `~/.openclaw/workspace/notes/review-reports/pr-<PR>-metadata-drift.md`
+   - `~/.openclaw/workspace/notes/review-reports/pr-<PR>-stale-findings.md`
 
    Manual equivalent (if needed):
    ```bash
@@ -309,8 +318,11 @@ Use `scripts/review/track-findings.py` to track which findings get addressed in 
    python3 ~/.openclaw/workspace/scripts/github/check-pr-metadata-drift.py \
      --pr <PR> --repo ChainSafe/lodestar \
      > ~/.openclaw/workspace/notes/review-reports/pr-<PR>-metadata-drift.md
+   python3 ~/.openclaw/workspace/scripts/review/track-findings.py stale <PR> \
+     --days 7 --severity critical major --fail-on-match \
+     > ~/.openclaw/workspace/notes/review-reports/pr-<PR>-stale-findings.md
    ```
-   Keep the markdown artifact path in your review notes / tracker entry for traceability.
+   Keep artifact paths in your review notes / tracker entry for traceability.
 4. When the author pushes a new commit, check coverage:
    ```bash
    # Get changed files from the new commit

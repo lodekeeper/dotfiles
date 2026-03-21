@@ -86,4 +86,4 @@
 - 2026-03-15: **Sub-agent reviewer inputs must live under `~/.openclaw/workspace/`.** Review sessions can fail when prompts/reference files are in `/tmp` or other home paths outside the workspace mount. Before spawning reviewers, copy diff/context artifacts into workspace-accessible paths.
 - 2026-03-18: **Default to repo migration patterns before inventing new types/helpers.** The voluntary-exit BeaconStateView refactor converged only after aligning to PR #8857 style (`IBeaconStateView` directly, no `Pick<>`, no duck-typing guards).
 - 2026-03-18: **Keep fork `unstable` synced before opening PRs from the fork.** If fork base lags upstream, PR diffs can explode with unrelated files; sync first, then open PR.
-- 2026-03-18: **For gpt-advisor architecture consults, `thinking: xhigh` often times out in this environment.** Use simpler prompts and/or `thinking: high` with practical timeouts unless deeper reasoning is clearly required.
+- 2026-03-20: **gpt-advisor timeout: always use `runTimeoutSeconds: 3600` (1h).** Nico's directive. Never reduce thinking level to work around timeouts — increase the timeout instead. 600s timed out on fork-narrowing spec (2026-03-20).
