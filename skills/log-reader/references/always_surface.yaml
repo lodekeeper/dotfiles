@@ -1,0 +1,159 @@
+# Always-surface patterns — checked on EVERY log entry regardless of filters
+# These appear in every triage report/overview pack
+
+always_surface:
+
+  # === Consensus / Block Validation ===
+  - id: block-error
+    severity: critical
+    match:
+      field: err
+      pattern: "^BLOCK_ERROR_"
+    label: "Block validation error"
+    keep_fields: [slot, epoch, root, parent, peer, err, cause]
+
+  - id: parent-unknown
+    severity: critical
+    match:
+      any:
+        - {field: msg, contains: "PARENT_UNKNOWN"}
+        - {field: ctx.parentInForkChoice, equals: false}
+    label: "Unknown parent block"
+    keep_fields: [slot, root, parent, peer]
+
+  - id: head-state-regen
+    severity: critical
+    match:
+      field: msg
+      contains: "Error on head state regen"
+    label: "Head state regen failure"
+
+  - id: head-state-missing
+    severity: critical
+    match:
+      field: msg
+      contains: "headState does not exist"
+    label: "Head state missing"
+
+  # === Execution Bridge ===
+  - id: el-offline
+    severity: high
+    match:
+      field: msg
+      contains: "Execution client is offline"
+    label: "EL offline"
+
+  - id: el-syncing
+    severity: high
+    match:
+      field: msg
+      contains: "Execution client is syncing"
+    label: "EL syncing"
+
+  - id: jwt-auth-fail
+    severity: critical
+    match:
+      field: msg
+      contains: "Execution client authentication failed"
+    label: "JWT auth failure"
+
+  - id: fcu-error
+    severity: critical
+    match:
+      field: msg
+      contains: "Error pushing notifyForkchoiceUpdate"
+    label: "FCU push error"
+
+  - id: geth-old-head
+    severity: critical
+    match:
+      field: msg
+      contains: "Ignoring beacon update to old head"
+    label: "EL: stale FCU head (fork choice desync)"
+
+  - id: engine-api-error
+    severity: critical
+    match:
+      any:
+        - {field: msg, contains: "engine_newPayload error"}
+        - {field: msg, contains: "engine_forkchoiceUpdated error"}
+    label: "Engine API error"
+
+  # === Block Production ===
+  - id: block-production-error
+    severity: critical
+    match:
+      any:
+        - {field: msg, pattern: ".*produce.*block.*error.*"}
+        - {field: msg, contains: "Withdrawals mismatch"}
+    label: "Block production error"
+
+  - id: payload-id-null
+    severity: high
+    match:
+      field: msg
+      contains: "payloadId=null"
+    label: "Null payloadId"
+
+  - id: engine-cutoff
+    severity: high
+    match:
+      any:
+        - {field: msg, contains: "Engine failed to produce the block within cutoff time"}
+        - {field: msg, contains: "Builder failed to produce the block within cutoff time"}
+    label: "Block production cutoff timeout"
+
+  # === Network Health ===
+  - id: low-peers
+    severity: high
+    match:
+      field: msg
+      contains: "Low peer count"
+    label: "Low peer count"
+
+  - id: network-worker-error
+    severity: critical
+    match:
+      field: msg
+      contains: "Network worker thread error"
+    label: "Network worker crash"
+
+  - id: discv5-no-boot
+    severity: high
+    match:
+      field: msg
+      contains: "discv5 has no boot enr"
+    label: "No bootstrap ENRs"
+
+  - id: bls-worker-error
+    severity: critical
+    match:
+      field: msg
+      contains: "BlsMultiThreadWorkerPool error"
+    label: "BLS worker pool error"
+
+  # === Process Lifecycle ===
+  - id: panic
+    severity: critical
+    match:
+      any:
+        - {field: msg, pattern: "(?i)panic"}
+        - {field: msg, pattern: "(?i)fatal"}
+        - {field: msg, pattern: "(?i)uncaught"}
+    label: "Process panic/fatal"
+
+  # === Timing Anomalies ===
+  # Note: thresholds are for 12s slot time. Scale for other slot durations.
+  - id: extreme-latency
+    severity: high
+    match:
+      field: ctx.recvToValLatency
+      gt: 4000  # >4s in ms
+    label: "High receive-to-validation latency (>4s)"
+
+  - id: slow-import
+    severity: high
+    match:
+      field: ctx.recvToImportLatency
+      gt: 8000  # >8s in ms
+    label: "Slow block import (>8s)"

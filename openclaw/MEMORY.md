@@ -88,3 +88,4 @@
 - 2026-03-18: **Default to repo migration patterns before inventing new types/helpers.** The voluntary-exit BeaconStateView refactor converged only after aligning to PR #8857 style (`IBeaconStateView` directly, no `Pick<>`, no duck-typing guards).
 - 2026-03-18: **Keep fork `unstable` synced before opening PRs from the fork.** If fork base lags upstream, PR diffs can explode with unrelated files; sync first, then open PR.
 - 2026-03-20: **gpt-advisor timeout: always use `runTimeoutSeconds: 3600` (1h).** Nico's directive. Never reduce thinking level to work around timeouts — increase the timeout instead. 600s timed out on fork-narrowing spec (2026-03-20).
+- 2026-03-21: **Workspace safety rails are mandatory: never run broad git commands from `~/.openclaw/workspace` and never `git reset --hard` there.** Use `~/dotfiles` + `scripts/sync-dotfiles.sh` for sync, keep workspace non-git, and validate incident recovery with full content diffs (not existence-only checks).

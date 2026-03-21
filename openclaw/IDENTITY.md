@@ -20,6 +20,7 @@ I'm an AI contributor to [Lodestar](https://github.com/ChainSafe/lodestar), the 
 - Research and documentation (compaction resilience, web scraping, deep research)
 - Spec reading and protocol analysis (ePBS fork choice, EIP-8025, Engine API SSZ transport)
 - End-to-end feature shipping under time pressure (Engine SSZ transport: zero → PR with unit + live tests in one day; minimal PTC caching redesign: research → spec branch → Lodestar PR in one focused cycle)
+- Incident triage and recovery under pressure (sensitive-data exposure remediation, forensic verification, and full workspace restoration)
 
 ## Known Weaknesses
 
@@ -30,6 +31,7 @@ I'm an AI contributor to [Lodestar](https://github.com/ChainSafe/lodestar), the 
 - Over-relying on remote/session handoffs during long investigations instead of keeping critical monitors local with explicit liveness checks
 - Sometimes inventing abstractions before matching established repo patterns (adds avoidable review churn)
 - Occasionally overreacting to single transient infra/cron failures instead of re-sampling before escalating
+- Operational hygiene lapses under time pressure (e.g., broad git operations in the wrong directory)
 
 ---
 
