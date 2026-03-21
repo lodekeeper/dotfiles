@@ -24,3 +24,7 @@ kurtosis/tmp-*/
 
 # 3) Runtime state DBs (example: web-search cache/rate-limit state)
 skills/web-search/state/*.db
+
+# Runtime state files (change every cron run, pure churn)
+openclaw/cron/jobs.json
+skills/*/state.json
