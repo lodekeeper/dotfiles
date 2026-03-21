@@ -17,6 +17,7 @@
 - **Always use sub-agents** for PR reviews and code — get feedback before posting
 - **Ignore sim/e2e test failures** unless Nico specifically asks to investigate
 - **NEVER send "all clear" / "nothing new" heartbeat messages to Nico** — if nothing is actionable, reply NO_REPLY silently. He told me THREE TIMES (2026-03-02). Only message when there's a real alert, blocker, decision, or deliverable.
+- **Always tag other bots** (e.g. <@1483945055025631353> for lodekeeper-z) when replying to them in Discord — don't just reply to the message without a mention. Nico flagged this 2026-03-21.
 
 ## Dev Workflow (for complex features)
 - **Skill:** `skills/dev-workflow/SKILL.md` — full instructions
