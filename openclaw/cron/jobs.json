@@ -247,7 +247,7 @@
       "name": "github-notifications",
       "enabled": true,
       "createdAtMs": 1772107716625,
-      "updatedAtMs": 1774113978021,
+      "updatedAtMs": 1774115212882,
       "schedule": {
         "kind": "every",
         "everyMs": 300000,
@@ -266,15 +266,14 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1774113957915,
+        "lastRunAtMs": 1774115189899,
         "lastStatus": "ok",
-        "lastDurationMs": 20106,
+        "lastDurationMs": 22983,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1774114257915,
-        "lastDelivered": false,
-        "runningAtMs": 1774114576597
+        "nextRunAtMs": 1774115489899,
+        "lastDelivered": false
       },
       "deleteAfterRun": false
     },
@@ -386,7 +385,7 @@
       "name": "workspace-periodic-cleanup",
       "enabled": true,
       "createdAtMs": 1772634832403,
-      "updatedAtMs": 1774092946148,
+      "updatedAtMs": 1774114887375,
       "schedule": {
         "kind": "every",
         "everyMs": 21600000,
@@ -403,15 +402,14 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1774114508828,
-        "lastRunAtMs": 1774092908828,
+        "nextRunAtMs": 1774136463913,
+        "lastRunAtMs": 1774114863913,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 37320,
+        "lastDurationMs": 23462,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
-        "consecutiveErrors": 0,
-        "runningAtMs": 1774114576597
+        "consecutiveErrors": 0
       }
     },
     {
@@ -519,7 +517,7 @@
       "name": "cron-health-watchdog",
       "enabled": true,
       "createdAtMs": 1772636078136,
-      "updatedAtMs": 1774113115740,
+      "updatedAtMs": 1774114919907,
       "schedule": {
         "kind": "every",
         "everyMs": 1800000,
@@ -536,11 +534,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1774114908442,
-        "lastRunAtMs": 1774113108442,
+        "nextRunAtMs": 1774116713839,
+        "lastRunAtMs": 1774114913839,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 7298,
+        "lastDurationMs": 6068,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
