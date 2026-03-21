@@ -185,12 +185,12 @@ async def ensure_pro_model(page, verbose=False):
             if pro_data.get("exhausted") or pro_data.get("disabled"):
                 if verbose:
                     print(
-                        f"⚠️  Pro quota exhausted — falling back to standard model",
+                        f"ℹ️  Pro option appears disabled in dropdown — trying anyway (UI may be stale)...",
                         file=sys.stderr, flush=True,
                     )
-                # Close dropdown by pressing Escape
-                await page.keyboard.press("Escape")
-                return {"model": model, "isPro": False, "quotaExhausted": True}
+                # Don't give up — try clicking even if it appears disabled.
+                # ChatGPT UI sometimes marks Pro as disabled in the dropdown
+                # while it's actually the active model.
 
             # Click the Pro option
             clicked = await page.evaluate("""
@@ -218,12 +218,20 @@ async def ensure_pro_model(page, verbose=False):
                         const btn = document.querySelector(
                             '[data-testid="model-switcher-dropdown-button"]'
                         );
-                        return btn ? btn.innerText.trim() : 'unknown';
+                        if (!btn) return JSON.stringify({model: 'unknown', aria: ''});
+                        return JSON.stringify({
+                            model: btn.innerText.trim(),
+                            aria: btn.getAttribute('aria-label') || '',
+                        });
                     })()
                 """)
-                is_now_pro = "pro" in new_info.lower()
+                new_data = json.loads(new_info)
+                new_model = new_data.get("model", "unknown")
+                new_aria = new_data.get("aria", "")
+                new_info = new_model
+                is_now_pro = "pro" in new_model.lower() or "pro" in new_aria.lower()
                 if verbose:
-                    status = "✅" if is_now_pro else "⚠️ failed"
+                    status = "✅" if is_now_pro else "ℹ️  (button still shows generic name — Pro may still be active)"
                     print(f"Model after switch: {new_info} {status}", file=sys.stderr, flush=True)
                 return {
                     "model": new_info,
@@ -234,7 +242,26 @@ async def ensure_pro_model(page, verbose=False):
         # Close dropdown
         await page.keyboard.press("Escape")
 
-    return {"model": model, "isPro": False, "quotaExhausted": False}
+    # Final check: re-read the model button — ChatGPT UI may not show "Pro"
+    # explicitly in button text but the session might still be Pro
+    final_info = await page.evaluate("""
+        (() => {
+            const btn = document.querySelector(
+                '[data-testid="model-switcher-dropdown-button"]'
+            );
+            if (!btn) return JSON.stringify({model: 'unknown', aria: ''});
+            return JSON.stringify({
+                model: btn.innerText.trim(),
+                aria: btn.getAttribute('aria-label') || '',
+            });
+        })()
+    """)
+    final_data = json.loads(final_info)
+    final_model = final_data.get("model", model)
+    final_aria = final_data.get("aria", "")
+    is_final_pro = "pro" in final_model.lower() or "pro" in final_aria.lower()
+
+    return {"model": final_model, "isPro": is_final_pro, "quotaExhausted": False}
 
 
 async def query_chatgpt(
