@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+source "$HOME/camoufox-env/bin/activate"
+exec python3 "$HOME/.openclaw/workspace/research/chatgpt-direct.py" "$@"

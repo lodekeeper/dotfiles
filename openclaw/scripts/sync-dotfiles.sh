@@ -87,22 +87,16 @@ fi
 [ -f "$HOME/lodekeeper-dash/scripts/update-status.sh" ] && cp "$HOME/lodekeeper-dash/scripts/update-status.sh" "$DOTFILES_DIR/scripts/update-status.sh"
 [ -f "$HOME/lodekeeper-dash/scripts/deploy.sh" ] && cp "$HOME/lodekeeper-dash/scripts/deploy.sh" "$DOTFILES_DIR/scripts/deploy.sh"
 
-# Workspace scripts (all — full backup)
-if [ -d "$WORKSPACE/scripts" ]; then
-  rsync -a \
-    --exclude '__pycache__' \
-    --exclude '*.pyc' \
-    "$WORKSPACE/scripts/" "$DOTFILES_DIR/openclaw/scripts/"
-fi
+# Workspace scripts (debug/spec tooling)
+mkdir -p "$DOTFILES_DIR/scripts/debug" "$DOTFILES_DIR/scripts/spec"
+[ -f "$WORKSPACE/scripts/debug/devnet-triage.sh" ] && cp "$WORKSPACE/scripts/debug/devnet-triage.sh" "$DOTFILES_DIR/scripts/debug/devnet-triage.sh"
+[ -f "$WORKSPACE/scripts/spec/extract-spec-section.sh" ] && cp "$WORKSPACE/scripts/spec/extract-spec-section.sh" "$DOTFILES_DIR/scripts/spec/extract-spec-section.sh"
 
-# Research scripts (all .py files)
-if [ -d "$WORKSPACE/research" ]; then
-  while IFS= read -r -d '' f; do
-    rel="${f#$WORKSPACE/research/}"
-    mkdir -p "$DOTFILES_DIR/research/$(dirname "$rel")"
-    cp "$f" "$DOTFILES_DIR/research/$rel"
-  done < <(find "$WORKSPACE/research" -type f -name '*.py' -print0)
-fi
+# Research scripts (Cloudflare bypass + Oracle bridge)
+mkdir -p "$DOTFILES_DIR/research"
+for f in cf-bypass-extended.py cf-bypass-scrapling.py cf-bypass-test.py chatgpt-camoufox.py oracle-bridge-cdp.py oracle-remote-chrome-test.py oracle-stealth-bridge.py; do
+  [ -f "$WORKSPACE/research/$f" ] && cp "$WORKSPACE/research/$f" "$DOTFILES_DIR/research/$f"
+done
 
 cd "$DOTFILES_DIR"
 assert_no_sensitive_changes

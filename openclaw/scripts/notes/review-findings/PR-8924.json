@@ -1,0 +1,33 @@
+{
+  "pr": 8924,
+  "created": "2026-03-08T23:48:08Z",
+  "updated": "2026-03-08T23:48:08Z",
+  "findings": [
+    {
+      "id": "411b5a",
+      "file": "src/sync/range/chain.ts",
+      "line": 142,
+      "severity": "major",
+      "reviewer": "review-bugs",
+      "body": "Race condition in batch completion: sleep() called outside of async guard, may interleave with abort signal",
+      "status": "open",
+      "addressed_commit": null,
+      "note": null,
+      "created": "2026-03-08T23:48:08Z",
+      "updated": "2026-03-08T23:48:08Z"
+    },
+    {
+      "id": "54f491",
+      "file": "src/sync/range/batch.ts",
+      "line": 89,
+      "severity": "minor",
+      "reviewer": "review-wisdom",
+      "body": "rateLimitedPeers set not cleared on batch reset \u2014 ghost entries could accumulate across retries",
+      "status": "open",
+      "addressed_commit": null,
+      "note": null,
+      "created": "2026-03-08T23:48:08Z",
+      "updated": "2026-03-08T23:48:08Z"
+    }
+  ]
+}

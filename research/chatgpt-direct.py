@@ -27,6 +27,85 @@ import time
 DEFAULT_COOKIES = os.path.expanduser("~/.oracle/chatgpt-cookies.json")
 
 
+async def get_expired_session_message(page):
+    """Return expired-session modal text if ChatGPT auth has expired."""
+    data = await page.evaluate("""
+        (() => {
+            const modal = document.querySelector('#modal-expired-session');
+            if (!modal) return JSON.stringify({open: false, text: ''});
+            return JSON.stringify({
+                open: true,
+                text: (modal.innerText || '').trim(),
+            });
+        })()
+    """)
+    parsed = json.loads(data)
+    if parsed.get("open"):
+        return parsed.get("text") or "Your session has expired"
+    return None
+
+
+async def dismiss_welcome_modal(page, verbose=False):
+    """Dismiss the non-auth welcome gate if present.
+
+    ChatGPT sometimes shows a "Welcome back" modal with a "Stay logged out"
+    dismiss link even when the composer is already rendered. This is not the same
+    as an expired session and should not be treated as an auth failure.
+    """
+    data = await page.evaluate("""
+        (() => {
+            const modal = document.querySelector('#modal-no-auth-login');
+            const dismiss = document.querySelector('[data-testid="dismiss-welcome"]');
+            return JSON.stringify({
+                open: !!modal,
+                text: modal ? (modal.innerText || '').trim() : '',
+                canDismiss: !!dismiss,
+            });
+        })()
+    """)
+    parsed = json.loads(data)
+    if not parsed.get("open"):
+        return False
+
+    if verbose:
+        first_line = (parsed.get("text") or "welcome modal").splitlines()[0]
+        print(f"Welcome modal detected: {first_line}", file=sys.stderr, flush=True)
+
+    if parsed.get("canDismiss"):
+        dismiss = await page.query_selector('[data-testid="dismiss-welcome"]')
+        if dismiss:
+            await dismiss.click()
+            await asyncio.sleep(2)
+            if verbose:
+                print("Dismissed welcome modal via 'Stay logged out'", file=sys.stderr, flush=True)
+            return True
+
+    return False
+
+
+async def get_auth_state(page):
+    """Inspect whether ChatGPT is in guest/free or authenticated mode."""
+    data = await page.evaluate("""
+        (() => {
+            const loginBtn = !!document.querySelector('[data-testid="login-button"]');
+            const signupBtn = !!document.querySelector('[data-testid="signup-button"]');
+            const modelBtn = document.querySelector('[data-testid="model-switcher-dropdown-button"]');
+            const profileBtn = document.querySelector('[data-testid="profile-button"]');
+            return JSON.stringify({
+                hasLogin: loginBtn,
+                hasSignup: signupBtn,
+                model: modelBtn ? (modelBtn.innerText || '').trim() : '',
+                profileAria: profileBtn ? (profileBtn.getAttribute('aria-label') || '') : '',
+            });
+        })()
+    """)
+    parsed = json.loads(data)
+    parsed["state"] = (
+        "guest" if (parsed.get("hasLogin") or parsed.get("hasSignup")) else "authenticated"
+    )
+    return parsed
+
+
 async def ensure_pro_model(page, verbose=False):
     """Check current model and switch to Pro if available.
 
@@ -158,7 +237,14 @@ async def ensure_pro_model(page, verbose=False):
     return {"model": model, "isPro": False, "quotaExhausted": False}
 
 
-async def query_chatgpt(prompt, cookies_path, timeout=3600, verbose=False):
+async def query_chatgpt(
+    prompt,
+    cookies_path,
+    timeout=3600,
+    verbose=False,
+    require_auth=False,
+    require_pro=False,
+):
     """Send prompt to ChatGPT via Camoufox and return response."""
     from camoufox.async_api import AsyncCamoufox
 
@@ -201,22 +287,66 @@ async def query_chatgpt(prompt, cookies_path, timeout=3600, verbose=False):
             if "Just a moment" in content:
                 return {"status": "error", "error": "Cloudflare challenge not bypassed"}
 
-        # Check login
-        if "Log in" in content and "Sign up" in content:
-            return {"status": "error", "error": "Session expired — need fresh cookies"}
+        expired_session_text = await get_expired_session_message(page)
+        if expired_session_text:
+            return {
+                "status": "error",
+                "error": (
+                    "Session expired — need fresh cookies "
+                    f"({expired_session_text.splitlines()[0]})"
+                ),
+            }
 
-        # Check prompt box
+        # Dismiss non-auth "Welcome back" modal if present.
+        # This overlay contains "Log in" / "Sign up" text but is NOT an auth
+        # failure — it's a dismissible gate that appears even with a valid
+        # session token.  Dismiss it before checking login state.
+        await dismiss_welcome_modal(page, verbose=verbose)
+
+        # Re-read content after potential modal dismissal
+        content = await page.content()
+
+        # Check login — only treat as expired if there's no prompt textarea
+        # AND "Log in" / "Sign up" are present.  The welcome modal contains
+        # those strings too, so we must check after dismissal.
         has_box = await page.evaluate(
             '!!document.querySelector(\'[id="prompt-textarea"]\')'
         )
         if not has_box:
+            if "Log in" in content and "Sign up" in content:
+                return {"status": "error", "error": "Session expired — need fresh cookies"}
             return {"status": "error", "error": f"No prompt box found (title: {title})"}
 
+        auth_info = await get_auth_state(page)
         if verbose:
-            print(f"Authenticated: {title}", file=sys.stderr, flush=True)
+            print(
+                f"Auth state: {auth_info['state']}"
+                f" (login={auth_info['hasLogin']}, signup={auth_info['hasSignup']})",
+                file=sys.stderr,
+                flush=True,
+            )
+            print(f"ChatGPT loaded: {title}", file=sys.stderr, flush=True)
+
+        if require_auth and auth_info["state"] != "authenticated":
+            return {
+                "status": "error",
+                "error": "Guest/free ChatGPT session detected — need fresh authenticated cookies",
+                "auth": auth_info,
+            }
 
         # Ensure Pro model is selected
         model_info = await ensure_pro_model(page, verbose=verbose)
+
+        if require_pro and not model_info.get("isPro"):
+            error = "GPT-5.4 Pro not available in current session"
+            if auth_info["state"] != "authenticated":
+                error += " — current cookies only open guest/free ChatGPT"
+            return {
+                "status": "error",
+                "error": error,
+                "auth": auth_info,
+                "model": model_info,
+            }
 
         # Type prompt using keyboard (reliable with React)
         el = await page.query_selector('[id="prompt-textarea"]')
@@ -351,7 +481,12 @@ async def query_chatgpt(prompt, cookies_path, timeout=3600, verbose=False):
                 saw_thinking = True
 
             if status == "error":
-                return {"status": "error", "text": text, "model": model_info}
+                return {
+                    "status": "error",
+                    "text": text,
+                    "model": model_info,
+                    "auth": auth_info,
+                }
 
             if status == "done" and text:
                 if text == last_text:
@@ -362,6 +497,7 @@ async def query_chatgpt(prompt, cookies_path, timeout=3600, verbose=False):
                             "text": _clean_response(text),
                             "elapsed": elapsed,
                             "model": model_info,
+                            "auth": auth_info,
                             "usedPro": saw_thinking or model_info.get("isPro", False),
                         }
                         # Warn only for complex prompts that should have triggered thinking
@@ -387,6 +523,7 @@ async def query_chatgpt(prompt, cookies_path, timeout=3600, verbose=False):
             "text": _clean_response(last_text) if last_text else "",
             "elapsed": round(time.time() - start),
             "model": model_info,
+            "auth": auth_info,
             "usedPro": saw_thinking,
         }
 
@@ -427,6 +564,16 @@ Examples:
     parser.add_argument("--json", action="store_true", help="JSON output")
     parser.add_argument("--cookies", default=DEFAULT_COOKIES)
     parser.add_argument("--verbose", "-v", action="store_true")
+    parser.add_argument(
+        "--require-auth",
+        action="store_true",
+        help="Fail unless the session is authenticated (not guest/free mode)",
+    )
+    parser.add_argument(
+        "--require-pro",
+        action="store_true",
+        help="Fail unless GPT-5.4 Pro is actually available in the current session",
+    )
     args = parser.parse_args()
 
     # Build prompt
@@ -450,6 +597,8 @@ Examples:
                 cookies_path=args.cookies,
                 timeout=args.timeout,
                 verbose=args.verbose,
+                require_auth=args.require_auth,
+                require_pro=args.require_pro,
             )
         )
 
