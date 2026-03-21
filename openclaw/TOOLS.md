@@ -103,6 +103,13 @@ git branch -d <branch-name>  # optional: delete local branch
 - Force push = last resort only (when merge truly doesn't work)
 - Keep local `unstable` in sync: `git fetch origin && git checkout unstable && git pull`
 
+### Diff Verification (MANDATORY)
+**Always double-check the diff before pushing AND after the PR is open:**
+1. **Before push:** `git diff main...HEAD` (or `unstable...HEAD`) — verify only intended files/changes, no stray files (TASK.md, CODING_CONTEXT.md, etc.)
+2. **After push / PR open:** Check the GitHub diff in the browser or via `gh pr diff <number>` — confirm it matches what you expect
+3. **No "it looks fine" assumptions** — actually read the diff each time
+- Lesson: PR #3416 had a stray `TASK.md` and an overly aggressive guard that broke the close() flush path. Both caught by Nico asking "does the diff look good?" — I should have caught them myself.
+
 ## Beacon APIs
 - **Repo:** ~/beacon-APIs (ethereum/beacon-APIs)
 - **Key file:** `validator-flow.md` — validator client ↔ beacon node interaction reference

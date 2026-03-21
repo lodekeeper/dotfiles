@@ -177,19 +177,6 @@ When starting a **bigger development task** (EIP implementations, significant fe
 
 **Topic sessions MUST update BACKLOG.md:** When working in a topic session, update `~/.openclaw/workspace/BACKLOG.md` with your progress — mark subtasks ✅ as you complete them, add new subtasks as discovered, update status descriptions. This is how the main session (orchestrator) tracks what's happening. If progress isn't in BACKLOG.md, the orchestrator can't see it.
 
-### 💬 Discord Channels/Threads
-The same tagging and routing pattern applies to Discord sessions:
-
-**Backlog integration:** Tag tasks in BACKLOG.md with `[discord:CHANNEL_ID]` (e.g. `[discord:1197575814494035968]`). Group tasks under project headers like Telegram topics.
-
-**Session keys:** Discord sessions use `agent:main:discord:channel:<CHANNEL_ID>`.
-
-**Routing rule:** Once a Discord channel/thread is associated with a task, route updates there — not to Telegram, not to DMs. Use `sessions_send` with sessionKey `agent:main:discord:channel:<CHANNEL_ID>`.
-
-**Discord sessions MUST update BACKLOG.md:** Same rule as Telegram topic sessions — update `~/.openclaw/workspace/BACKLOG.md` with progress. If it's not in BACKLOG.md, the orchestrator can't see it.
-
-**When to use Discord vs Telegram:** Use whichever channel the task originated from. If someone asks for work in Discord, tag it `[discord:]`. If in Telegram, tag it `[topic:]`. Don't cross-route between channels unless explicitly asked.
-
 ### 💬 Know When to Speak!
 In group chats where you receive every message, be **smart about when to contribute**:
 
@@ -343,12 +330,3 @@ When writing code myself (PRs, patches, implementations):
 5. **Submit:** Only open PR / commit after sub-agent approval
 
 **Why:** Code quality matters. Multiple perspectives catch issues early.
-
-## 🚫 TypeScript Code Quality Rules (MANDATORY)
-
-These apply to all code I write or review in Lodestar:
-
-- **NEVER use `as any`** — TypeScript type erasure via `as any` is forbidden. Always use proper types, narrow with type guards, or expose a typed accessor. If you see `as any` in a test or implementation, fix it before committing. Nico explicitly flagged this (2026-03-20, PR #9068).
-- **No `(obj as any).privateField`** — access internal/private fields through public API or typed test helpers, never via `as any` casting.
-- **Prefer typed test accessors** — if a test needs an internal field, expose a narrow `_test_*` accessor or add a helper method rather than bypassing the type system.
-- **Type-safe alternatives to `as any`:** use `as unknown as T` only when absolutely necessary and only with a comment explaining why; prefer proper interface definitions.

@@ -88,6 +88,8 @@ Before EVERY commit and push, run these in order:
 1. `pnpm lint` — fast, catches formatting/import issues. **Must pass. No exceptions.**
 2. `pnpm check-types` — catches type errors
 3. Build if you changed exports: `pnpm build`
+4. **Verify the diff:** `git diff main...HEAD --stat` then `git diff main...HEAD` — confirm only intended files, no stray working files (TASK.md, notes, etc.)
+5. **After PR is open:** Check GitHub diff via `gh pr diff <number>` — confirm it matches expectations
 
 If lint fails, fix it before committing. `pnpm lint --write` auto-fixes most issues.
 
