@@ -1,0 +1,1 @@
+I’m turning your findings into a concrete, implementable CLI log-reader skill with staged commands, token budgets, source adapters, and a persistent state model, while sanity-checking Loki/Kurtosis and parsing details so the interfaces line up with real tooling.
