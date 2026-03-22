@@ -50,10 +50,15 @@ gh pr diff <PR_NUMBER> --repo ChainSafe/lodestar
 **For local changes (pre-PR, dev workflow Phase 4):**
 ```bash
 cd ~/lodestar-<feature>
-git diff unstable...HEAD    # diff against base branch
-# or for staged changes:
-git diff --cached
+~/.openclaw/workspace/scripts/review/check-review-scope.sh \
+  --base origin/unstable \
+  --changed-files-out /tmp/review-changed-files.txt \
+  --diff-out /tmp/review.diff
 ```
+Use `/tmp/review.diff` as reviewer input and `/tmp/review-changed-files.txt` as `CHANGED_FILES`.
+
+> ⚠️ By default this guard fails on a dirty worktree so reviewers don't run on accidental uncommitted changes.
+> If you intentionally need staged/unstaged review, re-run with `--allow-dirty`.
 
 For large diffs (>3000 lines), focus on the most critical files or split into chunks.
 
@@ -67,9 +72,12 @@ Before spawning any reviewer, capture the exact set of files changed in this PR/
 # For open PRs:
 gh pr diff <PR_NUMBER> --repo ChainSafe/lodestar --name-only
 
-# For local changes:
+# For local changes (preferred):
 cd ~/lodestar-<feature>
-git diff --name-only origin/unstable...HEAD
+~/.openclaw/workspace/scripts/review/check-review-scope.sh --base origin/unstable
+
+# If you already generated artifacts in Step 1:
+cat /tmp/review-changed-files.txt
 ```
 
 Save the output as `CHANGED_FILES`. Add it to each reviewer task as:

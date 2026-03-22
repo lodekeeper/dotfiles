@@ -1,7 +1,27 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-03-20 (15th pass)
+> Updated: 2026-03-21 (16th pass)
+
+---
+
+## Daily Audit Snapshot — 2026-03-21 (self-improvement-audit-daily, 23:46 UTC)
+
+### PR review
+- **Blocker:** reviewer runs can still start from a dirty local worktree, which risks feeding sub-agents uncommitted or accidental diff scope (recently caused low-signal review rounds).
+- **Fix applied this cycle:** added `scripts/review/check-review-scope.sh` and wired it into `skills/lodestar-review/SKILL.md` Step 1/1.5 as the default local-review entrypoint.
+  - validates git worktree + base ref,
+  - fails fast on dirty trees by default,
+  - can emit both `CHANGED_FILES` and full diff artifacts in one command.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
 
 ---
 
@@ -344,6 +364,14 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 
 ## Improvements Implemented This Cycle
 
+### ✅ Local review-scope guard script + skill wiring (2026-03-21)
+Added `scripts/review/check-review-scope.sh` and updated `skills/lodestar-review/SKILL.md` so local review runs default to:
+- validating the base ref (`origin/unstable`) exists,
+- failing on dirty worktrees unless `--allow-dirty` is explicitly set,
+- optionally emitting both changed-file and diff artifacts in one command.
+
+**Rationale:** closes a recurring low-signal failure mode where reviewers get accidental/uncommitted scope, improving reviewer precision and reducing wasted follow-up cycles.
+
 ### ✅ Follow-up stale-finding guard fused into wrapper + skill docs (2026-03-20)
 Expanded `scripts/review/run-followup-guards.sh` and refreshed `skills/lodestar-review/SKILL.md` so follow-up rounds now run three checks in one command:
 - `track-findings.py sync-gh` delta sync,
@@ -653,3 +681,4 @@ Updated `scripts/ci/auto_fix_flaky.py`:
 29. ~~**PR metadata drift guard** — add a lightweight checker (or scripted checklist) that compares PR title/body claims vs current diff after follow-up commits, so scope/title mismatches are caught before re-review.~~ ✅ done (2026-03-19)
 30. ~~**Auto-wire metadata drift guard into review loop docs** — add a mandatory re-review step in `skills/lodestar-review/SKILL.md` to run the checker on follow-up commits and record output in review notes.~~ ✅ done (2026-03-19)
 31. ~~**Review-loop command wrapper for metadata drift artifacts** — add a small helper (`scripts/review/run-followup-guards.sh` or equivalent) that runs `sync-gh` + metadata drift check together and prints the exact `gh pr edit` reminder when drift is detected.~~ ✅ done (2026-03-20)
+32. ~~**Local review-scope guard** — add a pre-review command that fails on dirty worktrees and emits canonical `CHANGED_FILES` + diff artifacts for reviewer prompts.~~ ✅ done (2026-03-21)
