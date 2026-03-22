@@ -198,11 +198,52 @@ def find_gap_reason(events: list[dict[str, Any]]) -> str | None:
     return None
 
 
+# Patterns that represent normal block-processing pipeline operations.
+# These should NOT be elevated to "suspicious" tier just because they burst
+# during sync/catchup — bursting is *expected* behavior for these patterns.
+_NORMAL_OPERATION_PATTERNS: set[str] = {
+    "added block to forkchoice and state cache",
+    "block processed",
+    "call engine api newpayload",
+    "receive engine api newpayload result",
+    "persist block to hot db",
+    "persisted datacolumsidecars to hot db",
+    "persisted datacolumsidecars to hot db",
+    "persisted datacolumnsidecars to hot db",
+    "persisted blocksinput to db",
+    "pruned block input",
+    "new chain head",
+    "blockinputcache.prune deleted <num> cached blockinputs",
+    "attempt to cache block but is already cached on blockinput",
+    "call engine api forkchoiceupdated",
+    "receive engine api forkchoiceupdated result",
+    "imported block",
+    "processed block",
+}
+
+
+def _is_normal_operation(pattern: str) -> bool:
+    """Check if a template pattern matches a normal operation."""
+    return pattern.strip().lower() in _NORMAL_OPERATION_PATTERNS
+
+
 def score_template(events: list[dict[str, Any]], matched_rule_ids: list[str]) -> tuple[str, int, list[str]]:
-    """Assign a v1 tier and numeric score to a template."""
+    """Assign a v1 tier and numeric score to a template.
+
+    Scoring priorities (highest to lowest):
+    1. Always-surface rules → critical tier (300+)
+    2. Error/warn log levels → suspicious tier, boosted
+    3. Error causes (stack traces, ECONNREFUSED, etc.) → suspicious, boosted
+    4. Bursts of anomalous patterns → suspicious
+    5. Normal operations (block processing pipeline) → background even if bursty
+    6. Everything else → background
+    """
 
     reasons: list[str] = []
     levels = {event["lvl"] for event in events}
+    pattern = events[0]["msg"] if events else ""
+
+    # --- Gather signal reasons ---
     if matched_rule_ids:
         reasons.append("always-surface")
     if {"error", "fatal", "critical"} & levels:
@@ -211,6 +252,13 @@ def score_template(events: list[dict[str, Any]], matched_rule_ids: list[str]) ->
         reasons.append("warn-level")
     if len(events) == 1:
         reasons.append("singleton")
+
+    # Check for error causes (stack traces, connection errors, etc.)
+    has_error_cause = any(event.get("cause") or event.get("err") for event in events)
+    if has_error_cause:
+        reasons.append("has-error-cause")
+
+    # Burst detection
     buckets = Counter(bucket_minute(event["ts"]) for event in events)
     if buckets:
         bucket_values = list(buckets.values())
@@ -222,23 +270,52 @@ def score_template(events: list[dict[str, Any]], matched_rule_ids: list[str]) ->
     if gap_reason:
         reasons.append(gap_reason)
 
+    # Check if this is a normal operation pattern
+    is_normal = _is_normal_operation(pattern)
+    if is_normal:
+        reasons.append("normal-operation")
+
+    # --- Tier assignment ---
     if matched_rule_ids:
         tier = "critical"
-    elif {"error", "fatal", "critical", "warn"} & levels or any(reason in {"singleton", "burst"} or reason.startswith("slot gap") or reason.startswith("time gap") for reason in reasons):
+    elif is_normal and not ({"error", "fatal", "critical", "warn"} & levels):
+        # Normal operations stay background even if they burst during sync
+        tier = "background"
+    elif {"error", "fatal", "critical", "warn"} & levels or has_error_cause:
+        tier = "suspicious"
+    elif any(
+        reason in {"singleton", "burst"} or reason.startswith("slot gap") or reason.startswith("time gap")
+        for reason in reasons
+    ):
         tier = "suspicious"
     else:
         tier = "background"
 
+    # --- Score calculation ---
     base_score = {"critical": 300, "suspicious": 200, "background": 100}[tier]
-    score = base_score + min(len(events), 99) + len(matched_rule_ids) * 50
+
+    # Count contribution (capped at 99, but scaled by tier)
+    count_bonus = min(len(events), 99)
+    score = base_score + count_bonus + len(matched_rule_ids) * 50
+
+    # Level bonuses (significantly boosted vs v1)
     if "error-level" in reasons:
-        score += 25
+        score += 60
     elif "warn-level" in reasons:
-        score += 10
-    if "burst" in reasons:
+        score += 30
+
+    # Error cause bonus — templates with stack traces or connection errors
+    # are more actionable than those without
+    if "has-error-cause" in reasons:
+        score += 40
+
+    # Burst bonus — only for non-normal patterns
+    if "burst" in reasons and not is_normal:
         score += 20
+
     if "singleton" in reasons:
         score += 10
+
     return tier, score, reasons
 
 

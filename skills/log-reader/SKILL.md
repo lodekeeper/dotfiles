@@ -1,3 +1,12 @@
+---
+name: log-reader
+description: Parse, index, and analyze Ethereum client logs (Lodestar, Lighthouse, Geth) without reading raw log files. Produces compact overview packs for triage, drill packs for deep-dives, and cross-service comparison packs. Best for first-pass breadth triage on unfamiliar logs and multi-client correlation. For targeted "find error X" debugging, use grep directly.
+version: 1.0.0
+author: lodekeeper
+tags: [ethereum, logs, debugging, lodestar, lighthouse, geth, kurtosis, docker]
+related_skills: [grafana-loki, kurtosis-devnet, local-mainnet-debug, beacon-node]
+---
+
 # Log Reader Skill
 
 Parse, index, and analyze Ethereum client logs (Lodestar, Geth, Nethermind, etc.) without reading raw log files. The tool produces compact **packs** — structured markdown reports sized for LLM context windows.

@@ -106,7 +106,7 @@
       "name": "beacon-log-monitor",
       "enabled": true,
       "createdAtMs": 1771513454598,
-      "updatedAtMs": 1774095998712,
+      "updatedAtMs": 1774186052738,
       "schedule": {
         "kind": "every",
         "everyMs": 86400000,
@@ -116,24 +116,22 @@
       "wakeMode": "now",
       "payload": {
         "kind": "agentTurn",
-        "message": "Run the beacon log monitor script: `bash ~/.openclaw/workspace/scripts/monitor-beacon.sh`. If the output is empty, reply with just HEARTBEAT_OK. If there are alerts, send them to Nico on Telegram with context about what each alert means and whether it needs action.",
-        "timeoutSeconds": 180,
+        "message": "Run the beacon log monitor script: `bash ~/.openclaw/workspace/scripts/monitor-beacon.sh`.\n\nIf the output is empty, reply with just HEARTBEAT_OK.\n\nIf there are alerts, analyze them and determine severity:\n- **Low severity** (REST API noise: getPoolAttestationsV2 empty, getBlobSidecars not found, robots.txt 404, single transient errors): Post concise summary to Lodestar WG topic #347 using exec + OpenClaw CLI:\n  ```\n  timeout 60 /home/openclaw/.nvm/versions/node/v22.22.0/bin/openclaw message send --channel telegram --target -1003764039429 --thread-id 347 --message \"<your alert summary with context>\" || true\n  ```\n- **High severity** (sync loss, crash/OOM, EL communication failure, finality halt, low peers, repeated EL SYNCING state): Send to topic #347 AND DM Nico:\n  ```\n  timeout 60 /home/openclaw/.nvm/versions/node/v22.22.0/bin/openclaw message send --channel telegram --target -1003764039429 --thread-id 347 --message \"<high severity summary>\" || true\n  timeout 60 /home/openclaw/.nvm/versions/node/v22.22.0/bin/openclaw message send --channel telegram --target 5774760693 --message \"<urgent alert>\" || true\n  ```\n\nIMPORTANT: Always wrap the CLI call in `timeout 60 ... || true` so that a slow/hung Telegram delivery never blocks the cron from completing. If delivery fails, still reply NO_REPLY.\n\nFor each alert type, include context on what it means and whether it needs action.\nDo NOT use the message tool or sessions_send for Telegram delivery — use exec + OpenClaw CLI only.\nAfter sending (or delivery failure), reply exactly NO_REPLY.",
+        "timeoutSeconds": 300,
         "model": "anthropic/claude-sonnet-4-6"
       },
       "delivery": {
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1774182359608,
-        "lastRunAtMs": 1774095959608,
-        "lastStatus": "error",
-        "lastDurationMs": 39104,
-        "lastRunStatus": "error",
+        "nextRunAtMs": 1774271852946,
+        "lastRunAtMs": 1774185804982,
+        "lastStatus": "ok",
+        "lastDurationMs": 247756,
+        "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
-        "consecutiveErrors": 1,
-        "lastDelivered": false,
-        "lastError": "⚠️ ✉️ Message failed",
-        "lastDeliveryError": "⚠️ ✉️ Message failed"
+        "consecutiveErrors": 0,
+        "lastDelivered": false
       }
     },
     {
@@ -176,7 +174,7 @@
       "name": "eth-rnd-archive-hourly",
       "enabled": true,
       "createdAtMs": 1772034567300,
-      "updatedAtMs": 1774178131590,
+      "updatedAtMs": 1774185333152,
       "schedule": {
         "kind": "cron",
         "expr": "15 * * * *",
@@ -194,13 +192,13 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1774178100004,
+        "lastRunAtMs": 1774185300005,
         "lastStatus": "ok",
-        "lastDurationMs": 31586,
+        "lastDurationMs": 33147,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1774181700000,
+        "nextRunAtMs": 1774188900000,
         "lastDelivered": false
       }
     },
@@ -247,7 +245,7 @@
       "name": "github-notifications",
       "enabled": true,
       "createdAtMs": 1772107716625,
-      "updatedAtMs": 1774180692222,
+      "updatedAtMs": 1774188126845,
       "schedule": {
         "kind": "every",
         "everyMs": 300000,
@@ -266,13 +264,13 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1774180655655,
+        "lastRunAtMs": 1774188108663,
         "lastStatus": "ok",
-        "lastDurationMs": 36567,
+        "lastDurationMs": 18182,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1774180955655,
+        "nextRunAtMs": 1774188408663,
         "lastDelivered": false
       },
       "deleteAfterRun": false
@@ -352,7 +350,7 @@
       "name": "aztec-sequencer-health",
       "enabled": true,
       "createdAtMs": 1772373812089,
-      "updatedAtMs": 1774167020986,
+      "updatedAtMs": 1774181425100,
       "schedule": {
         "kind": "every",
         "everyMs": 14400000,
@@ -369,11 +367,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1774181399687,
-        "lastRunAtMs": 1774166999687,
+        "nextRunAtMs": 1774195799692,
+        "lastRunAtMs": 1774181399692,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 21299,
+        "lastDurationMs": 25408,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -418,7 +416,7 @@
       "name": "monitor-open-pr-ci",
       "enabled": true,
       "createdAtMs": 1772635128553,
-      "updatedAtMs": 1774180801427,
+      "updatedAtMs": 1774187997107,
       "schedule": {
         "kind": "every",
         "everyMs": 1800000,
@@ -435,11 +433,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1774182562356,
-        "lastRunAtMs": 1774180762356,
+        "nextRunAtMs": 1774189762381,
+        "lastRunAtMs": 1774187962381,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 39071,
+        "lastDurationMs": 34726,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -517,7 +515,7 @@
       "name": "cron-health-watchdog",
       "enabled": true,
       "createdAtMs": 1772636078136,
-      "updatedAtMs": 1774179975388,
+      "updatedAtMs": 1774187174556,
       "schedule": {
         "kind": "every",
         "everyMs": 1800000,
@@ -534,11 +532,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1774181766971,
-        "lastRunAtMs": 1774179966971,
+        "nextRunAtMs": 1774188966992,
+        "lastRunAtMs": 1774187166992,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 8417,
+        "lastDurationMs": 7564,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -587,7 +585,7 @@
       "description": "Sync dotfiles repo (safe mode: non-sensitive allowlist + sensitive-path guard)",
       "enabled": true,
       "createdAtMs": 1773087050715,
-      "updatedAtMs": 1774159308354,
+      "updatedAtMs": 1774180958167,
       "schedule": {
         "kind": "cron",
         "expr": "0 */6 * * *",
@@ -606,15 +604,16 @@
         "channel": "last"
       },
       "state": {
-        "nextRunAtMs": 1774180893107,
-        "lastRunAtMs": 1774159293111,
-        "lastRunStatus": "ok",
-        "lastStatus": "ok",
-        "lastDurationMs": 15243,
+        "nextRunAtMs": 1774202493107,
+        "lastRunAtMs": 1774180893111,
+        "lastRunStatus": "error",
+        "lastStatus": "error",
+        "lastDurationMs": 65056,
         "lastDeliveryStatus": "not-delivered",
-        "consecutiveErrors": 0,
+        "consecutiveErrors": 1,
         "lastDelivered": false,
-        "runningAtMs": 1774180893110
+        "lastError": "⚠️ ✉️ Message: `347` failed",
+        "lastDeliveryError": "⚠️ ✉️ Message: `347` failed"
       }
     },
     {
