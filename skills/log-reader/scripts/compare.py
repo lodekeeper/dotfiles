@@ -91,30 +91,68 @@ def compare_pack(session_id: str, services: list[str] | None, anchor: str, radiu
     ]
     sections.append("## Scope\n" + "\n".join(scope_lines))
 
-    timeline_lines = []
-    for event in filtered[:200]:
+    # Compact timeline for debug-heavy windows: collapse consecutive entries with same service+pattern
+    timeline_lines: list[str] = []
+    deduped: list[dict[str, Any]] = []
+    for event in filtered:
+        pattern = message_pattern(event["msg"])
+        if deduped and deduped[-1]["svc"] == event["svc"] and deduped[-1]["pattern"] == pattern and deduped[-1]["lvl"] == event["lvl"]:
+            deduped[-1]["count"] += 1
+            deduped[-1]["last_ts"] = event["ts"]
+            if event.get("slot") is not None:
+                deduped[-1]["slot"] = event["slot"]
+            if event.get("err"):
+                deduped[-1]["err"] = event["err"]
+        else:
+            deduped.append(
+                {
+                    "ts": event["ts"],
+                    "last_ts": event["ts"],
+                    "svc": event["svc"],
+                    "lvl": event["lvl"],
+                    "msg": event["msg"],
+                    "pattern": pattern,
+                    "slot": event.get("slot"),
+                    "err": event.get("err"),
+                    "count": 1,
+                }
+            )
+    for item in deduped[:80]:
         extras = []
-        if event.get("slot") is not None:
-            extras.append(f"slot={event['slot']}")
-        if event.get("err"):
-            extras.append(f"err={event['err']}")
+        if item.get("slot") is not None:
+            extras.append(f"slot={item['slot']}")
+        if item.get("err"):
+            extras.append(f"err={item['err']}")
+        if item["count"] > 1:
+            extras.append(f"×{item['count']} until {item['last_ts']}")
         extra_text = f" ({', '.join(extras)})" if extras else ""
-        timeline_lines.append(f"- {event['ts']} {event['svc']} {event['lvl']} {event['msg']}{extra_text}")
+        timeline_lines.append(f"- {item['ts']} {item['svc']} {item['lvl']} {item['pattern']}{extra_text}")
     sections.append("## Timeline\n" + "\n".join(timeline_lines if timeline_lines else ["- No events in window."]))
 
     service_sections: list[str] = []
     for service, service_events in sorted(by_service.items()):
         level_counts = Counter(event["lvl"] for event in service_events)
         patterns = Counter(message_pattern(event["msg"]) for event in service_events)
+        top_examples: dict[str, dict[str, Any]] = {}
+        for event in service_events:
+            pattern = message_pattern(event["msg"])
+            top_examples.setdefault(pattern, event)
         service_lines = [
             f"- Count: {len(service_events)}",
             f"- Levels: {dict(level_counts)}",
-            f"- Top patterns: {dict(patterns.most_common(5))}",
+            f"- Top patterns: {dict(patterns.most_common(8))}",
         ]
-        for event in service_events[:20]:
-            service_lines.append(f"- {event['ts']} {event['lvl']} {event['mod']} {event['msg']}")
-            if event.get("cause"):
-                service_lines.append(f"  cause:\n{event['cause']}")
+        for pattern, count in patterns.most_common(8):
+            example = top_examples[pattern]
+            extras = []
+            if example.get("slot") is not None:
+                extras.append(f"slot={example['slot']}")
+            if example.get("err"):
+                extras.append(f"err={example['err']}")
+            extra_text = f" ({', '.join(extras)})" if extras else ""
+            service_lines.append(f"- example [{count}]: {example['ts']} {example['lvl']} {example['mod']} {pattern}{extra_text}")
+            if example.get("cause"):
+                service_lines.append(f"  cause:\n{example['cause']}")
         service_sections.append(f"### {service}\n" + "\n".join(service_lines))
     sections.append("## Services\n" + ("\n\n".join(service_sections) if service_sections else "- No service slices."))
 

@@ -38,6 +38,12 @@ LODSTAR_EPOCH_RE = re.compile(
 GETH_HUMAN_RE = re.compile(
     r"^(?P<level>TRACE|DEBUG|INFO|WARN|ERRO|CRIT)\s+\[(?P<stamp>\d{2}-\d{2}\|\d{2}:\d{2}:\d{2}\.\d{3})\]\s*(?P<body>.*)$"
 )
+LIGHTHOUSE_HUMAN_RE = re.compile(
+    r"^(?P<stamp>[A-Z][a-z]{2}\s+\d{2}\s+\d{2}:\d{2}:\d{2}\.\d{3})\s+"
+    r"(?P<level>[A-Z]+)\s+"
+    r"(?P<body>.+)$"
+)
+KURTOSIS_PREFIX_RE = re.compile(r"^\[[\w.-]+\]\s*")
 GENERIC_LEVEL_RE = re.compile(r"\b(trace|debug|info|warn|warning|error|fatal|critical|panic)\b", re.IGNORECASE)
 KEY_RE = re.compile(r"(?:(?<=\s)|^)([A-Za-z_][A-Za-z0-9_./-]*)=")
 HEX_RE = re.compile(r"\b0x[a-fA-F0-9]{8,}\b")
@@ -90,6 +96,14 @@ def parse_geth_timestamp(stamp: str) -> str:
     """Parse a Geth MM-DD|HH:MM:SS.mmm timestamp."""
 
     dt = datetime.strptime(f"{current_year()} {stamp}", "%Y %m-%d|%H:%M:%S.%f")
+    dt = dt.replace(tzinfo=timezone.utc)
+    return dt.isoformat().replace("+00:00", "Z")
+
+
+def parse_lighthouse_timestamp(stamp: str) -> str:
+    """Parse a Lighthouse 'Mon DD HH:MM:SS.mmm' timestamp."""
+
+    dt = datetime.strptime(f"{current_year()} {stamp}", "%Y %b %d %H:%M:%S.%f")
     dt = dt.replace(tzinfo=timezone.utc)
     return dt.isoformat().replace("+00:00", "Z")
 
@@ -467,6 +481,56 @@ def parse_lodestar_human(raw: dict[str, Any], line: str, raw_ref: dict[str, Any]
     )
 
 
+def parse_lighthouse_human(raw: dict[str, Any], line: str, raw_ref: dict[str, Any]) -> dict[str, Any]:
+    """Parse a human-readable Lighthouse line."""
+
+    match = LIGHTHOUSE_HUMAN_RE.match(line)
+    if not match:
+        raise ValueError("not a Lighthouse human log line")
+    body = match.group("body")
+    # Lighthouse format: "Message text  key: value, key: value"
+    # Split on double-space boundary between message and KV pairs
+    LH_KV_RE = re.compile(r"\s{2,}(\w[\w_-]*):\s+")
+    kv_matches = list(LH_KV_RE.finditer(body))
+    if kv_matches:
+        message = body[: kv_matches[0].start()].strip()
+        ctx: dict[str, Any] = {}
+        for idx, kv_match in enumerate(kv_matches):
+            key = kv_match.group(1)
+            val_start = kv_match.end()
+            val_end = kv_matches[idx + 1].start() if idx + 1 < len(kv_matches) else len(body)
+            val_str = body[val_start:val_end].strip().rstrip(",")
+            # Strip quotes
+            if val_str.startswith('"') and val_str.endswith('"'):
+                val_str = val_str[1:-1]
+            ctx[key] = coerce_scalar(val_str)
+        if not ctx:
+            ctx = {}
+    else:
+        message = body.strip()
+        ctx = {}
+    error_text = flatten_error(ctx.get("error"))
+    slot, epoch, peer, root, err, cause = extract_event_fields(message, ctx, error_text)
+    module = sanitize_module(str(ctx.pop("service", "") or ctx.pop("component", "") or ""), "lighthouse")
+    return base_event(
+        ts=parse_lighthouse_timestamp(match.group("stamp")),
+        svc=str(raw["service"]),
+        client="lighthouse",
+        fmt="lighthouse-human",
+        lvl=normalize_level(match.group("level")),
+        mod=module or "lighthouse",
+        msg=message,
+        ctx=ctx,
+        raw_ref=raw_ref,
+        slot=slot,
+        epoch=epoch,
+        peer=peer,
+        root=root,
+        err=err,
+        cause=cause,
+    )
+
+
 def parse_geth_human(raw: dict[str, Any], line: str, raw_ref: dict[str, Any]) -> dict[str, Any]:
     """Parse a human-readable Geth line."""
 
@@ -530,6 +594,8 @@ def parse_event(raw: dict[str, Any], raw_file: str, raw_line_number: int) -> dic
     """Parse a single raw record into a normalized event."""
 
     line = ANSI_RE.sub("", str(raw.get("line", "")))
+    # Strip Kurtosis service prefix "[service-name] ..."
+    line = KURTOSIS_PREFIX_RE.sub("", line)
     outer_ts, inner = strip_outer_timestamp(line)
     raw_ref = {"file": raw_file, "line": raw_line_number}
     stripped = inner.strip()
@@ -542,6 +608,10 @@ def parse_event(raw: dict[str, Any], raw_file: str, raw_line_number: int) -> dic
             return parse_json_event(raw, payload, outer_ts, raw_ref)
     try:
         return parse_lodestar_human(raw, inner, raw_ref)
+    except ValueError:
+        pass
+    try:
+        return parse_lighthouse_human(raw, inner, raw_ref)
     except ValueError:
         pass
     try:
@@ -560,7 +630,8 @@ class PendingEvent:
     def append_line(self, line: str) -> None:
         """Append a continuation line to the buffered event."""
 
-        text = line.rstrip("\r\n")
+        text = ANSI_RE.sub("", line.rstrip("\r\n"))
+        text = KURTOSIS_PREFIX_RE.sub("", text)
         if not text:
             return
         existing = self.event.get("cause")
@@ -584,11 +655,17 @@ class SourceNormalizer:
         line = ANSI_RE.sub("", str(raw.get("line", ""))).strip()
         if not line:
             return False
+        line = KURTOSIS_PREFIX_RE.sub("", line)
         _, inner = strip_outer_timestamp(line)
         stripped = inner.strip()
         if stripped.startswith("{") and stripped.endswith("}"):
             return True
-        return bool(LODSTAR_EPOCH_RE.match(inner) or LODSTAR_HUMAN_RE.match(inner) or GETH_HUMAN_RE.match(inner))
+        return bool(
+            LODSTAR_EPOCH_RE.match(inner)
+            or LODSTAR_HUMAN_RE.match(inner)
+            or LIGHTHOUSE_HUMAN_RE.match(inner)
+            or GETH_HUMAN_RE.match(inner)
+        )
 
     def process(self, raw: dict[str, Any], raw_line_number: int) -> list[dict[str, Any]]:
         """Process a raw line and emit zero or more completed events."""

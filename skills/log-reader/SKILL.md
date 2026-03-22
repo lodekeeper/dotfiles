@@ -44,7 +44,7 @@ $SKILL_DIR/scripts/logskill.sh drill --session my-debug --slot 49 --radius 5m
 $SKILL_DIR/scripts/logskill.sh drill --session my-debug --time-start 2026-03-21T14:00:00Z --time-end 2026-03-21T14:05:00Z
 
 # 6. Compare services around an incident
-$SKILL_DIR/scripts/logskill.sh compare --session my-debug --slot 49 --radius 2m
+$SKILL_DIR/scripts/logskill.sh compare --session my-debug --anchor slot:49 --radius 2m
 
 # 7. Live soak monitor (post-fix verification)
 $SKILL_DIR/scripts/logskill.sh watch --session my-debug --source docker --container lodestar-beacon --interval 30
@@ -93,8 +93,8 @@ Deep-dive into specific log regions:
 - `--level LEVEL` — filter by level (error, warn, etc.)
 - `--module MODULE` — filter by module prefix
 
-### `compare --session <id> --slot N|--time-start ISO [--radius DURATION]`
-Cross-service comparison pack showing what each service was doing around an incident.
+### `compare --session <id> --anchor slot:N|time:ISO [--radius DURATION] [--services SVC1,SVC2]`
+Cross-service comparison pack showing what each service was doing around an incident. Anchor can be `slot:N` or `time:ISO8601`.
 
 ### `watch --session <id> --source <docker|kurtosis|loki|file> [source-args] [--interval SEC] [--duration DURATION]`
 Live soak monitor. Polls the source, normalizes, scans always-surface patterns, and prints alerts.
