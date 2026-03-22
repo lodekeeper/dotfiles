@@ -316,14 +316,46 @@ The goal: Be helpful without being annoying. Check in a few times a day, do usef
 
 This is a starting point. Add your own conventions, style, and rules as you figure out what works.
 
+## 🤖 Agent Usage — Expanded (mandatory)
+
+Sub-agents aren't just for code review. Use them for **all non-trivial thinking**.
+
+### When to consult agents (ALWAYS, not just dev-workflow):
+- **Before answering complex questions** → gpt-advisor or devils-advocate check first
+- **Before starting any investigation** → get a second perspective on approach
+- **Before committing to a conclusion** → challenge it with devils-advocate before reporting
+- **When uncertain between options** → spawn both gpt-advisor + devils-advocate, compare
+- **Before design decisions** → gpt-advisor for architecture consultation
+- **Before presenting findings to Nico** → stress-test with devils-advocate
+
+### Available personas (all defined in `~/dotfiles/personas/`):
+
+| Persona | Role | When to use |
+|---|---|---|
+| `gpt-advisor` | Architecture, deep reasoning, spec interpretation | Design decisions, tradeoff analysis, complex questions, spec work |
+| `devils-advocate` | Adversarial thinking, finding weaknesses | Stress-test conclusions, challenge assumptions, pre-Nico review |
+| `codex-reviewer` | General code review, correctness | Final quality gate before shipping code |
+| `review-bugs` | Bug hunting (functional errors only) | PR review: find broken behavior |
+| `review-security` | Security vulnerabilities | PR review: find exploitable flaws |
+| `reviewer-architect` | Architecture alignment | PR review: structural/design issues |
+| `review-wisdom` | Best practices, code health | PR review: long-term maintainability |
+| `review-linter` | Style consistency | PR review: convention alignment |
+| `review-defender` | Malicious code detection | PR review: supply chain / insider threats |
+| `review-devils-advocate` | Challenge PR premise (Lodestar-specific) | PR review: is this change even needed? |
+
+### The rule: Think → Consult → Verify → Deliver
+
+Don't deliver half-baked conclusions. If the answer took more than 30 seconds of thinking, it's worth a sub-agent check. This is what separates good work from great work.
+
 ## 🔄 Review Workflow (mandatory)
 
 Before posting PR reviews or important responses:
 1. Draft the review/response
-2. Send to a sub-agent for feedback:
-   - `codex-reviewer` (GPT-5.2) — code quality, edge cases
+2. Send to sub-agents for feedback (select from persona table above based on PR scope):
+   - `codex-reviewer` — code quality, correctness, edge cases
    - `gemini-reviewer` (Gemini Flash) — quick sanity check
-   - `gpt-advisor` (GPT-5.2) — second opinion on complex issues
+   - `gpt-advisor` — second opinion on complex issues
+   - Additional personas as needed (see lodestar-review skill for reviewer selection matrix)
 3. Incorporate feedback
 4. Post the final version
 
@@ -334,8 +366,9 @@ Before posting PR reviews or important responses:
 When writing code myself (PRs, patches, implementations):
 1. **Design phase:** Discuss approach with sub-agents first
    - Share problem context and proposed solution
-   - Get feedback on architecture/approach
-2. **Implementation:** Write the code
+   - Get feedback on architecture/approach (gpt-advisor)
+   - Challenge the premise (devils-advocate)
+2. **Implementation:** Write the code (delegate to Codex CLI / Claude CLI)
 3. **Review phase:** Send code to sub-agents for review
    - Check for bugs, edge cases, style issues
    - Verify it meets the requirements
