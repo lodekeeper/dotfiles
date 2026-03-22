@@ -202,12 +202,12 @@ def find_gap_reason(events: list[dict[str, Any]]) -> str | None:
 # These should NOT be elevated to "suspicious" tier just because they burst
 # during sync/catchup — bursting is *expected* behavior for these patterns.
 _NORMAL_OPERATION_PATTERNS: set[str] = {
+    # Block processing pipeline — expected to burst during sync/catchup
     "added block to forkchoice and state cache",
     "block processed",
     "call engine api newpayload",
     "receive engine api newpayload result",
     "persist block to hot db",
-    "persisted datacolumsidecars to hot db",
     "persisted datacolumsidecars to hot db",
     "persisted datacolumnsidecars to hot db",
     "persisted blocksinput to db",
@@ -219,12 +219,67 @@ _NORMAL_OPERATION_PATTERNS: set[str] = {
     "receive engine api forkchoiceupdated result",
     "imported block",
     "processed block",
+    # Peer discovery churn — normal network operation, not suspicious
+    "handlediscoveredpeer",
+    "discovered peer via discv5",
+    "discovered peer via libp2p",
+    "dialing discovered peer",
+    "dialed discovered peer",
+    "peer connected",
+    "onlibp2ppeerdisconnect",
+    "peer disconnected",
+    "discover peers outcome",
+    "peer discovered with no cgc, using default/miniumn",
+    # Request/response lifecycle — normal protocol operations
+    "req  dialing peer",
+    "req  request sent",
+    "req  stream closed",
+    "resp received request",
+    "resp sending chunk",
+    "resp stream closed",
+    # Gossip lifecycle — normal message propagation
+    "gossip block received",
+    "gossip attestation received",
+    "gossipsub:handlereceivedmessage",
+    "received gossip datacolumn",
+    "received gossip data column, waiting for full data availability",
+    "publish to topic",
+    # Protocol event handlers — normal lifecycle callbacks
+    "onstatus",
+    "onpeerconnected",
+    "onmetadata",
+    "peer score adjusted",
+    # Slot pipeline — normal per-slot operations
+    "running preparefornextslot",
+    "migratedatacolumnsidecarsfromhottocolddb",
+    # Request completion — normal req/resp lifecycle
+    "req  done",
+    # Data availability pipeline — normal block assembly
+    "trigger getblobsv2 for block",
+    "completed getblobsv2 for block",
+    "getblobsv2 result for block",
+    "no unknown block, process ancestor downloaded blocks",
+}
+
+
+# Peer discovery patterns that appear with error causes during normal sync
+# (e.g., "Error dialing discovered peer" with ECONNRESET is expected churn, not a bug)
+_NORMAL_CHURN_PATTERNS: set[str] = {
+    "error dialing discovered peer",
+    "disconnected a peer. enforcing a reconnection cool-down period",
 }
 
 
 def _is_normal_operation(pattern: str) -> bool:
     """Check if a template pattern matches a normal operation."""
-    return pattern.strip().lower() in _NORMAL_OPERATION_PATTERNS
+    lowered = pattern.strip().lower()
+    if lowered in _NORMAL_OPERATION_PATTERNS:
+        return True
+    # Check prefix matches for churn patterns that carry error context
+    for churn_pattern in _NORMAL_CHURN_PATTERNS:
+        if lowered.startswith(churn_pattern):
+            return True
+    return False
 
 
 def score_template(events: list[dict[str, Any]], matched_rule_ids: list[str]) -> tuple[str, int, list[str]]:
@@ -276,18 +331,34 @@ def score_template(events: list[dict[str, Any]], matched_rule_ids: list[str]) ->
         reasons.append("normal-operation")
 
     # --- Tier assignment ---
-    if matched_rule_ids:
-        tier = "critical"
-    elif is_normal and not ({"error", "fatal", "critical", "warn"} & levels):
-        # Normal operations stay background even if they burst during sync
-        tier = "background"
-    elif {"error", "fatal", "critical", "warn"} & levels or has_error_cause:
-        tier = "suspicious"
-    elif any(
+    # Strong signals: always-surface match, error/warn log level, error cause present
+    has_strong_signal = (
+        bool(matched_rule_ids)
+        or bool({"error", "fatal", "critical", "warn"} & levels)
+        or has_error_cause
+    )
+    # Weak signals: time gaps, slot gaps, bursts, singletons
+    # These alone shouldn't promote to suspicious — they're often just normal debug noise
+    has_weak_signal = any(
         reason in {"singleton", "burst"} or reason.startswith("slot gap") or reason.startswith("time gap")
         for reason in reasons
-    ):
+    )
+
+    if matched_rule_ids:
+        tier = "critical"
+    elif is_normal and not bool({"error", "fatal", "critical", "warn"} & levels):
+        # Normal operations (including churn with error causes like dial failures)
+        # stay background unless they have error/warn LOG LEVEL (not just error cause).
+        # Error causes on normal-churn patterns (ECONNRESET, EOF on peer dial) are expected.
+        tier = "background"
+    elif has_strong_signal:
         tier = "suspicious"
+    elif has_weak_signal and ("burst" in reasons or "singleton" in reasons):
+        # Bursts and singletons are moderately interesting even without error context
+        tier = "suspicious"
+    elif has_weak_signal:
+        # Time/slot gaps alone are not suspicious — they're just temporal spacing
+        tier = "background"
     else:
         tier = "background"
 
@@ -449,13 +520,24 @@ def build_status_reducer(events: list[dict[str, Any]]) -> dict[str, Any]:
     return {"services": services}
 
 
+# Messages that indicate actual block import activity (not just any event with a slot)
+_BLOCK_IMPORT_KEYWORDS = {
+    "import", "added block", "block processed", "persist block",
+    "new chain head", "new block", "synced", "downloaded",
+    "received block", "gossip block", "block accepted",
+}
+
+
 def build_block_import_reducer(events: list[dict[str, Any]]) -> dict[str, Any]:
     """Summarize block import activity and anomalies."""
 
     services: dict[str, dict[str, Any]] = {}
     for event in events:
         lower_msg = event["msg"].lower()
-        if "import" not in lower_msg and event.get("slot") is None:
+        # Only count events that are actually about block imports, not just any event with a slot
+        if not any(keyword in lower_msg for keyword in _BLOCK_IMPORT_KEYWORDS):
+            continue
+        if event.get("slot") is None:
             continue
         service = event["svc"]
         summary = services.setdefault(
@@ -541,6 +623,15 @@ def build_peer_health_reducer(events: list[dict[str, Any]]) -> dict[str, Any]:
     return {"services": output_services}
 
 
+# Keywords that indicate request/response protocol activity
+_REQRESP_KEYWORDS = {
+    "reqresp", "rpc", "request", "response",
+    "req ", "resp ", "invalid request",
+    "goodbye", "send goodbye",
+    "request_error", "dial_error", "dial_timeout", "empty_response",
+}
+
+
 def build_reqresp_reducer(events: list[dict[str, Any]]) -> dict[str, Any]:
     """Summarize request/response log activity."""
 
@@ -548,7 +639,15 @@ def build_reqresp_reducer(events: list[dict[str, Any]]) -> dict[str, Any]:
     for event in events:
         lower_msg = event["msg"].lower()
         lower_mod = str(event.get("mod", "")).lower()
-        if "reqresp" not in lower_mod and "rpc" not in lower_mod and "request" not in lower_msg and "response" not in lower_msg:
+        err_text = str(event.get("err") or "").lower()
+        # Match reqresp events: module-based OR message/error content
+        is_reqresp = (
+            "reqresp" in lower_mod
+            or "rpc" in lower_mod
+            or any(keyword in lower_msg for keyword in ("req ", "resp ", "request", "response", "goodbye", "invalid request"))
+            or any(keyword in err_text for keyword in ("request_error", "dial_error", "dial_timeout", "empty_response"))
+        )
+        if not is_reqresp:
             continue
         service = event["svc"]
         summary = services.setdefault(
@@ -559,6 +658,7 @@ def build_reqresp_reducer(events: list[dict[str, Any]]) -> dict[str, Any]:
                 "timeouts": 0,
                 "methods": Counter(),
                 "peers": Counter(),
+                "error_types": Counter(),
             },
         )
         summary["count"] += 1
@@ -568,9 +668,12 @@ def build_reqresp_reducer(events: list[dict[str, Any]]) -> dict[str, Any]:
         peer = event.get("peer")
         if peer:
             summary["peers"][str(peer)] += 1
-        if event["lvl"] in {"error", "fatal", "critical"}:
+        if event["lvl"] in {"error", "fatal", "critical"} or event.get("err"):
             summary["errors"] += 1
-        if "timeout" in lower_msg:
+        err = event.get("err")
+        if err:
+            summary["error_types"][str(err)] += 1
+        if "timeout" in lower_msg or "dial_timeout" in err_text:
             summary["timeouts"] += 1
     output_services: dict[str, dict[str, Any]] = {}
     for service, summary in services.items():
@@ -580,6 +683,7 @@ def build_reqresp_reducer(events: list[dict[str, Any]]) -> dict[str, Any]:
             "timeouts": summary["timeouts"],
             "methods": top_counter_items(summary["methods"], limit=10),
             "peers": top_counter_items(summary["peers"], limit=10),
+            "error_types": top_counter_items(summary["error_types"], limit=10),
         }
     return {"services": output_services}
 

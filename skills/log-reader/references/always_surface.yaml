@@ -157,3 +157,85 @@ always_surface:
       field: ctx.recvToImportLatency
       gt: 8000  # >8s in ms
     label: "Slow block import (>8s)"
+
+  # === Gossip Validation ===
+  - id: gossip-reject
+    severity: high
+    match:
+      any:
+        - {field: msg, contains: "Gossip validation rejected"}
+        - {field: msg, contains: "gossip validation reject"}
+    label: "Gossip validation rejection"
+    keep_fields: [slot, peer, err, cause]
+
+  - id: gossip-ignore
+    severity: high
+    match:
+      field: msg
+      contains: "Gossip validation ignored"
+    label: "Gossip validation ignored (potential issue)"
+    keep_fields: [slot, peer, err]
+
+  # === State Regen ===
+  - id: state-regen-error
+    severity: critical
+    match:
+      any:
+        - {field: msg, contains: "Error on state regen"}
+        - {field: msg, contains: "State regen to slot"}
+        - {field: msg, contains: "Failed to regen state"}
+    label: "State regen error"
+    keep_fields: [slot, root, err, cause]
+
+  # === Sync Errors ===
+  - id: sync-chain-error
+    severity: high
+    match:
+      any:
+        - {field: msg, contains: "SyncChain Error"}
+        - {field: msg, contains: "BATCH_ERROR"}
+    label: "Sync chain batch error"
+    keep_fields: [slot, err, cause]
+
+  - id: finality-stall
+    severity: critical
+    match:
+      field: msg
+      contains: "Finality checkpoint lagging behind"
+    label: "Finality stall detected"
+    keep_fields: [epoch, slot]
+
+  # === Memory / Process Health ===
+  - id: heap-limit
+    severity: high
+    match:
+      field: msg
+      contains: "heap size limit is too low"
+    label: "Node.js heap size warning"
+
+  - id: unhandled-rejection
+    severity: critical
+    match:
+      any:
+        - {field: msg, pattern: "(?i)unhandledrejection"}
+        - {field: msg, contains: "unhandled promise rejection"}
+    label: "Unhandled promise rejection"
+
+  # === Attestation / Validator ===
+  - id: attestation-error
+    severity: high
+    match:
+      any:
+        - {field: msg, contains: "Error processing attestation"}
+        - {field: err, pattern: "^ATTESTATION_ERROR_"}
+    label: "Attestation processing error"
+    keep_fields: [slot, epoch, peer, err, cause]
+
+  - id: proposer-slashing
+    severity: critical
+    match:
+      any:
+        - {field: msg, contains: "proposer slashing"}
+        - {field: msg, contains: "attester slashing"}
+    label: "Slashing event detected"
+    keep_fields: [slot, epoch]

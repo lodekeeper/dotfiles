@@ -27,11 +27,11 @@ from scripts.state import (  # noqa: E402
 )
 
 
-LODSTAR_HUMAN_RE = re.compile(
+LODESTAR_HUMAN_RE = re.compile(
     r"^(?P<stamp>[A-Z][a-z]{2}-\d{2}\s+\d{2}:\d{2}:\d{2}\.\d{3})\s*\[(?P<module>[^\]]*)\]\s+"
     r"(?P<level>[A-Za-z]+):\s*(?P<body>.*)$"
 )
-LODSTAR_EPOCH_RE = re.compile(
+LODESTAR_EPOCH_RE = re.compile(
     r"^Eph\s+(?P<epoch>\d+)\/(?P<slot>\d+)(?:\s+(?P<seconds>[0-9:.]+))?\s+\[(?P<module>[^\]]*)\]\s+"
     r"(?P<level>[A-Za-z]+):\s*(?P<body>.*)$"
 )
@@ -428,7 +428,7 @@ def parse_json_event(raw: dict[str, Any], payload: dict[str, Any], outer_ts: str
 def parse_lodestar_human(raw: dict[str, Any], line: str, raw_ref: dict[str, Any]) -> dict[str, Any]:
     """Parse a human-readable Lodestar line."""
 
-    epoch_match = LODSTAR_EPOCH_RE.match(line)
+    epoch_match = LODESTAR_EPOCH_RE.match(line)
     if epoch_match:
         message, ctx = split_message_and_kv(epoch_match.group("body"))
         epoch = int(epoch_match.group("epoch"))
@@ -455,7 +455,7 @@ def parse_lodestar_human(raw: dict[str, Any], line: str, raw_ref: dict[str, Any]
             err=err,
             cause=cause,
         )
-    human_match = LODSTAR_HUMAN_RE.match(line)
+    human_match = LODESTAR_HUMAN_RE.match(line)
     if not human_match:
         raise ValueError("not a Lodestar human log line")
     message, ctx = split_message_and_kv(human_match.group("body"))
@@ -661,8 +661,8 @@ class SourceNormalizer:
         if stripped.startswith("{") and stripped.endswith("}"):
             return True
         return bool(
-            LODSTAR_EPOCH_RE.match(inner)
-            or LODSTAR_HUMAN_RE.match(inner)
+            LODESTAR_EPOCH_RE.match(inner)
+            or LODESTAR_HUMAN_RE.match(inner)
             or LIGHTHOUSE_HUMAN_RE.match(inner)
             or GETH_HUMAN_RE.match(inner)
         )

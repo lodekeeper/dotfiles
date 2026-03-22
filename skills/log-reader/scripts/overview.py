@@ -49,13 +49,18 @@ def format_template_line(template: dict[str, Any]) -> str:
     """Render a single template summary line."""
 
     reasons = ", ".join(template.get("reasons", []))
-    # Use pattern for display if it differs from sample_msg (i.e., has generalizations)
     display_msg = template.get("pattern", template["sample_msg"])
-    return (
+    line = (
         f"- `{template['id']}` [{template['score_tier']}] score={template['score']} count={template['count']} "
         f"svc={','.join(sorted(template.get('svc_counts', {}).keys()))} mod={template['mod']} "
         f"msg={display_msg} reasons={reasons}"
     )
+    # Append top error types inline if present (key grep advantage)
+    top_errors = template.get("top_errors", {})
+    if top_errors:
+        error_summary = ", ".join(f"{err}({count})" for err, count in sorted(top_errors.items(), key=lambda x: -x[1])[:3])
+        line += f" errors=[{error_summary}]"
+    return line
 
 
 def format_hit_line(hit: dict[str, Any]) -> str:
@@ -162,31 +167,18 @@ def overview_pack(session_id: str, profile: str) -> dict[str, Any]:
             f"- peers `{service}` low_peer_events={len(data['low_peer_events'])} connects={data['connects']} disconnects={data['disconnects']}"
         )
     for service, data in reqresp.get("services", {}).items():
+        error_types = data.get("error_types", {})
+        error_summary = ""
+        if error_types:
+            top_3 = sorted(error_types.items(), key=lambda x: -x[1])[:3]
+            error_summary = " top_errors=[" + ", ".join(f"{err}({count})" for err, count in top_3) + "]"
         reducer_lines.append(
-            f"- reqresp `{service}` count={data['count']} errors={data['errors']} timeouts={data['timeouts']}"
+            f"- reqresp `{service}` count={data['count']} errors={data['errors']} timeouts={data['timeouts']}{error_summary}"
         )
     append_section(sections, "Reducers", reducer_lines)
 
     # Deduplicate timeline: group consecutive entries that match the same template
-    # Build a template lookup from templates.json for pattern matching
-    import re as _re
-    _HEX = _re.compile(r"\b0x[a-fA-F0-9]{4,}\b")
-    _PEER = _re.compile(r"\b(16Uiu[0-9A-Za-z]+|Qm[0-9A-Za-z]{20,})\b")
-    _NUM = _re.compile(r"\b\d+\b")
-    _REQID = _re.compile(r"\breq-[a-zA-Z0-9]+\b")
-    _QUOTED = _re.compile(r'"[^"]*"')
-    _TRUNC_HASH = _re.compile(r"\b0x[a-fA-F0-9]{4}…[a-fA-F0-9]*\b")
-    _SHORT_HEX = _re.compile(r"\b[a-f0-9]{4,}…[a-f0-9]*\b")
-
-    def _timeline_pattern(msg: str) -> str:
-        p = _QUOTED.sub("<str>", msg)
-        p = _HEX.sub("<hex>", p)
-        p = _TRUNC_HASH.sub("<hex>", p)
-        p = _SHORT_HEX.sub("<hex>", p)
-        p = _PEER.sub("<peer>", p)
-        p = _REQID.sub("<req>", p)
-        p = _NUM.sub("<num>", p)
-        return p
+    from scripts.build import message_pattern as _timeline_pattern
 
     raw_timeline = timeline.get("timeline", [])
     deduped_timeline: list[dict[str, Any]] = []
