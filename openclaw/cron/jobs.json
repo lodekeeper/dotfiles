@@ -247,7 +247,7 @@
       "name": "github-notifications",
       "enabled": true,
       "createdAtMs": 1772107716625,
-      "updatedAtMs": 1774154869638,
+      "updatedAtMs": 1774155468734,
       "schedule": {
         "kind": "every",
         "everyMs": 300000,
@@ -266,13 +266,13 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1774154849635,
+        "lastRunAtMs": 1774155449646,
         "lastStatus": "ok",
-        "lastDurationMs": 20003,
+        "lastDurationMs": 19088,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1774155149635,
+        "nextRunAtMs": 1774155749646,
         "lastDelivered": false
       },
       "deleteAfterRun": false
@@ -418,7 +418,7 @@
       "name": "monitor-open-pr-ci",
       "enabled": true,
       "createdAtMs": 1772635128553,
-      "updatedAtMs": 1774153797896,
+      "updatedAtMs": 1774155594107,
       "schedule": {
         "kind": "every",
         "everyMs": 1800000,
@@ -435,11 +435,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1774155562277,
-        "lastRunAtMs": 1774153762277,
+        "nextRunAtMs": 1774157362283,
+        "lastRunAtMs": 1774155562283,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 35619,
+        "lastDurationMs": 31824,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
