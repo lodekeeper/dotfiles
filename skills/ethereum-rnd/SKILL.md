@@ -500,3 +500,8 @@ Dark boxes denote headliners, grey boxes indicate offchain upgrades, black boxes
 5. **For implementation details**, the consensus-specs Python code is executable and testable — it's not just documentation
 6. **Fork order matters** — each fork builds on the previous. Start with the latest relevant fork and reference earlier ones for context
 7. **Cross-file search is powerful** — `grep -r "term" ~/ethereum-repos/consensus-specs/specs/` finds all references instantly
+
+
+## Self-Maintenance
+
+If any commands, file paths, URLs, or configurations in this skill are outdated or no longer work, update this SKILL.md with the correct information after completing your current task. Skills should stay accurate and self-healing — fix what you find broken.

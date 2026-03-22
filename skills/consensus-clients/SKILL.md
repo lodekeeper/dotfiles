@@ -491,3 +491,8 @@ gh search issues "keyword" --repo ChainSafe/lodestar
 | rust-libp2p | `libp2p/rust-libp2p` | libp2p networking stack in Rust | Lighthouse, Grandine |
 | js-libp2p | `libp2p/js-libp2p` | libp2p networking stack in JavaScript | Lodestar |
 | c-kzg-4844 | `ethereum/c-kzg-4844` | KZG commitment library for EIP-4844 blobs | Most clients via bindings |
+
+
+## Self-Maintenance
+
+If any commands, file paths, URLs, or configurations in this skill are outdated or no longer work, update this SKILL.md with the correct information after completing your current task. Skills should stay accurate and self-healing — fix what you find broken.

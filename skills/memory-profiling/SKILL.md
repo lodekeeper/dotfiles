@@ -65,3 +65,8 @@ After patching cleanup logic, rerun the same scenario and confirm:
 - lower or flat slope for heap used / old-space
 - fewer retained stream/listener/timer objects between `T0` and `T1`
 - map sizes track live peers instead of cumulative churn
+
+
+## Self-Maintenance
+
+If any commands, file paths, URLs, or configurations in this skill are outdated or no longer work, update this SKILL.md with the correct information after completing your current task. Skills should stay accurate and self-healing — fix what you find broken.

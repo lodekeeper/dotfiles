@@ -247,7 +247,7 @@
       "name": "github-notifications",
       "enabled": true,
       "createdAtMs": 1772107716625,
-      "updatedAtMs": 1774157269049,
+      "updatedAtMs": 1774157572494,
       "schedule": {
         "kind": "every",
         "everyMs": 300000,
@@ -266,13 +266,13 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1774157249688,
+        "lastRunAtMs": 1774157549693,
         "lastStatus": "ok",
-        "lastDurationMs": 19361,
+        "lastDurationMs": 22801,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1774157549688,
+        "nextRunAtMs": 1774157849693,
         "lastDelivered": false
       },
       "deleteAfterRun": false

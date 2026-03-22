@@ -348,3 +348,8 @@ curl -s "$BASE/eth/v1/lodestar/validator/participation/$EPOCH" | jq '.data'
 - **Execution optimistic:** Response field `execution_optimistic: true` means the CL hasn't verified the EL payload yet. Data may change.
 - **Spec reference:** Full OpenAPI spec at `~/beacon-APIs/beacon-node-oapi.yaml`
 - **Validator flow:** `~/beacon-APIs/validator-flow.md` — how VC and BN interact
+
+
+## Self-Maintenance
+
+If any commands, file paths, URLs, or configurations in this skill are outdated or no longer work, update this SKILL.md with the correct information after completing your current task. Skills should stay accurate and self-healing — fix what you find broken.

@@ -134,3 +134,8 @@ Use this after the warm-up window and slope check:
 ## Lodestar endpoint location
 - Endpoint wiring is in `packages/api/src/beacon/routes/lodestar.ts`.
 - Handler uses `writeHeapdump` and supports thread selection.
+
+
+## Self-Maintenance
+
+If any commands, file paths, URLs, or configurations in this skill are outdated or no longer work, update this SKILL.md with the correct information after completing your current task. Skills should stay accurate and self-healing — fix what you find broken.
