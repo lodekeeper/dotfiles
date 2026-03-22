@@ -32,6 +32,9 @@ HEX_RE = re.compile(r"\b0x[a-fA-F0-9]{8,}\b")
 PEER_RE = re.compile(r"\b(16Uiu[0-9A-Za-z]+|Qm[0-9A-Za-z]{20,})\b")
 NUMBER_RE = re.compile(r"\b\d+\b")
 QUOTED_RE = re.compile(r'"[^"]*"')
+REQ_ID_RE = re.compile(r"\breq-[a-zA-Z0-9]+\b")
+SHORT_HEX_RE = re.compile(r"\b[a-f0-9]{4,}…[a-f0-9]*\b")
+TRUNCATED_HASH_RE = re.compile(r"\b0x[a-fA-F0-9]{4}…[a-fA-F0-9]*\b")
 
 ALWAYS_SURFACE_PATH = Path(__file__).resolve().parent.parent / "references" / "always_surface.yaml"
 
@@ -153,7 +156,10 @@ def message_pattern(message: str) -> str:
 
     pattern = QUOTED_RE.sub("<str>", message)
     pattern = HEX_RE.sub("<hex>", pattern)
+    pattern = TRUNCATED_HASH_RE.sub("<hex>", pattern)
+    pattern = SHORT_HEX_RE.sub("<hex>", pattern)
     pattern = PEER_RE.sub("<peer>", pattern)
+    pattern = REQ_ID_RE.sub("<req>", pattern)
     pattern = NUMBER_RE.sub("<num>", pattern)
     return pattern
 

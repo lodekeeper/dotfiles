@@ -28,12 +28,12 @@ from scripts.state import (  # noqa: E402
 
 
 LODSTAR_HUMAN_RE = re.compile(
-    r"^(?P<stamp>[A-Z][a-z]{2}-\d{2}\s+\d{2}:\d{2}:\d{2}\.\d{3})\s+\[(?P<module>[^\]]+)\]\s+"
-    r"(?P<level>[A-Z]+):\s*(?P<body>.*)$"
+    r"^(?P<stamp>[A-Z][a-z]{2}-\d{2}\s+\d{2}:\d{2}:\d{2}\.\d{3})\s*\[(?P<module>[^\]]*)\]\s+"
+    r"(?P<level>[A-Za-z]+):\s*(?P<body>.*)$"
 )
 LODSTAR_EPOCH_RE = re.compile(
-    r"^Eph\s+(?P<epoch>\d+)\/(?P<slot>\d+)(?:\s+(?P<seconds>[0-9:.]+))?\s+\[(?P<module>[^\]]+)\]\s+"
-    r"(?P<level>[A-Z]+):\s*(?P<body>.*)$"
+    r"^Eph\s+(?P<epoch>\d+)\/(?P<slot>\d+)(?:\s+(?P<seconds>[0-9:.]+))?\s+\[(?P<module>[^\]]*)\]\s+"
+    r"(?P<level>[A-Za-z]+):\s*(?P<body>.*)$"
 )
 GETH_HUMAN_RE = re.compile(
     r"^(?P<level>TRACE|DEBUG|INFO|WARN|ERRO|CRIT)\s+\[(?P<stamp>\d{2}-\d{2}\|\d{2}:\d{2}:\d{2}\.\d{3})\]\s*(?P<body>.*)$"
@@ -46,6 +46,8 @@ SLOT_RE = re.compile(r"\bslot(?:=|\s+)(\d+)\b", re.IGNORECASE)
 EPOCH_RE = re.compile(r"\bepoch(?:=|\s+)(\d+)\b", re.IGNORECASE)
 ERR_RE = re.compile(r"\b([A-Z][A-Z0-9_]{5,})\b")
 ISO_PREFIX_RE = re.compile(r"^(?P<ts>\d{4}-\d{2}-\d{2}T[0-9:.+-]+Z?)\s+(?P<rest>.*)$")
+
+ANSI_RE = re.compile(r"\x1b\[[0-9;]*m")
 
 LEVEL_MAP = {
     "trace": "trace",
@@ -134,21 +136,40 @@ def coerce_scalar(value: str) -> Any:
     return text
 
 
+LODESTAR_DASH_KV_RE = re.compile(r"\s+-\s+([a-zA-Z][a-zA-Z0-9_-]*):\s+")
+
+
 def split_message_and_kv(body: str) -> tuple[str, dict[str, Any]]:
     """Split a log body into message text and trailing key-value pairs."""
 
+    # Try standard key=value first
     matches = list(KEY_RE.finditer(body))
-    if not matches:
-        return body.strip(), {}
-    first = matches[0]
-    message = body[: first.start()].rstrip(" ,")
-    fields: dict[str, Any] = {}
-    for index, match in enumerate(matches):
-        key = match.group(1)
-        value_start = match.end()
-        value_end = matches[index + 1].start() if index + 1 < len(matches) else len(body)
-        fields[key] = coerce_scalar(body[value_start:value_end])
-    return message.strip(), fields
+    if matches:
+        first = matches[0]
+        message = body[: first.start()].rstrip(" ,")
+        fields: dict[str, Any] = {}
+        for index, match in enumerate(matches):
+            key = match.group(1)
+            value_start = match.end()
+            value_end = matches[index + 1].start() if index + 1 < len(matches) else len(body)
+            fields[key] = coerce_scalar(body[value_start:value_end])
+        return message.strip(), fields
+
+    # Try Lodestar dash-separated "msg - key: value - key: value" format
+    dash_matches = list(LODESTAR_DASH_KV_RE.finditer(body))
+    if dash_matches:
+        first = dash_matches[0]
+        message = body[: first.start()].strip()
+        fields = {}
+        for index, match in enumerate(dash_matches):
+            key = match.group(1).replace("-", "_")
+            value_start = match.end()
+            value_end = dash_matches[index + 1].start() if index + 1 < len(dash_matches) else len(body)
+            fields[key] = coerce_scalar(body[value_start:value_end])
+        return message, fields
+
+    # Try simple "key=value, key=value" (comma-separated)
+    return body.strip(), {}
 
 
 def flatten_error(value: Any) -> str | None:
@@ -508,7 +529,7 @@ def parse_generic_event(raw: dict[str, Any], line: str, outer_ts: str | None, ra
 def parse_event(raw: dict[str, Any], raw_file: str, raw_line_number: int) -> dict[str, Any]:
     """Parse a single raw record into a normalized event."""
 
-    line = str(raw.get("line", ""))
+    line = ANSI_RE.sub("", str(raw.get("line", "")))
     outer_ts, inner = strip_outer_timestamp(line)
     raw_ref = {"file": raw_file, "line": raw_line_number}
     stripped = inner.strip()
@@ -560,7 +581,7 @@ class SourceNormalizer:
     def is_new_event(self, raw: dict[str, Any]) -> bool:
         """Return True if the raw line starts a new log event."""
 
-        line = str(raw.get("line", "")).strip()
+        line = ANSI_RE.sub("", str(raw.get("line", ""))).strip()
         if not line:
             return False
         _, inner = strip_outer_timestamp(line)

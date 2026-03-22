@@ -49,10 +49,12 @@ def format_template_line(template: dict[str, Any]) -> str:
     """Render a single template summary line."""
 
     reasons = ", ".join(template.get("reasons", []))
+    # Use pattern for display if it differs from sample_msg (i.e., has generalizations)
+    display_msg = template.get("pattern", template["sample_msg"])
     return (
         f"- `{template['id']}` [{template['score_tier']}] score={template['score']} count={template['count']} "
         f"svc={','.join(sorted(template.get('svc_counts', {}).keys()))} mod={template['mod']} "
-        f"msg={template['sample_msg']} reasons={reasons}"
+        f"msg={display_msg} reasons={reasons}"
     )
 
 
@@ -165,7 +167,45 @@ def overview_pack(session_id: str, profile: str) -> dict[str, Any]:
         )
     append_section(sections, "Reducers", reducer_lines)
 
-    timeline_lines = [format_timeline_line(entry) for entry in timeline.get("timeline", [])[:25]]
+    # Deduplicate timeline: group consecutive entries that match the same template
+    # Build a template lookup from templates.json for pattern matching
+    import re as _re
+    _HEX = _re.compile(r"\b0x[a-fA-F0-9]{4,}\b")
+    _PEER = _re.compile(r"\b(16Uiu[0-9A-Za-z]+|Qm[0-9A-Za-z]{20,})\b")
+    _NUM = _re.compile(r"\b\d+\b")
+    _REQID = _re.compile(r"\breq-[a-zA-Z0-9]+\b")
+    _QUOTED = _re.compile(r'"[^"]*"')
+    _TRUNC_HASH = _re.compile(r"\b0x[a-fA-F0-9]{4}…[a-fA-F0-9]*\b")
+    _SHORT_HEX = _re.compile(r"\b[a-f0-9]{4,}…[a-f0-9]*\b")
+
+    def _timeline_pattern(msg: str) -> str:
+        p = _QUOTED.sub("<str>", msg)
+        p = _HEX.sub("<hex>", p)
+        p = _TRUNC_HASH.sub("<hex>", p)
+        p = _SHORT_HEX.sub("<hex>", p)
+        p = _PEER.sub("<peer>", p)
+        p = _REQID.sub("<req>", p)
+        p = _NUM.sub("<num>", p)
+        return p
+
+    raw_timeline = timeline.get("timeline", [])
+    deduped_timeline: list[dict[str, Any]] = []
+    for entry in raw_timeline:
+        entry_pattern = _timeline_pattern(entry.get("msg", ""))
+        if deduped_timeline and deduped_timeline[-1].get("_pattern") == entry_pattern and deduped_timeline[-1].get("svc") == entry.get("svc"):
+            deduped_timeline[-1]["_repeat_count"] = deduped_timeline[-1].get("_repeat_count", 1) + 1
+            deduped_timeline[-1]["_last_ts"] = entry["ts"]
+        else:
+            new_entry = dict(entry)
+            new_entry["_pattern"] = entry_pattern
+            deduped_timeline.append(new_entry)
+    timeline_lines: list[str] = []
+    for entry in deduped_timeline[:25]:
+        line = format_timeline_line(entry)
+        repeat = entry.get("_repeat_count", 1)
+        if repeat > 1:
+            line += f" (×{repeat} until {entry['_last_ts']})"
+        timeline_lines.append(line)
     append_section(sections, "Timeline", timeline_lines)
 
     hint_lines: list[str] = []
