@@ -1,7 +1,27 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-03-21 (16th pass)
+> Updated: 2026-03-22 (17th pass)
+
+---
+
+## Daily Audit Snapshot — 2026-03-22 (self-improvement-audit-daily, 23:46 UTC)
+
+### PR review
+- **Status:** review-scope + follow-up guard workflow remains healthy; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** retry telemetry, rolling degradation checks, and log-fallback path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** extraction/compliance/vector-readiness gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident-bundle workflow remains healthy; no new blocker discovered this cycle.
+
+### Audit workflow (cross-cutting)
+- **Blocker:** daily autonomy snapshots were still manually scaffolded, so required sections could be skipped and heading format could drift across days.
+- **Fix applied this cycle:** added `scripts/notes/prepend-autonomy-audit-snapshot.py` to auto-prepend a dated snapshot scaffold (PR review, CI fix, spec implementation, devnet debugging) with duplicate-date protection.
 
 ---
 
@@ -363,6 +383,15 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Daily autonomy snapshot scaffolder added (2026-03-22)
+Created `scripts/notes/prepend-autonomy-audit-snapshot.py`:
+- prepends a correctly formatted `## Daily Audit Snapshot — YYYY-MM-DD` block at the top of `notes/autonomy-gaps.md`,
+- always includes the four required domains (PR review, CI fix, spec implementation, devnet debugging),
+- skips duplicate insertion for the same date unless `--force` is provided,
+- supports explicit `--date` and `--time-label` for deterministic cron output.
+
+**Rationale:** removes a recurring manual step that could drift or omit required sections, making daily autonomy audits more consistent and automatable.
 
 ### ✅ Local review-scope guard script + skill wiring (2026-03-21)
 Added `scripts/review/check-review-scope.sh` and updated `skills/lodestar-review/SKILL.md` so local review runs default to:

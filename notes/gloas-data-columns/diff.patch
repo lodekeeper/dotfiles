@@ -1,0 +1,1093 @@
+diff --git a/packages/beacon-node/src/chain/ColumnReconstructionTracker.ts b/packages/beacon-node/src/chain/ColumnReconstructionTracker.ts
+index 337fedb039..feedbc5618 100644
+--- a/packages/beacon-node/src/chain/ColumnReconstructionTracker.ts
++++ b/packages/beacon-node/src/chain/ColumnReconstructionTracker.ts
+@@ -1,8 +1,13 @@
+ import {ChainForkConfig} from "@lodestar/config";
+ import {Logger, sleep} from "@lodestar/utils";
+ import {Metrics} from "../metrics/metrics.js";
+-import {DataColumnReconstructionCode, recoverDataColumnSidecars} from "../util/dataColumns.js";
++import {
++  DataColumnReconstructionCode,
++  recoverDataColumnSidecars,
++  recoverGloasDataColumnSidecars,
++} from "../util/dataColumns.js";
+ import {BlockInputColumns} from "./blocks/blockInput/index.js";
++import {PayloadEnvelopeInput} from "./blocks/payloadEnvelopeInput/index.js";
+ import {ChainEventEmitter} from "./emitter.js";
+ 
+ /**
+@@ -91,4 +96,44 @@ export class ColumnReconstructionTracker {
+         this.logger.debug("ColumnReconstructionTracker unreachable error", {}, err);
+       });
+   }
++
++  triggerPayloadEnvelopeReconstruction(payloadInput: PayloadEnvelopeInput, onComplete?: () => void): void {
++    if (this.running) {
++      return;
++    }
++
++    if (this.lastBlockRootHex === payloadInput.blockRootHex) {
++      return;
++    }
++
++    this.running = true;
++    this.lastBlockRootHex = payloadInput.blockRootHex;
++    const delay = this.minDelayMs + Math.random() * (this.maxDelayMs - this.minDelayMs);
++    sleep(delay)
++      .then(() => {
++        const logCtx = {slot: payloadInput.slot, root: payloadInput.blockRootHex};
++        this.logger.debug("Attempting Gloas data column sidecar reconstruction", logCtx);
++        recoverGloasDataColumnSidecars(payloadInput, this.emitter, this.metrics)
++          .then((result) => {
++            this.metrics?.recoverDataColumnSidecars.reconstructionResult.inc({result});
++            this.logger.debug("Gloas data column sidecar reconstruction complete", {...logCtx, result});
++            if (result === DataColumnReconstructionCode.SuccessResolved && payloadInput.isComplete()) {
++              onComplete?.();
++            }
++          })
++          .catch((e) => {
++            this.metrics?.recoverDataColumnSidecars.reconstructionResult.inc({
++              result: DataColumnReconstructionCode.Failed,
++            });
++            this.logger.debug("Error during Gloas data column sidecar reconstruction", logCtx, e as Error);
++          })
++          .finally(() => {
++            this.logger.debug("Gloas data column sidecar reconstruction attempt finished", logCtx);
++            this.running = false;
++          });
++      })
++      .catch((err) => {
++        this.logger.debug("ColumnReconstructionTracker unreachable error", {}, err);
++      });
++  }
+ }
+diff --git a/packages/beacon-node/src/chain/blocks/payloadEnvelopeInput/payloadEnvelopeInput.ts b/packages/beacon-node/src/chain/blocks/payloadEnvelopeInput/payloadEnvelopeInput.ts
+index 313b7dce8f..ee0b6ecdaf 100644
+--- a/packages/beacon-node/src/chain/blocks/payloadEnvelopeInput/payloadEnvelopeInput.ts
++++ b/packages/beacon-node/src/chain/blocks/payloadEnvelopeInput/payloadEnvelopeInput.ts
+@@ -248,6 +248,22 @@ export class PayloadEnvelopeInput {
+     return columns;
+   }
+ 
++  get columnCount(): number {
++    return this.columnsCache.size;
++  }
++
++  hasColumn(columnIndex: number): boolean {
++    return this.columnsCache.has(columnIndex);
++  }
++
++  getAllColumnsWithSource(): ColumnWithSource[] {
++    return [...this.columnsCache.values()];
++  }
++
++  getAllColumns(): gloas.DataColumnSidecars {
++    return this.getAllColumnsWithSource().map(({columnSidecar}) => columnSidecar);
++  }
++
+   getSampledColumnsWithSource(): ColumnWithSource[] {
+     const columns: ColumnWithSource[] = [];
+     for (const index of this.sampledColumns) {
+@@ -290,8 +306,13 @@ export class PayloadEnvelopeInput {
+     return this.state.timeCompleteSec;
+   }
+ 
++  /**
++   * Payload import is only safe once the payload envelope is present AND the sampled
++   * columns are actually available (or no columns are required). Merely having enough
++   * columns to reconstruct later is not sufficient until reconstruction has run.
++   */
+   isComplete(): boolean {
+-    return this.state.hasPayload && this.state.hasAllData;
++    return this.state.hasPayload && this.state.hasComputedAllData;
+   }
+ 
+   async waitForData(): Promise<gloas.SignedExecutionPayloadEnvelope> {
+diff --git a/packages/beacon-node/src/chain/chain.ts b/packages/beacon-node/src/chain/chain.ts
+index fc6d683c19..7b5f1e1eff 100644
+--- a/packages/beacon-node/src/chain/chain.ts
++++ b/packages/beacon-node/src/chain/chain.ts
+@@ -860,12 +860,16 @@ export class BeaconChain implements IBeaconChain {
+ 
+   async getDataColumnSidecars(blockSlot: Slot, blockRootHex: string): Promise<DataColumnSidecars> {
+     const blockInput = this.seenBlockInputCache.get(blockRootHex);
+-    if (blockInput) {
+-      if (!isBlockInputColumns(blockInput)) {
+-        throw new Error(`Expected block input to have columns: slot=${blockSlot} root=${blockRootHex}`);
+-      }
++    if (blockInput && isBlockInputColumns(blockInput)) {
+       return blockInput.getAllColumns();
+     }
++
++    // Gloas columns live in PayloadEnvelopeInput, not BlockInputColumns
++    const payloadInput = this.seenPayloadEnvelopeInputCache.get(blockRootHex);
++    if (payloadInput) {
++      return payloadInput.getAllColumns();
++    }
++
+     const sidecarsUnfinalized = await this.db.dataColumnSidecar.values(fromHex(blockRootHex));
+     if (sidecarsUnfinalized.length > 0) {
+       return sidecarsUnfinalized as DataColumnSidecars;
+@@ -880,10 +884,7 @@ export class BeaconChain implements IBeaconChain {
+     indices: number[]
+   ): Promise<(Uint8Array | undefined)[]> {
+     const blockInput = this.seenBlockInputCache.get(blockRootHex);
+-    if (blockInput) {
+-      if (!isBlockInputColumns(blockInput)) {
+-        throw new Error(`Expected block input to have columns: slot=${blockSlot} root=${blockRootHex}`);
+-      }
++    if (blockInput && isBlockInputColumns(blockInput)) {
+       return indices.map((index) => {
+         const sidecar = blockInput.getColumn(index);
+         if (!sidecar) {
+@@ -896,6 +897,26 @@ export class BeaconChain implements IBeaconChain {
+         return sszTypesFor(blockInput.forkName as ForkPostFulu).DataColumnSidecar.serialize(sidecar);
+       });
+     }
++
++    // Gloas columns live in PayloadEnvelopeInput, not BlockInputColumns
++    const payloadInput = this.seenPayloadEnvelopeInputCache.get(blockRootHex);
++    if (payloadInput) {
++      // Build index map once to avoid O(n*m) lookups
++      const columnsByIndex = new Map(payloadInput.getAllColumns().map((c) => [c.index, c]));
++      const sszType = sszTypesFor(this.config.getForkName(payloadInput.slot) as ForkPostFulu).DataColumnSidecar;
++      return indices.map((index) => {
++        const sidecar = columnsByIndex.get(index);
++        if (!sidecar) {
++          return undefined;
++        }
++        const serialized = this.serializedCache.get(sidecar);
++        if (serialized) {
++          return serialized;
++        }
++        return sszType.serialize(sidecar);
++      });
++    }
++
+     const sidecarsUnfinalized = await this.db.dataColumnSidecar.getManyBinary(fromHex(blockRootHex), indices);
+     if (sidecarsUnfinalized.some((sidecar) => sidecar != null)) {
+       return sidecarsUnfinalized;
+diff --git a/packages/beacon-node/src/chain/errors/dataColumnSidecarError.ts b/packages/beacon-node/src/chain/errors/dataColumnSidecarError.ts
+index edc1b119ce..aca221fa2f 100644
+--- a/packages/beacon-node/src/chain/errors/dataColumnSidecarError.ts
++++ b/packages/beacon-node/src/chain/errors/dataColumnSidecarError.ts
+@@ -27,6 +27,12 @@ export enum DataColumnSidecarErrorCode {
+   /** Sidecars proofs not valid */
+   INVALID_KZG_PROOF_BATCH = "DATA_COLUMN_SIDECAR_ERROR_INVALID_KZG_PROOF_BATCH",
+ 
++  // Gloas-specific errors (EIP-7732)
++  /** Block for sidecar's beacon_block_root is not yet known */
++  BLOCK_UNKNOWN = "DATA_COLUMN_SIDECAR_ERROR_BLOCK_UNKNOWN",
++  /** Sidecar slot does not match the associated block's slot */
++  SLOT_MISMATCH = "DATA_COLUMN_SIDECAR_ERROR_SLOT_MISMATCH",
++
+   // following errors are adapted from the block errors
+   ALREADY_KNOWN = "DATA_COLUMN_SIDECAR_ERROR_ALREADY_KNOWN",
+   FUTURE_SLOT = "DATA_COLUMN_SIDECAR_ERROR_FUTURE_SLOT",
+@@ -55,6 +61,8 @@ export type DataColumnSidecarErrorType =
+       count: number;
+       limit: number;
+     }
++  | {code: DataColumnSidecarErrorCode.BLOCK_UNKNOWN; blockRoot: RootHex; slot: Slot}
++  | {code: DataColumnSidecarErrorCode.SLOT_MISMATCH; expectedSlot: Slot; sidecarSlot: Slot}
+   | {code: DataColumnSidecarErrorCode.ALREADY_KNOWN; columnIndex: number; slot: Slot}
+   | {code: DataColumnSidecarErrorCode.FUTURE_SLOT; blockSlot: Slot; currentSlot: Slot}
+   | {code: DataColumnSidecarErrorCode.WOULD_REVERT_FINALIZED_SLOT; blockSlot: Slot; finalizedSlot: Slot}
+diff --git a/packages/beacon-node/src/chain/validation/dataColumnSidecar.ts b/packages/beacon-node/src/chain/validation/dataColumnSidecar.ts
+index d2ae63072f..d54dd65976 100644
+--- a/packages/beacon-node/src/chain/validation/dataColumnSidecar.ts
++++ b/packages/beacon-node/src/chain/validation/dataColumnSidecar.ts
+@@ -10,7 +10,7 @@ import {
+   getBlockHeaderProposerSignatureSetByHeaderSlot,
+   getBlockHeaderProposerSignatureSetByParentStateSlot,
+ } from "@lodestar/state-transition";
+-import {DataColumnSidecar, Root, Slot, SubnetID, fulu, ssz} from "@lodestar/types";
++import {DataColumnSidecar, Root, Slot, SubnetID, deneb, fulu, gloas, ssz} from "@lodestar/types";
+ import {byteArrayEquals, toRootHex, verifyMerkleBranch} from "@lodestar/utils";
+ import {BeaconMetrics} from "../../metrics/metrics/beacon.js";
+ import {Metrics} from "../../metrics/metrics.js";
+@@ -480,3 +480,317 @@ export async function validateBlockDataColumnSidecars(
+ export function computeSubnetForDataColumnSidecar(config: ChainConfig, columnSidecar: DataColumnSidecar): SubnetID {
+   return columnSidecar.index % config.DATA_COLUMN_SIDECAR_SUBNET_COUNT;
+ }
++
++// ===========================
++// Gloas-specific validation
++// ===========================
++
++/**
++ * SPEC FUNCTION (Modified in Gloas:EIP7732)
++ * https://github.com/ethereum/consensus-specs/blob/dev/specs/gloas/p2p-interface.md#modified-verify_data_column_sidecar
++ *
++ * Verifies a Gloas DataColumnSidecar against externally-provided KZG commitments (from the bid).
++ * In Gloas, kzgCommitments are NOT embedded in the sidecar but sourced from
++ * block.body.signedExecutionPayloadBid.message.blobKzgCommitments.
++ */
++function verifyGloasDataColumnSidecar(
++  config: ChainForkConfig,
++  dataColumnSidecar: gloas.DataColumnSidecar,
++  kzgCommitments: deneb.KZGCommitment[]
++): void {
++  // The sidecar index must be within the valid range
++  if (dataColumnSidecar.index >= NUMBER_OF_COLUMNS) {
++    throw new DataColumnSidecarGossipError(GossipAction.REJECT, {
++      code: DataColumnSidecarErrorCode.INVALID_INDEX,
++      slot: dataColumnSidecar.slot,
++      columnIndex: dataColumnSidecar.index,
++    });
++  }
++
++  // A sidecar for zero blobs is invalid [Modified in Gloas:EIP7732]
++  if (dataColumnSidecar.column.length === 0) {
++    throw new DataColumnSidecarGossipError(GossipAction.REJECT, {
++      code: DataColumnSidecarErrorCode.NO_COMMITMENTS,
++      slot: dataColumnSidecar.slot,
++      columnIndex: dataColumnSidecar.index,
++    });
++  }
++
++  const epoch = computeEpochAtSlot(dataColumnSidecar.slot);
++  const maxBlobsPerBlock = config.getMaxBlobsPerBlock(epoch);
++
++  if (kzgCommitments.length > maxBlobsPerBlock) {
++    throw new DataColumnSidecarGossipError(GossipAction.REJECT, {
++      code: DataColumnSidecarErrorCode.TOO_MANY_KZG_COMMITMENTS,
++      slot: dataColumnSidecar.slot,
++      columnIndex: dataColumnSidecar.index,
++      count: kzgCommitments.length,
++      limit: maxBlobsPerBlock,
++    });
++  }
++
++  // The column length must be equal to the number of commitments/proofs
++  // [Modified in Gloas:EIP7732] — commitments from bid, not sidecar
++  if (
++    dataColumnSidecar.column.length !== kzgCommitments.length ||
++    dataColumnSidecar.column.length !== dataColumnSidecar.kzgProofs.length
++  ) {
++    throw new DataColumnSidecarGossipError(GossipAction.REJECT, {
++      code: DataColumnSidecarErrorCode.MISMATCHED_LENGTHS,
++      columnLength: dataColumnSidecar.column.length,
++      commitmentsLength: kzgCommitments.length,
++      proofsLength: dataColumnSidecar.kzgProofs.length,
++    });
++  }
++}
++
++/**
++ * SPEC FUNCTION (Modified in Gloas:EIP7732)
++ * https://github.com/ethereum/consensus-specs/blob/dev/specs/gloas/p2p-interface.md#data_column_sidecar_subnet_id
++ *
++ * Validates a Gloas DataColumnSidecar received via gossip.
++ * Key differences from Fulu:
++ * - No proposer signature verification (no signedBlockHeader)
++ * - No inclusion proof verification (no kzgCommitmentsInclusionProof)
++ * - KZG commitments sourced from block's execution payload bid
++ * - Block must already be known for validation
++ */
++export async function validateGossipGloasDataColumnSidecar(
++  chain: IBeaconChain,
++  dataColumnSidecar: gloas.DataColumnSidecar,
++  gossipSubnet: SubnetID,
++  metrics: Metrics | null
++): Promise<void> {
++  const blockRootHex = toRootHex(dataColumnSidecar.beaconBlockRoot);
++  const slot = dataColumnSidecar.slot;
++
++  // 1) [IGNORE] A valid block for the sidecar's slot has been seen.
++  //    If not yet seen, a client MUST queue the sidecar for deferred validation.
++  const protoBlock = chain.forkChoice.getBlockHexDefaultStatus(blockRootHex);
++  if (protoBlock === null) {
++    throw new DataColumnSidecarGossipError(GossipAction.IGNORE, {
++      code: DataColumnSidecarErrorCode.BLOCK_UNKNOWN,
++      blockRoot: blockRootHex,
++      slot,
++    });
++  }
++
++  // 2) [REJECT] The sidecar's slot matches the slot of the block
++  if (protoBlock.slot !== slot) {
++    throw new DataColumnSidecarGossipError(GossipAction.REJECT, {
++      code: DataColumnSidecarErrorCode.SLOT_MISMATCH,
++      expectedSlot: protoBlock.slot,
++      sidecarSlot: slot,
++    });
++  }
++
++  // Get KZG commitments from the block's execution payload bid
++  // First try seenBlockInputCache (fast path), then fall back to DB
++  const blockResult = await chain.getBlockByRoot(blockRootHex);
++  if (blockResult === null) {
++    // Block is in fork choice but body not available yet
++    throw new DataColumnSidecarGossipError(GossipAction.IGNORE, {
++      code: DataColumnSidecarErrorCode.BLOCK_UNKNOWN,
++      blockRoot: blockRootHex,
++      slot,
++    });
++  }
++  const blockBody = blockResult.block.message.body as gloas.BeaconBlockBody;
++  const kzgCommitments = blockBody.signedExecutionPayloadBid.message.blobKzgCommitments;
++
++  // 3) [REJECT] verify_data_column_sidecar(sidecar, bid.blob_kzg_commitments)
++  verifyGloasDataColumnSidecar(chain.config, dataColumnSidecar, kzgCommitments);
++
++  // 4) [REJECT] The sidecar is for the correct subnet
++  if (computeSubnetForDataColumnSidecar(chain.config, dataColumnSidecar) !== gossipSubnet) {
++    throw new DataColumnSidecarGossipError(GossipAction.REJECT, {
++      code: DataColumnSidecarErrorCode.INVALID_SUBNET,
++      columnIndex: dataColumnSidecar.index,
++      gossipSubnet,
++    });
++  }
++
++  // 5) [REJECT] verify_data_column_sidecar_kzg_proofs(sidecar, bid.blob_kzg_commitments)
++  const kzgProofTimer = metrics?.peerDas.dataColumnSidecarKzgProofsVerificationTime.startTimer();
++  try {
++    await verifyDataColumnSidecarKzgProofs(
++      kzgCommitments,
++      Array.from({length: dataColumnSidecar.column.length}, () => dataColumnSidecar.index),
++      dataColumnSidecar.column,
++      dataColumnSidecar.kzgProofs
++    );
++  } catch {
++    throw new DataColumnSidecarGossipError(GossipAction.REJECT, {
++      code: DataColumnSidecarErrorCode.INVALID_KZG_PROOF,
++      slot,
++      columnIndex: dataColumnSidecar.index,
++    });
++  } finally {
++    kzgProofTimer?.();
++  }
++
++  // 6) [IGNORE] The sidecar is the first sidecar for the tuple
++  //    (sidecar.beacon_block_root, sidecar.index) with valid kzg proof.
++  //    -- Handled by the caller (seenGossipBlockInput / PayloadEnvelopeInput dedup)
++}
++
++/**
++ * Validate Gloas DataColumnSidecars received via ReqResp (DataColumnsByRoot/DataColumnsByRange).
++ *
++ * Key differences from Fulu:
++ * - No signedBlockHeader comparison (sidecars don't have headers)
++ * - No proposer signature verification
++ * - No inclusion proof verification
++ * - KZG commitments are externally provided (from the block's execution payload bid)
++ * - Validates slot and beaconBlockRoot match across sidecars
++ *
++ * SPEC FUNCTION (Modified in Gloas:EIP7732)
++ */
++export async function validateBlockGloasDataColumnSidecars(
++  blockSlot: Slot,
++  blockRoot: Root,
++  kzgCommitments: deneb.KZGCommitment[],
++  dataColumnSidecars: gloas.DataColumnSidecars,
++  metrics?: BeaconMetrics["peerDas"] | null
++): Promise<void> {
++  metrics?.dataColumnSidecarProcessingRequests.inc(dataColumnSidecars.length);
++  const verificationTimer = metrics?.dataColumnSidecarGossipVerificationTime.startTimer();
++  try {
++    if (dataColumnSidecars.length === 0) {
++      return;
++    }
++
++    const blockBlobCount = kzgCommitments.length;
++    if (blockBlobCount === 0) {
++      throw new DataColumnSidecarValidationError(
++        {
++          code: DataColumnSidecarErrorCode.INCORRECT_SIDECAR_COUNT,
++          slot: blockSlot,
++          expected: 0,
++          actual: dataColumnSidecars.length,
++        },
++        "Block has no blob commitments but data column sidecars were provided"
++      );
++    }
++
++    // Verify first sidecar's beaconBlockRoot matches expected root
++    const firstSidecar = dataColumnSidecars[0];
++    if (!byteArrayEquals(blockRoot, firstSidecar.beaconBlockRoot)) {
++      throw new DataColumnSidecarValidationError(
++        {
++          code: DataColumnSidecarErrorCode.INCORRECT_BLOCK,
++          slot: blockSlot,
++          columnIndex: 0,
++          expected: toRootHex(blockRoot),
++          actual: toRootHex(firstSidecar.beaconBlockRoot),
++        },
++        "Gloas DataColumnSidecar doesn't match corresponding block"
++      );
++    }
++
++    // Verify first sidecar's slot matches expected slot
++    if (firstSidecar.slot !== blockSlot) {
++      throw new DataColumnSidecarValidationError({
++        code: DataColumnSidecarErrorCode.SLOT_MISMATCH,
++        expectedSlot: blockSlot,
++        sidecarSlot: firstSidecar.slot,
++      });
++    }
++
++    const commitments: Uint8Array[] = [];
++    const cellIndices: number[] = [];
++    const cells: Uint8Array[] = [];
++    const proofs: Uint8Array[] = [];
++
++    for (let i = 0; i < dataColumnSidecars.length; i++) {
++      const columnSidecar = dataColumnSidecars[i];
++
++      // All sidecars must reference the same block
++      if (i !== 0) {
++        if (!byteArrayEquals(firstSidecar.beaconBlockRoot, columnSidecar.beaconBlockRoot)) {
++          throw new DataColumnSidecarValidationError({
++            code: DataColumnSidecarErrorCode.INCORRECT_HEADER_ROOT,
++            slot: blockSlot,
++            expected: toRootHex(firstSidecar.beaconBlockRoot),
++            actual: toRootHex(columnSidecar.beaconBlockRoot),
++          });
++        }
++        if (columnSidecar.slot !== blockSlot) {
++          throw new DataColumnSidecarValidationError({
++            code: DataColumnSidecarErrorCode.SLOT_MISMATCH,
++            expectedSlot: blockSlot,
++            sidecarSlot: columnSidecar.slot,
++          });
++        }
++      }
++
++      if (columnSidecar.index >= NUMBER_OF_COLUMNS) {
++        throw new DataColumnSidecarValidationError(
++          {
++            code: DataColumnSidecarErrorCode.INVALID_INDEX,
++            slot: blockSlot,
++            columnIndex: columnSidecar.index,
++          },
++          "Gloas DataColumnSidecar has invalid index"
++        );
++      }
++
++      // Column length must match blob count from KZG commitments
++      if (columnSidecar.column.length !== blockBlobCount) {
++        throw new DataColumnSidecarValidationError({
++          code: DataColumnSidecarErrorCode.INCORRECT_CELL_COUNT,
++          slot: blockSlot,
++          columnIndex: columnSidecar.index,
++          expected: blockBlobCount,
++          actual: columnSidecar.column.length,
++        });
++      }
++
++      // KZG proofs count must match column length
++      if (columnSidecar.column.length !== columnSidecar.kzgProofs.length) {
++        throw new DataColumnSidecarValidationError({
++          code: DataColumnSidecarErrorCode.INCORRECT_KZG_PROOF_COUNT,
++          slot: blockSlot,
++          columnIndex: columnSidecar.index,
++          expected: columnSidecar.column.length,
++          actual: columnSidecar.kzgProofs.length,
++        });
++      }
++
++      // No inclusion proof verification for Gloas (field doesn't exist)
++      // No signedBlockHeader verification for Gloas (field doesn't exist)
++
++      // Use externally-provided KZG commitments (from bid)
++      commitments.push(...kzgCommitments);
++      cellIndices.push(...Array.from({length: columnSidecar.column.length}, () => columnSidecar.index));
++      cells.push(...columnSidecar.column);
++      proofs.push(...columnSidecar.kzgProofs);
++    }
++
++    let reason: string | undefined;
++    const kzgVerificationTimer = metrics?.kzgVerificationDataColumnBatchTime.startTimer();
++    try {
++      const valid = await kzg.asyncVerifyCellKzgProofBatch(commitments, cellIndices, cells, proofs);
++      if (!valid) {
++        reason = "Invalid KZG proof batch";
++      }
++    } catch (e) {
++      reason = (e as Error).message;
++    } finally {
++      kzgVerificationTimer?.();
++    }
++    if (reason !== undefined) {
++      throw new DataColumnSidecarValidationError(
++        {
++          code: DataColumnSidecarErrorCode.INVALID_KZG_PROOF_BATCH,
++          slot: blockSlot,
++          reason,
++        },
++        "Gloas DataColumnSidecar has invalid KZG proof batch"
++      );
++    }
++    metrics?.dataColumnSidecarProcessingSuccesses.inc();
++  } finally {
++    verificationTimer?.();
++  }
++}
+diff --git a/packages/beacon-node/src/network/network.ts b/packages/beacon-node/src/network/network.ts
+index 396a5e7fc2..76eed5396f 100644
+--- a/packages/beacon-node/src/network/network.ts
++++ b/packages/beacon-node/src/network/network.ts
+@@ -617,23 +617,25 @@ export class Network implements INetwork {
+     peerId: PeerIdStr,
+     request: fulu.DataColumnSidecarsByRangeRequest
+   ): Promise<fulu.DataColumnSidecar[]> {
++    // TODO GLOAS: add Gloas-specific column sync method
+     return collectMaxResponseTyped(
+       this.sendReqRespRequest(peerId, ReqRespMethod.DataColumnSidecarsByRange, [Version.V1], request),
+       request.count * request.columns.length,
+       responseSszTypeByMethod[ReqRespMethod.DataColumnSidecarsByRange]
+-    );
++    ) as Promise<fulu.DataColumnSidecar[]>;
+   }
+ 
+   async sendDataColumnSidecarsByRoot(
+     peerId: PeerIdStr,
+     request: DataColumnSidecarsByRootRequest
+   ): Promise<fulu.DataColumnSidecar[]> {
++    // TODO GLOAS: add Gloas-specific column sync method
+     return collectMaxResponseTyped(
+       this.sendReqRespRequest(peerId, ReqRespMethod.DataColumnSidecarsByRoot, [Version.V1], request),
+       request.reduce((total, {columns}) => total + columns.length, 0),
+       responseSszTypeByMethod[ReqRespMethod.DataColumnSidecarsByRoot],
+       this.chain.serializedCache
+-    );
++    ) as Promise<fulu.DataColumnSidecar[]>;
+   }
+ 
+   private sendReqRespRequest<Req>(
+diff --git a/packages/beacon-node/src/network/processor/gossipHandlers.ts b/packages/beacon-node/src/network/processor/gossipHandlers.ts
+index 2dc0aab0f2..1cef55070d 100644
+--- a/packages/beacon-node/src/network/processor/gossipHandlers.ts
++++ b/packages/beacon-node/src/network/processor/gossipHandlers.ts
+@@ -8,6 +8,7 @@ import {
+   ForkSeq,
+   NUMBER_OF_COLUMNS,
+   isForkPostElectra,
++  isForkPostGloas,
+ } from "@lodestar/params";
+ import {computeTimeAtSlot} from "@lodestar/state-transition";
+ import {
+@@ -19,6 +20,7 @@ import {
+   UintNum64,
+   deneb,
+   fulu,
++  gloas,
+   ssz,
+   sszTypesFor,
+ } from "@lodestar/types";
+@@ -51,7 +53,10 @@ import {
+ } from "../../chain/errors/index.js";
+ import {IBeaconChain} from "../../chain/interface.js";
+ import {validateGossipBlobSidecar} from "../../chain/validation/blobSidecar.js";
+-import {validateGossipDataColumnSidecar} from "../../chain/validation/dataColumnSidecar.js";
++import {
++  validateGossipDataColumnSidecar,
++  validateGossipGloasDataColumnSidecar,
++} from "../../chain/validation/dataColumnSidecar.js";
+ import {validateGossipExecutionPayloadBid} from "../../chain/validation/executionPayloadBid.js";
+ import {validateGossipExecutionPayloadEnvelope} from "../../chain/validation/executionPayloadEnvelope.js";
+ import {
+@@ -555,77 +560,152 @@ function getSequentialHandlers(modules: ValidatorFnsModules, options: GossipHand
+       seenTimestampSec,
+     }: GossipHandlerParamGeneric<GossipType.data_column_sidecar>) => {
+       const {serializedData} = gossipData;
+-      // TODO GLOAS: handle gloas.DataColumnSidecar
+-      const dataColumnSidecar = sszDeserialize(topic, serializedData) as fulu.DataColumnSidecar;
+-      const dataColumnSlot = dataColumnSidecar.signedBlockHeader.message.slot;
+-      const index = dataColumnSidecar.index;
++      const {fork} = topic.boundary;
+ 
+-      if (config.getForkSeq(dataColumnSlot) < ForkSeq.fulu) {
+-        throw new GossipActionError(GossipAction.REJECT, {code: "PRE_FULU_BLOCK"});
+-      }
+-      const delaySec = chain.clock.secFromSlot(dataColumnSlot, seenTimestampSec);
+-      const blockInput = await validateBeaconDataColumn(
+-        dataColumnSidecar,
+-        serializedData,
+-        topic.subnet,
+-        peerIdStr,
+-        seenTimestampSec
+-      );
+-      chain.serializedCache.set(dataColumnSidecar, serializedData);
+-      const blockInputMeta = blockInput.getLogMeta();
+-      const {receivedColumns} = blockInputMeta;
+-      // it's not helpful to track every single column received
+-      // instead of that, track 1st, 8th, 16th 32th, 64th, and 128th column
+-      switch (receivedColumns) {
+-        case 1:
+-        case config.SAMPLES_PER_SLOT:
+-        case 2 * config.SAMPLES_PER_SLOT:
+-        case NUMBER_OF_COLUMNS / 4:
+-        case NUMBER_OF_COLUMNS / 2:
+-        case NUMBER_OF_COLUMNS:
+-          metrics?.dataColumns.elapsedTimeTillReceived.observe({receivedOrder: receivedColumns}, delaySec);
+-          break;
+-      }
++      if (isForkPostGloas(fork)) {
++        // ============================================
++        // Gloas path: DataColumnSidecar has slot + beaconBlockRoot (no signedBlockHeader)
++        // Columns feed into PayloadEnvelopeInput (not BlockInputColumns)
++        // ============================================
++        const gloasSidecar = sszDeserialize(topic, serializedData) as gloas.DataColumnSidecar;
++        const dataColumnSlot = gloasSidecar.slot;
++        const index = gloasSidecar.index;
++        const blockRootHex = toRootHex(gloasSidecar.beaconBlockRoot);
++
++        const delaySec = chain.clock.secFromSlot(dataColumnSlot, seenTimestampSec);
++
++        // Check if this column was already seen via PayloadEnvelopeInput (dedup)
++        const existingPayloadInput = chain.seenPayloadEnvelopeInputCache.get(blockRootHex);
++        if (existingPayloadInput?.hasColumn(index)) {
++          throw new DataColumnSidecarGossipError(GossipAction.IGNORE, {
++            code: DataColumnSidecarErrorCode.ALREADY_KNOWN,
++            columnIndex: index,
++            slot: dataColumnSlot,
++          });
++        }
++
++        // Validate the Gloas data column sidecar
++        await validateGossipGloasDataColumnSidecar(chain, gloasSidecar, topic.subnet, metrics);
++
++        // Cache the serialized sidecar
++        chain.serializedCache.set(gloasSidecar, serializedData);
+ 
+-      if (!blockInput.hasComputedAllData()) {
+-        // immediately attempt fetch of data columns from execution engine
+-        chain.getBlobsTracker.triggerGetBlobs(blockInput);
+-        // if we've received at least half of the columns, trigger reconstruction of the rest
+-        if (blockInput.columnCount >= NUMBER_OF_COLUMNS / 2) {
+-          chain.columnReconstructionTracker.triggerColumnReconstruction(blockInput);
++        metrics?.dataColumns.elapsedTimeTillReceived.observe({receivedOrder: 1}, delaySec);
++
++        // Add column to PayloadEnvelopeInput if it exists
++        const payloadInput = chain.seenPayloadEnvelopeInputCache.get(blockRootHex);
++        if (payloadInput) {
++          payloadInput.addColumn({
++            columnSidecar: gloasSidecar,
++            source: PayloadEnvelopeInputSource.gossip,
++            seenTimestampSec,
++            peerIdStr,
++          });
++
++          // If we have enough columns to reconstruct but not yet the sampled subset,
++          // trigger Gloas column reconstruction. On success, process the payload.
++          if (!payloadInput.hasComputedAllData() && payloadInput.columnCount >= NUMBER_OF_COLUMNS / 2) {
++            chain.columnReconstructionTracker.triggerPayloadEnvelopeReconstruction(payloadInput, () => {
++              chain.processExecutionPayload(payloadInput, {validSignature: false}).catch((e) => {
++                chain.logger.error(
++                  "Error processing execution payload after Gloas column reconstruction",
++                  {slot: dataColumnSlot, root: blockRootHex},
++                  e as Error
++                );
++              });
++            });
++          }
++
++          // If all required data is already available, trigger payload processing immediately
++          if (payloadInput.isComplete()) {
++            chain.processExecutionPayload(payloadInput, {validSignature: false}).catch((e) => {
++              chain.logger.error(
++                "Error processing execution payload after column completion",
++                {slot: dataColumnSlot, root: blockRootHex},
++                e as Error
++              );
++            });
++          }
++        } else {
++          // PayloadEnvelopeInput not yet created (block not yet imported).
++          // The sidecar was validated and re-broadcast, but we can't track it yet.
++          // It will be re-fetched via reqresp when the block arrives and creates
++          // the PayloadEnvelopeInput (TODO: deferred column queue for optimization).
++          chain.logger.debug("Validated Gloas column but PayloadEnvelopeInput not yet created", {
++            slot: dataColumnSlot,
++            blockRoot: blockRootHex,
++            index,
++          });
++        }
++      } else {
++        // ============================================
++        // Fulu path: DataColumnSidecar has signedBlockHeader (existing behavior)
++        // Columns feed into BlockInputColumns via seenBlockInputCache
++        // ============================================
++        const dataColumnSidecar = sszDeserialize(topic, serializedData) as fulu.DataColumnSidecar;
++        const dataColumnSlot = dataColumnSidecar.signedBlockHeader.message.slot;
++        const index = dataColumnSidecar.index;
++
++        if (config.getForkSeq(dataColumnSlot) < ForkSeq.fulu) {
++          throw new GossipActionError(GossipAction.REJECT, {code: "PRE_FULU_BLOCK"});
++        }
++        const delaySec = chain.clock.secFromSlot(dataColumnSlot, seenTimestampSec);
++        const blockInput = await validateBeaconDataColumn(
++          dataColumnSidecar,
++          serializedData,
++          topic.subnet,
++          peerIdStr,
++          seenTimestampSec
++        );
++        chain.serializedCache.set(dataColumnSidecar, serializedData);
++        const blockInputMeta = blockInput.getLogMeta();
++        const {receivedColumns} = blockInputMeta;
++        // it's not helpful to track every single column received
++        // instead of that, track 1st, 8th, 16th 32th, 64th, and 128th column
++        switch (receivedColumns) {
++          case 1:
++          case config.SAMPLES_PER_SLOT:
++          case 2 * config.SAMPLES_PER_SLOT:
++          case NUMBER_OF_COLUMNS / 4:
++          case NUMBER_OF_COLUMNS / 2:
++          case NUMBER_OF_COLUMNS:
++            metrics?.dataColumns.elapsedTimeTillReceived.observe({receivedOrder: receivedColumns}, delaySec);
++            break;
+         }
+-      }
+ 
+-      if (!blockInput.hasBlockAndAllData()) {
+-        const cutoffTimeMs = getCutoffTimeMs(chain, dataColumnSlot, BLOCK_AVAILABILITY_CUTOFF_MS);
+-        chain.logger.debug("Received gossip data column, waiting for full data availability", {
+-          msToWait: cutoffTimeMs,
+-          dataColumnIndex: index,
+-          ...blockInputMeta,
+-        });
+-        // do not await here to not delay gossip validation
+-        blockInput.waitForBlockAndAllData(cutoffTimeMs).catch((_e) => {
+-          chain.logger.debug(
+-            "Waited for data after receiving gossip column. Cut-off reached so attempting to fetch remainder of BlockInput",
+-            {
+-              dataColumnIndex: index,
+-              ...blockInputMeta,
+-            }
+-          );
+-          chain.emitter.emit(ChainEvent.incompleteBlockInput, {
+-            blockInput,
+-            peer: peerIdStr,
+-            source: BlockInputSource.gossip,
++        if (!blockInput.hasComputedAllData()) {
++          // immediately attempt fetch of data columns from execution engine
++          chain.getBlobsTracker.triggerGetBlobs(blockInput);
++          // if we've received at least half of the columns, trigger reconstruction of the rest
++          if (blockInput.columnCount >= NUMBER_OF_COLUMNS / 2) {
++            chain.columnReconstructionTracker.triggerColumnReconstruction(blockInput);
++          }
++        }
++
++        if (!blockInput.hasBlockAndAllData()) {
++          const cutoffTimeMs = getCutoffTimeMs(chain, dataColumnSlot, BLOCK_AVAILABILITY_CUTOFF_MS);
++          chain.logger.debug("Received gossip data column, waiting for full data availability", {
++            msToWait: cutoffTimeMs,
++            dataColumnIndex: index,
++            ...blockInputMeta,
+           });
+-        });
++          // do not await here to not delay gossip validation
++          blockInput.waitForBlockAndAllData(cutoffTimeMs).catch((_e) => {
++            chain.logger.debug(
++              "Waited for data after receiving gossip column. Cut-off reached so attempting to fetch remainder of BlockInput",
++              {
++                dataColumnIndex: index,
++                ...blockInputMeta,
++              }
++            );
++            chain.emitter.emit(ChainEvent.incompleteBlockInput, {
++              blockInput,
++              peer: peerIdStr,
++              source: BlockInputSource.gossip,
++            });
++          });
++        }
+       }
+-
+-      // TODO GLOAS: In Gloas, also add column to PayloadEnvelopeInput and notify the payload processor:
+-      // const payloadInput = chain.seenPayloadEnvelopeInput.get(blockRootHex);
+-      // if (payloadInput) {
+-      //   payloadInput.addColumn({columnSidecar, source: BlockInputSource.gossip, seenTimestampSec, peerIdStr});
+-      //   chain.processExecutionPayload(payloadInput, {validSignature: true});
+-      // }
+     },
+ 
+     [GossipType.beacon_aggregate_and_proof]: async ({
+diff --git a/packages/beacon-node/src/network/reqresp/types.ts b/packages/beacon-node/src/network/reqresp/types.ts
+index b9bcec66f6..650dca1f45 100644
+--- a/packages/beacon-node/src/network/reqresp/types.ts
++++ b/packages/beacon-node/src/network/reqresp/types.ts
+@@ -1,8 +1,9 @@
+ import {Type} from "@chainsafe/ssz";
+ import {BeaconConfig} from "@lodestar/config";
+-import {ForkName, ForkPostAltair, isForkPostAltair} from "@lodestar/params";
++import {ForkName, ForkPostAltair, ForkPostFulu, isForkPostAltair, isForkPostFulu} from "@lodestar/params";
+ import {Protocol, ProtocolHandler, ReqRespRequest} from "@lodestar/reqresp";
+ import {
++  DataColumnSidecar,
+   LightClientBootstrap,
+   LightClientFinalityUpdate,
+   LightClientOptimisticUpdate,
+@@ -76,8 +77,8 @@ type ResponseBodyByMethod = {
+   [ReqRespMethod.BeaconBlocksByRoot]: SignedBeaconBlock;
+   [ReqRespMethod.BlobSidecarsByRange]: deneb.BlobSidecar;
+   [ReqRespMethod.BlobSidecarsByRoot]: deneb.BlobSidecar;
+-  [ReqRespMethod.DataColumnSidecarsByRange]: fulu.DataColumnSidecar;
+-  [ReqRespMethod.DataColumnSidecarsByRoot]: fulu.DataColumnSidecar;
++  [ReqRespMethod.DataColumnSidecarsByRange]: DataColumnSidecar;
++  [ReqRespMethod.DataColumnSidecarsByRoot]: DataColumnSidecar;
+ 
+   [ReqRespMethod.LightClientBootstrap]: LightClientBootstrap;
+   [ReqRespMethod.LightClientUpdatesByRange]: LightClientUpdate;
+@@ -135,8 +136,8 @@ export const responseSszTypeByMethod: {[K in ReqRespMethod]: ResponseTypeGetter<
+   [ReqRespMethod.LightClientBootstrap]: (fork) => sszTypesFor(onlyPostAltairFork(fork)).LightClientBootstrap,
+   [ReqRespMethod.LightClientUpdatesByRange]: (fork) => sszTypesFor(onlyPostAltairFork(fork)).LightClientUpdate,
+   [ReqRespMethod.LightClientFinalityUpdate]: (fork) => sszTypesFor(onlyPostAltairFork(fork)).LightClientFinalityUpdate,
+-  [ReqRespMethod.DataColumnSidecarsByRange]: () => ssz.fulu.DataColumnSidecar,
+-  [ReqRespMethod.DataColumnSidecarsByRoot]: () => ssz.fulu.DataColumnSidecar,
++  [ReqRespMethod.DataColumnSidecarsByRange]: (fork) => sszTypesFor(onlyPostFuluFork(fork)).DataColumnSidecar,
++  [ReqRespMethod.DataColumnSidecarsByRoot]: (fork) => sszTypesFor(onlyPostFuluFork(fork)).DataColumnSidecar,
+   [ReqRespMethod.LightClientOptimisticUpdate]: (fork) =>
+     sszTypesFor(onlyPostAltairFork(fork)).LightClientOptimisticUpdate,
+ };
+@@ -148,6 +149,13 @@ function onlyPostAltairFork(fork: ForkName): ForkPostAltair {
+   throw Error(`Not a post-altair fork ${fork}`);
+ }
+ 
++function onlyPostFuluFork(fork: ForkName): ForkPostFulu {
++  if (isForkPostFulu(fork)) {
++    return fork;
++  }
++  throw Error(`Not a post-fulu fork ${fork}`);
++}
++
+ export type RequestTypedContainer = {
+   [K in ReqRespMethod]: {method: K; body: RequestBodyByMethod[K]};
+ }[ReqRespMethod];
+diff --git a/packages/beacon-node/src/util/blobs.ts b/packages/beacon-node/src/util/blobs.ts
+index 0424210916..9ef6f2ebcc 100644
+--- a/packages/beacon-node/src/util/blobs.ts
++++ b/packages/beacon-node/src/util/blobs.ts
+@@ -13,7 +13,16 @@ import {
+   VERSIONED_HASH_VERSION_KZG,
+ } from "@lodestar/params";
+ import {signedBlockToSignedHeader} from "@lodestar/state-transition";
+-import {BeaconBlockBody, DataColumnSidecars, SSZTypesFor, SignedBeaconBlock, deneb, fulu, ssz} from "@lodestar/types";
++import {
++  BeaconBlockBody,
++  DataColumnSidecars,
++  SSZTypesFor,
++  SignedBeaconBlock,
++  deneb,
++  fulu,
++  gloas,
++  ssz,
++} from "@lodestar/types";
+ import {kzg} from "./kzg.js";
+ 
+ type VersionHash = Uint8Array;
+@@ -252,3 +261,81 @@ function cellsToBlob(cells: fulu.Cell[]): deneb.Blob {
+ 
+   return blob;
+ }
++
++/**
++ * Recover all data columns from a partial set of Gloas DataColumnSidecars.
++ *
++ * Unlike Fulu sidecars, Gloas sidecars don't carry kzgCommitments, signedBlockHeader,
++ * or kzgCommitmentsInclusionProof. The blob count must be provided externally
++ * (from the block's execution payload bid).
++ *
++ * SPEC FUNCTION (Modified in Gloas:EIP7732)
++ * https://github.com/ethereum/consensus-specs/blob/dev/specs/fulu/das-core.md#recover_matrix
++ */
++export async function dataColumnMatrixRecoveryGloas(
++  partialSidecars: Map<number, gloas.DataColumnSidecar>,
++  blobCount: number
++): Promise<gloas.DataColumnSidecars | null> {
++  const columnCount = partialSidecars.size;
++  if (columnCount < NUMBER_OF_COLUMNS / 2) {
++    return null;
++  }
++
++  if (columnCount === NUMBER_OF_COLUMNS) {
++    return Array.from(partialSidecars.values());
++  }
++
++  const partialSidecarsSorted = Array.from(partialSidecars.values()).sort((a, b) => a.index - b.index);
++
++  const firstDataColumn = partialSidecarsSorted[0];
++  if (firstDataColumn == null) {
++    throw new Error("No data column found in cache to recover from");
++  }
++
++  const fullColumns: Array<Uint8Array[]> = Array.from(
++    {length: NUMBER_OF_COLUMNS},
++    () => new Array<Uint8Array>(blobCount)
++  );
++  const blobProofs: Array<Uint8Array[]> = Array.from({length: blobCount});
++
++  const cellsAndProofs = await Promise.all(
++    blobProofs.map((_, blobIndex) => {
++      const cellIndices: number[] = [];
++      const cells: Uint8Array[] = [];
++      for (const dataColumn of partialSidecarsSorted) {
++        cellIndices.push(dataColumn.index);
++        cells.push(dataColumn.column[blobIndex]);
++      }
++      return kzg.asyncRecoverCellsAndKzgProofs(cellIndices, cells);
++    })
++  );
++
++  for (let blobIndex = 0; blobIndex < blobCount; blobIndex++) {
++    const recoveredCells = cellsAndProofs[blobIndex].cells;
++    blobProofs[blobIndex] = cellsAndProofs[blobIndex].proofs;
++    for (let columnIndex = 0; columnIndex < NUMBER_OF_COLUMNS; columnIndex++) {
++      fullColumns[columnIndex][blobIndex] = recoveredCells[columnIndex];
++    }
++  }
++
++  const result: gloas.DataColumnSidecars = new Array(NUMBER_OF_COLUMNS);
++
++  for (let columnIndex = 0; columnIndex < NUMBER_OF_COLUMNS; columnIndex++) {
++    const existing = partialSidecars.get(columnIndex);
++    if (existing) {
++      result[columnIndex] = existing;
++      continue;
++    }
++
++    // Gloas sidecars: only index, column, kzgProofs, slot, beaconBlockRoot
++    result[columnIndex] = {
++      index: columnIndex,
++      column: fullColumns[columnIndex],
++      kzgProofs: Array.from({length: blobCount}, (_, rowIndex) => blobProofs[rowIndex][columnIndex]),
++      slot: firstDataColumn.slot,
++      beaconBlockRoot: firstDataColumn.beaconBlockRoot,
++    };
++  }
++
++  return result;
++}
+diff --git a/packages/beacon-node/src/util/dataColumns.ts b/packages/beacon-node/src/util/dataColumns.ts
+index ac16f9683d..8518185952 100644
+--- a/packages/beacon-node/src/util/dataColumns.ts
++++ b/packages/beacon-node/src/util/dataColumns.ts
+@@ -16,6 +16,7 @@ import {
+   BeaconBlockBody,
+   ColumnIndex,
+   CustodyIndex,
++  DataColumnSidecar,
+   Root,
+   SSZTypesFor,
+   SignedBeaconBlock,
+@@ -24,15 +25,18 @@ import {
+   deneb,
+   fulu,
+   gloas,
++  isGloasDataColumnSidecar,
+   ssz,
+ } from "@lodestar/types";
+ import {bytesToBigInt} from "@lodestar/utils";
+ import {BlockInputColumns} from "../chain/blocks/blockInput/blockInput.js";
+ import {BlockInputSource} from "../chain/blocks/blockInput/types.js";
++import {PayloadEnvelopeInput} from "../chain/blocks/payloadEnvelopeInput/payloadEnvelopeInput.js";
++import {PayloadEnvelopeInputSource} from "../chain/blocks/payloadEnvelopeInput/types.js";
+ import {ChainEvent, ChainEventEmitter} from "../chain/emitter.js";
+ import {Metrics} from "../metrics/metrics.js";
+ import {NodeId} from "../network/subnets/index.js";
+-import {dataColumnMatrixRecovery} from "./blobs.js";
++import {dataColumnMatrixRecovery, dataColumnMatrixRecoveryGloas} from "./blobs.js";
+ import {kzg} from "./kzg.js";
+ 
+ export enum RecoverResult {
+@@ -467,6 +471,68 @@ export async function recoverDataColumnSidecars(
+   return DataColumnReconstructionCode.SuccessResolved;
+ }
+ 
++/**
++ * Recover missing sampled/custody columns for a Gloas PayloadEnvelopeInput once
++ * at least half the columns are available. Reconstructed columns are added back
++ * to the payload input and published as normal data column sidecars.
++ */
++export async function recoverGloasDataColumnSidecars(
++  payloadInput: PayloadEnvelopeInput,
++  emitter: ChainEventEmitter,
++  metrics: Metrics | null
++): Promise<DataColumnReconstructionCode> {
++  const existingColumns = payloadInput.getAllColumnsWithSource();
++  const columnCount = existingColumns.length;
++  if (columnCount >= NUMBER_OF_COLUMNS) {
++    return DataColumnReconstructionCode.NotAttemptedAlreadyFull;
++  }
++
++  if (columnCount < NUMBER_OF_COLUMNS / 2) {
++    return DataColumnReconstructionCode.NotAttemptedHaveLessThanHalf;
++  }
++
++  metrics?.recoverDataColumnSidecars.custodyBeforeReconstruction.set(columnCount);
++  const partialSidecars = new Map<number, gloas.DataColumnSidecar>();
++  for (const {columnSidecar} of existingColumns) {
++    if (partialSidecars.size >= NUMBER_OF_COLUMNS / 2) {
++      break;
++    }
++    partialSidecars.set(columnSidecar.index, columnSidecar);
++  }
++
++  const timer = metrics?.peerDas.dataColumnsReconstructionTime.startTimer();
++  const fullSidecars = await dataColumnMatrixRecoveryGloas(
++    partialSidecars,
++    payloadInput.getBlobKzgCommitments().length
++  ).catch(() => null);
++  timer?.();
++  if (fullSidecars == null) {
++    return DataColumnReconstructionCode.NullReturned;
++  }
++
++  if (payloadInput.getAllColumns().length === NUMBER_OF_COLUMNS) {
++    metrics?.dataColumns.alreadyAdded.inc(fullSidecars.length);
++    return DataColumnReconstructionCode.SuccessLate;
++  }
++
++  const sidecarsToPublish: gloas.DataColumnSidecars = [];
++  for (const columnSidecar of fullSidecars) {
++    if (!payloadInput.hasColumn(columnSidecar.index)) {
++      payloadInput.addColumn({
++        columnSidecar,
++        seenTimestampSec: Date.now() / 1000,
++        source: PayloadEnvelopeInputSource.recovery,
++      });
++      sidecarsToPublish.push(columnSidecar);
++    }
++  }
++
++  metrics?.peerDas.reconstructedColumns.inc(sidecarsToPublish.length);
++  metrics?.dataColumns.bySource.inc({source: BlockInputSource.recovery}, sidecarsToPublish.length);
++  emitter.emit(ChainEvent.publishDataColumns, sidecarsToPublish);
++  return DataColumnReconstructionCode.SuccessResolved;
++}
++
+ export enum DataColumnReconstructionCode {
+   NotAttemptedAlreadyFull = "not_attempted_full",
+   NotAttemptedHaveLessThanHalf = "not_attempted_less_than_half",
+@@ -475,3 +541,27 @@ export enum DataColumnReconstructionCode {
+   SuccessResolved = "success_resolved",
+   Failed = "failed",
+ }
++
++/**
++ * Get the slot from a DataColumnSidecar regardless of fork.
++ * Fulu: from signedBlockHeader.message.slot
++ * Gloas: from sidecar.slot directly
++ */
++export function getDataColumnSlot(sidecar: DataColumnSidecar): Slot {
++  if (isGloasDataColumnSidecar(sidecar)) {
++    return sidecar.slot;
++  }
++  return (sidecar as fulu.DataColumnSidecar).signedBlockHeader.message.slot;
++}
++
++/**
++ * Get the block root from a DataColumnSidecar regardless of fork.
++ * Fulu: computed from signedBlockHeader.message via hashTreeRoot
++ * Gloas: from sidecar.beaconBlockRoot directly
++ */
++export function getDataColumnBlockRoot(sidecar: DataColumnSidecar): Root {
++  if (isGloasDataColumnSidecar(sidecar)) {
++    return sidecar.beaconBlockRoot;
++  }
++  return ssz.phase0.BeaconBlockHeader.hashTreeRoot((sidecar as fulu.DataColumnSidecar).signedBlockHeader.message);
++}

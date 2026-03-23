@@ -22,15 +22,6 @@ Before sending anything to Nico DM from a heartbeat flow, all of these must be c
 3. Is this a critical deliverable Nico explicitly needs in DM?
 - If **all answers are no** → output `NO_REPLY`.
 
-## 🔴 TOP PRIORITY: Gloas Data Columns
-**Work on gloas-data-columns continuously until branch is ready and pushed.**
-- Topic: #2933 (Lodestar WG)
-- Session key: `agent:main:telegram:group:-1003764039429:topic:2933`
-- Tracker: `notes/gloas-data-columns/TRACKER.md`
-- Phases: Research/Design → Implementation → Quality Gate → Push
-- Only interrupt for: urgent notifications, CI failures, or direct messages from Nico
-- Each heartbeat: nudge the topic session to continue if it's not actively working
-
 ## ⚠️ STEP 1: BACKLOG — DO THIS FIRST, BEFORE ANYTHING ELSE
 1. Read `BACKLOG.md` right now
 2. Look for any task that is NOT marked ✅ and is NOT a passive "monitor/watch" item
