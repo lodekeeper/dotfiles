@@ -1,7 +1,27 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-03-22 (17th pass)
+> Updated: 2026-03-23 (18th pass)
+
+---
+
+## Daily Audit Snapshot — 2026-03-23 (self-improvement-audit-daily, 23:47 UTC)
+
+### PR review
+- **Status:** review-scope + follow-up guard workflow remains healthy; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** retry telemetry, rolling degradation checks, and log-fallback path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** extraction/compliance/vector-readiness gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident-bundle workflow remains healthy; no new blocker discovered this cycle.
+
+### Audit workflow (cross-cutting)
+- **Blocker:** daily audit kickoff still required two manual commands (consistency check + scaffold insertion), so the consistency guard could be skipped under time pressure.
+- **Fix applied this cycle:** added `scripts/notes/run-autonomy-audit-preflight.sh` to run the consistency guard and snapshot scaffolder in one command with optional date/time overrides.
 
 ---
 
@@ -384,6 +404,15 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 
 ## Improvements Implemented This Cycle
 
+### ✅ Daily autonomy-audit preflight wrapper added (2026-03-23)
+Created `scripts/notes/run-autonomy-audit-preflight.sh`:
+- runs `check-autonomy-gaps-consistency.py` before any snapshot mutation,
+- runs `prepend-autonomy-audit-snapshot.py` in the same command,
+- supports `--file`, `--date`, `--time-label`, and `--force` for deterministic cron/manual usage,
+- prints explicit next-step guidance to fill the inserted snapshot block.
+
+**Rationale:** removes a fragile two-command manual handoff at audit start, so consistency validation is no longer optional and daily snapshot setup stays deterministic.
+
 ### ✅ Daily autonomy snapshot scaffolder added (2026-03-22)
 Created `scripts/notes/prepend-autonomy-audit-snapshot.py`:
 - prepends a correctly formatted `## Daily Audit Snapshot — YYYY-MM-DD` block at the top of `notes/autonomy-gaps.md`,
@@ -711,3 +740,4 @@ Updated `scripts/ci/auto_fix_flaky.py`:
 30. ~~**Auto-wire metadata drift guard into review loop docs** — add a mandatory re-review step in `skills/lodestar-review/SKILL.md` to run the checker on follow-up commits and record output in review notes.~~ ✅ done (2026-03-19)
 31. ~~**Review-loop command wrapper for metadata drift artifacts** — add a small helper (`scripts/review/run-followup-guards.sh` or equivalent) that runs `sync-gh` + metadata drift check together and prints the exact `gh pr edit` reminder when drift is detected.~~ ✅ done (2026-03-20)
 32. ~~**Local review-scope guard** — add a pre-review command that fails on dirty worktrees and emits canonical `CHANGED_FILES` + diff artifacts for reviewer prompts.~~ ✅ done (2026-03-21)
+33. ~~**Autonomy-audit preflight wrapper** — unify consistency check + snapshot scaffolding into one command so the guard cannot be skipped during daily audits.~~ ✅ done (2026-03-23)
