@@ -85,8 +85,9 @@ Line 52 still says:
 But the code now uses `max_epoch = Epoch(get_current_epoch(state) + MIN_SEED_LOOKAHEAD)`.
 While functionally equivalent for `MIN_SEED_LOOKAHEAD=1`, the prose should match the code parameterization. Should say `epoch <= current_epoch + MIN_SEED_LOOKAHEAD`.
 
-### Naming: settled on `ptc_window`
-terence suggested `ptc_window` (over `ptc_lookbehind`), jtraglia agreed. Latest commits use `ptc_window` throughout. ✓
+### Naming: `ptc_window` → `ptc_assignments` suggested
+terence suggested `ptc_window` (over `ptc_lookbehind`), jtraglia agreed. Latest commits use `ptc_window` throughout.
+Nico suggested `ptc_assignments` on the spec PR (2026-03-24) — better because "window" is overloaded/implies variable size, and doesn't communicate content. "Assignments" matches existing spec vocabulary (`get_ptc_assignment`). Awaiting spec-side response.
 
 ### No issues with the core change
 The indexing math, epoch boundary handling, initialization, and fork passthrough are all correct.
