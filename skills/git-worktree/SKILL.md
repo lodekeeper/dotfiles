@@ -151,3 +151,37 @@ echo "status: $(git status --short | head -5)"
 ```
 
 If any output looks wrong, **STOP immediately** and alert the human.
+
+## Additional Guard Rails (from MEK 🐒)
+
+### Dependency installs
+Worktrees share git objects but **NOT** `node_modules`, build artifacts, or caches. Always run your package manager install in each new worktree:
+```bash
+cd ~/project-<feature>
+npm install    # or pnpm install, yarn, etc.
+```
+Skipping this causes mysterious build failures that waste hours.
+
+### Reading files from main safely
+If you need to reference a file from main/unstable, use `git show` — do NOT cd to the main checkout:
+```bash
+# GOOD — reads file without leaving worktree
+git show main:src/some/file.ts
+
+# BAD — leaves worktree, risks contamination
+cd ~/project && cat src/some/file.ts   # DON'T DO THIS
+```
+
+### Git hooks
+Some hooks live in `.git/hooks` of the main repo and don't propagate to worktrees automatically. If your workflow depends on pre-commit hooks, verify they run in the worktree or configure `core.hooksPath` to a shared location.
+
+### Relative path confusion
+If the repo has scripts with hardcoded relative paths (e.g., `../../some-path`), worktrees in sibling directories can break them. Check for this when first creating a worktree.
+
+### Branch naming convention
+Enforce a consistent pattern so worktree-to-PR mapping is obvious:
+```
+feat/<issue>-<short-desc>     →  ~/project-<short-desc>
+fix/<issue>-<short-desc>      →  ~/project-fix-<short-desc>
+```
+Makes cleanup and `git worktree list` audits much easier.
