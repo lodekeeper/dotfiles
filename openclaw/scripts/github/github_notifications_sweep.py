@@ -225,6 +225,28 @@ def fetch_pr_comments(repo: str, pr: int) -> Tuple[List[Dict[str, Any]], List[Di
     return review, issue
 
 
+def fetch_pr_reviews(repo: str, pr: int) -> List[Dict[str, Any]]:
+    """Fetch top-level PR reviews (not inline comments).
+
+    These are reviews submitted via the Reviews API with a body but potentially
+    no inline comments. Without this, reviews like 'CHANGES_REQUESTED' with only
+    a top-level body are invisible to the notification sweep.
+    """
+    try:
+        reviews = fetch_paginated(f"repos/{repo}/pulls/{pr}/reviews")
+        # Only return reviews with a non-empty body (skip empty approvals etc.)
+        # Also skip pure APPROVED reviews without substantive body — those are acknowledgments
+        out = []
+        for r in reviews:
+            body = (r.get("body") or "").strip()
+            if not body:
+                continue
+            out.append(r)
+        return out
+    except Exception:
+        return []
+
+
 def is_pr_merged_or_closed(repo: str, pr: int) -> bool:
     """Check if a PR is merged or closed. Returns True for either state."""
     try:
@@ -263,19 +285,41 @@ def scan_open_prs_for_unreplied(state: Dict, checklist: Dict) -> List[Dict[str, 
     Returns synthetic notification-like dicts for PRs with new comments,
     so they can be processed by the main notification loop.
     """
+    # Search across ALL repos for open PRs authored by lodekeeper
     try:
-        prs = json.loads(subprocess.check_output(
-            ["gh", "pr", "list", "--author", OWNER_SELF, "--state", "open",
-             "--repo", "ChainSafe/lodestar", "--json", "number,title",
-             "--limit", "20"],
-            text=True, timeout=30,
+        search_results = json.loads(subprocess.check_output(
+            ["gh", "search", "prs", "--author", OWNER_SELF, "--state", "open",
+             "--json", "number,title,repository", "--limit", "50"],
+            text=True, timeout=60,
         ))
-    except Exception as e:
-        print(f"WARNING: scan_open_prs failed: {e}", file=sys.stderr)
         prs = []
+        for sr in search_results:
+            repo_info = sr.get("repository", {})
+            repo_name = repo_info.get("nameWithOwner", "")
+            if not repo_name:
+                continue
+            prs.append({
+                "number": sr["number"],
+                "title": sr.get("title", ""),
+                "_repo": repo_name,
+            })
+    except Exception as e:
+        print(f"WARNING: scan_open_prs (cross-repo search) failed: {e}", file=sys.stderr)
+        # Fallback to just ChainSafe/lodestar
+        try:
+            fallback = json.loads(subprocess.check_output(
+                ["gh", "pr", "list", "--author", OWNER_SELF, "--state", "open",
+                 "--repo", "ChainSafe/lodestar", "--json", "number,title",
+                 "--limit", "20"],
+                text=True, timeout=30,
+            ))
+            prs = fallback
+        except Exception as e2:
+            print(f"WARNING: scan_open_prs fallback failed: {e2}", file=sys.stderr)
+            prs = []
 
-    # Build set of PR numbers already covered by own-PR scan
-    own_pr_nums = {pr_info["number"] for pr_info in prs}
+    # Build set of PR keys already covered by own-PR scan
+    own_pr_keys = {f"{pr_info.get('_repo', 'ChainSafe/lodestar')}#{pr_info['number']}" for pr_info in prs}
 
     # Also scan PRs from state that we've previously been notified about
     # (catches non-owned PRs where we're a reviewer/participant).
@@ -294,12 +338,12 @@ def scan_open_prs_for_unreplied(state: Dict, checklist: Dict) -> List[Dict[str, 
         if not m:
             continue
         repo, pr_num = m.group(1), int(m.group(2))
-        if pr_num in own_pr_nums:
+        if f"{repo}#{pr_num}" in own_pr_keys:
             continue
         # Only scan if there are open checklist items OR the PR was recently updated
         if pr_key in open_checklist_prs:
             prs.append({"number": pr_num, "title": "", "_repo": repo})
-            own_pr_nums.add(pr_num)
+            own_pr_keys.add(f"{repo}#{pr_num}")
 
     synthetic = []
     for pr_info in prs:
@@ -395,6 +439,8 @@ def main() -> int:
             item["doneReason"] = "pr-merged"
 
     for sid, item in checklist["items"].items():
+        if not sid.isdigit():
+            continue
         if item.get("status") == "open" and int(sid) in handled_ids:
             item["status"] = "done"
             item["doneAt"] = now
@@ -451,6 +497,7 @@ def main() -> int:
         notification_reason = (n.get("reason") or "").lower()
 
         review_comments, issue_comments = fetch_pr_comments(repo, pr)
+        pr_reviews = fetch_pr_reviews(repo, pr)
 
         # Thread-aware dedupe: if lodekeeper has replied in-thread to any node in a review thread,
         # mark the entire parent thread as handled to avoid stale false-positive reminders.
@@ -515,6 +562,7 @@ def main() -> int:
         # Update watermark candidates
         max_review = pr_state.get("last_review_comment_id", 0)
         max_issue = pr_state.get("last_issue_comment_id", 0)
+        max_review_body = pr_state.get("last_review_body_id", 0)
 
         for c in review_comments:
             cid = int(c["id"])
@@ -565,6 +613,60 @@ def main() -> int:
                     item["status"] = "done"
                     item["doneAt"] = now
                     item["doneReason"] = "owner-replied-in-thread"
+
+        # Process top-level PR review bodies (reviews submitted via the Reviews API
+        # with a body but no inline comments — e.g. CHANGES_REQUESTED with text).
+        for rv in pr_reviews:
+            rv_id = int(rv["id"])
+            max_review_body = max(max_review_body, rv_id)
+            author = (rv.get("user") or {}).get("login", "")
+            if author.lower() == OWNER_SELF:
+                continue
+
+            body = rv.get("body") or ""
+            in_scope = (
+                is_own_pr
+                or notification_reason == "mention"
+                or is_explicit_ping(body)
+            )
+            if not in_scope:
+                continue
+
+            # Use "rv_" prefix to distinguish from inline review comment IDs
+            item_key = f"rv_{rv_id}"
+            item = checklist["items"].get(item_key)
+            if item is None and rv_id > int(pr_state.get("last_review_body_id", 0)):
+                item = {
+                    "id": rv_id,
+                    "repo": repo,
+                    "pr": pr,
+                    "kind": "review-body",
+                    "author": author,
+                    "url": rv.get("html_url"),
+                    "createdAt": rv.get("submitted_at"),
+                    "status": "open",
+                    "firstSeenAt": now,
+                    "lastSeenAt": now,
+                    "reportedCount": 0,
+                    "reviewState": rv.get("state"),
+                }
+                checklist["items"][item_key] = item
+                actionable_new.append(item)
+            elif item is not None:
+                item["lastSeenAt"] = now
+
+            # Auto-close if we've already replied on the PR after this review
+            if item is not None and item.get("status") == "open":
+                review_time = rv.get("submitted_at", "")
+                for owner_time in [
+                    c.get("created_at", "") for c in issue_comments
+                    if (c.get("user") or {}).get("login", "").lower() == OWNER_SELF
+                ]:
+                    if owner_time > review_time:
+                        item["status"] = "done"
+                        item["doneAt"] = now
+                        item["doneReason"] = "owner-replied-after-review"
+                        break
 
         # Build a set of issue comment IDs that lodekeeper has replied to.
         # For non-threaded issue comments, we check if any subsequent comment
@@ -654,6 +756,7 @@ def main() -> int:
 
         pr_state["last_review_comment_id"] = max_review
         pr_state["last_issue_comment_id"] = max_issue
+        pr_state["last_review_body_id"] = max_review_body
 
         # Defer notification marking to after state save (race condition fix).
         # Synthetic entries from open-PR-scan have no thread_id.
