@@ -1,7 +1,27 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-03-24 (19th pass)
+> Updated: 2026-03-25 (15th pass)
+
+---
+
+## Daily Audit Snapshot — 2026-03-25 (self-improvement-audit-daily, 23:50 UTC)
+
+### PR review
+- **Status:** review-scope + follow-up guard workflow remains healthy; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** retry telemetry, rolling degradation checks, and log-fallback path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** extraction/compliance/vector-readiness gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident-bundle workflow remains healthy; no new blocker discovered this cycle.
+
+### Audit workflow (cross-cutting)
+- **Blocker:** audit completion still relied on manual post-edit steps (placeholder cleanup check + top-level `Updated` metadata refresh + final consistency rerun), which is easy to skip under time pressure.
+- **Fix applied this cycle:** added `scripts/notes/finalize-autonomy-audit.py` and updated preflight instructions so the close-out path is one command after filling the snapshot.
 
 ---
 
@@ -420,6 +440,15 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 
 ## Improvements Implemented This Cycle
 
+### ✅ Daily autonomy-audit finalizer added (2026-03-25)
+Created `scripts/notes/finalize-autonomy-audit.py` and updated `scripts/notes/run-autonomy-audit-preflight.sh` guidance:
+- verifies the current day's snapshot has no `_fill in_` placeholders,
+- refreshes the top-level `> Updated: YYYY-MM-DD (Nth pass)` metadata automatically,
+- runs `check-autonomy-gaps-consistency.py` as a required post-edit guard,
+- provides one deterministic close-out command after filling the snapshot.
+
+**Rationale:** closes the remaining manual handoff at audit end, so incomplete snapshots and stale header metadata are caught before cron completion.
+
 ### ✅ Daily autonomy-audit preflight wrapper added (2026-03-23)
 Created `scripts/notes/run-autonomy-audit-preflight.sh`:
 - runs `check-autonomy-gaps-consistency.py` before any snapshot mutation,
@@ -757,3 +786,4 @@ Updated `scripts/ci/auto_fix_flaky.py`:
 31. ~~**Review-loop command wrapper for metadata drift artifacts** — add a small helper (`scripts/review/run-followup-guards.sh` or equivalent) that runs `sync-gh` + metadata drift check together and prints the exact `gh pr edit` reminder when drift is detected.~~ ✅ done (2026-03-20)
 32. ~~**Local review-scope guard** — add a pre-review command that fails on dirty worktrees and emits canonical `CHANGED_FILES` + diff artifacts for reviewer prompts.~~ ✅ done (2026-03-21)
 33. ~~**Autonomy-audit preflight wrapper** — unify consistency check + snapshot scaffolding into one command so the guard cannot be skipped during daily audits.~~ ✅ done (2026-03-23)
+34. ~~**Autonomy-audit finalization guard** — add a one-command close-out that blocks `_fill in_` placeholders, refreshes the top-level updated metadata, and re-runs consistency checks before finishing daily audits.~~ ✅ done (2026-03-25)
