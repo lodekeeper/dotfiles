@@ -1,0 +1,645 @@
+diff --git a/packages/beacon-node/src/sync/constants.ts b/packages/beacon-node/src/sync/constants.ts
+index 7bef3598b181..c8cc33ff1c68 100644
+--- a/packages/beacon-node/src/sync/constants.ts
++++ b/packages/beacon-node/src/sync/constants.ts
+@@ -5,10 +5,7 @@ export const PARALLEL_HEAD_CHAINS = 2;
+ export const MIN_FINALIZED_CHAIN_VALIDATED_EPOCHS = 10;
+ 
+ /** The number of times to retry a batch before it is considered failed. */
+-// export const MAX_BATCH_DOWNLOAD_ATTEMPTS = 5;
+-// this constant is increased a lot for peerDAS because we may have many failed download due to rate limit not implemented yet
+-// TODO: change it back to 5 when this issue is implemented https://github.com/ChainSafe/lodestar/issues/8033
+-export const MAX_BATCH_DOWNLOAD_ATTEMPTS = 20;
++export const MAX_BATCH_DOWNLOAD_ATTEMPTS = 5;
+ 
+ /**
+  * Consider batch faulty after downloading and processing this number of times
+diff --git a/packages/beacon-node/src/sync/range/batch.ts b/packages/beacon-node/src/sync/range/batch.ts
+index cf03667acedb..aad1c8452427 100644
+--- a/packages/beacon-node/src/sync/range/batch.ts
++++ b/packages/beacon-node/src/sync/range/batch.ts
+@@ -331,6 +331,18 @@ export class Batch {
+     this.state = {status: BatchStatus.AwaitingDownload, blocks: this.state.blocks};
+   }
+ 
++  /**
++   * Downloading -> AwaitingDownload (without counting as a failed attempt).
++   * Used when the peer rate-limited us — the request was never actually served.
++   */
++  downloadingRateLimited(): void {
++    if (this.state.status !== BatchStatus.Downloading) {
++      throw new BatchError(this.wrongStatusErrorType(BatchStatus.Downloading));
++    }
++
++    this.state = {status: BatchStatus.AwaitingDownload, blocks: this.state.blocks};
++  }
++
+   /**
+    * AwaitingProcessing -> Processing
+    */
+diff --git a/packages/beacon-node/src/sync/range/chain.ts b/packages/beacon-node/src/sync/range/chain.ts
+index 911ce93b5bb0..79eb3c08df5d 100644
+--- a/packages/beacon-node/src/sync/range/chain.ts
++++ b/packages/beacon-node/src/sync/range/chain.ts
+@@ -1,4 +1,5 @@
+ import {ChainForkConfig} from "@lodestar/config";
++import {DEFAULT_RATE_LIMIT_BACKOFF_MS, RequestErrorCode} from "@lodestar/reqresp";
+ import {Epoch, Root, Slot} from "@lodestar/types";
+ import {ErrorAborted, LodestarError, Logger, toRootHex} from "@lodestar/utils";
+ import {isBlockInputBlobs, isBlockInputColumns} from "../../chain/blocks/blockInput/blockInput.js";
+@@ -133,6 +134,12 @@ export class SyncChain {
+   /** Sorted map of batches undergoing some kind of processing. */
+   private readonly batches = new Map<Epoch, Batch>();
+   private readonly peerset = new Map<PeerIdStr, ChainTarget>();
++  /**
++   * Tracks peers that have rate-limited us, mapped to the timestamp (ms) until which we should avoid them.
++   * This is a sync-layer optimization to avoid assigning batches to backed-off peers.
++   * The reqresp SelfRateLimiter independently enforces backoff at the protocol level as a safety net.
++   */
++  private readonly rateLimitedPeers = new Map<PeerIdStr, number>();
+ 
+   private readonly logger: Logger;
+   private readonly config: ChainForkConfig;
+@@ -239,6 +246,7 @@ export class SyncChain {
+    */
+   removePeer(peerId: PeerIdStr): boolean {
+     const deleted = this.peerset.delete(peerId);
++    this.rateLimitedPeers.delete(peerId);
+     this.computeTarget();
+     return deleted;
+   }
+@@ -374,8 +382,18 @@ export class SyncChain {
+       return;
+     }
+ 
++    const now = Date.now();
+     const peersSyncInfo: PeerSyncInfo[] = [];
+     for (const [peerId, target] of this.peerset.entries()) {
++      // Skip peers that are currently in rate-limit backoff
++      const rateLimitedUntil = this.rateLimitedPeers.get(peerId);
++      if (rateLimitedUntil !== undefined) {
++        if (now < rateLimitedUntil) {
++          continue;
++        }
++        this.rateLimitedPeers.delete(peerId);
++      }
++
+       try {
+         peersSyncInfo.push({...this.getConnectedPeerSyncMeta(peerId), target});
+       } catch (e) {
+@@ -507,7 +525,14 @@ export class SyncChain {
+           {id: this.logId, ...batch.getMetadata(), peer: prettyPrintPeerIdStr(peer.peerId)},
+           res.err
+         );
+-        batch.downloadingError(peer.peerId); // Throws after MAX_DOWNLOAD_ATTEMPTS
++        if (errCode === RequestErrorCode.RESP_RATE_LIMITED || errCode === RequestErrorCode.REQUEST_SELF_RATE_LIMITED) {
++          // Peer rate-limited us — don't count as a failed download attempt and mark peer for backoff
++          this.rateLimitedPeers.set(peer.peerId, Date.now() + DEFAULT_RATE_LIMIT_BACKOFF_MS);
++          batch.downloadingRateLimited();
++          this.triggerBatchDownloader();
++        } else {
++          batch.downloadingError(peer.peerId); // Throws after MAX_DOWNLOAD_ATTEMPTS
++        }
+       } else {
+         this.logger.verbose("Batch download success", {
+           id: this.logId,
+diff --git a/packages/beacon-node/src/sync/unknownBlock.ts b/packages/beacon-node/src/sync/unknownBlock.ts
+index ad3e5cbc2ad9..7a5a8c47063b 100644
+--- a/packages/beacon-node/src/sync/unknownBlock.ts
++++ b/packages/beacon-node/src/sync/unknownBlock.ts
+@@ -569,6 +569,8 @@ export class BlockInputSync {
+           downloadByRootMetrics?.error.inc({code: "req_resp", client: peerClient});
+           switch (e.type.code) {
+             case RequestErrorCode.REQUEST_RATE_LIMITED:
++            case RequestErrorCode.RESP_RATE_LIMITED:
++            case RequestErrorCode.REQUEST_SELF_RATE_LIMITED:
+             case RequestErrorCode.REQUEST_TIMEOUT:
+               // do not exclude peer for these errors
+               break;
+diff --git a/packages/beacon-node/test/e2e/network/reqresp.test.ts b/packages/beacon-node/test/e2e/network/reqresp.test.ts
+index 0d68bc1d3760..21eae086b535 100644
+--- a/packages/beacon-node/test/e2e/network/reqresp.test.ts
++++ b/packages/beacon-node/test/e2e/network/reqresp.test.ts
+@@ -2,7 +2,7 @@ import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
+ import {ChainForkConfig, createChainForkConfig} from "@lodestar/config";
+ import {chainConfig} from "@lodestar/config/default";
+ import {ForkName} from "@lodestar/params";
+-import {RequestError, RequestErrorCode, ResponseOutgoing} from "@lodestar/reqresp";
++import {RequestError, RequestErrorCode, RespStatus, ResponseError, ResponseOutgoing} from "@lodestar/reqresp";
+ import {computeEpochAtSlot} from "@lodestar/state-transition";
+ import {Root, SignedBeaconBlock, altair, phase0, ssz} from "@lodestar/types";
+ import {sleep} from "@lodestar/utils";
+@@ -283,6 +283,33 @@ function runTests({useWorker}: {useWorker: boolean}): void {
+       new RequestError({code: RequestErrorCode.RESP_TIMEOUT})
+     );
+   });
++
++  it("should detect a rate-limit response and back off the peer", async () => {
++    // Simulates a Lighthouse/Grandine-style rate limit response (status 139)
++    const rateLimitMessage = "Rate limited. There are already 2 active requests with the same protocol";
++
++    const [netA, _, _0, peerIdB] = await createAndConnectPeers(
++      (method) =>
++        // biome-ignore lint/correctness/useYield: No need for yield in test context
++        async function* onRequest() {
++          if (method === ReqRespMethod.BeaconBlocksByRange) {
++            throw new ResponseError(RespStatus.RATE_LIMITED, rateLimitMessage);
++          }
++        }
++    );
++
++    // First request: responder sends RATE_LIMITED → detected as RESP_RATE_LIMITED
++    await expectRejectedWithLodestarError(
++      netA.sendBeaconBlocksByRange(peerIdB, {startSlot: 0, step: 1, count: 1}),
++      new RequestError({code: RequestErrorCode.RESP_RATE_LIMITED})
++    );
++
++    // Second request: SelfRateLimiter has the peer in backoff → blocked before sending
++    await expectRejectedWithLodestarError(
++      netA.sendBeaconBlocksByRange(peerIdB, {startSlot: 0, step: 1, count: 1}),
++      new RequestError({code: RequestErrorCode.REQUEST_SELF_RATE_LIMITED})
++    );
++  });
+ }
+ 
+ function getEmptyEncodedPayloadSignedBeaconBlock(config: ChainForkConfig): ResponseOutgoing {
+diff --git a/packages/beacon-node/test/unit/sync/range/chain.test.ts b/packages/beacon-node/test/unit/sync/range/chain.test.ts
+index 246db737b897..4deb841c286a 100644
+--- a/packages/beacon-node/test/unit/sync/range/chain.test.ts
++++ b/packages/beacon-node/test/unit/sync/range/chain.test.ts
+@@ -1,7 +1,8 @@
+-import {afterEach, describe, it} from "vitest";
++import {afterEach, describe, expect, it} from "vitest";
+ import {config} from "@lodestar/config/default";
+ import {testLogger} from "@lodestar/logger/test-utils";
+ import {SLOTS_PER_EPOCH} from "@lodestar/params";
++import {RequestError, RequestErrorCode} from "@lodestar/reqresp";
+ import {computeStartSlotAtEpoch} from "@lodestar/state-transition";
+ import {Epoch, Slot, phase0, ssz} from "@lodestar/types";
+ import {Logger, fromHex} from "@lodestar/utils";
+@@ -205,6 +206,81 @@ describe("sync / range / chain", () => {
+     });
+   });
+ 
++  it("Should handle rate-limited peer without counting as a failed download attempt", async () => {
++    const startEpoch = 0;
++    const targetEpoch = 4;
++    const peer1 = peer;
++    const peer2 = "16Uiu2HAmRateLimitTestPeer2";
++    let peer1Downloads = 0;
++    let peer2Downloads = 0;
++
++    const processChainSegment: SyncChainFns["processChainSegment"] = async () => {};
++
++    const downloadByRange: SyncChainFns["downloadByRange"] = async (peerMeta, request, _partialDownload) => {
++      if (peerMeta.peerId === peer1) {
++        peer1Downloads++;
++        throw new RequestError({code: RequestErrorCode.RESP_RATE_LIMITED});
++      }
++
++      // peer2 returns blocks normally
++      peer2Downloads++;
++      const blocks: IBlockInput[] = [];
++      for (let i = request.startSlot; i < request.startSlot + request.count; i += 1) {
++        blocks.push(
++          BlockInputPreData.createFromBlock({
++            block: {
++              message: generateEmptyBlock(i),
++              signature: ACCEPT_BLOCK,
++            },
++            blockRootHex: "0x00",
++            forkName: config.getForkName(i),
++            seenTimestampSec: Math.floor(Date.now() / 1000),
++            daOutOfRange: false,
++            source: BlockInputSource.byRange,
++          })
++        );
++      }
++      return {result: blocks, warnings: null};
++    };
++
++    const target: ChainTarget = {slot: computeStartSlotAtEpoch(targetEpoch), root: ZERO_HASH};
++    const syncType = RangeSyncType.Finalized;
++
++    await new Promise<void>((resolve, reject) => {
++      const onEnd: SyncChainFns["onEnd"] = (err) => (err ? reject(err) : resolve());
++      const clock = new Clock({config, genesisTime: 0, signal: new AbortController().signal});
++      const initialSync = new SyncChain(
++        startEpoch,
++        target,
++        syncType,
++        logSyncChainFns(logger, {
++          processChainSegment,
++          downloadByRange,
++          getConnectedPeerSyncMeta,
++          reportPeer,
++          pruneBlockInputs,
++          onEnd,
++        }),
++        {config, logger, clock, custodyConfig, metrics: null}
++      );
++
++      // Add peer1 first — it will get rate-limited
++      initialSync.addPeer(peer1, target);
++
++      // Add peer2 after a short delay — it will complete the sync.
++      // Without rate-limit handling, the chain would die from MAX_BATCH_DOWNLOAD_ATTEMPTS
++      // before peer2 is ever used, because rate-limit errors would rapidly exhaust the retry counter.
++      setTimeout(() => initialSync.addPeer(peer2, target), 50);
++
++      initialSync.startSyncing(startEpoch);
++    });
++
++    // peer1 should have been attempted at least once (rate-limited)
++    expect(peer1Downloads).toBeGreaterThanOrEqual(1);
++    // peer2 should have handled the actual downloads
++    expect(peer2Downloads).toBeGreaterThanOrEqual(1);
++  });
++
+   function generateEmptyBlock(slot: Slot): phase0.BeaconBlock {
+     return {
+       slot,
+diff --git a/packages/reqresp/src/ReqResp.ts b/packages/reqresp/src/ReqResp.ts
+index 756a735cb0f6..49d4ac8a3112 100644
+--- a/packages/reqresp/src/ReqResp.ts
++++ b/packages/reqresp/src/ReqResp.ts
+@@ -74,6 +74,9 @@ export class ReqResp {
+     this.metrics?.selfRateLimiterPeerCount.addCollect(() => {
+       this.metrics?.selfRateLimiterPeerCount.set(this.selfRateLimiter.getPeerCount());
+     });
++    this.metrics?.selfRateLimiterRateLimitedPeerCount.addCollect(() => {
++      this.metrics?.selfRateLimiterRateLimitedPeerCount.set(this.selfRateLimiter.getRateLimitedPeerCount());
++    });
+   }
+ 
+   /**
+@@ -206,6 +209,9 @@ export class ReqResp {
+         if (e.type.code === RequestErrorCode.DIAL_ERROR || e.type.code === RequestErrorCode.DIAL_TIMEOUT) {
+           this.metrics?.dialErrors.inc();
+         }
++        if (e.type.code === RequestErrorCode.RESP_RATE_LIMITED) {
++          this.selfRateLimiter.onRateLimited(peerIdStr, e.type.backoffMs);
++        }
+         this.metrics?.outgoingErrorReasons.inc({reason: e.type.code});
+ 
+         this.onOutgoingRequestError(peerId, method, e);
+diff --git a/packages/reqresp/src/index.ts b/packages/reqresp/src/index.ts
+index f6633216a09e..3f0c2f424ee5 100644
+--- a/packages/reqresp/src/index.ts
++++ b/packages/reqresp/src/index.ts
+@@ -3,6 +3,7 @@ export type {Metrics} from "./metrics.js";
+ export {getMetrics} from "./metrics.js";
+ export type {ReqRespOpts} from "./ReqResp.js";
+ export {ReqResp} from "./ReqResp.js";
++export {DEFAULT_RATE_LIMIT_BACKOFF_MS} from "./rate_limiter/selfRateLimiter.js";
+ export * from "./request/errors.js";
+ export * from "./response/errors.js";
+ export * from "./types.js";
+diff --git a/packages/reqresp/src/metrics.ts b/packages/reqresp/src/metrics.ts
+index 564e29300dd6..f263cff2e2f3 100644
+--- a/packages/reqresp/src/metrics.ts
++++ b/packages/reqresp/src/metrics.ts
+@@ -75,5 +75,9 @@ export function getMetrics(register: MetricsRegisterExtra) {
+       name: "beacon_reqresp_self_rate_limiter_peer_count",
+       help: "Count of peers tracked by the self rate limiter",
+     }),
++    selfRateLimiterRateLimitedPeerCount: register.gauge({
++      name: "beacon_reqresp_self_rate_limiter_rate_limited_peer_count",
++      help: "Count of peers currently in rate-limit backoff",
++    }),
+   };
+ }
+diff --git a/packages/reqresp/src/rate_limiter/selfRateLimiter.ts b/packages/reqresp/src/rate_limiter/selfRateLimiter.ts
+index 5d26f4c025d8..d859b1e3b07a 100644
+--- a/packages/reqresp/src/rate_limiter/selfRateLimiter.ts
++++ b/packages/reqresp/src/rate_limiter/selfRateLimiter.ts
+@@ -17,12 +17,39 @@ const DISCONNECTED_TIMEOUT_MS = 60 * 1000;
+  **/
+ export const REQUEST_TIMEOUT_MS = 30 * 1000;
+ 
++/**
++ * Default backoff when a peer rate limits us without specifying a duration.
++ * Only Grandine sends an explicit backoff (parsed and used directly); all other clients
++ * send static error messages and fall back to this value.
++ *
++ * Cross-client rate limit behavior (as of March 2026):
++ *   - Lighthouse: concurrent-limit only (max 2 in-flight per protocol), no GCRA rejections
++ *   - Prysm:      30s leaky bucket for blocks/blobs, 1s for individual RPCs
++ *   - Teku:       60s sliding window — then disconnects the peer entirely
++ *   - Nimbus:     silent throttling (never sends errors)
++ *   - Grandine:   GCRA with explicit wait time — this default is not used
++ *
++ * 5s is a circuit breaker, not a full recovery wait. It prevents immediate retry loops
++ * while staying well under the ping interval (15-20s) since the backoff blocks ALL
++ * protocols for the peer. For Lighthouse/Grandine's concurrent limit, 5s is enough for
++ * an in-flight request to complete and free a slot (typical RTT 1-3s). For Prysm's
++ * longer bucket, repeated rate limits naturally extend the backoff window.
++ */
++export const DEFAULT_RATE_LIMIT_BACKOFF_MS = 5_000;
++
++/** Maximum backoff to prevent a malicious peer from requesting an excessively long backoff */
++export const MAX_RATE_LIMIT_BACKOFF_MS = 60_000;
++
+ type RequestId = number;
+ type RequestIdMs = number;
+ 
+ /**
+  * Simple rate limiter that allows a maximum of 2 concurrent requests per protocol per peer.
++ * Also tracks when a peer has rate-limited us and enforces a backoff period before allowing new requests.
+  * The consumer should either prevent requests from being sent when the limit is reached or handle the case when the request is not allowed.
++ *
++ * Note: SyncChain maintains its own rate-limit backoff map to avoid assigning batches to backed-off
++ * peers. This class acts as the authoritative safety net at the protocol level.
+  */
+ export class SelfRateLimiter {
+   private readonly rateLimitersPerPeer: MapDef<PeerIdStr, MapDef<ProtocolID, Map<RequestId, RequestIdMs>>>;
+@@ -31,6 +58,8 @@ export class SelfRateLimiter {
+    * This is the same design to `ReqRespRateLimiter`.
+    **/
+   private lastSeenRequestsByPeer: Map<string, number>;
++  /** Tracks the timestamp (ms) until which we should not send requests to a peer */
++  private rateLimitedUntilByPeer: Map<PeerIdStr, number>;
+   /** Interval to check lastSeenMessagesByPeer */
+   private cleanupInterval: NodeJS.Timeout | undefined = undefined;
+ 
+@@ -39,6 +68,7 @@ export class SelfRateLimiter {
+       () => new MapDef<ProtocolID, Map<RequestId, RequestIdMs>>(() => new Map())
+     );
+     this.lastSeenRequestsByPeer = new Map();
++    this.rateLimitedUntilByPeer = new Map();
+   }
+ 
+   start(): void {
+@@ -57,6 +87,19 @@ export class SelfRateLimiter {
+    */
+   allows(peerId: PeerIdStr, protocolId: ProtocolID, requestId: RequestId): boolean {
+     const now = Date.now();
++
++    // Check if peer has rate-limited us and we're still in backoff
++    const rateLimitedUntil = this.rateLimitedUntilByPeer.get(peerId);
++    if (rateLimitedUntil !== undefined) {
++      if (now < rateLimitedUntil) {
++        // Keep peer alive so checkDisconnectedPeers() doesn't prematurely evict the backoff entry
++        this.lastSeenRequestsByPeer.set(peerId, now);
++        return false;
++      }
++      // Backoff expired, clean up
++      this.rateLimitedUntilByPeer.delete(peerId);
++    }
++
+     const peerRateLimiter = this.rateLimitersPerPeer.getOrDefault(peerId);
+     const trackedRequests = peerRateLimiter.getOrDefault(protocolId);
+     this.lastSeenRequestsByPeer.set(peerId, now);
+@@ -95,16 +138,37 @@ export class SelfRateLimiter {
+     trackedRequests.delete(requestId);
+   }
+ 
++  /**
++   * Called when a peer responds with a rate-limit error, to enforce a backoff period before retrying.
++   */
++  onRateLimited(peerId: PeerIdStr, backoffMs = DEFAULT_RATE_LIMIT_BACKOFF_MS): void {
++    const cappedBackoffMs = Math.min(backoffMs, MAX_RATE_LIMIT_BACKOFF_MS);
++    const rateLimitedUntil = Date.now() + cappedBackoffMs;
++    this.rateLimitedUntilByPeer.set(peerId, rateLimitedUntil);
++    this.logger?.debug("SelfRateLimiter: peer rate limited us, backing off", {peerId, backoffMs: cappedBackoffMs});
++  }
++
+   getPeerCount(): number {
+     return this.rateLimitersPerPeer.size;
+   }
+ 
++  getRateLimitedPeerCount(): number {
++    return this.rateLimitedUntilByPeer.size;
++  }
++
+   private checkDisconnectedPeers(): void {
+     const now = Date.now();
+     for (const [peerIdStr, lastSeenTime] of this.lastSeenRequestsByPeer.entries()) {
+       if (now - lastSeenTime >= DISCONNECTED_TIMEOUT_MS) {
+         this.rateLimitersPerPeer.delete(peerIdStr);
+         this.lastSeenRequestsByPeer.delete(peerIdStr);
++        this.rateLimitedUntilByPeer.delete(peerIdStr);
++      }
++    }
++    // Also clean up expired backoff entries for peers still connected
++    for (const [peerIdStr, rateLimitedUntil] of this.rateLimitedUntilByPeer.entries()) {
++      if (now >= rateLimitedUntil) {
++        this.rateLimitedUntilByPeer.delete(peerIdStr);
+       }
+     }
+   }
+diff --git a/packages/reqresp/src/request/errors.ts b/packages/reqresp/src/request/errors.ts
+index 5d84b051f004..0efaf95a4c5c 100644
+--- a/packages/reqresp/src/request/errors.ts
++++ b/packages/reqresp/src/request/errors.ts
+@@ -49,7 +49,7 @@ type RequestErrorType =
+   | {code: RequestErrorCode.RESP_TIMEOUT}
+   | {code: RequestErrorCode.REQUEST_RATE_LIMITED}
+   | {code: RequestErrorCode.REQUEST_SELF_RATE_LIMITED}
+-  | {code: RequestErrorCode.RESP_RATE_LIMITED}
++  | {code: RequestErrorCode.RESP_RATE_LIMITED; backoffMs?: number}
+   | {code: RequestErrorCode.SSZ_OVER_MAX_SIZE};
+ 
+ export const REQUEST_ERROR_CLASS_NAME = "RequestError";
+@@ -73,17 +73,26 @@ export class RequestError extends LodestarError<RequestErrorType> {
+  */
+ export function responseStatusErrorToRequestError(e: ResponseError): RequestErrorType {
+   const {errorMessage, status} = e;
+-  // rate limited error from clients have different status, for example: lighthouse responds with 139, teku responds with 1
+-  // but all of them has "rate limit" in the error message
+-  // refer to https://github.com/ChainSafe/lodestar/issues/8065#issuecomment-3157266196
++  // Rate limit error detection: clients use different status codes and messages.
++  // We match on the error message text because status codes are inconsistent:
++  //   - Lighthouse/Grandine: status 139 (non-standard RateLimited code)
++  //     message: "Rate limited. There are already 2 active requests with the same protocol"
++  //   - Prysm: status 1 (INVALID_REQUEST), message: "rate limited"
++  //   - Teku: status 1 (INVALID_REQUEST), message: "Peer has been rate limited"
++  //   - Nimbus: never sends rate limit errors (silently throttles via token bucket)
++  // See https://github.com/ChainSafe/lodestar/issues/8065#issuecomment-3157266196
+   const errorMessageLowercase = errorMessage.toLowerCase();
+   if (errorMessageLowercase.includes("rate limit")) {
+-    return {code: RequestErrorCode.RESP_RATE_LIMITED};
++    return {code: RequestErrorCode.RESP_RATE_LIMITED, backoffMs: parseBackoffSeconds(errorMessageLowercase)};
+   }
+ 
+-  // Grandine may return this without standard RespStatus, see https://github.com/ChainSafe/lodestar/issues/8110
+-  if (errorMessageLowercase.includes("wait ")) {
+-    return {code: RequestErrorCode.RESP_TIMEOUT};
++  // Grandine's eth2_libp2p fork uses the old Lighthouse GCRA inbound rate limiter which sends
++  // "Wait <Duration>" with an explicit backoff (e.g. "Wait 2.816488536s") using Rust's
++  // Debug format for Duration. Lighthouse removed this in April 2025, switching to silent
++  // response throttling, but Grandine still sends it.
++  // See https://github.com/ChainSafe/lodestar/issues/8110
++  if (errorMessageLowercase.startsWith("wait ")) {
++    return {code: RequestErrorCode.RESP_RATE_LIMITED, backoffMs: parseBackoffSeconds(errorMessageLowercase)};
+   }
+ 
+   switch (status) {
+@@ -98,6 +107,36 @@ export function responseStatusErrorToRequestError(e: ResponseError): RequestErro
+   }
+ }
+ 
++/**
++ * Parse a backoff duration from a peer's rate limit error message.
++ * Currently only Grandine sends a parseable duration (e.g. "Wait 2.816488536s"),
++ * produced by Rust's `format!("Wait {:?}", duration)`. All other clients send
++ * static messages with no backoff hint.
++ *
++ * Returns the duration in milliseconds, or undefined if no parseable duration is found
++ * (in which case the caller falls back to DEFAULT_RATE_LIMIT_BACKOFF_MS).
++ *
++ * Input comes from untrusted remote peer error messages — the regex uses bounded
++ * quantifiers and the input is truncated to defend against adversarial strings.
++ */
++export function parseBackoffSeconds(errorMessageLowercase: string): number | undefined {
++  // Truncate to a sane length — real error messages are short, this prevents
++  // the regex engine from scanning megabytes of attacker-controlled input
++  const capped = errorMessageLowercase.length > 256 ? errorMessageLowercase.slice(0, 256) : errorMessageLowercase;
++
++  // Bounded quantifiers (\d{1,6}, \d{1,9}) prevent matching absurdly long digit
++  // strings that could produce huge intermediate values.
++  // Matches: "2.816s", "30s", "2.816488536s", "30 seconds", "1 second", "5 sec"
++  const match = capped.match(/(\d{1,6}(?:\.\d{1,9})?)\s*(?:s(?:ec(?:ond)?s?)?)\b/);
++  if (match?.[1]) {
++    const seconds = Number.parseFloat(match[1]);
++    if (Number.isFinite(seconds) && seconds > 0) {
++      return Math.ceil(seconds * 1000);
++    }
++  }
++  return undefined;
++}
++
+ /**
+  * Render responder's errorMessage directly in main's error.message for easier debugging
+  */
+diff --git a/packages/reqresp/test/unit/rate_limiter/selfRateLimiter.test.ts b/packages/reqresp/test/unit/rate_limiter/selfRateLimiter.test.ts
+index 67feb81aff02..fb77459e4e80 100644
+--- a/packages/reqresp/test/unit/rate_limiter/selfRateLimiter.test.ts
++++ b/packages/reqresp/test/unit/rate_limiter/selfRateLimiter.test.ts
+@@ -1,6 +1,8 @@
+ import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
+ import {
+   CHECK_DISCONNECTED_PEERS_INTERVAL_MS,
++  DEFAULT_RATE_LIMIT_BACKOFF_MS,
++  MAX_RATE_LIMIT_BACKOFF_MS,
+   REQUEST_TIMEOUT_MS,
+   SelfRateLimiter,
+ } from "../../../src/rate_limiter/selfRateLimiter.js";
+@@ -55,4 +57,83 @@ describe("SelfRateLimiter", () => {
+     vi.advanceTimersByTime(CHECK_DISCONNECTED_PEERS_INTERVAL_MS + 1);
+     expect(selfRateLimiter.allows("peer1", "protocol1", 4)).toBe(true);
+   });
++
++  describe("rate limit backoff", () => {
++    it("should block requests to a peer after onRateLimited", () => {
++      expect(selfRateLimiter.allows("peer1", "protocol1", 1)).toBe(true);
++      selfRateLimiter.requestCompleted("peer1", "protocol1", 1);
++
++      selfRateLimiter.onRateLimited("peer1");
++
++      // All protocols should be blocked for this peer
++      expect(selfRateLimiter.allows("peer1", "protocol1", 2)).toBe(false);
++      expect(selfRateLimiter.allows("peer1", "protocol2", 3)).toBe(false);
++
++      // Other peers should not be affected
++      expect(selfRateLimiter.allows("peer2", "protocol1", 4)).toBe(true);
++    });
++
++    it("should allow requests after backoff expires", () => {
++      selfRateLimiter.onRateLimited("peer1");
++      expect(selfRateLimiter.allows("peer1", "protocol1", 1)).toBe(false);
++
++      vi.advanceTimersByTime(DEFAULT_RATE_LIMIT_BACKOFF_MS);
++      expect(selfRateLimiter.allows("peer1", "protocol1", 2)).toBe(true);
++    });
++
++    it("should support custom backoff duration", () => {
++      const customBackoffMs = 15_000;
++      selfRateLimiter.onRateLimited("peer1", customBackoffMs);
++      expect(selfRateLimiter.allows("peer1", "protocol1", 1)).toBe(false);
++
++      vi.advanceTimersByTime(DEFAULT_RATE_LIMIT_BACKOFF_MS);
++      // Still blocked because custom backoff is longer
++      expect(selfRateLimiter.allows("peer1", "protocol1", 2)).toBe(false);
++
++      vi.advanceTimersByTime(customBackoffMs - DEFAULT_RATE_LIMIT_BACKOFF_MS);
++      expect(selfRateLimiter.allows("peer1", "protocol1", 3)).toBe(true);
++    });
++
++    it("should track rate limited peer count", () => {
++      expect(selfRateLimiter.getRateLimitedPeerCount()).toBe(0);
++
++      selfRateLimiter.onRateLimited("peer1");
++      selfRateLimiter.onRateLimited("peer2");
++      expect(selfRateLimiter.getRateLimitedPeerCount()).toBe(2);
++
++      vi.advanceTimersByTime(DEFAULT_RATE_LIMIT_BACKOFF_MS);
++      // Entries cleaned up on next allows() call or cleanup interval
++      selfRateLimiter.allows("peer1", "protocol1", 1);
++      expect(selfRateLimiter.getRateLimitedPeerCount()).toBe(1);
++    });
++
++    it("should cap backoff at MAX_RATE_LIMIT_BACKOFF_MS", () => {
++      selfRateLimiter.onRateLimited("peer1", 300_000);
++      expect(selfRateLimiter.allows("peer1", "protocol1", 1)).toBe(false);
++
++      // Should unblock at MAX, not at the requested 300s
++      vi.advanceTimersByTime(MAX_RATE_LIMIT_BACKOFF_MS);
++      expect(selfRateLimiter.allows("peer1", "protocol1", 2)).toBe(true);
++    });
++
++    it("should keep backoff alive during blocked attempts", () => {
++      selfRateLimiter.onRateLimited("peer1", MAX_RATE_LIMIT_BACKOFF_MS);
++
++      // Attempt midway through backoff — should still be blocked
++      vi.advanceTimersByTime(30_000);
++      expect(selfRateLimiter.allows("peer1", "protocol1", 1)).toBe(false);
++
++      // Backoff entry should still be tracked (allows() updates lastSeen
++      // so checkDisconnectedPeers doesn't prematurely evict the entry)
++      expect(selfRateLimiter.getRateLimitedPeerCount()).toBe(1);
++    });
++
++    it("should clean up expired backoff entries on disconnected peer check", () => {
++      selfRateLimiter.onRateLimited("peer1");
++      expect(selfRateLimiter.getRateLimitedPeerCount()).toBe(1);
++
++      vi.advanceTimersByTime(CHECK_DISCONNECTED_PEERS_INTERVAL_MS + 1);
++      expect(selfRateLimiter.getRateLimitedPeerCount()).toBe(0);
++    });
++  });
+ });
+diff --git a/packages/reqresp/test/unit/request/errors.test.ts b/packages/reqresp/test/unit/request/errors.test.ts
+new file mode 100644
+index 000000000000..73a6e8905cfa
+--- /dev/null
++++ b/packages/reqresp/test/unit/request/errors.test.ts
+@@ -0,0 +1,28 @@
++import {describe, expect, it} from "vitest";
++import {parseBackoffSeconds} from "../../../src/request/errors.js";
++
++describe("parseBackoffSeconds", () => {
++  const testCases: {input: string; expected: number | undefined}[] = [
++    // Grandine format
++    {input: "wait 2.816488536s", expected: 2817},
++    {input: "wait 30s", expected: 30_000},
++    {input: "wait 0.5s", expected: 500},
++    // "seconds" / "second" variants
++    {input: "wait 10 seconds", expected: 10_000},
++    {input: "wait 1 second", expected: 1000},
++    {input: "please wait 5 sec before retrying", expected: 5000},
++    // No parseable duration
++    {input: "rate limited", expected: undefined},
++    {input: "peer has been rate limited", expected: undefined},
++    {input: "rate limited. there are already 2 active requests with the same protocol", expected: undefined},
++    {input: "wait a moment", expected: undefined},
++    // Edge cases
++    {input: "wait 0s", expected: undefined},
++  ];
++
++  for (const {input, expected} of testCases) {
++    it(`"${input}" => ${expected}`, () => {
++      expect(parseBackoffSeconds(input)).toBe(expected);
++    });
++  }
++});
