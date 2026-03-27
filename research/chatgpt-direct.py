@@ -109,74 +109,96 @@ async def get_auth_state(page):
 async def ensure_pro_model(page, verbose=False):
     """Check current model and switch to Pro if available.
 
+    ChatGPT's current UI is inconsistent: the model button can keep showing a
+    generic "ChatGPT" label even when Pro is selected. Treat explicit Pro UI
+    affordances (composer pill / Pro menu item click) as valid evidence.
+
     Returns dict with model info: {model, isPro, quotaExhausted}.
     """
     info = await page.evaluate("""
         (() => {
             const btn = document.querySelector('[data-testid="model-switcher-dropdown-button"]');
-            if (!btn) return JSON.stringify({model: 'unknown', ariaLabel: ''});
+            const composerPills = [...document.querySelectorAll('[class*="composer-pill"]')]
+                .map((el) => (el.innerText || '').trim())
+                .filter(Boolean);
+            if (!btn) {
+                return JSON.stringify({
+                    model: 'unknown',
+                    ariaLabel: '',
+                    composerPills,
+                });
+            }
             return JSON.stringify({
                 model: btn.innerText.trim(),
                 ariaLabel: btn.getAttribute('aria-label') || '',
+                composerPills,
             });
         })()
     """)
     data = json.loads(info)
     model = data.get("model", "unknown")
     aria = data.get("ariaLabel", "")
-    is_pro = "pro" in model.lower() or "pro" in aria.lower()
+    composer_pills = data.get("composerPills", [])
+    is_pro = (
+        "pro" in model.lower()
+        or "pro" in aria.lower()
+        or any("pro" in pill.lower() for pill in composer_pills)
+    )
 
     if is_pro:
         if verbose:
-            print(f"Model: {model} ✅", file=sys.stderr, flush=True)
-        return {"model": model, "isPro": True, "quotaExhausted": False}
+            pill_note = f" pills={composer_pills}" if composer_pills else ""
+            print(f"Model: {model} ✅{pill_note}", file=sys.stderr, flush=True)
+        return {
+            "model": model,
+            "isPro": True,
+            "quotaExhausted": False,
+            "evidence": {"composerPills": composer_pills},
+        }
 
-    # Not on Pro — try to switch
     if verbose:
         print(f"Model: {model} — attempting to switch to Pro...", file=sys.stderr, flush=True)
 
-    # Click the model selector dropdown
     btn = await page.query_selector('[data-testid="model-switcher-dropdown-button"]')
     if btn:
         await btn.click()
         await asyncio.sleep(1)
 
-        # Look for Pro option in the dropdown
         pro_option = await page.evaluate("""
             (() => {
-                const items = document.querySelectorAll('[role="menuitem"], [role="option"], [data-testid*="model"]');
+                const items = [...document.querySelectorAll(
+                    '[role="menuitem"], [role="option"], [data-testid*="model"], button'
+                )];
+                let fallback = null;
                 for (const item of items) {
-                    const text = (item.innerText || '').toLowerCase();
-                    if (text.includes('pro') || text.includes('5.4')) {
-                        // Check if it's disabled/exhausted
-                        const disabled = item.getAttribute('aria-disabled') === 'true'
-                                      || item.classList.contains('disabled')
-                                      || item.querySelector('[class*="disabled"]');
-                        const exhausted = text.includes('limit') || text.includes('exhaust')
-                                       || text.includes('unavailable');
-                        return JSON.stringify({
-                            found: true,
-                            text: item.innerText.trim().slice(0, 80),
-                            disabled: !!disabled,
-                            exhausted: !!exhausted,
-                        });
+                    const text = (item.innerText || '').trim();
+                    const textLower = text.toLowerCase();
+                    const dataTestid = item.getAttribute('data-testid') || '';
+                    if (textLower.includes('project')) continue;
+                    if (!(textLower.includes('pro') || textLower.includes('5.4')
+                        || dataTestid.includes('gpt-5-4-pro'))) {
+                        continue;
                     }
-                }
-                // Also check buttons
-                const btns = document.querySelectorAll('button');
-                for (const b of btns) {
-                    const text = (b.innerText || '').toLowerCase();
-                    if ((text.includes('pro') || text.includes('5.4'))
-                        && !text.includes('project')) {
-                        return JSON.stringify({
-                            found: true,
-                            text: b.innerText.trim().slice(0, 80),
-                            disabled: b.disabled,
-                            exhausted: text.includes('limit') || text.includes('exhaust'),
-                        });
+                    const disabled = item.disabled
+                        || item.getAttribute('aria-disabled') === 'true'
+                        || item.classList.contains('disabled')
+                        || !!item.querySelector('[class*="disabled"]');
+                    const exhausted = textLower.includes('limit')
+                        || textLower.includes('exhaust')
+                        || textLower.includes('unavailable');
+                    const candidate = {
+                        found: true,
+                        text: text.slice(0, 80),
+                        disabled: !!disabled,
+                        exhausted: !!exhausted,
+                        dataTestid,
+                    };
+                    if (dataTestid === 'model-switcher-gpt-5-4-pro') {
+                        return JSON.stringify(candidate);
                     }
+                    if (!fallback) fallback = candidate;
                 }
-                return JSON.stringify({found: false});
+                return JSON.stringify(fallback || {found: false});
             })()
         """)
         pro_data = json.loads(pro_option)
@@ -185,83 +207,131 @@ async def ensure_pro_model(page, verbose=False):
             if pro_data.get("exhausted") or pro_data.get("disabled"):
                 if verbose:
                     print(
-                        f"ℹ️  Pro option appears disabled in dropdown — trying anyway (UI may be stale)...",
-                        file=sys.stderr, flush=True,
+                        "ℹ️  Pro option appears disabled in dropdown — trying anyway "
+                        "(UI may be stale)...",
+                        file=sys.stderr,
+                        flush=True,
                     )
-                # Don't give up — try clicking even if it appears disabled.
-                # ChatGPT UI sometimes marks Pro as disabled in the dropdown
-                # while it's actually the active model.
 
-            # Click the Pro option
-            clicked = await page.evaluate("""
+            clicked_json = await page.evaluate("""
                 (() => {
                     const items = [...document.querySelectorAll(
                         '[role="menuitem"], [role="option"], [data-testid*="model"], button'
                     )];
-                    for (const item of items) {
+                    const preferred = items.find(
+                        (item) => item.getAttribute('data-testid') === 'model-switcher-gpt-5-4-pro'
+                    );
+                    const fallback = items.find((item) => {
                         const text = (item.innerText || '').toLowerCase();
-                        if ((text.includes('pro') || text.includes('5.4'))
-                            && !text.includes('project') && !item.disabled) {
-                            item.click();
-                            return 'clicked';
-                        }
-                    }
-                    return 'not_found';
+                        return (text.includes('pro') || text.includes('5.4'))
+                            && !text.includes('project');
+                    });
+                    const target = preferred || fallback;
+                    if (!target) return JSON.stringify({clicked: false});
+                    target.click();
+                    return JSON.stringify({
+                        clicked: true,
+                        text: (target.innerText || '').trim().slice(0, 80),
+                        dataTestid: target.getAttribute('data-testid') || '',
+                    });
                 })()
             """)
+            clicked = json.loads(clicked_json)
 
-            if clicked == "clicked":
+            if clicked.get("clicked"):
                 await asyncio.sleep(1)
-                # Verify model switched
                 new_info = await page.evaluate("""
                     (() => {
                         const btn = document.querySelector(
                             '[data-testid="model-switcher-dropdown-button"]'
                         );
-                        if (!btn) return JSON.stringify({model: 'unknown', aria: ''});
+                        const composerPills = [...document.querySelectorAll('[class*="composer-pill"]')]
+                            .map((el) => (el.innerText || '').trim())
+                            .filter(Boolean);
+                        if (!btn) {
+                            return JSON.stringify({
+                                model: 'unknown',
+                                aria: '',
+                                composerPills,
+                            });
+                        }
                         return JSON.stringify({
                             model: btn.innerText.trim(),
                             aria: btn.getAttribute('aria-label') || '',
+                            composerPills,
                         });
                     })()
                 """)
                 new_data = json.loads(new_info)
                 new_model = new_data.get("model", "unknown")
                 new_aria = new_data.get("aria", "")
-                new_info = new_model
-                is_now_pro = "pro" in new_model.lower() or "pro" in new_aria.lower()
+                new_pills = new_data.get("composerPills", [])
+                is_now_pro = (
+                    "pro" in new_model.lower()
+                    or "pro" in new_aria.lower()
+                    or any("pro" in pill.lower() for pill in new_pills)
+                    or clicked.get("dataTestid") == "model-switcher-gpt-5-4-pro"
+                    or "pro" in clicked.get("text", "").lower()
+                )
                 if verbose:
-                    status = "✅" if is_now_pro else "ℹ️  (button still shows generic name — Pro may still be active)"
-                    print(f"Model after switch: {new_info} {status}", file=sys.stderr, flush=True)
+                    status = "✅" if is_now_pro else "ℹ️  (button still shows generic name)"
+                    print(
+                        f"Model after switch: {new_model} {status}; "
+                        f"clicked={clicked.get('dataTestid') or clicked.get('text')}; "
+                        f"pills={new_pills}",
+                        file=sys.stderr,
+                        flush=True,
+                    )
                 return {
-                    "model": new_info,
+                    "model": new_model,
                     "isPro": is_now_pro,
                     "quotaExhausted": False,
+                    "evidence": {
+                        "clicked": clicked,
+                        "composerPills": new_pills,
+                    },
                 }
 
-        # Close dropdown
         await page.keyboard.press("Escape")
 
-    # Final check: re-read the model button — ChatGPT UI may not show "Pro"
-    # explicitly in button text but the session might still be Pro
     final_info = await page.evaluate("""
         (() => {
             const btn = document.querySelector(
                 '[data-testid="model-switcher-dropdown-button"]'
             );
-            if (!btn) return JSON.stringify({model: 'unknown', aria: ''});
+            const composerPills = [...document.querySelectorAll('[class*="composer-pill"]')]
+                .map((el) => (el.innerText || '').trim())
+                .filter(Boolean);
+            if (!btn) {
+                return JSON.stringify({
+                    model: 'unknown',
+                    aria: '',
+                    composerPills,
+                });
+            }
             return JSON.stringify({
                 model: btn.innerText.trim(),
                 aria: btn.getAttribute('aria-label') || '',
+                composerPills,
             });
         })()
     """)
     final_data = json.loads(final_info)
     final_model = final_data.get("model", model)
     final_aria = final_data.get("aria", "")
-    is_final_pro = "pro" in final_model.lower() or "pro" in final_aria.lower()
+    final_pills = final_data.get("composerPills", [])
+    is_final_pro = (
+        "pro" in final_model.lower()
+        or "pro" in final_aria.lower()
+        or any("pro" in pill.lower() for pill in final_pills)
+    )
 
-    return {"model": final_model, "isPro": is_final_pro, "quotaExhausted": False}
+    return {
+        "model": final_model,
+        "isPro": is_final_pro,
+        "quotaExhausted": False,
+        "evidence": {"composerPills": final_pills},
+    }
 
 
 async def query_chatgpt(

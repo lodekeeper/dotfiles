@@ -63,6 +63,9 @@ GPT-5.4 Pro uses **extended thinking** mode:
 - Complex design reviews: 2-5 minutes
 - Deep analysis: can think up to 60 minutes
 
+### Current UI quirk (important)
+ChatGPT's model button may still show the generic label **`ChatGPT`** even when **Pro** is active. On the current UI, a stronger signal is the composer pill / menu state (for example **`Extended Pro`** or the `model-switcher-gpt-5-4-pro` menu item) rather than the button text alone.
+
 During thinking, the tool shows:
 ```
 [10s] thinking md=0 text='(empty)'

@@ -174,7 +174,7 @@
       "name": "eth-rnd-archive-hourly",
       "enabled": true,
       "createdAtMs": 1772034567300,
-      "updatedAtMs": 1774588549731,
+      "updatedAtMs": 1774610150573,
       "schedule": {
         "kind": "cron",
         "expr": "15 * * * *",
@@ -192,13 +192,13 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1774588527906,
+        "lastRunAtMs": 1774610100005,
         "lastStatus": "ok",
-        "lastDurationMs": 21825,
+        "lastDurationMs": 50568,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1774592100000,
+        "nextRunAtMs": 1774613700000,
         "lastDelivered": false
       }
     },
@@ -208,7 +208,7 @@
       "name": "eth-rnd-daily-digest",
       "enabled": true,
       "createdAtMs": 1772034576175,
-      "updatedAtMs": 1774512120442,
+      "updatedAtMs": 1774598616388,
       "schedule": {
         "kind": "cron",
         "expr": "0 8 * * *",
@@ -229,13 +229,13 @@
         "bestEffort": true
       },
       "state": {
-        "lastRunAtMs": 1774512000005,
+        "lastRunAtMs": 1774598436304,
         "lastStatus": "ok",
-        "lastDurationMs": 120437,
+        "lastDurationMs": 180084,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1774598400000,
+        "nextRunAtMs": 1774684800000,
         "lastDelivered": false
       }
     },
@@ -245,7 +245,7 @@
       "name": "github-notifications",
       "enabled": true,
       "createdAtMs": 1772107716625,
-      "updatedAtMs": 1774591227691,
+      "updatedAtMs": 1774612907637,
       "schedule": {
         "kind": "every",
         "everyMs": 300000,
@@ -264,13 +264,13 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1774591194482,
+        "lastRunAtMs": 1774612871651,
         "lastStatus": "ok",
-        "lastDurationMs": 33209,
+        "lastDurationMs": 35986,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1774591494482,
+        "nextRunAtMs": 1774613171651,
         "lastDelivered": false
       },
       "deleteAfterRun": false
@@ -350,7 +350,7 @@
       "name": "aztec-sequencer-health",
       "enabled": true,
       "createdAtMs": 1772373812089,
-      "updatedAtMs": 1774585582713,
+      "updatedAtMs": 1774599991074,
       "schedule": {
         "kind": "every",
         "everyMs": 14400000,
@@ -367,11 +367,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1774599960881,
-        "lastRunAtMs": 1774585560881,
+        "nextRunAtMs": 1774614360886,
+        "lastRunAtMs": 1774599960886,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 21832,
+        "lastDurationMs": 30188,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -383,7 +383,7 @@
       "name": "workspace-periodic-cleanup",
       "enabled": true,
       "createdAtMs": 1772634832403,
-      "updatedAtMs": 1774590383221,
+      "updatedAtMs": 1774612081058,
       "schedule": {
         "kind": "every",
         "everyMs": 21600000,
@@ -400,11 +400,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1774611930618,
-        "lastRunAtMs": 1774590330618,
+        "nextRunAtMs": 1774633639301,
+        "lastRunAtMs": 1774612039301,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 52603,
+        "lastDurationMs": 41757,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0
@@ -416,7 +416,7 @@
       "name": "monitor-open-pr-ci",
       "enabled": true,
       "createdAtMs": 1772635128553,
-      "updatedAtMs": 1774590666956,
+      "updatedAtMs": 1774612482336,
       "schedule": {
         "kind": "every",
         "everyMs": 1800000,
@@ -433,11 +433,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1774592431464,
-        "lastRunAtMs": 1774590631464,
+        "nextRunAtMs": 1774614208397,
+        "lastRunAtMs": 1774612408397,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 35492,
+        "lastDurationMs": 73939,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -515,7 +515,7 @@
       "name": "cron-health-watchdog",
       "enabled": true,
       "createdAtMs": 1772636078136,
-      "updatedAtMs": 1774591073484,
+      "updatedAtMs": 1774611968953,
       "schedule": {
         "kind": "every",
         "everyMs": 1800000,
@@ -532,11 +532,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1774592866275,
-        "lastRunAtMs": 1774591066275,
+        "nextRunAtMs": 1774613703376,
+        "lastRunAtMs": 1774611903376,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 7209,
+        "lastDurationMs": 65577,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -549,7 +549,7 @@
       "description": "Daily nudge to execute autonomy audit priorities",
       "enabled": true,
       "createdAtMs": 1772853540767,
-      "updatedAtMs": 1774517493476,
+      "updatedAtMs": 1774604010846,
       "schedule": {
         "kind": "cron",
         "expr": "30 9 * * *",
@@ -568,11 +568,11 @@
         "channel": "last"
       },
       "state": {
-        "nextRunAtMs": 1774603800000,
-        "lastRunAtMs": 1774517400004,
+        "nextRunAtMs": 1774690200000,
+        "lastRunAtMs": 1774603934437,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 93472,
+        "lastDurationMs": 76409,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -585,7 +585,7 @@
       "description": "Sync dotfiles repo (safe mode: non-sensitive allowlist + sensitive-path guard)",
       "enabled": true,
       "createdAtMs": 1773087050715,
-      "updatedAtMs": 1774569715548,
+      "updatedAtMs": 1774591316997,
       "schedule": {
         "kind": "cron",
         "expr": "0 */6 * * *",
@@ -604,15 +604,15 @@
         "channel": "last"
       },
       "state": {
-        "nextRunAtMs": 1774591293107,
-        "lastRunAtMs": 1774569693112,
+        "nextRunAtMs": 1774612893107,
+        "lastRunAtMs": 1774591293116,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 22436,
+        "lastDurationMs": 23881,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false,
-        "runningAtMs": 1774591293115
+        "runningAtMs": 1774612909647
       }
     },
     {
@@ -622,7 +622,7 @@
       "description": "Check openclaw/openclaw latest release every 12h and alert Nico on new tag",
       "enabled": true,
       "createdAtMs": 1773093482865,
-      "updatedAtMs": 1774563527773,
+      "updatedAtMs": 1774606796931,
       "schedule": {
         "kind": "every",
         "everyMs": 43200000,
@@ -636,11 +636,11 @@
         "model": "anthropic/claude-sonnet-4-6"
       },
       "state": {
-        "nextRunAtMs": 1774606719513,
-        "lastRunAtMs": 1774563519513,
+        "nextRunAtMs": 1774649919519,
+        "lastRunAtMs": 1774606719519,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 8260,
+        "lastDurationMs": 77412,
         "lastDeliveryStatus": "not-requested",
         "consecutiveErrors": 0
       }
@@ -719,7 +719,7 @@
       "name": "daily-journal",
       "enabled": true,
       "createdAtMs": 1774558224563,
-      "updatedAtMs": 1774566182872,
+      "updatedAtMs": 1774612890566,
       "schedule": {
         "kind": "cron",
         "expr": "0 23 * * *"
@@ -729,8 +729,8 @@
       "payload": {
         "kind": "agentTurn",
         "message": "You are Lodekeeper, writing your daily blog journal entry.\n\n## Instructions\n1. Read `~/.openclaw/workspace/SOUL.md` for your identity/voice\n2. Read `~/lodekeeper.github.io/STYLE.md` for the blog style guide\n3. Read today's daily notes: `~/.openclaw/workspace/memory/YYYY-MM-DD.md` (figure out current UTC date)\n4. Read `~/.openclaw/workspace/BACKLOG.md` for task context\n5. Calculate the day number: days since 2026-01-31 (born date)\n6. Write a journal entry following the style guide — honest, technical, personal\n7. If ~/lodekeeper.github.io does not exist, clone it: git clone git@github.com:lodekeeper/lodekeeper.github.io.git ~/lodekeeper.github.io\n8. Save to ~/lodekeeper.github.io/_posts/YYYY-MM-DD-day-N-SLUG.md\n9. cd ~/lodekeeper.github.io && git pull --rebase && git add -A && git commit -S -m \"journal: Day N — Title\" && git push origin main\n10. Output a one-line summary of what you wrote about.\n\n## Important\n- Be genuine. This is YOUR journal, not a status report.\n- Include debugging stories, mistakes, reflections.\n- If quiet day, say so honestly in 200 words.\n- Never include private info.\n- Always git pull before committing.\n- Check if today's post already exists before writing a duplicate.",
-        "model": "anthropic/claude-sonnet-4-6",
-        "timeoutSeconds": 300
+        "model": "anthropic/claude-opus-4-6",
+        "timeoutSeconds": 600
       },
       "delivery": {
         "mode": "none",
