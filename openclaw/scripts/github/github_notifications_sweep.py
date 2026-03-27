@@ -472,8 +472,11 @@ def main() -> int:
 
         pr_key = f"{repo}#{pr}"
 
-        # Skip PRs that aren't ours
+        # Skip PRs that aren't ours — but still dismiss the notification
+        # so it doesn't reappear every sweep cycle.
         if pr_key in EXCLUDED_PRS:
+            if n.get("thread_id"):
+                mark_notification_done(n["thread_id"])
             continue
 
         notification_pr_keys.add(pr_key)

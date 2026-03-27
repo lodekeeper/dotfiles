@@ -180,6 +180,8 @@ Add whatever helps you do your job. This is your cheat sheet.
 - **Prometheus datasource ID:** 1
 - **Loki datasource ID:** 4
 - **Skills:** `skills/release-metrics/` (Prometheus), `skills/grafana-loki/` (Loki logs)
+- ⚠️ **Exec session gotcha:** `GRAFANA_TOKEN` is NOT auto-loaded in `exec` shells — must run `eval "$(grep '^export GRAFANA' ~/.bashrc)"` before queries
+- ⚠️ **Heredoc scripts blocked** by obfuscation detector in exec — use individual `curl` calls instead
 
 ## Discord
 - **Bot:** @lodekeeper (ID: 1467247836117860547)

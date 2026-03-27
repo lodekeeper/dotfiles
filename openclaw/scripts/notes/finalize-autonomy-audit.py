@@ -16,6 +16,13 @@ import sys
 
 SNAPSHOT_HEADING = re.compile(r"^## Daily Audit Snapshot — (\d{4}-\d{2}-\d{2})\b.*$", re.MULTILINE)
 UPDATED_LINE = re.compile(r"^> Updated: .*$", re.MULTILINE)
+SECTION_HEADING = re.compile(r"^###\s+(.+?)\s*$", re.MULTILINE)
+REQUIRED_SECTIONS = [
+    "PR review",
+    "CI fix",
+    "Spec implementation",
+    "Devnet debugging",
+]
 
 
 def ordinal(n: int) -> str:
@@ -38,6 +45,11 @@ def snapshot_block(text: str, date_str: str) -> str | None:
             end = len(text)
         return text[start:end]
     return None
+
+
+def find_missing_sections(block: str) -> list[str]:
+    present = {m.group(1).strip().lower() for m in SECTION_HEADING.finditer(block)}
+    return [name for name in REQUIRED_SECTIONS if name.lower() not in present]
 
 
 def main() -> int:
@@ -67,6 +79,15 @@ def main() -> int:
 
     if "_fill in_" in block:
         print(f"❌ Snapshot {date_str} still has '_fill in_' placeholders", file=sys.stderr)
+        return 2
+
+    missing_sections = find_missing_sections(block)
+    if missing_sections:
+        joined = ", ".join(missing_sections)
+        print(
+            f"❌ Snapshot {date_str} is missing required section heading(s): {joined}",
+            file=sys.stderr,
+        )
         return 2
 
     pass_count = len(headings)

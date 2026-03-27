@@ -1,7 +1,27 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-03-25 (15th pass)
+> Updated: 2026-03-26 (16th pass)
+
+---
+
+## Daily Audit Snapshot — 2026-03-26 (self-improvement-audit-daily, 23:51 UTC)
+
+### PR review
+- **Status:** review-scope + follow-up guard workflow remains healthy; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** retry telemetry, rolling degradation checks, and log-fallback path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** extraction/compliance/vector-readiness gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident-bundle workflow remains healthy; no new blocker discovered this cycle.
+
+### Audit workflow (cross-cutting)
+- **Blocker:** audit finalization only blocked placeholder markers; section headings could still be accidentally removed/renamed during edits, allowing incomplete snapshots to pass.
+- **Fix applied this cycle:** hardened `scripts/notes/finalize-autonomy-audit.py` to require all four canonical section headings (`PR review`, `CI fix`, `Spec implementation`, `Devnet debugging`) before allowing finalization.
 
 ---
 
@@ -439,6 +459,13 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Daily autonomy-audit required-section guard added (2026-03-26)
+Updated `scripts/notes/finalize-autonomy-audit.py` to enforce snapshot structure during close-out:
+- verifies all four required section headings are present in the target-day snapshot (`PR review`, `CI fix`, `Spec implementation`, `Devnet debugging`),
+- fails finalization with an explicit missing-section error before header refresh / consistency pass if any heading is missing.
+
+**Rationale:** closes a residual audit-quality gap where placeholder checks could pass even if one of the required status sections was accidentally removed or renamed.
 
 ### ✅ Daily autonomy-audit finalizer added (2026-03-25)
 Created `scripts/notes/finalize-autonomy-audit.py` and updated `scripts/notes/run-autonomy-audit-preflight.sh` guidance:
