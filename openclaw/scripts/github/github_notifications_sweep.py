@@ -658,13 +658,19 @@ def main() -> int:
             elif item is not None:
                 item["lastSeenAt"] = now
 
-            # Auto-close if we've already replied on the PR after this review
+            # Auto-close if we've already replied on the PR after this review.
+            # Check both issue comments (PR-level) AND inline review comments
+            # so that replies posted in review threads also satisfy the condition.
             if item is not None and item.get("status") == "open":
                 review_time = rv.get("submitted_at", "")
-                for owner_time in [
+                owner_reply_times = [
                     c.get("created_at", "") for c in issue_comments
                     if (c.get("user") or {}).get("login", "").lower() == OWNER_SELF
-                ]:
+                ] + [
+                    c.get("created_at", "") for c in review_comments
+                    if (c.get("user") or {}).get("login", "").lower() == OWNER_SELF
+                ]
+                for owner_time in owner_reply_times:
                     if owner_time > review_time:
                         item["status"] = "done"
                         item["doneAt"] = now
