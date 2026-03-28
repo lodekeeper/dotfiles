@@ -17,12 +17,14 @@ import sys
 SNAPSHOT_HEADING = re.compile(r"^## Daily Audit Snapshot — (\d{4}-\d{2}-\d{2})\b.*$", re.MULTILINE)
 UPDATED_LINE = re.compile(r"^> Updated: .*$", re.MULTILINE)
 SECTION_HEADING = re.compile(r"^###\s+(.+?)\s*$", re.MULTILINE)
+STATUS_LINE = re.compile(r"^\s*-\s+\*\*Status:\*\*\s*(.+?)\s*$", re.MULTILINE)
 REQUIRED_SECTIONS = [
     "PR review",
     "CI fix",
     "Spec implementation",
     "Devnet debugging",
 ]
+STATUS_PLACEHOLDERS = {"", "_fill in_", "fill in", "tbd", "todo"}
 
 
 def ordinal(n: int) -> str:
@@ -50,6 +52,37 @@ def snapshot_block(text: str, date_str: str) -> str | None:
 def find_missing_sections(block: str) -> list[str]:
     present = {m.group(1).strip().lower() for m in SECTION_HEADING.finditer(block)}
     return [name for name in REQUIRED_SECTIONS if name.lower() not in present]
+
+
+def section_blocks(block: str) -> dict[str, str]:
+    matches = list(SECTION_HEADING.finditer(block))
+    sections: dict[str, str] = {}
+    for i, match in enumerate(matches):
+        name = match.group(1).strip().lower()
+        start = match.end()
+        if i + 1 < len(matches):
+            end = matches[i + 1].start()
+        else:
+            end = len(block)
+        sections[name] = block[start:end]
+    return sections
+
+
+def find_sections_with_invalid_status(block: str) -> list[str]:
+    sections = section_blocks(block)
+    invalid: list[str] = []
+    for name in REQUIRED_SECTIONS:
+        body = sections.get(name.lower(), "")
+        status_match = STATUS_LINE.search(body)
+        if status_match is None:
+            invalid.append(name)
+            continue
+
+        status_value = status_match.group(1).strip().strip("`").lower()
+        if status_value in STATUS_PLACEHOLDERS:
+            invalid.append(name)
+
+    return invalid
 
 
 def main() -> int:
@@ -86,6 +119,17 @@ def main() -> int:
         joined = ", ".join(missing_sections)
         print(
             f"❌ Snapshot {date_str} is missing required section heading(s): {joined}",
+            file=sys.stderr,
+        )
+        return 2
+
+    invalid_status_sections = find_sections_with_invalid_status(block)
+    if invalid_status_sections:
+        joined = ", ".join(invalid_status_sections)
+        print(
+            "❌ Snapshot "
+            f"{date_str} must include a non-empty '- **Status:** ...' line in each required section. "
+            f"Fix section(s): {joined}",
             file=sys.stderr,
         )
         return 2

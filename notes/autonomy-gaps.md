@@ -1,7 +1,27 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-03-26 (16th pass)
+> Updated: 2026-03-27 (17th pass)
+
+---
+
+## Daily Audit Snapshot — 2026-03-27 (self-improvement-audit-daily, 23:51 UTC)
+
+### PR review
+- **Status:** review-scope + follow-up guard workflow remains healthy; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** retry telemetry, rolling degradation checks, and log-fallback path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** extraction/compliance/vector-readiness gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident-bundle workflow remains healthy; no new blocker discovered this cycle.
+
+### Audit workflow (cross-cutting)
+- **Blocker:** audit finalization enforced section headings and placeholder removal, but it could still pass if a required section kept an empty `- **Status:**` line (or omitted the status line entirely), allowing low-signal snapshots to be marked complete.
+- **Fix applied this cycle:** hardened `scripts/notes/finalize-autonomy-audit.py` to require a non-empty `- **Status:** ...` line in each required section (`PR review`, `CI fix`, `Spec implementation`, `Devnet debugging`) before finalization succeeds.
 
 ---
 
@@ -459,6 +479,14 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Daily autonomy-audit non-empty status-line guard added (2026-03-27)
+Updated `scripts/notes/finalize-autonomy-audit.py` to enforce status quality for required sections during close-out:
+- parses section bodies and requires a `- **Status:** ...` line in each required section,
+- rejects empty/missing placeholder status values before header refresh / consistency pass,
+- reports exact section names that need fixing.
+
+**Rationale:** closes a residual quality gap where snapshot headings existed but status content could still be blank, allowing low-signal daily audits to pass finalization.
 
 ### ✅ Daily autonomy-audit required-section guard added (2026-03-26)
 Updated `scripts/notes/finalize-autonomy-audit.py` to enforce snapshot structure during close-out:

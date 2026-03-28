@@ -13,6 +13,10 @@ unified_exec = true
 apply_patch_freeform = true
 skills = true
 shell_snapshot = true
+# Use Landlock instead of bwrap for Linux sandbox
+# bwrap fails on this system: "loopback: Failed RTM_NEWADDR: Operation not permitted"
+# Root cause: bwrap 0.9.0 (Ubuntu 24.04) non-setuid doesn't write uid_map in unprivileged mode
+use_legacy_landlock = true
 
 [projects."/home/openclaw"]
 trust_level = "trusted"

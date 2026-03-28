@@ -164,6 +164,12 @@ git branch -d <branch-name>  # optional: delete local branch
 
 Add whatever helps you do your job. This is your cheat sheet.
 
+## Codex CLI Sandbox Fix
+- **Issue:** `bwrap: loopback: Failed RTM_NEWADDR: Operation not permitted`
+- **Root cause:** bwrap 0.9.0 (Ubuntu 24.04) non-setuid doesn't write `uid_map` in unprivileged mode → child has no capabilities in user namespace → can't configure loopback in network namespace
+- **Fix:** `use_legacy_landlock = true` in `~/.codex/config.toml` under `[features]` — uses Landlock LSM instead of bwrap for sandboxing
+- **Date fixed:** 2026-03-27
+
 ## CI Auto-Fix Pipeline
 - **Cron ID:** `573d18ec` (hourly, Codex GPT-5.3)
 - **Detector:** `scripts/ci/auto_fix_flaky.py` — scans unstable CI for flaky sim/e2e failures
