@@ -1,0 +1,72 @@
+{
+  "pr": 8962,
+  "created": "2026-03-15T16:32:24Z",
+  "updated": "2026-03-15T16:32:24Z",
+  "findings": [
+    {
+      "id": "7ccc2f",
+      "file": "packages/beacon-node/src/api/impl/beacon/blocks/index.ts",
+      "line": 38,
+      "severity": "major",
+      "reviewer": "review-linter",
+      "body": ".ts import extension breaks ESM resolution (3 files)",
+      "status": "open",
+      "addressed_commit": null,
+      "note": null,
+      "created": "2026-03-15T16:32:24Z",
+      "updated": "2026-03-15T16:32:24Z"
+    },
+    {
+      "id": "d60f21",
+      "file": "packages/beacon-node/src/network/processor/gossipHandlers.ts",
+      "line": 626,
+      "severity": "critical",
+      "reviewer": "review-bugs",
+      "body": "Unhandled promise rejection in gossip handler - will crash beacon node",
+      "status": "open",
+      "addressed_commit": null,
+      "note": null,
+      "created": "2026-03-15T16:32:24Z",
+      "updated": "2026-03-15T16:32:24Z"
+    },
+    {
+      "id": "83d888",
+      "file": "packages/beacon-node/src/api/impl/beacon/blocks/index.ts",
+      "line": 750,
+      "severity": "critical",
+      "reviewer": "review-bugs",
+      "body": "Unhandled promise rejection in API handler - fire-and-forget processExecutionPayload",
+      "status": "open",
+      "addressed_commit": null,
+      "note": null,
+      "created": "2026-03-15T16:32:24Z",
+      "updated": "2026-03-15T16:32:24Z"
+    },
+    {
+      "id": "bf8f9c",
+      "file": "packages/beacon-node/src/chain/blocks/writePayloadEnvelopeInputToDb.ts",
+      "line": 49,
+      "severity": "critical",
+      "reviewer": "review-bugs",
+      "body": "Cache pruned on DB write failure - data loss",
+      "status": "open",
+      "addressed_commit": null,
+      "note": null,
+      "created": "2026-03-15T16:32:24Z",
+      "updated": "2026-03-15T16:32:24Z"
+    },
+    {
+      "id": "3be53c",
+      "file": "packages/beacon-node/src/chain/blocks/importExecutionPayload.ts",
+      "line": 167,
+      "severity": "major",
+      "reviewer": "review-security",
+      "body": "EL SYNCING/ACCEPTED not distinguished from VALID in fork choice",
+      "status": "open",
+      "addressed_commit": null,
+      "note": null,
+      "created": "2026-03-15T16:32:24Z",
+      "updated": "2026-03-15T16:32:24Z"
+    }
+  ]
+}

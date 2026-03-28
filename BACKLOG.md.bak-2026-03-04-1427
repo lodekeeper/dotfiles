@@ -1,0 +1,985 @@
+# BACKLOG.md - Task Backlog
+
+**Rules:**
+1. **ALWAYS add new tasks here immediately** - even tiny ones, even if doing them right away
+2. Check this file at the start of every session, every heartbeat, and between tasks
+3. Mark tasks ✅ when done (move to Completed section periodically)
+4. Priority: 🔴 urgent (blocking someone) | 🟡 normal | 🟢 low/background
+5. Include source (who asked, where, when) so nothing is ambiguous
+6. **GitHub notification cron: do NOT add backlog entries for empty sweeps!**
+7. **Tag tasks with `[topic:ID]`** when a Telegram forum topic exists — updates route there
+
+---
+
+## 📌 EPBS devnet-0 attestation data index fix [topic:64]
+
+### ✅ Update epbs-devnet-0 to set AttestationData.index per CL spec (done)
+- **Source:** Nico, Telegram Lodestar WG topic #64, 2026-03-02 21:31 UTC
+- **Branch/worktree:** `fix/epbs-attestation-data-index` / `~/lodestar-epbs-devnet-0`
+- **Context:** Follow-up to PR #8914 now that fork-choice updates are fully implemented
+- **Outcome:** PR opened: https://github.com/ChainSafe/lodestar/pull/8972 (base: `epbs-devnet-0`)
+- **Subtasks:**
+  - ✅ Read PR #8914 + CL spec requirements for AttestationData.index
+  - ✅ Implement missing attestation data index logic on `epbs-devnet-0`
+  - ✅ Run sanity check with Lodestar ePBS devnet
+  - ✅ Report result + remaining gaps/blockers (none blocking in sanity run)
+- **Notes:** Kurtosis sanity run (`epbs-devnet-0-minimal-2node`) reached slot 40+; observed expected non-same-slot case `attestation_data.index=1` at slot 58 when head lagged 1 slot.
+- **Updates →** Telegram thread #64 in Lodestar WG
+
+### ✅ PR #8972 review feedback follow-up (Gemini comments)
+- **Source:** github-notifications cron, 2026-03-02 22:03 UTC
+- **Status:** Done — applied readability refactor, pushed `f0894ac305`, replied in-thread + acknowledged summary comment, and marked review thread resolved
+- **Comment links:**
+  - https://github.com/ChainSafe/lodestar/pull/8972#discussion_r2874883184
+  - https://github.com/ChainSafe/lodestar/pull/8972#issuecomment-3987155442
+
+### ✅ PR #8972 second Gemini follow-up (new bot review + summary)
+- **Source:** github-notifications cron, 2026-03-02 22:12 UTC
+- **Status:** Done — triaged as acknowledgement-only bot follow-up after our fix (`f0894ac305`), no further code/action required
+- **Comment links:**
+  - https://github.com/ChainSafe/lodestar/pull/8972#discussion_r2874920685
+  - https://github.com/ChainSafe/lodestar/pull/8972#issuecomment-3987215902
+
+### ✅ PR #8972 close-out after upstream squash-merge note (done)
+- **Source:** github-notifications cron highlight, 2026-03-02 22:30 UTC (`@nflaig` noted changes were squash-merged in `ffbb1d1c77e9c80d88cb89f3abeca578a7513175`)
+- **Status:** Done — verified note and closed PR #8972 with confirmation comment
+
+### 🟡 Debug Teku interop error `Payload Timeliness Committee is not available for slot` and fix on `epbs-devnet-0` (in progress)
+- **Source:** Nico, Telegram Lodestar WG topic #64, 2026-03-04 14:23 UTC
+- **Status:** In progress
+- **Goal / acceptance criteria:** root cause identified + fix merged via PR targeting `epbs-devnet-0`, validated by local rerun with no missed Lodestar blocks/attestations, stable peering, and finalization
+- **Config under test:** 2×Teku + 2×Lodestar (Geth EL), `gloas_fork_epoch: 1`, Dora enabled
+- **Subtasks:**
+  - ⏳ Reproduce failure locally on `epbs-devnet-0` baseline with provided config
+  - ⏳ Isolate root cause in Lodestar (or prove external incompat and document)
+  - ⏳ Implement minimal fix on `epbs-devnet-0`
+  - ⏳ Re-run devnet and verify acceptance criteria (missed blocks/attestations, peering, finalization)
+  - ⏳ Open PR against `epbs-devnet-0` with logs/evidence
+- **Updates →** Telegram thread #64 in Lodestar WG
+
+## 📌 EIP-7782 Prysm Interop Audit [topic:65]
+
+### ✅ Compare Lodestar EIP-7782 implementation vs prototyping notes + assess Prysm interop (done)
+- **Source:** Nico, Telegram Lodestar WG topic #65, 2026-03-02 14:18 UTC (+ follow-up rerun request)
+- **Status:** Done — reruns with exact blog-post pinned stack confirm issue is Prysm implementation gap, not config drift
+- **Subtasks:**
+  - ✅ Extract concrete requirements/assumptions from prototyping doc
+  - ✅ Diff against Lodestar EIP-7782 branch behavior
+  - ✅ Inspect Prysm for EIP-7782 support and config compatibility
+  - ✅ Conclude static interop readiness + blockers
+  - ✅ Spin up mixed Lodestar+Prysm EIP-7782 devnet
+  - ✅ Observe finality/head/attestation behavior across fork boundary
+  - ✅ Report whether interop works + exact divergence point (if any)
+  - ✅ Run devnet with exact blog-post config and pinned versions (ethereum-package / Dora / Prysm images)
+  - ✅ Run with Lodestar EIP-7782 image (local build) under same config
+  - ✅ Compare outcomes and isolate whether failure is config drift vs Prysm implementation gap
+- **Final result:**
+  - **Prysm-only (exact blog config + pinned images):** healthy for hours, finality progressing, 6s slots active
+  - **Mixed (same config + Lodestar image):** chain shares head pre-fork, then splits at/after slot 32
+  - At divergence: Prysm remains on `current_version=0x70000038` (Fulu), Lodestar upgrades to `current_version=0xb0000038` (EIP-7782)
+  - Prysm peers disconnect Lodestar peer ID; Lodestar logs `PublishError.NoPeersSubscribedToTopic` on post-fork block publication
+  - Conclusion: Prysm needs an `UpgradeToEip7782` state transition hook to update fork version/fork digest at EIP-7782 fork epoch
+- **Updates →** Telegram thread #65 in Lodestar WG
+
+## 📌 EIP-8025: Optional Proofs [topic:22]
+
+### ⏸️ EIP-8025 implementation (ON HOLD)
+- **Source:** Ongoing feature work
+- **Branch:** `feat/eip8025-optional-proofs` on lodekeeper/lodestar
+- **Worktree:** `~/lodestar-eip8025`
+- **Status:** On hold — Nico says wait for more eth-rnd progress (2026-03-01)
+- **PR:** TBD
+- **Updates →** Telegram thread #22 in Lodestar WG
+
+### ✅ Monitor EIP-8025 / zkEVM upstream updates (cron 6e703342, 2026-03-03 17:36 UTC)
+- **Source:** cron `6e703342-d57b-4fa0-9ba3-69f225de3cd5` (Monitor EIP-8025 / zkEVM updates)
+- **Status:** Done
+- **Task:** Ran full sweep across consensus-specs, Lighthouse Gloas/optional-proofs branches, prysm + ethpandaops/prysm branches, ethereum/pm zkEVM planning files, and eth-rnd-archive zkEVM channels/threads (last 3 days)
+- **Findings (implementation-impacting only):**
+  - `ethereum/consensus-specs`: **no new commits in last 3 days** touching `specs/_features/eip8025` or `specs/gloas` (latest EIP-8025 touch remains `14e6ce5` from 2026-02-26)
+  - `sigp/lighthouse`: no new commits in last 3 days on `origin/gloas-*` branches (latest heads are Jan 2026); no new optional-proofs deltas to port
+  - `ethpandaops/prysm`: no optional-proofs branch and no recent relevant updates (matching branches are legacy/old)
+  - `prysmaticlabs/prysm`: no new commits on `origin/optional-proofs` / `origin/poc/optional-proofs` in last 3 days; however `origin/develop` added **payload-envelope pending queue + by-root/by-range RPC + metadata/topic fixes** (`d46621eea`, `6d8445d44`, `e5382d95d`, `587422606`, `7b16c34af`) — architectural signal aligns with queue-first handling for early gossip messages
+  - `ethereum/pm`: no new zkEVM planning updates in last 3 days (no new zkevm-related commit history)
+  - `eth-rnd-archive` (`l1-zkevm`, `l1-zkevm-protocol` + `_threads`): new 2026-03-02 discussion traffic exists, but only around serialization/standards exploration (RLP vs SSZ, zkVM extension scope); **no concrete spec/client change requiring Lodestar code updates yet**
+- **Impact on `~/lodestar-eip8025` branch:** no immediate patch required this cycle
+- **Follow-up subtasks:**
+  - Next sweep: watch whether Prysm/Lighthouse apply the pending-queue pattern specifically to `execution_proof` gossip (not just payload envelopes)
+  - Next sweep: flag immediately if consensus-specs lands new EIP-8025 wire-format/validation changes (proof structure, req/resp, or gossip rules)
+- **Notify rule:** Alert Nico only if there are actual implementation-impacting updates
+- **Action taken:** No alert sent (no immediate Lodestar patch required)
+- **2026-03-03 17:39 UTC rerun:** no new implementation-impacting deltas since previous sweep. Heads unchanged (`consensus-specs@14e6ce5`, `lighthouse gLoas branches unchanged`, `prysm optional-proofs@90a45a66`, `prysm develop@d46621eea`, `pm zkevm planning unchanged`, same `eth-rnd-archive` 2026-03-02 zkEVM thread set).
+
+---
+
+## 📌 Network Thread Memory Leak (#8969) [topic:49]
+
+### 🟡 Monitor upstream review for network thread memory leak fix (passive)
+- **Source:** Nico, Telegram Dev Tasks topic, 2026-03-02 09:39 UTC
+- **Issue:** https://github.com/ChainSafe/lodestar/issues/8969
+- **Suspects:** PR #8890 (libp2p v3 migration), PR #8960 (unknown peers fix)
+- **Status:** Waiting on upstream maintainer feedback on issue/PR; no active local work unless review requests changes
+- **Subtasks:**
+  - ✅ Validate leak signal in Grafana (unstable vs stable comparison)
+  - ✅ Check for socket/handle leak (none; handle counts flat)
+  - ✅ Narrow to JS old-space growth in network worker
+  - ✅ Correlate heap growth with libp2p/gossipsub cache behavior
+  - ✅ Post initial findings to GitHub issue (#8969)
+  - ✅ Post follow-up root-cause update to GitHub issue (#8969) with heap evidence (2026-03-02 12:16 UTC)
+  - ✅ Run local Lodestar node (checkpoint sync + engineMock) to reproduce leak
+  - ✅ Take heap snapshots / long-soak memory sampling evidence (captured via A/B soak)
+  - ✅ Verify suspect 1: prometheus-metrics v5 `_track()` stream listener retention path (covered in upstream fix)
+  - ✅ Verify suspect 2: gossipsub v15 topics map pruning as non-primary leak source for this incident
+  - ✅ Verify suspect 3: libp2p v3 stream/reference retention path and isolate cleanup gap
+  - ✅ Propose mitigation patch + verify slope drop (upstream PR opened and A/B slope improved)
+  - ✅ A/B soak test: patched vs unpatched nodes in parallel (6.9h complete; unpatched +~2.0 MB/h vs patched)
+  - ✅ Open upstream issue with A/B evidence (requested by Nico, 2026-03-02 20:09 UTC): https://github.com/libp2p/js-libp2p/issues/3391
+  - ✅ Open upstream fix PR for `connection-monitor` + `AdaptiveTimeout.cleanUp`: https://github.com/libp2p/js-libp2p/pull/3392
+  - ✅ Verify upstream links posted cross-referenced (issue comment links PR #3392)
+  - ✅ Shut down local A/B nodes and sampler to free server memory
+  - 👀 Passive watch: upstream review/maintainer feedback on issue/PR
+
+### 🟡 Debug unknown peers regression after libp2p v3 upgrade (passive watch, in review)
+- **Source:** Nico, Telegram topic #49, 2026-03-02 21:22 UTC
+- **Context:** PR #8960 workaround exists but should be removed; PR #8970 libp2p dep bump did not resolve unknown peer spikes
+- **Goal:** Find root cause in libp2p, fix upstream (no Lodestar workaround), and validate with local beacon node run
+- **Findings (2026-03-02):**
+  - Root cause is in `@libp2p/prometheus-metrics` `_track()` adding `message` listeners, which can consume protocol frames before app readers attach (identify race)
+  - Minimal repro confirmed with `streamPair()`: with metrics tracking first, delayed reader times out; without tracking, first frame is read
+  - Local beacon validation (mainnet + engineMock, same host/config):
+    - baseline: avg unknown peers **1.36** / max **2** over 11 samples (~5 min)
+    - patched metrics behavior: avg unknown peers **0** / max **0** over 10 samples (~5 min)
+- **Subtasks:**
+  - ✅ Rebased `test/libp2p-hotfixes-3392-3394` onto latest `unstable` again (Nico request, 2026-03-03 00:58 UTC); branch now at 4980786ec3
+  - ✅ Rebased `test/libp2p-hotfixes-3392-3394` onto latest `unstable` (Nico request, 2026-03-03 00:15 UTC); branch now at 21aed01fc0
+  - ✅ Reproduce unknown-peer spike locally on current Lodestar/libp2p
+  - ✅ Isolate causal mechanism (identify protocol / peer-store / metadata path)
+  - ✅ Implement fix in upstream libp2p repo (`metrics-prometheus`)
+  - ✅ Open upstream issue + PR:
+    - issue: https://github.com/libp2p/js-libp2p/issues/3393
+    - PR: https://github.com/libp2p/js-libp2p/pull/3394
+  - ✅ Validate fix on local beacon node (unknown peers stable)
+  - ✅ Merge both upstream hotfixes into combined fork branch: https://github.com/lodekeeper/js-libp2p/tree/hotfix/3392-3394-combined
+  - ✅ Create Lodestar fork branch with both hotfixes applied via pnpm patchedDependencies:
+    - branch: https://github.com/lodekeeper/lodestar/tree/test/libp2p-hotfixes-3392-3394
+    - includes patches for `libp2p@3.1.3`, `@libp2p/utils@7.0.10`, `@libp2p/prometheus-metrics@5.0.10`
+  - ✅ Follow-up CI fix on PR #3394 (2026-03-03 15:26 UTC): updated `streams.spec.ts` receive-path tests to attach a reader before asserting receive metrics; pushed `5caa38665`
+  - ✅ CI retry handling complete (updated 2026-03-03 16:03 UTC): run `22629946131` initially failed only on flaky `test-interop` (`OperationFailedError ... dial backoff` in `dht.contentFetching`). GitHub rejected direct reruns (`--failed` / `--job`), so pushed empty retrigger commit `2464c3613`; rerun `22630811511` completed fully green (including `test-interop`, `test-node macos/windows`, and browser jobs).
+  - 👀 Passive watch: upstream maintainer feedback/review on #3393/#3394
+- **Updates →** Telegram thread #49 in Lodestar WG
+
+### ✅ Verify feat1 unknown-peers status across all nodes (done)
+- **Source:** Nico, Telegram topic #49, 2026-03-03 10:55 UTC
+- **Task:** Check whether unknown-peer issue is resolved on every `feat1-*` beacon node and report per-node status
+- **Subtasks:**
+  - ✅ Identify unknown-peer metrics/log signatures currently available in Prometheus/Loki
+  - ✅ Query all `feat1` beacon instances over a recent window (>=6h)
+  - ✅ Summarize per-node status (resolved/not resolved + evidence)
+- **Result (Prometheus `lodestar_peers_by_client_count{client="Unknown"}`):**
+  - Instant snapshot: `feat1-solo 8.37%`, `feat1-semi 9.45%`, `feat1-super 5.50%`, `feat1-sas 5.10%`, `feat1-mainnet-super 1.94%`
+  - 24h average unknown ratio by node: `solo 12.63%`, `semi 8.86%`, `super 6.65%`, `sas 8.31%`, `mainnet-super 2.46%`
+  - Group-level comparison (24h avg): `feat1 6.50%` vs `stable 4.45%` (and `unstable 12.63%`)
+- **Conclusion:** **Not fully resolved on all feat1 nodes** — `feat1-solo` (and to a lesser extent `feat1-semi`) remain elevated vs stable baseline; `feat1-super`, `feat1-sas`, and `feat1-mainnet-super` look much closer to healthy ranges.
+- **Updates →** Telegram thread #49 in Lodestar WG
+
+### ✅ Compare feat1 unknown-peer ratios against unstable baseline (done)
+- **Source:** Nico, Telegram topic #49, 2026-03-03 11:20 UTC
+- **Task:** Extend previous check with explicit `feat1` vs `unstable` comparison (group + per-node)
+- **Subtasks:**
+  - ✅ Query unstable unknown-peer ratios with same metric window and method
+  - ✅ Compare per-node host types and summarize deltas
+- **Result (same metric: `lodestar_peers_by_client_count{client="Unknown"}`):**
+  - Group avg over 24h: `feat1 6.50%` vs `unstable 12.63%` (feat1 better by ~2x)
+  - Per-node current % (feat1 vs unstable):
+    - solo: `6.57%` vs `13.93%`
+    - semi: `8.04%` vs `7.00%`
+    - super: `3.50%` vs `6.50%`
+    - sas: `4.65%` vs `40.30%`
+    - mainnet-super: `0.49%` vs `19.52%`
+- **Conclusion:** compared to unstable, feat1 is clearly healthier overall (especially `sas` and `mainnet-super`), with `semi` roughly similar/slightly worse at this instant.
+- **Updates →** Telegram thread #49 in Lodestar WG
+
+### ✅ Scope unknown-peers monitoring to mainnet nodes only (done)
+- **Source:** Nico, Telegram topic #49, 2026-03-03 11:27 UTC
+- **Task:** Reframe unknown-peer status around mainnet nodes only and report mainnet comparison
+- **Subtasks:**
+  - ✅ Query `*-mainnet-super` unknown-peer ratios across feat1/stable/unstable
+  - ✅ Report recommendation for mainnet-only monitoring scope
+- **Result (mainnet-only, same Unknown-peer metric):**
+  - `feat1-mainnet-super`: now `1.49%`, 24h avg `2.48%` (p95 `4.48%`)
+  - `stable-mainnet-super`: now `4.74%`, 24h avg `3.08%` (p95 `5.24%`)
+  - `unstable-mainnet-super`: now `18.45%`, 24h avg `16.83%` (p95 `24.64%`)
+- **Recommendation:** yes — mainnet-only view is the cleanest signal; by that lens feat1 looks healthy and clearly better than unstable.
+- **Updates →** Telegram thread #49 in Lodestar WG
+
+---
+
+## 📌 General (no topic)
+
+### 🟡 Backlog cleanup and archive completed tasks (Nico DM, 2026-03-04 14:27 UTC)
+- **Source:** Nico, Telegram DM
+- **Status:** In progress
+- **Task:** Reduce BACKLOG.md size by moving completed items to archive while keeping active/passive items in-place
+
+### ✅ Eth R&D archive hourly check (cron a81458a8, 2026-03-04 14:15 UTC)
+- **Source:** cron `a81458a8-24ea-4d1d-9847-378168f0711d` (eth-rnd-archive-hourly), 2026-03-04 14:15 UTC
+- **Status:** Done
+- **Task:** Read skill, run `bash skills/eth-rnd-archive/check-updates.sh`, summarize tracked-channel updates into notes, alert Nico only if critical for Lodestar
+- **Outcome:** No tracked-channel updates this cycle (`changed_files: []`); no notes update required and no critical Lodestar alert
+
+### ✅ Eth R&D archive hourly check (cron a81458a8, 2026-03-04 13:15 UTC)
+- **Source:** cron `a81458a8-24ea-4d1d-9847-378168f0711d` (eth-rnd-archive-hourly), 2026-03-04 13:15 UTC
+- **Status:** Done
+- **Task:** Read skill, run `bash skills/eth-rnd-archive/check-updates.sh`, summarize tracked-channel updates into notes, alert Nico only if critical for Lodestar
+- **Outcome:** No tracked-channel updates this cycle (`changed_files: []`); no notes update required and no critical Lodestar alert
+
+
+### ✅ Assess readability-only commit c503403 in PR #8982 (Nico DM, 2026-03-04 12:36 UTC)
+- **Source:** Nico, Telegram DM
+- **Status:** Done
+- **Task:** Reviewed commit diff and judged readability impact
+- **Result:** Net positive readability change: explicit null/root/slot checks inline make guard intent clearer and safer for future edits.
+
+### ✅ Beacon log monitor check (cron 92d0f137, 2026-03-04 12:21 UTC)
+- **Source:** cron `92d0f137-8485-4d2c-a48b-d837e58daaf6` (beacon-log-monitor)
+- **Status:** Done
+- **Task:** Run `bash ~/.openclaw/workspace/scripts/monitor-beacon.sh`; if output is empty respond `HEARTBEAT_OK`, otherwise send alert summary to Nico on Telegram with context/actionability
+- **Result:** 6 warn/error lines (excluding known `getBlockV2` noise): `getPoolAttestationsV2` "No attestations for slot" and `getBlobSidecars` "Block not found" for queried slot IDs. Interpreted as likely REST poll timing/empty-pool/skipped-slot behavior; no immediate node-health action required unless frequency increases or downstream consumers expect strict non-empty responses.
+
+### ✅ Explain PR #8982 line-1008 canonicalAttestedBlock root mismatch guard (Nico DM, 2026-03-04 12:04 UTC)
+- **Source:** Nico, Telegram DM
+- **Status:** Done
+- **Task:** Inspected PR #8982 context and explained why mismatch resets index to 0
+- **Result:** The index is a search cursor/cache optimization; mismatch indicates stale cursor (likely reorg or different branch), so resetting to 0 forces full re-scan to preserve correctness.
+
+### ✅ Eth R&D archive hourly check (cron a81458a8, 2026-03-04 12:15 UTC)
+- **Source:** cron `a81458a8-24ea-4d1d-9847-378168f0711d` (eth-rnd-archive-hourly), 2026-03-04 12:15 UTC
+- **Status:** Done
+- **Task:** Read skill, run `bash skills/eth-rnd-archive/check-updates.sh`, summarize tracked-channel updates into notes, alert Nico only if critical for Lodestar
+- **Outcome:** No tracked-channel updates this cycle (`changed_files: []`); no notes update required and no critical Lodestar alert
+
+### ✅ Daily meme generation (cron 69456592, 2026-03-04 12:08 UTC)
+- **Source:** cron `69456592-47f7-404c-ac8f-b04d7c0f9b8b` (daily-meme)
+- **Status:** Done
+- **Task:** Read today's daily notes + BACKLOG, generate one funny programming meme via `openai-image-gen` (`gpt-image-1`), and send to Nico on Telegram
+- **Result:** Generated meme image (`memory/daily-meme-2026-03-04-1208.png`) and delivered to Nico via Telegram (`messageId: 7403`)
+
+### ✅ Dotfiles periodic sync (cron reminder, 2026-03-04 12:03 UTC)
+- **Source:** system reminder (dotfiles periodic)
+- **Status:** Done — ran `~/dotfiles/scripts/sync-dotfiles.sh`; synced and pushed `main` (`c03e6d4` -> `36bfef8`)
+
+### ✅ Eth R&D archive hourly check (cron a81458a8, 2026-03-04 11:15 UTC)
+- **Source:** cron `a81458a8-24ea-4d1d-9847-378168f0711d` (eth-rnd-archive-hourly), 2026-03-04 11:15 UTC
+- **Status:** Done
+- **Task:** Read skill, run `bash skills/eth-rnd-archive/check-updates.sh`, summarize tracked-channel updates into notes, alert Nico only if critical for Lodestar
+- **Outcome:** No tracked-channel updates this cycle (`changed_files: []`); no notes update required and no critical Lodestar alert
+
+### ✅ Implement handled-checklist dedupe for GitHub notifications cron (Nico DM, 2026-03-04 11:06 UTC)
+- **Source:** Nico, Telegram DM
+- **Status:** Done
+- **Task:** Added durable handled/open checklist so cron avoids re-notifying already-handled comments while preventing missed items
+- **Result:**
+  - Added deterministic sweep script: `scripts/github/github_notifications_sweep.py`
+  - Added checklist store: `/home/openclaw/gh-notif-checklist.json`
+  - Updated cron job `github-notifications` prompt in `~/.openclaw/cron/jobs.json` to use script + checklist dedupe flow
+
+### ✅ Eth R&D archive hourly check (cron a81458a8, 2026-03-04 10:15 UTC)
+- **Source:** cron `a81458a8-24ea-4d1d-9847-378168f0711d` (eth-rnd-archive-hourly), 2026-03-04 10:15 UTC
+- **Status:** Done
+- **Task:** Read skill, run `bash skills/eth-rnd-archive/check-updates.sh`, summarize tracked-channel updates into notes, alert Nico only if critical for Lodestar
+- **Outcome:** No tracked-channel updates this cycle (`changed_files: []`); no notes update required and no critical Lodestar alert
+
+
+### ✅ Aztec sequencer health check (cron 2f3cccd0, 2026-03-04 10:06 UTC)
+- **Source:** cron `2f3cccd0-4dc3-4528-a6d9-becd492469cc` (aztec-sequencer-health)
+- **Status:** Done
+- **Task:** Check `aztec-sequencer` logs for error/fatal/crash/restart/OOM signals over last 4h and verify container running status; notify Nico only if actionable issues are found
+- **Result:** Container status `Up 10 days`; grep hits were routine `INFO ... failed txs` counter lines only (no `ERROR`/`FATAL`/panic/crash/restart/OOM indicators). No notification sent.
+
+### ✅ Eth R&D archive hourly check (cron a81458a8, 2026-03-04 09:15 UTC)
+- **Source:** cron `a81458a8-24ea-4d1d-9847-378168f0711d` (eth-rnd-archive-hourly), 2026-03-04 09:15 UTC
+- **Status:** Done
+- **Task:** Read skill, run `bash skills/eth-rnd-archive/check-updates.sh`, summarize tracked-channel updates into notes, alert Nico only if critical for Lodestar
+- **Outcome:** No tracked-channel updates this cycle (`changed_files: []`); no notes update required and no critical Lodestar alert
+
+### ✅ Apply maintainer request on PR #3394 (drop parity-test commits, 2026-03-04 08:48 UTC)
+- **Source:** tabcat comment `issuecomment-3996089674`
+- **Status:** Done
+- **Task:** Removed parity-tests/devDep commits (`7c6a553ac`, `cbaadfee4`) and replied in-thread
+- **Links:**
+  - Request: https://github.com/libp2p/js-libp2p/pull/3394#issuecomment-3996089674
+  - Revert commit: https://github.com/libp2p/js-libp2p/commit/bcb1710a2
+  - Reply: https://github.com/libp2p/js-libp2p/pull/3394#issuecomment-3996128425
+
+### ✅ Triage PR #3394 devDependency request (dozyio, 2026-03-04 08:26 UTC)
+- **Source:** github-notifications cron alert
+- **Status:** Done
+- **Task:** Added missing `@libp2p/utils` devDependencies for metrics-simple + metrics-opentelemetry, pushed, and replied
+- **Links:**
+  - Request: https://github.com/libp2p/js-libp2p/pull/3394#issuecomment-3995996274
+  - Fix commit: https://github.com/libp2p/js-libp2p/commit/cbaadfee4
+  - Reply: https://github.com/libp2p/js-libp2p/pull/3394#issuecomment-3996028539
+
+### ✅ Eth R&D archive hourly check (cron a81458a8, 2026-03-04 08:15 UTC)
+- **Source:** cron `a81458a8-24ea-4d1d-9847-378168f0711d` (eth-rnd-archive-hourly), 2026-03-04 08:15 UTC
+- **Status:** Done
+- **Task:** Read skill, run `bash skills/eth-rnd-archive/check-updates.sh`, summarize tracked-channel updates into notes, alert Nico only if critical for Lodestar
+- **Outcome:** No tracked-channel updates this cycle (`changed_files: []`); no notes update required and no critical Lodestar alert
+
+### ✅ Triage PR #3394 new issue comment from tabcat (2026-03-04 07:53 UTC)
+- **Source:** github-notifications cron alert
+- **Status:** Done
+- **Task:** Reviewed `issuecomment-3995795708` and replied with current state
+- **Links:**
+  - Comment: https://github.com/libp2p/js-libp2p/pull/3394#issuecomment-3995795708
+  - Reply: https://github.com/libp2p/js-libp2p/pull/3394#issuecomment-3995884934
+
+### ✅ Triage new PR #3394 parity-test request (dozyio, 2026-03-04 07:26 UTC)
+- **Source:** github-notifications cron alert
+- **Status:** Done
+- **Task:** Added parity tests for metrics-simple + metrics-opentelemetry and replied on PR #3394
+- **Links:**
+  - Request: https://github.com/libp2p/js-libp2p/pull/3394#issuecomment-3995768882
+  - Fix commit: https://github.com/libp2p/js-libp2p/commit/7c6a553ac
+  - Reply: https://github.com/libp2p/js-libp2p/pull/3394#issuecomment-3995804712
+
+### ✅ Eth R&D archive hourly check (cron a81458a8, 2026-03-04 07:15 UTC)
+- **Source:** cron `a81458a8-24ea-4d1d-9847-378168f0711d` (eth-rnd-archive-hourly), 2026-03-04 07:15 UTC
+- **Status:** Done
+- **Task:** Read skill, run `bash skills/eth-rnd-archive/check-updates.sh`, summarize tracked-channel updates into notes, alert Nico only if critical for Lodestar
+- **Outcome:** No tracked-channel updates this cycle (`changed_files: []`); no notes update required and no critical Lodestar alert
+
+### ✅ Eth R&D archive hourly check (cron a81458a8, 2026-03-04 06:15 UTC)
+- **Source:** cron `a81458a8-24ea-4d1d-9847-378168f0711d` (eth-rnd-archive-hourly), 2026-03-04 06:15 UTC
+- **Status:** Done
+- **Task:** Read skill, run `bash skills/eth-rnd-archive/check-updates.sh`, summarize tracked-channel updates into notes, alert Nico only if critical for Lodestar
+- **Outcome:** No tracked-channel updates this cycle (`changed_files: []`); no notes update required and no critical Lodestar alert
+
+### ✅ Aztec sequencer health check (cron 2f3cccd0, 2026-03-04 06:06 UTC)
+- **Source:** cron `2f3cccd0-4dc3-4528-a6d9-becd492469cc` (aztec-sequencer-health)
+- **Status:** Done
+- **Task:** Check `aztec-sequencer` logs for error/fatal/crash/restart/OOM signals over last 4h and verify container running status; notify Nico only if actionable issues are found
+- **Result:** Container status `Up 10 days`; grep hits were routine `INFO ... failed txs` counters and recurring `WARN ... Failed to fetch all blobs ... (got 0/1)` lines only; no `ERROR`/`FATAL`/panic/crash/restart/OOM indicators. No notification sent.
+
+
+### ✅ Dotfiles periodic sync (cron reminder, 2026-03-04 06:03 UTC)
+- **Source:** system reminder (dotfiles periodic)
+- **Status:** Done — ran `~/dotfiles/scripts/sync-dotfiles.sh`; synced and pushed `main` (`9d85dce` -> `c03e6d4`)
+
+### ✅ Eth R&D archive hourly check (cron a81458a8, 2026-03-04 05:15 UTC)
+- **Source:** cron `a81458a8-24ea-4d1d-9847-378168f0711d` (eth-rnd-archive-hourly), 2026-03-04 05:15 UTC
+- **Status:** Done
+- **Task:** Read skill, run `bash skills/eth-rnd-archive/check-updates.sh`, summarize tracked-channel updates into notes, alert Nico only if critical for Lodestar
+- **Outcome:** No tracked-channel updates this cycle (`changed_files: []`); no notes update required and no critical Lodestar alert
+
+### ✅ Eth R&D archive hourly check (cron a81458a8, 2026-03-04 04:15 UTC)
+- **Source:** cron `a81458a8-24ea-4d1d-9847-378168f0711d` (eth-rnd-archive-hourly), 2026-03-04 04:15 UTC
+- **Status:** Done
+- **Task:** Read skill, run `bash skills/eth-rnd-archive/check-updates.sh`, summarize tracked-channel updates into notes, alert Nico only if critical for Lodestar
+- **Outcome:** No tracked-channel updates this cycle (`changed_files: []`); no notes update required and no critical Lodestar alert
+
+### ✅ Dotfiles periodic sync (heartbeat periodic, 2026-03-04 03:34 UTC)
+- **Source:** HEARTBEAT.md periodic task (~6h)
+- **Status:** Done — ran `~/dotfiles/scripts/sync-dotfiles.sh`; synced and pushed `main` (`ed6d809` -> `9d85dce`)
+
+### ✅ Nightly memory consolidation run + report (cron 4aaaf7f7, 2026-03-04 03:30 UTC)
+- **Source:** cron `4aaaf7f7-fa4c-45ba-9aea-8676b4a46bd1` (nightly-memory-consolidation)
+- **Status:** Done
+- **Task:** Ran `bash ~/.openclaw/workspace/scripts/memory/nightly_memory_cycle.sh` and reviewed consolidation/indexing output
+- **Result summary:** consolidated recent daily notes into bank state/views, regenerated entity pages (people/projects/PRs), rebuilt SQLite FTS index, updated QMD collections + embeddings, and completed cycle log at `memory/memory-cycle-2026-03-04.log`.
+- **Note:** QMD CUDA build probe failed (`CUDA Toolkit not found`) and automatically fell back to CPU embedding (expected on this host).
+
+### ✅ Eth R&D archive hourly check (cron a81458a8, 2026-03-04 03:15 UTC)
+- **Source:** cron `a81458a8-24ea-4d1d-9847-378168f0711d` (eth-rnd-archive-hourly), 2026-03-04 03:15 UTC
+- **Status:** Done
+- **Task:** Read skill, run `bash skills/eth-rnd-archive/check-updates.sh`, summarize tracked-channel updates into notes, alert Nico only if critical for Lodestar
+- **Outcome:** No tracked-channel updates this cycle (`changed_files: []`); no notes update required and no critical Lodestar alert
+
+### ✅ Eth R&D archive hourly check (cron a81458a8, 2026-03-04 02:15 UTC)
+- **Source:** cron `a81458a8-24ea-4d1d-9847-378168f0711d` (eth-rnd-archive-hourly), 2026-03-04 02:15 UTC
+- **Status:** Done
+- **Task:** Read skill, run `bash skills/eth-rnd-archive/check-updates.sh`, summarize tracked-channel updates into notes, alert Nico only if critical for Lodestar
+- **Outcome:** No tracked-channel updates this cycle (`changed_files: []`); no notes update required and no critical Lodestar alert
+
+### ✅ Eth R&D archive hourly check (cron a81458a8, 2026-03-04 01:15 UTC)
+- **Source:** cron `a81458a8-24ea-4d1d-9847-378168f0711d` (eth-rnd-archive-hourly), 2026-03-04 01:15 UTC
+- **Status:** Done
+- **Task:** Read skill, run `bash skills/eth-rnd-archive/check-updates.sh`, summarize tracked-channel updates into notes, alert Nico only if critical for Lodestar
+- **Outcome:** No tracked-channel updates this cycle (`changed_files: []`); no notes update required and no critical Lodestar alert
+
+### ✅ Summarize Discord thread + rationale for closing PR #8976 (Nico DM, 2026-03-04 00:16 UTC)
+- **Source:** Nico, Telegram DM
+- **Status:** Done
+- **Task:** Reviewed discussion context + linked PR review threads and produced close rationale
+- **Result summary:** PR #8976 is not needed because the issue is addressed by the cleaner call-site/spec-aligned flow in PR #8739 (notably: invoke the status-selection path during both block import and gossip handling, consistent with `notify_ptc_messages` expectations). #8976 adds heavy dynamic reparenting/weight-migration machinery for a problem that was primarily invocation/path wiring, making it higher risk and redundant compared to #8739.
+
+### ✅ Eth R&D archive hourly check (cron a81458a8, 2026-03-04 00:15 UTC)
+- **Source:** cron `a81458a8-24ea-4d1d-9847-378168f0711d` (eth-rnd-archive-hourly), 2026-03-04 00:15 UTC
+- **Status:** Done
+- **Task:** Read skill, run `bash skills/eth-rnd-archive/check-updates.sh`, summarize tracked-channel updates into notes, alert Nico only if critical for Lodestar
+- **Outcome:** No tracked-channel updates this cycle (`changed_files: []`); no notes update required and no critical Lodestar alert
+
+### ✅ Triage 5 new PR #8739 review comments from Nico (2026-03-04 00:12 UTC)
+- **Source:** github-notifications cron alert
+- **Status:** Done
+- **Task:** Reviewed comments `r2881108776`, `r2881113839`, `r2881114652`, `r2881115307`, `r2881119101` on PR #8739
+- **Result:** All 5 were follow-up acknowledgements/confirmations (no code changes requested); added `+1` reactions for acknowledgement on each comment
+
+### ✅ Dotfiles periodic sync (cron reminder, 2026-03-04 00:03 UTC)
+- **Source:** system reminder (dotfiles periodic)
+- **Status:** Done — ran `~/dotfiles/scripts/sync-dotfiles.sh`; synced and pushed `main` (`b0f698a` -> `ed6d809`)
+- **Task:** Sync tracked local config/docs changes to `github.com/lodekeeper/dotfiles`
+
+### ✅ Eth R&D archive hourly check (cron a81458a8, 2026-03-03 23:15 UTC)
+- **Source:** cron `a81458a8-24ea-4d1d-9847-378168f0711d` (eth-rnd-archive-hourly), 2026-03-03 23:15 UTC
+- **Status:** Done
+- **Task:** Read skill, run `bash skills/eth-rnd-archive/check-updates.sh`, summarize tracked-channel updates into notes, alert Nico only if critical for Lodestar
+- **Outcome:** No tracked-channel updates this cycle (`changed_files: []`); no notes update required and no critical Lodestar alert
+
+### ✅ Daily summary write-up (cron 4f081573, 2026-03-03 23:00 UTC)
+- **Source:** cron `4f081573-9bed-4c92-9334-d39ba402b2da` (daily-summary)
+- **Status:** Done
+- **Task:** Summarize today's work in `memory/2026-03-03.md` with PR reviews, PR updates, code written, issues found, and lessons learned
+
+### ✅ Triage PR #8739 follow-up review comment (ensi321 call-site expectation, 2026-03-03 22:33 UTC)
+- **Source:** github-notifications cron alert
+- **Status:** Done
+- **Task:** Reviewed `discussion_r2880829354` and replied in-thread aligning on block-import + gossip call-sites
+- **Links:**
+  - Comment: https://github.com/ChainSafe/lodestar/pull/8739#discussion_r2880829354
+  - Reply: https://github.com/ChainSafe/lodestar/pull/8739#discussion_r2880850108
+
+### ✅ Triage PR #8739 new review comment (ensi321 naming question, 2026-03-03 22:30 UTC)
+- **Source:** github-notifications cron alert
+- **Status:** Done
+- **Task:** Reviewed `discussion_r2880818978` and replied in-thread with naming recommendation
+- **Links:**
+  - Comment: https://github.com/ChainSafe/lodestar/pull/8739#discussion_r2880818978
+  - Reply: https://github.com/ChainSafe/lodestar/pull/8739#discussion_r2880838059
+
+### ✅ Eth R&D archive hourly check (cron a81458a8, 2026-03-03 22:15 UTC)
+- **Source:** cron `a81458a8-24ea-4d1d-9847-378168f0711d` (eth-rnd-archive-hourly), 2026-03-03 22:15 UTC
+- **Status:** Done
+- **Task:** Read skill, run `bash skills/eth-rnd-archive/check-updates.sh`, summarize tracked-channel updates into notes, alert Nico only if critical for Lodestar
+- **Outcome:** No tracked-channel updates this cycle (`changed_files: []`); no notes update required and no critical Lodestar alert
+
+### ✅ Daily meme generation (cron 69456592, 2026-03-03 22:00 UTC)
+- **Source:** cron `69456592-47f7-404c-ac8f-b04d7c0f9b8b` (daily-meme)
+- **Status:** Done
+- **Task:** Read today's daily notes + BACKLOG, generate one funny programming meme via `openai-image-gen` (`gpt-image-1`), and send to Nico on Telegram
+- **Result:** Generated meme image (`memory/daily-meme-2026-03-03-2200.png`) and delivered to Nico via Telegram (`messageId: 7326`)
+
+### ✅ Eth R&D archive hourly check (cron a81458a8, 2026-03-03 21:15 UTC)
+- **Source:** cron `a81458a8-24ea-4d1d-9847-378168f0711d` (eth-rnd-archive-hourly), 2026-03-03 21:15 UTC
+- **Status:** Done
+- **Task:** Read skill, run `bash skills/eth-rnd-archive/check-updates.sh`, summarize tracked-channel updates into notes, alert Nico only if critical for Lodestar
+- **Outcome:** No tracked-channel updates this cycle (`changed_files: []`); no notes update required and no critical Lodestar alert
+
+
+### ✅ Publish backup research doc to dotfiles GitHub (Nico DM, 2026-03-03 20:50 UTC)
+- **Source:** Nico, Telegram DM (audio)
+- **Status:** Done
+- **Task:** Synced backup strategy document into dotfiles repo so Nico can review on GitHub
+- **Result:** Added `research/backup-strategy/backup-strategy-openclaw-2026-03-03.md` and pushed `main` (`65fd69b` -> `62130af`)
+
+### ✅ Dotfiles periodic sync (cron reminder, 2026-03-03 20:48 UTC)
+- **Source:** system reminder (dotfiles periodic)
+- **Status:** Done — ran `~/dotfiles/scripts/sync-dotfiles.sh`; synced and pushed `main` (`55c3843` -> `65fd69b`)
+- **Task:** Sync tracked local config/docs changes to `github.com/lodekeeper/dotfiles`
+
+### ✅ Deep research: full backup strategy for OpenClaw setup/data (Nico DM, 2026-03-03 20:45 UTC)
+- **Source:** Nico, Telegram DM
+- **Status:** Done
+- **Task:** Produced robust backup strategy covering critical state/config/data, options (minimal/core/full), recovery plan, schedules, retention, encryption, and restore drills
+- **Deliverable:** `/home/openclaw/.openclaw/workspace/research/backup-strategy-openclaw-2026-03-03.md`
+
+### ✅ Daily meme generation (cron 69456592, 2026-03-03 20:39 UTC)
+- **Source:** cron `69456592-47f7-404c-ac8f-b04d7c0f9b8b` (daily-meme)
+- **Status:** Done
+- **Task:** Read today's daily notes + BACKLOG, generate one funny programming meme via `openai-image-gen` (`gpt-image-1`), and send to Nico on Telegram
+- **Result:** Generated meme image (`memory/daily-meme-2026-03-03.png`) and delivered to Nico via Telegram (`messageId: 7318`)
+
+### ✅ Update dotfiles README (Nico DM, 2026-03-03 20:24 UTC)
+- **Source:** Nico, Telegram DM
+- **Status:** Done
+- **Task:** Refreshed outdated sections in dotfiles README and aligned with current setup/workflow
+- **Result:** Updated skills list (`memory-profiling`), setup/gitconfig symlink note, multi-agent architecture section, and sync/local-only file notes; pushed `main` (`5c5a43d` -> `55c3843`)
+
+### ✅ Eth R&D archive hourly check (cron a81458a8, 2026-03-03 20:15 UTC)
+- **Source:** cron `a81458a8-24ea-4d1d-9847-378168f0711d` (eth-rnd-archive-hourly), 2026-03-03 20:15 UTC
+- **Status:** Done
+- **Task:** Read skill, run `bash skills/eth-rnd-archive/check-updates.sh`, summarize tracked-channel updates into notes, alert Nico only if critical for Lodestar
+- **Outcome:** No tracked-channel updates this cycle (`changed_files: []`); no notes update required and no critical Lodestar alert
+
+### ✅ CI auto-fix unstable sweep (cron 573d18ec, 2026-03-03 20:06 UTC)
+- **Source:** cron `573d18ec-602c-40ba-a01a-004841c0da1a` (ci-autofix-unstable)
+- **Status:** Done — detector returned clean (`No new failures on unstable`), no follow-up action required
+- **Task:** Read `scripts/ci/CRON_PROMPT.md`, run detector, act on actionable findings, report results
+
+### ✅ CI auto-fix unstable sweep (cron 573d18ec, 2026-03-03 19:06 UTC)
+- **Source:** cron `573d18ec-602c-40ba-a01a-004841c0da1a` (ci-autofix-unstable)
+- **Status:** Done — detector returned clean (`No new failures on unstable`), no follow-up action required
+- **Task:** Read `scripts/ci/CRON_PROMPT.md`, run detector, act on actionable findings, report results
+- **Note:** `gh` workflow-runs API returned transient HTTP 502 during detector run; detector still completed and reported clean
+
+### ✅ Eth R&D archive hourly check (cron a81458a8, 2026-03-03 18:15 UTC)
+- **Source:** cron `a81458a8-24ea-4d1d-9847-378168f0711d` (eth-rnd-archive-hourly), 2026-03-03 18:15 UTC
+- **Status:** Done
+- **Task:** Read skill, run `bash skills/eth-rnd-archive/check-updates.sh`, summarize tracked-channel updates into notes, alert Nico only if critical for Lodestar
+- **Outcome:** No tracked-channel updates this cycle (`changed_files: []`); no notes update required and no critical Lodestar alert
+
+### ✅ CI auto-fix unstable sweep (cron 573d18ec, 2026-03-03 18:06 UTC)
+- **Source:** cron `573d18ec-602c-40ba-a01a-004841c0da1a` (ci-autofix-unstable)
+- **Status:** Done — detector returned clean (`No new failures on unstable`), no follow-up action required
+- **Task:** Read `scripts/ci/CRON_PROMPT.md`, run detector, act on actionable findings, report results
+
+
+### ✅ Aztec sequencer health check (cron 2f3cccd0, 2026-03-03 18:05 UTC)
+- **Source:** cron `2f3cccd0-4dc3-4528-a6d9-becd492469cc` (aztec-sequencer-health)
+- **Status:** Done
+- **Task:** Check `aztec-sequencer` logs for error/fatal/crash/restart/OOM signals over last 4h and verify container running state; notify Nico only if actionable issues are found
+- **Result:** Container status `Up 9 days`; grep hits were routine `INFO ... failed txs` counters and recurring `WARN ... Failed to fetch all blobs ... (got 0/1)` lines only; no `ERROR`/`FATAL`/panic/crash/restart/OOM indicators. No notification sent.
+
+### ✅ Dotfiles periodic sync (cron reminder, 2026-03-03 18:03 UTC)
+- **Source:** system reminder (dotfiles periodic)
+- **Status:** Done — ran `~/dotfiles/scripts/sync-dotfiles.sh`; synced and pushed `main` (`fce68a6` -> `5c5a43d`)
+- **Task:** Sync tracked local config/docs changes to `github.com/lodekeeper/dotfiles`
+
+### ✅ Triage new PR #3394 review comment (tabcat cast simplification) — 2026-03-03 17:26 UTC
+- **Source:** github-notifications cron alert
+- **Status:** Done
+- **Task:** Reviewed comment `discussion_r2879534188`, applied simplification, and replied in-thread
+- **Links:**
+  - Comment: https://github.com/libp2p/js-libp2p/pull/3394#discussion_r2879534188
+  - Fix pushed: https://github.com/libp2p/js-libp2p/commit/dc51a3371
+  - Thread reply: https://github.com/libp2p/js-libp2p/pull/3394#discussion_r2879579980
+
+### ✅ Check PR #3394 review summary comment (Nico DM, 2026-03-03 17:18 UTC)
+- **Source:** Nico, Telegram DM
+- **Status:** Done
+- **Task:** Inspected review `pullrequestreview-3883849170`, applied requested follow-up changes, and replied on PR
+- **Links:**
+  - Review: https://github.com/libp2p/js-libp2p/pull/3394#pullrequestreview-3883849170
+  - Follow-up fix: https://github.com/libp2p/js-libp2p/commit/4dbf55d82
+  - PR reply: https://github.com/libp2p/js-libp2p/pull/3394#issuecomment-3992484978
+
+### ✅ Eth R&D archive hourly check (cron a81458a8, 2026-03-03 17:15 UTC)
+- **Source:** cron `a81458a8-24ea-4d1d-9847-378168f0711d` (eth-rnd-archive-hourly), 2026-03-03 17:15 UTC
+- **Status:** Done
+- **Task:** Read skill, run `bash skills/eth-rnd-archive/check-updates.sh`, summarize tracked-channel updates into notes, alert Nico only if critical for Lodestar
+- **Outcome:** No tracked-channel updates this cycle (`changed_files: []`); no notes update required and no critical Lodestar alert
+
+### ✅ CI auto-fix unstable sweep (cron 573d18ec, 2026-03-03 17:05 UTC)
+- **Source:** cron `573d18ec-602c-40ba-a01a-004841c0da1a` (ci-autofix-unstable)
+- **Status:** Done — detector returned clean (`No new failures on unstable`), no follow-up action required
+- **Task:** Read `scripts/ci/CRON_PROMPT.md`, run detector, act on actionable findings, report results
+
+
+### ✅ Provide EIP-8025 status + spec-diff update in Discord thread (#optional-execution-proofs-eip8025) (done)
+- **Source:** bing mention in Discord thread `#optional-execution-proofs-eip8025`, 2026-03-03 16:41 UTC
+- **Task:** Summarize current implementation status and what changed in the EIP-8025 spec since previous TLDR
+- **Result:** Posted concise status: implementation merged into `optional-proofs` branch (PR #8918 + #8923), work currently on hold pending Eth R&D progress, and highlighted new consensus-spec deltas (#4941, #4944) plus current req/resp wire-format mismatch to track.
+
+
+### ✅ React to appreciation comment on libp2p/js-libp2p PR #3392 (Nico DM, 2026-03-03 16:30 UTC)
+- **Source:** Nico, Telegram DM
+- **Status:** Done
+- **Task:** Add a ❤️ reaction to https://github.com/libp2p/js-libp2p/pull/3392#issuecomment-3991582670 and adopt as standing etiquette
+- **Result:** Added `heart` reaction (reaction id `334863169`)
+
+### ✅ Triage new PR #3394 review comment (tabcat: unnecessary type assertion) — 2026-03-03 16:59 UTC
+- **Source:** github-notifications cron alert
+- **Status:** Done
+- **Task:** Reviewed comment `discussion_r2879397647`, applied fix, and replied in-thread
+- **Links:**
+  - Comment: https://github.com/libp2p/js-libp2p/pull/3394#discussion_r2879397647
+  - Fix pushed: https://github.com/libp2p/js-libp2p/commit/62f0167
+  - Thread reply: https://github.com/libp2p/js-libp2p/pull/3394#discussion_r2879456909
+
+### ✅ Eth R&D archive hourly check (cron a81458a8, 2026-03-03 16:15 UTC)
+- **Source:** cron `a81458a8-24ea-4d1d-9847-378168f0711d` (eth-rnd-archive-hourly), 2026-03-03 16:15 UTC
+- **Status:** Done
+- **Task:** Read skill, run `bash skills/eth-rnd-archive/check-updates.sh`, summarize tracked-channel updates into notes, alert Nico only if critical for Lodestar
+- **Outcome:** No tracked-channel updates this cycle (`changed_files: []`); no notes update required and no critical Lodestar alert
+
+### ✅ CI auto-fix unstable sweep (cron 573d18ec, 2026-03-03 16:05 UTC)
+- **Source:** cron `573d18ec-602c-40ba-a01a-004841c0da1a` (ci-autofix-unstable)
+- **Status:** Done — detector returned clean (`No new failures on unstable`), no follow-up action required
+- **Task:** Read `scripts/ci/CRON_PROMPT.md`, run detector, act on actionable findings, report results
+
+### ✅ Re-check CI status on libp2p/js-libp2p PR #3394 (Nico DM, 2026-03-03 15:19 UTC)
+- **Source:** Nico, Telegram DM
+- **Status:** Done
+- **Task:** Verified current CI status and identified remaining failures
+- **Result:** CI is still red on run `22628513667` with:
+  - `test-electron-main` failing in `@libp2p/prometheus-metrics` (`streams.spec` assertion: expected `libp2p_data_transfer_bytes_total` metric line present for outbound receive case)
+  - `test-node (macos-latest, lts/*)` failing at `actions/setup-node@v6` with `Unable to find LTS release '*' for Node version 'lts/*'` (likely CI/runner infra issue)
+
+### ✅ Eth R&D archive hourly check (cron a81458a8, 2026-03-03 15:15 UTC)
+- **Source:** cron `a81458a8-24ea-4d1d-9847-378168f0711d` (eth-rnd-archive-hourly), 2026-03-03 15:15 UTC
+- **Status:** Done
+- **Task:** Read skill, run `bash skills/eth-rnd-archive/check-updates.sh`, summarize tracked-channel updates into notes, alert Nico only if critical for Lodestar
+- **Outcome:** No tracked-channel updates this cycle (`changed_files: []`); no notes update required and no critical Lodestar alert
+
+### ✅ CI auto-fix unstable sweep (cron 573d18ec, 2026-03-03 15:05 UTC)
+- **Source:** cron `573d18ec-602c-40ba-a01a-004841c0da1a` (ci-autofix-unstable)
+- **Status:** Done — detector returned clean (`No new failures on unstable`), no follow-up action required
+- **Task:** Read `scripts/ci/CRON_PROMPT.md`, run detector, act on actionable findings, report results
+
+### 🟡 Investigate feat4 QUIC crashes (passive watch; waiting next live restart evidence)
+- **Source:** wemeetagain mention in Discord `#quic-support`, 2026-03-03 14:29 UTC
+- **Context:** Reports that `feat4-sas` is crashing continuously and `feat4-super` had at least one crash while testing QUIC branch
+- **Task:** Check crash frequency/signatures, isolate likely cause, and report actionable next steps
+- **Current findings (2026-03-03 14:45 UTC):**
+  - `feat4-sas` beacon restarts are high: **9 restarts/6h**, **24 restarts/24h** (`changes(process_start_time_seconds)`)
+  - `feat4-super` is comparatively stable: **0 restarts/6h**, **2 restarts/24h**
+  - **New host evidence (2026-03-03 15:23 UTC):** fatal Node/V8 crash on `feat4-sas` at `14:45:43 UTC` with `Check failed: node->IsInUse()` and native stack including `napi_delete_async_work` + `classic-level` (`PriorityWorker::DoFinally`) — indicates native abort path, not just JS-level uncaught exception
+  - Dependency provenance check: crash path references `node_modules/.pnpm/classic-level@3.0.0/...`; Lodestar chain DB still depends on `classic-level@1.4.1`, while `classic-level@3.0.0` is pulled via `level@10` (introduced with libp2p v3 stack), so this may be network/libp2p datastore related rather than direct chain DB write-path regression
+  - No explicit `segfault` / `SIGSEGV` / `core dumped` strings in beacon logs over 48h for either node
+  - `feat4-sas` shows repeated network `uncaughtException` bursts (notably `Offset is outside the bounds of the DataView` from libp2p identify/discv5 paths)
+  - Derived recent `feat4-sas` beacon restart timestamps (UTC) from `process_start_time_seconds` transitions: `13:10:50`, `14:18:50`, `14:46:50` (also frequent earlier cycles), giving concrete windows for host log extraction
+  - `feat4-super` only shows 2 restarts over 24h (`23:41:04`, `00:27:04` UTC)
+  - Loki 24h count snapshot (2026-03-03 16:11 UTC):
+    - `feat4-sas`: `# Fatal error in , line 0` = **17**, `Offset is outside the bounds of the DataView` = **21**
+    - `feat4-super`: both counts = **0**
+    - reinforces sas-specific instability pattern
+  - Fatal cadence analysis (last 24h, `feat4-sas`): inter-crash gap avg **56.35m** (median **48.71m**, min **13.65m**, max **128.62m**), i.e. repeated periodic aborts rather than one-off incident
+  - Correlation check (last 8h): only **1/8** fatal windows had nearby DataView/uncaught bursts (±30m); none had those signals in the immediate 5m pre-fatal window, so current evidence does **not** support a strong direct trigger link from those JS errors to every native abort
+  - Fatal→restart coupling check (last 24h, `feat4-sas`): **17/17** fatal events are followed by a `process_start_time_seconds` transition within 120s (typically 41–70s), confirming each native abort is immediately followed by process restart
+  - Working hypothesis (2026-03-03 18:08 UTC): primary trigger may be upstream QUIC/libp2p instability causing process blowup/restart, while the observed `node->IsInUse()` + `napi_delete_async_work` + `classic-level` stack is a teardown-time native race that reliably detonates during env shutdown and can mask original trigger details
+  - Clarification to thread (2026-03-03 19:08 UTC): no expected steady-state datastore teardown path in Lodestar; explicit close is on network/libp2p stop (shutdown path). Teardown can still occur on non-user-triggered worker/process termination/restart, which is sufficient to trigger env cleanup races
+  - `feat4-super` control check (24h): fatal events **0**, restart transitions **2**
+  - Fatal context sampling (`feat4-sas`, ±5s windows): chain-processing logs (`New chain head` / `Block processed` / `Processed past epoch`) are present in **7/17** fatal windows, while active `Syncing - X minutes left` appears in only **1/17**. This suggests crashes are not exclusively tied to explicit sync-loop phases and can occur during normal block-processing activity.
+  - Source-level check (`Level/classic-level@v3.0.0`, commit `22556ab`): `PriorityWorker::DoFinally` unconditionally calls `napi_delete_async_work` (via `BaseWorker::DoFinally`) after priority-work decrement; `db_close` defers close via `pendingCloseWorker_` until priority work reaches zero. This strengthens hypothesis of teardown/cleanup race in native async-worker lifecycle rather than gossip-path JS exceptions
+  - Priority-worker surface mapping (`classic-level`): **11** async worker classes use `PriorityWorker` (`Put/Get/Has/GetMany/HasMany/Del/Clear/ApproximateSize/CompactRange/Batch/BatchWrite`), i.e. both read and write hot paths. This means heavy peerstore churn can plausibly amplify exposure to the same finalizer path (`PriorityWorker::DoFinally` → `napi_delete_async_work`).
+  - Network-burst control check (Loki instant counts, 5m windows, `feat4-sas`): pre-fatal means vs +30m controls are only modestly different (`dial_ping` **516.7 vs 453.6**, `handleDiscoveredPeer` **162.4 vs 152.4**, `identify agentVersion errors` **135.8 vs 127.4**), so high peer-churn appears common and is not a strong standalone predictor of fatal aborts
+- **Host-level follow-up:**
+  - Systemd exporter shows `beacon.service` remains `active` and never enters `failed` state on either node over 24h (`max_over_time(...state="failed") = 0`)
+  - `feat4-sas` shows `deactivating` transitions while `feat4-super` does not, consistent with recycle/restart behavior on sas
+  - Current Grafana telemetry does **not** expose kernel core-dump / exit-code lines for these hosts, so we cannot directly confirm exit code `139` from Loki alone
+  - **15:23–15:31 UTC host `journalctl` evidence received:** repeated fatal crash snippets from `beacon.service` show V8 abort + native stack (`Check failed: node->IsInUse()`, `napi_delete_async_work`, `classic-level` addon frame), with precise timestamps and interleaved chain logs around `14:45:43 UTC`
+  - **15:26 UTC additional host evidence:** `systemctl show beacon.service` returned `ExecMainCode=0`, `ExecMainStatus=0`, `Result=success`, `NRestarts=25`; kernel journal grep found no segfault/abrt/oom markers in the crash window
+  - Interpretation: likely no kernel segfault; either (a) wrapper process (`beacon_run.sh`) keeps service healthy while child node crashes/restarts, or (b) service-level restarts are treated as clean exits
+  - Verified again in heartbeat (2026-03-03 14:58 UTC): no paired nodes available via `nodes status` (`nodes: []`), so host-shell evidence must come from operators with direct host access
+- **Subtasks:**
+  - ✅ Pull recent logs for `feat4-sas` and `feat4-super`
+  - ✅ Identify segfault signatures + correlate with deploy/version context
+  - ✅ Compare node-specific patterns (continuous vs single crash)
+  - ✅ Share findings + mitigation recommendations in thread (posted batched update + host-evidence request, Discord msg `1478401300017184848`)
+  - ✅ Re-posted one batched crash triage update (per Nico request, 2026-03-03 14:38 UTC), Discord msg `1478401558784774165`
+  - ✅ Posted concise restart-window follow-up in QUIC thread (per Nico request 2026-03-03 15:03 UTC)
+  - ✅ Host feedback received in thread: no output from provided `journalctl -u lodestar` / `dmesg` commands
+  - ✅ Reran with correct unit (`beacon.service`) and obtained fatal native stack trace from host logs
+  - ✅ Collected `systemctl show beacon.service` + `journalctl -k` window; no kernel segfault/abrt/oom signal and service reports clean current main process state
+  - ✅ Posted follow-up ask for unit exit/PID transition extraction around crash window (Discord msg `1478413584030498866`)
+  - ✅ Host reran with corrected command/window and provided precise fatal stack output at `14:45:43` (PID `3083758`) including `napi_delete_async_work` + `classic-level`
+  - ✅ Confirms native V8 abort signature is reproducible in host logs (not a false positive from Loki parsing)
+  - 🔄 Next ask: capture wrapper/script lifecycle evidence (how `beacon_run.sh` respawns `node`) and match crash timestamps to restart counter deltas
+  - 🔄 Next ask: sample `feat4-super` restart windows to check whether the same `classic-level`/`node->IsInUse()` fatal signature appears there or if sas is unique
+  - ✅ Provided one copy-paste command block for operator to run on `feat4-super` windows (`23:41` / `00:27` UTC)
+  - ✅ Host confirmed no fatal-signature matches on `feat4-super` windows
+  - 🔄 Investigate `feat4-super` restart cause separately (non-fatal path: deploy/restart policy/clean exit vs hidden crash); request unit restart policy + raw service logs around restart windows
+  - ✅ Operator responded after re-nudge: still no output from `feat4-super` command block
+  - ✅ Confirmed `feat4-super` unit is `beacon.service`
+  - ✅ Raw unit config from host confirms wrapper setup on super (`ExecStart=/home/devops/beacon/beacon_run.sh`, `StandardOutput=journal`, `MainPID=ExecMainPID=3027597`, `NRestarts=2`, current start time `2026-03-03 16:31:29 UTC`)
+  - ✅ Operator reports discovery-tail grep still returns no lines for the selected restart window
+  - ✅ Host reports even raw `journalctl -u beacon.service` window queries around `23:41` / `00:27` return no lines
+  - ✅ Loki check around `feat4-super` restart windows (`23:41` / `00:27` UTC) shows no startup-marker lines (`Node identity`, `Genesis time`, `Lodestar v`), consistent with missing/filtered bootstrap log visibility for super in current pipeline
+  - ✅ Determined why historical super windows are empty: host has a single current boot (`2026-03-03 02:28:50 UTC → now`) and earliest `beacon.service` journal entry shown is ~`02:56 UTC`, so `23:41/00:27` windows are outside available local journal horizon
+  - 🔄 Next ask: for the *next* `feat4-super` restart, capture live window immediately (raw `journalctl -u beacon.service --since ... --until ...`) to classify clean service cycle vs wrapper child restart
+  - ✅ Next live super restart captured (2026-03-03 16:31 UTC): PID flips from `beacon_run.sh[2932756]` to `beacon_run.sh[3027597]` with immediate startup logs (`Lodestar ... commit=d4cf9df`, LevelDB connect), but no explicit crash/exit line in adjacent unit output
+  - 🔄 Next ask in progress: collect manager-side systemd transition lines around 16:31 (`Main process exited`, `code=`, `status=`, `Scheduled restart`) to classify clean stop vs crash/policy recycle — command block already posted in QUIC thread (msg `1478434904021798993`); awaiting raw output
+  - ✅ Posted one final focused command request for systemd manager-line extraction around `2026-03-03 16:31 UTC` (per Nico inter-session request, 2026-03-03 16:52 UTC), Discord msg `1478434904021798993`
+  - ✅ Operator confirms no additional `journalctl -u beacon.service` manager lines at the `16:30:30–16:32:30 UTC` restart boundary (same conclusion: PID rollover visible, explicit exit-cause lines absent)
+  - ✅ Posted focused unblock command set (hostname/time sanity + `journalctl --utc` explicit windows + first/last unit entries) and got raw output (`journalctl --list-boots` single boot, early `beacon.service` lines around `02:56`, plus `tail` hang report)
+  - ✅ Re-posted focused unblock request with exact command block (Nico inter-session request, 2026-03-03 16:39 UTC), Discord msg `1478431814967099485`
+  - ✅ Agreed in-thread to treat `feat4-super` historical restart-cause visibility as journald scope/retention limitation and move on; keep only a live-capture ask for the next super restart
+  - 🔄 Follow-up (partial complete): preliminary Loki correlation against recent QUIC/DataView/uncaught bursts shows weak direct temporal coupling (1/8 fatal windows within ±30m; 0/8 within 5m). `classic-level` async-worker teardown path mapping is now done (PriorityWorker fan-out + finalizer path); remaining piece is host-side `beacon_run.sh` child lifecycle evidence at next live super/sas restart.
+  - 🔄 New input (2026-03-03 18:04 UTC): review external proposed `classic-level` fix (closing flag + env_cleanup_hook coordination + guarded `napi_delete_async_work`) and request patch/commit for A/B validation on feat4 nodes
+  - ✅ Clarified in thread: the race is on *environment/worker-thread teardown*, not only full app shutdown; frequent worker/process restarts make it recur in normal runtime windows
+  - ✅ Added 5m network-burst control test around all 17 fatal events: peer-dial/discovery/identify-error volumes are only modestly higher than +30m control windows (not strongly discriminative as standalone crash predictor).
+
+### ✅ PR #3394 follow-up comment triage (libp2p/js-libp2p)
+- **Source:** Nico, Telegram DM, 2026-03-03 14:40 UTC
+- **Status:** Done
+- **Task:** Checked comment `#issuecomment-3991446778`, pushed fix, and replied in-thread
+- **Links:**
+  - Incoming: https://github.com/libp2p/js-libp2p/pull/3394#issuecomment-3991446778
+  - Fix commit: https://github.com/libp2p/js-libp2p/commit/bfb080b52
+  - Response: https://github.com/libp2p/js-libp2p/pull/3394#issuecomment-3991597962
+
+### ✅ PR #3394 new review feedback to triage (libp2p/js-libp2p)
+- **Source:** github-notifications cron, 2026-03-03 14:21 UTC
+- **Status:** Done
+- **Task:** Triaged latest PR feedback and responded in-thread
+- **Links:**
+  - Incoming comment: https://github.com/libp2p/js-libp2p/pull/3394#issuecomment-3991406344
+  - Response: https://github.com/libp2p/js-libp2p/pull/3394#issuecomment-3991419724
+
+
+### ✅ Eth R&D archive hourly check (cron a81458a8, 2026-03-03 14:15 UTC)
+- **Source:** cron `a81458a8-24ea-4d1d-9847-378168f0711d` (eth-rnd-archive-hourly), 2026-03-03 14:15 UTC
+- **Status:** Done
+- **Task:** Read skill, run `bash skills/eth-rnd-archive/check-updates.sh`, summarize tracked-channel updates into notes, alert Nico only if critical for Lodestar
+- **Outcome:** No tracked-channel updates this cycle (`changed_files: []`); no notes update required and no critical Lodestar alert
+
+### ✅ Aztec sequencer health check (cron 2f3cccd0, 2026-03-03 14:05 UTC)
+- **Source:** cron `2f3cccd0-4dc3-4528-a6d9-becd492469cc` (aztec-sequencer-health), 2026-03-03 14:05 UTC
+- **Status:** Done
+- **Task:** Check `aztec-sequencer` container logs for error/fatal/crash/restart signals over last 4h and verify running status; notify Nico only if actionable issues are found
+- **Result:** Container status `Up 9 days`; grep hits were routine `WARN ... Failed to fetch all blobs ... (got 0/1)` lines only, with no `ERROR`/`FATAL`/`PANIC`/crash/restart/OOM indicators. No notification sent.
+
+### ✅ CI auto-fix unstable sweep (cron 573d18ec, 2026-03-03 14:04 UTC)
+- **Source:** cron `573d18ec-602c-40ba-a01a-004841c0da1a` (ci-autofix-unstable), 2026-03-03 14:04 UTC
+- **Status:** Done — detector returned clean (`No new failures on unstable`), no follow-up action required
+- **Task:** Read `scripts/ci/CRON_PROMPT.md`, run detector, act on actionable findings, report results
+
+### ✅ Eth R&D archive hourly check (cron a81458a8, 2026-03-03 13:16 UTC)
+- **Source:** cron `a81458a8-24ea-4d1d-9847-378168f0711d` (eth-rnd-archive-hourly), 2026-03-03 13:16 UTC
+- **Status:** Done
+- **Task:** Read skill, run `bash skills/eth-rnd-archive/check-updates.sh`, summarize tracked-channel updates into notes, alert Nico only if critical for Lodestar
+- **Outcome:** No tracked-channel updates this cycle (`changed_files: []`); no notes update required and no critical Lodestar alert
+
+### ✅ CI auto-fix unstable sweep (cron 573d18ec, 2026-03-03 13:03 UTC)
+- **Source:** cron `573d18ec-602c-40ba-a01a-004841c0da1a` (ci-autofix-unstable)
+- **Status:** Done — detector returned clean (`No new failures on unstable`), no follow-up action required
+- **Task:** Read `scripts/ci/CRON_PROMPT.md`, run detector, act on actionable findings, report results
+
+### ✅ Beacon log monitor check (cron 92d0f137, 2026-03-03 12:21 UTC)
+- **Source:** cron `92d0f137-8485-4d2c-a48b-d837e58daaf6` (beacon-log-monitor)
+- **Status:** Done
+- **Task:** Run `bash ~/.openclaw/workspace/scripts/monitor-beacon.sh`; if output is empty respond `HEARTBEAT_OK`, otherwise send actionable alert summary to Nico on Telegram
+- **Result:** 5 recent `getPoolAttestationsV2` error lines (`No attestations for slot`); likely REST polling against empty attestation pool rather than node fault. No immediate action required unless external consumers are unexpectedly relying on non-empty pool responses for those exact slots.
+
+### ✅ Eth R&D archive hourly check (cron a81458a8, 2026-03-03 12:15 UTC)
+- **Source:** cron `a81458a8-24ea-4d1d-9847-378168f0711d` (eth-rnd-archive-hourly), 2026-03-03 12:15 UTC
+- **Status:** Done
+- **Task:** Read skill, run `bash skills/eth-rnd-archive/check-updates.sh`, summarize tracked-channel updates into notes, alert Nico only if critical for Lodestar
+- **Outcome:** No tracked-channel updates this cycle (`changed_files: []`); no notes update required and no critical Lodestar alert
+
+### ✅ Dotfiles periodic sync (cron reminder, 2026-03-03 12:03 UTC)
+- **Source:** system reminder (dotfiles periodic)
+- **Status:** Done — ran `~/dotfiles/scripts/sync-dotfiles.sh`; synced and pushed `main` (`2e43c78` -> `fce68a6`)
+
+### ✅ CI auto-fix unstable sweep (cron 573d18ec, 2026-03-03 12:03 UTC)
+- **Source:** cron `573d18ec-602c-40ba-a01a-004841c0da1a` (ci-autofix-unstable)
+- **Status:** Done — detector returned clean (`No new failures on unstable`), no follow-up action required
+- **Task:** Read `scripts/ci/CRON_PROMPT.md`, run detector, act on actionable findings, report results
+
+### ✅ Check current top CPU/memory usage + summarize top 10 processes (Nico DM, 2026-03-03 11:37 UTC)
+- **Source:** Nico, Telegram DM (audio)
+- **Status:** Done
+- **Task:** Inspect current server process CPU/memory usage and report top 10 with concise summary table
+- **Result snapshot:** Top CPU process is Lodestar beacon (`~45.5% CPU`), top memory process is Erigon (`~30.3% RAM / ~19.0 GiB RSS`)
+
+### ✅ Eth R&D archive hourly check (cron a81458a8, 2026-03-03 11:15 UTC)
+- **Source:** cron `a81458a8-24ea-4d1d-9847-378168f0711d` (eth-rnd-archive-hourly), 2026-03-03 11:15 UTC
+- **Status:** Done
+- **Task:** Read skill, run `bash skills/eth-rnd-archive/check-updates.sh`, summarize tracked-channel updates into notes, alert Nico only if critical for Lodestar
+- **Outcome:** No tracked-channel updates this cycle (`changed_files: []`); no notes update required and no critical Lodestar alert
+
+### ✅ CI auto-fix unstable sweep (cron 573d18ec, 2026-03-03 11:03 UTC)
+- **Source:** cron `573d18ec-602c-40ba-a01a-004841c0da1a` (ci-autofix-unstable)
+- **Status:** Done — detector returned clean (`No new failures on unstable`), no follow-up action required
+- **Task:** Read `scripts/ci/CRON_PROMPT.md`, run detector, act on actionable findings, report results
+
+### ✅ Eth R&D archive hourly check (cron a81458a8, 2026-03-03 10:15 UTC)
+- **Source:** cron `a81458a8-24ea-4d1d-9847-378168f0711d` (eth-rnd-archive-hourly), 2026-03-03 10:15 UTC
+- **Status:** Done
+- **Task:** Read skill, run `bash skills/eth-rnd-archive/check-updates.sh`, summarize tracked-channel updates into notes, alert Nico only if critical for Lodestar
+- **Outcome:** No tracked-channel updates this cycle (`changed_files: []`); no notes update required and no critical Lodestar alert
+
+### ✅ CI auto-fix unstable sweep (cron 573d18ec, 2026-03-03 10:02 UTC)
+- **Source:** cron `573d18ec-602c-40ba-a01a-004841c0da1a` (ci-autofix-unstable)
+- **Status:** Done — detector returned clean (`No new failures on unstable`), no follow-up action required
+- **Task:** Read `scripts/ci/CRON_PROMPT.md`, run detector, act on actionable findings, report results
+
+### ✅ Manual run validation for eth-rnd-daily-digest cron (Lodestar WG topic #1)
+- **Source:** Nico, Telegram Lodestar WG topic #1, 2026-03-03 09:47 UTC
+- **Status:** Done
+- **Task:** Execute cron `0e3e3b9d` manually and confirm successful end-to-end run
+- **Result:** Manual run succeeded (`ran=true`, exit code 0).
+- **Evidence:** `openclaw cron runs --id 0e3e3b9d --limit 1` shows latest run status `ok`.
+- **End-to-end check:**
+  - Digest sent to Telegram topic 59 (`messageId: 315`)
+  - Optional notes logging succeeded at `/home/openclaw/.openclaw/workspace/memory/eth-rnd-archive-notes/2026-03-03.md`
+
+### ✅ Sync dotfiles on request (Nico DM, 2026-03-03 09:41 UTC)
+- **Source:** Nico, Telegram DM
+- **Status:** Done — ran `~/dotfiles/scripts/sync-dotfiles.sh`; synced and pushed `main` (`541a4f1` -> `2e43c78`)
+
+### ✅ Investigate Nico report: "please investigate what's going wrong" (Lodestar WG topic #1)
+- **Source:** Nico, Telegram Lodestar WG topic #1, 2026-03-03 09:34 UTC
+- **Status:** Done
+- **Task:** Triaged OpenClaw/runtime state + cron run history to isolate failure source
+- **Root cause:** `eth-rnd-daily-digest` cron (0e3e3b9d) uses `write/edit` on `~/eth-rnd-archive-notes/...` (outside workspace root). `write` fails with `Path escapes workspace root`; `edit` reports misleading `File not found` for same path.
+- **Evidence:**
+  - `openclaw cron list` shows job `0e3e3b9d` status `error`
+  - `openclaw cron runs --id 0e3e3b9d ...` shows `Write/Edit ... failed`
+  - Repro: `read` succeeds on `/home/openclaw/eth-rnd-archive-notes/2026-03-03.md`, but `edit` fails `File not found`; `write` fails `Path escapes workspace root`
+- **Impact:** Digest still sends to Telegram topic successfully, but run is marked error whenever note-write step executes via file tools.
+
+### ✅ Apply reliable fix for eth-rnd-daily-digest notes-write failures (Lodestar WG topic #1)
+- **Source:** Nico, Telegram Lodestar WG topic #1, 2026-03-03 09:43 UTC
+- **Status:** Done
+- **Task:** Implement easiest robust fix so cron no longer errors on notes logging
+- **Changes applied:**
+  - Updated cron job `0e3e3b9d` prompt (step 8) to log only under workspace path: `/home/openclaw/.openclaw/workspace/memory/eth-rnd-archive-notes/YYYY-MM-DD.md`
+  - Added explicit guardrail in cron prompt: do not use `~/eth-rnd-archive-notes/...`
+  - Set cron delivery mode to `none` (keeps message-tool direct send pattern, avoids announce-path quirks)
+  - Updated skill config `skills/eth-rnd-archive/config.json` `notesPath` to workspace location
+  - Updated `skills/eth-rnd-archive/check-updates.sh` to read `notesPath` from config
+  - Updated `skills/eth-rnd-archive/SKILL.md` path references to workspace notes path
+- **Validation:**
+  - `bash skills/eth-rnd-archive/check-updates.sh` runs successfully
+  - `openclaw cron run ... --due --expect-final` confirms scheduler path works (`not-due`)
+  - `write` tool to new notes path succeeds
+
+### ✅ Dotfiles sync (heartbeat periodic, 2026-03-03 09:21 UTC)
+- **Source:** HEARTBEAT.md periodic task (~6h)
+- **Status:** Done — ran `~/dotfiles/scripts/sync-dotfiles.sh`; synced and pushed `main` (`dfcabbf` -> `541a4f1`)
+
+### ✅ Eth R&D archive hourly check (cron a81458a8, 2026-03-03 09:15 UTC)
+- **Source:** cron `a81458a8-24ea-4d1d-9847-378168f0711d` (eth-rnd-archive-hourly), 2026-03-03 09:15 UTC
+- **Status:** Done
+- **Task:** Read skill, run `skills/eth-rnd-archive/check-updates.sh`, summarize tracked-channel updates into notes, alert only if critical
+- **Outcome:** No tracked-channel updates this cycle (`changed_files: []`); no notes update needed and no critical Lodestar alert
+
+### ✅ CI auto-fix unstable sweep (cron 573d18ec, 2026-03-03 09:02 UTC)
+- **Source:** cron `573d18ec-602c-40ba-a01a-004841c0da1a` (ci-autofix-unstable)
+- **Status:** Done — detector returned clean (`No new failures on unstable`), no follow-up action required
+- **Task:** Read `scripts/ci/CRON_PROMPT.md`, run detector, act on actionable findings, report results
+
+### ✅ Eth R&D archive hourly check (cron a81458a8, 2026-03-03 08:15 UTC)
+- **Source:** cron `a81458a8-24ea-4d1d-9847-378168f0711d` (eth-rnd-archive-hourly), 2026-03-03 08:15 UTC
+- **Status:** Done
+- **Task:** Read skill, run `skills/eth-rnd-archive/check-updates.sh`, summarize tracked-channel updates into notes, alert only if critical
+- **Outcome:** No tracked-channel updates this cycle (`changed_files: []`); no notes update needed and no critical Lodestar alert
+
+### ✅ CI auto-fix unstable sweep (cron 573d18ec, 2026-03-03 08:02 UTC)
+- **Source:** cron `573d18ec-602c-40ba-a01a-004841c0da1a` (ci-autofix-unstable)
+- **Status:** Done — detector returned clean (`No new failures on unstable`), no follow-up action required
+- **Task:** Read `scripts/ci/CRON_PROMPT.md`, run detector, act on actionable findings, report results
+
+### ✅ CI auto-fix unstable sweep (cron 573d18ec, 2026-03-03 06:59 UTC)
+- **Source:** cron `573d18ec-602c-40ba-a01a-004841c0da1a` (ci-autofix-unstable)
+- **Status:** Done — detector returned clean (`No new failures on unstable`), no follow-up action required
+- **Task:** Read `scripts/ci/CRON_PROMPT.md`, run detector, act on actionable findings, report results
+
+### ✅ Eth R&D archive hourly check (cron a81458a8, 2026-03-03 06:15 UTC)
+- **Source:** cron `a81458a8-24ea-4d1d-9847-378168f0711d` (eth-rnd-archive-hourly), 2026-03-03 06:15 UTC
+- **Status:** Done
+- **Task:** Read skill, run `skills/eth-rnd-archive/check-updates.sh`, summarize tracked-channel updates into notes, alert only if critical
+- **Outcome:** No tracked-channel updates this cycle (`changed_files: []`); no notes update needed and no critical Lodestar alert
+
+### ✅ CI auto-fix unstable sweep (cron 573d18ec, 2026-03-03 05:59 UTC)
+- **Source:** cron `573d18ec-602c-40ba-a01a-004841c0da1a` (ci-autofix-unstable)
+- **Status:** Done — detector returned clean (`No new failures on unstable`), no follow-up action required
+- **Task:** Read `scripts/ci/CRON_PROMPT.md`, run detector, act on actionable findings, report results
+
+### ✅ Eth R&D archive hourly check (cron a81458a8, 2026-03-03 05:15 UTC)
+- **Source:** cron `a81458a8-24ea-4d1d-9847-378168f0711d` (eth-rnd-archive-hourly), 2026-03-03 05:15 UTC
+- **Status:** Done
+- **Task:** Read skill, run `skills/eth-rnd-archive/check-updates.sh`, summarize tracked-channel updates into notes, alert only if critical
+- **Outcome:** No tracked-channel updates this cycle (`changed_files: []`); no notes update needed and no critical Lodestar alert
+
+### ✅ CI auto-fix unstable sweep (cron 573d18ec, 2026-03-03 04:59 UTC)
+- **Source:** cron `573d18ec-602c-40ba-a01a-004841c0da1a` (ci-autofix-unstable)
+- **Status:** Done — detector returned clean (`No new failures on unstable`), no follow-up action required
+- **Task:** Read `scripts/ci/CRON_PROMPT.md`, run detector, act on actionable findings, report results
+
+### ✅ CI auto-fix unstable sweep (cron 573d18ec, 2026-03-03 03:58 UTC)
+- **Source:** cron `573d18ec-602c-40ba-a01a-004841c0da1a` (ci-autofix-unstable)
+- **Status:** Done — detector returned clean (`No new failures on unstable`), no follow-up action required
+- **Task:** Run `scripts/ci/auto_fix_flaky.py --apply`, handle actionable findings, and report result
+
+### ✅ Report current model config to Nico (Nico DM, 2026-03-03 03:40 UTC)
+- **Source:** Nico, Telegram DM
+- **Status:** Done — verified from `~/.openclaw/openclaw.json` and reported effective main/fallback values
+
+### ✅ Switch model to GPT primary, Opus fallback after 429 report (Nico DM, 2026-03-03 03:35 UTC)
+- **Source:** Nico, Telegram DM
+- **Status:** Done — updated `~/.openclaw/openclaw.json` (`primary=openai-codex/gpt-5.3-codex`, `fallback=anthropic/claude-opus-4-6`) and confirmed gateway running with new PID (`2396858`)
+
+### ✅ Nightly memory consolidation run + report (cron 4aaaf7f7)
+- **Source:** cron `4aaaf7f7-fa4c-45ba-9aea-8676b4a46bd1` (nightly-memory-consolidation), 2026-03-03 03:31 UTC
+- **Status:** Done — cycle completed at `03:33:19Z` (`memory/memory-cycle-2026-03-03.log`); consolidation/index/QMD refresh finished, with expected QMD CUDA fallback warnings (CPU mode)
+
+### ✅ PR #8938 new review feedback triage (ChainSafe/lodestar)
+- **Source:** github-notifications cron, 2026-03-03 03:29 UTC
+- **Status:** Done — no new human review feedback after last-read timestamp; notification was stale/no-op and marked done (`thread 23041787803`)
+
+### ✅ Switch main model back to Opus, GPT as fallback (Nico DM, 2026-03-03 03:28 UTC)
+- **Source:** Nico, Telegram DM
+- **Status:** Done then superseded — applied as requested, then reversed at 03:35 UTC after 429 report to `GPT primary / Opus fallback`
+
+### ✅ Diagnose failed edit path for eth-rnd notes (`~` vs absolute path) (Nico DM, 2026-03-03 03:26 UTC)
+- **Source:** Nico, Telegram DM
+- **Status:** Done — file exists and both `~/eth-rnd-archive-notes/2026-03-03.md` and absolute path resolve; failure is from `edit` exact-match miss (old text not found), not path expansion
+
+### ✅ Sync dotfiles repo on request (Nico DM, 2026-03-03 03:24 UTC)
+- **Source:** Nico, Telegram DM
+- **Status:** Done — ran `~/dotfiles/scripts/sync-dotfiles.sh`, pushed `main` -> `dfcabbf`
+
+### ✅ Eth R&D archive hourly check (cron a81458a8, 2026-03-03 04:15 UTC)
+- **Source:** cron `a81458a8-24ea-4d1d-9847-378168f0711d` (eth-rnd-archive-hourly), 2026-03-03 04:15 UTC
+- **Status:** Done
+- **Task:** Read skill, ran `skills/eth-rnd-archive/check-updates.sh`, summarized tracked-channel updates into notes, alert only if critical
+- **Outcome:** 1 new message (`epbs`) logged to `~/eth-rnd-archive-notes/2026-03-03.md`; no critical Lodestar alert criteria met
+
+### ✅ Eth R&D archive hourly check (cron a81458a8, 2026-03-03 03:15 UTC)
+- **Source:** cron `a81458a8-24ea-4d1d-9847-378168f0711d` (eth-rnd-archive-hourly), 2026-03-03 03:15 UTC
+- **Status:** Done
+- **Task:** Ran `skills/eth-rnd-archive/check-updates.sh`, summarized new tracked-channel messages into notes
+- **Outcome:** 3 new messages (`consensus-dev`, `epbs`) logged to `~/eth-rnd-archive-notes/2026-03-03.md`; no critical Lodestar alert criteria met
+
+### ✅ Run full lodestar-review multi-persona pass on PR #8962 (Nico DM, 2026-03-03 03:11 UTC)
+- **Source:** Nico, Telegram DM
+- **Status:** Done — completed bugs/security/wisdom/architect passes and posted 3 additional inline findings:
+  - security CPU-DoS / repeated regen-verify risk: https://github.com/ChainSafe/lodestar/pull/8962#discussion_r2875851796
+  - self-build builder-index pubkey validation edge case: https://github.com/ChainSafe/lodestar/pull/8962#discussion_r2875852193
+  - payload-input completion drift across gossip/API column path: https://github.com/ChainSafe/lodestar/pull/8962#discussion_r2875852467
+
+### 🟢 PR #8924 (ChainSafe/lodestar): Awaiting maintainer review (non-blocking)
+
+### ✅ Backlog cleanup (2026-03-03)
+- Reduced noisy done-task clutter in General; kept only active/pending items + key recent outcomes.
+- Key recent outcomes preserved:
+  - PR #8973 opened/updated and merged
+  - PR #8971 / #8972 closed after follow-up handling
+  - Dotfiles sync completed (`c6ff62e`)
+  - `github-notifications` cron model-limit issue resolved
+
+---
+
+## Completed (2026-03-01)
+
+- ✅ Lodeloop v2.0 built, reviewed, shipped
+- ✅ Telegram forum group (Lodestar WG) set up + cron delivery fixed
+- ✅ Worktree cleanup (20+ → 8)
+- ✅ Aztec sequencer health cron set up
+- ✅ Memory system Phases 1-2.5
+- ✅ CI auto-fix pipeline: cron `573d18ec` (hourly, Codex GPT-5.3)
+- ✅ PR #8968 merged — clock gossip disparity off-by-one fix
+
+## Completed (2026-02-28)
+
+- ✅ PR #5 review comments, Dora fixes, slot 32 fix, PR #8967 merged
+- ✅ Secrets migration, cron fixes, config backup
+
+## Completed (Earlier)
+
+- ✅ EIP-7782 E2E tests, Kurtosis devnets (2026-02-27)
+- ✅ V8 pointer compression research (2026-02-26, on hold)
+- ✅ PR #8739 ePBS review, PR #8961 merged (2026-02-26)
+- ✅ EPBS devnet-0 fix stack (2026-02-24)
+- ✅ Dashboard redesign (2026-02-22)
+- ✅ Code review skill (2026-02-21)
+- ✅ Dotfiles repo + PR #8929 merged (2026-02-20)
+
+
+### ✅ Eth R&D archive daily digest (cron 0e3e3b9d, 2026-03-03 08:00 UTC)
+- **Source:** cron `0e3e3b9d-1922-49b4-a000-6823f174232d` (eth-rnd-daily-digest)
+- **Status:** Done
+- **Task:** Read skill + run `skills/eth-rnd-archive/check-updates.sh`, review last 2 days of tracked channel + thread JSON, send concise digest to Telegram topic
+- **Outcome:** Digest sent to `-1003764039429` thread `59` (message id `307`); summary logged to `~/eth-rnd-archive-notes/2026-03-03.md`

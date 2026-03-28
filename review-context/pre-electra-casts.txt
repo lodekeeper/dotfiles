@@ -1,0 +1,17 @@
+packages/beacon-node/src/api/impl/beacon/state/index.ts:251:      const stateCached = state as CachedBeaconStateAltair;
+packages/beacon-node/src/api/impl/beacon/state/index.ts:318:      const stateCached = state as CachedBeaconStateAltair;
+packages/beacon-node/src/chain/opPools/aggregatedAttestationPool.ts:756:  const altairState = state as CachedBeaconStateAltair;
+packages/beacon-node/src/chain/blocks/importBlock.ts:378:            postState as CachedBeaconStateAltair,
+packages/beacon-node/src/chain/prepareNextSlot.ts:126:        let updatedPrepareState = prepareState as CachedBeaconStateExecutions | CachedBeaconStateGloas;
+packages/beacon-node/src/chain/prepareNextSlot.ts:149:            )) as CachedBeaconStateExecutions | CachedBeaconStateGloas;
+packages/beacon-node/src/chain/validation/syncCommitteeContributionAndProof.ts:56:  const syncCommitteeParticipantIndices = getContributionIndices(headState as CachedBeaconStateAltair, contribution);
+packages/beacon-node/src/chain/validation/syncCommitteeContributionAndProof.ts:88:      headState as CachedBeaconStateAltair,
+packages/beacon-node/src/chain/produceBlock/produceBlockBody.ts:339:            currentState as CachedBeaconStateBellatrix,
+packages/beacon-node/src/chain/produceBlock/produceBlockBody.ts:354:          currentState as CachedBeaconStateBellatrix,
+packages/beacon-node/src/chain/produceBlock/produceBlockBody.ts:391:        const parentGasLimit = (currentState as CachedBeaconStateBellatrix).latestExecutionPayloadHeader.gasLimit;
+packages/beacon-node/src/chain/produceBlock/produceBlockBody.ts:452:          currentState as CachedBeaconStateExecutions,
+packages/beacon-node/src/chain/produceBlock/produceBlockBody.ts:622:    : (state as CachedBeaconStateExecutions).latestExecutionPayloadHeader.blockHash;
+packages/beacon-node/src/chain/produceBlock/produceBlockBody.ts:723:    : (prepareState as CachedBeaconStateExecutions).latestExecutionPayloadHeader.blockHash;
+packages/beacon-node/src/chain/produceBlock/produceBlockBody.ts:739:    parentBlockNumber = (prepareState as CachedBeaconStateExecutions).latestExecutionPayloadHeader.blockNumber;
+packages/beacon-node/src/chain/produceBlock/produceBlockBody.ts:782:      prepareState as CachedBeaconStateCapella
+packages/beacon-node/src/chain/validatorMonitor.ts:742:        const {previousEpochParticipation} = headState as CachedBeaconStateAltair;
