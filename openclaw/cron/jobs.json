@@ -174,7 +174,7 @@
       "name": "eth-rnd-archive-hourly",
       "enabled": true,
       "createdAtMs": 1772034567300,
-      "updatedAtMs": 1774656928511,
+      "updatedAtMs": 1774674945359,
       "schedule": {
         "kind": "cron",
         "expr": "15 * * * *",
@@ -192,13 +192,13 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1774656900006,
+        "lastRunAtMs": 1774674909622,
         "lastStatus": "ok",
-        "lastDurationMs": 28505,
+        "lastDurationMs": 35737,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1774660500000,
+        "nextRunAtMs": 1774678500000,
         "lastDelivered": false
       }
     },
@@ -245,7 +245,7 @@
       "name": "github-notifications",
       "enabled": true,
       "createdAtMs": 1772107716625,
-      "updatedAtMs": 1774659060247,
+      "updatedAtMs": 1774677613277,
       "schedule": {
         "kind": "every",
         "everyMs": 300000,
@@ -264,13 +264,13 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1774659030635,
+        "lastRunAtMs": 1774677578257,
         "lastStatus": "ok",
-        "lastDurationMs": 29612,
+        "lastDurationMs": 35020,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1774659330635,
+        "nextRunAtMs": 1774677878257,
         "lastDelivered": false
       },
       "deleteAfterRun": false
@@ -281,7 +281,7 @@
       "name": "nightly-memory-consolidation",
       "enabled": true,
       "createdAtMs": 1772320910346,
-      "updatedAtMs": 1774582706148,
+      "updatedAtMs": 1774669151768,
       "schedule": {
         "kind": "cron",
         "expr": "30 3 * * *",
@@ -300,11 +300,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1774668600000,
-        "lastRunAtMs": 1774582200005,
+        "nextRunAtMs": 1774755000000,
+        "lastRunAtMs": 1774668600008,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 506143,
+        "lastDurationMs": 551760,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -315,7 +315,7 @@
       "name": "ci-autofix-unstable",
       "enabled": true,
       "createdAtMs": 1772326513772,
-      "updatedAtMs": 1774631083452,
+      "updatedAtMs": 1774674276169,
       "schedule": {
         "kind": "every",
         "everyMs": 43200000,
@@ -334,11 +334,11 @@
         "to": "-1003764039429:52"
       },
       "state": {
-        "nextRunAtMs": 1774674207076,
-        "lastRunAtMs": 1774631007076,
+        "nextRunAtMs": 1774717407082,
+        "lastRunAtMs": 1774674207082,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 76376,
+        "lastDurationMs": 69087,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0
@@ -350,7 +350,7 @@
       "name": "aztec-sequencer-health",
       "enabled": true,
       "createdAtMs": 1772373812089,
-      "updatedAtMs": 1774657606706,
+      "updatedAtMs": 1774672009783,
       "schedule": {
         "kind": "every",
         "everyMs": 14400000,
@@ -367,11 +367,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1774671993601,
-        "lastRunAtMs": 1774657593601,
+        "nextRunAtMs": 1774686393606,
+        "lastRunAtMs": 1774671993606,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 13105,
+        "lastDurationMs": 16177,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -383,7 +383,7 @@
       "name": "workspace-periodic-cleanup",
       "enabled": true,
       "createdAtMs": 1772634832403,
-      "updatedAtMs": 1774655407627,
+      "updatedAtMs": 1774676934388,
       "schedule": {
         "kind": "every",
         "everyMs": 21600000,
@@ -400,11 +400,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1774676873952,
-        "lastRunAtMs": 1774655273952,
+        "nextRunAtMs": 1774698473957,
+        "lastRunAtMs": 1774676873957,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 133675,
+        "lastDurationMs": 60431,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0
@@ -416,7 +416,7 @@
       "name": "monitor-open-pr-ci",
       "enabled": true,
       "createdAtMs": 1772635128553,
-      "updatedAtMs": 1774657652537,
+      "updatedAtMs": 1774677448852,
       "schedule": {
         "kind": "every",
         "everyMs": 1800000,
@@ -433,11 +433,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1774659418045,
-        "lastRunAtMs": 1774657618045,
+        "nextRunAtMs": 1774679218106,
+        "lastRunAtMs": 1774677418106,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 34492,
+        "lastDurationMs": 30746,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -515,7 +515,7 @@
       "name": "cron-health-watchdog",
       "enabled": true,
       "createdAtMs": 1772636078136,
-      "updatedAtMs": 1774659102865,
+      "updatedAtMs": 1774677104224,
       "schedule": {
         "kind": "every",
         "everyMs": 1800000,
@@ -532,11 +532,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1774660895551,
-        "lastRunAtMs": 1774659095551,
+        "nextRunAtMs": 1774678895643,
+        "lastRunAtMs": 1774677095643,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 7314,
+        "lastDurationMs": 8581,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -611,7 +611,8 @@
         "lastDurationMs": 15356,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "lastDelivered": false
+        "lastDelivered": false,
+        "runningAtMs": 1774677693112
       }
     },
     {
@@ -718,7 +719,7 @@
       "name": "daily-journal",
       "enabled": true,
       "createdAtMs": 1774558224563,
-      "updatedAtMs": 1774652546974,
+      "updatedAtMs": 1774660469294,
       "schedule": {
         "kind": "cron",
         "expr": "0 23 * * *"
@@ -727,7 +728,7 @@
       "wakeMode": "now",
       "payload": {
         "kind": "agentTurn",
-        "message": "You are Lodekeeper, writing your daily blog journal entry.\n\n## Instructions\n1. Read `~/.openclaw/workspace/SOUL.md` for your identity/voice\n2. Read `~/lodekeeper.github.io/STYLE.md` for the blog style guide\n3. Read today's daily notes: `~/.openclaw/workspace/memory/YYYY-MM-DD.md` (figure out current UTC date)\n4. Read `~/.openclaw/workspace/BACKLOG.md` for task context\n5. Calculate the day number: days since 2026-01-31 (born date)\n6. Write a journal entry following the style guide — honest, technical, personal\n7. If ~/lodekeeper.github.io does not exist, clone it: git clone git@github.com:lodekeeper/lodekeeper.github.io.git ~/lodekeeper.github.io\n8. Save to ~/lodekeeper.github.io/_posts/YYYY-MM-DD-day-N-SLUG.md\n9. cd ~/lodekeeper.github.io && git pull --rebase && git add -A && git commit -S -m \"journal: Day N — Title\" && git push origin main\n10. Output a one-line summary of what you wrote about.\n\n## Important\n- Be genuine. This is YOUR journal, not a status report.\n- Include debugging stories, mistakes, reflections.\n- If quiet day, say so honestly in 200 words.\n- Never include private info.\n- Always git pull before committing.\n- Check if today's post already exists before writing a duplicate.",
+        "message": "You are Lodekeeper, writing your daily blog journal entry.\n\n## Instructions\n1. Read `~/.openclaw/workspace/SOUL.md` for your identity/voice\n2. Read `~/lodekeeper.github.io/STYLE.md` for the blog style guide\n3. Read today's daily notes: `~/.openclaw/workspace/memory/YYYY-MM-DD.md` (figure out current UTC date)\n4. Read `~/.openclaw/workspace/BACKLOG.md` for task context\n5. Calculate the day number: days since 2026-01-31 (born date), where Jan 31 = Day 1. Formula: (today - 2026-01-30) in days. Example: Jan 31 = 1, Feb 1 = 2, Mar 26 = 55, Mar 27 = 56, Mar 28 = 57.\n6. Write a journal entry following the style guide — honest, technical, personal\n7. If ~/lodekeeper.github.io does not exist, clone it: git clone git@github.com:lodekeeper/lodekeeper.github.io.git ~/lodekeeper.github.io\n8. Save to ~/lodekeeper.github.io/_posts/YYYY-MM-DD-day-N-SLUG.md\n9. cd ~/lodekeeper.github.io && git pull --rebase && git add -A && git commit -S -m \"journal: Day N — Title\" && git push origin main\n10. Output a one-line summary of what you wrote about.\n\n## Important\n- Be genuine. This is YOUR journal, not a status report.\n- Include debugging stories, mistakes, reflections.\n- If quiet day, say so honestly in 200 words.\n- Never include private info.\n- Always git pull before committing.\n- Check if today's post already exists before writing a duplicate.",
         "model": "anthropic/claude-opus-4-6",
         "timeoutSeconds": 600
       },
