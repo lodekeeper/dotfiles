@@ -183,58 +183,95 @@ for line in sys.stdin:
 "
 P3
 
-  # Panel 4: Workspace file diffs (bottom-right)
+  # Panel 4: Workspace file diffs with git-style diffs (bottom-right)
   cat > /tmp/wl-workspace-diffs.sh << 'P4'
 #!/usr/bin/env bash
 WORKSPACE="$HOME/.openclaw/workspace"
+SHADOW_DIR="/tmp/wl-shadow"
 echo -e "\033[1;35m━━━ 📂 Workspace Changes ━━━\033[0m"
 echo ""
 
-# Check if inotifywait is available
+# Files to watch
+WATCH_FILES=(MEMORY.md BACKLOG.md STATE.md HEARTBEAT.md TOOLS.md)
+
+# Create shadow copies for diffing
+mkdir -p "$SHADOW_DIR"
+for f in "${WATCH_FILES[@]}"; do
+    [[ -f "$WORKSPACE/$f" ]] && cp "$WORKSPACE/$f" "$SHADOW_DIR/$f" 2>/dev/null
+done
+# Also shadow today's daily notes
+today=$(date -u +%F)
+notes="$WORKSPACE/memory/${today}.md"
+[[ -f "$notes" ]] && cp "$notes" "$SHADOW_DIR/daily-notes.md" 2>/dev/null || touch "$SHADOW_DIR/daily-notes.md"
+
+show_diff() {
+    local label="$1"
+    local shadow="$2"
+    local current="$3"
+    local ts
+    ts=$(date -u +%H:%M:%S)
+
+    if [[ ! -f "$shadow" ]]; then
+        # New file — show last 5 lines
+        echo -e "\033[2m${ts}\033[0m \033[1;35m✏️  ${label}\033[0m \033[1;32m(new file)\033[0m"
+        tail -5 "$current" | sed 's/^/  \x1b[32m+ \x1b[0m/'
+    else
+        local diff_output
+        diff_output=$(diff -u "$shadow" "$current" 2>/dev/null | tail -n +3)
+        if [[ -n "$diff_output" ]]; then
+            echo -e "\033[2m${ts}\033[0m \033[1;35m✏️  ${label}\033[0m"
+            echo "$diff_output" | while IFS= read -r line; do
+                if [[ "$line" == +* && "$line" != +++* ]]; then
+                    echo -e "  \033[32m${line}\033[0m"
+                elif [[ "$line" == -* && "$line" != ---* ]]; then
+                    echo -e "  \033[31m${line}\033[0m"
+                elif [[ "$line" == @@* ]]; then
+                    echo -e "  \033[36m${line}\033[0m"
+                fi
+            done
+            echo ""
+        fi
+    fi
+    # Update shadow
+    cp "$current" "$shadow" 2>/dev/null
+}
+
 if ! command -v inotifywait &>/dev/null; then
-    echo "inotify-tools not installed. Falling back to poll mode."
-    echo "Install with: sudo apt install inotify-tools"
+    echo -e "\033[2minotify-tools not installed, using poll mode (5s)\033[0m"
     echo ""
-    # Fallback: poll key files every 5s
-    declare -A checksums
-    for f in MEMORY.md BACKLOG.md STATE.md HEARTBEAT.md; do
-        fp="$WORKSPACE/$f"
-        [[ -f "$fp" ]] && checksums[$f]=$(md5sum "$fp" 2>/dev/null | cut -d' ' -f1)
-    done
     while true; do
-        for f in MEMORY.md BACKLOG.md STATE.md HEARTBEAT.md; do
-            fp="$WORKSPACE/$f"
-            [[ -f "$fp" ]] || continue
-            new=$(md5sum "$fp" 2>/dev/null | cut -d' ' -f1)
-            if [[ "${checksums[$f]:-}" != "$new" ]]; then
-                echo -e "\033[2m$(date -u +%H:%M:%S)\033[0m \033[1;35m✏️  $f changed\033[0m"
-                checksums[$f]="$new"
-            fi
+        for f in "${WATCH_FILES[@]}"; do
+            [[ -f "$WORKSPACE/$f" ]] && show_diff "$f" "$SHADOW_DIR/$f" "$WORKSPACE/$f"
         done
+        [[ -f "$notes" ]] && show_diff "daily-notes" "$SHADOW_DIR/daily-notes.md" "$notes"
         sleep 5
     done
 else
-    # Watch key workspace files for modifications
-    WATCH_FILES=(
-        "$WORKSPACE/MEMORY.md"
-        "$WORKSPACE/BACKLOG.md"
-        "$WORKSPACE/STATE.md"
-        "$WORKSPACE/HEARTBEAT.md"
-        "$WORKSPACE/TOOLS.md"
-    )
-    # Build inotifywait args
+    # Build watch list
     WATCH_ARGS=()
     for f in "${WATCH_FILES[@]}"; do
-        [[ -f "$f" ]] && WATCH_ARGS+=("$f")
+        [[ -f "$WORKSPACE/$f" ]] && WATCH_ARGS+=("$WORKSPACE/$f")
     done
-    # Also watch daily notes dir
     WATCH_ARGS+=("$WORKSPACE/memory/")
 
     while true; do
         changed=$(inotifywait -q -e modify,create "${WATCH_ARGS[@]}" 2>/dev/null)
-        if [[ -n "$changed" ]]; then
-            fname=$(basename "$(echo "$changed" | awk '{print $1}')")
-            echo -e "\033[2m$(date -u +%H:%M:%S)\033[0m \033[1;35m✏️  $fname modified\033[0m"
+        # Small delay to let writes finish
+        sleep 0.3
+
+        dir=$(echo "$changed" | awk '{print $1}')
+        if [[ "$dir" == *"/memory/"* ]]; then
+            # Daily notes change
+            [[ -f "$notes" ]] && show_diff "daily-notes (${today})" "$SHADOW_DIR/daily-notes.md" "$notes"
+        else
+            # Workspace root file
+            for f in "${WATCH_FILES[@]}"; do
+                if [[ -f "$WORKSPACE/$f" ]]; then
+                    csum_old=$(md5sum "$SHADOW_DIR/$f" 2>/dev/null | cut -d' ' -f1)
+                    csum_new=$(md5sum "$WORKSPACE/$f" 2>/dev/null | cut -d' ' -f1)
+                    [[ "$csum_old" != "$csum_new" ]] && show_diff "$f" "$SHADOW_DIR/$f" "$WORKSPACE/$f"
+                fi
+            done
         fi
     done
 fi
