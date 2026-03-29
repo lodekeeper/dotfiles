@@ -1,7 +1,27 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-03-27 (17th pass)
+> Updated: 2026-03-28 (18th pass)
+
+---
+
+## Daily Audit Snapshot — 2026-03-28 (self-improvement-audit-daily, 23:51 UTC)
+
+### PR review
+- **Status:** review-scope + follow-up guard workflow remains healthy; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** retry telemetry, rolling degradation checks, and log-fallback path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** extraction/compliance/vector-readiness gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident-bundle workflow remains healthy; no new blocker discovered this cycle.
+
+### Audit workflow (cross-cutting)
+- **Blocker:** the finalizer currently accepts multiple `- **Status:**` lines inside one required section and only validates the first match, which can hide conflicting status text after copy/paste edits.
+- **Fix applied this cycle:** hardened `scripts/notes/finalize-autonomy-audit.py` to require exactly one `- **Status:** ...` line per required section and fail with explicit section names when duplicates are present.
 
 ---
 
@@ -479,6 +499,14 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Daily autonomy-audit duplicate status-line guard added (2026-03-28)
+Updated `scripts/notes/finalize-autonomy-audit.py` to enforce one canonical status line per required section during close-out:
+- scans each required section body for `- **Status:** ...` occurrences,
+- fails finalization when a required section has zero or multiple status lines,
+- reports section-specific reasons (`missing status line`, `multiple status lines`, `empty/placeholder status value`).
+
+**Rationale:** prevents copy/paste drift where conflicting status lines could coexist in one section and still pass finalization by matching only the first line.
 
 ### ✅ Daily autonomy-audit non-empty status-line guard added (2026-03-27)
 Updated `scripts/notes/finalize-autonomy-audit.py` to enforce status quality for required sections during close-out:

@@ -114,15 +114,14 @@ Spawn all selected reviewers in parallel (no dependencies between them).
 > default model instead of the reviewer's configured model. This caused bugs+security reviewers to run on
 > Claude Opus instead of GPT-5.3-Codex, leading to timeouts on PR #8962 (105KB diff).
 
-> ⚠️ **Timeout scaling by diff size:**
-> | Diff size | `runTimeoutSeconds` |
-> |---|---|
-> | < 30KB (~800 lines) | 180 |
-> | 30–80KB (~800–2000 lines) | 300 |
-> | > 80KB (~2000+ lines) | 420 |
+> ⚠️ **Timeout: use `runTimeoutSeconds: 900` (15 min) for all reviewers.**
 >
-> The default 300s is too short for large diffs. PR #8962 (105KB) timed out 2 reviewers at 300s;
-> retries succeeded at 420s (bugs: 6m7s, security: 4m12s).
+> Reviewers should explore the full repo for context — not just read the diff. A good review
+> catches what's *missing*, not just what's wrong in the changed lines. Codebase exploration
+> (grepping for callers, checking existing patterns, verifying event wiring) takes time but
+> produces significantly better findings. 900s gives reviewers room to do this properly.
+>
+> Do NOT instruct reviewers to "only read the diff" or "don't grep" — let them explore.
 
 **Note:** For `reviewer-architect`, always pass `thinking: "xhigh"` in the spawn call for deep architectural reasoning.
 

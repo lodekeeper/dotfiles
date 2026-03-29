@@ -68,21 +68,26 @@ def section_blocks(block: str) -> dict[str, str]:
     return sections
 
 
-def find_sections_with_invalid_status(block: str) -> list[str]:
+def find_status_issues(block: str) -> dict[str, str]:
     sections = section_blocks(block)
-    invalid: list[str] = []
+    issues: dict[str, str] = {}
     for name in REQUIRED_SECTIONS:
         body = sections.get(name.lower(), "")
-        status_match = STATUS_LINE.search(body)
-        if status_match is None:
-            invalid.append(name)
+        status_matches = list(STATUS_LINE.finditer(body))
+
+        if not status_matches:
+            issues[name] = "missing status line"
             continue
 
-        status_value = status_match.group(1).strip().strip("`").lower()
-        if status_value in STATUS_PLACEHOLDERS:
-            invalid.append(name)
+        if len(status_matches) > 1:
+            issues[name] = f"multiple status lines ({len(status_matches)})"
+            continue
 
-    return invalid
+        status_value = status_matches[0].group(1).strip().strip("`").lower()
+        if status_value in STATUS_PLACEHOLDERS:
+            issues[name] = "empty/placeholder status value"
+
+    return issues
 
 
 def main() -> int:
@@ -123,12 +128,12 @@ def main() -> int:
         )
         return 2
 
-    invalid_status_sections = find_sections_with_invalid_status(block)
-    if invalid_status_sections:
-        joined = ", ".join(invalid_status_sections)
+    status_issues = find_status_issues(block)
+    if status_issues:
+        joined = ", ".join(f"{name} ({reason})" for name, reason in status_issues.items())
         print(
             "❌ Snapshot "
-            f"{date_str} must include a non-empty '- **Status:** ...' line in each required section. "
+            f"{date_str} must include exactly one non-empty '- **Status:** ...' line in each required section. "
             f"Fix section(s): {joined}",
             file=sys.stderr,
         )
