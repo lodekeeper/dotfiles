@@ -1,51 +1,74 @@
-# Coding Context — Fix Benchmark Failures
+# Coding Context — Enable QUIC by Default
 
-## Problem
-After bumping `@chainsafe/benchmark` from 1.2.3 to 2.0.2, benchmark CI now properly reports errors that were previously silently swallowed. 5 benchmark test files are failing:
+## Task
+Change Lodestar to enable QUIC transport by default (currently disabled). Update all defaults, documentation, CLI descriptions, and tests.
 
-### Failing files and errors:
+## Background
+QUIC is already fully implemented in Lodestar. The IPv6 crash fix (PR #9101) was merged to `unstable`, so QUIC is now safe to enable on IPv4-only hosts. The task is to flip the default from `false` to `true`.
 
-1. **`packages/beacon-node/test/perf/chain/opPools/aggregatedAttestationPool.test.ts`**
-   - Error: `Does not support producing blocks for pre-electra forks anymore`
-   - Cause: Uses `generatePerfTestCachedStateAltair` which creates an Altair-era state, but `getAttestationsForBlock()` at line 216 of `aggregatedAttestationPool.ts` now rejects forks before Electra
-   - Fix needed: Update to use Electra state (need `generatePerfTestCachedStateElectra` or equivalent)
+## Files to Change
 
-2. **`packages/beacon-node/test/perf/chain/produceBlock/produceBlockBody.test.ts`**
-   - Error: `REGEN_ERROR_NO_SEED_STATE`
-   - Cause: Uses `generatePerfTestCachedStateAltair` to create a BeaconChain — state is incompatible with current chain initialization
-   - Fix needed: Update to use Electra state
+### 1. Beacon node network options default
+**File:** `packages/beacon-node/src/network/options.ts`
+- Line 72: Change `quic: false` → `quic: true`
 
-3. **`packages/state-transition/test/perf/block/processAttestation.test.ts`**
-   - Error: `BitArray set bitIndex 31 beyond bitLen 31` (flaky, may pass locally but fails in CI)
-   - Cause: `getAggregationBits(len, participants)` in `util.ts` uses 0-based indexing — `bits.set(participants-1)` is fine but `bits.set(participants)` when participants==len is out of bounds
-   - Fix: Check `util.ts` line ~258-264 for off-by-one in BitArray creation
+### 2. CLI option default  
+**File:** `packages/cli/src/options/beaconNodeOptions/network.ts`
+- Line ~314-319: The `quic` option has `default: false` — change to `default: true`
+- Line ~90: `const quic = args.quic ?? false;` — change fallback to `true`
+- Update the description from "Enable QUIC transport" to something like "Enable QUIC transport (enabled by default)"
 
-4. **`packages/state-transition/test/perf/block/processBlockAltair.test.ts`**
-   - Same BitArray error as #3
+### 3. Documentation — Networking guide
+**File:** `docs/pages/run/beacon-management/networking.md`
+- Line ~89: Update "QUIC is disabled by default and can be enabled with the `--quic` flag" → "QUIC is enabled by default"
+- Line ~91-97: Update the "Enabling QUIC" section — it's now enabled by default, show how to disable instead (`--quic=false` or `--no-quic`)
+- Line ~99: Update "When QUIC is enabled" text
+- Line ~103: Update "With QUIC enabled" text  
+- Line ~127: Update "only if `--quic` is enabled" → QUIC port is now open by default
+- Update the port table and firewall section to reflect QUIC is default
 
-5. **`packages/state-transition/test/perf/block/processEth1Data.test.ts`**
-   - Same BitArray error as #3
+### 4. Documentation — CLI reference (beacon)
+**File:** `docs/pages/run/beacon-management/beacon-cli.md`
+- Line ~599-609: Update `--quic` description and default value from `false` to `true`
 
-## Key Files
-- `packages/state-transition/src/testUtils/util.ts` — contains `generatePerfTestCachedStateAltair`, `generatePerfTestCachedStatePhase0`
-- `packages/state-transition/test/perf/block/util.ts` — contains `getBlockAltair`, `getAggregationBits`
-- `packages/beacon-node/src/chain/opPools/aggregatedAttestationPool.ts` — line 216: pre-electra rejection
+### 5. Documentation — Dev CLI reference
+**File:** `docs/pages/contribution/dev-cli.md`  
+- Line ~605: Update `--quic` description and default value from `false` to `true`
+
+### 6. Tests — ENR initialization
+**File:** `packages/cli/test/unit/cmds/initPeerIdAndEnr.test.ts`
+- Line 12: Test "should set tcp but not quic fields by default" — now QUIC IS set by default, update expectations
+- Line 20: `expect(enr.quic).toBeUndefined()` → should now expect QUIC to be set
+- Line 54: Test "should not set quic fields when quic is false" — keep this test (explicit opt-out)
+
+### 7. Tests — Network option parsing
+**File:** `packages/cli/test/unit/options/beaconNodeOptions.test.ts`
+- Line 197: `quic: false` in expected output — change to `quic: true`
+- Line 220+: Tests for tcp/quic flags — update default behavior tests
+- The test "should not include quic multiaddrs by default" should now expect QUIC multiaddrs present
 
 ## Constraints
-- Branch: `fix/benchmark-failures` on `~/lodestar`
-- Run `pnpm lint` before committing
-- Run `pnpm benchmark:files <file>` to verify each fix
-- Keep changes minimal — fix the test setup, don't change production code
+- Branch: `feat/quic-by-default` on `~/lodestar-quic-default`
+- Run `pnpm lint` before committing — mandatory, no exceptions
+- Run `pnpm check-types` to verify TypeScript compiles
+- Run `pnpm test:unit` in relevant packages to verify tests pass
 - Node 24: `source ~/.nvm/nvm.sh && nvm use 24`
-- Project convention: no scopes in commit messages (e.g. `test: fix benchmark failures` not `test(perf): ...`)
-- If creating `generatePerfTestCachedStateElectra`, export it from `test-utils` like the existing ones
+- Project convention: no scopes in commit messages (e.g. `feat: enable quic by default` not `feat(network): ...`)
+- Keep changes minimal and focused — only what's needed to flip the default
 
 ## Verification
-Run each failing benchmark file individually:
-```
-pnpm benchmark:files packages/beacon-node/test/perf/chain/opPools/aggregatedAttestationPool.test.ts
-pnpm benchmark:files packages/beacon-node/test/perf/chain/produceBlock/produceBlockBody.test.ts
-pnpm benchmark:files packages/state-transition/test/perf/block/processAttestation.test.ts
-pnpm benchmark:files packages/state-transition/test/perf/block/processBlockAltair.test.ts
-pnpm benchmark:files packages/state-transition/test/perf/block/processEth1Data.test.ts
+```bash
+# Type check
+pnpm check-types
+
+# Lint
+pnpm lint
+
+# Run affected unit tests
+pnpm vitest run packages/cli/test/unit/cmds/initPeerIdAndEnr.test.ts
+pnpm vitest run packages/cli/test/unit/options/beaconNodeOptions.test.ts
+
+# Verify the default is correct
+grep -n "quic" packages/beacon-node/src/network/options.ts
+grep -n "quic" packages/cli/src/options/beaconNodeOptions/network.ts
 ```
