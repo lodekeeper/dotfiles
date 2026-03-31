@@ -94,6 +94,11 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Finalize autonomy-audit markdown for a given date")
     parser.add_argument("--file", default="notes/autonomy-gaps.md", help="Target markdown file")
     parser.add_argument("--date", help="Audit date YYYY-MM-DD (default: current UTC date)")
+    parser.add_argument(
+        "--fail-on-no-change",
+        action="store_true",
+        help="Exit 3 when no meaningful snapshot delta is detected vs previous snapshot",
+    )
     args = parser.parse_args()
 
     now = datetime.now(timezone.utc)
@@ -157,6 +162,26 @@ def main() -> int:
     cmd = [sys.executable, str(check_script), "--file", str(path)]
     print("[final check] running consistency guard")
     subprocess.run(cmd, check=True)
+
+    delta_script = script_dir / "check-autonomy-audit-delta.py"
+    delta_cmd = [
+        sys.executable,
+        str(delta_script),
+        "--file",
+        str(path),
+        "--date",
+        date_str,
+    ]
+    if args.fail_on_no_change:
+        delta_cmd.append("--fail-on-no-change")
+
+    print("[final check] running snapshot delta detector")
+    delta_result = subprocess.run(delta_cmd, check=False)
+    if delta_result.returncode != 0:
+        if args.fail_on_no_change and delta_result.returncode == 3:
+            print("⚠️ Finalization complete but no meaningful delta detected; recommend NO_REPLY")
+            return 3
+        return delta_result.returncode
 
     print(f"✅ Finalized autonomy audit for {date_str}")
     return 0

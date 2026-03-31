@@ -1,7 +1,27 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-03-29 (19th pass)
+> Updated: 2026-03-31 (20th pass)
+
+---
+
+## Daily Audit Snapshot — 2026-03-31 (self-improvement-audit-daily, 00:14 UTC)
+
+### PR review
+- **Status:** review-scope + follow-up guard workflow remains healthy; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** retry telemetry, rolling degradation checks, and log-fallback path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** extraction/compliance/vector-readiness gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident-bundle workflow remains healthy; no new blocker discovered this cycle.
+
+### Audit workflow (cross-cutting)
+- **Blocker:** deciding whether to send a summary vs `NO_REPLY` is still a manual judgment call, so unchanged snapshots can accidentally emit noisy updates.
+- **Fix applied this cycle:** added `scripts/notes/check-autonomy-audit-delta.py` and wired it into `scripts/notes/finalize-autonomy-audit.py` (`--fail-on-no-change`) so close-out now computes snapshot deltas against the previous audit and can hard-stop with exit code 3 when no meaningful change exists.
 
 ---
 
@@ -515,6 +535,15 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Daily autonomy-audit delta detector + no-change suppression gate added (2026-03-31)
+Added `scripts/notes/check-autonomy-audit-delta.py` and wired it into `scripts/notes/finalize-autonomy-audit.py`:
+- compares the target-day snapshot body to the previous snapshot body (normalized),
+- reports whether a meaningful delta exists and which required-section status lines changed,
+- supports `--fail-on-no-change` (exit code `3`) for cron-safe NO_REPLY suppression,
+- updated `scripts/notes/run-autonomy-audit-preflight.sh` guidance to use `finalize-autonomy-audit.py --fail-on-no-change`.
+
+**Rationale:** removes a fragile manual judgment step at audit close-out and enforces "no meaningful change => NO_REPLY" deterministically.
 
 ### ✅ Daily autonomy-audit duplicate status-line guard added (2026-03-28)
 Updated `scripts/notes/finalize-autonomy-audit.py` to enforce one canonical status line per required section during close-out:

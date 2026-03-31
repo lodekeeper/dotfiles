@@ -1,0 +1,185 @@
+#!/usr/bin/env python3
+"""Detect meaningful deltas between daily autonomy-audit snapshots.
+
+This helps decide whether the daily audit should emit a summary or `NO_REPLY`.
+
+Meaningful delta heuristic:
+- Compare the target snapshot body to the previous snapshot body (excluding heading line)
+- If body text differs after light normalization, it's a meaningful change
+- Also reports which required section status lines changed for quick triage
+
+Exit codes:
+- 0: delta detected (or no delta and --fail-on-no-change not set)
+- 3: no delta and --fail-on-no-change set
+- 2: target/previous snapshot missing or malformed
+- 1: runtime/usage error
+"""
+
+from __future__ import annotations
+
+import argparse
+from dataclasses import dataclass
+from pathlib import Path
+import re
+import sys
+
+SNAPSHOT_HEADING = re.compile(r"^## Daily Audit Snapshot — (\d{4}-\d{2}-\d{2})\b.*$", re.MULTILINE)
+SECTION_HEADING = re.compile(r"^###\s+(.+?)\s*$", re.MULTILINE)
+STATUS_LINE = re.compile(r"^\s*-\s+\*\*Status:\*\*\s*(.+?)\s*$", re.MULTILINE)
+REQUIRED_SECTIONS = [
+    "PR review",
+    "CI fix",
+    "Spec implementation",
+    "Devnet debugging",
+]
+
+
+@dataclass
+class Snapshot:
+    date: str
+    start: int
+    end: int
+    heading_line: str
+    body: str
+
+
+def normalize_text(text: str) -> str:
+    lines = [line.rstrip() for line in text.splitlines()]
+
+    # Collapse repeated blank lines to reduce noise from formatting-only edits.
+    normalized: list[str] = []
+    last_blank = False
+    for line in lines:
+        blank = line.strip() == ""
+        if blank and last_blank:
+            continue
+        normalized.append(line)
+        last_blank = blank
+
+    return "\n".join(normalized).strip()
+
+
+def parse_snapshots(text: str) -> list[Snapshot]:
+    matches = list(SNAPSHOT_HEADING.finditer(text))
+    snapshots: list[Snapshot] = []
+
+    for i, match in enumerate(matches):
+        start = match.start()
+        end = matches[i + 1].start() if i + 1 < len(matches) else len(text)
+        block = text[start:end]
+        first_newline = block.find("\n")
+        if first_newline == -1:
+            heading_line = block.strip()
+            body = ""
+        else:
+            heading_line = block[:first_newline].strip()
+            body = block[first_newline + 1 :]
+
+        snapshots.append(
+            Snapshot(
+                date=match.group(1),
+                start=start,
+                end=end,
+                heading_line=heading_line,
+                body=body,
+            )
+        )
+
+    return snapshots
+
+
+def get_required_statuses(body: str) -> dict[str, str]:
+    section_matches = list(SECTION_HEADING.finditer(body))
+    sections: dict[str, str] = {}
+
+    for i, match in enumerate(section_matches):
+        section_name = match.group(1).strip().lower()
+        start = match.end()
+        end = section_matches[i + 1].start() if i + 1 < len(section_matches) else len(body)
+        sections[section_name] = body[start:end]
+
+    statuses: dict[str, str] = {}
+    for section_name in REQUIRED_SECTIONS:
+        section_body = sections.get(section_name.lower(), "")
+        status_match = STATUS_LINE.search(section_body)
+        if status_match:
+            statuses[section_name] = normalize_text(status_match.group(1))
+
+    return statuses
+
+
+def find_snapshot_with_previous(snapshots: list[Snapshot], date_str: str | None) -> tuple[Snapshot, Snapshot]:
+    if not snapshots:
+        raise ValueError("No snapshots found")
+
+    if date_str is None:
+        if len(snapshots) < 2:
+            raise ValueError("Need at least two snapshots to compare")
+        return snapshots[0], snapshots[1]
+
+    for i, snap in enumerate(snapshots):
+        if snap.date != date_str:
+            continue
+        if i + 1 >= len(snapshots):
+            raise ValueError(f"No previous snapshot found for date {date_str}")
+        return snap, snapshots[i + 1]
+
+    raise ValueError(f"Snapshot not found for date {date_str}")
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description="Check whether autonomy-audit snapshot changed meaningfully")
+    parser.add_argument("--file", default="notes/autonomy-gaps.md", help="Path to autonomy-gaps markdown")
+    parser.add_argument("--date", help="Target snapshot date YYYY-MM-DD (default: latest snapshot)")
+    parser.add_argument(
+        "--fail-on-no-change",
+        action="store_true",
+        help="Return exit code 3 when no meaningful change is detected",
+    )
+    args = parser.parse_args()
+
+    path = Path(args.file)
+    if not path.exists():
+        print(f"❌ File not found: {path}", file=sys.stderr)
+        return 1
+
+    text = path.read_text(encoding="utf-8")
+    snapshots = parse_snapshots(text)
+
+    try:
+        current, previous = find_snapshot_with_previous(snapshots, args.date)
+    except ValueError as exc:
+        print(f"❌ {exc}", file=sys.stderr)
+        return 2
+
+    current_norm = normalize_text(current.body)
+    previous_norm = normalize_text(previous.body)
+    has_delta = current_norm != previous_norm
+
+    current_statuses = get_required_statuses(current.body)
+    previous_statuses = get_required_statuses(previous.body)
+    changed_sections = [
+        section
+        for section in REQUIRED_SECTIONS
+        if current_statuses.get(section) != previous_statuses.get(section)
+    ]
+
+    print(f"Compared snapshots: {current.date} vs {previous.date}")
+    print(f"Meaningful delta: {'yes' if has_delta else 'no'}")
+
+    if changed_sections:
+        print("Changed required-section status lines:")
+        for section in changed_sections:
+            print(f"- {section}")
+    else:
+        print("Changed required-section status lines: none")
+
+    if not has_delta and args.fail_on_no_change:
+        print("⚠️ No meaningful change detected; recommend NO_REPLY")
+        return 3
+
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

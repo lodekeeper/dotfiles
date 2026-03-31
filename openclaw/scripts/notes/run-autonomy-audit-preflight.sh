@@ -81,4 +81,4 @@ echo "[1/2] Running consistency guard on $TARGET_FILE"
 echo "[2/2] Inserting daily snapshot scaffold"
 "${PREPEND_CMD[@]}"
 
-echo "✅ Preflight complete. Fill the new snapshot status blocks, then run scripts/notes/finalize-autonomy-audit.py --date ${DATE:-$(date -u +%F)}"
+echo "✅ Preflight complete. Fill the new snapshot status blocks, then run scripts/notes/finalize-autonomy-audit.py --date ${DATE:-$(date -u +%F)} --fail-on-no-change"
