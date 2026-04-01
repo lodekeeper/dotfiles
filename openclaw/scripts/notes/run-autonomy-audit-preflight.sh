@@ -6,6 +6,7 @@ FILE="notes/autonomy-gaps.md"
 DATE=""
 TIME_LABEL=""
 FORCE=0
+CARRY_FORWARD_STATUS=0
 
 usage() {
   cat <<'EOF'
@@ -20,6 +21,8 @@ Options:
   --date <YYYY-MM-DD>   Snapshot date (default: current UTC date)
   --time-label <label>  Snapshot time label (default: current UTC HH:MM UTC)
   --force               Allow duplicate date scaffold insertion
+  --carry-forward-status
+                        Prefill required status lines from latest snapshot
   -h, --help            Show this help
 EOF
 }
@@ -40,6 +43,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --force)
       FORCE=1
+      shift
+      ;;
+    --carry-forward-status)
+      CARRY_FORWARD_STATUS=1
       shift
       ;;
     -h|--help)
@@ -73,6 +80,10 @@ fi
 
 if [[ "$FORCE" -eq 1 ]]; then
   PREPEND_CMD+=(--force)
+fi
+
+if [[ "$CARRY_FORWARD_STATUS" -eq 1 ]]; then
+  PREPEND_CMD+=(--carry-forward-status)
 fi
 
 echo "[1/2] Running consistency guard on $TARGET_FILE"

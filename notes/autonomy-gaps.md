@@ -1,7 +1,27 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-03-31 (20th pass)
+> Updated: 2026-04-01 (21st pass)
+
+---
+
+## Daily Audit Snapshot — 2026-04-01 (self-improvement-audit-daily, 00:14 UTC)
+
+### PR review
+- **Status:** review-scope + follow-up guard workflow remains healthy; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** retry telemetry, rolling degradation checks, and log-fallback path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** extraction/compliance/vector-readiness gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident-bundle workflow remains healthy; no new blocker discovered this cycle.
+
+### Audit workflow (cross-cutting)
+- **Blocker:** daily snapshot kickoff still required manually rewriting repeated status lines when there was no domain change, adding low-signal edit churn and increasing the chance of accidental wording drift.
+- **Fix applied this cycle:** added `--carry-forward-status` to `scripts/notes/prepend-autonomy-audit-snapshot.py` and wired pass-through support in `scripts/notes/run-autonomy-audit-preflight.sh`, so required status lines can be prefilled from the latest snapshot before focused edits.
 
 ---
 
@@ -536,6 +556,14 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 
 ## Improvements Implemented This Cycle
 
+### ✅ Daily autonomy-audit carry-forward status prefill added (2026-04-01)
+Updated snapshot scaffolding so repeated daily status text can be reused deterministically:
+- added `--carry-forward-status` to `scripts/notes/prepend-autonomy-audit-snapshot.py`,
+- parses the latest snapshot and pre-fills required `- **Status:** ...` lines when available,
+- wired pass-through support in `scripts/notes/run-autonomy-audit-preflight.sh`, including usage text.
+
+**Rationale:** cuts repetitive low-signal edits during daily audits and reduces copy/paste drift while preserving explicit human review for any real status changes.
+
 ### ✅ Daily autonomy-audit delta detector + no-change suppression gate added (2026-03-31)
 Added `scripts/notes/check-autonomy-audit-delta.py` and wired it into `scripts/notes/finalize-autonomy-audit.py`:
 - compares the target-day snapshot body to the previous snapshot body (normalized),
@@ -581,7 +609,7 @@ Created `scripts/notes/finalize-autonomy-audit.py` and updated `scripts/notes/ru
 Created `scripts/notes/run-autonomy-audit-preflight.sh`:
 - runs `check-autonomy-gaps-consistency.py` before any snapshot mutation,
 - runs `prepend-autonomy-audit-snapshot.py` in the same command,
-- supports `--file`, `--date`, `--time-label`, and `--force` for deterministic cron/manual usage,
+- supports `--file`, `--date`, `--time-label`, `--force`, and `--carry-forward-status` for deterministic cron/manual usage,
 - prints explicit next-step guidance to fill the inserted snapshot block.
 
 **Rationale:** removes a fragile two-command manual handoff at audit start, so consistency validation is no longer optional and daily snapshot setup stays deterministic.
