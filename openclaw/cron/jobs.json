@@ -246,7 +246,7 @@
       "name": "github-notifications",
       "enabled": true,
       "createdAtMs": 1772107716625,
-      "updatedAtMs": 1775154934170,
+      "updatedAtMs": 1775155396500,
       "schedule": {
         "kind": "every",
         "everyMs": 300000,
@@ -265,15 +265,15 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1775154694244,
+        "lastRunAtMs": 1775155007031,
         "lastStatus": "ok",
-        "lastDurationMs": 239926,
+        "lastDurationMs": 389469,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1775154994244,
+        "nextRunAtMs": 1775155616564,
         "lastDelivered": false,
-        "runningAtMs": 1775155007030
+        "runningAtMs": 1775155920003
       },
       "deleteAfterRun": false
     },
@@ -385,7 +385,7 @@
       "name": "workspace-periodic-cleanup",
       "enabled": true,
       "createdAtMs": 1772634832403,
-      "updatedAtMs": 1775133123570,
+      "updatedAtMs": 1775155917483,
       "schedule": {
         "kind": "every",
         "everyMs": 21600000,
@@ -402,15 +402,14 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1775154568926,
-        "lastRunAtMs": 1775132968926,
+        "nextRunAtMs": 1775176996500,
+        "lastRunAtMs": 1775155396500,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 154644,
+        "lastDurationMs": 520983,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
-        "consecutiveErrors": 0,
-        "runningAtMs": 1775155007030
+        "consecutiveErrors": 0
       }
     },
     {
@@ -443,7 +442,8 @@
         "lastDurationMs": 366072,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "lastDelivered": false
+        "lastDelivered": false,
+        "runningAtMs": 1775155920003
       }
     },
     {
