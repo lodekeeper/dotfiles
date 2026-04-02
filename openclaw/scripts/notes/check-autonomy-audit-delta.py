@@ -7,6 +7,7 @@ Meaningful delta heuristic:
 - Compare the target snapshot body to the previous snapshot body (excluding heading line)
 - If body text differs after light normalization, it's a meaningful change
 - Also reports which required section status lines changed for quick triage
+- Optional `--json` mode emits machine-readable output for cron wrappers
 
 Exit codes:
 - 0: delta detected (or no delta and --fail-on-no-change not set)
@@ -19,6 +20,7 @@ from __future__ import annotations
 
 import argparse
 from dataclasses import dataclass
+import json
 from pathlib import Path
 import re
 import sys
@@ -136,6 +138,11 @@ def main() -> int:
         action="store_true",
         help="Return exit code 3 when no meaningful change is detected",
     )
+    parser.add_argument(
+        "--json",
+        action="store_true",
+        help="Emit machine-readable JSON output instead of human-readable text",
+    )
     args = parser.parse_args()
 
     path = Path(args.file)
@@ -164,18 +171,30 @@ def main() -> int:
         if current_statuses.get(section) != previous_statuses.get(section)
     ]
 
-    print(f"Compared snapshots: {current.date} vs {previous.date}")
-    print(f"Meaningful delta: {'yes' if has_delta else 'no'}")
+    payload = {
+        "currentDate": current.date,
+        "previousDate": previous.date,
+        "hasDelta": has_delta,
+        "changedRequiredSections": changed_sections,
+        "noReplyRecommended": (not has_delta),
+    }
 
-    if changed_sections:
-        print("Changed required-section status lines:")
-        for section in changed_sections:
-            print(f"- {section}")
+    if args.json:
+        print(json.dumps(payload, ensure_ascii=False))
     else:
-        print("Changed required-section status lines: none")
+        print(f"Compared snapshots: {current.date} vs {previous.date}")
+        print(f"Meaningful delta: {'yes' if has_delta else 'no'}")
+
+        if changed_sections:
+            print("Changed required-section status lines:")
+            for section in changed_sections:
+                print(f"- {section}")
+        else:
+            print("Changed required-section status lines: none")
 
     if not has_delta and args.fail_on_no_change:
-        print("⚠️ No meaningful change detected; recommend NO_REPLY")
+        if not args.json:
+            print("⚠️ No meaningful change detected; recommend NO_REPLY")
         return 3
 
     return 0

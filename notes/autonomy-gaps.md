@@ -1,10 +1,29 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-04-01 (21st pass)
+> Updated: 2026-04-02 (22nd pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-04-02 (self-improvement-audit-daily, 00:29 UTC)
+
+### PR review
+- **Status:** review-scope + follow-up guard workflow remains healthy; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** retry telemetry, rolling degradation checks, and log-fallback path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** extraction/compliance/vector-readiness gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident-bundle workflow remains healthy; no new blocker discovered this cycle.
+
+### Audit workflow (cross-cutting)
+- **Blocker:** snapshot-delta checks were text-only, so automation wrappers had to parse prose output to consume section-level changes, making downstream reminder routing brittle.
+- **Fix applied this cycle:** added `--json` output mode to `scripts/notes/check-autonomy-audit-delta.py` (with `hasDelta`, changed required sections, and `noReplyRecommended`) so cron/workflow automation can consume structured results without string parsing.
+
+---
 ## Daily Audit Snapshot — 2026-04-01 (self-improvement-audit-daily, 00:14 UTC)
 
 ### PR review
