@@ -64,6 +64,20 @@ The `Write` and `Edit` tools are sandboxed to `~/.openclaw/workspace`. For ANY f
 - **Patch:** `sed -i` for simple replacements
 - **Never** attempt `Write`/`Edit` tools on worktree files — it just fails with a noisy error.
 
+### Backlog Updates (IMPORTANT)
+`edit` is brittle for `BACKLOG.md` because it requires exact text matches, and failed exact-match edits can leak noisy tool errors into chat. Prefer the semantic helper instead of ad-hoc exact-match edits when only the status line needs to change:
+
+```bash
+python3 scripts/backlog/set_status.py \
+  --task "Investigate repeated surfaced BACKLOG edit/tool errors in Nico DM" \
+  --status "Done — added a semantic backlog status updater and documented it"
+```
+
+Notes:
+- The helper matches the `### ...` task heading by case-insensitive substring.
+- It replaces the first `- **Status:**` line under that heading.
+- If multiple headings match, it fails loudly instead of editing the wrong task.
+
 ### Git Worktrees (IMPORTANT)
 Use worktrees to work on multiple branches without cross-contamination:
 
