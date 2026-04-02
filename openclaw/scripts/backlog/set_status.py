@@ -2,77 +2,46 @@
 from __future__ import annotations
 
 import argparse
-import re
 import sys
-from pathlib import Path
+
+
+DISABLED_REASON = """`set_status.py` is intentionally disabled for now.
+
+Why:
+- the first version did an unlocked whole-file read/modify/write
+- that is not safe under multiple concurrent backlog writers
+- the observed exact-match `edit` failures were mostly noisy, not evidence that we
+  should switch to a weaker concurrency model
+
+What would be required before this helper is safe to use:
+1. Acquire an exclusive lock on the backlog file (or a dedicated lock file).
+2. Re-read the file *after* acquiring the lock.
+3. Resolve the target heading/status against that locked, current content.
+4. Write to a temp file in the same directory.
+5. `fsync()` the temp file.
+6. Atomically replace the original file via rename.
+7. Optionally `fsync()` the parent directory.
+8. Detect/report conflicts clearly when the target block changed underneath us.
+9. Prefer tests that simulate concurrent writers.
+
+Until then, do not use this helper as the standard backlog update path.
+"""
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Update the status line for a BACKLOG.md task heading without brittle exact-match edits."
+        description="DISABLED: backlog status updater prototype retained only with safety notes."
     )
-    parser.add_argument(
-        "--file",
-        default="/home/openclaw/.openclaw/workspace/BACKLOG.md",
-        help="Path to backlog file (default: workspace BACKLOG.md)",
-    )
-    parser.add_argument(
-        "--task",
-        required=True,
-        help="Task heading text to match. Uses case-insensitive substring matching against '### ...' headings.",
-    )
-    parser.add_argument(
-        "--status",
-        required=True,
-        help="Replacement text after '- **Status:** '.",
-    )
+    parser.add_argument("--file")
+    parser.add_argument("--task")
+    parser.add_argument("--status")
     return parser.parse_args()
 
 
 def main() -> int:
-    args = parse_args()
-    path = Path(args.file)
-    if not path.exists():
-        print(f"error: backlog file not found: {path}", file=sys.stderr)
-        return 1
-
-    lines = path.read_text(encoding="utf-8").splitlines()
-    task_query = args.task.casefold()
-
-    matches: list[tuple[int, str]] = []
-    for i, line in enumerate(lines):
-        if line.startswith("### ") and task_query in line.casefold():
-            matches.append((i, line))
-
-    if not matches:
-        print(f"error: no task heading matched query: {args.task!r}", file=sys.stderr)
-        return 1
-
-    if len(matches) > 1:
-        print("error: task query matched multiple headings; be more specific:", file=sys.stderr)
-        for _, heading in matches:
-            print(f"  - {heading}", file=sys.stderr)
-        return 1
-
-    task_idx, task_heading = matches[0]
-    status_idx = None
-    for i in range(task_idx + 1, len(lines)):
-        line = lines[i]
-        if re.match(r"^### ", line):
-            break
-        if line.startswith("- **Status:**"):
-            status_idx = i
-            break
-
-    if status_idx is None:
-        print(f"error: no status line found under heading: {task_heading}", file=sys.stderr)
-        return 1
-
-    lines[status_idx] = f"- **Status:** {args.status}"
-    new_text = "\n".join(lines) + "\n"
-    path.write_text(new_text, encoding="utf-8")
-    print(f"updated {path}: {task_heading}")
-    return 0
+    parse_args()
+    print(DISABLED_REASON, file=sys.stderr)
+    return 2
 
 
 if __name__ == "__main__":
