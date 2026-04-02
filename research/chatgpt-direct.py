@@ -84,18 +84,20 @@ async def dismiss_welcome_modal(page, verbose=False):
 
 
 async def get_auth_state(page):
-    """Inspect whether ChatGPT is in guest/free or authenticated mode."""
+    """Inspect whether the visible ChatGPT UI looks guest/free or authenticated."""
     data = await page.evaluate("""
         (() => {
             const loginBtn = !!document.querySelector('[data-testid="login-button"]');
             const signupBtn = !!document.querySelector('[data-testid="signup-button"]');
             const modelBtn = document.querySelector('[data-testid="model-switcher-dropdown-button"]');
             const profileBtn = document.querySelector('[data-testid="profile-button"]');
+            const welcomeModal = !!document.querySelector('#modal-no-auth-login');
             return JSON.stringify({
                 hasLogin: loginBtn,
                 hasSignup: signupBtn,
                 model: modelBtn ? (modelBtn.innerText || '').trim() : '',
                 profileAria: profileBtn ? (profileBtn.getAttribute('aria-label') || '') : '',
+                welcomeModal,
             });
         })()
     """)
@@ -104,6 +106,64 @@ async def get_auth_state(page):
         "guest" if (parsed.get("hasLogin") or parsed.get("hasSignup")) else "authenticated"
     )
     return parsed
+
+
+async def get_server_auth_state(page):
+    """Inspect ChatGPT's server-side auth session via /api/auth/session.
+
+    The UI can render a guest-looking shell even when a stale/broken authenticated
+    session is still present in cookies. Distinguish:
+    - guest: no user/account session
+    - stale: user/account present but refresh/access state is broken
+    - authenticated: healthy signed-in session with no server error
+    """
+    data = await page.evaluate("""
+        async () => {
+            try {
+                const response = await fetch('/api/auth/session', {credentials: 'include'});
+                const text = await response.text();
+                let parsed = null;
+                try {
+                    parsed = JSON.parse(text);
+                } catch {
+                    parsed = null;
+                }
+                return JSON.stringify({
+                    ok: response.ok,
+                    status: response.status,
+                    parsed,
+                    text: parsed ? null : text,
+                });
+            } catch (error) {
+                return JSON.stringify({
+                    ok: false,
+                    status: 0,
+                    error: String(error),
+                });
+            }
+        }
+    """)
+    parsed = json.loads(data)
+    payload = parsed.get("parsed") or {}
+    has_user = bool(payload.get("user"))
+    has_account = bool(payload.get("account"))
+    session_error = payload.get("error")
+
+    if has_user or has_account:
+        state = "stale" if session_error else "authenticated"
+    else:
+        state = "guest"
+
+    return {
+        "state": state,
+        "status": parsed.get("status"),
+        "ok": parsed.get("ok", False),
+        "hasUser": has_user,
+        "hasAccount": has_account,
+        "planType": (payload.get("account") or {}).get("planType"),
+        "structure": (payload.get("account") or {}).get("structure"),
+        "error": session_error or parsed.get("error"),
+    }
 
 
 async def ensure_pro_model(page, verbose=False):
@@ -394,10 +454,43 @@ async def query_chatgpt(
                 ),
             }
 
+        server_auth = await get_server_auth_state(page)
+        if verbose:
+            server_note = (
+                f"error={server_auth['error']}"
+                if server_auth.get("error")
+                else "error=none"
+            )
+            plan_note = f", plan={server_auth['planType']}" if server_auth.get("planType") else ""
+            print(
+                f"Server auth state: {server_auth['state']}"
+                f" ({server_note}{plan_note})",
+                file=sys.stderr,
+                flush=True,
+            )
+
+        if require_auth and server_auth["state"] == "stale":
+            return {
+                "status": "error",
+                "error": (
+                    "Authenticated ChatGPT session metadata exists, but it is stale/broken "
+                    f"for UI use ({server_auth.get('error') or 'session refresh failed'}) "
+                    "— need fresh authenticated cookies"
+                ),
+                "auth": {"server": server_auth},
+            }
+
+        if require_auth and server_auth["state"] == "guest":
+            return {
+                "status": "error",
+                "error": "Guest/free ChatGPT session detected — need fresh authenticated cookies",
+                "auth": {"server": server_auth},
+            }
+
         # Dismiss non-auth "Welcome back" modal if present.
-        # This overlay contains "Log in" / "Sign up" text but is NOT an auth
-        # failure — it's a dismissible gate that appears even with a valid
-        # session token.  Dismiss it before checking login state.
+        # This overlay contains "Log in" / "Sign up" text even in guest mode.
+        # For non-auth flows we dismiss it to keep guest usage working; for
+        # auth-required flows we already returned above on stale/guest server auth.
         await dismiss_welcome_modal(page, verbose=verbose)
 
         # Re-read content after potential modal dismissal
@@ -415,10 +508,12 @@ async def query_chatgpt(
             return {"status": "error", "error": f"No prompt box found (title: {title})"}
 
         auth_info = await get_auth_state(page)
+        auth_info["server"] = server_auth
         if verbose:
             print(
-                f"Auth state: {auth_info['state']}"
-                f" (login={auth_info['hasLogin']}, signup={auth_info['hasSignup']})",
+                f"UI auth state: {auth_info['state']}"
+                f" (login={auth_info['hasLogin']}, signup={auth_info['hasSignup']}, "
+                f"welcomeModal={auth_info['welcomeModal']})",
                 file=sys.stderr,
                 flush=True,
             )

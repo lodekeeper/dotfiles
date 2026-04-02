@@ -128,6 +128,7 @@ From agent code / skill scripts:
 ```json
 [
   {"name": "__Secure-next-auth.session-token", "value": "...", "domain": ".chatgpt.com", ...},
+  {"name": "_account", "value": "...", "domain": ".chatgpt.com", ...},
   {"name": "cf_clearance", "value": "...", "domain": ".chatgpt.com", ...},
   ...
 ]
@@ -135,6 +136,12 @@ From agent code / skill scripts:
 
 Export all cookies from chatgpt.com domain (including HttpOnly). The `cf_clearance` cookie is helpful but not required — Camoufox obtains its own CF clearance.
 
+### Important current blocker (2026-04-01)
+A cookie jar containing only a single `__Secure-next-auth.session-token` is **not sufficient** on the current ChatGPT UI — Camoufox can pass Cloudflare but still lands in guest/free mode after the welcome modal. In practice, you want a **full cookie export** from a genuinely logged-in ChatGPT Pro session; the minimum observed useful auth set is at least `__Secure-next-auth.session-token` plus `_account`.
+
+If browser mode is landing in guest mode, the fix is:
+1. attach a logged-in `chatgpt.com` tab via Browser Relay and harvest fresh auth state, or
+2. replace `~/.oracle/chatgpt-cookies.json` with a fresh full cookie export from a live Pro session.
 
 ## Self-Maintenance
 
