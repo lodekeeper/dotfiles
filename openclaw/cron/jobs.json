@@ -106,7 +106,7 @@
       "name": "beacon-log-monitor",
       "enabled": true,
       "createdAtMs": 1771513454598,
-      "updatedAtMs": 1775136191791,
+      "updatedAtMs": 1775222489610,
       "schedule": {
         "kind": "every",
         "everyMs": 86400000,
@@ -124,10 +124,10 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1775222464921,
-        "lastRunAtMs": 1775136064921,
+        "nextRunAtMs": 1775308864926,
+        "lastRunAtMs": 1775222464926,
         "lastStatus": "ok",
-        "lastDurationMs": 126870,
+        "lastDurationMs": 24684,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
@@ -174,7 +174,7 @@
       "name": "eth-rnd-archive-hourly",
       "enabled": true,
       "createdAtMs": 1772034567300,
-      "updatedAtMs": 1775214970520,
+      "updatedAtMs": 1775240867302,
       "schedule": {
         "kind": "cron",
         "expr": "15 * * * *",
@@ -192,14 +192,15 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1775214900004,
-        "lastStatus": "ok",
-        "lastDurationMs": 70516,
-        "lastRunStatus": "ok",
-        "lastDeliveryStatus": "not-delivered",
-        "consecutiveErrors": 0,
-        "nextRunAtMs": 1775218500000,
-        "lastDelivered": false
+        "lastRunAtMs": 1775240267251,
+        "lastStatus": "error",
+        "lastDurationMs": 600051,
+        "lastRunStatus": "error",
+        "lastDeliveryStatus": "not-requested",
+        "consecutiveErrors": 1,
+        "nextRunAtMs": 1775243700000,
+        "lastError": "cron: job execution timed out",
+        "lastErrorReason": "timeout"
       }
     },
     {
@@ -245,7 +246,7 @@
       "name": "github-notifications",
       "enabled": true,
       "createdAtMs": 1772107716625,
-      "updatedAtMs": 1775217471252,
+      "updatedAtMs": 1775242883716,
       "schedule": {
         "kind": "every",
         "everyMs": 300000,
@@ -264,13 +265,13 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1775217416836,
+        "lastRunAtMs": 1775242698762,
         "lastStatus": "ok",
-        "lastDurationMs": 54416,
+        "lastDurationMs": 184954,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1775217716836,
+        "nextRunAtMs": 1775242998762,
         "lastDelivered": false
       },
       "deleteAfterRun": false
@@ -315,7 +316,7 @@
       "name": "ci-autofix-unstable",
       "enabled": true,
       "createdAtMs": 1772326513772,
-      "updatedAtMs": 1775193243833,
+      "updatedAtMs": 1775236625456,
       "schedule": {
         "kind": "every",
         "everyMs": 43200000,
@@ -334,11 +335,11 @@
         "to": "-1003764039429:52"
       },
       "state": {
-        "nextRunAtMs": 1775236395925,
-        "lastRunAtMs": 1775193195925,
+        "nextRunAtMs": 1775279629989,
+        "lastRunAtMs": 1775236429989,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 47908,
+        "lastDurationMs": 195467,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -350,7 +351,7 @@
       "name": "aztec-sequencer-health",
       "enabled": true,
       "createdAtMs": 1772373812089,
-      "updatedAtMs": 1775210332662,
+      "updatedAtMs": 1775239964564,
       "schedule": {
         "kind": "every",
         "everyMs": 14400000,
@@ -367,11 +368,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1775224696929,
-        "lastRunAtMs": 1775210296929,
+        "nextRunAtMs": 1775254191300,
+        "lastRunAtMs": 1775239791300,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 35733,
+        "lastDurationMs": 173264,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -383,7 +384,7 @@
       "name": "workspace-periodic-cleanup",
       "enabled": true,
       "createdAtMs": 1772634832403,
-      "updatedAtMs": 1775198783251,
+      "updatedAtMs": 1775242696117,
       "schedule": {
         "kind": "every",
         "everyMs": 21600000,
@@ -400,11 +401,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1775220247579,
-        "lastRunAtMs": 1775198647579,
+        "nextRunAtMs": 1775263473446,
+        "lastRunAtMs": 1775241873446,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 135672,
+        "lastDurationMs": 822671,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0
@@ -416,7 +417,7 @@
       "name": "monitor-open-pr-ci",
       "enabled": true,
       "createdAtMs": 1772635128553,
-      "updatedAtMs": 1775216688895,
+      "updatedAtMs": 1775238839697,
       "schedule": {
         "kind": "every",
         "everyMs": 1800000,
@@ -433,11 +434,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1775218415878,
-        "lastRunAtMs": 1775216615878,
+        "nextRunAtMs": 1775243328553,
+        "lastRunAtMs": 1775238656528,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 73017,
+        "lastDurationMs": 183169,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -515,7 +516,7 @@
       "name": "cron-health-watchdog",
       "enabled": true,
       "createdAtMs": 1772636078136,
-      "updatedAtMs": 1775217291111,
+      "updatedAtMs": 1775238894786,
       "schedule": {
         "kind": "every",
         "everyMs": 1800000,
@@ -532,14 +533,15 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1775219059810,
-        "lastRunAtMs": 1775217259810,
+        "nextRunAtMs": 1775242792065,
+        "lastRunAtMs": 1775238884611,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 31301,
+        "lastDurationMs": 10175,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "lastDelivered": false
+        "lastDelivered": false,
+        "runningAtMs": 1775242885732
       }
     },
     {
@@ -585,7 +587,7 @@
       "description": "Sync dotfiles repo (safe mode: non-sensitive allowlist + sensitive-path guard)",
       "enabled": true,
       "createdAtMs": 1773087050715,
-      "updatedAtMs": 1775196190679,
+      "updatedAtMs": 1775240264565,
       "schedule": {
         "kind": "cron",
         "expr": "0 */6 * * *",
@@ -604,15 +606,15 @@
         "channel": "last"
       },
       "state": {
-        "nextRunAtMs": 1775217693107,
-        "lastRunAtMs": 1775196140047,
-        "lastRunStatus": "ok",
-        "lastStatus": "ok",
-        "lastDurationMs": 50632,
-        "lastDeliveryStatus": "not-delivered",
-        "consecutiveErrors": 0,
-        "lastDelivered": false,
-        "runningAtMs": 1775217693111
+        "nextRunAtMs": 1775260893107,
+        "lastRunAtMs": 1775239964564,
+        "lastRunStatus": "error",
+        "lastStatus": "error",
+        "lastDurationMs": 300001,
+        "lastDeliveryStatus": "not-requested",
+        "consecutiveErrors": 1,
+        "lastErrorReason": "timeout",
+        "runningAtMs": 1775242932047
       }
     },
     {
@@ -745,6 +747,59 @@
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
+      }
+    },
+    {
+      "id": "12b3b2a8-96bb-438d-a346-edf9e83a2def",
+      "name": "review-royale-weekly-digest",
+      "enabled": true,
+      "createdAtMs": 1775241564160,
+      "updatedAtMs": 1775241564160,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 5 * * 2"
+      },
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "Run the weekly Review Royale digest. Execute ~/.openclaw/workspace/scripts/review-royale/weekly_digest.sh to get data, then format and post to Discord #lodestar-developer (channel 1197575814494035968) using the message tool. Follow the template in ~/.openclaw/workspace/scripts/review-royale/CRON_DIGEST_PROMPT.md. If no data, do nothing.",
+        "model": "anthropic/claude-haiku-4-5",
+        "timeoutSeconds": 120
+      },
+      "delivery": {
+        "mode": "none",
+        "channel": "last"
+      },
+      "state": {
+        "nextRunAtMs": 1775538000000
+      }
+    },
+    {
+      "id": "9dfcea87-b11d-4a90-83eb-7483289373f8",
+      "name": "review-royale-achievements",
+      "enabled": true,
+      "createdAtMs": 1775241575298,
+      "updatedAtMs": 1775241575298,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 */6 * * *",
+        "staggerMs": 300000
+      },
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "Check for new Review Royale achievements. Run: curl -s http://localhost:3456/api/achievements/pending — if there are pending notifications, format and post to Discord #lodestar-developer (channel 1197575814494035968). Template: '🏆 **Achievement Unlocked!** [emoji] **[username]** earned **[name]**! _[description]_'. Group multiple achievements for the same user. Max 5 per run. After posting, mark as notified. If no pending or error, do nothing.",
+        "model": "anthropic/claude-haiku-4-5",
+        "timeoutSeconds": 60
+      },
+      "delivery": {
+        "mode": "none",
+        "channel": "last"
+      },
+      "state": {
+        "nextRunAtMs": 1775260828853
       }
     }
   ]
