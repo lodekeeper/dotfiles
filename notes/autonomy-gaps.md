@@ -1,10 +1,29 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-04-02 (22nd pass)
+> Updated: 2026-04-03 (23rd pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-04-03 (self-improvement-audit-daily, 00:29 UTC)
+
+### PR review
+- **Status:** review-scope + follow-up guard workflow remains healthy; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** retry telemetry, rolling degradation checks, and log-fallback path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** extraction/compliance/vector-readiness gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident-bundle workflow remains healthy; no new blocker discovered this cycle.
+
+### Audit workflow (cross-cutting)
+- **Blocker:** `check-autonomy-audit-delta.py --json` reported whether there was a delta, but it did not expose *which non-required sections* changed. When only `### Audit workflow (cross-cutting)` changed, automation still had to parse prose to craft a concise summary.
+- **Fix applied this cycle:** extended `scripts/notes/check-autonomy-audit-delta.py` JSON output with `addedSectionHeadings`, `removedSectionHeadings`, and per-section `statusDeltas` so cron/workflow wrappers can explain meaningful changes without brittle markdown parsing.
+
+---
 ## Daily Audit Snapshot — 2026-04-02 (self-improvement-audit-daily, 00:29 UTC)
 
 ### PR review
@@ -574,6 +593,14 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Daily autonomy-audit delta JSON now includes section-level change context (2026-04-03)
+Updated `scripts/notes/check-autonomy-audit-delta.py` so automation can explain *what* changed when a snapshot delta is detected:
+- added `statusDeltas` map for required-section status changes (`current` vs `previous`),
+- added `addedSectionHeadings` and `removedSectionHeadings` for non-required-section visibility,
+- preserved existing fields (`hasDelta`, `changedRequiredSections`, `noReplyRecommended`) for backward compatibility.
+
+**Rationale:** daily reminder routing no longer needs brittle markdown/prose parsing to summarize cross-cutting changes (for example, `### Audit workflow (cross-cutting)` updates with unchanged core status lines).
 
 ### ✅ Daily autonomy-audit carry-forward status prefill added (2026-04-01)
 Updated snapshot scaffolding so repeated daily status text can be reused deterministically:

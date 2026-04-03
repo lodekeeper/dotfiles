@@ -90,24 +90,34 @@ def parse_snapshots(text: str) -> list[Snapshot]:
     return snapshots
 
 
-def get_required_statuses(body: str) -> dict[str, str]:
+def parse_sections(body: str) -> dict[str, str]:
     section_matches = list(SECTION_HEADING.finditer(body))
     sections: dict[str, str] = {}
 
     for i, match in enumerate(section_matches):
-        section_name = match.group(1).strip().lower()
+        section_name = match.group(1).strip()
         start = match.end()
         end = section_matches[i + 1].start() if i + 1 < len(section_matches) else len(body)
         sections[section_name] = body[start:end]
 
+    return sections
+
+
+def get_required_statuses(body: str) -> dict[str, str]:
+    sections = parse_sections(body)
+
     statuses: dict[str, str] = {}
     for section_name in REQUIRED_SECTIONS:
-        section_body = sections.get(section_name.lower(), "")
+        section_body = sections.get(section_name, "")
         status_match = STATUS_LINE.search(section_body)
         if status_match:
             statuses[section_name] = normalize_text(status_match.group(1))
 
     return statuses
+
+
+def section_heading_names(body: str) -> list[str]:
+    return [name.strip() for name in parse_sections(body).keys()]
 
 
 def find_snapshot_with_previous(snapshots: list[Snapshot], date_str: str | None) -> tuple[Snapshot, Snapshot]:
@@ -165,17 +175,34 @@ def main() -> int:
 
     current_statuses = get_required_statuses(current.body)
     previous_statuses = get_required_statuses(previous.body)
-    changed_sections = [
+    changed_required_sections = [
         section
         for section in REQUIRED_SECTIONS
         if current_statuses.get(section) != previous_statuses.get(section)
     ]
 
+    current_headings = section_heading_names(current.body)
+    previous_headings = section_heading_names(previous.body)
+
+    added_headings = [name for name in current_headings if name not in previous_headings]
+    removed_headings = [name for name in previous_headings if name not in current_headings]
+
+    status_deltas = {
+        section: {
+            "current": current_statuses.get(section),
+            "previous": previous_statuses.get(section),
+        }
+        for section in changed_required_sections
+    }
+
     payload = {
         "currentDate": current.date,
         "previousDate": previous.date,
         "hasDelta": has_delta,
-        "changedRequiredSections": changed_sections,
+        "changedRequiredSections": changed_required_sections,
+        "statusDeltas": status_deltas,
+        "addedSectionHeadings": added_headings,
+        "removedSectionHeadings": removed_headings,
         "noReplyRecommended": (not has_delta),
     }
 
@@ -185,12 +212,22 @@ def main() -> int:
         print(f"Compared snapshots: {current.date} vs {previous.date}")
         print(f"Meaningful delta: {'yes' if has_delta else 'no'}")
 
-        if changed_sections:
+        if changed_required_sections:
             print("Changed required-section status lines:")
-            for section in changed_sections:
+            for section in changed_required_sections:
                 print(f"- {section}")
         else:
             print("Changed required-section status lines: none")
+
+        if added_headings:
+            print("Added section headings:")
+            for heading in added_headings:
+                print(f"- {heading}")
+
+        if removed_headings:
+            print("Removed section headings:")
+            for heading in removed_headings:
+                print(f"- {heading}")
 
     if not has_delta and args.fail_on_no_change:
         if not args.json:
