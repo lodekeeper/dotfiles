@@ -245,7 +245,7 @@
       "name": "github-notifications",
       "enabled": true,
       "createdAtMs": 1772107716625,
-      "updatedAtMs": 1775333892068,
+      "updatedAtMs": 1775336143314,
       "schedule": {
         "kind": "every",
         "everyMs": 300000,
@@ -264,14 +264,15 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1775333818183,
+        "lastRunAtMs": 1775335916575,
         "lastStatus": "ok",
-        "lastDurationMs": 36365,
+        "lastDurationMs": 226739,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1775334118183,
-        "lastDelivered": false
+        "nextRunAtMs": 1775336216575,
+        "lastDelivered": false,
+        "runningAtMs": 1775336216576
       },
       "deleteAfterRun": false
     },
@@ -416,7 +417,7 @@
       "name": "monitor-open-pr-ci",
       "enabled": true,
       "createdAtMs": 1772635128553,
-      "updatedAtMs": 1775333892976,
+      "updatedAtMs": 1775335195322,
       "schedule": {
         "kind": "every",
         "everyMs": 1800000,
@@ -433,11 +434,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1775335128557,
-        "lastRunAtMs": 1775333328557,
+        "nextRunAtMs": 1775336928560,
+        "lastRunAtMs": 1775335128560,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 53715,
+        "lastDurationMs": 66762,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -515,7 +516,7 @@
       "name": "cron-health-watchdog",
       "enabled": true,
       "createdAtMs": 1772636078136,
-      "updatedAtMs": 1775333894044,
+      "updatedAtMs": 1775335296592,
       "schedule": {
         "kind": "every",
         "everyMs": 1800000,
@@ -532,11 +533,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1775335278737,
-        "lastRunAtMs": 1775333478737,
+        "nextRunAtMs": 1775337081180,
+        "lastRunAtMs": 1775335281180,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 15008,
+        "lastDurationMs": 15412,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -585,7 +586,7 @@
       "description": "Sync dotfiles repo (safe mode: non-sensitive allowlist + sensitive-path guard)",
       "enabled": true,
       "createdAtMs": 1773087050715,
-      "updatedAtMs": 1775333965150,
+      "updatedAtMs": 1775334122842,
       "schedule": {
         "kind": "cron",
         "expr": "0 */6 * * *",
@@ -605,14 +606,14 @@
       },
       "state": {
         "nextRunAtMs": 1775347293107,
-        "lastRunAtMs": 1775326085372,
+        "lastRunAtMs": 1775334060002,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 25730,
+        "lastDurationMs": 62840,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false,
-        "runningAtMs": 1775334060002
+        "runningAtMs": 1775336203983
       }
     },
     {
