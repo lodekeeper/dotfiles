@@ -416,7 +416,7 @@
       "name": "monitor-open-pr-ci",
       "enabled": true,
       "createdAtMs": 1772635128553,
-      "updatedAtMs": 1775335195322,
+      "updatedAtMs": 1775336981668,
       "schedule": {
         "kind": "every",
         "everyMs": 1800000,
@@ -433,15 +433,14 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1775336928560,
-        "lastRunAtMs": 1775335128560,
+        "nextRunAtMs": 1775338728563,
+        "lastRunAtMs": 1775336928563,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 66762,
+        "lastDurationMs": 53105,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "lastDelivered": false,
-        "runningAtMs": 1775336928563
+        "lastDelivered": false
       }
     },
     {
@@ -540,7 +539,8 @@
         "lastDurationMs": 15412,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "lastDelivered": false
+        "lastDelivered": false,
+        "runningAtMs": 1775337081181
       }
     },
     {
