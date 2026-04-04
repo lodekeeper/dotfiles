@@ -185,19 +185,106 @@ Define explicit destinations to prevent noisy DMs:
 
 ---
 
-## Part 3: Supporting Infrastructure
+## Part 3: Task Continuity & Agent Orchestration
 
-### Memory Files
+### STATE.md — Surviving Compaction
 
-The orchestration system works best with a daily-notes memory system:
+AI sessions compact. When they do, conversation history gets summarized and detail is lost. `STATE.md` is a file the agent maintains with **current working state** — what it's actively doing, what's blocked, what's in-flight.
 
-- **`memory/YYYY-MM-DD.md`** — raw daily log of what happened (decisions, progress, context)
-- **`MEMORY.md`** — curated long-term memory (distilled from daily notes)
-- **`STATE.md`** — current working state that survives compaction (optional but useful)
+**Purpose:** When the agent wakes up after compaction, it reads STATE.md and knows exactly where it left off. Without it, long-running tasks (multi-day investigations, complex PRs) lose critical context.
 
-Daily notes give the agent context when waking up fresh. The backlog gives it tasks. The heartbeat gives it a rhythm.
+**What goes in STATE.md:**
+- Active task details (not just "working on X" but the actual investigation state, code paths found, hypotheses tested)
+- Open PR table with current status of each
+- Environment state (worktree layout, running processes, deployed versions)
+- Cleanup items pending
 
-### Cron Jobs vs Heartbeats
+**When to update:**
+- Before any expected compaction (pre-compaction memory flushes)
+- When significant progress is made on a long-running task
+- When switching between tasks
+
+**Example structure:**
+```markdown
+# STATE.md
+# Last updated: 2026-04-04 — Current Working State
+
+## 🔴 Active Task: Fix checkpoint sync crash
+
+### Context
+Assigned by Nico, 2026-04-03. Beacon node crashes on restart with
+"headState does not exist" error.
+
+### Investigation State
+- Root cause: anchor state cached with wrong payload status
+- Code paths: chain.ts:391, regen/queued.ts:162
+- Fix direction: determine actual payload status on load
+- Tested: A/B comparison with Lighthouse confirms mismatch
+
+### Open PRs
+| PR | Title | Status |
+|---|---|---|
+| #9156 | Checkpoint sync fix | Awaiting review |
+| #9170 | Gossip counter perf | CI green |
+
+### Environment
+~/lodestar-epbs-devnet-0 → active worktree
+~/lodestar → unstable (clean)
+```
+
+### AGENTS.md — The Rules Engine
+
+`AGENTS.md` is the agent's operating manual. It defines the **session startup sequence** and enforces behavioral rules. For orchestration purposes, the critical sections are:
+
+**Session startup sequence** (runs every session, including after compaction):
+1. Read SOUL.md (identity)
+2. Read USER.md (human's preferences)
+3. Read STATE.md (current working state)
+4. Read BACKLOG.md (task list)
+5. Read today's daily notes (recent context)
+
+This sequence ensures the agent always has context before acting. The order matters — identity and preferences first, then state and tasks.
+
+**Backlog-first enforcement:**
+```markdown
+## ⚠️ BACKLOG FIRST — MANDATORY FOR EVERY TASK
+
+Before starting ANY work, add it to BACKLOG.md FIRST.
+This is NOT optional. If it's not in the backlog, it didn't happen.
+```
+
+**Sub-agent rules:** When to delegate, which personas to use, the Think → Consult → Verify → Deliver workflow. This is where you define your agent's delegation patterns.
+
+### Session Routing & Sub-Agent Coordination
+
+OpenClaw sessions are keyed by channel:
+- `agent:main:telegram:group:<GROUP_ID>:topic:<TOPIC_ID>` — Telegram forum topic
+- `agent:main:discord:channel:<CHANNEL_ID>` — Discord channel/thread
+- `agent:main:telegram:direct:<USER_ID>` — Telegram DM
+- `agent:main:main` — the main/default session
+
+**The coordination loop:**
+1. Task arrives in channel X → agent adds to BACKLOG.md with routing tag
+2. Heartbeat fires in main session → reads BACKLOG.md → sees tagged task
+3. If task is tagged for a different session → nudge that session via `sessions_send`
+4. Sub-agent session works on task → updates BACKLOG.md with progress
+5. Next heartbeat → orchestrator reads updated BACKLOG.md → sees progress → decides next action
+
+**The shared file contract:** BACKLOG.md is the coordination surface. Every session that works on a task MUST write its progress back. The nudge message explicitly includes this:
+
+```
+"Continue working on <task>. Current status: <status>.
+ Next step: <next subtask>.
+ IMPORTANT: Update BACKLOG.md (~/.openclaw/workspace/BACKLOG.md)
+ with your progress — mark subtasks ✅ as you complete them,
+ add new subtasks as discovered."
+```
+
+### Cron Jobs — Delegating Recurring Work
+
+Some monitoring tasks run better as isolated cron jobs than as heartbeat checks:
+
+**When to use cron vs heartbeat:**
 
 | Feature | Heartbeat | Cron |
 |---------|-----------|------|
@@ -242,6 +329,12 @@ A task appears in the backlog with no source. Two sessions later, nobody remembe
 
 ### ❌ Archiving too late
 BACKLOG.md grows to 500 lines. Every heartbeat reads the whole thing. Token burn increases. Agent gets confused by completed tasks. **Archive ✅ items regularly.**
+
+### ❌ Stale STATE.md
+Agent updates STATE.md once, then works for three days without updating it. Compaction hits. Agent reads STATE.md and acts on stale context. **Update STATE.md whenever significant progress is made or the active task changes.**
+
+### ❌ Sub-agent works outside BACKLOG
+A sub-agent receives a nudge, does the work, posts results in its channel — but never updates BACKLOG.md. The orchestrator can't see the progress and either re-nudges or considers the task stuck. **The shared file is the contract. No update = no visibility.**
 
 ---
 
