@@ -1,74 +1,93 @@
-# Coding Context — Enable QUIC by Default
+# CODING_CONTEXT.md — Current Task
 
-## Task
-Change Lodestar to enable QUIC transport by default (currently disabled). Update all defaults, documentation, CLI descriptions, and tests.
+## Task: Fix Gloas Withdrawals in Payload Attributes and State Transition
 
-## Background
-QUIC is already fully implemented in Lodestar. The IPv6 crash fix (PR #9101) was merged to `unstable`, so QUIC is now safe to enable on IPv4-only hosts. The task is to flip the default from `false` to `true`.
+Two related bugs where Gloas withdrawals are computed/stored incorrectly when the parent block is not full.
 
-## Files to Change
+### Fix 1: `packages/state-transition/src/block/processWithdrawals.ts`
 
-### 1. Beacon node network options default
-**File:** `packages/beacon-node/src/network/options.ts`
-- Line 72: Change `quic: false` → `quic: true`
+The early-return path (line ~36) does NOT clear `state.payloadExpectedWithdrawals`, leaving stale data from a prior full block. This breaks envelope validation later.
 
-### 2. CLI option default  
-**File:** `packages/cli/src/options/beaconNodeOptions/network.ts`
-- Line ~314-319: The `quic` option has `default: false` — change to `default: true`
-- Line ~90: `const quic = args.quic ?? false;` — change fallback to `true`
-- Update the description from "Enable QUIC transport" to something like "Enable QUIC transport (enabled by default)"
-
-### 3. Documentation — Networking guide
-**File:** `docs/pages/run/beacon-management/networking.md`
-- Line ~89: Update "QUIC is disabled by default and can be enabled with the `--quic` flag" → "QUIC is enabled by default"
-- Line ~91-97: Update the "Enabling QUIC" section — it's now enabled by default, show how to disable instead (`--quic=false` or `--no-quic`)
-- Line ~99: Update "When QUIC is enabled" text
-- Line ~103: Update "With QUIC enabled" text  
-- Line ~127: Update "only if `--quic` is enabled" → QUIC port is now open by default
-- Update the port table and firewall section to reflect QUIC is default
-
-### 4. Documentation — CLI reference (beacon)
-**File:** `docs/pages/run/beacon-management/beacon-cli.md`
-- Line ~599-609: Update `--quic` description and default value from `false` to `true`
-
-### 5. Documentation — Dev CLI reference
-**File:** `docs/pages/contribution/dev-cli.md`  
-- Line ~605: Update `--quic` description and default value from `false` to `true`
-
-### 6. Tests — ENR initialization
-**File:** `packages/cli/test/unit/cmds/initPeerIdAndEnr.test.ts`
-- Line 12: Test "should set tcp but not quic fields by default" — now QUIC IS set by default, update expectations
-- Line 20: `expect(enr.quic).toBeUndefined()` → should now expect QUIC to be set
-- Line 54: Test "should not set quic fields when quic is false" — keep this test (explicit opt-out)
-
-### 7. Tests — Network option parsing
-**File:** `packages/cli/test/unit/options/beaconNodeOptions.test.ts`
-- Line 197: `quic: false` in expected output — change to `quic: true`
-- Line 220+: Tests for tcp/quic flags — update default behavior tests
-- The test "should not include quic multiaddrs by default" should now expect QUIC multiaddrs present
-
-## Constraints
-- Branch: `feat/quic-by-default` on `~/lodestar-quic-default`
-- Run `pnpm lint` before committing — mandatory, no exceptions
-- Run `pnpm check-types` to verify TypeScript compiles
-- Run `pnpm test:unit` in relevant packages to verify tests pass
-- Node 24: `source ~/.nvm/nvm.sh && nvm use 24`
-- Project convention: no scopes in commit messages (e.g. `feat: enable quic by default` not `feat(network): ...`)
-- Keep changes minimal and focused — only what's needed to flip the default
-
-## Verification
-```bash
-# Type check
-pnpm check-types
-
-# Lint
-pnpm lint
-
-# Run affected unit tests
-pnpm vitest run packages/cli/test/unit/cmds/initPeerIdAndEnr.test.ts
-pnpm vitest run packages/cli/test/unit/options/beaconNodeOptions.test.ts
-
-# Verify the default is correct
-grep -n "quic" packages/beacon-node/src/network/options.ts
-grep -n "quic" packages/cli/src/options/beaconNodeOptions/network.ts
+**Current code (around line 34-37):**
+```typescript
+  if (fork >= ForkSeq.gloas && !isParentBlockFull(state as CachedBeaconStateGloas)) {
+    return;
+  }
 ```
+
+**Change to:**
+```typescript
+  if (fork >= ForkSeq.gloas && !isParentBlockFull(state as CachedBeaconStateGloas)) {
+    // Clear expected withdrawals so envelope validation doesn't use stale data from a prior full block
+    (state as CachedBeaconStateGloas).payloadExpectedWithdrawals = ssz.capella.Withdrawals.toViewDU([]);
+    return;
+  }
+```
+
+`ssz` is already imported at top of file (`import {..., ssz} from "@lodestar/types"`).
+
+### Fix 2: `packages/beacon-node/src/chain/produceBlock/produceBlockBody.ts`
+
+In the `preparePayloadAttributes()` function (starts at line 744), the withdrawals computation at line ~777-778 is unconditional:
+
+```typescript
+    (payloadAttributes as capella.SSEPayloadAttributes["payloadAttributes"]).withdrawals =
+      prepareState.getExpectedWithdrawals().expectedWithdrawals;
+```
+
+For Gloas, if the parent block is not full, withdrawals should be `[]` (the EL should not include them).
+
+**Replace the withdrawals section (lines ~773-779) with:**
+```typescript
+    if (!isStatePostCapella(prepareState)) {
+      throw new Error("Expected Capella state for withdrawals");
+    }
+
+    let withdrawals: capella.Withdrawal[];
+    if (ForkSeq[fork] >= ForkSeq.gloas && isStatePostGloas(prepareState) && !isParentBlockFull(prepareState)) {
+      // Gloas: parent block was not full → process_withdrawals returns early → no withdrawals
+      withdrawals = [];
+    } else {
+      withdrawals = prepareState.getExpectedWithdrawals().expectedWithdrawals;
+    }
+
+    (payloadAttributes as capella.SSEPayloadAttributes["payloadAttributes"]).withdrawals = withdrawals;
+```
+
+**Add to the existing import from `@lodestar/state-transition` (line ~17-25):**
+```typescript
+  isParentBlockFull,
+```
+
+The import block already imports `isStatePostGloas` from `@lodestar/state-transition`. Just add `isParentBlockFull` to the same import statement.
+
+Also add `CachedBeaconStateGloas` to the types import IF `isParentBlockFull` requires it — but check the type signature first. Actually, `isParentBlockFull` takes `CachedBeaconStateGloas` as parameter. Since we gate on `isStatePostGloas(prepareState)`, the type narrows correctly. But `isParentBlockFull` expects `CachedBeaconStateGloas` specifically, so you may need a cast. Check the actual `IBeaconStateViewBellatrix` interface — if `isStatePostGloas` narrows to a type that has `latestExecutionPayloadBid` and `latestBlockHash`, it should work.
+
+If you need a cast, do:
+```typescript
+!isParentBlockFull(prepareState as unknown as CachedBeaconStateGloas)
+```
+But FIRST check if `isStatePostGloas` narrows enough. Prefer NO cast.
+
+### DO NOT change:
+- Any other functions in `produceBlockBody.ts`
+- Anything in `processExecutionPayloadEnvelope.ts`
+- Test fixtures or test infrastructure files
+
+### Tests
+Add a test in `packages/state-transition/test/unit/block/` if there is an existing `processWithdrawals.test.ts`. If not, create one with a minimal test:
+- Create a mock Gloas state where `isParentBlockFull` returns false
+- Run `processWithdrawals` on it
+- Assert `payloadExpectedWithdrawals` is empty (length 0)
+
+### Pre-push checklist
+1. `pnpm lint` — must pass (run `pnpm lint --write` to autofix)
+2. `pnpm check-types` — must pass
+3. `pnpm build` — must succeed
+4. Verify diff: only the 2-3 files above should be changed
+
+### Project conventions
+- Node v24: `source ~/.nvm/nvm.sh && nvm use 24`
+- Build: `pnpm build`
+- Lint: `pnpm lint` (MANDATORY before commit)
+- All commits must be signed with GPG
