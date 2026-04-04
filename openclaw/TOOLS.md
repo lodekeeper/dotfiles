@@ -202,3 +202,19 @@ Plain text `@username` does NOT ping users on Discord. Use proper Discord mentio
 - **MEK (bot):** `<@1484133729092763808>`
 - **lodekeeper-z (bot):** look up ID from channel reads
 Always use `<@USER_ID>` format in message sends to actually ping someone.
+
+## Review Royale
+- **API:** http://127.0.0.1:3456 (public: https://review-royale.nflaig.dev)
+- **Repos:** ChainSafe/lodestar, ChainSafe/lodestar-z
+- **Useful endpoints:**
+  - `GET /api/leaderboard?period=week|month|all&limit=10` — global leaderboard
+  - `GET /api/repos/:owner/:name/leaderboard?period=week|month|all&limit=10` — per-repo
+  - `GET /api/users/:username` — user profile
+  - `GET /api/users/:username/stats` — detailed stats
+  - `GET /api/achievements` — achievement catalog
+  - `POST /api/recalculate` — recalculate all XP
+  - `POST /api/categorize` — categorize uncategorized comments
+- **When someone asks about leaderboard, stats, reviews, XP, achievements, or roasts:** query the API and respond naturally. No special commands needed — just understand the intent and fetch the data.
+- **Docker:** `review-royale-api-1` (port 3456→3000), `review-royale-rr-postgres-1`, `review-royale-rr-redis-1`
+- **Crons:** weekly-digest (Tue 05:00), achievements (every 6h), post-sync-pipeline (every 6h offset)
+- **Config:** `~/review-royale/docker-compose.yml`, `~/review-royale/docker-compose.override.yml`

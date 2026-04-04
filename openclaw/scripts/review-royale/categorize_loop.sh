@@ -1,46 +1,53 @@
 #!/usr/bin/env bash
+# Single-threaded AI categorization loop for Review Royale
+# Processes uncategorized comments in batches of 50 with proper error handling
 set -euo pipefail
 
 API_BASE="${REVIEW_ROYALE_API:-http://127.0.0.1:3456}"
-BATCH_SIZE="${BATCH_SIZE:-50}"
-MAX_BATCHES="${MAX_BATCHES:-200}"
-SLEEP_SECS="${SLEEP_SECS:-2}"
-RETRY_SECS="${RETRY_SECS:-10}"
+BATCH_SIZE=50
+DELAY_BETWEEN_BATCHES=5  # seconds
+MAX_RETRIES=3
+RETRY_DELAY=30  # seconds
 
-progress() {
-  cd ~/review-royale
-  docker compose exec -T rr-postgres psql -U postgres -d review_royale -At -F $'\t' \
-    -c "SELECT COUNT(*)::text, COUNT(*) FILTER (WHERE category IS NOT NULL)::text FROM review_comments;"
-}
+echo "Starting categorization loop: API=$API_BASE batch=$BATCH_SIZE delay=${DELAY_BETWEEN_BATCHES}s"
 
-read -r total categorized < <(progress)
-echo "Starting categorization loop: categorized=${categorized}/${total}"
+# Get initial count
+total=$(curl -sf "${API_BASE}/api/repos" | jq 'length' 2>/dev/null || echo "?")
+echo "Repos tracked: $total"
 
-for i in $(seq 1 "$MAX_BATCHES"); do
-  response=$(curl -fsS -X POST "${API_BASE}/api/categorize?batch_size=${BATCH_SIZE}" 2>/tmp/review-royale-categorize.err || true)
-  if [[ -z "${response}" ]]; then
-    err=$(cat /tmp/review-royale-categorize.err 2>/dev/null || true)
-    echo "Batch ${i}: request failed: ${err:-unknown error}. Retrying in ${RETRY_SECS}s"
-    sleep "$RETRY_SECS"
+batch_num=0
+consecutive_errors=0
+
+while true; do
+  batch_num=$((batch_num + 1))
+  
+  result=$(curl -sf --max-time 120 -X POST "${API_BASE}/api/categorize?batch_size=${BATCH_SIZE}" 2>&1) || {
+    consecutive_errors=$((consecutive_errors + 1))
+    echo "Batch $batch_num: HTTP error (consecutive: $consecutive_errors)"
+    if [ $consecutive_errors -ge $MAX_RETRIES ]; then
+      echo "Too many consecutive errors ($consecutive_errors). Stopping."
+      exit 1
+    fi
+    echo "Retrying in ${RETRY_DELAY}s..."
+    sleep $RETRY_DELAY
     continue
-  fi
-
-  processed=$(echo "$response" | jq -r '.processed // 0' 2>/dev/null || echo 0)
-  errors=$(echo "$response" | jq -r '.errors // 0' 2>/dev/null || echo 0)
-
-  if [[ "$processed" == "0" ]]; then
-    read -r total categorized < <(progress)
-    echo "Batch ${i}: no new items processed. Current ${categorized}/${total}. Stopping."
+  }
+  
+  processed=$(echo "$result" | jq -r '.processed // 0' 2>/dev/null)
+  errors=$(echo "$result" | jq -r '.errors // 0' 2>/dev/null)
+  
+  if [ "$processed" = "0" ] || [ -z "$processed" ]; then
+    echo "Batch $batch_num: no more uncategorized comments. Done!"
     break
   fi
-
-  if (( i % 10 == 0 )); then
-    read -r total categorized < <(progress)
-    echo "Batch ${i}: processed=${processed} errors=${errors} total_progress=${categorized}/${total}"
+  
+  consecutive_errors=0  # Reset on success
+  
+  if [ $((batch_num % 10)) -eq 0 ]; then
+    echo "Batch $batch_num: processed=$processed errors=$errors (est. ~$((batch_num * BATCH_SIZE + 1150)) categorized)"
   fi
-
-  sleep "$SLEEP_SECS"
+  
+  sleep $DELAY_BETWEEN_BATCHES
 done
 
-read -r total categorized < <(progress)
-echo "Done: ${categorized}/${total} categorized"
+echo "=== Categorization complete ==="

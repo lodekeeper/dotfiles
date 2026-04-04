@@ -7,7 +7,7 @@
       "name": "daily-summary",
       "enabled": true,
       "createdAtMs": 1769895413579,
-      "updatedAtMs": 1775170940906,
+      "updatedAtMs": 1775257471474,
       "schedule": {
         "kind": "cron",
         "expr": "0 23 * * *",
@@ -21,10 +21,10 @@
         "model": "anthropic/claude-sonnet-4-6"
       },
       "state": {
-        "nextRunAtMs": 1775257200000,
-        "lastRunAtMs": 1775170823839,
+        "nextRunAtMs": 1775343600000,
+        "lastRunAtMs": 1775257200012,
         "lastStatus": "ok",
-        "lastDurationMs": 117067,
+        "lastDurationMs": 271462,
         "lastRunStatus": "ok",
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
@@ -42,7 +42,7 @@
       "name": "specs-study-reminder",
       "enabled": true,
       "createdAtMs": 1771194766869,
-      "updatedAtMs": 1774649325287,
+      "updatedAtMs": 1775254303314,
       "schedule": {
         "kind": "every",
         "everyMs": 604800000,
@@ -56,10 +56,10 @@
         "model": "openai-codex/gpt-5.4"
       },
       "state": {
-        "lastRunAtMs": 1774649305478,
+        "lastRunAtMs": 1775254183282,
         "lastStatus": "ok",
-        "lastDurationMs": 19809,
-        "nextRunAtMs": 1775254105478,
+        "lastDurationMs": 120032,
+        "nextRunAtMs": 1775858983282,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-requested",
         "consecutiveErrors": 0
@@ -72,7 +72,7 @@
       "name": "Monitor EIP-8025 / zkEVM updates",
       "enabled": true,
       "createdAtMs": 1771320800043,
-      "updatedAtMs": 1774985290732,
+      "updatedAtMs": 1775244627714,
       "schedule": {
         "kind": "every",
         "everyMs": 259200000,
@@ -90,10 +90,10 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1775244160749,
-        "lastRunAtMs": 1774984960749,
+        "nextRunAtMs": 1775503360758,
+        "lastRunAtMs": 1775244160758,
         "lastStatus": "ok",
-        "lastDurationMs": 329983,
+        "lastDurationMs": 466956,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
@@ -140,7 +140,7 @@
       "name": "daily-meme",
       "enabled": true,
       "createdAtMs": 1771753595377,
-      "updatedAtMs": 1775167564743,
+      "updatedAtMs": 1775253726918,
       "schedule": {
         "kind": "cron",
         "expr": "0 22 * * *",
@@ -158,10 +158,10 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1775253600000,
-        "lastRunAtMs": 1775167383138,
+        "nextRunAtMs": 1775340000000,
+        "lastRunAtMs": 1775253600027,
         "lastStatus": "ok",
-        "lastDurationMs": 181605,
+        "lastDurationMs": 126891,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
@@ -174,7 +174,7 @@
       "name": "eth-rnd-archive-hourly",
       "enabled": true,
       "createdAtMs": 1772034567300,
-      "updatedAtMs": 1775240867302,
+      "updatedAtMs": 1775258130668,
       "schedule": {
         "kind": "cron",
         "expr": "15 * * * *",
@@ -192,15 +192,14 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1775240267251,
-        "lastStatus": "error",
-        "lastDurationMs": 600051,
-        "lastRunStatus": "error",
-        "lastDeliveryStatus": "not-requested",
-        "consecutiveErrors": 1,
-        "nextRunAtMs": 1775243700000,
-        "lastError": "cron: job execution timed out",
-        "lastErrorReason": "timeout"
+        "lastRunAtMs": 1775258100005,
+        "lastStatus": "ok",
+        "lastDurationMs": 30663,
+        "lastRunStatus": "ok",
+        "lastDeliveryStatus": "not-delivered",
+        "consecutiveErrors": 0,
+        "nextRunAtMs": 1775261700000,
+        "lastDelivered": false
       }
     },
     {
@@ -246,7 +245,7 @@
       "name": "github-notifications",
       "enabled": true,
       "createdAtMs": 1772107716625,
-      "updatedAtMs": 1775242883716,
+      "updatedAtMs": 1775260593945,
       "schedule": {
         "kind": "every",
         "everyMs": 300000,
@@ -265,14 +264,15 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1775242698762,
+        "lastRunAtMs": 1775260566130,
         "lastStatus": "ok",
-        "lastDurationMs": 184954,
+        "lastDurationMs": 27815,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1775242998762,
-        "lastDelivered": false
+        "nextRunAtMs": 1775260866130,
+        "lastDelivered": false,
+        "runningAtMs": 1775260951532
       },
       "deleteAfterRun": false
     },
@@ -351,7 +351,7 @@
       "name": "aztec-sequencer-health",
       "enabled": true,
       "createdAtMs": 1772373812089,
-      "updatedAtMs": 1775239964564,
+      "updatedAtMs": 1775254487008,
       "schedule": {
         "kind": "every",
         "everyMs": 14400000,
@@ -368,11 +368,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1775254191300,
-        "lastRunAtMs": 1775239791300,
+        "nextRunAtMs": 1775268844299,
+        "lastRunAtMs": 1775254444299,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 173264,
+        "lastDurationMs": 42709,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -417,7 +417,7 @@
       "name": "monitor-open-pr-ci",
       "enabled": true,
       "createdAtMs": 1772635128553,
-      "updatedAtMs": 1775238839697,
+      "updatedAtMs": 1775259740441,
       "schedule": {
         "kind": "every",
         "everyMs": 1800000,
@@ -434,11 +434,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1775243328553,
-        "lastRunAtMs": 1775238656528,
+        "nextRunAtMs": 1775261503330,
+        "lastRunAtMs": 1775259703330,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 183169,
+        "lastDurationMs": 37111,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -516,7 +516,7 @@
       "name": "cron-health-watchdog",
       "enabled": true,
       "createdAtMs": 1772636078136,
-      "updatedAtMs": 1775238894786,
+      "updatedAtMs": 1775259527776,
       "schedule": {
         "kind": "every",
         "everyMs": 1800000,
@@ -533,15 +533,14 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1775242792065,
-        "lastRunAtMs": 1775238884611,
+        "nextRunAtMs": 1775261321461,
+        "lastRunAtMs": 1775259521461,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 10175,
+        "lastDurationMs": 6315,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "lastDelivered": false,
-        "runningAtMs": 1775242885732
+        "lastDelivered": false
       }
     },
     {
@@ -587,7 +586,7 @@
       "description": "Sync dotfiles repo (safe mode: non-sensitive allowlist + sensitive-path guard)",
       "enabled": true,
       "createdAtMs": 1773087050715,
-      "updatedAtMs": 1775240264565,
+      "updatedAtMs": 1775242976943,
       "schedule": {
         "kind": "cron",
         "expr": "0 */6 * * *",
@@ -607,14 +606,14 @@
       },
       "state": {
         "nextRunAtMs": 1775260893107,
-        "lastRunAtMs": 1775239964564,
-        "lastRunStatus": "error",
-        "lastStatus": "error",
-        "lastDurationMs": 300001,
-        "lastDeliveryStatus": "not-requested",
-        "consecutiveErrors": 1,
-        "lastErrorReason": "timeout",
-        "runningAtMs": 1775242932047
+        "lastRunAtMs": 1775242932047,
+        "lastRunStatus": "ok",
+        "lastStatus": "ok",
+        "lastDurationMs": 44896,
+        "lastDeliveryStatus": "not-delivered",
+        "consecutiveErrors": 0,
+        "lastDelivered": false,
+        "runningAtMs": 1775260951532
       }
     },
     {
@@ -624,7 +623,7 @@
       "description": "Check openclaw/openclaw latest release every 12h and alert Nico on new tag",
       "enabled": true,
       "createdAtMs": 1773093482865,
-      "updatedAtMs": 1775212494946,
+      "updatedAtMs": 1775255801715,
       "schedule": {
         "kind": "every",
         "everyMs": 43200000,
@@ -638,11 +637,11 @@
         "model": "anthropic/claude-sonnet-4-6"
       },
       "state": {
-        "nextRunAtMs": 1775255681536,
-        "lastRunAtMs": 1775212481536,
+        "nextRunAtMs": 1775298881540,
+        "lastRunAtMs": 1775255681540,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 13410,
+        "lastDurationMs": 120175,
         "lastDeliveryStatus": "not-requested",
         "consecutiveErrors": 0
       }
@@ -721,7 +720,7 @@
       "name": "daily-journal",
       "enabled": true,
       "createdAtMs": 1774558224563,
-      "updatedAtMs": 1775171291198,
+      "updatedAtMs": 1775257563375,
       "schedule": {
         "kind": "cron",
         "expr": "0 23 * * *"
@@ -739,11 +738,11 @@
         "channel": "last"
       },
       "state": {
-        "nextRunAtMs": 1775257200000,
-        "lastRunAtMs": 1775171048295,
+        "nextRunAtMs": 1775343600000,
+        "lastRunAtMs": 1775257471474,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 242903,
+        "lastDurationMs": 91901,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -754,7 +753,7 @@
       "name": "review-royale-weekly-digest",
       "enabled": true,
       "createdAtMs": 1775241564160,
-      "updatedAtMs": 1775241564160,
+      "updatedAtMs": 1775260612860,
       "schedule": {
         "kind": "cron",
         "expr": "0 5 * * 2"
@@ -763,8 +762,8 @@
       "wakeMode": "now",
       "payload": {
         "kind": "agentTurn",
-        "message": "Run the weekly Review Royale digest. Execute ~/.openclaw/workspace/scripts/review-royale/weekly_digest.sh to get data, then format and post to Discord #lodestar-developer (channel 1197575814494035968) using the message tool. Follow the template in ~/.openclaw/workspace/scripts/review-royale/CRON_DIGEST_PROMPT.md. If no data, do nothing.",
-        "model": "anthropic/claude-haiku-4-5",
+        "message": "Run the weekly Review Royale digest and post to Discord #lodestar-developer.\n\nSteps:\n1. Run: `bash /home/openclaw/.openclaw/workspace/scripts/review-royale/weekly_digest.sh`\n2. If output is \"NO_DATA\", reply NO_REPLY (no reviews this week)\n3. Otherwise, format the raw data into a Discord message following the template in /home/openclaw/.openclaw/workspace/scripts/review-royale/CRON_DIGEST_PROMPT.md\n4. Send the formatted message to Discord channel 1197575814494035968 using the message tool:\n   - action: send\n   - channel: discord\n   - target: 1197575814494035968\n   - message: (the formatted digest)\n5. Reply NO_REPLY after posting.\n\nIMPORTANT:\n- Use <https://review-royale.nflaig.dev> as the link (NOT lodekeeper.dev)\n- No markdown tables in Discord — use bullet lists\n- Keep it concise and fun",
+        "model": "anthropic/claude-sonnet-4-6",
         "timeoutSeconds": 120
       },
       "delivery": {
@@ -772,7 +771,14 @@
         "channel": "last"
       },
       "state": {
-        "nextRunAtMs": 1775538000000
+        "nextRunAtMs": 1775538000000,
+        "lastRunAtMs": 1775260607633,
+        "lastRunStatus": "ok",
+        "lastStatus": "ok",
+        "lastDurationMs": 5227,
+        "lastDelivered": false,
+        "lastDeliveryStatus": "not-delivered",
+        "consecutiveErrors": 0
       }
     },
     {
@@ -780,7 +786,7 @@
       "name": "review-royale-achievements",
       "enabled": true,
       "createdAtMs": 1775241575298,
-      "updatedAtMs": 1775241575298,
+      "updatedAtMs": 1775260948863,
       "schedule": {
         "kind": "cron",
         "expr": "0 */6 * * *",
@@ -790,16 +796,56 @@
       "wakeMode": "now",
       "payload": {
         "kind": "agentTurn",
-        "message": "Check for new Review Royale achievements. Run: curl -s http://localhost:3456/api/achievements/pending — if there are pending notifications, format and post to Discord #lodestar-developer (channel 1197575814494035968). Template: '🏆 **Achievement Unlocked!** [emoji] **[username]** earned **[name]**! _[description]_'. Group multiple achievements for the same user. Max 5 per run. After posting, mark as notified. If no pending or error, do nothing.",
-        "model": "anthropic/claude-haiku-4-5",
-        "timeoutSeconds": 60
+        "message": "Check for new Review Royale achievements and post to Discord.\n\nSteps:\n1. Run: `bash /home/openclaw/.openclaw/workspace/scripts/review-royale/check_achievements.sh`\n2. If output is \"NO_PENDING\", reply NO_REPLY\n3. Otherwise, send the output to Discord channel 1197575814494035968 using the message tool:\n   - action: send\n   - channel: discord\n   - target: 1197575814494035968\n   - message: (the script output)\n4. Reply NO_REPLY after posting.\n\nThe script handles DB queries and marks achievements as notified. Do NOT modify the output.",
+        "model": "anthropic/claude-sonnet-4-6",
+        "timeoutSeconds": 120
       },
       "delivery": {
         "mode": "none",
         "channel": "last"
       },
       "state": {
-        "nextRunAtMs": 1775260828853
+        "nextRunAtMs": 1775282428853,
+        "lastRunAtMs": 1775260828858,
+        "lastRunStatus": "error",
+        "lastStatus": "error",
+        "lastDurationMs": 120005,
+        "lastErrorReason": "timeout",
+        "lastDeliveryStatus": "not-requested",
+        "consecutiveErrors": 2,
+        "lastError": "cron: job execution timed out"
+      }
+    },
+    {
+      "id": "96db177e-e73a-4e10-b612-4c1549aef8b9",
+      "name": "review-royale-post-sync",
+      "enabled": true,
+      "createdAtMs": 1775250385564,
+      "updatedAtMs": 1775253387718,
+      "schedule": {
+        "kind": "cron",
+        "expr": "30 3,9,15,21 * * *"
+      },
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "Run the Review Royale post-sync pipeline to categorize new comments and recalculate XP.\n\nSteps:\n1. Run: `bash /home/openclaw/.openclaw/workspace/scripts/review-royale/post_sync_pipeline.sh`\n2. The script handles everything automatically (categorization loop + recalculation)\n3. Reply NO_REPLY when done.\n\nThis is a background maintenance task — no Discord posting needed.",
+        "model": "anthropic/claude-sonnet-4-6",
+        "timeoutSeconds": 900
+      },
+      "delivery": {
+        "mode": "none"
+      },
+      "state": {
+        "nextRunAtMs": 1775273400000,
+        "lastRunAtMs": 1775253203928,
+        "lastRunStatus": "ok",
+        "lastStatus": "ok",
+        "lastDurationMs": 183790,
+        "lastDelivered": false,
+        "lastDeliveryStatus": "not-delivered",
+        "consecutiveErrors": 0
       }
     }
   ]

@@ -4,7 +4,7 @@
 
 set -euo pipefail
 
-API_BASE="${REVIEW_ROYALE_API:-http://localhost:3456}"
+API_BASE="${REVIEW_ROYALE_API:-http://127.0.0.1:3456}"
 
 # Fetch weekly leaderboard for both repos
 lodestar_lb=$(curl -sf "${API_BASE}/api/repos/ChainSafe/lodestar/leaderboard?period=week&limit=10" 2>/dev/null || echo "[]")

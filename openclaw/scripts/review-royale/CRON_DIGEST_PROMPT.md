@@ -36,7 +36,7 @@ Format as a Discord message (no markdown tables — use bullet lists). Include:
 
 [fun closer based on activity level]
 
-🔗 Full leaderboard: <https://review-royale.lodekeeper.dev/ChainSafe/lodestar>
+🔗 Full leaderboard: <https://review-royale.nflaig.dev/ChainSafe/lodestar>
 ```
 
 ## Rules
