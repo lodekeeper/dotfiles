@@ -116,10 +116,6 @@ def get_required_statuses(body: str) -> dict[str, str]:
     return statuses
 
 
-def section_heading_names(body: str) -> list[str]:
-    return [name.strip() for name in parse_sections(body).keys()]
-
-
 def find_snapshot_with_previous(snapshots: list[Snapshot], date_str: str | None) -> tuple[Snapshot, Snapshot]:
     if not snapshots:
         raise ValueError("No snapshots found")
@@ -181,11 +177,26 @@ def main() -> int:
         if current_statuses.get(section) != previous_statuses.get(section)
     ]
 
-    current_headings = section_heading_names(current.body)
-    previous_headings = section_heading_names(previous.body)
+    current_sections = parse_sections(current.body)
+    previous_sections = parse_sections(previous.body)
+
+    current_headings = [name.strip() for name in current_sections.keys()]
+    previous_headings = [name.strip() for name in previous_sections.keys()]
 
     added_headings = [name for name in current_headings if name not in previous_headings]
     removed_headings = [name for name in previous_headings if name not in current_headings]
+
+    required_lookup = {name.lower() for name in REQUIRED_SECTIONS}
+    shared_non_required = [
+        name
+        for name in current_sections.keys()
+        if name in previous_sections and name.lower() not in required_lookup
+    ]
+    changed_non_required_sections = [
+        name
+        for name in shared_non_required
+        if normalize_text(current_sections[name]) != normalize_text(previous_sections[name])
+    ]
 
     status_deltas = {
         section: {
@@ -201,6 +212,7 @@ def main() -> int:
         "hasDelta": has_delta,
         "changedRequiredSections": changed_required_sections,
         "statusDeltas": status_deltas,
+        "changedNonRequiredSections": changed_non_required_sections,
         "addedSectionHeadings": added_headings,
         "removedSectionHeadings": removed_headings,
         "noReplyRecommended": (not has_delta),
@@ -218,6 +230,13 @@ def main() -> int:
                 print(f"- {section}")
         else:
             print("Changed required-section status lines: none")
+
+        if changed_non_required_sections:
+            print("Changed non-required section bodies:")
+            for section in changed_non_required_sections:
+                print(f"- {section}")
+        else:
+            print("Changed non-required section bodies: none")
 
         if added_headings:
             print("Added section headings:")

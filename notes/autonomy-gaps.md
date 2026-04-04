@@ -1,10 +1,29 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-04-03 (23rd pass)
+> Updated: 2026-04-04 (24th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-04-04 (self-improvement-audit-daily, 00:29 UTC)
+
+### PR review
+- **Status:** review-scope + follow-up guard workflow remains healthy; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** retry telemetry, rolling degradation checks, and log-fallback path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** extraction/compliance/vector-readiness gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident-bundle workflow remains healthy; no new blocker discovered this cycle.
+
+### Audit workflow (cross-cutting)
+- **Blocker:** delta detection now works well, but converting that JSON into a policy-compliant final cron reply (`NO_REPLY` vs concise summary) was still manual, which risks inconsistent wording and accidental noise.
+- **Fix applied this cycle:** extended `scripts/notes/check-autonomy-audit-delta.py` with `changedNonRequiredSections`, then added `scripts/notes/render-autonomy-audit-response.py` + preflight guidance so the audit flow now has a one-command response renderer driven by structured delta JSON.
+
+---
 ## Daily Audit Snapshot — 2026-04-03 (self-improvement-audit-daily, 00:29 UTC)
 
 ### PR review
@@ -593,6 +612,16 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Daily autonomy-audit response renderer added for deterministic NO_REPLY vs summary output (2026-04-04)
+Extended `scripts/notes/check-autonomy-audit-delta.py` + created `scripts/notes/render-autonomy-audit-response.py`, then updated `scripts/notes/run-autonomy-audit-preflight.sh` close-out guidance:
+- delta JSON now includes `changedNonRequiredSections` (for shared non-required sections with body changes),
+- response renderer consumes structured delta output directly,
+- prints exact `NO_REPLY` when no meaningful delta exists,
+- otherwise emits one concise summary line including required-status, non-required-section, and heading changes,
+- keeps wording deterministic so cron wrappers do not need ad-hoc prose parsing.
+
+**Rationale:** closes the last manual handoff between delta detection and outbound reminder text, reducing accidental notification noise while preserving concise updates when there is a real change.
 
 ### ✅ Daily autonomy-audit delta JSON now includes section-level change context (2026-04-03)
 Updated `scripts/notes/check-autonomy-audit-delta.py` so automation can explain *what* changed when a snapshot delta is detected:

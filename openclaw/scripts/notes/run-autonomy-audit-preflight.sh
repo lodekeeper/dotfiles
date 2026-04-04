@@ -93,3 +93,4 @@ echo "[2/2] Inserting daily snapshot scaffold"
 "${PREPEND_CMD[@]}"
 
 echo "✅ Preflight complete. Fill the new snapshot status blocks, then run scripts/notes/finalize-autonomy-audit.py --date ${DATE:-$(date -u +%F)} --fail-on-no-change"
+echo "   After finalize, render the cron response with scripts/notes/render-autonomy-audit-response.py --date ${DATE:-$(date -u +%F)}"
