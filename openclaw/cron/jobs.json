@@ -106,7 +106,7 @@
       "name": "beacon-log-monitor",
       "enabled": true,
       "createdAtMs": 1771513454598,
-      "updatedAtMs": 1775333968074,
+      "updatedAtMs": 1775395846578,
       "schedule": {
         "kind": "every",
         "everyMs": 86400000,
@@ -124,10 +124,10 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1775395278198,
-        "lastRunAtMs": 1775308878198,
+        "nextRunAtMs": 1775482148600,
+        "lastRunAtMs": 1775395748600,
         "lastStatus": "ok",
-        "lastDurationMs": 16797,
+        "lastDurationMs": 97978,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
@@ -174,7 +174,7 @@
       "name": "eth-rnd-archive-hourly",
       "enabled": true,
       "createdAtMs": 1772034567300,
-      "updatedAtMs": 1775387732996,
+      "updatedAtMs": 1775409350832,
       "schedule": {
         "kind": "cron",
         "expr": "15 * * * *",
@@ -192,13 +192,13 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1775387700004,
+        "lastRunAtMs": 1775409300002,
         "lastStatus": "ok",
-        "lastDurationMs": 32992,
+        "lastDurationMs": 50830,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1775391300000,
+        "nextRunAtMs": 1775412900000,
         "lastDelivered": false
       }
     },
@@ -245,7 +245,7 @@
       "name": "github-notifications",
       "enabled": true,
       "createdAtMs": 1772107716625,
-      "updatedAtMs": 1775390275206,
+      "updatedAtMs": 1775412263724,
       "schedule": {
         "kind": "every",
         "everyMs": 300000,
@@ -264,15 +264,15 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1775390216567,
-        "lastStatus": "ok",
-        "lastDurationMs": 58639,
-        "lastRunStatus": "ok",
-        "lastDeliveryStatus": "not-delivered",
-        "consecutiveErrors": 0,
-        "nextRunAtMs": 1775390516567,
-        "lastDelivered": false,
-        "runningAtMs": 1775390959091
+        "lastRunAtMs": 1775411363721,
+        "lastStatus": "error",
+        "lastDurationMs": 900003,
+        "lastRunStatus": "error",
+        "lastDeliveryStatus": "not-requested",
+        "consecutiveErrors": 1,
+        "nextRunAtMs": 1775412416564,
+        "lastError": "cron: job execution timed out",
+        "lastErrorReason": "timeout"
       },
       "deleteAfterRun": false
     },
@@ -316,7 +316,7 @@
       "name": "ci-autofix-unstable",
       "enabled": true,
       "createdAtMs": 1772326513772,
-      "updatedAtMs": 1775366146568,
+      "updatedAtMs": 1775409287201,
       "schedule": {
         "kind": "every",
         "everyMs": 43200000,
@@ -335,14 +335,15 @@
         "to": "-1003764039429:52"
       },
       "state": {
-        "nextRunAtMs": 1775409253786,
-        "lastRunAtMs": 1775366053786,
-        "lastRunStatus": "ok",
-        "lastStatus": "ok",
-        "lastDurationMs": 92782,
-        "lastDeliveryStatus": "not-delivered",
-        "consecutiveErrors": 0,
-        "lastDelivered": false
+        "nextRunAtMs": 1775452453788,
+        "lastRunAtMs": 1775409253788,
+        "lastRunStatus": "error",
+        "lastStatus": "error",
+        "lastDurationMs": 33413,
+        "lastDeliveryStatus": "not-requested",
+        "consecutiveErrors": 1,
+        "lastError": "FallbackSummaryError: All models failed (2): openai-codex/gpt-5.3-codex: ⚠️ You have hit your ChatGPT usage limit (pro plan). Try again in ~3769 min. (rate_limit) | openai-codex/gpt-5.4: ⚠️ You have hit your ChatGPT usage limit (pro plan). Try again in ~3769 min. (rate_limit)",
+        "lastErrorReason": "rate_limit"
       },
       "deleteAfterRun": false
     },
@@ -351,7 +352,7 @@
       "name": "aztec-sequencer-health",
       "enabled": true,
       "createdAtMs": 1772373812089,
-      "updatedAtMs": 1775384057937,
+      "updatedAtMs": 1775398462033,
       "schedule": {
         "kind": "every",
         "everyMs": 14400000,
@@ -368,14 +369,15 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1775398444342,
-        "lastRunAtMs": 1775384044342,
-        "lastRunStatus": "ok",
-        "lastStatus": "ok",
-        "lastDurationMs": 13595,
-        "lastDeliveryStatus": "not-delivered",
-        "consecutiveErrors": 0,
-        "lastDelivered": false
+        "nextRunAtMs": 1775412844345,
+        "lastRunAtMs": 1775398444345,
+        "lastRunStatus": "error",
+        "lastStatus": "error",
+        "lastDurationMs": 17688,
+        "lastDeliveryStatus": "not-requested",
+        "consecutiveErrors": 1,
+        "lastError": "FallbackSummaryError: All models failed (2): claude-cli/claude-sonnet-4-6: {\"type\":\"system\",\"subtype\":\"init\",\"cwd\":\"/home/openclaw/.openclaw/workspace\",\"session_id\":\"1537e3f5-b6f7-4158-a31f-eb6b35660ee5\",\"tools\":[\"Task\",\"AskUserQuestion\",\"Bash\",\"CronCreate\",\"CronDelete\",\"CronList\",\"Edit\",\"EnterPlanMode\",\"EnterWorktree\",\"ExitPlanMode\",\"ExitWorktree\",\"Glob\",\"Grep\",\"NotebookEdit\",\"Read\",\"RemoteTrigger\",\"Skill\",\"TaskOutput\",\"TaskStop\",\"TodoWrite\",\"ToolSearch\",\"WebFetch\",\"WebSearch\",\"Write\"],\"mcp_servers\":[],\"model\":\"claude-sonnet-4-6\",\"permissionMode\":\"bypassPermissions\",\"slash_commands\":[\"update-config\",\"debug\",\"simplify\",\"batch\",\"loop\",\"schedule\",\"claude-api\",\"compact\",\"context\",\"cost\",\"heapdump\",\"init\",\"review\",\"security-review\",\"extra-usage\",\"insights\"],\"apiKeySource\":\"none\",\"claude_code_version\":\"2.1.92\",\"output_style\":\"default\",\"agents\":[\"general-purpose\",\"statusline-setup\",\"Explore\",\"Plan\"],\"skills\":[\"update-config\",\"debug\",\"simplify\",\"batch\",\"loop\",\"schedule\",\"claude-api\"],\"plugins\":[],\"uuid\":\"ef1007fa-96ea-4031-915c-eb02a874c0e8\",\"fast_mode_state\":\"off\"}\n{\"type\":\"assistant\",\"message\":{\"id\":\"d2554ee2-b1e3-4f90-b30f-a535ac0a5879\",\"container\":null,\"model\":\"<synthetic>\",\"role\":\"assistant\",\"stop_reason\":\"stop_sequence\",\"stop_sequence\":\"\",\"type\":\"message\",\"usage\":{\"input_tokens\":0,\"output_tokens\":0,\"cache_creation_input_tokens\":0,\"cache_read_input_tokens\":0,\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":null,\"cache_creation\":{\"ephemeral_1h_input_tokens\":0,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":null,\"iterations\":null,\"speed\":null},\"content\":[{\"type\":\"text\",\"text\":\"API Error: 400 {\\\"type\\\":\\\"error\\\",\\\"error\\\":{\\\"type\\\":\\\"invalid_request_error\\\",\\\"message\\\":\\\"You're out of extra usage. Add more at claude.ai/settings/usage and keep going.\\\"},\\\"request_id\\\":\\\"req_011CZkmDkanJaxUjZ1cYTvRM\\\"}\"}],\"context_management\":null},\"parent_tool_use_id\":null,\"session_id\":\"1537e3f5-b6f7-4158-a31f-eb6b35660ee5\",\"uuid\":\"cc5dbe28-00ec-4ca8-9a13-1d71e9fc5415\",\"error\":\"unknown\"}\n{\"type\":\"result\",\"subtype\":\"success\",\"is_error\":true,\"duration_ms\":274,\"duration_api_ms\":0,\"num_turns\":1,\"result\":\"API Error: 400 {\\\"type\\\":\\\"error\\\",\\\"error\\\":{\\\"type\\\":\\\"invalid_request_error\\\",\\\"message\\\":\\\"You're out of extra usage. Add more at claude.ai/settings/usage and keep going.\\\"},\\\"request_id\\\":\\\"req_011CZkmDkanJaxUjZ1cYTvRM\\\"}\",\"stop_reason\":\"stop_sequence\",\"session_id\":\"1537e3f5-b6f7-4158-a31f-eb6b35660ee5\",\"total_cost_usd\":0,\"usage\":{\"input_tokens\":0,\"cache_creation_input_tokens\":0,\"cache_read_input_tokens\":0,\"output_tokens\":0,\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":0,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"\",\"iterations\":[],\"speed\":\"standard\"},\"modelUsage\":{},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"uuid\":\"3c881cc9-b13b-4119-bbdb-59fa683bcce0\"} (format) | openai-codex/gpt-5.4: ⚠️ You have hit your ChatGPT usage limit (pro plan). Try again in ~3949 min. (rate_limit)",
+        "lastErrorReason": "rate_limit"
       }
     },
     {
@@ -384,7 +386,7 @@
       "name": "workspace-periodic-cleanup",
       "enabled": true,
       "createdAtMs": 1772634832403,
-      "updatedAtMs": 1775371531559,
+      "updatedAtMs": 1775393932319,
       "schedule": {
         "kind": "every",
         "everyMs": 21600000,
@@ -401,11 +403,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1775393073483,
-        "lastRunAtMs": 1775371473483,
+        "nextRunAtMs": 1775415030358,
+        "lastRunAtMs": 1775393430358,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 58076,
+        "lastDurationMs": 501961,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0
@@ -417,7 +419,7 @@
       "name": "monitor-open-pr-ci",
       "enabled": true,
       "createdAtMs": 1772635128553,
-      "updatedAtMs": 1775389451078,
+      "updatedAtMs": 1775410091584,
       "schedule": {
         "kind": "every",
         "everyMs": 1800000,
@@ -434,14 +436,15 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1775391195634,
-        "lastRunAtMs": 1775389395634,
+        "nextRunAtMs": 1775411760748,
+        "lastRunAtMs": 1775409960748,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 55444,
+        "lastDurationMs": 130836,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "lastDelivered": false
+        "lastDelivered": false,
+        "runningAtMs": 1775412266176
       }
     },
     {
@@ -516,7 +519,7 @@
       "name": "cron-health-watchdog",
       "enabled": true,
       "createdAtMs": 1772636078136,
-      "updatedAtMs": 1775389937133,
+      "updatedAtMs": 1775410761707,
       "schedule": {
         "kind": "every",
         "everyMs": 1800000,
@@ -533,11 +536,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1775391729899,
-        "lastRunAtMs": 1775389929899,
+        "nextRunAtMs": 1775412463388,
+        "lastRunAtMs": 1775410663388,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 7234,
+        "lastDurationMs": 98319,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -586,7 +589,7 @@
       "description": "Sync dotfiles repo (safe mode: non-sensitive allowlist + sensitive-path guard)",
       "enabled": true,
       "createdAtMs": 1773087050715,
-      "updatedAtMs": 1775369269723,
+      "updatedAtMs": 1775391111715,
       "schedule": {
         "kind": "cron",
         "expr": "0 */6 * * *",
@@ -605,15 +608,15 @@
         "channel": "last"
       },
       "state": {
-        "nextRunAtMs": 1775390493107,
-        "lastRunAtMs": 1775369204771,
+        "nextRunAtMs": 1775412093107,
+        "lastRunAtMs": 1775391003585,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 64952,
+        "lastDurationMs": 108130,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false,
-        "runningAtMs": 1775390959091
+        "runningAtMs": 1775412266176
       }
     },
     {
@@ -812,7 +815,8 @@
         "lastDurationMs": 527693,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "lastDelivered": false
+        "lastDelivered": false,
+        "runningAtMs": 1775412266176
       }
     },
     {
@@ -820,7 +824,7 @@
       "name": "review-royale-post-sync",
       "enabled": true,
       "createdAtMs": 1775250385564,
-      "updatedAtMs": 1775381523120,
+      "updatedAtMs": 1775403016547,
       "schedule": {
         "kind": "cron",
         "expr": "30 3,9,15,21 * * *"
@@ -837,14 +841,15 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1775403000000,
-        "lastRunAtMs": 1775381494832,
-        "lastRunStatus": "ok",
-        "lastStatus": "ok",
-        "lastDurationMs": 28288,
-        "lastDelivered": false,
-        "lastDeliveryStatus": "not-delivered",
-        "consecutiveErrors": 0
+        "nextRunAtMs": 1775424600000,
+        "lastRunAtMs": 1775403000005,
+        "lastRunStatus": "error",
+        "lastStatus": "error",
+        "lastDurationMs": 16542,
+        "lastDeliveryStatus": "not-requested",
+        "consecutiveErrors": 1,
+        "lastError": "FallbackSummaryError: All models failed (2): claude-cli/claude-sonnet-4-6: {\"type\":\"system\",\"subtype\":\"init\",\"cwd\":\"/home/openclaw/.openclaw/workspace\",\"session_id\":\"b307643f-42f7-4866-99c7-405fafe3fb14\",\"tools\":[\"Task\",\"AskUserQuestion\",\"Bash\",\"CronCreate\",\"CronDelete\",\"CronList\",\"Edit\",\"EnterPlanMode\",\"EnterWorktree\",\"ExitPlanMode\",\"ExitWorktree\",\"Glob\",\"Grep\",\"NotebookEdit\",\"Read\",\"RemoteTrigger\",\"Skill\",\"TaskOutput\",\"TaskStop\",\"TodoWrite\",\"ToolSearch\",\"WebFetch\",\"WebSearch\",\"Write\"],\"mcp_servers\":[],\"model\":\"claude-sonnet-4-6\",\"permissionMode\":\"bypassPermissions\",\"slash_commands\":[\"update-config\",\"debug\",\"simplify\",\"batch\",\"loop\",\"schedule\",\"claude-api\",\"compact\",\"context\",\"cost\",\"heapdump\",\"init\",\"review\",\"security-review\",\"extra-usage\",\"insights\"],\"apiKeySource\":\"none\",\"claude_code_version\":\"2.1.92\",\"output_style\":\"default\",\"agents\":[\"general-purpose\",\"statusline-setup\",\"Explore\",\"Plan\"],\"skills\":[\"update-config\",\"debug\",\"simplify\",\"batch\",\"loop\",\"schedule\",\"claude-api\"],\"plugins\":[],\"uuid\":\"2fe45ea1-4851-498f-9d31-72a69af5b0fb\",\"fast_mode_state\":\"off\"}\n{\"type\":\"assistant\",\"message\":{\"id\":\"6a20d10c-4c30-48c3-bf90-6f844238dec8\",\"container\":null,\"model\":\"<synthetic>\",\"role\":\"assistant\",\"stop_reason\":\"stop_sequence\",\"stop_sequence\":\"\",\"type\":\"message\",\"usage\":{\"input_tokens\":0,\"output_tokens\":0,\"cache_creation_input_tokens\":0,\"cache_read_input_tokens\":0,\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":null,\"cache_creation\":{\"ephemeral_1h_input_tokens\":0,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":null,\"iterations\":null,\"speed\":null},\"content\":[{\"type\":\"text\",\"text\":\"API Error: 400 {\\\"type\\\":\\\"error\\\",\\\"error\\\":{\\\"type\\\":\\\"invalid_request_error\\\",\\\"message\\\":\\\"You're out of extra usage. Add more at claude.ai/settings/usage and keep going.\\\"},\\\"request_id\\\":\\\"req_011CZks1ahpqsEd3Xt9hMhH9\\\"}\"}],\"context_management\":null},\"parent_tool_use_id\":null,\"session_id\":\"b307643f-42f7-4866-99c7-405fafe3fb14\",\"uuid\":\"848d9c40-d456-4c6a-af5d-d4b7bfeaa8aa\",\"error\":\"unknown\"}\n{\"type\":\"result\",\"subtype\":\"success\",\"is_error\":true,\"duration_ms\":346,\"duration_api_ms\":0,\"num_turns\":1,\"result\":\"API Error: 400 {\\\"type\\\":\\\"error\\\",\\\"error\\\":{\\\"type\\\":\\\"invalid_request_error\\\",\\\"message\\\":\\\"You're out of extra usage. Add more at claude.ai/settings/usage and keep going.\\\"},\\\"request_id\\\":\\\"req_011CZks1ahpqsEd3Xt9hMhH9\\\"}\",\"stop_reason\":\"stop_sequence\",\"session_id\":\"b307643f-42f7-4866-99c7-405fafe3fb14\",\"total_cost_usd\":0,\"usage\":{\"input_tokens\":0,\"cache_creation_input_tokens\":0,\"cache_read_input_tokens\":0,\"output_tokens\":0,\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":0,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"\",\"iterations\":[],\"speed\":\"standard\"},\"modelUsage\":{},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"uuid\":\"d20031de-e221-4471-b7e5-91dc7e8f858b\"} (format) | openai-codex/gpt-5.4: ⚠️ You have hit your ChatGPT usage limit (pro plan). Try again in ~3873 min. (rate_limit)",
+        "lastErrorReason": "rate_limit"
       }
     }
   ]
