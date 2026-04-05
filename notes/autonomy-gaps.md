@@ -1,10 +1,29 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-04-04 (24th pass)
+> Updated: 2026-04-05 (25th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-04-05 (self-improvement-audit-daily, 00:29 UTC)
+
+### PR review
+- **Status:** review-scope + follow-up guard workflow remains healthy; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** retry telemetry, rolling degradation checks, and log-fallback path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** extraction/compliance/vector-readiness gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident-bundle workflow remains healthy; no new blocker discovered this cycle.
+
+### Audit workflow (cross-cutting)
+- **Blocker:** daily close-out still required two explicit commands (`finalize` then `render`) and manual handling of finalize exit code 3, which adds avoidable operator steps and can lead to inconsistent cron outputs.
+- **Fix applied this cycle:** added `scripts/notes/close-autonomy-audit.sh` to run finalize + response rendering in one command with built-in no-change handling (`NO_REPLY` on exit code 3), and updated `run-autonomy-audit-preflight.sh` guidance to use the new wrapper.
+
+---
 ## Daily Audit Snapshot — 2026-04-04 (self-improvement-audit-daily, 00:29 UTC)
 
 ### PR review
@@ -612,6 +631,17 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ One-command autonomy-audit close-out wrapper added (2026-04-05)
+Added `scripts/notes/close-autonomy-audit.sh` to collapse the daily close-out into one deterministic command:
+- runs `finalize-autonomy-audit.py --fail-on-no-change`,
+- maps finalize exit code `3` directly to exact `NO_REPLY`,
+- otherwise runs `render-autonomy-audit-response.py` for concise summary output,
+- supports `--file` and `--date` for cron/manual parity.
+
+Also updated `scripts/notes/run-autonomy-audit-preflight.sh` completion guidance to use the new one-command close-out path (with legacy two-step path still documented).
+
+**Rationale:** removes the last operator-owned handoff in daily audits (manual finalize→render sequencing and exit-code interpretation), reducing response drift and accidental noisy output.
 
 ### ✅ Daily autonomy-audit response renderer added for deterministic NO_REPLY vs summary output (2026-04-04)
 Extended `scripts/notes/check-autonomy-audit-delta.py` + created `scripts/notes/render-autonomy-audit-response.py`, then updated `scripts/notes/run-autonomy-audit-preflight.sh` close-out guidance:
