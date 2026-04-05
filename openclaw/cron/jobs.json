@@ -174,7 +174,7 @@
       "name": "eth-rnd-archive-hourly",
       "enabled": true,
       "createdAtMs": 1772034567300,
-      "updatedAtMs": 1775409350832,
+      "updatedAtMs": 1775412942258,
       "schedule": {
         "kind": "cron",
         "expr": "15 * * * *",
@@ -192,13 +192,13 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1775409300002,
+        "lastRunAtMs": 1775412900005,
         "lastStatus": "ok",
-        "lastDurationMs": 50830,
+        "lastDurationMs": 42253,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1775412900000,
+        "nextRunAtMs": 1775416500000,
         "lastDelivered": false
       }
     },
@@ -245,7 +245,7 @@
       "name": "github-notifications",
       "enabled": true,
       "createdAtMs": 1772107716625,
-      "updatedAtMs": 1775412263724,
+      "updatedAtMs": 1775415803790,
       "schedule": {
         "kind": "every",
         "everyMs": 300000,
@@ -264,15 +264,14 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1775411363721,
-        "lastStatus": "error",
-        "lastDurationMs": 900003,
-        "lastRunStatus": "error",
-        "lastDeliveryStatus": "not-requested",
-        "consecutiveErrors": 1,
-        "nextRunAtMs": 1775412416564,
-        "lastError": "cron: job execution timed out",
-        "lastErrorReason": "timeout"
+        "lastRunAtMs": 1775415721643,
+        "lastStatus": "ok",
+        "lastDurationMs": 82147,
+        "lastRunStatus": "ok",
+        "lastDeliveryStatus": "not-delivered",
+        "consecutiveErrors": 0,
+        "nextRunAtMs": 1775416021643,
+        "lastDelivered": false
       },
       "deleteAfterRun": false
     },
@@ -352,7 +351,7 @@
       "name": "aztec-sequencer-health",
       "enabled": true,
       "createdAtMs": 1772373812089,
-      "updatedAtMs": 1775398462033,
+      "updatedAtMs": 1775412854879,
       "schedule": {
         "kind": "every",
         "everyMs": 14400000,
@@ -369,15 +368,14 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1775412844345,
-        "lastRunAtMs": 1775398444345,
-        "lastRunStatus": "error",
-        "lastStatus": "error",
-        "lastDurationMs": 17688,
-        "lastDeliveryStatus": "not-requested",
-        "consecutiveErrors": 1,
-        "lastError": "FallbackSummaryError: All models failed (2): claude-cli/claude-sonnet-4-6: {\"type\":\"system\",\"subtype\":\"init\",\"cwd\":\"/home/openclaw/.openclaw/workspace\",\"session_id\":\"1537e3f5-b6f7-4158-a31f-eb6b35660ee5\",\"tools\":[\"Task\",\"AskUserQuestion\",\"Bash\",\"CronCreate\",\"CronDelete\",\"CronList\",\"Edit\",\"EnterPlanMode\",\"EnterWorktree\",\"ExitPlanMode\",\"ExitWorktree\",\"Glob\",\"Grep\",\"NotebookEdit\",\"Read\",\"RemoteTrigger\",\"Skill\",\"TaskOutput\",\"TaskStop\",\"TodoWrite\",\"ToolSearch\",\"WebFetch\",\"WebSearch\",\"Write\"],\"mcp_servers\":[],\"model\":\"claude-sonnet-4-6\",\"permissionMode\":\"bypassPermissions\",\"slash_commands\":[\"update-config\",\"debug\",\"simplify\",\"batch\",\"loop\",\"schedule\",\"claude-api\",\"compact\",\"context\",\"cost\",\"heapdump\",\"init\",\"review\",\"security-review\",\"extra-usage\",\"insights\"],\"apiKeySource\":\"none\",\"claude_code_version\":\"2.1.92\",\"output_style\":\"default\",\"agents\":[\"general-purpose\",\"statusline-setup\",\"Explore\",\"Plan\"],\"skills\":[\"update-config\",\"debug\",\"simplify\",\"batch\",\"loop\",\"schedule\",\"claude-api\"],\"plugins\":[],\"uuid\":\"ef1007fa-96ea-4031-915c-eb02a874c0e8\",\"fast_mode_state\":\"off\"}\n{\"type\":\"assistant\",\"message\":{\"id\":\"d2554ee2-b1e3-4f90-b30f-a535ac0a5879\",\"container\":null,\"model\":\"<synthetic>\",\"role\":\"assistant\",\"stop_reason\":\"stop_sequence\",\"stop_sequence\":\"\",\"type\":\"message\",\"usage\":{\"input_tokens\":0,\"output_tokens\":0,\"cache_creation_input_tokens\":0,\"cache_read_input_tokens\":0,\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":null,\"cache_creation\":{\"ephemeral_1h_input_tokens\":0,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":null,\"iterations\":null,\"speed\":null},\"content\":[{\"type\":\"text\",\"text\":\"API Error: 400 {\\\"type\\\":\\\"error\\\",\\\"error\\\":{\\\"type\\\":\\\"invalid_request_error\\\",\\\"message\\\":\\\"You're out of extra usage. Add more at claude.ai/settings/usage and keep going.\\\"},\\\"request_id\\\":\\\"req_011CZkmDkanJaxUjZ1cYTvRM\\\"}\"}],\"context_management\":null},\"parent_tool_use_id\":null,\"session_id\":\"1537e3f5-b6f7-4158-a31f-eb6b35660ee5\",\"uuid\":\"cc5dbe28-00ec-4ca8-9a13-1d71e9fc5415\",\"error\":\"unknown\"}\n{\"type\":\"result\",\"subtype\":\"success\",\"is_error\":true,\"duration_ms\":274,\"duration_api_ms\":0,\"num_turns\":1,\"result\":\"API Error: 400 {\\\"type\\\":\\\"error\\\",\\\"error\\\":{\\\"type\\\":\\\"invalid_request_error\\\",\\\"message\\\":\\\"You're out of extra usage. Add more at claude.ai/settings/usage and keep going.\\\"},\\\"request_id\\\":\\\"req_011CZkmDkanJaxUjZ1cYTvRM\\\"}\",\"stop_reason\":\"stop_sequence\",\"session_id\":\"1537e3f5-b6f7-4158-a31f-eb6b35660ee5\",\"total_cost_usd\":0,\"usage\":{\"input_tokens\":0,\"cache_creation_input_tokens\":0,\"cache_read_input_tokens\":0,\"output_tokens\":0,\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":0,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"\",\"iterations\":[],\"speed\":\"standard\"},\"modelUsage\":{},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"uuid\":\"3c881cc9-b13b-4119-bbdb-59fa683bcce0\"} (format) | openai-codex/gpt-5.4: ⚠️ You have hit your ChatGPT usage limit (pro plan). Try again in ~3949 min. (rate_limit)",
-        "lastErrorReason": "rate_limit"
+        "nextRunAtMs": 1775427244349,
+        "lastRunAtMs": 1775412844349,
+        "lastRunStatus": "ok",
+        "lastStatus": "ok",
+        "lastDurationMs": 10530,
+        "lastDeliveryStatus": "not-delivered",
+        "consecutiveErrors": 0,
+        "lastDelivered": false
       }
     },
     {
@@ -386,7 +384,7 @@
       "name": "workspace-periodic-cleanup",
       "enabled": true,
       "createdAtMs": 1772634832403,
-      "updatedAtMs": 1775393932319,
+      "updatedAtMs": 1775416022807,
       "schedule": {
         "kind": "every",
         "everyMs": 21600000,
@@ -397,17 +395,17 @@
       "payload": {
         "kind": "agentTurn",
         "message": "Run periodic workspace cleanup (every 6 hours). Keep files lean without spamming Nico.\n\nRequired steps:\n1) BACKLOG cleanup:\n   - Move completed top-level items (`### ✅`) from `~/.openclaw/workspace/BACKLOG.md` to `~/.openclaw/workspace/BACKLOG_ARCHIVE.md`.\n   - **Condense verbose active items:** If any `### 🟡` or `### 🔴` or `### ⏸️` item has more than 30 lines of subtasks/findings, condense it:\n     - Keep the header, status line, PR/issue link, and current blocker/next-step (max ~10 lines per item)\n     - Move the verbose subtask tree to `BACKLOG_ARCHIVE.md` under a dated batch header\n     - Replace with a one-line summary like: `- **Full investigation log:** archived 2026-03-06 (150 lines → BACKLOG_ARCHIVE.md)`\n   - Target: BACKLOG.md should stay under ~150 lines total. If it exceeds 200 lines, aggressively condense.\n   - Keep only active/passive/on-hold items in BACKLOG.md.\n   - Do NOT add backlog entries for empty cleanup runs.\n2) HEARTBEAT cleanup:\n   - Keep `~/.openclaw/workspace/HEARTBEAT.md` lean; remove stale completed checklist lines if any.\n3) Daily notes hygiene:\n   - Review `~/.openclaw/workspace/memory/` daily notes older than 7 days.\n   - Before removing or archiving anything, ensure durable key info is reflected in `MEMORY.md` or memory bank outputs.\n   - Prefer safe archiving/moving over deletion.\n\nReporting rules:\n- If no actionable changes were needed, reply exactly `NO_REPLY`.\n- If changes were made, send only a concise summary with file paths and counts.",
-        "model": "claude-cli/claude-sonnet-4-6"
+        "model": "claude-cli/claude-haiku-4-5"
       },
       "delivery": {
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1775415030358,
-        "lastRunAtMs": 1775393430358,
+        "nextRunAtMs": 1775436630360,
+        "lastRunAtMs": 1775415030360,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 501961,
+        "lastDurationMs": 89271,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0
@@ -419,7 +417,7 @@
       "name": "monitor-open-pr-ci",
       "enabled": true,
       "createdAtMs": 1772635128553,
-      "updatedAtMs": 1775410091584,
+      "updatedAtMs": 1775414194172,
       "schedule": {
         "kind": "every",
         "everyMs": 1800000,
@@ -436,15 +434,15 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1775411760748,
-        "lastRunAtMs": 1775409960748,
+        "nextRunAtMs": 1775415866179,
+        "lastRunAtMs": 1775414066179,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 130836,
+        "lastDurationMs": 127993,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false,
-        "runningAtMs": 1775412266176
+        "runningAtMs": 1775415866185
       }
     },
     {
@@ -519,7 +517,7 @@
       "name": "cron-health-watchdog",
       "enabled": true,
       "createdAtMs": 1772636078136,
-      "updatedAtMs": 1775410761707,
+      "updatedAtMs": 1775416023713,
       "schedule": {
         "kind": "every",
         "everyMs": 1800000,
@@ -530,17 +528,17 @@
       "payload": {
         "kind": "agentTurn",
         "message": "Run: python3 ~/.openclaw/workspace/scripts/cron/check_cron_health.py\\n- If output is exactly `NO_REPLY`, reply exactly `NO_REPLY`.\\n- Otherwise send the output as-is (it contains failing cron details and action guidance).\\n- Do not create empty-sweep backlog entries.\\n",
-        "model": "claude-cli/claude-sonnet-4-6"
+        "model": "claude-cli/claude-haiku-4-5"
       },
       "delivery": {
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1775412463388,
-        "lastRunAtMs": 1775410663388,
+        "nextRunAtMs": 1775416332788,
+        "lastRunAtMs": 1775414532788,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 98319,
+        "lastDurationMs": 7151,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -589,7 +587,7 @@
       "description": "Sync dotfiles repo (safe mode: non-sensitive allowlist + sensitive-path guard)",
       "enabled": true,
       "createdAtMs": 1773087050715,
-      "updatedAtMs": 1775391111715,
+      "updatedAtMs": 1775416024679,
       "schedule": {
         "kind": "cron",
         "expr": "0 */6 * * *",
@@ -600,7 +598,7 @@
       "payload": {
         "kind": "agentTurn",
         "message": "Run ~/dotfiles/scripts/sync-dotfiles.sh now to sync local files into ~/dotfiles and push to github.com/lodekeeper/dotfiles.\nDo this directly (do not send a reminder message).\nOutput policy:\n- If sync succeeded and there were meaningful changes pushed: send a short routine update to Telegram topic #347 via message tool (target=-1003764039429, threadId=347).\n- If no changes were needed: NO_REPLY.\n- If sync fails: send an actionable error summary to Telegram topic #347; DM Nico only if urgent/manual intervention is required.",
-        "model": "claude-cli/claude-sonnet-4-6",
+        "model": "claude-cli/claude-haiku-4-5",
         "timeoutSeconds": 300
       },
       "delivery": {
@@ -608,15 +606,15 @@
         "channel": "last"
       },
       "state": {
-        "nextRunAtMs": 1775412093107,
-        "lastRunAtMs": 1775391003585,
-        "lastRunStatus": "ok",
-        "lastStatus": "ok",
-        "lastDurationMs": 108130,
-        "lastDeliveryStatus": "not-delivered",
-        "consecutiveErrors": 0,
-        "lastDelivered": false,
-        "runningAtMs": 1775412266176
+        "nextRunAtMs": 1775433693107,
+        "lastRunAtMs": 1775415945362,
+        "lastRunStatus": "error",
+        "lastStatus": "error",
+        "lastDurationMs": 16665,
+        "lastDeliveryStatus": "not-requested",
+        "consecutiveErrors": 2,
+        "lastErrorReason": "rate_limit",
+        "runningAtMs": 1775416093046
       }
     },
     {
@@ -635,9 +633,9 @@
       "sessionTarget": "main",
       "wakeMode": "now",
       "payload": {
-        "kind": "systemEvent",
-        "text": "Check for new OpenClaw release by running /home/openclaw/.openclaw/workspace/scripts/cron/check_openclaw_release.sh. If output is NEW_OPENCLAW_RELEASE|..., alert Nico via sessions_send to agent:main:telegram:direct:5774760693 with tag/url/published/previous. If HEARTBEAT_OK, do nothing and reply HEARTBEAT_OK. Do not edit BACKLOG.",
-        "model": "claude-cli/claude-sonnet-4-6"
+        "kind": "agentTurn",
+        "message": "Check for new OpenClaw release by running /home/openclaw/.openclaw/workspace/scripts/cron/check_openclaw_release.sh. If output is NEW_OPENCLAW_RELEASE, alert Nico via sessions_send. If HEARTBEAT_OK, reply HEARTBEAT_OK. Do not edit BACKLOG.",
+        "model": "claude-cli/claude-haiku-4-5"
       },
       "state": {
         "nextRunAtMs": 1775428481548,
@@ -789,7 +787,7 @@
       "name": "review-royale-achievements",
       "enabled": true,
       "createdAtMs": 1775241575298,
-      "updatedAtMs": 1775390956549,
+      "updatedAtMs": 1775416051743,
       "schedule": {
         "kind": "cron",
         "expr": "0 */6 * * *",
@@ -800,7 +798,7 @@
       "payload": {
         "kind": "agentTurn",
         "message": "Check for new Review Royale achievements and post to Discord.\n\nSteps:\n1. Run: `bash /home/openclaw/.openclaw/workspace/scripts/review-royale/check_achievements.sh`\n2. If output is \"NO_PENDING\", reply NO_REPLY\n3. Otherwise, send the output to Discord channel 1197575814494035968 using the message tool:\n   - action: send\n   - channel: discord\n   - target: 1197575814494035968\n   - message: (the script output)\n4. Reply NO_REPLY after posting.\n\nThe script handles DB queries and marks achievements as notified. Do NOT modify the output.",
-        "model": "claude-cli/claude-sonnet-4-6",
+        "model": "claude-cli/claude-haiku-4-5",
         "timeoutSeconds": 600
       },
       "delivery": {
@@ -808,15 +806,14 @@
         "channel": "last"
       },
       "state": {
-        "nextRunAtMs": 1775412028853,
-        "lastRunAtMs": 1775390428856,
+        "nextRunAtMs": 1775433628853,
+        "lastRunAtMs": 1775412679104,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 527693,
+        "lastDurationMs": 7914,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "lastDelivered": false,
-        "runningAtMs": 1775412266176
+        "lastDelivered": false
       }
     },
     {
@@ -824,7 +821,7 @@
       "name": "review-royale-post-sync",
       "enabled": true,
       "createdAtMs": 1775250385564,
-      "updatedAtMs": 1775403016547,
+      "updatedAtMs": 1775416052612,
       "schedule": {
         "kind": "cron",
         "expr": "30 3,9,15,21 * * *"
@@ -834,7 +831,7 @@
       "payload": {
         "kind": "agentTurn",
         "message": "Run the Review Royale post-sync pipeline to categorize new comments and recalculate XP.\n\nSteps:\n1. Run: `bash /home/openclaw/.openclaw/workspace/scripts/review-royale/post_sync_pipeline.sh`\n2. The script handles everything automatically (categorization loop + recalculation)\n3. Reply NO_REPLY when done.\n\nThis is a background maintenance task — no Discord posting needed.",
-        "model": "claude-cli/claude-sonnet-4-6",
+        "model": "claude-cli/claude-haiku-4-5",
         "timeoutSeconds": 900
       },
       "delivery": {
