@@ -7,7 +7,7 @@
       "name": "daily-summary",
       "enabled": true,
       "createdAtMs": 1769895413579,
-      "updatedAtMs": 1775343719258,
+      "updatedAtMs": 1775430331081,
       "schedule": {
         "kind": "cron",
         "expr": "0 23 * * *",
@@ -21,10 +21,10 @@
         "model": "claude-cli/claude-sonnet-4-6"
       },
       "state": {
-        "nextRunAtMs": 1775430000000,
-        "lastRunAtMs": 1775343600002,
+        "nextRunAtMs": 1775516400000,
+        "lastRunAtMs": 1775430000004,
         "lastStatus": "ok",
-        "lastDurationMs": 119256,
+        "lastDurationMs": 331077,
         "lastRunStatus": "ok",
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
@@ -140,7 +140,7 @@
       "name": "daily-meme",
       "enabled": true,
       "createdAtMs": 1771753595377,
-      "updatedAtMs": 1775340181733,
+      "updatedAtMs": 1775427214437,
       "schedule": {
         "kind": "cron",
         "expr": "0 22 * * *",
@@ -151,21 +151,22 @@
       "payload": {
         "kind": "agentTurn",
         "message": "It's end of day — time for the daily meme! Read memory/$(date -u +%Y-%m-%d).md (today's daily notes) and BACKLOG.md to understand what happened today. Then generate ONE meme image using the openai-image-gen skill (NOT nano-banana-pro). Run:\n\npython3 /home/openclaw/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/skills/openai-image-gen/scripts/gen.py --model gpt-image-1 --quality high --size 1024x1024 --count 1 --out-dir /tmp/daily-meme --prompt \"<your meme prompt>\"\n\nMake the prompt a funny programming meme that summarizes today's work — inside jokes about PRs, CI, code reviews, EPBS debugging, etc. If nothing notable happened, use general Lodestar/Ethereum humor.\n\nThen send the generated image to Nico on Telegram:\nmessage action=send channel=telegram message=\"<funny caption>\" media=\"/tmp/daily-meme/001-*.png\" target=\"5774760693\"\n\n⛔ HARD CONSTRAINT: Do NOT edit memory files (memory/*.md) or BACKLOG.md under ANY circumstances. This will cause the cron to fail. Memory updates are handled exclusively by the nightly consolidation pipeline.\n\nAfter sending the image, reply exactly NO_REPLY.",
-        "timeoutSeconds": 600,
-        "model": "openai-codex/gpt-5.4"
+        "timeoutSeconds": 900,
+        "model": "claude-cli/claude-opus-4-6"
       },
       "delivery": {
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1775426400000,
-        "lastRunAtMs": 1775340000003,
-        "lastStatus": "ok",
-        "lastDurationMs": 181730,
-        "lastRunStatus": "ok",
-        "lastDeliveryStatus": "not-delivered",
-        "consecutiveErrors": 0,
-        "lastDelivered": false
+        "nextRunAtMs": 1775512800000,
+        "lastRunAtMs": 1775426400003,
+        "lastStatus": "error",
+        "lastDurationMs": 600002,
+        "lastRunStatus": "error",
+        "lastDeliveryStatus": "not-requested",
+        "consecutiveErrors": 1,
+        "lastError": "cron: job execution timed out",
+        "lastErrorReason": "timeout"
       }
     },
     {
@@ -174,7 +175,7 @@
       "name": "eth-rnd-archive-hourly",
       "enabled": true,
       "createdAtMs": 1772034567300,
-      "updatedAtMs": 1775412942258,
+      "updatedAtMs": 1775430962802,
       "schedule": {
         "kind": "cron",
         "expr": "15 * * * *",
@@ -192,13 +193,13 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1775412900005,
+        "lastRunAtMs": 1775430900002,
         "lastStatus": "ok",
-        "lastDurationMs": 42253,
+        "lastDurationMs": 62800,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1775416500000,
+        "nextRunAtMs": 1775434500000,
         "lastDelivered": false
       }
     },
@@ -245,7 +246,7 @@
       "name": "github-notifications",
       "enabled": true,
       "createdAtMs": 1772107716625,
-      "updatedAtMs": 1775415803790,
+      "updatedAtMs": 1775433498807,
       "schedule": {
         "kind": "every",
         "everyMs": 300000,
@@ -264,14 +265,15 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1775415721643,
+        "lastRunAtMs": 1775433462280,
         "lastStatus": "ok",
-        "lastDurationMs": 82147,
+        "lastDurationMs": 36527,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1775416021643,
-        "lastDelivered": false
+        "nextRunAtMs": 1775433762280,
+        "lastDelivered": false,
+        "runningAtMs": 1775434090721
       },
       "deleteAfterRun": false
     },
@@ -351,7 +353,7 @@
       "name": "aztec-sequencer-health",
       "enabled": true,
       "createdAtMs": 1772373812089,
-      "updatedAtMs": 1775412854879,
+      "updatedAtMs": 1775427259177,
       "schedule": {
         "kind": "every",
         "everyMs": 14400000,
@@ -368,11 +370,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1775427244349,
-        "lastRunAtMs": 1775412844349,
+        "nextRunAtMs": 1775441644355,
+        "lastRunAtMs": 1775427244355,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 10530,
+        "lastDurationMs": 14822,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -417,7 +419,7 @@
       "name": "monitor-open-pr-ci",
       "enabled": true,
       "createdAtMs": 1772635128553,
-      "updatedAtMs": 1775414194172,
+      "updatedAtMs": 1775432549725,
       "schedule": {
         "kind": "every",
         "everyMs": 1800000,
@@ -434,15 +436,14 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1775415866179,
-        "lastRunAtMs": 1775414066179,
+        "nextRunAtMs": 1775434244812,
+        "lastRunAtMs": 1775432444812,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 127993,
+        "lastDurationMs": 104913,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "lastDelivered": false,
-        "runningAtMs": 1775415866185
+        "lastDelivered": false
       }
     },
     {
@@ -517,7 +518,7 @@
       "name": "cron-health-watchdog",
       "enabled": true,
       "createdAtMs": 1772636078136,
-      "updatedAtMs": 1775416023713,
+      "updatedAtMs": 1775432611963,
       "schedule": {
         "kind": "every",
         "everyMs": 1800000,
@@ -534,11 +535,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1775416332788,
-        "lastRunAtMs": 1775414532788,
+        "nextRunAtMs": 1775434404208,
+        "lastRunAtMs": 1775432604208,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 7151,
+        "lastDurationMs": 7755,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -587,7 +588,7 @@
       "description": "Sync dotfiles repo (safe mode: non-sensitive allowlist + sensitive-path guard)",
       "enabled": true,
       "createdAtMs": 1773087050715,
-      "updatedAtMs": 1775416024679,
+      "updatedAtMs": 1775416116503,
       "schedule": {
         "kind": "cron",
         "expr": "0 */6 * * *",
@@ -607,14 +608,14 @@
       },
       "state": {
         "nextRunAtMs": 1775433693107,
-        "lastRunAtMs": 1775415945362,
-        "lastRunStatus": "error",
-        "lastStatus": "error",
-        "lastDurationMs": 16665,
-        "lastDeliveryStatus": "not-requested",
-        "consecutiveErrors": 2,
-        "lastErrorReason": "rate_limit",
-        "runningAtMs": 1775416093046
+        "lastRunAtMs": 1775416093046,
+        "lastRunStatus": "ok",
+        "lastStatus": "ok",
+        "lastDurationMs": 23457,
+        "lastDeliveryStatus": "not-delivered",
+        "consecutiveErrors": 0,
+        "lastDelivered": false,
+        "runningAtMs": 1775434090721
       }
     },
     {
@@ -624,7 +625,7 @@
       "description": "Check openclaw/openclaw latest release every 12h and alert Nico on new tag",
       "enabled": true,
       "createdAtMs": 1773093482865,
-      "updatedAtMs": 1775385293277,
+      "updatedAtMs": 1775428776369,
       "schedule": {
         "kind": "every",
         "everyMs": 43200000,
@@ -638,13 +639,14 @@
         "model": "claude-cli/claude-haiku-4-5"
       },
       "state": {
-        "nextRunAtMs": 1775428481548,
-        "lastRunAtMs": 1775385281548,
-        "lastRunStatus": "ok",
-        "lastStatus": "ok",
-        "lastDurationMs": 11729,
+        "nextRunAtMs": 1775471976368,
+        "lastRunAtMs": 1775428776368,
+        "lastRunStatus": "skipped",
+        "lastStatus": "skipped",
+        "lastDurationMs": 1,
         "lastDeliveryStatus": "not-requested",
-        "consecutiveErrors": 0
+        "consecutiveErrors": 0,
+        "lastError": "main job requires payload.kind=\"systemEvent\""
       }
     },
     {
@@ -721,7 +723,7 @@
       "name": "daily-journal",
       "enabled": true,
       "createdAtMs": 1774558224563,
-      "updatedAtMs": 1775343875293,
+      "updatedAtMs": 1775430438699,
       "schedule": {
         "kind": "cron",
         "expr": "0 23 * * *"
@@ -739,11 +741,11 @@
         "channel": "last"
       },
       "state": {
-        "nextRunAtMs": 1775430000000,
-        "lastRunAtMs": 1775343719258,
+        "nextRunAtMs": 1775516400000,
+        "lastRunAtMs": 1775430331081,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 156035,
+        "lastDurationMs": 107618,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -787,7 +789,7 @@
       "name": "review-royale-achievements",
       "enabled": true,
       "createdAtMs": 1775241575298,
-      "updatedAtMs": 1775416051743,
+      "updatedAtMs": 1775434088235,
       "schedule": {
         "kind": "cron",
         "expr": "0 */6 * * *",
@@ -806,11 +808,11 @@
         "channel": "last"
       },
       "state": {
-        "nextRunAtMs": 1775433628853,
-        "lastRunAtMs": 1775412679104,
+        "nextRunAtMs": 1775455228853,
+        "lastRunAtMs": 1775433628855,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 7914,
+        "lastDurationMs": 459380,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -821,7 +823,7 @@
       "name": "review-royale-post-sync",
       "enabled": true,
       "createdAtMs": 1775250385564,
-      "updatedAtMs": 1775416052612,
+      "updatedAtMs": 1775424738529,
       "schedule": {
         "kind": "cron",
         "expr": "30 3,9,15,21 * * *"
@@ -838,15 +840,14 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1775424600000,
-        "lastRunAtMs": 1775403000005,
-        "lastRunStatus": "error",
-        "lastStatus": "error",
-        "lastDurationMs": 16542,
-        "lastDeliveryStatus": "not-requested",
-        "consecutiveErrors": 1,
-        "lastError": "FallbackSummaryError: All models failed (2): claude-cli/claude-sonnet-4-6: {\"type\":\"system\",\"subtype\":\"init\",\"cwd\":\"/home/openclaw/.openclaw/workspace\",\"session_id\":\"b307643f-42f7-4866-99c7-405fafe3fb14\",\"tools\":[\"Task\",\"AskUserQuestion\",\"Bash\",\"CronCreate\",\"CronDelete\",\"CronList\",\"Edit\",\"EnterPlanMode\",\"EnterWorktree\",\"ExitPlanMode\",\"ExitWorktree\",\"Glob\",\"Grep\",\"NotebookEdit\",\"Read\",\"RemoteTrigger\",\"Skill\",\"TaskOutput\",\"TaskStop\",\"TodoWrite\",\"ToolSearch\",\"WebFetch\",\"WebSearch\",\"Write\"],\"mcp_servers\":[],\"model\":\"claude-sonnet-4-6\",\"permissionMode\":\"bypassPermissions\",\"slash_commands\":[\"update-config\",\"debug\",\"simplify\",\"batch\",\"loop\",\"schedule\",\"claude-api\",\"compact\",\"context\",\"cost\",\"heapdump\",\"init\",\"review\",\"security-review\",\"extra-usage\",\"insights\"],\"apiKeySource\":\"none\",\"claude_code_version\":\"2.1.92\",\"output_style\":\"default\",\"agents\":[\"general-purpose\",\"statusline-setup\",\"Explore\",\"Plan\"],\"skills\":[\"update-config\",\"debug\",\"simplify\",\"batch\",\"loop\",\"schedule\",\"claude-api\"],\"plugins\":[],\"uuid\":\"2fe45ea1-4851-498f-9d31-72a69af5b0fb\",\"fast_mode_state\":\"off\"}\n{\"type\":\"assistant\",\"message\":{\"id\":\"6a20d10c-4c30-48c3-bf90-6f844238dec8\",\"container\":null,\"model\":\"<synthetic>\",\"role\":\"assistant\",\"stop_reason\":\"stop_sequence\",\"stop_sequence\":\"\",\"type\":\"message\",\"usage\":{\"input_tokens\":0,\"output_tokens\":0,\"cache_creation_input_tokens\":0,\"cache_read_input_tokens\":0,\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":null,\"cache_creation\":{\"ephemeral_1h_input_tokens\":0,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":null,\"iterations\":null,\"speed\":null},\"content\":[{\"type\":\"text\",\"text\":\"API Error: 400 {\\\"type\\\":\\\"error\\\",\\\"error\\\":{\\\"type\\\":\\\"invalid_request_error\\\",\\\"message\\\":\\\"You're out of extra usage. Add more at claude.ai/settings/usage and keep going.\\\"},\\\"request_id\\\":\\\"req_011CZks1ahpqsEd3Xt9hMhH9\\\"}\"}],\"context_management\":null},\"parent_tool_use_id\":null,\"session_id\":\"b307643f-42f7-4866-99c7-405fafe3fb14\",\"uuid\":\"848d9c40-d456-4c6a-af5d-d4b7bfeaa8aa\",\"error\":\"unknown\"}\n{\"type\":\"result\",\"subtype\":\"success\",\"is_error\":true,\"duration_ms\":346,\"duration_api_ms\":0,\"num_turns\":1,\"result\":\"API Error: 400 {\\\"type\\\":\\\"error\\\",\\\"error\\\":{\\\"type\\\":\\\"invalid_request_error\\\",\\\"message\\\":\\\"You're out of extra usage. Add more at claude.ai/settings/usage and keep going.\\\"},\\\"request_id\\\":\\\"req_011CZks1ahpqsEd3Xt9hMhH9\\\"}\",\"stop_reason\":\"stop_sequence\",\"session_id\":\"b307643f-42f7-4866-99c7-405fafe3fb14\",\"total_cost_usd\":0,\"usage\":{\"input_tokens\":0,\"cache_creation_input_tokens\":0,\"cache_read_input_tokens\":0,\"output_tokens\":0,\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":0,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"\",\"iterations\":[],\"speed\":\"standard\"},\"modelUsage\":{},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"uuid\":\"d20031de-e221-4471-b7e5-91dc7e8f858b\"} (format) | openai-codex/gpt-5.4: ⚠️ You have hit your ChatGPT usage limit (pro plan). Try again in ~3873 min. (rate_limit)",
-        "lastErrorReason": "rate_limit"
+        "nextRunAtMs": 1775446200000,
+        "lastRunAtMs": 1775424600004,
+        "lastRunStatus": "ok",
+        "lastStatus": "ok",
+        "lastDurationMs": 138525,
+        "lastDeliveryStatus": "not-delivered",
+        "consecutiveErrors": 0,
+        "lastDelivered": false
       }
     }
   ]
