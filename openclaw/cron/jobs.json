@@ -106,7 +106,7 @@
       "name": "beacon-log-monitor",
       "enabled": true,
       "createdAtMs": 1771513454598,
-      "updatedAtMs": 1775395846578,
+      "updatedAtMs": 1775482388036,
       "schedule": {
         "kind": "every",
         "everyMs": 86400000,
@@ -124,10 +124,10 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1775482148600,
-        "lastRunAtMs": 1775395748600,
+        "nextRunAtMs": 1775568548603,
+        "lastRunAtMs": 1775482148603,
         "lastStatus": "ok",
-        "lastDurationMs": 97978,
+        "lastDurationMs": 239433,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
@@ -175,7 +175,7 @@
       "name": "eth-rnd-archive-hourly",
       "enabled": true,
       "createdAtMs": 1772034567300,
-      "updatedAtMs": 1775474163049,
+      "updatedAtMs": 1775495742196,
       "schedule": {
         "kind": "cron",
         "expr": "15 * * * *",
@@ -193,13 +193,13 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1775474100002,
+        "lastRunAtMs": 1775495700002,
         "lastStatus": "ok",
-        "lastDurationMs": 63047,
+        "lastDurationMs": 42194,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1775477700000,
+        "nextRunAtMs": 1775499300000,
         "lastDelivered": false
       }
     },
@@ -246,7 +246,7 @@
       "name": "github-notifications",
       "enabled": true,
       "createdAtMs": 1772107716625,
-      "updatedAtMs": 1775476652972,
+      "updatedAtMs": 1775498306140,
       "schedule": {
         "kind": "every",
         "everyMs": 300000,
@@ -265,15 +265,15 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1775476616596,
+        "lastRunAtMs": 1775498265767,
         "lastStatus": "ok",
-        "lastDurationMs": 36376,
+        "lastDurationMs": 40373,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1775476916596,
+        "nextRunAtMs": 1775498565767,
         "lastDelivered": false,
-        "runningAtMs": 1775477330074
+        "runningAtMs": 1775498653477
       },
       "deleteAfterRun": false
     },
@@ -318,7 +318,7 @@
       "name": "ci-autofix-unstable",
       "enabled": true,
       "createdAtMs": 1772326513772,
-      "updatedAtMs": 1775452934397,
+      "updatedAtMs": 1775496407986,
       "schedule": {
         "kind": "every",
         "everyMs": 43200000,
@@ -337,15 +337,15 @@
         "to": "-1003764039429:52"
       },
       "state": {
-        "nextRunAtMs": 1775496102820,
-        "lastRunAtMs": 1775452902820,
+        "nextRunAtMs": 1775539571036,
+        "lastRunAtMs": 1775496371036,
         "lastRunStatus": "error",
         "lastStatus": "error",
-        "lastDurationMs": 31577,
+        "lastDurationMs": 36950,
         "lastDeliveryStatus": "not-requested",
-        "consecutiveErrors": 2,
+        "consecutiveErrors": 3,
         "lastErrorReason": "rate_limit",
-        "lastError": "FallbackSummaryError: All models failed (2): openai-codex/gpt-5.3-codex: ⚠️ You have hit your ChatGPT usage limit (pro plan). Try again in ~3041 min. (rate_limit) | openai-codex/gpt-5.4: ⚠️ You have hit your ChatGPT usage limit (pro plan). Try again in ~3041 min. (rate_limit)"
+        "lastError": "FallbackSummaryError: All models failed (2): openai-codex/gpt-5.3-codex: ⚠️ You have hit your ChatGPT usage limit (pro plan). Try again in ~2317 min. (rate_limit) | openai-codex/gpt-5.4: ⚠️ You have hit your ChatGPT usage limit (pro plan). Try again in ~2317 min. (rate_limit)"
       },
       "deleteAfterRun": false
     },
@@ -354,7 +354,7 @@
       "name": "aztec-sequencer-health",
       "enabled": true,
       "createdAtMs": 1772373812089,
-      "updatedAtMs": 1775470599554,
+      "updatedAtMs": 1775485476733,
       "schedule": {
         "kind": "every",
         "everyMs": 14400000,
@@ -371,11 +371,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1775484991481,
-        "lastRunAtMs": 1775470591481,
+        "nextRunAtMs": 1775499860175,
+        "lastRunAtMs": 1775485460175,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 8073,
+        "lastDurationMs": 16558,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -387,7 +387,7 @@
       "name": "workspace-periodic-cleanup",
       "enabled": true,
       "createdAtMs": 1772634832403,
-      "updatedAtMs": 1775458249170,
+      "updatedAtMs": 1775479861563,
       "schedule": {
         "kind": "every",
         "everyMs": 21600000,
@@ -404,11 +404,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1775479830364,
-        "lastRunAtMs": 1775458230364,
+        "nextRunAtMs": 1775501430366,
+        "lastRunAtMs": 1775479830366,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 18806,
+        "lastDurationMs": 31197,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0
@@ -420,7 +420,7 @@
       "name": "monitor-open-pr-ci",
       "enabled": true,
       "createdAtMs": 1772635128553,
-      "updatedAtMs": 1775475700410,
+      "updatedAtMs": 1775497348655,
       "schedule": {
         "kind": "every",
         "everyMs": 1800000,
@@ -437,11 +437,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1775477444872,
-        "lastRunAtMs": 1775475644872,
+        "nextRunAtMs": 1775499088710,
+        "lastRunAtMs": 1775497288710,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 55538,
+        "lastDurationMs": 59945,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -521,7 +521,7 @@
       "name": "cron-health-watchdog",
       "enabled": true,
       "createdAtMs": 1772636078136,
-      "updatedAtMs": 1775476557899,
+      "updatedAtMs": 1775498219168,
       "schedule": {
         "kind": "every",
         "everyMs": 1800000,
@@ -538,11 +538,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1775478351361,
-        "lastRunAtMs": 1775476551361,
+        "nextRunAtMs": 1775500009995,
+        "lastRunAtMs": 1775498209995,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 6538,
+        "lastDurationMs": 9173,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -592,7 +592,7 @@
       "description": "Sync dotfiles repo (safe mode: non-sensitive allowlist + sensitive-path guard)",
       "enabled": true,
       "createdAtMs": 1773087050715,
-      "updatedAtMs": 1775455568010,
+      "updatedAtMs": 1775477390977,
       "schedule": {
         "kind": "cron",
         "expr": "0 */6 * * *",
@@ -611,15 +611,15 @@
         "channel": "last"
       },
       "state": {
-        "nextRunAtMs": 1775476893107,
-        "lastRunAtMs": 1775455535793,
+        "nextRunAtMs": 1775498493107,
+        "lastRunAtMs": 1775477369162,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 32217,
+        "lastDurationMs": 21815,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false,
-        "runningAtMs": 1775477330074
+        "runningAtMs": 1775498653477
       }
     },
     {
@@ -794,7 +794,7 @@
       "name": "review-royale-achievements",
       "enabled": true,
       "createdAtMs": 1775241575298,
-      "updatedAtMs": 1775477327673,
+      "updatedAtMs": 1775498651472,
       "schedule": {
         "kind": "cron",
         "expr": "0 */6 * * *",
@@ -813,15 +813,14 @@
         "channel": "last"
       },
       "state": {
-        "nextRunAtMs": 1775498428853,
-        "lastRunAtMs": 1775476828855,
-        "lastRunStatus": "error",
-        "lastStatus": "error",
-        "lastDurationMs": 498818,
-        "lastDeliveryStatus": "not-requested",
-        "consecutiveErrors": 1,
-        "lastError": "FallbackSummaryError: All models failed (2): claude-cli/claude-haiku-4-5: CLI produced no output for 480s and was terminated. (timeout) | openai-codex/gpt-5.4: ⚠️ You have hit your ChatGPT usage limit (pro plan). Try again in ~2635 min. (rate_limit)",
-        "lastErrorReason": "rate_limit"
+        "nextRunAtMs": 1775520028853,
+        "lastRunAtMs": 1775498428855,
+        "lastRunStatus": "ok",
+        "lastStatus": "ok",
+        "lastDurationMs": 222617,
+        "lastDeliveryStatus": "not-delivered",
+        "consecutiveErrors": 0,
+        "lastDelivered": false
       }
     },
     {
@@ -829,7 +828,7 @@
       "name": "review-royale-post-sync",
       "enabled": true,
       "createdAtMs": 1775250385564,
-      "updatedAtMs": 1775468218033,
+      "updatedAtMs": 1775489741564,
       "schedule": {
         "kind": "cron",
         "expr": "30 3,9,15,21 * * *"
@@ -846,11 +845,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1775489400000,
-        "lastRunAtMs": 1775467818231,
+        "nextRunAtMs": 1775511000000,
+        "lastRunAtMs": 1775489400002,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 399802,
+        "lastDurationMs": 341562,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
