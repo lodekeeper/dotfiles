@@ -7,7 +7,7 @@ You are generating the weekly Review Royale digest for the Lodestar team.
 1. Run `~/.openclaw/workspace/scripts/review-royale/weekly_digest.sh` to get the raw data
 2. If output is "NO_DATA", do nothing (reply with just "NO_DATA")
 3. Format the data into a Discord message (see template below)
-4. Send it to #lodestar-developer (channel 1197575814494035968) using the message tool
+4. Send it to #lodestar-review-royale (channel 1490679163026145290) using the message tool
 5. Reply with "DIGEST_SENT" after posting
 
 ## Discord Message Template
@@ -36,7 +36,7 @@ Format as a Discord message (no markdown tables — use bullet lists). Include:
 
 [fun closer based on activity level]
 
-🔗 Full leaderboard: <https://review-royale.nflaig.dev/ChainSafe/lodestar>
+🔗 Full leaderboard: <https://review-royale.nflaig.dev/>
 ```
 
 ## Rules

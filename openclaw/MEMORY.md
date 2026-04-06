@@ -94,3 +94,4 @@
 - 2026-04-02: **Verify participant claims before naming peers as official devnet nodes.** `client=` identify strings and observed peer behavior are not proof of official devnet membership; cross-check against the published participant set before writing PR text/commit messages.
 - 2026-04-02: **Tie long-running repro loops to real liveness signals.** If the remote host/port is hard-closed, stop churning local node restarts and switch to a lightweight availability watcher until the target reopens.
 - 2026-04-02: **Use semantic backlog status tooling for recurring updates.** Brittle exact-match edits on `BACKLOG.md` can fail noisily and leak operational noise; prefer heading-targeted status updates (`scripts/backlog/set_status.py`).
+- 2026-04-06: **Post Review Royale digests in a Discord thread, not the main channel.** Matthew Keil asked to keep automated digests isolated — they create noise in #lodestar-developer.

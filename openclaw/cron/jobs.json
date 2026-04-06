@@ -175,7 +175,7 @@
       "name": "eth-rnd-archive-hourly",
       "enabled": true,
       "createdAtMs": 1772034567300,
-      "updatedAtMs": 1775452962281,
+      "updatedAtMs": 1775474163049,
       "schedule": {
         "kind": "cron",
         "expr": "15 * * * *",
@@ -193,13 +193,13 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1775452936794,
+        "lastRunAtMs": 1775474100002,
         "lastStatus": "ok",
-        "lastDurationMs": 25487,
+        "lastDurationMs": 63047,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1775456100000,
+        "nextRunAtMs": 1775477700000,
         "lastDelivered": false
       }
     },
@@ -209,7 +209,7 @@
       "name": "eth-rnd-daily-digest",
       "enabled": true,
       "createdAtMs": 1772034576175,
-      "updatedAtMs": 1775372750607,
+      "updatedAtMs": 1775459254480,
       "schedule": {
         "kind": "cron",
         "expr": "0 8 * * *",
@@ -230,13 +230,13 @@
         "bestEffort": true
       },
       "state": {
-        "lastRunAtMs": 1775372400002,
+        "lastRunAtMs": 1775459190182,
         "lastStatus": "ok",
-        "lastDurationMs": 350605,
+        "lastDurationMs": 64298,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1775458800000,
+        "nextRunAtMs": 1775545200000,
         "lastDelivered": false
       }
     },
@@ -246,7 +246,7 @@
       "name": "github-notifications",
       "enabled": true,
       "createdAtMs": 1772107716625,
-      "updatedAtMs": 1775455533341,
+      "updatedAtMs": 1775476652972,
       "schedule": {
         "kind": "every",
         "everyMs": 300000,
@@ -265,14 +265,15 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1775455127976,
+        "lastRunAtMs": 1775476616596,
         "lastStatus": "ok",
-        "lastDurationMs": 405365,
+        "lastDurationMs": 36376,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1775455616564,
-        "lastDelivered": false
+        "nextRunAtMs": 1775476916596,
+        "lastDelivered": false,
+        "runningAtMs": 1775477330074
       },
       "deleteAfterRun": false
     },
@@ -353,7 +354,7 @@
       "name": "aztec-sequencer-health",
       "enabled": true,
       "createdAtMs": 1772373812089,
-      "updatedAtMs": 1775441710993,
+      "updatedAtMs": 1775470599554,
       "schedule": {
         "kind": "every",
         "everyMs": 14400000,
@@ -370,11 +371,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1775456099116,
-        "lastRunAtMs": 1775441699116,
+        "nextRunAtMs": 1775484991481,
+        "lastRunAtMs": 1775470591481,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 11877,
+        "lastDurationMs": 8073,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -386,7 +387,7 @@
       "name": "workspace-periodic-cleanup",
       "enabled": true,
       "createdAtMs": 1772634832403,
-      "updatedAtMs": 1775436642920,
+      "updatedAtMs": 1775458249170,
       "schedule": {
         "kind": "every",
         "everyMs": 21600000,
@@ -403,11 +404,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1775458230362,
-        "lastRunAtMs": 1775436630362,
+        "nextRunAtMs": 1775479830364,
+        "lastRunAtMs": 1775458230364,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 12558,
+        "lastDurationMs": 18806,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0
@@ -419,7 +420,7 @@
       "name": "monitor-open-pr-ci",
       "enabled": true,
       "createdAtMs": 1772635128553,
-      "updatedAtMs": 1775454225956,
+      "updatedAtMs": 1775475700410,
       "schedule": {
         "kind": "every",
         "everyMs": 1800000,
@@ -436,11 +437,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1775455844839,
-        "lastRunAtMs": 1775454044839,
+        "nextRunAtMs": 1775477444872,
+        "lastRunAtMs": 1775475644872,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 181117,
+        "lastDurationMs": 55538,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -520,7 +521,7 @@
       "name": "cron-health-watchdog",
       "enabled": true,
       "createdAtMs": 1772636078136,
-      "updatedAtMs": 1775454805346,
+      "updatedAtMs": 1775476557899,
       "schedule": {
         "kind": "every",
         "everyMs": 1800000,
@@ -537,11 +538,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1775456599515,
-        "lastRunAtMs": 1775454799515,
+        "nextRunAtMs": 1775478351361,
+        "lastRunAtMs": 1775476551361,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 5831,
+        "lastDurationMs": 6538,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -554,7 +555,7 @@
       "description": "Daily nudge to execute autonomy audit priorities",
       "enabled": true,
       "createdAtMs": 1772853540767,
-      "updatedAtMs": 1775381494832,
+      "updatedAtMs": 1775467818231,
       "schedule": {
         "kind": "cron",
         "expr": "30 9 * * *",
@@ -573,14 +574,15 @@
         "channel": "last"
       },
       "state": {
-        "nextRunAtMs": 1775467800000,
-        "lastRunAtMs": 1775381400001,
-        "lastRunStatus": "ok",
-        "lastStatus": "ok",
-        "lastDurationMs": 94831,
-        "lastDeliveryStatus": "not-delivered",
-        "consecutiveErrors": 0,
-        "lastDelivered": false
+        "nextRunAtMs": 1775554200000,
+        "lastRunAtMs": 1775467800002,
+        "lastRunStatus": "error",
+        "lastStatus": "error",
+        "lastDurationMs": 18229,
+        "lastDeliveryStatus": "not-requested",
+        "consecutiveErrors": 1,
+        "lastError": "FailoverError: ⚠️ You have hit your ChatGPT usage limit (pro plan). Try again in ~2793 min.",
+        "lastErrorReason": "rate_limit"
       }
     },
     {
@@ -590,7 +592,7 @@
       "description": "Sync dotfiles repo (safe mode: non-sensitive allowlist + sensitive-path guard)",
       "enabled": true,
       "createdAtMs": 1773087050715,
-      "updatedAtMs": 1775434149699,
+      "updatedAtMs": 1775455568010,
       "schedule": {
         "kind": "cron",
         "expr": "0 */6 * * *",
@@ -609,15 +611,15 @@
         "channel": "last"
       },
       "state": {
-        "nextRunAtMs": 1775455293107,
-        "lastRunAtMs": 1775434130266,
+        "nextRunAtMs": 1775476893107,
+        "lastRunAtMs": 1775455535793,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 19433,
+        "lastDurationMs": 32217,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false,
-        "runningAtMs": 1775455535792
+        "runningAtMs": 1775477330074
       }
     },
     {
@@ -627,7 +629,7 @@
       "description": "Check openclaw/openclaw latest release every 12h and alert Nico on new tag",
       "enabled": true,
       "createdAtMs": 1773093482865,
-      "updatedAtMs": 1775428776369,
+      "updatedAtMs": 1775471976376,
       "schedule": {
         "kind": "every",
         "everyMs": 43200000,
@@ -641,8 +643,8 @@
         "model": "claude-cli/claude-haiku-4-5"
       },
       "state": {
-        "nextRunAtMs": 1775471976368,
-        "lastRunAtMs": 1775428776368,
+        "nextRunAtMs": 1775515176375,
+        "lastRunAtMs": 1775471976375,
         "lastRunStatus": "skipped",
         "lastStatus": "skipped",
         "lastDurationMs": 1,
@@ -692,7 +694,7 @@
       "name": "weekly-stale-review-findings",
       "enabled": true,
       "createdAtMs": 1773653503285,
-      "updatedAtMs": 1774864886436,
+      "updatedAtMs": 1775469889492,
       "schedule": {
         "kind": "cron",
         "expr": "0 10 * * 1",
@@ -710,14 +712,15 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1775469600000,
-        "lastRunAtMs": 1774864836941,
-        "lastRunStatus": "ok",
-        "lastStatus": "ok",
-        "lastDurationMs": 49495,
-        "lastDelivered": false,
-        "lastDeliveryStatus": "not-delivered",
-        "consecutiveErrors": 0
+        "nextRunAtMs": 1776074400000,
+        "lastRunAtMs": 1775469856817,
+        "lastRunStatus": "error",
+        "lastStatus": "error",
+        "lastDurationMs": 32675,
+        "lastDeliveryStatus": "not-requested",
+        "consecutiveErrors": 1,
+        "lastError": "FallbackSummaryError: All models failed (2): openai-codex/gpt-5.3-codex: ⚠️ You have hit your ChatGPT usage limit (pro plan). Try again in ~2759 min. (rate_limit) | openai-codex/gpt-5.4: ⚠️ You have hit your ChatGPT usage limit (pro plan). Try again in ~2759 min. (rate_limit)",
+        "lastErrorReason": "rate_limit"
       }
     },
     {
@@ -767,7 +770,7 @@
       "wakeMode": "now",
       "payload": {
         "kind": "agentTurn",
-        "message": "Run the weekly Review Royale digest and post to Discord #lodestar-developer.\n\nSteps:\n1. Run: `bash /home/openclaw/.openclaw/workspace/scripts/review-royale/weekly_digest.sh`\n2. If output is \"NO_DATA\", reply NO_REPLY (no reviews this week)\n3. Otherwise, format the raw data into a Discord message following the template in /home/openclaw/.openclaw/workspace/scripts/review-royale/CRON_DIGEST_PROMPT.md\n4. Send the formatted message to Discord channel 1197575814494035968 using the message tool:\n   - action: send\n   - channel: discord\n   - target: 1197575814494035968\n   - message: (the formatted digest)\n5. Reply NO_REPLY after posting.\n\nIMPORTANT:\n- Use <https://review-royale.nflaig.dev> as the link (NOT lodekeeper.dev)\n- No markdown tables in Discord — use bullet lists\n- Keep it concise and fun",
+        "message": "Run the weekly Review Royale digest and post to Discord #lodestar-review-royale.\n\nSteps:\n1. Run: `bash /home/openclaw/.openclaw/workspace/scripts/review-royale/weekly_digest.sh`\n2. If output is \"NO_DATA\", reply NO_REPLY (no reviews this week)\n3. Otherwise, format the raw data into a Discord message following the template in /home/openclaw/.openclaw/workspace/scripts/review-royale/CRON_DIGEST_PROMPT.md\n4. Send the formatted message to Discord channel 1490679163026145290 using the message tool:\n   - action: send\n   - channel: discord\n   - target: 1490679163026145290\n   - message: (the formatted digest)\n5. Reply NO_REPLY after posting.\n\nIMPORTANT:\n- Use <https://review-royale.nflaig.dev> as the link (NOT lodekeeper.dev)\n- No markdown tables in Discord — use bullet lists\n- Keep it concise and fun",
         "model": "claude-cli/claude-sonnet-4-6",
         "timeoutSeconds": 120
       },
@@ -791,7 +794,7 @@
       "name": "review-royale-achievements",
       "enabled": true,
       "createdAtMs": 1775241575298,
-      "updatedAtMs": 1775434088235,
+      "updatedAtMs": 1775477327673,
       "schedule": {
         "kind": "cron",
         "expr": "0 */6 * * *",
@@ -801,7 +804,7 @@
       "wakeMode": "now",
       "payload": {
         "kind": "agentTurn",
-        "message": "Check for new Review Royale achievements and post to Discord.\n\nSteps:\n1. Run: `bash /home/openclaw/.openclaw/workspace/scripts/review-royale/check_achievements.sh`\n2. If output is \"NO_PENDING\", reply NO_REPLY\n3. Otherwise, send the output to Discord channel 1197575814494035968 using the message tool:\n   - action: send\n   - channel: discord\n   - target: 1197575814494035968\n   - message: (the script output)\n4. Reply NO_REPLY after posting.\n\nThe script handles DB queries and marks achievements as notified. Do NOT modify the output.",
+        "message": "Check for new Review Royale achievements and post to Discord.\n\nSteps:\n1. Run: `bash /home/openclaw/.openclaw/workspace/scripts/review-royale/check_achievements.sh`\n2. If output is \"NO_PENDING\", reply NO_REPLY\n3. Otherwise, send the output to Discord channel 1490679163026145290 using the message tool:\n   - action: send\n   - channel: discord\n   - target: 1490679163026145290\n   - message: (the script output)\n4. Reply NO_REPLY after posting.\n\nThe script handles DB queries and marks achievements as notified. Do NOT modify the output.",
         "model": "claude-cli/claude-haiku-4-5",
         "timeoutSeconds": 600
       },
@@ -810,15 +813,15 @@
         "channel": "last"
       },
       "state": {
-        "nextRunAtMs": 1775455228853,
-        "lastRunAtMs": 1775433628855,
-        "lastRunStatus": "ok",
-        "lastStatus": "ok",
-        "lastDurationMs": 459380,
-        "lastDeliveryStatus": "not-delivered",
-        "consecutiveErrors": 0,
-        "lastDelivered": false,
-        "runningAtMs": 1775455535792
+        "nextRunAtMs": 1775498428853,
+        "lastRunAtMs": 1775476828855,
+        "lastRunStatus": "error",
+        "lastStatus": "error",
+        "lastDurationMs": 498818,
+        "lastDeliveryStatus": "not-requested",
+        "consecutiveErrors": 1,
+        "lastError": "FallbackSummaryError: All models failed (2): claude-cli/claude-haiku-4-5: CLI produced no output for 480s and was terminated. (timeout) | openai-codex/gpt-5.4: ⚠️ You have hit your ChatGPT usage limit (pro plan). Try again in ~2635 min. (rate_limit)",
+        "lastErrorReason": "rate_limit"
       }
     },
     {
@@ -826,7 +829,7 @@
       "name": "review-royale-post-sync",
       "enabled": true,
       "createdAtMs": 1775250385564,
-      "updatedAtMs": 1775446413340,
+      "updatedAtMs": 1775468218033,
       "schedule": {
         "kind": "cron",
         "expr": "30 3,9,15,21 * * *"
@@ -843,11 +846,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1775467800000,
-        "lastRunAtMs": 1775446385309,
+        "nextRunAtMs": 1775489400000,
+        "lastRunAtMs": 1775467818231,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 28031,
+        "lastDurationMs": 399802,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
