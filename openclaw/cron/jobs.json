@@ -175,7 +175,7 @@
       "name": "eth-rnd-archive-hourly",
       "enabled": true,
       "createdAtMs": 1772034567300,
-      "updatedAtMs": 1775430962802,
+      "updatedAtMs": 1775452962281,
       "schedule": {
         "kind": "cron",
         "expr": "15 * * * *",
@@ -193,13 +193,13 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1775430900002,
+        "lastRunAtMs": 1775452936794,
         "lastStatus": "ok",
-        "lastDurationMs": 62800,
+        "lastDurationMs": 25487,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1775434500000,
+        "nextRunAtMs": 1775456100000,
         "lastDelivered": false
       }
     },
@@ -246,7 +246,7 @@
       "name": "github-notifications",
       "enabled": true,
       "createdAtMs": 1772107716625,
-      "updatedAtMs": 1775433498807,
+      "updatedAtMs": 1775455533341,
       "schedule": {
         "kind": "every",
         "everyMs": 300000,
@@ -265,15 +265,14 @@
         "mode": "none"
       },
       "state": {
-        "lastRunAtMs": 1775433462280,
+        "lastRunAtMs": 1775455127976,
         "lastStatus": "ok",
-        "lastDurationMs": 36527,
+        "lastDurationMs": 405365,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1775433762280,
-        "lastDelivered": false,
-        "runningAtMs": 1775434090721
+        "nextRunAtMs": 1775455616564,
+        "lastDelivered": false
       },
       "deleteAfterRun": false
     },
@@ -283,7 +282,7 @@
       "name": "nightly-memory-consolidation",
       "enabled": true,
       "createdAtMs": 1772320910346,
-      "updatedAtMs": 1775360530445,
+      "updatedAtMs": 1775446385309,
       "schedule": {
         "kind": "cron",
         "expr": "30 3 * * *",
@@ -302,14 +301,15 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1775446200000,
-        "lastRunAtMs": 1775359800002,
-        "lastRunStatus": "ok",
-        "lastStatus": "ok",
-        "lastDurationMs": 730443,
-        "lastDeliveryStatus": "not-delivered",
-        "consecutiveErrors": 0,
-        "lastDelivered": false
+        "nextRunAtMs": 1775532600000,
+        "lastRunAtMs": 1775446384902,
+        "lastRunStatus": "error",
+        "lastStatus": "error",
+        "lastDurationMs": 407,
+        "lastDeliveryStatus": "not-requested",
+        "consecutiveErrors": 1,
+        "lastError": "FallbackSummaryError: All models failed (1): openai-codex/gpt-5.4: Provider openai-codex is in cooldown (all profiles unavailable) (rate_limit)",
+        "lastErrorReason": "rate_limit"
       }
     },
     {
@@ -317,7 +317,7 @@
       "name": "ci-autofix-unstable",
       "enabled": true,
       "createdAtMs": 1772326513772,
-      "updatedAtMs": 1775409287201,
+      "updatedAtMs": 1775452934397,
       "schedule": {
         "kind": "every",
         "everyMs": 43200000,
@@ -336,15 +336,15 @@
         "to": "-1003764039429:52"
       },
       "state": {
-        "nextRunAtMs": 1775452453788,
-        "lastRunAtMs": 1775409253788,
+        "nextRunAtMs": 1775496102820,
+        "lastRunAtMs": 1775452902820,
         "lastRunStatus": "error",
         "lastStatus": "error",
-        "lastDurationMs": 33413,
+        "lastDurationMs": 31577,
         "lastDeliveryStatus": "not-requested",
-        "consecutiveErrors": 1,
-        "lastError": "FallbackSummaryError: All models failed (2): openai-codex/gpt-5.3-codex: ⚠️ You have hit your ChatGPT usage limit (pro plan). Try again in ~3769 min. (rate_limit) | openai-codex/gpt-5.4: ⚠️ You have hit your ChatGPT usage limit (pro plan). Try again in ~3769 min. (rate_limit)",
-        "lastErrorReason": "rate_limit"
+        "consecutiveErrors": 2,
+        "lastErrorReason": "rate_limit",
+        "lastError": "FallbackSummaryError: All models failed (2): openai-codex/gpt-5.3-codex: ⚠️ You have hit your ChatGPT usage limit (pro plan). Try again in ~3041 min. (rate_limit) | openai-codex/gpt-5.4: ⚠️ You have hit your ChatGPT usage limit (pro plan). Try again in ~3041 min. (rate_limit)"
       },
       "deleteAfterRun": false
     },
@@ -353,7 +353,7 @@
       "name": "aztec-sequencer-health",
       "enabled": true,
       "createdAtMs": 1772373812089,
-      "updatedAtMs": 1775427259177,
+      "updatedAtMs": 1775441710993,
       "schedule": {
         "kind": "every",
         "everyMs": 14400000,
@@ -370,11 +370,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1775441644355,
-        "lastRunAtMs": 1775427244355,
+        "nextRunAtMs": 1775456099116,
+        "lastRunAtMs": 1775441699116,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 14822,
+        "lastDurationMs": 11877,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -386,7 +386,7 @@
       "name": "workspace-periodic-cleanup",
       "enabled": true,
       "createdAtMs": 1772634832403,
-      "updatedAtMs": 1775416022807,
+      "updatedAtMs": 1775436642920,
       "schedule": {
         "kind": "every",
         "everyMs": 21600000,
@@ -403,11 +403,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1775436630360,
-        "lastRunAtMs": 1775415030360,
+        "nextRunAtMs": 1775458230362,
+        "lastRunAtMs": 1775436630362,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 89271,
+        "lastDurationMs": 12558,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0
@@ -419,7 +419,7 @@
       "name": "monitor-open-pr-ci",
       "enabled": true,
       "createdAtMs": 1772635128553,
-      "updatedAtMs": 1775432549725,
+      "updatedAtMs": 1775454225956,
       "schedule": {
         "kind": "every",
         "everyMs": 1800000,
@@ -436,11 +436,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1775434244812,
-        "lastRunAtMs": 1775432444812,
+        "nextRunAtMs": 1775455844839,
+        "lastRunAtMs": 1775454044839,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 104913,
+        "lastDurationMs": 181117,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -452,7 +452,7 @@
       "name": "review-identity-files",
       "enabled": true,
       "createdAtMs": 1772635128553,
-      "updatedAtMs": 1775175240174,
+      "updatedAtMs": 1775434386519,
       "schedule": {
         "kind": "every",
         "everyMs": 259200000,
@@ -463,20 +463,21 @@
       "payload": {
         "kind": "agentTurn",
         "message": "Periodic identity-file review (every 3 days).\n1) Re-read `SOUL.md`, `IDENTITY.md`, and `MEMORY.md` for drift.\n2) Add new lessons, update strengths/weaknesses, and refine personality notes where warranted.\n3) If you made edits, sync via `~/dotfiles/scripts/sync-dotfiles.sh` (non-sensitive files only).\n4) Report only when meaningful changes were made.\nIf no updates are needed, reply exactly `NO_REPLY`.",
-        "model": "openai-codex/gpt-5.3-codex"
+        "model": "claude-opus-4-6"
       },
       "delivery": {
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1775434346220,
-        "lastRunAtMs": 1775175146220,
+        "nextRunAtMs": 1775693556000,
+        "lastRunAtMs": 1775434356000,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 93954,
-        "lastDelivered": false,
-        "lastDeliveryStatus": "not-delivered",
-        "consecutiveErrors": 0
+        "lastDurationMs": 30519,
+        "lastDeliveryStatus": "not-requested",
+        "consecutiveErrors": 0,
+        "lastError": null,
+        "lastErrorReason": null
       }
     },
     {
@@ -485,7 +486,7 @@
       "name": "self-improvement-audit-daily",
       "enabled": true,
       "createdAtMs": 1772635128553,
-      "updatedAtMs": 1775349142110,
+      "updatedAtMs": 1775435374429,
       "schedule": {
         "kind": "every",
         "everyMs": 86400000,
@@ -502,14 +503,15 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1775435357371,
-        "lastRunAtMs": 1775348957371,
-        "lastRunStatus": "ok",
-        "lastStatus": "ok",
-        "lastDurationMs": 184739,
-        "lastDelivered": false,
-        "lastDeliveryStatus": "not-delivered",
-        "consecutiveErrors": 0
+        "nextRunAtMs": 1775521757374,
+        "lastRunAtMs": 1775435357374,
+        "lastRunStatus": "error",
+        "lastStatus": "error",
+        "lastDurationMs": 17055,
+        "lastDeliveryStatus": "not-requested",
+        "consecutiveErrors": 1,
+        "lastError": "FallbackSummaryError: All models failed (2): openai-codex/gpt-5.3-codex: Provider openai-codex is in cooldown (all profiles unavailable) (rate_limit) | openai-codex/gpt-5.4: ⚠️ You have hit your ChatGPT usage limit (pro plan). Try again in ~3334 min. (rate_limit)",
+        "lastErrorReason": "rate_limit"
       }
     },
     {
@@ -518,7 +520,7 @@
       "name": "cron-health-watchdog",
       "enabled": true,
       "createdAtMs": 1772636078136,
-      "updatedAtMs": 1775432611963,
+      "updatedAtMs": 1775454805346,
       "schedule": {
         "kind": "every",
         "everyMs": 1800000,
@@ -535,11 +537,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1775434404208,
-        "lastRunAtMs": 1775432604208,
+        "nextRunAtMs": 1775456599515,
+        "lastRunAtMs": 1775454799515,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 7755,
+        "lastDurationMs": 5831,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
@@ -588,7 +590,7 @@
       "description": "Sync dotfiles repo (safe mode: non-sensitive allowlist + sensitive-path guard)",
       "enabled": true,
       "createdAtMs": 1773087050715,
-      "updatedAtMs": 1775416116503,
+      "updatedAtMs": 1775434149699,
       "schedule": {
         "kind": "cron",
         "expr": "0 */6 * * *",
@@ -607,15 +609,15 @@
         "channel": "last"
       },
       "state": {
-        "nextRunAtMs": 1775433693107,
-        "lastRunAtMs": 1775416093046,
+        "nextRunAtMs": 1775455293107,
+        "lastRunAtMs": 1775434130266,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 23457,
+        "lastDurationMs": 19433,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false,
-        "runningAtMs": 1775434090721
+        "runningAtMs": 1775455535792
       }
     },
     {
@@ -815,7 +817,8 @@
         "lastDurationMs": 459380,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
-        "lastDelivered": false
+        "lastDelivered": false,
+        "runningAtMs": 1775455535792
       }
     },
     {
@@ -823,7 +826,7 @@
       "name": "review-royale-post-sync",
       "enabled": true,
       "createdAtMs": 1775250385564,
-      "updatedAtMs": 1775424738529,
+      "updatedAtMs": 1775446413340,
       "schedule": {
         "kind": "cron",
         "expr": "30 3,9,15,21 * * *"
@@ -840,11 +843,11 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1775446200000,
-        "lastRunAtMs": 1775424600004,
+        "nextRunAtMs": 1775467800000,
+        "lastRunAtMs": 1775446385309,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 138525,
+        "lastDurationMs": 28031,
         "lastDeliveryStatus": "not-delivered",
         "consecutiveErrors": 0,
         "lastDelivered": false
