@@ -397,7 +397,7 @@ async def ensure_pro_model(page, verbose=False):
 async def query_chatgpt(
     prompt,
     cookies_path,
-    timeout=3600,
+    timeout=21600,
     verbose=False,
     require_auth=False,
     require_pro=False,
@@ -749,8 +749,8 @@ Examples:
     parser.add_argument("--prompt", "-p", help="Prompt text")
     parser.add_argument("--file", "-f", help="Append file contents to prompt")
     parser.add_argument(
-        "--timeout", "-t", type=int, default=3600,
-        help="Response timeout in seconds (default: 3600 — GPT-5.4 Pro can think for up to an hour)",
+        "--timeout", "-t", type=int, default=21600,
+        help="Response timeout in seconds (default: 21600 — deep research can take up to 6 hours)",
     )
     parser.add_argument("--output", "-o", help="Write response to file")
     parser.add_argument("--json", action="store_true", help="JSON output")
