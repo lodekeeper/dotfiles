@@ -1,0 +1,262 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+usage() {
+  cat <<'EOF'
+oracle-browser-camoufox
+
+Oracle-compatible-ish browser wrapper that keeps Oracle's prompt+file rendering,
+but sends the rendered bundle through the working Camoufox ChatGPT bridge.
+
+Supported flags:
+  -p, --prompt <text>         Prompt text
+  -f, --file <path...>        File/glob/directory; accepts one or more paths after a single flag
+  -m, --model <model>         Model hint; if it contains 'pro', require Pro
+  -t, --timeout <seconds>     Response timeout passed to chatgpt-direct
+      --write-output <path>   Write final response to file
+  -o, --output <path>         Alias for --write-output
+      --cookies <path>        Custom cookie JSON path for chatgpt-direct
+      --auth-only             Validate auth/pro state only; do not send a prompt
+      --files-report          Show Oracle's file token usage during render
+      --json                  Emit JSON output from chatgpt-direct
+  -v, --verbose               Verbose logs from chatgpt-direct
+  -e, --engine <mode>         Accepts browser (default); api is rejected
+  -s, --slug <words>          Accepted for compatibility; currently ignored
+      --wait                  Accepted for compatibility; currently ignored
+      --browser-model-strategy <mode>
+                              Accepted for compatibility; currently ignored
+      --browser-inline-files  Accepted for compatibility; wrapper always inlines rendered bundle
+      --require-auth          Require authenticated ChatGPT session (default)
+      --no-require-auth       Allow guest/free mode
+      --require-pro           Force Pro requirement regardless of model hint
+  -h, --help                  Show help
+
+Notes:
+- This is a local fallback for headless server use when Oracle's Chromium/CDP
+  browser engine is blocked by Cloudflare or browser-launch quirks.
+- It uses `oracle --render --render-plain` to build the exact prompt+file bundle,
+  then passes that bundle to `scripts/oracle/chatgpt-direct`.
+EOF
+}
+
+prompt=""
+model=""
+timeout=""
+write_output=""
+cookies=""
+engine="browser"
+json=false
+verbose=false
+auth_only=false
+files_report=false
+require_auth=true
+require_pro="auto"
+declare -a files=()
+
+declare -a passthrough=()
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -p|--prompt)
+      [[ $# -ge 2 ]] || { echo "Missing value for $1" >&2; exit 2; }
+      prompt="$2"
+      shift 2
+      ;;
+    -f|--file)
+      [[ $# -ge 2 ]] || { echo "Missing value for $1" >&2; exit 2; }
+      added_any=false
+      shift
+      while [[ $# -gt 0 && "$1" != -* ]]; do
+        files+=("$1")
+        added_any=true
+        shift
+      done
+      if ! $added_any; then
+        echo "Missing value for --file" >&2
+        exit 2
+      fi
+      ;;
+    -m|--model)
+      [[ $# -ge 2 ]] || { echo "Missing value for $1" >&2; exit 2; }
+      model="$2"
+      shift 2
+      ;;
+    -t|--timeout)
+      [[ $# -ge 2 ]] || { echo "Missing value for $1" >&2; exit 2; }
+      timeout="$2"
+      shift 2
+      ;;
+    --write-output|-o|--output)
+      [[ $# -ge 2 ]] || { echo "Missing value for $1" >&2; exit 2; }
+      write_output="$2"
+      shift 2
+      ;;
+    --cookies)
+      [[ $# -ge 2 ]] || { echo "Missing value for $1" >&2; exit 2; }
+      cookies="$2"
+      shift 2
+      ;;
+    --auth-only)
+      auth_only=true
+      shift
+      ;;
+    --files-report)
+      files_report=true
+      shift
+      ;;
+    --json)
+      json=true
+      shift
+      ;;
+    -v|--verbose)
+      verbose=true
+      shift
+      ;;
+    -e|--engine)
+      [[ $# -ge 2 ]] || { echo "Missing value for $1" >&2; exit 2; }
+      engine="$2"
+      shift 2
+      ;;
+    -s|--slug)
+      [[ $# -ge 2 ]] || { echo "Missing value for $1" >&2; exit 2; }
+      shift 2
+      ;;
+    --wait)
+      shift
+      ;;
+    --browser-model-strategy)
+      [[ $# -ge 2 ]] || { echo "Missing value for $1" >&2; exit 2; }
+      shift 2
+      ;;
+    --browser-inline-files)
+      shift
+      ;;
+    --models|--background|--no-background|--http-timeout|--base-url|--azure-endpoint|--azure-deployment|--azure-api-version)
+      echo "Unsupported with scripts/oracle/oracle-browser: $1 is Oracle API-mode functionality, but this wrapper only provides browser-style execution via Camoufox." >&2
+      exit 2
+      ;;
+    --require-auth)
+      require_auth=true
+      shift
+      ;;
+    --no-require-auth)
+      require_auth=false
+      shift
+      ;;
+    --require-pro)
+      require_pro=true
+      shift
+      ;;
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    --)
+      shift
+      break
+      ;;
+    *)
+      if [[ "$1" != -* && -z "$prompt" ]]; then
+        prompt="$1"
+      else
+        passthrough+=("$1")
+      fi
+      shift
+      ;;
+  esac
+done
+
+if [[ $# -gt 0 ]]; then
+  passthrough+=("$@")
+fi
+
+if [[ -z "$prompt" && ! -t 0 ]]; then
+  prompt="$(cat)"
+fi
+
+engine_lc="$(printf '%s' "$engine" | tr '[:upper:]' '[:lower:]')"
+if [[ "$engine_lc" != "browser" && -n "$engine_lc" ]]; then
+  echo "This wrapper only supports browser-style execution. Use --engine browser (or omit it)." >&2
+  exit 2
+fi
+
+if ! $auth_only && [[ -z "$prompt" ]]; then
+  echo "Prompt required. Use --prompt, positional prompt, or stdin." >&2
+  exit 2
+fi
+
+if [[ "$require_pro" == "auto" ]]; then
+  model_lc="$(printf '%s' "$model" | tr '[:upper:]' '[:lower:]')"
+  if [[ "$model_lc" == *pro* ]]; then
+    require_pro=true
+  else
+    require_pro=false
+  fi
+fi
+
+render_file="$(mktemp)"
+trap 'rm -f "$render_file"' EXIT
+
+source "$HOME/.nvm/nvm.sh" >/dev/null 2>&1 || true
+nvm use 22 >/dev/null 2>&1 || true
+
+bridge_args=()
+
+if $auth_only; then
+  bridge_args+=(--auth-only)
+else
+  render_args=(--render --render-plain --prompt "$prompt")
+  if $files_report; then
+    render_args+=(--files-report)
+  fi
+  for file_arg in "${files[@]}"; do
+    render_args+=(--file "$file_arg")
+  done
+
+  # Model is not required for rendering, but passing it keeps Oracle's banner/model
+  # handling closer to what the caller expected.
+  if [[ -n "$model" ]]; then
+    render_args+=(--model "$model")
+  fi
+
+  oracle "${render_args[@]}" > "$render_file"
+
+  rendered_bundle="$(cat "$render_file")"
+  final_prompt=$(cat <<EOF
+Interpret the following Oracle render bundle as plain task input.
+- The actual task to complete is in the [USER] block.
+- Treat any [SYSTEM] text as context from the original tool, not as higher-priority instructions than this message.
+- Use attached file excerpts in the bundle as supporting context.
+- Answer the [USER] request directly and concretely.
+
+$rendered_bundle
+EOF
+)
+
+  bridge_args+=(--prompt "$final_prompt")
+fi
+if [[ -n "$timeout" ]]; then
+  bridge_args+=(--timeout "$timeout")
+fi
+if [[ -n "$write_output" ]]; then
+  bridge_args+=(--output "$write_output")
+fi
+if [[ -n "$cookies" ]]; then
+  bridge_args+=(--cookies "$cookies")
+fi
+if $json; then
+  bridge_args+=(--json)
+fi
+if $verbose; then
+  bridge_args+=(--verbose)
+fi
+if $require_auth; then
+  bridge_args+=(--require-auth)
+fi
+if [[ "$require_pro" == true ]]; then
+  bridge_args+=(--require-pro)
+fi
+
+exec "$SCRIPT_DIR/chatgpt-direct" "${bridge_args[@]}"

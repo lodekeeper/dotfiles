@@ -203,6 +203,19 @@ Plain text `@username` does NOT ping users on Discord. Use proper Discord mentio
 - **lodekeeper-z (bot):** look up ID from channel reads
 Always use `<@USER_ID>` format in message sends to actually ping someone.
 
+## Oracle / ChatGPT on this server
+- **Direct working path:** `scripts/oracle/chatgpt-direct`
+  - Camoufox-based ChatGPT automation
+  - Best choice when I want ChatGPT Pro/browser access on this headless server
+- **Oracle-style wrapper:** `scripts/oracle/oracle-browser-camoufox`
+  - Simpler alias: `scripts/oracle/oracle-browser`
+  - Uses `oracle --render --render-plain` for prompt+file bundling, then sends the rendered bundle through the working Camoufox path
+  - Supports the common workflow plus a few Oracle-ish compatibility flags: `--auth-only`, `--cookies`, `--engine browser`, `--wait`, `--slug`, `--browser-model-strategy`, `--browser-inline-files`
+  - Use this instead of `oracle --engine browser` when I want Oracle-like browser workflow without fighting Chromium/CDP + Cloudflare
+- **Docs:** `scripts/oracle/README.md`
+- **Verification:** `scripts/oracle/check-wrapper.sh` (use `--live` for auth/pro + browser smoke checks)
+- **Current caveat:** stock Oracle browser mode is still unreliable here because the Chromium/CDP path hits launch quirks and/or Cloudflare anti-bot; prefer the wrapper unless explicitly testing Oracle-native browser behavior
+
 ## Review Royale
 - **API:** http://127.0.0.1:3456 (public: https://review-royale.nflaig.dev)
 - **Repos:** ChainSafe/lodestar, ChainSafe/lodestar-z

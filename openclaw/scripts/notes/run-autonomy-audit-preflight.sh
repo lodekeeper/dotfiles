@@ -14,7 +14,8 @@ Usage: run-autonomy-audit-preflight.sh [options]
 
 Runs daily autonomy-audit preflight checks:
 1) Consistency guard on notes/autonomy-gaps.md
-2) Snapshot scaffold insertion for today's audit
+2) Cadence guard (advisory) to surface missing-day snapshot gaps
+3) Snapshot scaffold insertion for today's audit
 
 Options:
   --file <path>         Target markdown file (default: notes/autonomy-gaps.md)
@@ -68,6 +69,7 @@ else
 fi
 
 CHECK_CMD=(python3 "$WORKSPACE/scripts/notes/check-autonomy-gaps-consistency.py" --file "$TARGET_FILE")
+CADENCE_CMD=(python3 "$WORKSPACE/scripts/notes/check-autonomy-audit-cadence.py" --file "$TARGET_FILE" --fail-on-gap)
 PREPEND_CMD=(python3 "$WORKSPACE/scripts/notes/prepend-autonomy-audit-snapshot.py" --file "$TARGET_FILE")
 
 if [[ -n "$DATE" ]]; then
@@ -86,10 +88,19 @@ if [[ "$CARRY_FORWARD_STATUS" -eq 1 ]]; then
   PREPEND_CMD+=(--carry-forward-status)
 fi
 
-echo "[1/2] Running consistency guard on $TARGET_FILE"
+echo "[1/3] Running consistency guard on $TARGET_FILE"
 "${CHECK_CMD[@]}"
 
-echo "[2/2] Inserting daily snapshot scaffold"
+echo "[2/3] Running cadence guard (advisory)"
+set +e
+"${CADENCE_CMD[@]}"
+cadence_rc=$?
+set -e
+if [[ "$cadence_rc" -ne 0 ]]; then
+  echo "⚠️ Cadence guard reported missing-day gaps. Continue with today's snapshot, and document root cause/fix in the audit workflow section."
+fi
+
+echo "[3/3] Inserting daily snapshot scaffold"
 "${PREPEND_CMD[@]}"
 
 echo "✅ Preflight complete. Fill the new snapshot status blocks, then run scripts/notes/close-autonomy-audit.sh --date ${DATE:-$(date -u +%F)}"

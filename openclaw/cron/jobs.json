@@ -194,14 +194,14 @@
       "state": {
         "consecutiveErrors": 0,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 24673,
-        "lastRunAtMs": 1775607300003,
+        "lastDurationMs": 67962,
+        "lastRunAtMs": 1775625300006,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1775610900000,
+        "nextRunAtMs": 1775628900000,
         "lastDelivered": false
       },
-      "updatedAtMs": 1775607324676,
+      "updatedAtMs": 1775625367968,
       "wakeMode": "now"
     },
     {
@@ -267,14 +267,14 @@
       "state": {
         "consecutiveErrors": 0,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 72109,
-        "lastRunAtMs": 1775608342532,
+        "lastDurationMs": 732296,
+        "lastRunAtMs": 1775627894220,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1775608642532,
+        "nextRunAtMs": 1775628716564,
         "lastDelivered": false
       },
-      "updatedAtMs": 1775608414641,
+      "updatedAtMs": 1775628626516,
       "wakeMode": "now"
     },
     {
@@ -300,17 +300,16 @@
       },
       "sessionTarget": "isolated",
       "state": {
-        "consecutiveErrors": 2,
-        "lastDeliveryStatus": "not-requested",
-        "lastDurationMs": 626,
-        "lastErrorReason": "rate_limit",
-        "lastRunAtMs": 1775532600002,
-        "lastRunStatus": "error",
-        "lastStatus": "error",
-        "nextRunAtMs": 1775619000000,
-        "lastError": "FallbackSummaryError: All models failed (1): openai-codex/gpt-5.4: Provider openai-codex is in cooldown (all profiles unavailable) (rate_limit)"
+        "consecutiveErrors": 0,
+        "lastDeliveryStatus": "not-delivered",
+        "lastDurationMs": 42069,
+        "lastRunAtMs": 1775619011668,
+        "lastRunStatus": "ok",
+        "lastStatus": "ok",
+        "nextRunAtMs": 1775705400000,
+        "lastDelivered": false
       },
-      "updatedAtMs": 1775532600628,
+      "updatedAtMs": 1775619053737,
       "wakeMode": "now"
     },
     {
@@ -336,17 +335,16 @@
       },
       "sessionTarget": "isolated",
       "state": {
-        "consecutiveErrors": 5,
-        "lastDeliveryStatus": "not-requested",
-        "lastDurationMs": 35932,
-        "lastErrorReason": "rate_limit",
-        "lastRunAtMs": 1775582771041,
-        "lastRunStatus": "error",
-        "lastStatus": "error",
-        "nextRunAtMs": 1775625971041,
-        "lastError": "FallbackSummaryError: All models failed (2): openai-codex/gpt-5.3-codex: ⚠️ You have hit your ChatGPT usage limit (pro plan). Try again in ~877 min. (rate_limit) | openai-codex/gpt-5.4: ⚠️ You have hit your ChatGPT usage limit (pro plan). Try again in ~877 min. (rate_limit)"
+        "consecutiveErrors": 0,
+        "lastDeliveryStatus": "not-delivered",
+        "lastDurationMs": 499029,
+        "lastRunAtMs": 1775626492729,
+        "lastRunStatus": "ok",
+        "lastStatus": "ok",
+        "nextRunAtMs": 1775669692729,
+        "lastDelivered": false
       },
-      "updatedAtMs": 1775582806973,
+      "updatedAtMs": 1775626991758,
       "wakeMode": "now"
     },
     {
@@ -372,13 +370,13 @@
         "consecutiveErrors": 0,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 11328,
-        "lastRunAtMs": 1775601489691,
+        "lastDurationMs": 71723,
+        "lastRunAtMs": 1775615939724,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1775615889691
+        "nextRunAtMs": 1775630339724
       },
-      "updatedAtMs": 1775601501019,
+      "updatedAtMs": 1775616011447,
       "wakeMode": "now"
     },
     {
@@ -405,13 +403,13 @@
         "consecutiveErrors": 0,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 27505,
-        "lastRunAtMs": 1775587830378,
+        "lastDurationMs": 147836,
+        "lastRunAtMs": 1775609567933,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1775609430378
+        "nextRunAtMs": 1775631167933
       },
-      "updatedAtMs": 1775608007531,
+      "updatedAtMs": 1775609715769,
       "wakeMode": "now"
     },
     {
@@ -437,14 +435,14 @@
       "state": {
         "consecutiveErrors": 0,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 116874,
-        "lastRunAtMs": 1775608111328,
+        "lastDurationMs": 86309,
+        "lastRunAtMs": 1775627083517,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1775609911328,
+        "nextRunAtMs": 1775628883517,
         "lastDelivered": false
       },
-      "updatedAtMs": 1775608228202,
+      "updatedAtMs": 1775627169826,
       "wakeMode": "now"
     },
     {
@@ -502,17 +500,16 @@
       },
       "sessionTarget": "isolated",
       "state": {
-        "consecutiveErrors": 2,
-        "lastDeliveryStatus": "not-requested",
-        "lastDurationMs": 16411,
-        "lastErrorReason": "rate_limit",
-        "lastRunAtMs": 1775522142252,
-        "lastRunStatus": "error",
-        "lastStatus": "error",
-        "nextRunAtMs": 1775608542252,
-        "lastError": "FallbackSummaryError: All models failed (2): openai-codex/gpt-5.3-codex: Provider openai-codex is in cooldown (all profiles unavailable) (rate_limit) | openai-codex/gpt-5.4: ⚠️ You have hit your ChatGPT usage limit (pro plan). Try again in ~1887 min. (rate_limit)"
+        "consecutiveErrors": 0,
+        "lastDeliveryStatus": "not-delivered",
+        "lastDurationMs": 251306,
+        "lastRunAtMs": 1775608542255,
+        "lastRunStatus": "ok",
+        "lastStatus": "ok",
+        "nextRunAtMs": 1775694942255,
+        "lastDelivered": false
       },
-      "updatedAtMs": 1775522158663,
+      "updatedAtMs": 1775608793561,
       "wakeMode": "now"
     },
     {
@@ -539,13 +536,13 @@
         "consecutiveErrors": 0,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 6838,
-        "lastRunAtMs": 1775607492832,
+        "lastDurationMs": 23400,
+        "lastRunAtMs": 1775627538057,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1775609292832
+        "nextRunAtMs": 1775629338057
       },
-      "updatedAtMs": 1775607985807,
+      "updatedAtMs": 1775627561457,
       "wakeMode": "now"
     },
     {
@@ -616,7 +613,8 @@
         "lastRunAtMs": 1775606880272,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1775628093107
+        "nextRunAtMs": 1775628093107,
+        "runningAtMs": 1775628628984
       },
       "updatedAtMs": 1775608006340,
       "wakeMode": "now"
@@ -819,7 +817,8 @@
         "lastRunStatus": "ok",
         "lastStatus": "ok",
         "nextRunAtMs": 1775628028853,
-        "lastDelivered": false
+        "lastDelivered": false,
+        "runningAtMs": 1775628628984
       },
       "updatedAtMs": 1775606906970,
       "wakeMode": "now"
@@ -847,13 +846,13 @@
         "consecutiveErrors": 0,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 29259,
-        "lastRunAtMs": 1775597563302,
+        "lastDurationMs": 73865,
+        "lastRunAtMs": 1775619053737,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1775619000000
+        "nextRunAtMs": 1775640600000
       },
-      "updatedAtMs": 1775597592561,
+      "updatedAtMs": 1775619127602,
       "wakeMode": "now"
     }
   ]

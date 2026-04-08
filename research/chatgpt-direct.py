@@ -405,6 +405,8 @@ async def query_chatgpt(
     """Send prompt to ChatGPT via Camoufox and return response."""
     from camoufox.async_api import AsyncCamoufox
 
+    session_start = time.time()
+
     with open(cookies_path) as f:
         auth_cookies = json.load(f)
 
@@ -538,6 +540,16 @@ async def query_chatgpt(
                 "error": error,
                 "auth": auth_info,
                 "model": model_info,
+            }
+
+        if not prompt:
+            return {
+                "status": "ok",
+                "text": "ORACLE_BRIDGE_OK: Browser-mode authentication is functioning correctly.",
+                "elapsed": round(time.time() - session_start),
+                "model": model_info,
+                "auth": auth_info,
+                "usedPro": model_info.get("isPro", False),
             }
 
         # Type prompt using keyboard (reliable with React)
@@ -766,6 +778,11 @@ Examples:
         action="store_true",
         help="Fail unless GPT-5.4 Pro is actually available in the current session",
     )
+    parser.add_argument(
+        "--auth-only",
+        action="store_true",
+        help="Only validate auth/model state and exit without sending a prompt",
+    )
     args = parser.parse_args()
 
     # Build prompt
@@ -778,7 +795,7 @@ Examples:
             content = fh.read()
         prompt = f"{prompt}\n\n{content}" if prompt else content
 
-    if not prompt:
+    if not prompt and not args.auth_only:
         parser.print_help(sys.stderr)
         sys.exit(1)
 

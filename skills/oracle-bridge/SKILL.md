@@ -29,6 +29,9 @@ Camoufox (headless Firefox)
 # Simple query
 scripts/oracle/chatgpt-direct --prompt "Your question here"
 
+# Auth/Pro smoke test (no prompt sent)
+scripts/oracle/chatgpt-direct --auth-only --require-auth --require-pro
+
 # With file input
 scripts/oracle/chatgpt-direct --prompt "Review this:" --file doc.md
 
@@ -55,6 +58,7 @@ scripts/oracle/chatgpt-direct --prompt "..." --verbose
 | `--cookies` | `~/.oracle/chatgpt-cookies.json` | Cookie file path |
 | `--require-auth` | off | Fail unless the session is truly authenticated (not guest/free) |
 | `--require-pro` | off | Fail unless GPT-5.4 Pro is actually available |
+| `--auth-only` | off | Validate auth/model state only; do not send a prompt |
 
 ## GPT-5.4 Pro Thinking Behavior
 
@@ -75,6 +79,26 @@ During thinking, the tool shows:
 ```
 
 The `md=0` indicates the model is still thinking. Once `md > 0`, the actual response is arriving.
+
+## Canonical Recovery Smoke Test
+
+After refreshing cookies/session state, use this as the first verification step:
+
+```bash
+scripts/oracle/chatgpt-direct --auth-only --require-auth --require-pro --json
+```
+
+Expected success shape:
+- `status: "ok"`
+- `text: "ORACLE_BRIDGE_OK: ..."`
+- `auth.state: "authenticated"`
+- `auth.server.planType: "pro"`
+- Pro evidence in `model.evidence.composerPills` (for example `Extended Pro`)
+
+If the smoke test fails:
+- `Guest/free ChatGPT session detected` → cookies are unauthenticated / expired / incomplete
+- `stale/broken ... RefreshAccessTokenError` → auth metadata exists but refresh state is stale; replace with fresh auth material
+- `GPT-5.4 Pro not available in current session` → session loaded, but Pro is not actually usable in the current UI/session
 
 ## Response Detection
 
@@ -136,12 +160,15 @@ From agent code / skill scripts:
 
 Export all cookies from chatgpt.com domain (including HttpOnly). The `cf_clearance` cookie is helpful but not required — Camoufox obtains its own CF clearance.
 
-### Important current blocker (2026-04-01)
-A cookie jar containing only a single `__Secure-next-auth.session-token` is **not sufficient** on the current ChatGPT UI — Camoufox can pass Cloudflare but still lands in guest/free mode after the welcome modal. In practice, you want a **full cookie export** from a genuinely logged-in ChatGPT Pro session; the minimum observed useful auth set is at least `__Secure-next-auth.session-token` plus `_account`.
+### Important current auth nuance (updated 2026-04-08)
+A cookie jar containing only a single `__Secure-next-auth.session-token` is **not reliably sufficient** on the current ChatGPT UI — stale single-token jars often collapse to guest/free mode after the welcome modal. However, a **freshly rotated** single `__Secure-next-auth.session-token` can work again: on 2026-04-08, replacing the stale token in `~/.oracle/chatgpt-cookies.json` with a fresh one restored authenticated Pro mode and passed both `--require-auth` and `--require-pro` checks.
 
-If browser mode is landing in guest mode, the fix is:
-1. attach a logged-in `chatgpt.com` tab via Browser Relay and harvest fresh auth state, or
-2. replace `~/.oracle/chatgpt-cookies.json` with a fresh full cookie export from a live Pro session.
+Practical guidance:
+1. **Safest default:** use a **full cookie export** from a genuinely logged-in ChatGPT Pro session.
+2. **Fast recovery path:** if the jar only contains `__Secure-next-auth.session-token`, try replacing it with a **fresh** value first — this may be enough.
+3. If browser mode still lands in guest mode, then escalate to:
+   - attaching a logged-in `chatgpt.com` tab via Browser Relay and harvesting fresh auth state, or
+   - replacing `~/.oracle/chatgpt-cookies.json` with a fresh full cookie export from a live Pro session.
 
 ## Self-Maintenance
 

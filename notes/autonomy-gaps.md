@@ -1,10 +1,33 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-04-05 (25th pass)
+> Updated: 2026-04-08 (26th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-04-08 (self-improvement-audit-daily, 00:35 UTC)
+
+### PR review
+- **Status:** review-scope + follow-up guard workflow remains healthy; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** retry telemetry, rolling degradation checks, and log-fallback path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** extraction/compliance/vector-readiness gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident-bundle workflow remains healthy; no new blocker discovered this cycle.
+
+### Audit workflow (cross-cutting)
+- **Blocker:** missing-day gaps between snapshot entries (for example 2026-04-05 → 2026-04-08) were not surfaced automatically, so skipped daily audit runs could go unnoticed.
+- **Fix applied this cycle:** added `scripts/notes/check-autonomy-audit-cadence.py` and wired it into `scripts/notes/run-autonomy-audit-preflight.sh` as an advisory cadence check before snapshot insertion.
+
+### Oracle/bridge docs (cross-cutting)
+- **Blocker:** the Oracle bridge skill had drifted too far toward the 2026-04-01 failure mode and now overstated that a single `__Secure-next-auth.session-token` cookie is categorically insufficient. Tonight's recovery proved that a **fresh** single session-token can again restore authenticated Pro mode in Camoufox, so the doc had become pessimistic in a way that could slow recovery during future expiries.
+- **Fix applied this cycle:** updated `skills/oracle-bridge/SKILL.md` to reflect the newer reality: a full cookie export remains the safest default, but a freshly rotated single session-token may be enough and is worth trying first before assuming Oracle browser mode is still broken.
+
+---
 ## Daily Audit Snapshot — 2026-04-05 (self-improvement-audit-daily, 00:29 UTC)
 
 ### PR review
@@ -631,6 +654,16 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Daily autonomy-audit cadence guard added (2026-04-08)
+Added `scripts/notes/check-autonomy-audit-cadence.py` to detect missing-day gaps between snapshot entries:
+- parses `## Daily Audit Snapshot — YYYY-MM-DD` headings,
+- reports missing-day intervals across the snapshot date range,
+- supports `--fail-on-gap` for strict workflows.
+
+Also updated `scripts/notes/run-autonomy-audit-preflight.sh` to run the cadence check in advisory mode before inserting today's scaffold.
+
+**Rationale:** daily audits can silently skip days when a cron run is missed; surfacing cadence gaps makes these misses visible and turns them into explicit follow-up work instead of hidden drift.
 
 ### ✅ One-command autonomy-audit close-out wrapper added (2026-04-05)
 Added `scripts/notes/close-autonomy-audit.sh` to collapse the daily close-out into one deterministic command:
