@@ -113,6 +113,8 @@ def process_parent_execution_payload(state: BeaconState, block: BeaconBlock) -> 
         assert block.body.parent_execution_requests == ExecutionRequests()
 ```
 
+**Note on infallibility:** `process_deposit_request`, `process_withdrawal_request`, and `process_consolidation_request` are all infallible — they use early returns, not assertions. They cannot cause `state_transition` to fail. This is critical: if they could fail, a malicious builder could craft execution requests that cause assertion failures in `process_block`, potentially splitting the network. Since they are infallible, including them in `process_block` is always safe.
+
 **Note on `process_execution_payload_bid` validation:** The existing assertion `bid.parent_block_hash == state.latest_block_hash` (line 1167 in the current spec) becomes tautological when the parent was FULL (we just set `latest_block_hash = bid.parent_block_hash`). When the parent was EMPTY, it remains a real validation — the builder must reference the last FULL payload's hash. The FULL case is validated at fork-choice level (`on_block` verifies `parent_execution_requests` match EE-verified data).
 
 ### 3. `process_execution_payload` -- pure verification, zero CL state mutations

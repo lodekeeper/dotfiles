@@ -167,7 +167,7 @@
         "nextRunAtMs": 1775685600000,
         "lastDelivered": false
       },
-      "updatedAtMs": 1775599838733,
+      "updatedAtMs": 1775608008783,
       "wakeMode": "now"
     },
     {
@@ -194,14 +194,14 @@
       "state": {
         "consecutiveErrors": 0,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 29942,
-        "lastRunAtMs": 1775603700003,
+        "lastDurationMs": 24673,
+        "lastRunAtMs": 1775607300003,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1775607300000,
+        "nextRunAtMs": 1775610900000,
         "lastDelivered": false
       },
-      "updatedAtMs": 1775603729945,
+      "updatedAtMs": 1775607324676,
       "wakeMode": "now"
     },
     {
@@ -267,15 +267,14 @@
       "state": {
         "consecutiveErrors": 0,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 34238,
-        "lastRunAtMs": 1775606131393,
+        "lastDurationMs": 72109,
+        "lastRunAtMs": 1775608342532,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1775606431393,
-        "lastDelivered": false,
-        "runningAtMs": 1775606842520
+        "nextRunAtMs": 1775608642532,
+        "lastDelivered": false
       },
-      "updatedAtMs": 1775606165631,
+      "updatedAtMs": 1775608414641,
       "wakeMode": "now"
     },
     {
@@ -394,7 +393,7 @@
       "payload": {
         "kind": "agentTurn",
         "message": "Run periodic workspace cleanup (every 6 hours). Keep files lean without spamming Nico.\n\nRequired steps:\n1) BACKLOG cleanup:\n   - Move completed top-level items (`### ✅`) from `~/.openclaw/workspace/BACKLOG.md` to `~/.openclaw/workspace/BACKLOG_ARCHIVE.md`.\n   - **Condense verbose active items:** If any `### 🟡` or `### 🔴` or `### ⏸️` item has more than 30 lines of subtasks/findings, condense it:\n     - Keep the header, status line, PR/issue link, and current blocker/next-step (max ~10 lines per item)\n     - Move the verbose subtask tree to `BACKLOG_ARCHIVE.md` under a dated batch header\n     - Replace with a one-line summary like: `- **Full investigation log:** archived 2026-03-06 (150 lines → BACKLOG_ARCHIVE.md)`\n   - Target: BACKLOG.md should stay under ~150 lines total. If it exceeds 200 lines, aggressively condense.\n   - Keep only active/passive/on-hold items in BACKLOG.md.\n   - Do NOT add backlog entries for empty cleanup runs.\n2) HEARTBEAT cleanup:\n   - Keep `~/.openclaw/workspace/HEARTBEAT.md` lean; remove stale completed checklist lines if any.\n3) Daily notes hygiene:\n   - Review `~/.openclaw/workspace/memory/` daily notes older than 7 days.\n   - Before removing or archiving anything, ensure durable key info is reflected in `MEMORY.md` or memory bank outputs.\n   - Prefer safe archiving/moving over deletion.\n\nReporting rules:\n- If no actionable changes were needed, reply exactly `NO_REPLY`.\n- If changes were made, send only a concise summary with file paths and counts.",
-        "model": "claude-cli/claude-haiku-4-5"
+        "model": "openai-codex/gpt-5.3-codex-spark"
       },
       "schedule": {
         "anchorMs": 1772634832403,
@@ -412,7 +411,7 @@
         "lastStatus": "ok",
         "nextRunAtMs": 1775609430378
       },
-      "updatedAtMs": 1775587857883,
+      "updatedAtMs": 1775608007531,
       "wakeMode": "now"
     },
     {
@@ -438,14 +437,14 @@
       "state": {
         "consecutiveErrors": 0,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 528724,
-        "lastRunAtMs": 1775606311326,
+        "lastDurationMs": 116874,
+        "lastRunAtMs": 1775608111328,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1775608111326,
+        "nextRunAtMs": 1775609911328,
         "lastDelivered": false
       },
-      "updatedAtMs": 1775606840050,
+      "updatedAtMs": 1775608228202,
       "wakeMode": "now"
     },
     {
@@ -528,7 +527,7 @@
       "payload": {
         "kind": "agentTurn",
         "message": "Run: python3 ~/.openclaw/workspace/scripts/cron/check_cron_health.py\\n- If output is exactly `NO_REPLY`, reply exactly `NO_REPLY`.\\n- Otherwise send the output as-is (it contains failing cron details and action guidance).\\n- Do not create empty-sweep backlog entries.\\n",
-        "model": "claude-cli/claude-haiku-4-5"
+        "model": "openai-codex/gpt-5.3-codex-spark"
       },
       "schedule": {
         "anchorMs": 1772704792065,
@@ -540,13 +539,13 @@
         "consecutiveErrors": 0,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 9410,
-        "lastRunAtMs": 1775605692830,
+        "lastDurationMs": 6838,
+        "lastRunAtMs": 1775607492832,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1775607492830
+        "nextRunAtMs": 1775609292832
       },
-      "updatedAtMs": 1775605702240,
+      "updatedAtMs": 1775607985807,
       "wakeMode": "now"
     },
     {
@@ -600,7 +599,7 @@
       "payload": {
         "kind": "agentTurn",
         "message": "Run ~/dotfiles/scripts/sync-dotfiles.sh now to sync local files into ~/dotfiles and push to github.com/lodekeeper/dotfiles.\nDo this directly (do not send a reminder message).\nOutput policy:\n- If sync succeeded and there were meaningful changes pushed: send a short routine update to Telegram topic #347 via message tool (target=-1003764039429, threadId=347).\n- If no changes were needed: NO_REPLY.\n- If sync fails: send an actionable error summary to Telegram topic #347; DM Nico only if urgent/manual intervention is required.",
-        "model": "claude-cli/claude-haiku-4-5",
+        "model": "openai-codex/gpt-5.3-codex-spark",
         "timeoutSeconds": 300
       },
       "schedule": {
@@ -613,14 +612,13 @@
         "consecutiveErrors": 0,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 19358,
-        "lastRunAtMs": 1775585362561,
+        "lastDurationMs": 16981,
+        "lastRunAtMs": 1775606880272,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1775606493107,
-        "runningAtMs": 1775606842520
+        "nextRunAtMs": 1775628093107
       },
-      "updatedAtMs": 1775585381919,
+      "updatedAtMs": 1775608006340,
       "wakeMode": "now"
     },
     {
@@ -633,7 +631,7 @@
       "payload": {
         "kind": "agentTurn",
         "message": "Check for new OpenClaw release by running /home/openclaw/.openclaw/workspace/scripts/cron/check_openclaw_release.sh. If output is NEW_OPENCLAW_RELEASE, alert Nico via sessions_send. If HEARTBEAT_OK, reply HEARTBEAT_OK. Do not edit BACKLOG.",
-        "model": "claude-cli/claude-haiku-4-5"
+        "model": "openai-codex/gpt-5.3-codex-spark"
       },
       "schedule": {
         "anchorMs": 1773093482865,
@@ -755,7 +753,7 @@
         "lastStatus": "ok",
         "nextRunAtMs": 1775689200000
       },
-      "updatedAtMs": 1775603144484,
+      "updatedAtMs": 1775608010099,
       "wakeMode": "now"
     },
     {
@@ -816,15 +814,14 @@
       "state": {
         "consecutiveErrors": 0,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 26727,
-        "lastRunAtMs": 1775585381919,
+        "lastDurationMs": 9717,
+        "lastRunAtMs": 1775606897253,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1775606428853,
-        "lastDelivered": false,
-        "runningAtMs": 1775606842520
+        "nextRunAtMs": 1775628028853,
+        "lastDelivered": false
       },
-      "updatedAtMs": 1775585408646,
+      "updatedAtMs": 1775606906970,
       "wakeMode": "now"
     },
     {
