@@ -16,7 +16,9 @@ Examples:
 ```bash
 scripts/oracle/chatgpt-direct --prompt "Summarize this"
 scripts/oracle/chatgpt-direct --prompt "Review this" --file notes.md
+scripts/oracle/chatgpt-direct --prompt "Review these" --file notes.md scripts/oracle/README.md
 scripts/oracle/chatgpt-direct --auth-only --require-auth --require-pro --json
+scripts/oracle/chatgpt-direct --chatgpt-url "https://chatgpt.com/g/.../project" --prompt "Use this project context"
 ```
 
 ### `oracle-browser-camoufox`
@@ -39,6 +41,11 @@ Current caveats:
 - optimized for the common prompt + file + model + timeout workflow
 - preserves Oracle's render/bundle step, but the actual browser execution is ChatGPT-via-Camoufox, not Oracle's Chromium engine
 - supports Oracle-style multi-path `--file` usage after a single flag
+- now also accepts `--browser-attachments` and `--browser-bundle-files` as compatibility flags for browser-style invocations
+- supports `--dry-run` preview modes so you can inspect the wrapper plan or final rendered prompt without making a ChatGPT call
+- now also accepts Oracle-style `--render`, `--render-markdown`, and `--render-plain` aliases for full preview output
+- preview/render output now also honors `--write-output` / `--output`, so you can save the generated preview bundle directly to disk
+- accepts Oracle-style `--copy-markdown` for preview/render modes and fails clearly if no clipboard backend is available on the host
 
 Examples:
 ```bash
@@ -65,6 +72,28 @@ scripts/oracle/oracle-browser \
 # Auth/Pro smoke test via wrapper
 scripts/oracle/oracle-browser --auth-only --require-auth --require-pro --json
 
+# Preview the wrapper plan without sending anything to ChatGPT
+scripts/oracle/oracle-browser --prompt "Summarize these files." --file notes.md --dry-run
+scripts/oracle/oracle-browser --prompt "Summarize these files." --file notes.md --dry-run json
+scripts/oracle/oracle-browser --prompt "Summarize these files." --file notes.md --dry-run full
+
+# Oracle-style render aliases (mapped to full wrapper preview output)
+scripts/oracle/oracle-browser --prompt "Summarize these files." --file notes.md --render
+scripts/oracle/oracle-browser --prompt "Summarize these files." --file notes.md --render-plain
+
+# Save preview output to a file instead of only stdout
+scripts/oracle/oracle-browser --prompt "Summarize these files." --file notes.md --dry-run json --write-output preview.json
+scripts/oracle/oracle-browser --prompt "Summarize these files." --file notes.md --render --output preview.md
+
+# Copy preview output to the clipboard (requires pbcopy, wl-copy, xclip, or xsel)
+scripts/oracle/oracle-browser --prompt "Summarize these files." --file notes.md --render --copy-markdown
+
+# Start from a specific ChatGPT project/folder/custom-GPT URL
+scripts/oracle/oracle-browser \
+  --chatgpt-url "https://chatgpt.com/g/.../project" \
+  --prompt "Continue in this project context" \
+  --file notes.md
+
 # File token usage during the Oracle render phase
 scripts/oracle/oracle-browser --files-report --prompt "Summarize these files." --file notes.md scripts/oracle/README.md
 ```
@@ -87,9 +116,15 @@ What it checks:
 - shell syntax for `oracle-browser-camoufox`
 - help output renders
 - API-only flags fail clearly
+- unknown unsupported args fail clearly
 - optional live auth/pro smoke test
 - optional live browser-style prompt run with multi-file `--file` usage
 - optional machine-readable JSON summary for automation / future health checks
+
+## Wrap-up reference
+
+If you need the single-file handoff summary for this work, see:
+- `research/oracle/WRAPUP-2026-04-08.md`
 
 ## Why this exists
 
@@ -115,7 +150,13 @@ So the practical production answer is:
   - write-output
   - auth-only checks
   - custom cookie path
+  - custom `--chatgpt-url` targets (projects / folders / custom GPT entry URLs)
   - file token reporting via `--files-report`
-  - a few compatibility/no-op flags (`--engine browser`, `--wait`, `--slug`, `--browser-model-strategy`, `--browser-inline-files`)
+  - wrapper preview via `--dry-run summary|json|full`
+  - Oracle-style render aliases via `--render`, `--render-markdown`, `--render-plain`
+  - preview/render export via `--write-output` / `--output`
+  - preview/render clipboard copy via `--copy-markdown`
+  - a few compatibility/no-op flags (`--engine browser`, `--wait`, `--slug`, `--browser-model-strategy`, `--browser-attachments`, `--browser-inline-files`, `--browser-bundle-files`)
   - clearer rejection of API-only Oracle flags such as `--models`, `--background`, `--base-url`, and Azure API options
+  - explicit rejection of unknown/unsupported leftover args instead of silently ignoring them
 - If more Oracle flags are needed, extend the wrapper rather than patching the global Oracle install first.

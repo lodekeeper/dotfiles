@@ -401,6 +401,7 @@ async def query_chatgpt(
     verbose=False,
     require_auth=False,
     require_pro=False,
+    chatgpt_url="https://chatgpt.com",
 ):
     """Send prompt to ChatGPT via Camoufox and return response."""
     from camoufox.async_api import AsyncCamoufox
@@ -428,9 +429,9 @@ async def query_chatgpt(
             }])
 
         if verbose:
-            print("Loading ChatGPT...", file=sys.stderr, flush=True)
+            print(f"Loading ChatGPT: {chatgpt_url}", file=sys.stderr, flush=True)
 
-        await page.goto("https://chatgpt.com", timeout=30000)
+        await page.goto(chatgpt_url, timeout=30000)
         await page.wait_for_load_state("domcontentloaded")
         await asyncio.sleep(8)
 
@@ -759,7 +760,13 @@ Examples:
         """,
     )
     parser.add_argument("--prompt", "-p", help="Prompt text")
-    parser.add_argument("--file", "-f", help="Append file contents to prompt")
+    parser.add_argument(
+        "--file",
+        "-f",
+        action="append",
+        nargs="+",
+        help="Append one or more files to the prompt; may be passed multiple times",
+    )
     parser.add_argument(
         "--timeout", "-t", type=int, default=21600,
         help="Response timeout in seconds (default: 21600 — deep research can take up to 6 hours)",
@@ -767,6 +774,11 @@ Examples:
     parser.add_argument("--output", "-o", help="Write response to file")
     parser.add_argument("--json", action="store_true", help="JSON output")
     parser.add_argument("--cookies", default=DEFAULT_COOKIES)
+    parser.add_argument(
+        "--chatgpt-url",
+        default="https://chatgpt.com",
+        help="ChatGPT URL to open first (default: https://chatgpt.com)",
+    )
     parser.add_argument("--verbose", "-v", action="store_true")
     parser.add_argument(
         "--require-auth",
@@ -791,9 +803,11 @@ Examples:
         prompt = sys.stdin.read().strip()
 
     if args.file:
-        with open(args.file) as fh:
-            content = fh.read()
-        prompt = f"{prompt}\n\n{content}" if prompt else content
+        for group in args.file:
+            for file_path in group:
+                with open(file_path) as fh:
+                    content = fh.read()
+                prompt = f"{prompt}\n\n{content}" if prompt else content
 
     if not prompt and not args.auth_only:
         parser.print_help(sys.stderr)
@@ -808,6 +822,7 @@ Examples:
                 verbose=args.verbose,
                 require_auth=args.require_auth,
                 require_pro=args.require_pro,
+                chatgpt_url=args.chatgpt_url,
             )
         )
 

@@ -26,7 +26,7 @@ Camoufox (headless Firefox)
 ## Quick Start
 
 ```bash
-# Simple query
+# Simple direct query
 scripts/oracle/chatgpt-direct --prompt "Your question here"
 
 # Auth/Pro smoke test (no prompt sent)
@@ -34,6 +34,9 @@ scripts/oracle/chatgpt-direct --auth-only --require-auth --require-pro
 
 # With file input
 scripts/oracle/chatgpt-direct --prompt "Review this:" --file doc.md
+
+# Multiple files (one or more after each --file; may be repeated)
+scripts/oracle/chatgpt-direct --prompt "Review these:" --file doc.md notes.md --file diff.txt
 
 # Pipe from stdin
 echo "What is RRF?" | scripts/oracle/chatgpt-direct
@@ -43,6 +46,26 @@ scripts/oracle/chatgpt-direct --prompt "..." --json --output response.md
 
 # Verbose mode (shows thinking progress)
 scripts/oracle/chatgpt-direct --prompt "..." --verbose
+
+# Oracle-style browser wrapper (preferred when someone asks for Oracle browser mode)
+scripts/oracle/oracle-browser \
+  --engine browser \
+  --wait \
+  --prompt "Review these files and give the concrete fix." \
+  --file notes.md src/index.ts \
+  --model gpt-5.2-pro
+
+# Preview wrapper behavior without making a ChatGPT call
+scripts/oracle/oracle-browser --prompt "Summarize these files" --file notes.md --dry-run json
+
+# Oracle-style render aliases on the wrapper
+scripts/oracle/oracle-browser --prompt "Summarize these files" --file notes.md --render
+
+# Save preview output directly to a file
+scripts/oracle/oracle-browser --prompt "Summarize these files" --file notes.md --dry-run json --write-output preview.json
+
+# Copy preview output to the clipboard (requires a clipboard backend on the host)
+scripts/oracle/oracle-browser --prompt "Summarize these files" --file notes.md --render --copy-markdown
 ```
 
 ## Key Options
@@ -88,6 +111,12 @@ After refreshing cookies/session state, use this as the first verification step:
 scripts/oracle/chatgpt-direct --auth-only --require-auth --require-pro --json
 ```
 
+For the Oracle-style wrapper path, the equivalent check is:
+
+```bash
+scripts/oracle/oracle-browser --auth-only --require-auth --require-pro --json
+```
+
 Expected success shape:
 - `status: "ok"`
 - `text: "ORACLE_BRIDGE_OK: ..."`
@@ -131,6 +160,9 @@ The tool distinguishes thinking from response by checking:
 |------|---------|
 | `research/chatgpt-direct.py` | Main Camoufox-based ChatGPT client |
 | `scripts/oracle/chatgpt-direct` | CLI wrapper (activates venv) |
+| `scripts/oracle/oracle-browser` | Simpler alias for the Oracle-style Camoufox wrapper |
+| `scripts/oracle/oracle-browser-camoufox` | Oracle-compatible-ish browser wrapper: uses `oracle --render --render-plain`, then routes the rendered bundle through `chatgpt-direct` |
+| `scripts/oracle/check-wrapper.sh` | Static/live verification script for the Oracle-style wrapper; supports `--json` for machine-readable summaries and checks unknown-arg rejection too |
 | `research/oracle-bridge-v4.py` | Legacy Chrome CDP bridge (deprecated — Chrome gets 403) |
 | `research/camoufox-direct.py` | Standalone test script (proof of concept) |
 
@@ -138,12 +170,43 @@ The tool distinguishes thinking from response by checking:
 
 From agent code / skill scripts:
 ```bash
-# Query GPT-5.4 Pro for research review
+# Direct Camoufox path
 ~/.openclaw/workspace/scripts/oracle/chatgpt-direct \
   --prompt "Review this research:" \
   --file ~/research/topic/FINAL-REPORT.md \
   --output ~/research/topic/gpt54-review.md \
   --timeout 3600
+
+# Direct Camoufox path, but start from a specific ChatGPT folder/project/custom-GPT URL
+~/.openclaw/workspace/scripts/oracle/chatgpt-direct \
+  --chatgpt-url "https://chatgpt.com/g/.../project" \
+  --prompt "Continue with the project context already loaded there." \
+  --timeout 3600
+
+# Oracle-style browser path on this server
+~/.openclaw/workspace/scripts/oracle/oracle-browser \
+  --engine browser \
+  --wait \
+  --prompt "Review this research and list the concrete fixes." \
+  --file ~/research/topic/FINAL-REPORT.md \
+  --model gpt-5.2-pro \
+  --timeout 3600
+
+# Oracle-style path targeting a specific ChatGPT URL
+~/.openclaw/workspace/scripts/oracle/oracle-browser \
+  --engine browser \
+  --wait \
+  --chatgpt-url "https://chatgpt.com/g/.../project" \
+  --prompt "Review this research and continue in that project context." \
+  --file ~/research/topic/FINAL-REPORT.md \
+  --model gpt-5.2-pro \
+  --timeout 3600
+
+# Wrapper verification
+~/.openclaw/workspace/scripts/oracle/check-wrapper.sh --live --json
+
+# Quick machine-readable static contract check
+~/.openclaw/workspace/scripts/oracle/check-wrapper.sh --json
 ```
 
 ## Cookie Format
@@ -169,6 +232,27 @@ Practical guidance:
 3. If browser mode still lands in guest mode, then escalate to:
    - attaching a logged-in `chatgpt.com` tab via Browser Relay and harvesting fresh auth state, or
    - replacing `~/.oracle/chatgpt-cookies.json` with a fresh full cookie export from a live Pro session.
+
+## Wrapper notes (current 2026-04-08 behavior)
+
+- `scripts/oracle/oracle-browser` is the preferred entrypoint when the caller wants something Oracle-browser-like on this server.
+- It is **not** a full Oracle drop-in, but it now covers the common workflow well:
+  - prompt
+  - multi-file `--file` usage after one flag
+  - `--auth-only`
+  - `--cookies`
+  - `--chatgpt-url`
+  - `--files-report`
+  - `--dry-run summary|json|full`
+  - `--render` / `--render-markdown` / `--render-plain`
+  - preview/render export via `--write-output` / `--output`
+  - preview/render clipboard copy via `--copy-markdown`
+  - `--engine browser`
+  - `--wait`
+  - compatibility/no-op handling for a few browser-style flags, including `--browser-attachments` and `--browser-bundle-files`
+- It rejects obvious Oracle API-only flags (`--models`, `--background`, `--base-url`, Azure API options) with clearer wrapper-specific errors instead of failing ambiguously.
+- It also rejects unknown/unsupported leftover args explicitly instead of silently ignoring them.
+- Use `scripts/oracle/check-wrapper.sh` for fast regression checks before debugging the wrapper manually; the static check now also asserts unknown-arg rejection.
 
 ## Self-Maintenance
 

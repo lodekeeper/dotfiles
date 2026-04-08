@@ -18,8 +18,14 @@ Supported flags:
       --write-output <path>   Write final response to file
   -o, --output <path>         Alias for --write-output
       --cookies <path>        Custom cookie JSON path for chatgpt-direct
+      --chatgpt-url <url>     ChatGPT URL to open first (project/folder/custom GPT)
       --auth-only             Validate auth/pro state only; do not send a prompt
       --files-report          Show Oracle's file token usage during render
+      --dry-run [mode]        Preview wrapper behavior without sending to ChatGPT (summary|json|full)
+      --render                Alias for wrapper preview output (same as --dry-run full)
+      --render-markdown       Alias for wrapper preview output (same as --dry-run full)
+      --render-plain          Alias for wrapper preview output (same as --dry-run full)
+      --copy-markdown         Copy preview/render output to clipboard (preview modes only)
       --json                  Emit JSON output from chatgpt-direct
   -v, --verbose               Verbose logs from chatgpt-direct
   -e, --engine <mode>         Accepts browser (default); api is rejected
@@ -27,7 +33,10 @@ Supported flags:
       --wait                  Accepted for compatibility; currently ignored
       --browser-model-strategy <mode>
                               Accepted for compatibility; currently ignored
+      --browser-attachments <mode>
+                              Accepted for compatibility; currently ignored
       --browser-inline-files  Accepted for compatibility; wrapper always inlines rendered bundle
+      --browser-bundle-files  Accepted for compatibility; currently ignored
       --require-auth          Require authenticated ChatGPT session (default)
       --no-require-auth       Allow guest/free mode
       --require-pro           Force Pro requirement regardless of model hint
@@ -46,11 +55,15 @@ model=""
 timeout=""
 write_output=""
 cookies=""
+chatgpt_url=""
 engine="browser"
 json=false
 verbose=false
 auth_only=false
 files_report=false
+dry_run_mode=""
+render_alias_requested=false
+copy_markdown=false
 require_auth=true
 require_pro="auto"
 declare -a files=()
@@ -98,12 +111,47 @@ while [[ $# -gt 0 ]]; do
       cookies="$2"
       shift 2
       ;;
+    --chatgpt-url)
+      [[ $# -ge 2 ]] || { echo "Missing value for $1" >&2; exit 2; }
+      chatgpt_url="$2"
+      shift 2
+      ;;
     --auth-only)
       auth_only=true
       shift
       ;;
     --files-report)
       files_report=true
+      shift
+      ;;
+    --dry-run)
+      if [[ $# -ge 2 && "$2" != -* ]]; then
+        case "$2" in
+          summary|json|full)
+            dry_run_mode="$2"
+            shift 2
+            ;;
+          *)
+            echo "Invalid value for --dry-run: $2 (expected summary|json|full)" >&2
+            exit 2
+            ;;
+        esac
+      else
+        dry_run_mode="summary"
+        shift
+      fi
+      ;;
+    --render|--render-markdown|--render-plain)
+      render_alias_requested=true
+      if [[ -n "$dry_run_mode" && "$dry_run_mode" != "full" ]]; then
+        echo "$1 conflicts with --dry-run $dry_run_mode. Use either render-style preview or a single dry-run mode." >&2
+        exit 2
+      fi
+      dry_run_mode="full"
+      shift
+      ;;
+    --copy-markdown)
+      copy_markdown=true
       shift
       ;;
     --json)
@@ -130,7 +178,21 @@ while [[ $# -gt 0 ]]; do
       [[ $# -ge 2 ]] || { echo "Missing value for $1" >&2; exit 2; }
       shift 2
       ;;
+    --browser-attachments)
+      [[ $# -ge 2 ]] || { echo "Missing value for $1" >&2; exit 2; }
+      case "$2" in
+        auto|never|always) ;;
+        *)
+          echo "Invalid value for --browser-attachments: $2 (expected auto|never|always)" >&2
+          exit 2
+          ;;
+      esac
+      shift 2
+      ;;
     --browser-inline-files)
+      shift
+      ;;
+    --browser-bundle-files)
       shift
       ;;
     --models|--background|--no-background|--http-timeout|--base-url|--azure-endpoint|--azure-deployment|--azure-api-version)
@@ -176,6 +238,12 @@ if [[ -z "$prompt" && ! -t 0 ]]; then
   prompt="$(cat)"
 fi
 
+if [[ ${#passthrough[@]} -gt 0 ]]; then
+  printf 'Unsupported with scripts/oracle/oracle-browser: unrecognized or unsupported argument(s): %s\n' "${passthrough[*]}" >&2
+  printf 'Use --help to see the supported wrapper flags. This wrapper only covers the Oracle browser-style workflow on this server.\n' >&2
+  exit 2
+fi
+
 engine_lc="$(printf '%s' "$engine" | tr '[:upper:]' '[:lower:]')"
 if [[ "$engine_lc" != "browser" && -n "$engine_lc" ]]; then
   echo "This wrapper only supports browser-style execution. Use --engine browser (or omit it)." >&2
@@ -196,13 +264,113 @@ if [[ "$require_pro" == "auto" ]]; then
   fi
 fi
 
+if $copy_markdown && [[ -z "$dry_run_mode" ]]; then
+  echo "Unsupported with scripts/oracle/oracle-browser: --copy-markdown is only supported with preview/render modes (--dry-run, --render, --render-markdown, --render-plain)." >&2
+  exit 2
+fi
+
 render_file="$(mktemp)"
 trap 'rm -f "$render_file"' EXIT
+
+copy_preview_to_clipboard() {
+  local output="$1"
+  if command -v pbcopy >/dev/null 2>&1; then
+    printf '%s' "$output" | pbcopy
+  elif command -v wl-copy >/dev/null 2>&1; then
+    printf '%s' "$output" | wl-copy
+  elif command -v xclip >/dev/null 2>&1; then
+    printf '%s' "$output" | xclip -selection clipboard
+  elif command -v xsel >/dev/null 2>&1; then
+    printf '%s' "$output" | xsel --clipboard --input
+  else
+    echo "Unsupported with scripts/oracle/oracle-browser: --copy-markdown requires a clipboard backend (pbcopy, wl-copy, xclip, or xsel), and none is available on this host." >&2
+    return 2
+  fi
+}
+
+emit_preview_output() {
+  local output="$1"
+  printf '%s\n' "$output"
+  if [[ -n "$write_output" ]]; then
+    printf '%s\n' "$output" > "$write_output"
+  fi
+  if $copy_markdown; then
+    copy_preview_to_clipboard "$output"
+  fi
+}
+
+build_dry_run_output() {
+  local rendered_bundle="$1"
+  local final_prompt="$2"
+  local file_count="${#files[@]}"
+  local mode="${dry_run_mode:-summary}"
+  local require_pro_effective="${require_pro}"
+  case "$mode" in
+    full)
+      if $auth_only; then
+        printf '%s\n' "oracle-browser dry run (auth-only): no prompt would be sent; wrapper would only validate auth/pro state."
+      else
+        printf '%s\n' "$final_prompt"
+      fi
+      ;;
+    summary)
+      cat <<EOF
+oracle-browser dry run
+- authOnly: $auth_only
+- promptProvided: $([[ -n "$prompt" ]] && echo true || echo false)
+- fileCount: $file_count
+- model: ${model:-"(none)"}
+- requireAuth: $require_auth
+- requirePro: $require_pro_effective
+- chatgptUrl: ${chatgpt_url:-https://chatgpt.com}
+- filesReport: $files_report
+- jsonOutput: $json
+- writeOutput: ${write_output:-"(none)"}
+- copyMarkdown: $copy_markdown
+EOF
+      ;;
+    json)
+      python3 - <<'PY' \
+        "$auth_only" "$([[ -n "$prompt" ]] && echo true || echo false)" "$file_count" \
+        "$model" "$require_auth" "$require_pro_effective" "${chatgpt_url:-https://chatgpt.com}" \
+        "$files_report" "$json" "$timeout" "$write_output" "$cookies" "$copy_markdown" "${#rendered_bundle}" "${#final_prompt}"
+import json, sys
+(auth_only, prompt_provided, file_count, model, require_auth, require_pro, chatgpt_url,
+ files_report, json_output, timeout, write_output, cookies, copy_markdown, rendered_len, final_len) = sys.argv[1:16]
+print(json.dumps({
+  "status": "ok",
+  "mode": "dry-run",
+  "wrapper": "oracle-browser-camoufox",
+  "plan": {
+    "authOnly": auth_only == "true",
+    "promptProvided": prompt_provided == "true",
+    "fileCount": int(file_count),
+    "model": model,
+    "requireAuth": require_auth == "true",
+    "requirePro": require_pro == "true",
+    "chatgptUrl": chatgpt_url,
+    "filesReport": files_report == "true",
+    "jsonOutput": json_output == "true",
+    "timeout": timeout,
+    "writeOutput": write_output,
+    "customCookies": bool(cookies),
+    "copyMarkdown": copy_markdown == "true",
+    "renderedBundleChars": int(rendered_len),
+    "finalPromptChars": int(final_len),
+  }
+}, indent=2))
+PY
+      ;;
+  esac
+}
 
 source "$HOME/.nvm/nvm.sh" >/dev/null 2>&1 || true
 nvm use 22 >/dev/null 2>&1 || true
 
 bridge_args=()
+
+final_prompt=""
+rendered_bundle=""
 
 if $auth_only; then
   bridge_args+=(--auth-only)
@@ -237,6 +405,13 @@ EOF
 
   bridge_args+=(--prompt "$final_prompt")
 fi
+
+if [[ -n "$dry_run_mode" ]]; then
+  preview_output="$(build_dry_run_output "$rendered_bundle" "$final_prompt")"
+  emit_preview_output "$preview_output"
+  exit 0
+fi
+
 if [[ -n "$timeout" ]]; then
   bridge_args+=(--timeout "$timeout")
 fi
@@ -245,6 +420,9 @@ if [[ -n "$write_output" ]]; then
 fi
 if [[ -n "$cookies" ]]; then
   bridge_args+=(--cookies "$cookies")
+fi
+if [[ -n "$chatgpt_url" ]]; then
+  bridge_args+=(--chatgpt-url "$chatgpt_url")
 fi
 if $json; then
   bridge_args+=(--json)
