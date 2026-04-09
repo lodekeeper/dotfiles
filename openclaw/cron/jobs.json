@@ -267,14 +267,14 @@
       "state": {
         "consecutiveErrors": 0,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 33432,
-        "lastRunAtMs": 1775692868723,
+        "lastDurationMs": 37059,
+        "lastRunAtMs": 1775693468727,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1775693168723,
+        "nextRunAtMs": 1775693768727,
         "lastDelivered": false
       },
-      "updatedAtMs": 1775692902155,
+      "updatedAtMs": 1775693505786,
       "wakeMode": "now"
     },
     {
@@ -435,14 +435,14 @@
       "state": {
         "consecutiveErrors": 0,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 134299,
-        "lastRunAtMs": 1775691702885,
+        "lastDurationMs": 158462,
+        "lastRunAtMs": 1775693508495,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1775693502885,
+        "nextRunAtMs": 1775695308495,
         "lastDelivered": false
       },
-      "updatedAtMs": 1775691837184,
+      "updatedAtMs": 1775693666957,
       "wakeMode": "now"
     },
     {
@@ -469,12 +469,12 @@
         "consecutiveErrors": 0,
         "lastDeliveryStatus": "not-requested",
         "lastDurationMs": 30519,
-        "lastError": null,
         "lastErrorReason": null,
         "lastRunAtMs": 1775434356000,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1775693556000
+        "nextRunAtMs": 1775693556000,
+        "runningAtMs": 1775693668959
       },
       "updatedAtMs": 1775434386519,
       "wakeMode": "now"
@@ -608,14 +608,13 @@
         "consecutiveErrors": 0,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 17530,
-        "lastRunAtMs": 1775671293109,
+        "lastDurationMs": 14579,
+        "lastRunAtMs": 1775692904677,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1775692893107,
-        "runningAtMs": 1775692904670
+        "nextRunAtMs": 1775714493107
       },
-      "updatedAtMs": 1775671310639,
+      "updatedAtMs": 1775692919256,
       "wakeMode": "now"
     },
     {
