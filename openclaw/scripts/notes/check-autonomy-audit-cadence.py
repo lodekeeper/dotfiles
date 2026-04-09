@@ -60,6 +60,11 @@ def main() -> int:
         help="Expected spacing between snapshots in days (default: 1)",
     )
     parser.add_argument(
+        "--latest-only",
+        action="store_true",
+        help="Only check the latest snapshot pair (ignore historical gaps)",
+    )
+    parser.add_argument(
         "--fail-on-gap",
         action="store_true",
         help="Exit 2 when missing-day gaps are detected",
@@ -82,11 +87,17 @@ def main() -> int:
         print(f"❌ No snapshot headings found in {path}", file=sys.stderr)
         return 1
 
-    gaps = find_gaps(dates, expected_every_days=args.expected_every_days)
+    check_dates = dates
+    if args.latest_only and len(dates) >= 2:
+        check_dates = dates[-2:]
+
+    gaps = find_gaps(check_dates, expected_every_days=args.expected_every_days)
 
     print(f"Cadence check: {path}")
     print(f"- Snapshots parsed: {len(dates)}")
-    print(f"- Range: {dates[0].isoformat()} → {dates[-1].isoformat()}")
+    print(f"- Range (all): {dates[0].isoformat()} → {dates[-1].isoformat()}")
+    if args.latest_only and len(dates) >= 2:
+        print(f"- Scope: latest pair only ({check_dates[0].isoformat()} → {check_dates[-1].isoformat()})")
 
     if not gaps:
         print("✅ No missing-day cadence gaps detected")

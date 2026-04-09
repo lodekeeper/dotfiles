@@ -1,10 +1,29 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-04-08 (26th pass)
+> Updated: 2026-04-09 (27th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-04-09 (self-improvement-audit-daily, 00:35 UTC)
+
+### PR review
+- **Status:** review-scope + follow-up guard workflow remains healthy; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** retry telemetry, rolling degradation checks, and log-fallback path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** extraction/compliance/vector-readiness gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident-bundle workflow remains healthy; no new blocker discovered this cycle.
+
+### Audit workflow (cross-cutting)
+- **Blocker:** cadence checks were still reporting historical missing-day gaps on every run, which creates alert fatigue and can hide *fresh* missed-day regressions once cadence has resumed.
+- **Fix applied this cycle:** added `--latest-only` mode to `scripts/notes/check-autonomy-audit-cadence.py` and wired `scripts/notes/run-autonomy-audit-preflight.sh` to use it by default, so daily preflight now focuses on the newest snapshot pair while full-history scans remain available for periodic audits.
+
+---
 ## Daily Audit Snapshot — 2026-04-08 (self-improvement-audit-daily, 00:35 UTC)
 
 ### PR review
@@ -654,6 +673,13 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Daily autonomy-audit cadence guard now supports fresh-gap-only mode (2026-04-09)
+Added `--latest-only` to `scripts/notes/check-autonomy-audit-cadence.py` so cadence checks can focus on the newest snapshot pair instead of re-reporting old historical gaps on every run.
+
+Also updated `scripts/notes/run-autonomy-audit-preflight.sh` to run cadence checks in latest-pair advisory mode by default.
+
+**Rationale:** once cadence resumes after a missed-day incident, repeated historical-gap alerts become noise. Latest-pair checks surface fresh regressions without drowning daily runs in already-known history, while full-history scans remain available when needed.
 
 ### ✅ Daily autonomy-audit cadence guard added (2026-04-08)
 Added `scripts/notes/check-autonomy-audit-cadence.py` to detect missing-day gaps between snapshot entries:

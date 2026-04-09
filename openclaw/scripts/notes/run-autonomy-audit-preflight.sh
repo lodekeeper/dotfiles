@@ -14,7 +14,7 @@ Usage: run-autonomy-audit-preflight.sh [options]
 
 Runs daily autonomy-audit preflight checks:
 1) Consistency guard on notes/autonomy-gaps.md
-2) Cadence guard (advisory) to surface missing-day snapshot gaps
+2) Cadence guard (advisory, latest-pair) to surface fresh missing-day snapshot gaps
 3) Snapshot scaffold insertion for today's audit
 
 Options:
@@ -69,7 +69,7 @@ else
 fi
 
 CHECK_CMD=(python3 "$WORKSPACE/scripts/notes/check-autonomy-gaps-consistency.py" --file "$TARGET_FILE")
-CADENCE_CMD=(python3 "$WORKSPACE/scripts/notes/check-autonomy-audit-cadence.py" --file "$TARGET_FILE" --fail-on-gap)
+CADENCE_CMD=(python3 "$WORKSPACE/scripts/notes/check-autonomy-audit-cadence.py" --file "$TARGET_FILE" --latest-only --fail-on-gap)
 PREPEND_CMD=(python3 "$WORKSPACE/scripts/notes/prepend-autonomy-audit-snapshot.py" --file "$TARGET_FILE")
 
 if [[ -n "$DATE" ]]; then
@@ -91,7 +91,7 @@ fi
 echo "[1/3] Running consistency guard on $TARGET_FILE"
 "${CHECK_CMD[@]}"
 
-echo "[2/3] Running cadence guard (advisory)"
+echo "[2/3] Running cadence guard (advisory, latest-pair)"
 set +e
 "${CADENCE_CMD[@]}"
 cadence_rc=$?

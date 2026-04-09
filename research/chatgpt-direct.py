@@ -753,6 +753,7 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
+  %(prog)s --auth-only --require-auth --require-pro --json
   %(prog)s --prompt "Explain RRF ranking"
   %(prog)s --prompt "Review this:" --file research.md
   %(prog)s --timeout 300 --json < question.txt
