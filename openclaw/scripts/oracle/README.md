@@ -46,6 +46,7 @@ Current caveats:
 - now also accepts Oracle-style `--render`, `--render-markdown`, and `--render-plain` aliases for full preview output
 - preview/render output now also honors `--write-output` / `--output`, so you can save the generated preview bundle directly to disk
 - accepts Oracle-style `--copy-markdown` for preview/render modes and fails clearly if no clipboard backend is available on the host
+- now also accepts common Oracle CLI UX flags as compatibility no-ops (`--notify`, `--no-notify`, `--notify-sound`, `--no-notify-sound`, `--heartbeat`, `--force`)
 
 Examples:
 ```bash
@@ -156,7 +157,7 @@ So the practical production answer is:
   - Oracle-style render aliases via `--render`, `--render-markdown`, `--render-plain`
   - preview/render export via `--write-output` / `--output`
   - preview/render clipboard copy via `--copy-markdown`
-  - a few compatibility/no-op flags (`--engine browser`, `--wait`, `--slug`, `--browser-model-strategy`, `--browser-attachments`, `--browser-inline-files`, `--browser-bundle-files`)
+  - a few compatibility/no-op flags (`--engine browser`, `--wait`, `--slug`, `--notify`, `--no-notify`, `--notify-sound`, `--no-notify-sound`, `--heartbeat`, `--force`, `--browser-model-strategy`, `--browser-attachments`, `--browser-inline-files`, `--browser-bundle-files`)
   - clearer rejection of API-only Oracle flags such as `--models`, `--background`, `--base-url`, and Azure API options
   - explicit rejection of unknown/unsupported leftover args instead of silently ignoring them
 - If more Oracle flags are needed, extend the wrapper rather than patching the global Oracle install first.

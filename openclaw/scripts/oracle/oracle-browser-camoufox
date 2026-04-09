@@ -31,6 +31,12 @@ Supported flags:
   -e, --engine <mode>         Accepts browser (default); api is rejected
   -s, --slug <words>          Accepted for compatibility; currently ignored
       --wait                  Accepted for compatibility; currently ignored
+      --notify                Accepted for compatibility; currently ignored
+      --no-notify             Accepted for compatibility; currently ignored
+      --notify-sound          Accepted for compatibility; currently ignored
+      --no-notify-sound       Accepted for compatibility; currently ignored
+      --heartbeat <seconds>   Accepted for compatibility; currently ignored
+      --force                 Accepted for compatibility; currently ignored
       --browser-model-strategy <mode>
                               Accepted for compatibility; currently ignored
       --browser-attachments <mode>
@@ -171,8 +177,12 @@ while [[ $# -gt 0 ]]; do
       [[ $# -ge 2 ]] || { echo "Missing value for $1" >&2; exit 2; }
       shift 2
       ;;
-    --wait)
+    --wait|--notify|--no-notify|--notify-sound|--no-notify-sound|--force)
       shift
+      ;;
+    --heartbeat)
+      [[ $# -ge 2 ]] || { echo "Missing value for $1" >&2; exit 2; }
+      shift 2
       ;;
     --browser-model-strategy)
       [[ $# -ge 2 ]] || { echo "Missing value for $1" >&2; exit 2; }

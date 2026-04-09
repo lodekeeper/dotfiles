@@ -249,7 +249,7 @@ Practical guidance:
   - preview/render clipboard copy via `--copy-markdown`
   - `--engine browser`
   - `--wait`
-  - compatibility/no-op handling for a few browser-style flags, including `--browser-attachments` and `--browser-bundle-files`
+  - compatibility/no-op handling for a few browser-style / CLI UX flags, including `--notify`, `--no-notify`, `--notify-sound`, `--no-notify-sound`, `--heartbeat`, `--force`, `--browser-attachments`, and `--browser-bundle-files`
 - It rejects obvious Oracle API-only flags (`--models`, `--background`, `--base-url`, Azure API options) with clearer wrapper-specific errors instead of failing ambiguously.
 - It also rejects unknown/unsupported leftover args explicitly instead of silently ignoring them.
 - Use `scripts/oracle/check-wrapper.sh` for fast regression checks before debugging the wrapper manually; the static check now also asserts unknown-arg rejection.

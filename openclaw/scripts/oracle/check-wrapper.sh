@@ -134,7 +134,7 @@ fi
 
 log "checking help output"
 help_out="$TMP_DIR/help.txt"
-if run "$WRAPPER" --help > "$help_out" && grep -q 'oracle-browser-camoufox' "$help_out" && grep -q -- '--files-report' "$help_out" && grep -q -- '--chatgpt-url' "$help_out" && grep -q -- '--browser-attachments' "$help_out" && grep -q -- '--browser-bundle-files' "$help_out" && grep -q -- '--dry-run' "$help_out" && grep -q -- '--render-markdown' "$help_out" && grep -q -- '--copy-markdown' "$help_out"; then
+if run "$WRAPPER" --help > "$help_out" && grep -q 'oracle-browser-camoufox' "$help_out" && grep -q -- '--files-report' "$help_out" && grep -q -- '--chatgpt-url' "$help_out" && grep -q -- '--browser-attachments' "$help_out" && grep -q -- '--browser-bundle-files' "$help_out" && grep -q -- '--dry-run' "$help_out" && grep -q -- '--render-markdown' "$help_out" && grep -q -- '--copy-markdown' "$help_out" && grep -q -- '--notify' "$help_out" && grep -q -- '--heartbeat <seconds>' "$help_out"; then
   HELP_RESULT="passed"
 else
   HELP_RESULT="failed"
@@ -232,6 +232,24 @@ if grep -q 'only supported with preview/render modes' "$copy_guard_out"; then
 else
   COPY_MARKDOWN_RESULT="failed"
   finish_fail "copy-markdown preview guard message missing"
+fi
+
+log "checking common CLI UX flag compatibility"
+ux_json="$TMP_DIR/ux.json"
+if run "$WRAPPER" --prompt 'Reply with exactly UX_FLAGS_OK.' --file "$ctx" --dry-run json --notify --no-notify-sound --heartbeat 5 --force --json > "$ux_json" && python3 - <<'PY' "$ux_json"
+import json, sys
+with open(sys.argv[1]) as f:
+    data = json.load(f)
+assert data.get('status') == 'ok', data
+assert data.get('mode') == 'dry-run', data
+plan = data.get('plan', {})
+assert plan.get('promptProvided') is True, data
+assert plan.get('fileCount') == 1, data
+PY
+then
+  :
+else
+  finish_fail "common UX flag compatibility check failed"
 fi
 
 if ! $LIVE; then
