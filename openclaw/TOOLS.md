@@ -216,6 +216,12 @@ Always use `<@USER_ID>` format in message sends to actually ping someone.
 - **Verification:** `scripts/oracle/check-wrapper.sh` (use `--live` for auth/pro + browser smoke checks)
 - **Current caveat:** stock Oracle browser mode is still unreliable here because the Chromium/CDP path hits launch quirks and/or Cloudflare anti-bot; prefer the wrapper unless explicitly testing Oracle-native browser behavior
 
+## Backlog inspection
+- **Safe helper:** `scripts/backlog/list_statuses.py`
+  - Use this to inspect `BACKLOG.md` headings/status lines instead of ad-hoc inline `python3 -` snippets.
+  - Example: `python3 ~/.openclaw/workspace/scripts/backlog/list_statuses.py --active-only`
+- **Why:** two separate runaway `python3 -` processes (2026-04-08, 2026-04-10) were caused by brittle inline loops that only advanced on `### ` headings and spun forever on `## ` section headers.
+
 ## Review Royale
 - **API:** http://127.0.0.1:3456 (public: https://review-royale.nflaig.dev)
 - **Repos:** ChainSafe/lodestar, ChainSafe/lodestar-z

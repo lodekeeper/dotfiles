@@ -10,7 +10,7 @@ BAD_CONCLUSIONS = {"failure", "cancelled", "timed_out", "action_required"}
 
 
 def run(cmd: str) -> str:
-    return subprocess.check_output(cmd, shell=True, text=True)
+    return subprocess.check_output(cmd, shell=True, text=True, timeout=60)
 
 
 def load_state() -> dict:
