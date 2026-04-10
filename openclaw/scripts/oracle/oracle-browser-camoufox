@@ -18,6 +18,8 @@ Supported flags:
       --write-output <path>   Write final response to file
   -o, --output <path>         Alias for --write-output
       --cookies <path>        Custom cookie JSON path for chatgpt-direct
+      --browser-cookie-path <path>
+                              Compatibility alias for --cookies
       --chatgpt-url <url>     ChatGPT URL to open first (project/folder/custom GPT)
       --auth-only             Validate auth/pro state only; do not send a prompt
       --files-report          Show Oracle's file token usage during render
@@ -37,6 +39,11 @@ Supported flags:
       --no-notify-sound       Accepted for compatibility; currently ignored
       --heartbeat <seconds>   Accepted for compatibility; currently ignored
       --force                 Accepted for compatibility; currently ignored
+      --verbose-render        Accepted for compatibility; currently ignored
+      --retain-hours <hours>  Accepted for compatibility; currently ignored
+      --zombie-timeout <dur>  Accepted for compatibility; currently ignored
+      --zombie-last-activity  Accepted for compatibility; currently ignored
+      --debug-help            Show wrapper help and exit (compatibility alias)
       --browser-model-strategy <mode>
                               Accepted for compatibility; currently ignored
       --browser-attachments <mode>
@@ -112,7 +119,7 @@ while [[ $# -gt 0 ]]; do
       write_output="$2"
       shift 2
       ;;
-    --cookies)
+    --cookies|--browser-cookie-path)
       [[ $# -ge 2 ]] || { echo "Missing value for $1" >&2; exit 2; }
       cookies="$2"
       shift 2
@@ -177,12 +184,16 @@ while [[ $# -gt 0 ]]; do
       [[ $# -ge 2 ]] || { echo "Missing value for $1" >&2; exit 2; }
       shift 2
       ;;
-    --wait|--notify|--no-notify|--notify-sound|--no-notify-sound|--force)
+    --wait|--notify|--no-notify|--notify-sound|--no-notify-sound|--force|--verbose-render|--zombie-last-activity)
       shift
       ;;
-    --heartbeat)
+    --heartbeat|--retain-hours|--zombie-timeout)
       [[ $# -ge 2 ]] || { echo "Missing value for $1" >&2; exit 2; }
       shift 2
+      ;;
+    --debug-help)
+      usage
+      exit 0
       ;;
     --browser-model-strategy)
       [[ $# -ge 2 ]] || { echo "Missing value for $1" >&2; exit 2; }
@@ -204,6 +215,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --browser-bundle-files)
       shift
+      ;;
+    --remote-chrome|--remote-host|--remote-token|--browser-port)
+      echo "Unsupported with scripts/oracle/oracle-browser: $1 targets Oracle's native Chrome/CDP or remote-browser paths, but this wrapper always uses the local Camoufox ChatGPT bridge instead." >&2
+      exit 2
       ;;
     --models|--background|--no-background|--http-timeout|--base-url|--azure-endpoint|--azure-deployment|--azure-api-version)
       echo "Unsupported with scripts/oracle/oracle-browser: $1 is Oracle API-mode functionality, but this wrapper only provides browser-style execution via Camoufox." >&2

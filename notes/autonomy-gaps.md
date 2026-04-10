@@ -1,10 +1,29 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-04-09 (27th pass)
+> Updated: 2026-04-10 (28th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-04-10 (self-improvement-audit-daily, 00:35 UTC)
+
+### PR review
+- **Status:** review-scope + follow-up guard workflow remains healthy; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** retry telemetry, rolling degradation checks, and log-fallback path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** extraction/compliance/vector-readiness gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident-bundle workflow remains healthy; no new blocker discovered this cycle.
+
+### Audit workflow (cross-cutting)
+- **Blocker:** `scripts/notes/close-autonomy-audit.sh` leaked finalize logs to stdout before printing `NO_REPLY`, so no-change runs could violate the strict "reply exactly NO_REPLY" contract expected by cron reminder handlers.
+- **Fix applied this cycle:** hardened `scripts/notes/close-autonomy-audit.sh` to capture finalize output, print only the final renderer result to stdout, and emit exact `NO_REPLY` on no-change while keeping optional diagnostic logs behind `--verbose` (stderr only).
+
+---
 ## Daily Audit Snapshot — 2026-04-09 (self-improvement-audit-daily, 00:35 UTC)
 
 ### PR review
@@ -673,6 +692,15 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Autonomy-audit close-out wrapper now preserves exact stdout contract (2026-04-10)
+Updated `scripts/notes/close-autonomy-audit.sh` to keep finalize diagnostics out of stdout:
+- captures `finalize-autonomy-audit.py` output to a temp log,
+- prints only final response text on stdout,
+- emits exact `NO_REPLY` (and nothing else) for no-change runs,
+- adds optional `--verbose` flag to surface finalize logs on stderr when debugging.
+
+**Rationale:** reminder handlers require exact `NO_REPLY` for silent cycles; leaking finalize chatter to stdout risked noisy/non-compliant cron replies.
 
 ### ✅ Daily autonomy-audit cadence guard now supports fresh-gap-only mode (2026-04-09)
 Added `--latest-only` to `scripts/notes/check-autonomy-audit-cadence.py` so cadence checks can focus on the newest snapshot pair instead of re-reporting old historical gaps on every run.

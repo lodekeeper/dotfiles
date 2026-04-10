@@ -98,6 +98,45 @@ finish_fail() {
   exit 1
 }
 
+summarize_auth_failure() {
+  local json_path="$1"
+  if [[ ! -s "$json_path" ]]; then
+    return 1
+  fi
+  python3 - <<'PY' "$json_path"
+import json, sys
+path = sys.argv[1]
+try:
+    with open(path) as f:
+        data = json.load(f)
+except Exception:
+    sys.exit(1)
+
+error = data.get("error")
+server = ((data.get("auth") or {}).get("server") or {})
+parts = []
+if error:
+    parts.append(error)
+if server:
+    state = server.get("state")
+    plan = server.get("planType")
+    serr = server.get("error")
+    meta = []
+    if state:
+        meta.append(f"state={state}")
+    if plan:
+        meta.append(f"plan={plan}")
+    if serr and serr not in (error or ""):
+        meta.append(f"server_error={serr}")
+    if meta:
+        parts.append("(" + ", ".join(meta) + ")")
+if parts:
+    print(" ".join(parts))
+    sys.exit(0)
+sys.exit(1)
+PY
+}
+
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --live)
@@ -134,24 +173,33 @@ fi
 
 log "checking help output"
 help_out="$TMP_DIR/help.txt"
-if run "$WRAPPER" --help > "$help_out" && grep -q 'oracle-browser-camoufox' "$help_out" && grep -q -- '--files-report' "$help_out" && grep -q -- '--chatgpt-url' "$help_out" && grep -q -- '--browser-attachments' "$help_out" && grep -q -- '--browser-bundle-files' "$help_out" && grep -q -- '--dry-run' "$help_out" && grep -q -- '--render-markdown' "$help_out" && grep -q -- '--copy-markdown' "$help_out" && grep -q -- '--notify' "$help_out" && grep -q -- '--heartbeat <seconds>' "$help_out"; then
+if run "$WRAPPER" --help > "$help_out" && grep -q 'oracle-browser-camoufox' "$help_out" && grep -q -- '--files-report' "$help_out" && grep -q -- '--chatgpt-url' "$help_out" && grep -q -- '--browser-cookie-path <path>' "$help_out" && grep -q -- '--browser-attachments' "$help_out" && grep -q -- '--browser-bundle-files' "$help_out" && grep -q -- '--dry-run' "$help_out" && grep -q -- '--render-markdown' "$help_out" && grep -q -- '--copy-markdown' "$help_out" && grep -q -- '--notify' "$help_out" && grep -q -- '--heartbeat <seconds>' "$help_out" && grep -q -- '--verbose-render' "$help_out" && grep -q -- '--retain-hours <hours>' "$help_out" && grep -q -- '--zombie-timeout <dur>' "$help_out" && grep -q -- '--debug-help' "$help_out"; then
   HELP_RESULT="passed"
 else
   HELP_RESULT="failed"
   finish_fail "help output check failed"
 fi
 
-log "checking API-only flag rejection"
+log "checking API-only / native-browser flag rejection"
 reject_out="$TMP_DIR/reject.txt"
+remote_reject_out="$TMP_DIR/remote-reject.txt"
 if "$WRAPPER" --models gpt-5.2-pro --prompt hi > "$reject_out" 2>&1; then
   REJECT_RESULT="failed"
   finish_fail "expected API-only flag rejection, but command succeeded"
 fi
-if grep -q 'API-mode functionality' "$reject_out"; then
+if ! grep -q 'API-mode functionality' "$reject_out"; then
+  REJECT_RESULT="failed"
+  finish_fail "API-only flag rejection message missing"
+fi
+if "$WRAPPER" --remote-chrome 127.0.0.1:9222 --prompt hi > "$remote_reject_out" 2>&1; then
+  REJECT_RESULT="failed"
+  finish_fail "expected native-browser flag rejection, but command succeeded"
+fi
+if grep -q 'native Chrome/CDP or remote-browser paths' "$remote_reject_out"; then
   REJECT_RESULT="passed"
 else
   REJECT_RESULT="failed"
-  finish_fail "API-only flag rejection message missing"
+  finish_fail "native-browser flag rejection message missing"
 fi
 
 log "checking unknown argument rejection"
@@ -234,9 +282,10 @@ else
   finish_fail "copy-markdown preview guard message missing"
 fi
 
-log "checking common CLI UX flag compatibility"
+log "checking common CLI UX/session flag compatibility"
 ux_json="$TMP_DIR/ux.json"
-if run "$WRAPPER" --prompt 'Reply with exactly UX_FLAGS_OK.' --file "$ctx" --dry-run json --notify --no-notify-sound --heartbeat 5 --force --json > "$ux_json" && python3 - <<'PY' "$ux_json"
+debug_help_out="$TMP_DIR/debug-help.txt"
+if run "$WRAPPER" --debug-help > "$debug_help_out" && grep -q 'oracle-browser-camoufox' "$debug_help_out" && run "$WRAPPER" --prompt 'Reply with exactly UX_FLAGS_OK.' --file "$ctx" --browser-cookie-path /tmp/fake-cookies.json --dry-run json --notify --no-notify-sound --heartbeat 5 --force --verbose-render --retain-hours 24 --zombie-timeout 10m --zombie-last-activity --json > "$ux_json" && python3 - <<'PY' "$ux_json"
 import json, sys
 with open(sys.argv[1]) as f:
     data = json.load(f)
@@ -245,11 +294,12 @@ assert data.get('mode') == 'dry-run', data
 plan = data.get('plan', {})
 assert plan.get('promptProvided') is True, data
 assert plan.get('fileCount') == 1, data
+assert plan.get('customCookies') is True, data
 PY
 then
   :
 else
-  finish_fail "common UX flag compatibility check failed"
+  finish_fail "common UX/session flag compatibility check failed"
 fi
 
 if ! $LIVE; then
@@ -270,6 +320,10 @@ then
   AUTH_RESULT="passed"
 else
   AUTH_RESULT="failed"
+  auth_detail="$(summarize_auth_failure "$auth_json" || true)"
+  if [[ -n "$auth_detail" ]]; then
+    finish_fail "live auth/pro smoke test failed: $auth_detail"
+  fi
   finish_fail "live auth/pro smoke test failed"
 fi
 

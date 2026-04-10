@@ -21,6 +21,38 @@ scripts/oracle/chatgpt-direct --auth-only --require-auth --require-pro --json
 scripts/oracle/chatgpt-direct --chatgpt-url "https://chatgpt.com/g/.../project" --prompt "Use this project context"
 ```
 
+### `replace-session-token.py`
+Safe helper to patch a fresh `__Secure-next-auth.session-token` into the local
+ChatGPT cookie jar without hand-editing JSON.
+
+What it does:
+- updates the existing token in `~/.oracle/chatgpt-cookies.json`
+- preserves all other cookies when present
+- writes a timestamped backup before changing the jar
+- can also create a minimal token-only jar when no cookie jar exists yet
+
+Examples:
+```bash
+scripts/oracle/replace-session-token.py --token-file /tmp/session-token.txt
+scripts/oracle/replace-session-token.py --token "fresh-session-token-value"
+cat /tmp/session-token.txt | scripts/oracle/replace-session-token.py --stdin
+```
+
+Recommended post-refresh sequence:
+```bash
+# 1) patch the local cookie jar
+scripts/oracle/replace-session-token.py --token-file /tmp/session-token.txt
+
+# 2) verify direct Camoufox auth/pro state
+scripts/oracle/chatgpt-direct --auth-only --require-auth --require-pro --json
+
+# 3) verify the Oracle-style wrapper path
+scripts/oracle/oracle-browser --auth-only --require-auth --require-pro --json
+
+# 4) run the full wrapper verifier
+scripts/oracle/check-wrapper.sh --live --json
+```
+
 ### `oracle-browser-camoufox`
 Compatibility wrapper for **Oracle-style browser usage** on this machine.
 
@@ -47,6 +79,8 @@ Current caveats:
 - preview/render output now also honors `--write-output` / `--output`, so you can save the generated preview bundle directly to disk
 - accepts Oracle-style `--copy-markdown` for preview/render modes and fails clearly if no clipboard backend is available on the host
 - now also accepts common Oracle CLI UX flags as compatibility no-ops (`--notify`, `--no-notify`, `--notify-sound`, `--no-notify-sound`, `--heartbeat`, `--force`)
+- also accepts a few Oracle session/debug flags in compatibility-safe form (`--verbose-render`, `--retain-hours`, `--zombie-timeout`, `--zombie-last-activity`, `--debug-help`)
+- `--browser-cookie-path` is accepted as an alias for `--cookies`, while native Oracle browser transport flags like `--remote-chrome`, `--remote-host`, `--remote-token`, and `--browser-port` now fail with wrapper-specific errors instead of generic unknown-arg noise
 
 Examples:
 ```bash
@@ -113,6 +147,10 @@ scripts/oracle/check-wrapper.sh --live
 scripts/oracle/check-wrapper.sh --live --json
 ```
 
+If live auth has gone stale, the JSON/error output now includes the concrete reason
+(for example `RefreshAccessTokenError`, `state=stale`, `plan=pro`) instead of only
+reporting a generic wrapper smoke-test failure.
+
 What it checks:
 - shell syntax for `oracle-browser-camoufox`
 - help output renders
@@ -150,14 +188,14 @@ So the practical production answer is:
   - JSON output
   - write-output
   - auth-only checks
-  - custom cookie path
+  - custom cookie path (including `--browser-cookie-path` as an alias)
   - custom `--chatgpt-url` targets (projects / folders / custom GPT entry URLs)
   - file token reporting via `--files-report`
   - wrapper preview via `--dry-run summary|json|full`
   - Oracle-style render aliases via `--render`, `--render-markdown`, `--render-plain`
   - preview/render export via `--write-output` / `--output`
   - preview/render clipboard copy via `--copy-markdown`
-  - a few compatibility/no-op flags (`--engine browser`, `--wait`, `--slug`, `--notify`, `--no-notify`, `--notify-sound`, `--no-notify-sound`, `--heartbeat`, `--force`, `--browser-model-strategy`, `--browser-attachments`, `--browser-inline-files`, `--browser-bundle-files`)
+  - a few compatibility/no-op flags (`--engine browser`, `--wait`, `--slug`, `--notify`, `--no-notify`, `--notify-sound`, `--no-notify-sound`, `--heartbeat`, `--force`, `--verbose-render`, `--retain-hours`, `--zombie-timeout`, `--zombie-last-activity`, `--debug-help`, `--browser-model-strategy`, `--browser-attachments`, `--browser-inline-files`, `--browser-bundle-files`)
   - clearer rejection of API-only Oracle flags such as `--models`, `--background`, `--base-url`, and Azure API options
   - explicit rejection of unknown/unsupported leftover args instead of silently ignoring them
 - If more Oracle flags are needed, extend the wrapper rather than patching the global Oracle install first.

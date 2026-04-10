@@ -4,6 +4,7 @@ set -euo pipefail
 WORKSPACE="${WORKSPACE:-$HOME/.openclaw/workspace}"
 FILE="notes/autonomy-gaps.md"
 DATE=""
+VERBOSE=0
 
 usage() {
   cat <<'EOF'
@@ -16,6 +17,7 @@ Runs daily autonomy-audit close-out in one command:
 Options:
   --file <path>         Target markdown file (default: notes/autonomy-gaps.md)
   --date <YYYY-MM-DD>   Snapshot date (default: current UTC date)
+  -v, --verbose         Print finalize logs to stderr
   -h, --help            Show this help
 EOF
 }
@@ -29,6 +31,10 @@ while [[ $# -gt 0 ]]; do
     --date)
       DATE="$2"
       shift 2
+      ;;
+    -v|--verbose)
+      VERBOSE=1
+      shift
       ;;
     -h|--help)
       usage
@@ -57,10 +63,20 @@ FINALIZE_CMD=(
   --fail-on-no-change
 )
 
+finalize_log="$(mktemp)"
+cleanup() {
+  rm -f "$finalize_log"
+}
+trap cleanup EXIT
+
 set +e
-"${FINALIZE_CMD[@]}"
+"${FINALIZE_CMD[@]}" >"$finalize_log" 2>&1
 finalize_rc=$?
 set -e
+
+if [[ "$VERBOSE" -eq 1 && -s "$finalize_log" ]]; then
+  cat "$finalize_log" >&2
+fi
 
 if [[ "$finalize_rc" -eq 3 ]]; then
   echo "NO_REPLY"
@@ -68,6 +84,9 @@ if [[ "$finalize_rc" -eq 3 ]]; then
 fi
 
 if [[ "$finalize_rc" -ne 0 ]]; then
+  if [[ "$VERBOSE" -ne 1 && -s "$finalize_log" ]]; then
+    cat "$finalize_log" >&2
+  fi
   exit "$finalize_rc"
 fi
 

@@ -233,6 +233,22 @@ Practical guidance:
    - attaching a logged-in `chatgpt.com` tab via Browser Relay and harvesting fresh auth state, or
    - replacing `~/.oracle/chatgpt-cookies.json` with a fresh full cookie export from a live Pro session.
 
+### Fast local token refresh helper
+
+When only the session token changed, prefer the local helper over hand-editing the cookie jar:
+
+```bash
+scripts/oracle/replace-session-token.py --token-file /tmp/session-token.txt
+```
+
+Then re-run the canonical verification sequence:
+
+```bash
+scripts/oracle/chatgpt-direct --auth-only --require-auth --require-pro --json
+scripts/oracle/oracle-browser --auth-only --require-auth --require-pro --json
+scripts/oracle/check-wrapper.sh --live --json
+```
+
 ## Wrapper notes (current 2026-04-08 behavior)
 
 - `scripts/oracle/oracle-browser` is the preferred entrypoint when the caller wants something Oracle-browser-like on this server.
@@ -240,7 +256,7 @@ Practical guidance:
   - prompt
   - multi-file `--file` usage after one flag
   - `--auth-only`
-  - `--cookies`
+  - `--cookies` / `--browser-cookie-path`
   - `--chatgpt-url`
   - `--files-report`
   - `--dry-run summary|json|full`
@@ -249,8 +265,9 @@ Practical guidance:
   - preview/render clipboard copy via `--copy-markdown`
   - `--engine browser`
   - `--wait`
-  - compatibility/no-op handling for a few browser-style / CLI UX flags, including `--notify`, `--no-notify`, `--notify-sound`, `--no-notify-sound`, `--heartbeat`, `--force`, `--browser-attachments`, and `--browser-bundle-files`
+  - compatibility/no-op handling for a few browser-style / CLI UX flags, including `--notify`, `--no-notify`, `--notify-sound`, `--no-notify-sound`, `--heartbeat`, `--force`, `--verbose-render`, `--retain-hours`, `--zombie-timeout`, `--zombie-last-activity`, `--debug-help`, `--browser-attachments`, and `--browser-bundle-files`
 - It rejects obvious Oracle API-only flags (`--models`, `--background`, `--base-url`, Azure API options) with clearer wrapper-specific errors instead of failing ambiguously.
+- It also rejects Oracle-native Chrome/CDP / remote-browser transport flags (`--remote-chrome`, `--remote-host`, `--remote-token`, `--browser-port`) with a wrapper-specific explanation, because this path always uses the local Camoufox bridge instead.
 - It also rejects unknown/unsupported leftover args explicitly instead of silently ignoring them.
 - Use `scripts/oracle/check-wrapper.sh` for fast regression checks before debugging the wrapper manually; the static check now also asserts unknown-arg rejection.
 
