@@ -583,16 +583,55 @@ async def query_chatgpt(
         if verbose:
             print(f"Inserted {inserted} chars, sending...", file=sys.stderr, flush=True)
 
-        # Click send
-        send_btn = await page.query_selector('[data-testid="send-button"]')
-        if send_btn:
-            disabled = await send_btn.get_attribute("disabled")
-            if not disabled:
-                await send_btn.click()
-            else:
-                await page.keyboard.press("Enter")
-        else:
-            await page.keyboard.press("Enter")
+        # Send prompt. Prefer Enter because the composer is already focused and
+        # ChatGPT tooltips can transiently intercept pointer events on the send button.
+        send_started = False
+        turns_before_send = await page.evaluate(
+            "document.querySelectorAll('[data-testid^=\"conversation-turn\"]').length"
+        )
+
+        async def _send_started() -> bool:
+            return await page.evaluate(
+                """
+                (turnsBeforeSend) => {
+                    const stopBtn = !!document.querySelector('[data-testid=\"stop-button\"]');
+                    const turns = document.querySelectorAll('[data-testid^=\"conversation-turn\"]').length;
+                    const textarea = document.querySelector('[id=\"prompt-textarea\"]');
+                    const textLen = textarea ? ((textarea.innerText || '').trim().length) : 0;
+                    return stopBtn || turns > turnsBeforeSend || textLen === 0;
+                }
+                """,
+                turns_before_send,
+            )
+
+        await page.keyboard.press("Enter")
+        await asyncio.sleep(1)
+        send_started = await _send_started()
+
+        if not send_started:
+            send_btn = await page.query_selector('[data-testid="send-button"]')
+            if send_btn:
+                disabled = await send_btn.get_attribute("disabled")
+                if not disabled:
+                    try:
+                        await send_btn.click(timeout=3000)
+                    except Exception:
+                        try:
+                            await send_btn.click(timeout=3000, force=True)
+                        except Exception:
+                            await page.evaluate(
+                                """
+                                (() => {
+                                    const btn = document.querySelector('[data-testid=\"send-button\"]');
+                                    if (btn) btn.click();
+                                })()
+                                """
+                            )
+                    await asyncio.sleep(1)
+                    send_started = await _send_started()
+
+        if not send_started:
+            return {"status": "error", "error": "Failed to send prompt"}
 
         # Wait for response
         if verbose:

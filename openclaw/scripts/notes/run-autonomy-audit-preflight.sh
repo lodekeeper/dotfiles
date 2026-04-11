@@ -96,8 +96,11 @@ set +e
 "${CADENCE_CMD[@]}"
 cadence_rc=$?
 set -e
-if [[ "$cadence_rc" -ne 0 ]]; then
+if [[ "$cadence_rc" -eq 2 ]]; then
   echo "⚠️ Cadence guard reported missing-day gaps. Continue with today's snapshot, and document root cause/fix in the audit workflow section."
+elif [[ "$cadence_rc" -ne 0 ]]; then
+  echo "❌ Cadence guard failed (exit $cadence_rc). Aborting preflight." >&2
+  exit "$cadence_rc"
 fi
 
 echo "[3/3] Inserting daily snapshot scaffold"

@@ -38,19 +38,66 @@ scripts/oracle/replace-session-token.py --token "fresh-session-token-value"
 cat /tmp/session-token.txt | scripts/oracle/replace-session-token.py --stdin
 ```
 
+### `install-chatgpt-cookies.py`
+Safe helper to replace the local cookie jar from a **full ChatGPT cookie export**
+without hand-editing JSON.
+
+What it does:
+- loads a JSON cookie export from disk
+- filters to ChatGPT/OpenAI-related domains only
+- requires `__Secure-next-auth.session-token` by default
+- writes a timestamped backup before replacing `~/.oracle/chatgpt-cookies.json`
+- writes the normalized jar with restrictive permissions
+
+Examples:
+```bash
+scripts/oracle/install-chatgpt-cookies.py --source /tmp/chatgpt-cookies.json
+scripts/oracle/install-chatgpt-cookies.py --source /tmp/export.json --cookie-file ~/.oracle/chatgpt-cookies.json
+```
+
+### `verify-after-auth-refresh.sh`
+One-command runner for the full post-refresh verification sequence.
+
+It can optionally refresh the local cookie jar first, then runs:
+1. direct Camoufox auth/pro verification
+2. Oracle-style wrapper auth/pro verification
+3. full `check-wrapper.sh --live` verification
+
+Supported refresh inputs:
+- fresh session token (`--token-file`, `--token`, `--stdin`)
+- fresh full cookie export (`--cookie-source /path/to/chatgpt-cookies.json`)
+
+Examples:
+```bash
+scripts/oracle/verify-after-auth-refresh.sh --token-file /tmp/session-token.txt
+scripts/oracle/verify-after-auth-refresh.sh --cookie-source /tmp/chatgpt-cookies.json
+scripts/oracle/verify-after-auth-refresh.sh --json
+```
+
+It stores step artifacts under `research/oracle/refresh-verify-<timestamp>/`.
+
+For large rendered bundles, `--dry-run json` now includes:
+- `requestedTimeout`
+- `effectiveTimeout`
+- `timeoutHeuristicFloor`
+- `timeoutAutoBumped`
+- `timeoutAdjustment`
+- `bundleGuidance`
+- `veryLargeBundle`
+- `allowVeryLargeBundle`
+
+This makes it easy to see when the wrapper raised an explicitly too-short timeout before handing off to `chatgpt-direct`, and also surfaces human-readable guidance when a bundle is large enough that extended thinking time is expected.
+
 Recommended post-refresh sequence:
 ```bash
-# 1) patch the local cookie jar
-scripts/oracle/replace-session-token.py --token-file /tmp/session-token.txt
+# One command for the full refresh + verification flow from a fresh token
+scripts/oracle/verify-after-auth-refresh.sh --token-file /tmp/session-token.txt
 
-# 2) verify direct Camoufox auth/pro state
-scripts/oracle/chatgpt-direct --auth-only --require-auth --require-pro --json
+# One command for the full refresh + verification flow from a full cookie export
+scripts/oracle/verify-after-auth-refresh.sh --cookie-source /tmp/chatgpt-cookies.json
 
-# 3) verify the Oracle-style wrapper path
-scripts/oracle/oracle-browser --auth-only --require-auth --require-pro --json
-
-# 4) run the full wrapper verifier
-scripts/oracle/check-wrapper.sh --live --json
+# Or run the checks only if the cookie jar is already updated
+scripts/oracle/verify-after-auth-refresh.sh --json
 ```
 
 ### `oracle-browser-camoufox`
@@ -71,6 +118,9 @@ Use this when:
 Current caveats:
 - not a full flag-for-flag replacement for Oracle
 - optimized for the common prompt + file + model + timeout workflow
+- if a caller passes an explicitly short `--timeout` for a very large rendered bundle, the wrapper now auto-bumps it to a safer floor instead of blindly preserving a timeout that is too short for Extended Pro thinking
+- for extremely large rendered bundles (currently `>=100000` chars after render framing), the wrapper refuses live sends by default unless the caller explicitly passes `--allow-very-large-bundle`
+- if `--json` is set on that refusal path, the wrapper now emits a structured error object (`error.code = very-large-bundle-refused`) instead of forcing callers to scrape stderr
 - preserves Oracle's render/bundle step, but the actual browser execution is ChatGPT-via-Camoufox, not Oracle's Chromium engine
 - supports Oracle-style multi-path `--file` usage after a single flag
 - now also accepts `--browser-attachments` and `--browser-bundle-files` as compatibility flags for browser-style invocations
@@ -89,6 +139,20 @@ scripts/oracle/oracle-browser \
   --file "src/**/*.ts" \
   --model gpt-5.2-pro \
   --timeout 300
+
+# Large rendered bundles: dry-run JSON now shows requested/effective timeout,
+# and the wrapper auto-bumps too-short explicit timeouts to a safer floor.
+scripts/oracle/oracle-browser \
+  --prompt "Review these large files carefully." \
+  --file AGENTS.md USER.md \
+  --timeout 180 \
+  --dry-run json
+
+# Extremely large bundles require explicit opt-in for a live send
+scripts/oracle/oracle-browser \
+  --prompt "Review these very large files carefully." \
+  --file tmp/oracle-huge-bundle.txt \
+  --allow-very-large-bundle
 
 scripts/oracle/oracle-browser-camoufox \
   --prompt "Review this code and give the concrete fix." \
@@ -145,6 +209,9 @@ Full static + live smoke checks:
 ```bash
 scripts/oracle/check-wrapper.sh --live
 scripts/oracle/check-wrapper.sh --live --json
+
+# Override the cookie jar being verified
+scripts/oracle/check-wrapper.sh --live --cookie-file /tmp/chatgpt-cookies.json --json
 ```
 
 If live auth has gone stale, the JSON/error output now includes the concrete reason
@@ -158,6 +225,7 @@ What it checks:
 - unknown unsupported args fail clearly
 - optional live auth/pro smoke test
 - optional live browser-style prompt run with multi-file `--file` usage
+- optional custom cookie-jar verification via `--cookie-file <path>` for refresh/recovery flows
 - optional machine-readable JSON summary for automation / future health checks
 
 ## Wrap-up reference

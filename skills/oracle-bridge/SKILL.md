@@ -149,6 +149,8 @@ The tool distinguishes thinking from response by checking:
 ### Response times out after extended thinking
 - Increase `--timeout` (the direct bridge defaults to 21600s = 6 hours)
 - For the Oracle-style wrapper path, explicitly too-short `--timeout` values on large rendered bundles are now auto-bumped to a safer floor; inspect `--dry-run json` to see `requestedTimeout`, `effectiveTimeout`, `timeoutAutoBumped`, and `bundleGuidance`
+- For extremely large rendered bundles (currently `>=100000` chars after render framing), the wrapper now refuses live sends unless the caller explicitly passes `--allow-very-large-bundle`
+- If `--json` is set on that refusal path, the wrapper emits a structured error object (`error.code = very-large-bundle-refused`) so automation can react cleanly
 - Some queries genuinely take GPT-5.4 Pro 10+ minutes to think through
 - If consistently stuck even with generous timeout headroom, the model may have hit a generation error — retry
 
@@ -272,6 +274,7 @@ scripts/oracle/check-wrapper.sh --live --cookie-file ~/.oracle/chatgpt-cookies.j
 
 - `scripts/oracle/oracle-browser` is the preferred entrypoint when the caller wants something Oracle-browser-like on this server.
 - For large prompt/file bundles, the wrapper now preserves the direct bridge's long-thinking posture better by auto-bumping explicitly too-short timeouts to a safer heuristic floor; inspect `--dry-run json` when debugging timeout behavior.
+- If a bundle crosses the extremely-large threshold, prefer narrowing the file set first; only use `--allow-very-large-bundle` when you consciously want a live send anyway.
 - It is **not** a full Oracle drop-in, but it now covers the common workflow well:
   - prompt
   - multi-file `--file` usage after one flag

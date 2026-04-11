@@ -10,6 +10,7 @@ trap 'rm -rf "$TMP_DIR"' EXIT
 LIVE=false
 VERBOSE=false
 JSON_OUT=false
+COOKIE_FILE=""
 
 SYNTAX_RESULT="pending"
 HELP_RESULT="pending"
@@ -40,7 +41,7 @@ Optional live checks (--live):
 - multi-file --file compatibility
 
 Usage:
-  scripts/oracle/check-wrapper.sh [--live] [--verbose] [--json]
+  scripts/oracle/check-wrapper.sh [--live] [--cookie-file <path>] [--verbose] [--json]
 EOF
 }
 
@@ -57,14 +58,15 @@ run() {
 
 emit_json() {
   python3 - <<'PY' \
-    "$FINAL_STATUS" "$FINAL_MESSAGE" "$LIVE" \
+    "$FINAL_STATUS" "$FINAL_MESSAGE" "$LIVE" "$COOKIE_FILE" \
     "$SYNTAX_RESULT" "$HELP_RESULT" "$REJECT_RESULT" "$UNKNOWN_ARG_RESULT" "$DRY_RUN_RESULT" "$RENDER_ALIAS_RESULT" "$COPY_MARKDOWN_RESULT" "$AUTH_RESULT" "$SMOKE_RESULT"
 import json, sys
-status, message, live, syntax, help_r, reject, unknown_arg, dry_run, render_alias, copy_markdown, auth, smoke = sys.argv[1:13]
+status, message, live, cookie_file, syntax, help_r, reject, unknown_arg, dry_run, render_alias, copy_markdown, auth, smoke = sys.argv[1:14]
 print(json.dumps({
     "status": status,
     "message": message,
     "live": live.lower() == "true",
+    "cookieFile": cookie_file or None,
     "checks": {
         "shellSyntax": syntax,
         "helpOutput": help_r,
@@ -151,6 +153,11 @@ while [[ $# -gt 0 ]]; do
       JSON_OUT=true
       shift
       ;;
+    --cookie-file)
+      [[ $# -ge 2 ]] || { echo "Missing value for $1" >&2; exit 2; }
+      COOKIE_FILE="$2"
+      shift 2
+      ;;
     -h|--help)
       usage
       exit 0
@@ -163,6 +170,11 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
+COOKIE_ARGS=()
+if [[ -n "$COOKIE_FILE" ]]; then
+  COOKIE_ARGS=(--cookies "$COOKIE_FILE")
+fi
+
 log "checking shell syntax"
 if run bash -n "$SCRIPT_DIR/oracle-browser-camoufox"; then
   SYNTAX_RESULT="passed"
@@ -173,7 +185,7 @@ fi
 
 log "checking help output"
 help_out="$TMP_DIR/help.txt"
-if run "$WRAPPER" --help > "$help_out" && grep -q 'oracle-browser-camoufox' "$help_out" && grep -q -- '--files-report' "$help_out" && grep -q -- '--chatgpt-url' "$help_out" && grep -q -- '--browser-cookie-path <path>' "$help_out" && grep -q -- '--browser-attachments' "$help_out" && grep -q -- '--browser-bundle-files' "$help_out" && grep -q -- '--dry-run' "$help_out" && grep -q -- '--render-markdown' "$help_out" && grep -q -- '--copy-markdown' "$help_out" && grep -q -- '--notify' "$help_out" && grep -q -- '--heartbeat <seconds>' "$help_out" && grep -q -- '--verbose-render' "$help_out" && grep -q -- '--retain-hours <hours>' "$help_out" && grep -q -- '--zombie-timeout <dur>' "$help_out" && grep -q -- '--debug-help' "$help_out"; then
+if run "$WRAPPER" --help > "$help_out" && grep -q 'oracle-browser-camoufox' "$help_out" && grep -q -- '--files-report' "$help_out" && grep -q -- '--chatgpt-url' "$help_out" && grep -q -- '--browser-cookie-path <path>' "$help_out" && grep -q -- '--browser-attachments' "$help_out" && grep -q -- '--browser-bundle-files' "$help_out" && grep -q -- '--dry-run' "$help_out" && grep -q -- '--render-markdown' "$help_out" && grep -q -- '--copy-markdown' "$help_out" && grep -q -- '--allow-very-large-bundle' "$help_out" && grep -q -- '--notify' "$help_out" && grep -q -- '--heartbeat <seconds>' "$help_out" && grep -q -- '--verbose-render' "$help_out" && grep -q -- '--retain-hours <hours>' "$help_out" && grep -q -- '--zombie-timeout <dur>' "$help_out" && grep -q -- '--debug-help' "$help_out"; then
   HELP_RESULT="passed"
 else
   HELP_RESULT="failed"
@@ -235,6 +247,10 @@ assert plan.get('chatgptUrl') == 'https://chatgpt.com/g/example/project', data
 assert plan.get('promptProvided') is True, data
 assert plan.get('renderedBundleChars', 0) > 0, data
 assert plan.get('finalPromptChars', 0) > 0, data
+assert plan.get('requestedTimeout') is None, data
+assert plan.get('effectiveTimeout') == 21600, data
+assert plan.get('timeoutAutoBumped') is False, data
+assert plan.get('bundleGuidance') in ('', None), data
 assert plan.get('writeOutput') == sys.argv[2], data
 assert plan.get('copyMarkdown') is False, data
 PY
@@ -243,6 +259,81 @@ then
 else
   DRY_RUN_RESULT="failed"
   finish_fail "dry-run json check failed"
+fi
+
+log "checking timeout auto-bump heuristic for large bundles"
+large_ctx="$TMP_DIR/large-context.txt"
+python3 - <<'PY' "$large_ctx"
+import pathlib, sys
+path = pathlib.Path(sys.argv[1])
+path.write_text('large bundle line\n' * 1800)
+PY
+large_json="$TMP_DIR/large-dry-run.json"
+if run "$WRAPPER" --prompt 'Reply with exactly LARGE_TIMEOUT_OK.' --file "$large_ctx" --timeout 180 --dry-run json > "$large_json" && python3 - <<'PY' "$large_json"
+import json, sys
+with open(sys.argv[1]) as f:
+    data = json.load(f)
+plan = data.get('plan', {})
+assert plan.get('requestedTimeout') == 180, data
+assert plan.get('effectiveTimeout') == 900, data
+assert plan.get('timeoutHeuristicFloor') == 900, data
+assert plan.get('timeoutAutoBumped') is True, data
+assert 'auto-bumped' in (plan.get('timeoutAdjustment') or ''), data
+assert 'large rendered bundle' in (plan.get('bundleGuidance') or ''), data
+assert plan.get('finalPromptChars', 0) >= 20000, data
+PY
+then
+  :
+else
+  DRY_RUN_RESULT="failed"
+  finish_fail "large-bundle timeout heuristic check failed"
+fi
+
+log "checking refusal guard for extremely large live bundles"
+huge_ctx="$TMP_DIR/huge-context.txt"
+python3 - <<'PY' "$huge_ctx"
+import pathlib, sys
+path = pathlib.Path(sys.argv[1])
+path.write_text('huge bundle line for refusal guard path\n' * 3200)
+PY
+huge_guard_out="$TMP_DIR/huge-guard.txt"
+if "$WRAPPER" --prompt 'Reply with exactly HUGE_BUNDLE_GUARD_OK.' --file "$huge_ctx" --timeout 180 > "$huge_guard_out" 2>&1; then
+  DRY_RUN_RESULT="failed"
+  finish_fail "expected extremely large bundle refusal guard, but command succeeded"
+fi
+if grep -q 'refusing live send for an extremely large rendered bundle' "$huge_guard_out"; then
+  :
+else
+  DRY_RUN_RESULT="failed"
+  finish_fail "extremely large bundle refusal guard message missing"
+fi
+
+log "checking JSON refusal shape for extremely large live bundles"
+huge_guard_json="$TMP_DIR/huge-guard.json"
+if "$WRAPPER" --prompt 'Reply with exactly HUGE_BUNDLE_GUARD_JSON_OK.' --file "$huge_ctx" --timeout 180 --json > "$huge_guard_json" 2> "$TMP_DIR/huge-guard-json.err"; then
+  DRY_RUN_RESULT="failed"
+  finish_fail "expected extremely large bundle JSON refusal, but command succeeded"
+fi
+if python3 - <<'PY' "$huge_guard_json"
+import json, sys
+with open(sys.argv[1]) as f:
+    data = json.load(f)
+assert data.get('status') == 'error', data
+err = data.get('error', {})
+assert err.get('code') == 'very-large-bundle-refused', data
+assert 'refusing live send for an extremely large rendered bundle' in (err.get('message') or ''), data
+plan = data.get('plan', {})
+assert plan.get('veryLargeBundle') is True, data
+assert plan.get('allowVeryLargeBundle') is False, data
+assert plan.get('effectiveTimeout') == 900, data
+assert plan.get('timeoutAutoBumped') is True, data
+assert plan.get('finalPromptChars', 0) >= 100000, data
+PY
+then
+  :
+else
+  DRY_RUN_RESULT="failed"
+  finish_fail "extremely large bundle JSON refusal check failed"
 fi
 
 log "checking render alias output"
@@ -308,7 +399,7 @@ fi
 
 log "running live auth/pro smoke test"
 auth_json="$TMP_DIR/auth.json"
-if run "$WRAPPER" --auth-only --require-auth --require-pro --chatgpt-url https://chatgpt.com --browser-attachments auto --browser-bundle-files --json > "$auth_json" && python3 - <<'PY' "$auth_json"
+if run "$WRAPPER" --auth-only --require-auth --require-pro --chatgpt-url https://chatgpt.com --browser-attachments auto --browser-bundle-files "${COOKIE_ARGS[@]}" --json > "$auth_json" && python3 - <<'PY' "$auth_json"
 import json, sys
 with open(sys.argv[1]) as f:
     data = json.load(f)
@@ -340,6 +431,7 @@ if run "$WRAPPER" \
   --file "$ctx1" "$ctx2" \
   --model gpt-5.2-pro \
   --timeout 120 \
+  "${COOKIE_ARGS[@]}" \
   --json > "$smoke_json" && python3 - <<'PY' "$smoke_json"
 import json, sys
 with open(sys.argv[1]) as f:

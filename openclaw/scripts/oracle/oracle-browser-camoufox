@@ -14,7 +14,9 @@ Supported flags:
   -p, --prompt <text>         Prompt text
   -f, --file <path...>        File/glob/directory; accepts one or more paths after a single flag
   -m, --model <model>         Model hint; if it contains 'pro', require Pro
-  -t, --timeout <seconds>     Response timeout passed to chatgpt-direct
+  -t, --timeout <seconds>     Response timeout passed to chatgpt-direct (too-short explicit values may be auto-bumped for large rendered bundles)
+      --allow-very-large-bundle
+                              Permit live sends for extremely large rendered bundles (otherwise wrapper refuses and asks for narrower scope / explicit opt-in)
       --write-output <path>   Write final response to file
   -o, --output <path>         Alias for --write-output
       --cookies <path>        Custom cookie JSON path for chatgpt-direct
@@ -79,6 +81,7 @@ render_alias_requested=false
 copy_markdown=false
 require_auth=true
 require_pro="auto"
+allow_very_large_bundle=false
 declare -a files=()
 
 declare -a passthrough=()
@@ -113,6 +116,10 @@ while [[ $# -gt 0 ]]; do
       [[ $# -ge 2 ]] || { echo "Missing value for $1" >&2; exit 2; }
       timeout="$2"
       shift 2
+      ;;
+    --allow-very-large-bundle)
+      allow_very_large_bundle=true
+      shift
       ;;
     --write-output|-o|--output)
       [[ $# -ge 2 ]] || { echo "Missing value for $1" >&2; exit 2; }
@@ -297,6 +304,34 @@ fi
 render_file="$(mktemp)"
 trap 'rm -f "$render_file"' EXIT
 
+recommend_timeout_floor() {
+  local final_len="$1"
+  if [[ ! "$final_len" =~ ^[0-9]+$ ]]; then
+    echo 0
+  elif (( final_len >= 20000 )); then
+    echo 900
+  elif (( final_len >= 10000 )); then
+    echo 600
+  else
+    echo 0
+  fi
+}
+
+bundle_guidance() {
+  local final_len="$1"
+  if [[ ! "$final_len" =~ ^[0-9]+$ ]]; then
+    echo ""
+  elif (( final_len >= 40000 )); then
+    echo "very large rendered bundle — expect long Extended Pro thinking; consider narrowing files or inspecting --dry-run json / --files-report first"
+  elif (( final_len >= 20000 )); then
+    echo "large rendered bundle — expect Extended Pro thinking; use --dry-run json or --files-report if you want to inspect size before sending"
+  elif (( final_len >= 10000 )); then
+    echo "moderately large rendered bundle — longer thinking time is normal"
+  else
+    echo ""
+  fi
+}
+
 copy_preview_to_clipboard() {
   local output="$1"
   if command -v pbcopy >/dev/null 2>&1; then
@@ -327,6 +362,14 @@ emit_preview_output() {
 build_dry_run_output() {
   local rendered_bundle="$1"
   local final_prompt="$2"
+  local requested_timeout="$3"
+  local effective_timeout="$4"
+  local timeout_floor="$5"
+  local timeout_auto_bumped="$6"
+  local timeout_adjustment="$7"
+  local bundle_guidance_note="$8"
+  local very_large_bundle="$9"
+  local allow_very_large_bundle_effective="${10}"
   local file_count="${#files[@]}"
   local mode="${dry_run_mode:-summary}"
   local require_pro_effective="${require_pro}"
@@ -350,6 +393,14 @@ oracle-browser dry run
 - chatgptUrl: ${chatgpt_url:-https://chatgpt.com}
 - filesReport: $files_report
 - jsonOutput: $json
+- requestedTimeout: ${requested_timeout:-"(bridge default)"}
+- effectiveTimeout: ${effective_timeout:-21600}
+- timeoutHeuristicFloor: ${timeout_floor:-0}
+- timeoutAutoBumped: $timeout_auto_bumped
+- timeoutAdjustment: ${timeout_adjustment:-"(none)"}
+- bundleGuidance: ${bundle_guidance_note:-"(none)"}
+- veryLargeBundle: $very_large_bundle
+- allowVeryLargeBundle: $allow_very_large_bundle_effective
 - writeOutput: ${write_output:-"(none)"}
 - copyMarkdown: $copy_markdown
 EOF
@@ -358,10 +409,12 @@ EOF
       python3 - <<'PY' \
         "$auth_only" "$([[ -n "$prompt" ]] && echo true || echo false)" "$file_count" \
         "$model" "$require_auth" "$require_pro_effective" "${chatgpt_url:-https://chatgpt.com}" \
-        "$files_report" "$json" "$timeout" "$write_output" "$cookies" "$copy_markdown" "${#rendered_bundle}" "${#final_prompt}"
+        "$files_report" "$json" "$requested_timeout" "$effective_timeout" "$timeout_floor" "$timeout_auto_bumped" "$timeout_adjustment" "$bundle_guidance_note" "$very_large_bundle" "$allow_very_large_bundle_effective" "$write_output" "$cookies" "$copy_markdown" "${#rendered_bundle}" "${#final_prompt}"
 import json, sys
 (auth_only, prompt_provided, file_count, model, require_auth, require_pro, chatgpt_url,
- files_report, json_output, timeout, write_output, cookies, copy_markdown, rendered_len, final_len) = sys.argv[1:16]
+ files_report, json_output, requested_timeout, effective_timeout, timeout_floor, timeout_auto_bumped,
+ timeout_adjustment, bundle_guidance_note, very_large_bundle, allow_very_large_bundle_effective,
+ write_output, cookies, copy_markdown, rendered_len, final_len) = sys.argv[1:23]
 print(json.dumps({
   "status": "ok",
   "mode": "dry-run",
@@ -376,7 +429,15 @@ print(json.dumps({
     "chatgptUrl": chatgpt_url,
     "filesReport": files_report == "true",
     "jsonOutput": json_output == "true",
-    "timeout": timeout,
+    "requestedTimeout": int(requested_timeout) if requested_timeout else None,
+    "effectiveTimeout": int(effective_timeout) if effective_timeout else 21600,
+    "bridgeDefaultTimeoutSeconds": 21600,
+    "timeoutHeuristicFloor": int(timeout_floor) if timeout_floor else 0,
+    "timeoutAutoBumped": timeout_auto_bumped == "true",
+    "timeoutAdjustment": timeout_adjustment,
+    "bundleGuidance": bundle_guidance_note,
+    "veryLargeBundle": very_large_bundle == "true",
+    "allowVeryLargeBundle": allow_very_large_bundle_effective == "true",
     "writeOutput": write_output,
     "customCookies": bool(cookies),
     "copyMarkdown": copy_markdown == "true",
@@ -396,6 +457,13 @@ bridge_args=()
 
 final_prompt=""
 rendered_bundle=""
+requested_timeout="$timeout"
+effective_timeout="$timeout"
+timeout_floor="0"
+timeout_auto_bumped=false
+timeout_adjustment=""
+bundle_guidance_note=""
+very_large_bundle=false
 
 if $auth_only; then
   bridge_args+=(--auth-only)
@@ -429,16 +497,72 @@ EOF
 )
 
   bridge_args+=(--prompt "$final_prompt")
+
+  timeout_floor="$(recommend_timeout_floor "${#final_prompt}")"
+  bundle_guidance_note="$(bundle_guidance "${#final_prompt}")"
+  if (( ${#final_prompt} >= 100000 )); then
+    very_large_bundle=true
+  fi
+  if [[ -n "$requested_timeout" && "$requested_timeout" =~ ^[0-9]+$ ]] && [[ "$timeout_floor" =~ ^[0-9]+$ ]] && (( timeout_floor > 0 )) && (( requested_timeout < timeout_floor )); then
+    effective_timeout="$timeout_floor"
+    timeout_auto_bumped=true
+    timeout_adjustment="requested timeout auto-bumped for large rendered bundle"
+    printf 'oracle-browser: requested --timeout %ss is short for a %s-char rendered prompt under Extended Pro; auto-bumping to %ss.\n' "$requested_timeout" "${#final_prompt}" "$effective_timeout" >&2
+  fi
+  if [[ -n "$bundle_guidance_note" ]]; then
+    printf 'oracle-browser: %s (finalPromptChars=%s, fileCount=%s, effectiveTimeout=%s).\n' "$bundle_guidance_note" "${#final_prompt}" "${#files[@]}" "${effective_timeout:-21600}" >&2
+  fi
 fi
 
 if [[ -n "$dry_run_mode" ]]; then
-  preview_output="$(build_dry_run_output "$rendered_bundle" "$final_prompt")"
+  preview_output="$(build_dry_run_output "$rendered_bundle" "$final_prompt" "$requested_timeout" "$effective_timeout" "$timeout_floor" "$timeout_auto_bumped" "$timeout_adjustment" "$bundle_guidance_note" "$very_large_bundle" "$allow_very_large_bundle")"
   emit_preview_output "$preview_output"
   exit 0
 fi
 
-if [[ -n "$timeout" ]]; then
-  bridge_args+=(--timeout "$timeout")
+if $very_large_bundle && ! $allow_very_large_bundle; then
+  refusal_message="refusing live send for an extremely large rendered bundle (${#final_prompt} chars). Narrow the file set, inspect with --dry-run json / --files-report first, or pass --allow-very-large-bundle to proceed explicitly."
+  if $json; then
+    python3 - <<'PY' \
+      "$refusal_message" "$requested_timeout" "$effective_timeout" "$timeout_floor" "$timeout_auto_bumped" "$timeout_adjustment" "$bundle_guidance_note" "$very_large_bundle" "$allow_very_large_bundle" "${#rendered_bundle}" "${#final_prompt}" "${#files[@]}" "$model" "$require_auth" "$require_pro" "${chatgpt_url:-https://chatgpt.com}"
+import json, sys
+(message, requested_timeout, effective_timeout, timeout_floor, timeout_auto_bumped,
+ timeout_adjustment, bundle_guidance_note, very_large_bundle, allow_very_large_bundle,
+ rendered_len, final_len, file_count, model, require_auth, require_pro, chatgpt_url) = sys.argv[1:17]
+print(json.dumps({
+  "status": "error",
+  "error": {
+    "code": "very-large-bundle-refused",
+    "message": message,
+  },
+  "wrapper": "oracle-browser-camoufox",
+  "plan": {
+    "fileCount": int(file_count),
+    "model": model,
+    "requireAuth": require_auth == "true",
+    "requirePro": require_pro == "true",
+    "chatgptUrl": chatgpt_url,
+    "requestedTimeout": int(requested_timeout) if requested_timeout else None,
+    "effectiveTimeout": int(effective_timeout) if effective_timeout else 21600,
+    "timeoutHeuristicFloor": int(timeout_floor) if timeout_floor else 0,
+    "timeoutAutoBumped": timeout_auto_bumped == "true",
+    "timeoutAdjustment": timeout_adjustment,
+    "bundleGuidance": bundle_guidance_note,
+    "veryLargeBundle": very_large_bundle == "true",
+    "allowVeryLargeBundle": allow_very_large_bundle == "true",
+    "renderedBundleChars": int(rendered_len),
+    "finalPromptChars": int(final_len),
+  }
+}, indent=2))
+PY
+  else
+    printf 'oracle-browser: %s\n' "$refusal_message" >&2
+  fi
+  exit 2
+fi
+
+if [[ -n "$effective_timeout" ]]; then
+  bridge_args+=(--timeout "$effective_timeout")
 fi
 if [[ -n "$write_output" ]]; then
   bridge_args+=(--output "$write_output")
