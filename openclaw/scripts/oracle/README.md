@@ -71,10 +71,13 @@ Examples:
 ```bash
 scripts/oracle/verify-after-auth-refresh.sh --token-file /tmp/session-token.txt
 scripts/oracle/verify-after-auth-refresh.sh --cookie-source /tmp/chatgpt-cookies.json
+scripts/oracle/verify-after-auth-refresh.sh --dry-run --json
 scripts/oracle/verify-after-auth-refresh.sh --json
 ```
 
 It stores step artifacts under `research/oracle/refresh-verify-<timestamp>/`.
+In `--dry-run` mode it prints the planned sequence and artifact path **without**
+changing the cookie jar or creating the artifact directory.
 
 For large rendered bundles, `--dry-run json` now includes:
 - `requestedTimeout`
@@ -82,6 +85,8 @@ For large rendered bundles, `--dry-run json` now includes:
 - `timeoutHeuristicFloor`
 - `timeoutAutoBumped`
 - `timeoutAdjustment`
+- `bundleClass`
+- `recommendedAction`
 - `bundleGuidance`
 - `veryLargeBundle`
 - `allowVeryLargeBundle`

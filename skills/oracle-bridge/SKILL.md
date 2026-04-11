@@ -148,7 +148,7 @@ The tool distinguishes thinking from response by checking:
 
 ### Response times out after extended thinking
 - Increase `--timeout` (the direct bridge defaults to 21600s = 6 hours)
-- For the Oracle-style wrapper path, explicitly too-short `--timeout` values on large rendered bundles are now auto-bumped to a safer floor; inspect `--dry-run json` to see `requestedTimeout`, `effectiveTimeout`, `timeoutAutoBumped`, and `bundleGuidance`
+- For the Oracle-style wrapper path, explicitly too-short `--timeout` values on large rendered bundles are now auto-bumped to a safer floor; inspect `--dry-run json` to see `requestedTimeout`, `effectiveTimeout`, `timeoutAutoBumped`, `bundleClass`, `recommendedAction`, and `bundleGuidance`
 - For extremely large rendered bundles (currently `>=100000` chars after render framing), the wrapper now refuses live sends unless the caller explicitly passes `--allow-very-large-bundle`
 - If `--json` is set on that refusal path, the wrapper emits a structured error object (`error.code = very-large-bundle-refused`) so automation can react cleanly
 - Some queries genuinely take GPT-5.4 Pro 10+ minutes to think through
@@ -258,9 +258,12 @@ For the default recovery path, prefer the one-command verifier:
 ```bash
 scripts/oracle/verify-after-auth-refresh.sh --token-file /tmp/session-token.txt
 scripts/oracle/verify-after-auth-refresh.sh --cookie-source /tmp/chatgpt-cookies.json
+scripts/oracle/verify-after-auth-refresh.sh --dry-run --json
 ```
 
 It stores per-step artifacts under `research/oracle/refresh-verify-<timestamp>/`.
+In `--dry-run` mode it previews the planned sequence and artifact path without
+changing the cookie jar or creating the artifact directory.
 
 Manual verification sequence if you want each step separately:
 

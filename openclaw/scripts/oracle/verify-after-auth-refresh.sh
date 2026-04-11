@@ -13,6 +13,7 @@ TOKEN_VALUE=""
 TOKEN_FILE=""
 COOKIE_SOURCE=""
 JSON=false
+DRY_RUN=false
 
 usage() {
   cat <<'EOF'
@@ -31,14 +32,62 @@ Optional refresh input modes:
   --stdin                Read a fresh session token from stdin first
   --cookie-source <path> Replace the local jar from a full cookie export first
   --cookie-file <path>   Override destination cookie jar path (default: ~/.oracle/chatgpt-cookies.json)
+  --dry-run              Print the planned verification sequence without changing anything
   --json                 Emit final summary as JSON
   -h, --help             Show help
 
 Examples:
   scripts/oracle/verify-after-auth-refresh.sh --token-file /tmp/session-token.txt
   scripts/oracle/verify-after-auth-refresh.sh --cookie-source /tmp/chatgpt-cookies.json
+  scripts/oracle/verify-after-auth-refresh.sh --dry-run --json
   scripts/oracle/verify-after-auth-refresh.sh --json
 EOF
+}
+
+emit_dry_run() {
+  local refresh_desc
+  case "$TOKEN_MODE" in
+    file) refresh_desc="replace-session-token from file: $TOKEN_FILE" ;;
+    value) refresh_desc="replace-session-token from inline value" ;;
+    stdin) refresh_desc="replace-session-token from stdin" ;;
+    *)
+      if [[ -n "$COOKIE_SOURCE" ]]; then
+        refresh_desc="install full cookie export from: $COOKIE_SOURCE"
+      else
+        refresh_desc="no refresh input; verify existing cookie jar only"
+      fi
+      ;;
+  esac
+
+  if $JSON; then
+    python3 - <<'PY' "$ARTIFACT_DIR" "$COOKIE_FILE" "$refresh_desc"
+import json, sys
+artifact_dir, cookie_file, refresh_desc = sys.argv[1:4]
+print(json.dumps({
+    "status": "ok",
+    "mode": "dry-run",
+    "artifactDir": artifact_dir,
+    "cookieFile": cookie_file,
+    "refreshInput": refresh_desc,
+    "steps": [
+        "chatgpt-direct --auth-only --require-auth --require-pro --cookies <cookieFile> --json",
+        "oracle-browser --auth-only --require-auth --require-pro --cookies <cookieFile> --json",
+        "check-wrapper.sh --live --cookie-file <cookieFile> --json",
+    ],
+}, indent=2))
+PY
+  else
+    cat <<EOF
+verify-after-auth-refresh.sh dry run
+- artifact dir: $ARTIFACT_DIR
+- cookie file: $COOKIE_FILE
+- refresh input: $refresh_desc
+- planned steps:
+  1. chatgpt-direct --auth-only --require-auth --require-pro --cookies <cookieFile> --json
+  2. oracle-browser --auth-only --require-auth --require-pro --cookies <cookieFile> --json
+  3. check-wrapper.sh --live --cookie-file <cookieFile> --json
+EOF
+  fi
 }
 
 fail() {
@@ -83,6 +132,10 @@ while [[ $# -gt 0 ]]; do
       COOKIE_FILE="$2"
       shift 2
       ;;
+    --dry-run)
+      DRY_RUN=true
+      shift
+      ;;
     --json)
       JSON=true
       shift
@@ -99,8 +152,6 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-mkdir -p "$ARTIFACT_DIR"
-
 step_status="pending"
 direct_status="pending"
 wrapper_status="pending"
@@ -109,6 +160,13 @@ check_wrapper_status="pending"
 if [[ -n "$TOKEN_MODE" && -n "$COOKIE_SOURCE" ]]; then
   fail "choose exactly one refresh input: token mode or --cookie-source"
 fi
+
+if $DRY_RUN; then
+  emit_dry_run
+  exit 0
+fi
+
+mkdir -p "$ARTIFACT_DIR"
 
 if [[ -n "$COOKIE_SOURCE" ]]; then
   step_status="running"

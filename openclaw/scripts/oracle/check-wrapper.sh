@@ -250,6 +250,8 @@ assert plan.get('finalPromptChars', 0) > 0, data
 assert plan.get('requestedTimeout') is None, data
 assert plan.get('effectiveTimeout') == 21600, data
 assert plan.get('timeoutAutoBumped') is False, data
+assert plan.get('bundleClass') == 'normal', data
+assert plan.get('recommendedAction') == 'none', data
 assert plan.get('bundleGuidance') in ('', None), data
 assert plan.get('writeOutput') == sys.argv[2], data
 assert plan.get('copyMarkdown') is False, data
@@ -279,6 +281,8 @@ assert plan.get('effectiveTimeout') == 900, data
 assert plan.get('timeoutHeuristicFloor') == 900, data
 assert plan.get('timeoutAutoBumped') is True, data
 assert 'auto-bumped' in (plan.get('timeoutAdjustment') or ''), data
+assert plan.get('bundleClass') == 'large', data
+assert plan.get('recommendedAction') == 'inspect-or-narrow', data
 assert 'large rendered bundle' in (plan.get('bundleGuidance') or ''), data
 assert plan.get('finalPromptChars', 0) >= 20000, data
 PY
@@ -323,6 +327,8 @@ err = data.get('error', {})
 assert err.get('code') == 'very-large-bundle-refused', data
 assert 'refusing live send for an extremely large rendered bundle' in (err.get('message') or ''), data
 plan = data.get('plan', {})
+assert plan.get('bundleClass') == 'very-large', data
+assert plan.get('recommendedAction') == 'explicit-override-required', data
 assert plan.get('veryLargeBundle') is True, data
 assert plan.get('allowVeryLargeBundle') is False, data
 assert plan.get('effectiveTimeout') == 900, data

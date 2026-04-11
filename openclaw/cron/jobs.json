@@ -122,17 +122,16 @@
       },
       "sessionTarget": "isolated",
       "state": {
-        "consecutiveErrors": 4,
-        "lastDeliveryStatus": "not-requested",
-        "lastDurationMs": 300066,
-        "lastRunAtMs": 1775827748612,
-        "lastRunStatus": "error",
-        "lastStatus": "error",
-        "nextRunAtMs": 1775914148612,
-        "lastErrorReason": "timeout",
-        "lastError": "cron: job execution timed out"
+        "consecutiveErrors": 0,
+        "lastDeliveryStatus": "not-delivered",
+        "lastDurationMs": 79905,
+        "lastRunAtMs": 1775914148614,
+        "lastRunStatus": "ok",
+        "lastStatus": "ok",
+        "nextRunAtMs": 1776000548614,
+        "lastDelivered": false
       },
-      "updatedAtMs": 1775828048678,
+      "updatedAtMs": 1775914228519,
       "wakeMode": "now"
     },
     {
@@ -193,14 +192,14 @@
       "state": {
         "consecutiveErrors": 0,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 127976,
-        "lastRunAtMs": 1775906100003,
+        "lastDurationMs": 81648,
+        "lastRunAtMs": 1775927799913,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1775909700000,
+        "nextRunAtMs": 1775931300000,
         "lastDelivered": false
       },
-      "updatedAtMs": 1775906227979,
+      "updatedAtMs": 1775927881561,
       "wakeMode": "now"
     },
     {
@@ -266,14 +265,14 @@
       "state": {
         "consecutiveErrors": 0,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 80563,
-        "lastRunAtMs": 1775908883373,
+        "lastDurationMs": 76982,
+        "lastRunAtMs": 1775930392925,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1775909183373,
+        "nextRunAtMs": 1775930692925,
         "lastDelivered": false
       },
-      "updatedAtMs": 1775908963936,
+      "updatedAtMs": 1775930469907,
       "wakeMode": "now"
     },
     {
@@ -336,14 +335,14 @@
       "state": {
         "consecutiveErrors": 0,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 841606,
-        "lastRunAtMs": 1775886083963,
+        "lastDurationMs": 51716,
+        "lastRunAtMs": 1775929439198,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1775929283963,
+        "nextRunAtMs": 1775972639198,
         "lastDelivered": false
       },
-      "updatedAtMs": 1775886925569,
+      "updatedAtMs": 1775929490914,
       "wakeMode": "now"
     },
     {
@@ -369,13 +368,13 @@
         "consecutiveErrors": 0,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 80495,
-        "lastRunAtMs": 1775906609095,
+        "lastDurationMs": 59452,
+        "lastRunAtMs": 1775921009098,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1775921009095
+        "nextRunAtMs": 1775935409098
       },
-      "updatedAtMs": 1775906689590,
+      "updatedAtMs": 1775921068550,
       "wakeMode": "now"
     },
     {
@@ -399,18 +398,16 @@
       },
       "sessionTarget": "isolated",
       "state": {
-        "consecutiveErrors": 1,
+        "consecutiveErrors": 0,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 88426,
-        "lastRunAtMs": 1775892267739,
-        "lastRunStatus": "error",
-        "lastStatus": "error",
-        "nextRunAtMs": 1775913867739,
-        "lastError": "⚠️ 📝 Edit: `in ~/.openclaw/workspace/BACKLOG_ARCHIVE.md` failed",
-        "lastDeliveryError": "⚠️ 📝 Edit: `in ~/.openclaw/workspace/BACKLOG_ARCHIVE.md` failed"
+        "lastDurationMs": 80669,
+        "lastRunAtMs": 1775913867740,
+        "lastRunStatus": "ok",
+        "lastStatus": "ok",
+        "nextRunAtMs": 1775935467740
       },
-      "updatedAtMs": 1775892356165,
+      "updatedAtMs": 1775913948409,
       "wakeMode": "now"
     },
     {
@@ -436,14 +433,14 @@
       "state": {
         "consecutiveErrors": 0,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 93205,
-        "lastRunAtMs": 1775908188032,
+        "lastDurationMs": 134480,
+        "lastRunAtMs": 1775929887720,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1775909988032,
+        "nextRunAtMs": 1775931687720,
         "lastDelivered": false
       },
-      "updatedAtMs": 1775908281237,
+      "updatedAtMs": 1775930022200,
       "wakeMode": "now"
     },
     {
@@ -536,13 +533,13 @@
         "consecutiveErrors": 0,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 8458,
-        "lastRunAtMs": 1775908868800,
+        "lastDurationMs": 8014,
+        "lastRunAtMs": 1775930484810,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1775910668800
+        "nextRunAtMs": 1775932284810
       },
-      "updatedAtMs": 1775908877258,
+      "updatedAtMs": 1775930492824,
       "wakeMode": "now"
     },
     {
@@ -605,17 +602,17 @@
       },
       "sessionTarget": "isolated",
       "state": {
-        "consecutiveErrors": 1,
-        "lastDeliveryStatus": "not-requested",
-        "lastDurationMs": 300003,
-        "lastRunAtMs": 1775892944426,
-        "lastRunStatus": "error",
-        "lastStatus": "error",
-        "nextRunAtMs": 1775908893107,
-        "lastErrorReason": "timeout",
-        "runningAtMs": 1775908965941
+        "consecutiveErrors": 0,
+        "lastDeliveryStatus": "not-delivered",
+        "lastDurationMs": 29228,
+        "lastRunAtMs": 1775908965942,
+        "lastRunStatus": "ok",
+        "lastStatus": "ok",
+        "nextRunAtMs": 1775930493107,
+        "lastDelivered": false,
+        "runningAtMs": 1775930493108
       },
-      "updatedAtMs": 1775893244429,
+      "updatedAtMs": 1775908995170,
       "wakeMode": "now"
     },
     {
@@ -809,14 +806,14 @@
       "state": {
         "consecutiveErrors": 0,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 9821,
-        "lastRunAtMs": 1775908828859,
+        "lastDurationMs": 10280,
+        "lastRunAtMs": 1775930472523,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1775930428853,
+        "nextRunAtMs": 1775952028853,
         "lastDelivered": false
       },
-      "updatedAtMs": 1775908838680,
+      "updatedAtMs": 1775930482803,
       "wakeMode": "now"
     },
     {
@@ -842,13 +839,13 @@
         "consecutiveErrors": 0,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 30318,
-        "lastRunAtMs": 1775901013591,
+        "lastDurationMs": 30862,
+        "lastRunAtMs": 1775921440435,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1775921400000
+        "nextRunAtMs": 1775943000000
       },
-      "updatedAtMs": 1775901043909,
+      "updatedAtMs": 1775921471297,
       "wakeMode": "now"
     }
   ]

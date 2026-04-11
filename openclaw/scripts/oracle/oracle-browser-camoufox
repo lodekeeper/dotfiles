@@ -332,6 +332,44 @@ bundle_guidance() {
   fi
 }
 
+bundle_class() {
+  local final_len="$1"
+  if [[ ! "$final_len" =~ ^[0-9]+$ ]]; then
+    echo "unknown"
+  elif (( final_len >= 100000 )); then
+    echo "very-large"
+  elif (( final_len >= 20000 )); then
+    echo "large"
+  elif (( final_len >= 10000 )); then
+    echo "moderately-large"
+  else
+    echo "normal"
+  fi
+}
+
+recommended_action() {
+  local bundle_class_name="$1"
+  local allow_very_large_bundle_effective="$2"
+  case "$bundle_class_name" in
+    normal)
+      echo "none"
+      ;;
+    moderately-large|large)
+      echo "inspect-or-narrow"
+      ;;
+    very-large)
+      if [[ "$allow_very_large_bundle_effective" == "true" ]]; then
+        echo "inspect-or-narrow"
+      else
+        echo "explicit-override-required"
+      fi
+      ;;
+    *)
+      echo "inspect-or-narrow"
+      ;;
+  esac
+}
+
 copy_preview_to_clipboard() {
   local output="$1"
   if command -v pbcopy >/dev/null 2>&1; then
@@ -370,6 +408,8 @@ build_dry_run_output() {
   local bundle_guidance_note="$8"
   local very_large_bundle="$9"
   local allow_very_large_bundle_effective="${10}"
+  local bundle_class_name="${11}"
+  local recommended_action_name="${12}"
   local file_count="${#files[@]}"
   local mode="${dry_run_mode:-summary}"
   local require_pro_effective="${require_pro}"
@@ -398,6 +438,8 @@ oracle-browser dry run
 - timeoutHeuristicFloor: ${timeout_floor:-0}
 - timeoutAutoBumped: $timeout_auto_bumped
 - timeoutAdjustment: ${timeout_adjustment:-"(none)"}
+- bundleClass: ${bundle_class_name:-unknown}
+- recommendedAction: ${recommended_action_name:-inspect-or-narrow}
 - bundleGuidance: ${bundle_guidance_note:-"(none)"}
 - veryLargeBundle: $very_large_bundle
 - allowVeryLargeBundle: $allow_very_large_bundle_effective
@@ -409,12 +451,12 @@ EOF
       python3 - <<'PY' \
         "$auth_only" "$([[ -n "$prompt" ]] && echo true || echo false)" "$file_count" \
         "$model" "$require_auth" "$require_pro_effective" "${chatgpt_url:-https://chatgpt.com}" \
-        "$files_report" "$json" "$requested_timeout" "$effective_timeout" "$timeout_floor" "$timeout_auto_bumped" "$timeout_adjustment" "$bundle_guidance_note" "$very_large_bundle" "$allow_very_large_bundle_effective" "$write_output" "$cookies" "$copy_markdown" "${#rendered_bundle}" "${#final_prompt}"
+        "$files_report" "$json" "$requested_timeout" "$effective_timeout" "$timeout_floor" "$timeout_auto_bumped" "$timeout_adjustment" "$bundle_class_name" "$recommended_action_name" "$bundle_guidance_note" "$very_large_bundle" "$allow_very_large_bundle_effective" "$write_output" "$cookies" "$copy_markdown" "${#rendered_bundle}" "${#final_prompt}"
 import json, sys
 (auth_only, prompt_provided, file_count, model, require_auth, require_pro, chatgpt_url,
  files_report, json_output, requested_timeout, effective_timeout, timeout_floor, timeout_auto_bumped,
- timeout_adjustment, bundle_guidance_note, very_large_bundle, allow_very_large_bundle_effective,
- write_output, cookies, copy_markdown, rendered_len, final_len) = sys.argv[1:23]
+ timeout_adjustment, bundle_class_name, recommended_action_name, bundle_guidance_note, very_large_bundle, allow_very_large_bundle_effective,
+ write_output, cookies, copy_markdown, rendered_len, final_len) = sys.argv[1:25]
 print(json.dumps({
   "status": "ok",
   "mode": "dry-run",
@@ -435,6 +477,8 @@ print(json.dumps({
     "timeoutHeuristicFloor": int(timeout_floor) if timeout_floor else 0,
     "timeoutAutoBumped": timeout_auto_bumped == "true",
     "timeoutAdjustment": timeout_adjustment,
+    "bundleClass": bundle_class_name,
+    "recommendedAction": recommended_action_name,
     "bundleGuidance": bundle_guidance_note,
     "veryLargeBundle": very_large_bundle == "true",
     "allowVeryLargeBundle": allow_very_large_bundle_effective == "true",
@@ -464,6 +508,8 @@ timeout_auto_bumped=false
 timeout_adjustment=""
 bundle_guidance_note=""
 very_large_bundle=false
+bundle_class_name="normal"
+recommended_action_name="none"
 
 if $auth_only; then
   bridge_args+=(--auth-only)
@@ -499,6 +545,7 @@ EOF
   bridge_args+=(--prompt "$final_prompt")
 
   timeout_floor="$(recommend_timeout_floor "${#final_prompt}")"
+  bundle_class_name="$(bundle_class "${#final_prompt}")"
   bundle_guidance_note="$(bundle_guidance "${#final_prompt}")"
   if (( ${#final_prompt} >= 100000 )); then
     very_large_bundle=true
@@ -512,10 +559,11 @@ EOF
   if [[ -n "$bundle_guidance_note" ]]; then
     printf 'oracle-browser: %s (finalPromptChars=%s, fileCount=%s, effectiveTimeout=%s).\n' "$bundle_guidance_note" "${#final_prompt}" "${#files[@]}" "${effective_timeout:-21600}" >&2
   fi
+  recommended_action_name="$(recommended_action "$bundle_class_name" "$allow_very_large_bundle")"
 fi
 
 if [[ -n "$dry_run_mode" ]]; then
-  preview_output="$(build_dry_run_output "$rendered_bundle" "$final_prompt" "$requested_timeout" "$effective_timeout" "$timeout_floor" "$timeout_auto_bumped" "$timeout_adjustment" "$bundle_guidance_note" "$very_large_bundle" "$allow_very_large_bundle")"
+  preview_output="$(build_dry_run_output "$rendered_bundle" "$final_prompt" "$requested_timeout" "$effective_timeout" "$timeout_floor" "$timeout_auto_bumped" "$timeout_adjustment" "$bundle_guidance_note" "$very_large_bundle" "$allow_very_large_bundle" "$bundle_class_name" "$recommended_action_name")"
   emit_preview_output "$preview_output"
   exit 0
 fi
@@ -547,6 +595,8 @@ print(json.dumps({
     "timeoutHeuristicFloor": int(timeout_floor) if timeout_floor else 0,
     "timeoutAutoBumped": timeout_auto_bumped == "true",
     "timeoutAdjustment": timeout_adjustment,
+    "bundleClass": "very-large",
+    "recommendedAction": "explicit-override-required",
     "bundleGuidance": bundle_guidance_note,
     "veryLargeBundle": very_large_bundle == "true",
     "allowVeryLargeBundle": allow_very_large_bundle == "true",
