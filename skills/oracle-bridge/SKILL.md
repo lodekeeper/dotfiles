@@ -147,9 +147,10 @@ The tool distinguishes thinking from response by checking:
 - Same fix: refresh `~/.oracle/chatgpt-cookies.json`
 
 ### Response times out after extended thinking
-- Increase `--timeout` (default is 3600s = 1 hour)
+- Increase `--timeout` (the direct bridge defaults to 21600s = 6 hours)
+- For the Oracle-style wrapper path, explicitly too-short `--timeout` values on large rendered bundles are now auto-bumped to a safer floor; inspect `--dry-run json` to see `requestedTimeout`, `effectiveTimeout`, `timeoutAutoBumped`, and `bundleGuidance`
 - Some queries genuinely take GPT-5.4 Pro 10+ minutes to think through
-- If consistently stuck, the model may have hit a generation error — retry
+- If consistently stuck even with generous timeout headroom, the model may have hit a generation error — retry
 
 ### "Something went wrong" error
 - Transient ChatGPT error — tool retries automatically (new chat + resend)
@@ -205,6 +206,9 @@ From agent code / skill scripts:
 # Wrapper verification
 ~/.openclaw/workspace/scripts/oracle/check-wrapper.sh --live --json
 
+# Wrapper verification against a specific cookie jar during auth recovery
+~/.openclaw/workspace/scripts/oracle/check-wrapper.sh --live --cookie-file /tmp/chatgpt-cookies.json --json
+
 # Quick machine-readable static contract check
 ~/.openclaw/workspace/scripts/oracle/check-wrapper.sh --json
 ```
@@ -241,17 +245,33 @@ When only the session token changed, prefer the local helper over hand-editing t
 scripts/oracle/replace-session-token.py --token-file /tmp/session-token.txt
 ```
 
-Then re-run the canonical verification sequence:
+When you have a **full fresh cookie export**, install it safely with:
+
+```bash
+scripts/oracle/install-chatgpt-cookies.py --source /tmp/chatgpt-cookies.json
+```
+
+For the default recovery path, prefer the one-command verifier:
+
+```bash
+scripts/oracle/verify-after-auth-refresh.sh --token-file /tmp/session-token.txt
+scripts/oracle/verify-after-auth-refresh.sh --cookie-source /tmp/chatgpt-cookies.json
+```
+
+It stores per-step artifacts under `research/oracle/refresh-verify-<timestamp>/`.
+
+Manual verification sequence if you want each step separately:
 
 ```bash
 scripts/oracle/chatgpt-direct --auth-only --require-auth --require-pro --json
 scripts/oracle/oracle-browser --auth-only --require-auth --require-pro --json
-scripts/oracle/check-wrapper.sh --live --json
+scripts/oracle/check-wrapper.sh --live --cookie-file ~/.oracle/chatgpt-cookies.json --json
 ```
 
 ## Wrapper notes (current 2026-04-08 behavior)
 
 - `scripts/oracle/oracle-browser` is the preferred entrypoint when the caller wants something Oracle-browser-like on this server.
+- For large prompt/file bundles, the wrapper now preserves the direct bridge's long-thinking posture better by auto-bumping explicitly too-short timeouts to a safer heuristic floor; inspect `--dry-run json` when debugging timeout behavior.
 - It is **not** a full Oracle drop-in, but it now covers the common workflow well:
   - prompt
   - multi-file `--file` usage after one flag

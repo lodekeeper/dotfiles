@@ -1,10 +1,29 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-04-10 (28th pass)
+> Updated: 2026-04-11 (29th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-04-11 (self-improvement-audit-daily, 00:35 UTC)
+
+### PR review
+- **Status:** review-scope + follow-up guard workflow remains healthy; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** retry telemetry, rolling degradation checks, and log-fallback path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** extraction/compliance/vector-readiness gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident-bundle workflow remains healthy; no new blocker discovered this cycle.
+
+### Audit workflow (cross-cutting)
+- **Blocker:** `scripts/notes/run-autonomy-audit-preflight.sh` treated *all* non-zero cadence-check exits as advisory "missing-day gap" warnings, so real cadence-check failures (parse/runtime/config errors) could be silently downgraded and allow snapshot insertion on a broken preflight signal.
+- **Fix applied this cycle:** hardened `scripts/notes/run-autonomy-audit-preflight.sh` to continue only for cadence exit `2` (actual gap warning), and fail fast for any other non-zero exit with an explicit error.
+
+---
 ## Daily Audit Snapshot — 2026-04-10 (self-improvement-audit-daily, 00:35 UTC)
 
 ### PR review
@@ -692,6 +711,14 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Preflight now distinguishes cadence gaps from hard cadence-check failures (2026-04-11)
+Updated `scripts/notes/run-autonomy-audit-preflight.sh` cadence guard handling:
+- treats exit `2` from `check-autonomy-audit-cadence.py` as advisory gap signal (continue with warning),
+- treats any other non-zero cadence exit as hard failure and aborts preflight,
+- emits an explicit error line with the failing exit code for faster triage.
+
+**Rationale:** prevents real cadence-check failures from being silently downgraded into "missing-day gap" warnings, so daily snapshot insertion only proceeds when the cadence guard itself is healthy.
 
 ### ✅ Autonomy-audit close-out wrapper now preserves exact stdout contract (2026-04-10)
 Updated `scripts/notes/close-autonomy-audit.sh` to keep finalize diagnostics out of stdout:
