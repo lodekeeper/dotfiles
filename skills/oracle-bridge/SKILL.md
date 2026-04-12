@@ -105,6 +105,8 @@ The `md=0` indicates the model is still thinking. Once `md > 0`, the actual resp
 
 ## Canonical Recovery Smoke Test
 
+> **IMPORTANT: Do NOT run wrapper checks or live smoke tests proactively, periodically, or as health checks.** Only run them when explicitly asked by the operator, or once immediately after a cookie/session refresh. Repeated wrapper checks waste ChatGPT sessions and produce noise.
+
 After refreshing cookies/session state, use this as the first verification step:
 
 ```bash
@@ -322,7 +324,7 @@ scripts/oracle/check-wrapper.sh --live --cookie-file ~/.oracle/chatgpt-cookies.j
 - It rejects obvious Oracle API-only flags (`--models`, `--background`, `--base-url`, Azure API options) with clearer wrapper-specific errors instead of failing ambiguously.
 - It also rejects Oracle-native Chrome/CDP / remote-browser transport flags (`--remote-chrome`, `--remote-host`, `--remote-token`, `--browser-port`) with a wrapper-specific explanation, because this path always uses the local Camoufox bridge instead.
 - It also rejects unknown/unsupported leftover args explicitly instead of silently ignoring them.
-- Use `scripts/oracle/check-wrapper.sh` for fast regression checks before debugging the wrapper manually; the static check now also asserts unknown-arg rejection.
+- Only run `scripts/oracle/check-wrapper.sh --live` when explicitly asked or once after a cookie refresh — **never** as a periodic health check. The static check (`--json` without `--live`) is fine anytime.
 - `scripts/oracle/check-wrapper.sh --json` now also covers the recovery helpers statically:
   - `verify-after-auth-refresh.sh --dry-run --json`
   - `install-chatgpt-cookies.py` mixed-domain filtering + session-token preservation
