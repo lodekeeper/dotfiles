@@ -148,7 +148,9 @@ The tool distinguishes thinking from response by checking:
 
 ### Response times out after extended thinking
 - Increase `--timeout` (the direct bridge defaults to 21600s = 6 hours)
-- For the Oracle-style wrapper path, explicitly too-short `--timeout` values on large rendered bundles are now auto-bumped to a safer floor; inspect `--dry-run json` to see `requestedTimeout`, `effectiveTimeout`, `timeoutAutoBumped`, `bundleClass`, `recommendedAction`, and `bundleGuidance`
+- For the Oracle-style wrapper path, explicitly too-short `--timeout` values on large rendered bundles are now auto-bumped to a safer floor; inspect wrapper JSON output (`--dry-run json`, successful live `--json`, structured refusal JSON, parsed bridge-originated JSON auth failures, or malformed/non-JSON bridge-output fallback envelopes) to see the top-level contract marker (`wrapper=oracle-browser-camoufox`, `wrapperSchemaVersion=1`) plus fields like `requestedTimeout`, `effectiveTimeout`, `timeoutAutoBumped`, `bundleClass`, `recommendedAction`, and `bundleGuidance`
+- When the underlying `chatgpt-direct` path fails to emit valid JSON even though the wrapper was called with `--json`, the wrapper now preserves machine-readable output by emitting a structured fallback error envelope instead of raw stdout (`error.code=bridge-json-invalid`, plus `bridgeExitStatus` and a truncated `bridgeOutputExcerpt` for debugging)
+- When the underlying `chatgpt-direct` path emits valid JSON but not a JSON object (for example `[]`), the wrapper also preserves machine-readable output by emitting a structured fallback error envelope instead of treating that as a successful contract match (`error.code=bridge-json-shape-invalid`)
 - For extremely large rendered bundles (currently `>=100000` chars after render framing), the wrapper now refuses live sends unless the caller explicitly passes `--allow-very-large-bundle`
 - If `--json` is set on that refusal path, the wrapper emits a structured error object (`error.code = very-large-bundle-refused`) so automation can react cleanly
 - Some queries genuinely take GPT-5.4 Pro 10+ minutes to think through
@@ -251,6 +253,9 @@ When you have a **full fresh cookie export**, install it safely with:
 
 ```bash
 scripts/oracle/install-chatgpt-cookies.py --source /tmp/chatgpt-cookies.json
+
+# Or pipe it directly without staging a temp file
+cat /tmp/chatgpt-cookies.json | scripts/oracle/install-chatgpt-cookies.py --source -
 ```
 
 For the default recovery path, prefer the one-command verifier:
@@ -258,6 +263,10 @@ For the default recovery path, prefer the one-command verifier:
 ```bash
 scripts/oracle/verify-after-auth-refresh.sh --token-file /tmp/session-token.txt
 scripts/oracle/verify-after-auth-refresh.sh --cookie-source /tmp/chatgpt-cookies.json
+
+# Or pipe a fresh full cookie export directly into the verifier
+cat /tmp/chatgpt-cookies.json | scripts/oracle/verify-after-auth-refresh.sh --cookie-source -
+
 scripts/oracle/verify-after-auth-refresh.sh --dry-run --json
 ```
 
@@ -296,6 +305,9 @@ scripts/oracle/check-wrapper.sh --live --cookie-file ~/.oracle/chatgpt-cookies.j
 - It also rejects Oracle-native Chrome/CDP / remote-browser transport flags (`--remote-chrome`, `--remote-host`, `--remote-token`, `--browser-port`) with a wrapper-specific explanation, because this path always uses the local Camoufox bridge instead.
 - It also rejects unknown/unsupported leftover args explicitly instead of silently ignoring them.
 - Use `scripts/oracle/check-wrapper.sh` for fast regression checks before debugging the wrapper manually; the static check now also asserts unknown-arg rejection.
+- `scripts/oracle/check-wrapper.sh --json` now also covers the recovery helpers statically:
+  - `verify-after-auth-refresh.sh --dry-run --json`
+  - `install-chatgpt-cookies.py` mixed-domain filtering + session-token preservation
 
 ## Self-Maintenance
 

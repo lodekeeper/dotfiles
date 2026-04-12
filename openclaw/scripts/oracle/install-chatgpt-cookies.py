@@ -3,7 +3,7 @@
 
 This helper is the full-cookie complement to `replace-session-token.py`.
 It:
-- loads a JSON cookie export from a file
+- loads a JSON cookie export from a file or stdin
 - filters to ChatGPT/OpenAI-related domains only
 - requires a session token by default
 - writes a timestamped backup before replacing the destination jar
@@ -12,6 +12,7 @@ It:
 Usage examples:
   scripts/oracle/install-chatgpt-cookies.py --source /tmp/chatgpt-cookies.json
   scripts/oracle/install-chatgpt-cookies.py --source /tmp/export.json --cookie-file ~/.oracle/chatgpt-cookies.json
+  cat /tmp/chatgpt-cookies.json | scripts/oracle/install-chatgpt-cookies.py --source -
 """
 
 from __future__ import annotations
@@ -22,6 +23,7 @@ import os
 from datetime import datetime, timezone
 from pathlib import Path
 import shutil
+import sys
 
 DEFAULT_COOKIE_PATH = Path.home() / ".oracle" / "chatgpt-cookies.json"
 SESSION_TOKEN = "__Secure-next-auth.session-token"
@@ -38,16 +40,24 @@ def backup_path_for(path: Path) -> Path:
     return path.with_name(path.name + f".bak-{stamp}")
 
 
-def load_cookie_export(path: Path) -> list[dict]:
-    data = json.loads(path.read_text())
+def load_cookie_export(source: str) -> tuple[list[dict], str]:
+    if source == "-":
+        raw_text = sys.stdin.read()
+        source_label = "<stdin>"
+    else:
+        path = Path(source).expanduser()
+        raw_text = path.read_text()
+        source_label = str(path)
+
+    data = json.loads(raw_text)
     if not isinstance(data, list):
-        raise ValueError(f"Cookie export is not a JSON array: {path}")
+        raise ValueError(f"Cookie export is not a JSON array: {source_label}")
     cookies: list[dict] = []
     for i, item in enumerate(data):
         if not isinstance(item, dict):
             raise ValueError(f"Cookie export entry #{i} is not an object")
         cookies.append(item)
-    return cookies
+    return cookies, source_label
 
 
 def cookie_domain(cookie: dict) -> str:
@@ -92,19 +102,18 @@ def write_cookie_jar(path: Path, cookies: list[dict]) -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--source", required=True, help="Path to the full cookie export JSON file")
+    parser.add_argument("--source", required=True, help="Path to the full cookie export JSON file, or '-' to read from stdin")
     parser.add_argument("--cookie-file", default=str(DEFAULT_COOKIE_PATH), help="Destination cookie jar path (default: ~/.oracle/chatgpt-cookies.json)")
     parser.add_argument("--no-backup", action="store_true", help="Do not write a timestamped backup before replacing the destination jar")
     parser.add_argument("--allow-no-session-token", action="store_true", help="Allow installing a jar that does not contain __Secure-next-auth.session-token")
     args = parser.parse_args()
 
-    source = Path(args.source).expanduser()
     dest = Path(args.cookie_file).expanduser()
-    raw = load_cookie_export(source)
+    raw, source_label = load_cookie_export(args.source)
     cookies, dropped = filter_and_normalize(raw)
 
     if not cookies:
-        raise SystemExit(f"No ChatGPT/OpenAI cookies remained after filtering: {source}")
+        raise SystemExit(f"No ChatGPT/OpenAI cookies remained after filtering: {source_label}")
 
     names = [str(cookie.get("name", "")) for cookie in cookies]
     has_session_token = SESSION_TOKEN in names
@@ -124,7 +133,7 @@ def main() -> int:
 
     summary = {
         "status": "ok",
-        "source": str(source),
+        "source": source_label,
         "cookieFile": str(dest),
         "backupFile": str(backup) if backup else None,
         "sourceCookieCount": len(raw),

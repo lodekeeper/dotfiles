@@ -27,6 +27,7 @@ HEADING_IMPROVEMENTS = re.compile(r"^##\s+Improvements Implemented This Cycle\s*
 HEADING_H2 = re.compile(r"^##\s+")
 HEADING_H3 = re.compile(r"^###\s+")
 HEADING_H4 = re.compile(r"^####\s+")
+SNAPSHOT_HEADING = re.compile(r"^## Daily Audit Snapshot — (\d{4}-\d{2}-\d{2})\b", re.MULTILINE)
 
 CODE_SPAN = re.compile(r"`([^`]+)`")
 PATH_LIKE = re.compile(r"^(?:\.?\.?/)?(?:scripts|notes|skills|docs|config|openclaw)/[^\s`]+$")
@@ -204,6 +205,28 @@ def find_ref_conflicts(gaps: Iterable[GapItem], improvements: Iterable[Improveme
     return conflicts
 
 
+def find_duplicate_snapshot_dates(text: str) -> tuple[int, list[str], list[str]]:
+    all_dates = [match.group(1) for match in SNAPSHOT_HEADING.finditer(text)]
+    counts: dict[str, int] = {}
+    for date_str in all_dates:
+        counts[date_str] = counts.get(date_str, 0) + 1
+
+    latest_date = all_dates[0] if all_dates else None
+    conflicts: list[str] = []
+    warnings: list[str] = []
+
+    for date_str, count in sorted(counts.items()):
+        if count <= 1:
+            continue
+        message = f"Snapshot date appears multiple times: {date_str} ({count} entries)"
+        if date_str == latest_date:
+            conflicts.append(message)
+        else:
+            warnings.append(message)
+
+    return len(all_dates), conflicts, warnings
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Check autonomy-gaps markdown for contradictory status.")
     parser.add_argument(
@@ -226,12 +249,19 @@ def main() -> int:
 
     title_conflicts = find_title_conflicts(gaps)
     ref_conflicts = find_ref_conflicts(gaps, improvements)
+    snapshot_count, snapshot_conflicts, snapshot_warnings = find_duplicate_snapshot_dates(text)
 
     print(f"Checked: {path}")
     print(f"- Gap items parsed: {len(gaps)}")
     print(f"- Improvement entries parsed: {len(improvements)}")
+    print(f"- Snapshot headings parsed: {snapshot_count}")
 
-    all_conflicts = title_conflicts + ref_conflicts
+    if snapshot_warnings:
+        print("⚠️ Historical snapshot-date duplicates detected (non-blocking):")
+        for warning in snapshot_warnings:
+            print(f"- {warning}")
+
+    all_conflicts = title_conflicts + ref_conflicts + snapshot_conflicts
     if not all_conflicts:
         print("✅ No contradictions detected")
         return 0

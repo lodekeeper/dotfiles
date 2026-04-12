@@ -43,7 +43,7 @@ Safe helper to replace the local cookie jar from a **full ChatGPT cookie export*
 without hand-editing JSON.
 
 What it does:
-- loads a JSON cookie export from disk
+- loads a JSON cookie export from disk or stdin (`--source -`)
 - filters to ChatGPT/OpenAI-related domains only
 - requires `__Secure-next-auth.session-token` by default
 - writes a timestamped backup before replacing `~/.oracle/chatgpt-cookies.json`
@@ -53,6 +53,7 @@ Examples:
 ```bash
 scripts/oracle/install-chatgpt-cookies.py --source /tmp/chatgpt-cookies.json
 scripts/oracle/install-chatgpt-cookies.py --source /tmp/export.json --cookie-file ~/.oracle/chatgpt-cookies.json
+cat /tmp/chatgpt-cookies.json | scripts/oracle/install-chatgpt-cookies.py --source -
 ```
 
 ### `verify-after-auth-refresh.sh`
@@ -65,12 +66,13 @@ It can optionally refresh the local cookie jar first, then runs:
 
 Supported refresh inputs:
 - fresh session token (`--token-file`, `--token`, `--stdin`)
-- fresh full cookie export (`--cookie-source /path/to/chatgpt-cookies.json`)
+- fresh full cookie export (`--cookie-source /path/to/chatgpt-cookies.json`, or `--cookie-source -` to read from stdin)
 
 Examples:
 ```bash
 scripts/oracle/verify-after-auth-refresh.sh --token-file /tmp/session-token.txt
 scripts/oracle/verify-after-auth-refresh.sh --cookie-source /tmp/chatgpt-cookies.json
+cat /tmp/chatgpt-cookies.json | scripts/oracle/verify-after-auth-refresh.sh --cookie-source - --dry-run --json
 scripts/oracle/verify-after-auth-refresh.sh --dry-run --json
 scripts/oracle/verify-after-auth-refresh.sh --json
 ```
@@ -79,7 +81,30 @@ It stores step artifacts under `research/oracle/refresh-verify-<timestamp>/`.
 In `--dry-run` mode it prints the planned sequence and artifact path **without**
 changing the cookie jar or creating the artifact directory.
 
-For large rendered bundles, `--dry-run json` now includes:
+For large rendered bundles, wrapper JSON outputs now include the wrapper-side planning metadata below. This applies to:
+- `--dry-run json`
+- structured JSON refusal output on the extremely-large guard path
+- successful live `--json` wrapper runs
+- parsed bridge-originated JSON error outputs that the wrapper passes through after enrichment (for example auth/pro failures)
+- malformed/non-JSON bridge output when the wrapper was asked for `--json` (the wrapper now emits a structured fallback error envelope instead of raw stdout)
+- valid-but-non-object bridge JSON when the wrapper was asked for `--json` (for example `[]` or `"oops"`; the wrapper now emits a structured fallback error envelope instead of treating that as a successful contract match)
+
+All of those JSON shapes now also include a top-level contract marker:
+- `wrapper = "oracle-browser-camoufox"`
+- `wrapperSchemaVersion = 1`
+
+For malformed bridge-output fallback envelopes, the top-level `error` object now also carries:
+- `code = "bridge-json-invalid"`
+- `bridgeExitStatus`
+- `bridgeOutputBytes`
+- `bridgeOutputExcerpt`
+- `bridgeOutputTruncated`
+
+For valid-but-non-object bridge JSON fallback envelopes, the top-level `error` object uses:
+- `code = "bridge-json-shape-invalid"`
+- the same `bridgeExitStatus` / `bridgeOutput*` diagnostics as above
+
+Included fields:
 - `requestedTimeout`
 - `effectiveTimeout`
 - `timeoutHeuristicFloor`
@@ -91,7 +116,7 @@ For large rendered bundles, `--dry-run json` now includes:
 - `veryLargeBundle`
 - `allowVeryLargeBundle`
 
-This makes it easy to see when the wrapper raised an explicitly too-short timeout before handing off to `chatgpt-direct`, and also surfaces human-readable guidance when a bundle is large enough that extended thinking time is expected.
+This makes it easy to see when the wrapper raised an explicitly too-short timeout before handing off to `chatgpt-direct`, and also surfaces human-readable guidance + recommended next action when a bundle is large enough that extended thinking time is expected.
 
 Recommended post-refresh sequence:
 ```bash
@@ -100,6 +125,9 @@ scripts/oracle/verify-after-auth-refresh.sh --token-file /tmp/session-token.txt
 
 # One command for the full refresh + verification flow from a full cookie export
 scripts/oracle/verify-after-auth-refresh.sh --cookie-source /tmp/chatgpt-cookies.json
+
+# Same flow, but pipe the export directly instead of staging a temp file
+cat /tmp/chatgpt-cookies.json | scripts/oracle/verify-after-auth-refresh.sh --cookie-source -
 
 # Or run the checks only if the cookie jar is already updated
 scripts/oracle/verify-after-auth-refresh.sh --json
@@ -228,6 +256,9 @@ What it checks:
 - help output renders
 - API-only flags fail clearly
 - unknown unsupported args fail clearly
+- recovery helpers stay healthy too:
+  - `verify-after-auth-refresh.sh --dry-run --json`
+  - `install-chatgpt-cookies.py` mixed-domain filtering + session-token preservation
 - optional live auth/pro smoke test
 - optional live browser-style prompt run with multi-file `--file` usage
 - optional custom cookie-jar verification via `--cookie-file <path>` for refresh/recovery flows

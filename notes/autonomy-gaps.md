@@ -1,10 +1,29 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-04-11 (29th pass)
+> Updated: 2026-04-12 (30th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-04-12 (self-improvement-audit-daily, 00:35 UTC)
+
+### PR review
+- **Status:** review-scope + follow-up guard workflow remains healthy; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** retry telemetry, rolling degradation checks, and log-fallback path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** extraction/compliance/vector-readiness gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident-bundle workflow remains healthy; no new blocker discovered this cycle.
+
+### Audit workflow (cross-cutting)
+- **Blocker:** consistency checks did not inspect snapshot-date uniqueness, so accidental duplicate headings for the *latest* date (for example from a rerun with `--force` or retry turbulence) could silently skew delta comparison and produce misleading `NO_REPLY`/summary decisions.
+- **Fix applied this cycle:** extended `scripts/notes/check-autonomy-gaps-consistency.py` to parse snapshot headings and enforce duplicate-date hygiene for active runs: duplicate entries for the current latest snapshot date now fail consistency checks, while older historical duplicates are surfaced as non-blocking warnings for later cleanup.
+
+---
 ## Daily Audit Snapshot — 2026-04-11 (self-improvement-audit-daily, 00:35 UTC)
 
 ### PR review
@@ -711,6 +730,14 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Consistency guard now blocks duplicate latest snapshot dates (2026-04-12)
+Updated `scripts/notes/check-autonomy-gaps-consistency.py` to validate snapshot-date uniqueness alongside gap/improvement contradiction checks:
+- parses all `## Daily Audit Snapshot — YYYY-MM-DD` headings,
+- fails consistency when the **latest** snapshot date appears more than once,
+- reports older historical duplicate dates as non-blocking warnings.
+
+**Rationale:** duplicate headings for the active audit date can poison daily delta comparisons and lead to incorrect `NO_REPLY` vs summary behavior; this makes that failure mode explicit before close-out.
 
 ### ✅ Preflight now distinguishes cadence gaps from hard cadence-check failures (2026-04-11)
 Updated `scripts/notes/run-autonomy-audit-preflight.sh` cadence guard handling:

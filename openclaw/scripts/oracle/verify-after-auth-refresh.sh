@@ -30,7 +30,7 @@ Optional refresh input modes:
   --token-file <path>    Patch a fresh session token from file first
   --token <value>        Patch a fresh session token from CLI first
   --stdin                Read a fresh session token from stdin first
-  --cookie-source <path> Replace the local jar from a full cookie export first
+  --cookie-source <path> Replace the local jar from a full cookie export first (`-` = stdin)
   --cookie-file <path>   Override destination cookie jar path (default: ~/.oracle/chatgpt-cookies.json)
   --dry-run              Print the planned verification sequence without changing anything
   --json                 Emit final summary as JSON
@@ -39,6 +39,7 @@ Optional refresh input modes:
 Examples:
   scripts/oracle/verify-after-auth-refresh.sh --token-file /tmp/session-token.txt
   scripts/oracle/verify-after-auth-refresh.sh --cookie-source /tmp/chatgpt-cookies.json
+  cat /tmp/chatgpt-cookies.json | scripts/oracle/verify-after-auth-refresh.sh --cookie-source - --dry-run --json
   scripts/oracle/verify-after-auth-refresh.sh --dry-run --json
   scripts/oracle/verify-after-auth-refresh.sh --json
 EOF

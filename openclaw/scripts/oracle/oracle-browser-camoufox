@@ -2,6 +2,7 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+BRIDGE_BIN="${ORACLE_CHATGPT_DIRECT_BIN:-$SCRIPT_DIR/chatgpt-direct}"
 
 usage() {
   cat <<'EOF'
@@ -370,6 +371,109 @@ recommended_action() {
   esac
 }
 
+emit_wrapped_live_json() {
+  local bridge_json_path="$1"
+  python3 - <<'PY' \
+    "$bridge_json_path" "$auth_only" "$([[ -n "$prompt" ]] && echo true || echo false)" "${#files[@]}" \
+    "$model" "$require_auth" "$require_pro" "${chatgpt_url:-https://chatgpt.com}" \
+    "$files_report" "$json" "$requested_timeout" "$effective_timeout" "$timeout_floor" "$timeout_auto_bumped" "$timeout_adjustment" "$bundle_class_name" "$recommended_action_name" "$bundle_guidance_note" "$very_large_bundle" "$allow_very_large_bundle" "${#rendered_bundle}" "${#final_prompt}"
+import json, sys
+(bridge_json_path, auth_only, prompt_provided, file_count, model, require_auth, require_pro, chatgpt_url,
+ files_report, json_output, requested_timeout, effective_timeout, timeout_floor, timeout_auto_bumped,
+ timeout_adjustment, bundle_class_name, recommended_action_name, bundle_guidance_note, very_large_bundle,
+ allow_very_large_bundle, rendered_len, final_len) = sys.argv[1:24]
+
+with open(bridge_json_path) as f:
+    data = json.load(f)
+
+data["wrapper"] = "oracle-browser-camoufox"
+data["wrapperSchemaVersion"] = 1
+data["plan"] = {
+    "authOnly": auth_only == "true",
+    "promptProvided": prompt_provided == "true",
+    "fileCount": int(file_count),
+    "model": model,
+    "requireAuth": require_auth == "true",
+    "requirePro": require_pro == "true",
+    "chatgptUrl": chatgpt_url,
+    "filesReport": files_report == "true",
+    "jsonOutput": json_output == "true",
+    "requestedTimeout": int(requested_timeout) if requested_timeout else None,
+    "effectiveTimeout": int(effective_timeout) if effective_timeout else 21600,
+    "bridgeDefaultTimeoutSeconds": 21600,
+    "timeoutHeuristicFloor": int(timeout_floor) if timeout_floor else 0,
+    "timeoutAutoBumped": timeout_auto_bumped == "true",
+    "timeoutAdjustment": timeout_adjustment,
+    "bundleClass": bundle_class_name,
+    "recommendedAction": recommended_action_name,
+    "bundleGuidance": bundle_guidance_note,
+    "veryLargeBundle": very_large_bundle == "true",
+    "allowVeryLargeBundle": allow_very_large_bundle == "true",
+    "renderedBundleChars": int(rendered_len),
+    "finalPromptChars": int(final_len),
+}
+print(json.dumps(data, indent=2))
+PY
+}
+
+emit_bridge_json_error() {
+  local bridge_json_path="$1"
+  local bridge_status="$2"
+  local error_code="$3"
+  local error_message="$4"
+  python3 - <<'PY' \
+    "$bridge_json_path" "$bridge_status" "$error_code" "$error_message" \
+    "$auth_only" "$([[ -n "$prompt" ]] && echo true || echo false)" "${#files[@]}" \
+    "$model" "$require_auth" "$require_pro" "${chatgpt_url:-https://chatgpt.com}" \
+    "$files_report" "$json" "$requested_timeout" "$effective_timeout" "$timeout_floor" "$timeout_auto_bumped" "$timeout_adjustment" "$bundle_class_name" "$recommended_action_name" "$bundle_guidance_note" "$very_large_bundle" "$allow_very_large_bundle" "${#rendered_bundle}" "${#final_prompt}"
+import json, pathlib, sys
+(bridge_json_path, bridge_status, error_code, error_message, auth_only, prompt_provided, file_count, model,
+ require_auth, require_pro, chatgpt_url, files_report, json_output, requested_timeout, effective_timeout,
+ timeout_floor, timeout_auto_bumped, timeout_adjustment, bundle_class_name, recommended_action_name,
+ bundle_guidance_note, very_large_bundle, allow_very_large_bundle, rendered_len, final_len) = sys.argv[1:26]
+
+raw_output = pathlib.Path(bridge_json_path).read_text(errors="replace")
+excerpt = raw_output[:4000]
+print(json.dumps({
+  "status": "error",
+  "error": {
+    "code": error_code,
+    "message": error_message,
+    "bridgeExitStatus": int(bridge_status),
+    "bridgeOutputBytes": len(raw_output.encode("utf-8", errors="replace")),
+    "bridgeOutputExcerpt": excerpt,
+    "bridgeOutputTruncated": len(excerpt) < len(raw_output),
+  },
+  "wrapper": "oracle-browser-camoufox",
+  "wrapperSchemaVersion": 1,
+  "plan": {
+    "authOnly": auth_only == "true",
+    "promptProvided": prompt_provided == "true",
+    "fileCount": int(file_count),
+    "model": model,
+    "requireAuth": require_auth == "true",
+    "requirePro": require_pro == "true",
+    "chatgptUrl": chatgpt_url,
+    "filesReport": files_report == "true",
+    "jsonOutput": json_output == "true",
+    "requestedTimeout": int(requested_timeout) if requested_timeout else None,
+    "effectiveTimeout": int(effective_timeout) if effective_timeout else 21600,
+    "bridgeDefaultTimeoutSeconds": 21600,
+    "timeoutHeuristicFloor": int(timeout_floor) if timeout_floor else 0,
+    "timeoutAutoBumped": timeout_auto_bumped == "true",
+    "timeoutAdjustment": timeout_adjustment,
+    "bundleClass": bundle_class_name,
+    "recommendedAction": recommended_action_name,
+    "bundleGuidance": bundle_guidance_note,
+    "veryLargeBundle": very_large_bundle == "true",
+    "allowVeryLargeBundle": allow_very_large_bundle == "true",
+    "renderedBundleChars": int(rendered_len),
+    "finalPromptChars": int(final_len),
+  }
+}, indent=2))
+PY
+}
+
 copy_preview_to_clipboard() {
   local output="$1"
   if command -v pbcopy >/dev/null 2>&1; then
@@ -461,6 +565,7 @@ print(json.dumps({
   "status": "ok",
   "mode": "dry-run",
   "wrapper": "oracle-browser-camoufox",
+  "wrapperSchemaVersion": 1,
   "plan": {
     "authOnly": auth_only == "true",
     "promptProvided": prompt_provided == "true",
@@ -584,6 +689,7 @@ print(json.dumps({
     "message": message,
   },
   "wrapper": "oracle-browser-camoufox",
+  "wrapperSchemaVersion": 1,
   "plan": {
     "fileCount": int(file_count),
     "model": model,
@@ -636,4 +742,66 @@ if [[ "$require_pro" == true ]]; then
   bridge_args+=(--require-pro)
 fi
 
-exec "$SCRIPT_DIR/chatgpt-direct" "${bridge_args[@]}"
+if ! $json; then
+  exec "$BRIDGE_BIN" "${bridge_args[@]}"
+fi
+
+bridge_json_file="$(mktemp)"
+trap 'rm -f "$render_file" "$bridge_json_file"' EXIT
+set +e
+"$BRIDGE_BIN" "${bridge_args[@]}" > "$bridge_json_file"
+bridge_status=$?
+set -e
+
+if python3 - <<'PY' "$bridge_json_file"
+import json, sys
+with open(sys.argv[1]) as f:
+    json.load(f)
+PY
+then
+  if python3 - <<'PY' "$bridge_json_file"
+import json, sys
+with open(sys.argv[1]) as f:
+    data = json.load(f)
+if not isinstance(data, dict):
+    sys.exit(1)
+status = data.get('status')
+if isinstance(status, str) and status in {'ok', 'error'}:
+    sys.exit(0)
+sys.exit(2)
+PY
+  then
+    emit_wrapped_live_json "$bridge_json_file"
+    exit "$bridge_status"
+  fi
+
+  shape_check_status=$?
+  if [[ "$shape_check_status" -eq 1 ]]; then
+    wrapper_error_message="underlying chatgpt-direct emitted valid JSON but not a JSON object despite wrapper --json; returning a wrapper error envelope instead"
+    wrapper_error_code="bridge-json-shape-invalid"
+    wrapper_exit_status="$bridge_status"
+    if [[ "$wrapper_exit_status" -eq 0 ]]; then
+      wrapper_exit_status=4
+    fi
+    emit_bridge_json_error "$bridge_json_file" "$bridge_status" "$wrapper_error_code" "$wrapper_error_message"
+    exit "$wrapper_exit_status"
+  fi
+
+  wrapper_error_message="underlying chatgpt-direct emitted a JSON object but without a valid top-level status ('ok'|'error') despite wrapper --json; returning a wrapper error envelope instead"
+  wrapper_error_code="bridge-json-contract-invalid"
+  wrapper_exit_status="$bridge_status"
+  if [[ "$wrapper_exit_status" -eq 0 ]]; then
+    wrapper_exit_status=5
+  fi
+  emit_bridge_json_error "$bridge_json_file" "$bridge_status" "$wrapper_error_code" "$wrapper_error_message"
+  exit "$wrapper_exit_status"
+fi
+
+wrapper_error_message="underlying chatgpt-direct did not emit valid JSON despite wrapper --json; returning a wrapper error envelope instead"
+wrapper_error_code="bridge-json-invalid"
+wrapper_exit_status="$bridge_status"
+if [[ "$wrapper_exit_status" -eq 0 ]]; then
+  wrapper_exit_status=3
+fi
+emit_bridge_json_error "$bridge_json_file" "$bridge_status" "$wrapper_error_code" "$wrapper_error_message"
+exit "$wrapper_exit_status"
