@@ -97,6 +97,17 @@ def get_token(args: argparse.Namespace) -> str:
     return normalize_token(sys.stdin.read())
 
 
+def format_error(exc: Exception) -> str:
+    if isinstance(exc, FileNotFoundError):
+        return f"file not found: {exc.filename}"
+    if isinstance(exc, PermissionError):
+        return f"permission denied: {exc.filename}"
+    if isinstance(exc, json.JSONDecodeError):
+        return f"invalid JSON input at line {exc.lineno}, column {exc.colno}: {exc.msg}"
+    message = str(exc).strip()
+    return message or exc.__class__.__name__
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--cookie-file", default=str(DEFAULT_COOKIE_PATH), help="Cookie jar path (default: ~/.oracle/chatgpt-cookies.json)")
@@ -132,4 +143,11 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    try:
+        raise SystemExit(main())
+    except KeyboardInterrupt:
+        print("ERROR: interrupted", file=sys.stderr)
+        raise SystemExit(130)
+    except Exception as exc:
+        print(f"ERROR: {format_error(exc)}", file=sys.stderr)
+        raise SystemExit(1)

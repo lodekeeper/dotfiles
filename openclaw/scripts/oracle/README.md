@@ -30,6 +30,8 @@ What it does:
 - preserves all other cookies when present
 - writes a timestamped backup before changing the jar
 - can also create a minimal token-only jar when no cookie jar exists yet
+- fails cleanly on common direct-helper errors (for example missing token file, invalid JSON cookie jar, permission problems) instead of dumping a Python traceback
+- fails cleanly on missing/invalid input (stderr error, no Python traceback)
 
 Examples:
 ```bash
@@ -48,6 +50,9 @@ What it does:
 - requires `__Secure-next-auth.session-token` by default
 - writes a timestamped backup before replacing `~/.oracle/chatgpt-cookies.json`
 - writes the normalized jar with restrictive permissions
+- fails cleanly on common direct-helper errors (for example missing source file, invalid JSON input, wrong top-level JSON shape, permission problems) instead of dumping a Python traceback
+- for wrong-shape exports it now says what the top-level JSON value was (for example object/number) and adds an explicit hint when the export is wrapped as `{ "cookies": [...] }` instead of the cookie array itself
+- fails cleanly on missing/invalid input (stderr error, no Python traceback)
 
 Examples:
 ```bash
@@ -81,6 +86,29 @@ It stores step artifacts under `research/oracle/refresh-verify-<timestamp>/`.
 In `--dry-run` mode it prints the planned sequence and artifact path **without**
 changing the cookie jar or creating the artifact directory.
 
+On failure, its JSON output now also includes:
+- `failedStep` — which stage failed (`refreshInput`, `chatgptDirectAuth`, `oracleWrapperAuth`, `checkWrapperLive`)
+- `failedDetail` — concrete detail extracted from the failing step artifact when available (JSON first, then stderr fallback for helper/setup failures like a missing cookie-export path)
+That dry-run path now also covers pipe-based full-cookie recovery via
+`--cookie-source -`.
+
+Wrong-shape full-cookie refresh inputs (for example a top-level object like
+`{"cookies": [...]}` instead of the cookie array itself) now also surface that
+specific shape detail through `failedDetail`, rather than collapsing to a vague
+refresh-install failure.
+
+When `--json` is used on a failing live run, the verifier now also preserves:
+- `cookieFile`
+- `failedStep`
+- `refreshInput`
+- per-step status under `steps`
+
+So automation can tell whether the run failed while installing auth material,
+verifying `chatgpt-direct`, verifying the wrapper, or running the final live
+wrapper check.
+
+Refresh-input failures now also report `steps.refreshInput = "error"` instead of leaving the step stuck at `"running"` in failure JSON.
+
 For large rendered bundles, wrapper JSON outputs now include the wrapper-side planning metadata below. This applies to:
 - `--dry-run json`
 - structured JSON refusal output on the extremely-large guard path
@@ -88,6 +116,7 @@ For large rendered bundles, wrapper JSON outputs now include the wrapper-side pl
 - parsed bridge-originated JSON error outputs that the wrapper passes through after enrichment (for example auth/pro failures)
 - malformed/non-JSON bridge output when the wrapper was asked for `--json` (the wrapper now emits a structured fallback error envelope instead of raw stdout)
 - valid-but-non-object bridge JSON when the wrapper was asked for `--json` (for example `[]` or `"oops"`; the wrapper now emits a structured fallback error envelope instead of treating that as a successful contract match)
+- object-shaped bridge JSON that still violates the wrapper contract by lacking a valid top-level `status` (`ok` / `error`) when the wrapper was asked for `--json`
 
 All of those JSON shapes now also include a top-level contract marker:
 - `wrapper = "oracle-browser-camoufox"`
@@ -102,6 +131,10 @@ For malformed bridge-output fallback envelopes, the top-level `error` object now
 
 For valid-but-non-object bridge JSON fallback envelopes, the top-level `error` object uses:
 - `code = "bridge-json-shape-invalid"`
+- the same `bridgeExitStatus` / `bridgeOutput*` diagnostics as above
+
+For object-shaped-but-contract-invalid bridge JSON fallback envelopes, the top-level `error` object uses:
+- `code = "bridge-json-contract-invalid"`
 - the same `bridgeExitStatus` / `bridgeOutput*` diagnostics as above
 
 Included fields:
@@ -258,7 +291,9 @@ What it checks:
 - unknown unsupported args fail clearly
 - recovery helpers stay healthy too:
   - `verify-after-auth-refresh.sh --dry-run --json`
+  - refresh-input failure classification in `verify-after-auth-refresh.sh` (missing path + wrong-top-level-shape cookie export)
   - `install-chatgpt-cookies.py` mixed-domain filtering + session-token preservation
+  - direct helper failure UX for missing-path, malformed-JSON, and wrong-top-level-shape cookie exports
 - optional live auth/pro smoke test
 - optional live browser-style prompt run with multi-file `--file` usage
 - optional custom cookie-jar verification via `--cookie-file <path>` for refresh/recovery flows
@@ -274,6 +309,8 @@ If you need the single-file handoff summary for this work, see:
 On this server:
 - **Camoufox direct works**
 - **Oracle Chromium/CDP browser mode is unreliable**
+  - upstream expects Linux browser runs to stay headful and to have a compositor / virtual display available
+  - this host currently has no Xvfb / virtual display installed, so the intended headful path is unavailable here
   - local launch path can fail before CDP attach
   - remote headless Chromium path reaches ChatGPT but hits Cloudflare anti-bot
 

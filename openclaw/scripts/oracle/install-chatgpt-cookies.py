@@ -40,6 +40,23 @@ def backup_path_for(path: Path) -> Path:
     return path.with_name(path.name + f".bak-{stamp}")
 
 
+def describe_top_level_json(data: object) -> str:
+    if data is None:
+        return "null"
+    if isinstance(data, bool):
+        return "boolean"
+    if isinstance(data, dict):
+        return "object"
+    if isinstance(data, list):
+        return "array"
+    if isinstance(data, (int, float)):
+        return "number"
+    if isinstance(data, str):
+        return "string"
+    return type(data).__name__
+
+
+
 def load_cookie_export(source: str) -> tuple[list[dict], str]:
     if source == "-":
         raw_text = sys.stdin.read()
@@ -51,7 +68,19 @@ def load_cookie_export(source: str) -> tuple[list[dict], str]:
 
     data = json.loads(raw_text)
     if not isinstance(data, list):
-        raise ValueError(f"Cookie export is not a JSON array: {source_label}")
+        shape = describe_top_level_json(data)
+        if isinstance(data, dict) and "cookies" in data:
+            nested = data.get("cookies")
+            nested_shape = describe_top_level_json(nested)
+            raise ValueError(
+                "Cookie export top-level shape is an object with a 'cookies' field "
+                f"({nested_shape}), but this helper expects the cookie array itself: {source_label}. "
+                "If your export nests cookies under 'cookies', pass or extract that array instead."
+            )
+        raise ValueError(
+            "Cookie export top-level shape is "
+            f"{shape}, but this helper expects a JSON array of cookie objects: {source_label}"
+        )
     cookies: list[dict] = []
     for i, item in enumerate(data):
         if not isinstance(item, dict):
@@ -98,6 +127,17 @@ def write_cookie_jar(path: Path, cookies: list[dict]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(cookies, indent=2) + "\n")
     os.chmod(path, 0o600)
+
+
+def format_error(exc: Exception) -> str:
+    if isinstance(exc, FileNotFoundError):
+        return f"file not found: {exc.filename}"
+    if isinstance(exc, PermissionError):
+        return f"permission denied: {exc.filename}"
+    if isinstance(exc, json.JSONDecodeError):
+        return f"invalid JSON input at line {exc.lineno}, column {exc.colno}: {exc.msg}"
+    message = str(exc).strip()
+    return message or exc.__class__.__name__
 
 
 def main() -> int:
@@ -148,4 +188,11 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    try:
+        raise SystemExit(main())
+    except KeyboardInterrupt:
+        print("ERROR: interrupted", file=sys.stderr)
+        raise SystemExit(130)
+    except Exception as exc:
+        print(f"ERROR: {format_error(exc)}", file=sys.stderr)
+        raise SystemExit(1)

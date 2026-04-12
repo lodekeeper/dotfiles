@@ -153,6 +153,17 @@ PY
 check_verify_after_auth_refresh_dry_run() {
   local help_out="$1"
   local json_out="$2"
+  local stdin_json_out="$3"
+  local refresh_fail_json="$4"
+  local refresh_wrong_shape_fail_json="$5"
+  local source_json="$6"
+  cat > "$source_json" <<'EOF'
+[
+  {"name":"__Secure-next-auth.session-token","value":"fresh-token","domain":".chatgpt.com","path":"/","secure":true,"httpOnly":true},
+  {"name":"_account","value":"personal","domain":"chatgpt.com","path":"/","secure":true},
+  {"name":"irrelevant","value":"drop-me","domain":"example.com","path":"/"}
+]
+EOF
   run "$SCRIPT_DIR/verify-after-auth-refresh.sh" --help > "$help_out"
   grep -q -- '--cookie-source <path>' "$help_out"
   grep -q -- '--dry-run' "$help_out"
@@ -173,12 +184,81 @@ assert 'chatgpt-direct --auth-only' in steps[0], data
 assert 'oracle-browser --auth-only' in steps[1], data
 assert 'check-wrapper.sh --live' in steps[2], data
 PY
+  run bash -lc 'set -euo pipefail; cat "$1" | "$2" --cookie-source - --dry-run --json > "$3"' _ "$source_json" "$SCRIPT_DIR/verify-after-auth-refresh.sh" "$stdin_json_out"
+  python3 - <<'PY' "$stdin_json_out"
+import json, os, sys
+with open(sys.argv[1]) as f:
+    data = json.load(f)
+assert data.get('status') == 'ok', data
+assert data.get('mode') == 'dry-run', data
+artifact_dir = data.get('artifactDir')
+assert artifact_dir and 'refresh-verify-' in artifact_dir, data
+assert not os.path.exists(artifact_dir), data
+assert data.get('refreshInput') == 'install full cookie export from: -', data
+steps = data.get('steps') or []
+assert len(steps) == 3, data
+assert 'chatgpt-direct --auth-only' in steps[0], data
+assert 'oracle-browser --auth-only' in steps[1], data
+assert 'check-wrapper.sh --live --cookie-file <cookieFile> --json' == steps[2], data
+PY
+  if "$SCRIPT_DIR/verify-after-auth-refresh.sh" --cookie-source /tmp/definitely-missing-chatgpt-cookies.json --json > "$refresh_fail_json"; then
+    return 1
+  fi
+  python3 - <<'PY' "$refresh_fail_json"
+import json, sys
+with open(sys.argv[1]) as f:
+    data = json.load(f)
+assert data.get('status') == 'error', data
+assert data.get('failedStep') == 'refreshInput', data
+assert data.get('failedDetail'), data
+assert '/tmp/definitely-missing-chatgpt-cookies.json' in data.get('failedDetail', ''), data
+steps = data.get('steps') or {}
+assert steps.get('refreshInput') == 'error', data
+assert steps.get('chatgptDirectAuth') == 'pending', data
+assert steps.get('oracleWrapperAuth') == 'pending', data
+assert steps.get('checkWrapperLive') == 'pending', data
+PY
+  wrong_shape_source_json="${source_json%.json}-wrong-shape.json"
+  cat > "$wrong_shape_source_json" <<'EOF'
+{
+  "cookies": []
+}
+EOF
+  if "$SCRIPT_DIR/verify-after-auth-refresh.sh" --cookie-source "$wrong_shape_source_json" --json > "$refresh_wrong_shape_fail_json"; then
+    return 1
+  fi
+  python3 - <<'PY' "$refresh_wrong_shape_fail_json" "$wrong_shape_source_json"
+import json, sys
+with open(sys.argv[1]) as f:
+    data = json.load(f)
+assert data.get('status') == 'error', data
+assert data.get('failedStep') == 'refreshInput', data
+detail = data.get('failedDetail') or ''
+assert "top-level shape is an object with a 'cookies' field (array)" in detail, data
+assert 'expects the cookie array itself' in detail, data
+assert sys.argv[2] in detail, data
+steps = data.get('steps') or {}
+assert steps.get('refreshInput') == 'error', data
+assert steps.get('chatgptDirectAuth') == 'pending', data
+assert steps.get('oracleWrapperAuth') == 'pending', data
+assert steps.get('checkWrapperLive') == 'pending', data
+PY
 }
 
 check_install_chatgpt_cookies_helper() {
   local source_json="$1"
   local dest_json="$2"
   local summary_json="$3"
+  local dest_stdin_json="$4"
+  local stdin_summary_json="$5"
+  local install_missing_err="$6"
+  local replace_missing_err="$7"
+  local install_bad_json_err="$8"
+  local install_wrong_shape_err="$9"
+  local install_scalar_shape_err="${10}"
+  local bad_source_json="${source_json%.json}-bad.json"
+  local wrong_shape_source_json="${source_json%.json}-wrong-shape.json"
+  local scalar_shape_source_json="${source_json%.json}-scalar-shape.json"
   cat > "$source_json" <<'EOF'
 [
   {"name":"__Secure-next-auth.session-token","value":"fresh-token","domain":".chatgpt.com","path":"/","secure":true,"httpOnly":true},
@@ -193,6 +273,7 @@ summary_path, dest_path = sys.argv[1:3]
 with open(summary_path) as f:
     data = json.load(f)
 assert data.get('status') == 'ok', data
+assert data.get('source', '').endswith('install-chatgpt-source.json'), data
 assert data.get('installedCookieCount') == 2, data
 assert data.get('droppedNonChatgptCookies') == 1, data
 assert data.get('hasSessionToken') is True, data
@@ -203,6 +284,76 @@ domains = {c['domain'] for c in cookies}
 assert '__Secure-next-auth.session-token' in names, cookies
 assert 'irrelevant' not in names, cookies
 assert 'example.com' not in domains, cookies
+PY
+  run bash -lc 'cat "$1" | python3 "$2" --source - --cookie-file "$3" > "$4"' _ "$source_json" "$SCRIPT_DIR/install-chatgpt-cookies.py" "$dest_stdin_json" "$stdin_summary_json"
+  python3 - <<'PY' "$stdin_summary_json" "$dest_stdin_json"
+import json, sys
+summary_path, dest_path = sys.argv[1:3]
+with open(summary_path) as f:
+    data = json.load(f)
+assert data.get('status') == 'ok', data
+assert data.get('source') == '<stdin>', data
+assert data.get('installedCookieCount') == 2, data
+assert data.get('droppedNonChatgptCookies') == 1, data
+assert data.get('hasSessionToken') is True, data
+with open(dest_path) as f:
+    cookies = json.load(f)
+names = {c['name'] for c in cookies}
+domains = {c['domain'] for c in cookies}
+assert '__Secure-next-auth.session-token' in names, cookies
+assert 'irrelevant' not in names, cookies
+assert 'example.com' not in domains, cookies
+PY
+  if python3 "$SCRIPT_DIR/install-chatgpt-cookies.py" --source /tmp/definitely-missing-chatgpt-cookies.json > /dev/null 2> "$install_missing_err"; then
+    return 1
+  fi
+  if python3 "$SCRIPT_DIR/replace-session-token.py" --token-file /tmp/definitely-missing-session-token.txt > /dev/null 2> "$replace_missing_err"; then
+    return 1
+  fi
+  printf '{bad json\n' > "$bad_source_json"
+  if python3 "$SCRIPT_DIR/install-chatgpt-cookies.py" --source "$bad_source_json" > /dev/null 2> "$install_bad_json_err"; then
+    return 1
+  fi
+  cat > "$wrong_shape_source_json" <<'EOF'
+{
+  "cookies": []
+}
+EOF
+  if python3 "$SCRIPT_DIR/install-chatgpt-cookies.py" --source "$wrong_shape_source_json" > /dev/null 2> "$install_wrong_shape_err"; then
+    return 1
+  fi
+  printf '123\n' > "$scalar_shape_source_json"
+  if python3 "$SCRIPT_DIR/install-chatgpt-cookies.py" --source "$scalar_shape_source_json" > /dev/null 2> "$install_scalar_shape_err"; then
+    return 1
+  fi
+  python3 - <<'PY' "$install_missing_err" "$replace_missing_err" "$install_bad_json_err" "$bad_source_json" "$install_wrong_shape_err" "$wrong_shape_source_json" "$install_scalar_shape_err" "$scalar_shape_source_json"
+import sys
+missing_expectations = [
+    (sys.argv[1], 'file not found:', '/tmp/definitely-missing-chatgpt-cookies.json'),
+    (sys.argv[2], 'file not found:', '/tmp/definitely-missing-session-token.txt'),
+]
+for path, phrase, needle in missing_expectations:
+    text = open(path, encoding='utf-8', errors='replace').read()
+    assert 'Traceback ' not in text, text
+    assert 'ERROR:' in text, text
+    assert phrase in text, text
+    assert needle in text, text
+bad_json_text = open(sys.argv[3], encoding='utf-8', errors='replace').read()
+assert 'Traceback ' not in bad_json_text, bad_json_text
+assert 'ERROR:' in bad_json_text, bad_json_text
+assert 'invalid JSON input at line' in bad_json_text, bad_json_text
+wrong_shape_text = open(sys.argv[5], encoding='utf-8', errors='replace').read()
+assert 'Traceback ' not in wrong_shape_text, wrong_shape_text
+assert 'ERROR:' in wrong_shape_text, wrong_shape_text
+assert "top-level shape is an object with a 'cookies' field (array)" in wrong_shape_text, wrong_shape_text
+assert 'expects the cookie array itself' in wrong_shape_text, wrong_shape_text
+assert sys.argv[6] in wrong_shape_text, wrong_shape_text
+scalar_shape_text = open(sys.argv[7], encoding='utf-8', errors='replace').read()
+assert 'Traceback ' not in scalar_shape_text, scalar_shape_text
+assert 'ERROR:' in scalar_shape_text, scalar_shape_text
+assert 'top-level shape is number' in scalar_shape_text, scalar_shape_text
+assert 'expects a JSON array of cookie objects' in scalar_shape_text, scalar_shape_text
+assert sys.argv[8] in scalar_shape_text, scalar_shape_text
 PY
 }
 
@@ -494,11 +645,21 @@ fi
 log "checking recovery helper static behavior"
 verify_help_out="$TMP_DIR/verify-after-auth-refresh-help.txt"
 verify_dry_json="$TMP_DIR/verify-after-auth-refresh-dry-run.json"
+verify_dry_stdin_json="$TMP_DIR/verify-after-auth-refresh-dry-run-stdin.json"
+verify_refresh_fail_json="$TMP_DIR/verify-after-auth-refresh-refresh-fail.json"
+verify_refresh_wrong_shape_fail_json="$TMP_DIR/verify-after-auth-refresh-wrong-shape-fail.json"
 install_source="$TMP_DIR/install-chatgpt-source.json"
 install_dest="$TMP_DIR/install-chatgpt-dest.json"
 install_json="$TMP_DIR/install-chatgpt.json"
-if check_verify_after_auth_refresh_dry_run "$verify_help_out" "$verify_dry_json" \
-  && check_install_chatgpt_cookies_helper "$install_source" "$install_dest" "$install_json"
+install_stdin_dest="$TMP_DIR/install-chatgpt-stdin-dest.json"
+install_stdin_json="$TMP_DIR/install-chatgpt-stdin.json"
+install_missing_err="$TMP_DIR/install-chatgpt-missing.err"
+replace_missing_err="$TMP_DIR/replace-session-token-missing.err"
+install_bad_json_err="$TMP_DIR/install-chatgpt-bad-json.err"
+install_wrong_shape_err="$TMP_DIR/install-chatgpt-wrong-shape.err"
+install_scalar_shape_err="$TMP_DIR/install-chatgpt-scalar-shape.err"
+if check_verify_after_auth_refresh_dry_run "$verify_help_out" "$verify_dry_json" "$verify_dry_stdin_json" "$verify_refresh_fail_json" "$verify_refresh_wrong_shape_fail_json" "$install_source" \
+  && check_install_chatgpt_cookies_helper "$install_source" "$install_dest" "$install_json" "$install_stdin_dest" "$install_stdin_json" "$install_missing_err" "$replace_missing_err" "$install_bad_json_err" "$install_wrong_shape_err" "$install_scalar_shape_err"
 then
   RECOVERY_HELPERS_RESULT="passed"
 else

@@ -14,6 +14,8 @@ TOKEN_FILE=""
 COOKIE_SOURCE=""
 JSON=false
 DRY_RUN=false
+FAILED_STEP=""
+FAILED_DETAIL=""
 
 usage() {
   cat <<'EOF'
@@ -45,23 +47,96 @@ Examples:
 EOF
 }
 
-emit_dry_run() {
-  local refresh_desc
+refresh_desc() {
   case "$TOKEN_MODE" in
-    file) refresh_desc="replace-session-token from file: $TOKEN_FILE" ;;
-    value) refresh_desc="replace-session-token from inline value" ;;
-    stdin) refresh_desc="replace-session-token from stdin" ;;
+    file) printf 'replace-session-token from file: %s' "$TOKEN_FILE" ;;
+    value) printf 'replace-session-token from inline value' ;;
+    stdin) printf 'replace-session-token from stdin' ;;
     *)
       if [[ -n "$COOKIE_SOURCE" ]]; then
-        refresh_desc="install full cookie export from: $COOKIE_SOURCE"
+        printf 'install full cookie export from: %s' "$COOKIE_SOURCE"
       else
-        refresh_desc="no refresh input; verify existing cookie jar only"
+        printf 'no refresh input; verify existing cookie jar only'
       fi
       ;;
   esac
+}
+
+summarize_failure_json() {
+  local json_path="$1"
+  [[ -s "$json_path" ]] || return 1
+  python3 - <<'PY' "$json_path"
+import json, sys
+path = sys.argv[1]
+try:
+    with open(path) as f:
+        data = json.load(f)
+except Exception:
+    sys.exit(1)
+
+parts = []
+message = data.get("message")
+error = data.get("error")
+if isinstance(error, str) and error:
+    parts.append(error)
+elif isinstance(message, str) and message:
+    parts.append(message)
+
+server = ((data.get("auth") or {}).get("server") or {})
+state = server.get("state")
+plan = server.get("planType")
+serr = server.get("error")
+meta = []
+if state:
+    meta.append(f"state={state}")
+if plan:
+    meta.append(f"plan={plan}")
+if serr and (not parts or serr not in parts[0]):
+    meta.append(f"server_error={serr}")
+if meta:
+    parts.append("(" + ", ".join(meta) + ")")
+
+if parts:
+    print(" ".join(parts))
+    sys.exit(0)
+sys.exit(1)
+PY
+}
+
+summarize_failure_stderr() {
+  local stderr_path="$1"
+  [[ -s "$stderr_path" ]] || return 1
+  python3 - <<'PY' "$stderr_path"
+import sys
+path = sys.argv[1]
+try:
+    text = open(path, encoding="utf-8", errors="replace").read()
+except Exception:
+    sys.exit(1)
+lines = [line.strip() for line in text.splitlines() if line.strip()]
+if not lines:
+    sys.exit(1)
+for line in reversed(lines):
+    if line.startswith("Traceback "):
+        continue
+    print(line)
+    sys.exit(0)
+sys.exit(1)
+PY
+}
+
+set_failed_detail_from_artifacts() {
+  local json_path="$1"
+  local stderr_path="$2"
+  FAILED_DETAIL="$(summarize_failure_json "$json_path" || summarize_failure_stderr "$stderr_path" || true)"
+}
+
+emit_dry_run() {
+  local refresh_input
+  refresh_input="$(refresh_desc)"
 
   if $JSON; then
-    python3 - <<'PY' "$ARTIFACT_DIR" "$COOKIE_FILE" "$refresh_desc"
+    python3 - <<'PY' "$ARTIFACT_DIR" "$COOKIE_FILE" "$refresh_input"
 import json, sys
 artifact_dir, cookie_file, refresh_desc = sys.argv[1:4]
 print(json.dumps({
@@ -82,7 +157,7 @@ PY
 verify-after-auth-refresh.sh dry run
 - artifact dir: $ARTIFACT_DIR
 - cookie file: $COOKIE_FILE
-- refresh input: $refresh_desc
+- refresh input: $refresh_input
 - planned steps:
   1. chatgpt-direct --auth-only --require-auth --require-pro --cookies <cookieFile> --json
   2. oracle-browser --auth-only --require-auth --require-pro --cookies <cookieFile> --json
@@ -93,13 +168,40 @@ EOF
 
 fail() {
   local message="$1"
+  local full_message="$message"
+  local refresh_input
+  refresh_input="$(refresh_desc)"
+  if [[ -n "$FAILED_DETAIL" ]]; then
+    full_message="$message: $FAILED_DETAIL"
+  fi
   if $JSON; then
-    python3 - <<'PY' "$message" "$ARTIFACT_DIR"
+    python3 - <<'PY' \
+      "$full_message" "$ARTIFACT_DIR" "$COOKIE_FILE" "$FAILED_STEP" "$FAILED_DETAIL" "$refresh_input" \
+      "$step_status" "$direct_status" "$wrapper_status" "$check_wrapper_status"
 import json, sys
-print(json.dumps({"status": "error", "message": sys.argv[1], "artifactDir": sys.argv[2]}, indent=2))
+message, artifact_dir, cookie_file, failed_step, failed_detail, refresh_input, refresh_status, direct_status, wrapper_status, check_wrapper_status = sys.argv[1:11]
+print(json.dumps({
+    "status": "error",
+    "message": message,
+    "artifactDir": artifact_dir,
+    "cookieFile": cookie_file,
+    "failedStep": failed_step or None,
+    "failedDetail": failed_detail or None,
+    "refreshInput": refresh_input,
+    "steps": {
+        "refreshInput": refresh_status,
+        "chatgptDirectAuth": direct_status,
+        "oracleWrapperAuth": wrapper_status,
+        "checkWrapperLive": check_wrapper_status,
+    },
+}, indent=2))
 PY
   else
-    echo "ERROR: $message" >&2
+    echo "ERROR: $full_message" >&2
+    if [[ -n "$FAILED_STEP" ]]; then
+      echo "Failed step: $FAILED_STEP" >&2
+    fi
+    echo "Cookie file: $COOKIE_FILE" >&2
     echo "Artifacts: $ARTIFACT_DIR" >&2
   fi
   exit 1
@@ -159,6 +261,7 @@ wrapper_status="pending"
 check_wrapper_status="pending"
 
 if [[ -n "$TOKEN_MODE" && -n "$COOKIE_SOURCE" ]]; then
+  FAILED_STEP="argumentValidation"
   fail "choose exactly one refresh input: token mode or --cookie-source"
 fi
 
@@ -171,23 +274,44 @@ mkdir -p "$ARTIFACT_DIR"
 
 if [[ -n "$COOKIE_SOURCE" ]]; then
   step_status="running"
-  python3 "$SCRIPT_DIR/install-chatgpt-cookies.py" --cookie-file "$COOKIE_FILE" --source "$COOKIE_SOURCE" > "$ARTIFACT_DIR/01-install-chatgpt-cookies.json" \
-    || fail "full cookie-jar install failed"
-  step_status="ok"
+  FAILED_STEP="refreshInput"
+  if python3 "$SCRIPT_DIR/install-chatgpt-cookies.py" --cookie-file "$COOKIE_FILE" --source "$COOKIE_SOURCE" > "$ARTIFACT_DIR/01-install-chatgpt-cookies.json" 2> "$ARTIFACT_DIR/01-install-chatgpt-cookies.stderr"; then
+    step_status="ok"
+  else
+    step_status="error"
+    set_failed_detail_from_artifacts "$ARTIFACT_DIR/01-install-chatgpt-cookies.json" "$ARTIFACT_DIR/01-install-chatgpt-cookies.stderr"
+    fail "full cookie-jar install failed"
+  fi
 elif [[ -n "$TOKEN_MODE" ]]; then
   step_status="running"
+  FAILED_STEP="refreshInput"
   case "$TOKEN_MODE" in
     file)
-      python3 "$SCRIPT_DIR/replace-session-token.py" --cookie-file "$COOKIE_FILE" --token-file "$TOKEN_FILE" > "$ARTIFACT_DIR/01-replace-session-token.json" \
-        || fail "session-token replacement failed"
+      if python3 "$SCRIPT_DIR/replace-session-token.py" --cookie-file "$COOKIE_FILE" --token-file "$TOKEN_FILE" > "$ARTIFACT_DIR/01-replace-session-token.json" 2> "$ARTIFACT_DIR/01-replace-session-token.stderr"; then
+        :
+      else
+        step_status="error"
+        set_failed_detail_from_artifacts "$ARTIFACT_DIR/01-replace-session-token.json" "$ARTIFACT_DIR/01-replace-session-token.stderr"
+        fail "session-token replacement failed"
+      fi
       ;;
     value)
-      python3 "$SCRIPT_DIR/replace-session-token.py" --cookie-file "$COOKIE_FILE" --token "$TOKEN_VALUE" > "$ARTIFACT_DIR/01-replace-session-token.json" \
-        || fail "session-token replacement failed"
+      if python3 "$SCRIPT_DIR/replace-session-token.py" --cookie-file "$COOKIE_FILE" --token "$TOKEN_VALUE" > "$ARTIFACT_DIR/01-replace-session-token.json" 2> "$ARTIFACT_DIR/01-replace-session-token.stderr"; then
+        :
+      else
+        step_status="error"
+        set_failed_detail_from_artifacts "$ARTIFACT_DIR/01-replace-session-token.json" "$ARTIFACT_DIR/01-replace-session-token.stderr"
+        fail "session-token replacement failed"
+      fi
       ;;
     stdin)
-      python3 "$SCRIPT_DIR/replace-session-token.py" --cookie-file "$COOKIE_FILE" --stdin > "$ARTIFACT_DIR/01-replace-session-token.json" \
-        || fail "session-token replacement failed"
+      if python3 "$SCRIPT_DIR/replace-session-token.py" --cookie-file "$COOKIE_FILE" --stdin > "$ARTIFACT_DIR/01-replace-session-token.json" 2> "$ARTIFACT_DIR/01-replace-session-token.stderr"; then
+        :
+      else
+        step_status="error"
+        set_failed_detail_from_artifacts "$ARTIFACT_DIR/01-replace-session-token.json" "$ARTIFACT_DIR/01-replace-session-token.stderr"
+        fail "session-token replacement failed"
+      fi
       ;;
   esac
   step_status="ok"
@@ -196,37 +320,44 @@ else
 fi
 
 direct_status="running"
-if "$SCRIPT_DIR/chatgpt-direct" --auth-only --require-auth --require-pro --cookies "$COOKIE_FILE" --json > "$ARTIFACT_DIR/02-chatgpt-direct-auth.json"; then
+FAILED_STEP="chatgptDirectAuth"
+if "$SCRIPT_DIR/chatgpt-direct" --auth-only --require-auth --require-pro --cookies "$COOKIE_FILE" --json > "$ARTIFACT_DIR/02-chatgpt-direct-auth.json" 2> "$ARTIFACT_DIR/02-chatgpt-direct-auth.stderr"; then
   direct_status="ok"
 else
   direct_status="error"
+  set_failed_detail_from_artifacts "$ARTIFACT_DIR/02-chatgpt-direct-auth.json" "$ARTIFACT_DIR/02-chatgpt-direct-auth.stderr"
   fail "direct Camoufox auth/pro verification failed"
 fi
 
 wrapper_status="running"
-if "$SCRIPT_DIR/oracle-browser" --auth-only --require-auth --require-pro --cookies "$COOKIE_FILE" --json > "$ARTIFACT_DIR/03-oracle-wrapper-auth.json"; then
+FAILED_STEP="oracleWrapperAuth"
+if "$SCRIPT_DIR/oracle-browser" --auth-only --require-auth --require-pro --cookies "$COOKIE_FILE" --json > "$ARTIFACT_DIR/03-oracle-wrapper-auth.json" 2> "$ARTIFACT_DIR/03-oracle-wrapper-auth.stderr"; then
   wrapper_status="ok"
 else
   wrapper_status="error"
+  set_failed_detail_from_artifacts "$ARTIFACT_DIR/03-oracle-wrapper-auth.json" "$ARTIFACT_DIR/03-oracle-wrapper-auth.stderr"
   fail "Oracle-style wrapper auth/pro verification failed"
 fi
 
 check_wrapper_status="running"
-if "$SCRIPT_DIR/check-wrapper.sh" --live --cookie-file "$COOKIE_FILE" --json > "$ARTIFACT_DIR/04-check-wrapper-live.json"; then
+FAILED_STEP="checkWrapperLive"
+if "$SCRIPT_DIR/check-wrapper.sh" --live --cookie-file "$COOKIE_FILE" --json > "$ARTIFACT_DIR/04-check-wrapper-live.json" 2> "$ARTIFACT_DIR/04-check-wrapper-live.stderr"; then
   check_wrapper_status="ok"
 else
   check_wrapper_status="error"
+  set_failed_detail_from_artifacts "$ARTIFACT_DIR/04-check-wrapper-live.json" "$ARTIFACT_DIR/04-check-wrapper-live.stderr"
   fail "full wrapper live verification failed"
 fi
 
 if $JSON; then
-  python3 - <<'PY' "$ARTIFACT_DIR" "$COOKIE_FILE" "$step_status" "$direct_status" "$wrapper_status" "$check_wrapper_status"
+  python3 - <<'PY' "$ARTIFACT_DIR" "$COOKIE_FILE" "$(refresh_desc)" "$step_status" "$direct_status" "$wrapper_status" "$check_wrapper_status"
 import json, sys
-artifact_dir, cookie_file, refresh_status, direct_status, wrapper_status, check_wrapper_status = sys.argv[1:7]
+artifact_dir, cookie_file, refresh_input, refresh_status, direct_status, wrapper_status, check_wrapper_status = sys.argv[1:8]
 print(json.dumps({
     "status": "ok",
     "artifactDir": artifact_dir,
     "cookieFile": cookie_file,
+    "refreshInput": refresh_input,
     "steps": {
         "refreshInput": refresh_status,
         "chatgptDirectAuth": direct_status,
@@ -240,7 +371,8 @@ else
 Oracle auth refresh verification OK
 - artifact dir: $ARTIFACT_DIR
 - cookie file: $COOKIE_FILE
-- refresh input: $step_status
+- refresh input: $(refresh_desc)
+- refresh step: $step_status
 - chatgpt-direct auth/pro: $direct_status
 - oracle-browser auth/pro: $wrapper_status
 - check-wrapper live: $check_wrapper_status

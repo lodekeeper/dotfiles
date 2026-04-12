@@ -759,7 +759,8 @@ with open(sys.argv[1]) as f:
     json.load(f)
 PY
 then
-  if python3 - <<'PY' "$bridge_json_file"
+  set +e
+  python3 - <<'PY' "$bridge_json_file"
 import json, sys
 with open(sys.argv[1]) as f:
     data = json.load(f)
@@ -770,12 +771,14 @@ if isinstance(status, str) and status in {'ok', 'error'}:
     sys.exit(0)
 sys.exit(2)
 PY
-  then
+  shape_check_status=$?
+  set -e
+
+  if [[ "$shape_check_status" -eq 0 ]]; then
     emit_wrapped_live_json "$bridge_json_file"
     exit "$bridge_status"
   fi
 
-  shape_check_status=$?
   if [[ "$shape_check_status" -eq 1 ]]; then
     wrapper_error_message="underlying chatgpt-direct emitted valid JSON but not a JSON object despite wrapper --json; returning a wrapper error envelope instead"
     wrapper_error_code="bridge-json-shape-invalid"

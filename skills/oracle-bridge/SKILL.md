@@ -129,6 +129,11 @@ If the smoke test fails:
 - `stale/broken ... RefreshAccessTokenError` → auth metadata exists but refresh state is stale; replace with fresh auth material
 - `GPT-5.4 Pro not available in current session` → session loaded, but Pro is not actually usable in the current UI/session
 
+For the one-command verifier (`verify-after-auth-refresh.sh --json`), failure JSON now also includes:
+- `failedStep` — which stage failed
+- `failedDetail` — concrete detail extracted from the failing step artifact when available (JSON first, then stderr fallback for helper/setup failures such as a missing cookie-export path)
+- `steps.refreshInput = "error"` on refresh/setup failures (instead of leaving that step at `"running"`)
+
 ## Response Detection
 
 The tool distinguishes thinking from response by checking:
@@ -151,6 +156,7 @@ The tool distinguishes thinking from response by checking:
 - For the Oracle-style wrapper path, explicitly too-short `--timeout` values on large rendered bundles are now auto-bumped to a safer floor; inspect wrapper JSON output (`--dry-run json`, successful live `--json`, structured refusal JSON, parsed bridge-originated JSON auth failures, or malformed/non-JSON bridge-output fallback envelopes) to see the top-level contract marker (`wrapper=oracle-browser-camoufox`, `wrapperSchemaVersion=1`) plus fields like `requestedTimeout`, `effectiveTimeout`, `timeoutAutoBumped`, `bundleClass`, `recommendedAction`, and `bundleGuidance`
 - When the underlying `chatgpt-direct` path fails to emit valid JSON even though the wrapper was called with `--json`, the wrapper now preserves machine-readable output by emitting a structured fallback error envelope instead of raw stdout (`error.code=bridge-json-invalid`, plus `bridgeExitStatus` and a truncated `bridgeOutputExcerpt` for debugging)
 - When the underlying `chatgpt-direct` path emits valid JSON but not a JSON object (for example `[]`), the wrapper also preserves machine-readable output by emitting a structured fallback error envelope instead of treating that as a successful contract match (`error.code=bridge-json-shape-invalid`)
+- When the underlying `chatgpt-direct` path emits a JSON object but without a valid top-level `status` (`ok` / `error`), the wrapper also fails closed with a structured fallback error envelope instead of silently enriching contract-invalid JSON (`error.code=bridge-json-contract-invalid`)
 - For extremely large rendered bundles (currently `>=100000` chars after render framing), the wrapper now refuses live sends unless the caller explicitly passes `--allow-very-large-bundle`
 - If `--json` is set on that refusal path, the wrapper emits a structured error object (`error.code = very-large-bundle-refused`) so automation can react cleanly
 - Some queries genuinely take GPT-5.4 Pro 10+ minutes to think through
@@ -249,6 +255,8 @@ When only the session token changed, prefer the local helper over hand-editing t
 scripts/oracle/replace-session-token.py --token-file /tmp/session-token.txt
 ```
 
+These direct helpers now fail cleanly on common setup/input errors (missing file, invalid JSON, permission problems) instead of dumping Python tracebacks.
+
 When you have a **full fresh cookie export**, install it safely with:
 
 ```bash
@@ -273,6 +281,16 @@ scripts/oracle/verify-after-auth-refresh.sh --dry-run --json
 It stores per-step artifacts under `research/oracle/refresh-verify-<timestamp>/`.
 In `--dry-run` mode it previews the planned sequence and artifact path without
 changing the cookie jar or creating the artifact directory.
+That dry-run path now also covers pipe-based full-cookie recovery via
+`--cookie-source -`.
+
+When `--json` is used on a failing live run, the verifier now also returns:
+- `cookieFile`
+- `failedStep`
+- `refreshInput`
+- per-step status under `steps`
+
+That makes stale-cookie failures much easier to classify programmatically.
 
 Manual verification sequence if you want each step separately:
 
