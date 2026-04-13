@@ -1,10 +1,29 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-04-12 (30th pass)
+> Updated: 2026-04-13 (31st pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-04-13 (self-improvement-audit-daily, 00:35 UTC)
+
+### PR review
+- **Status:** review-scope + follow-up guard workflow remains healthy; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** retry telemetry, rolling degradation checks, and log-fallback path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** extraction/compliance/vector-readiness gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident-bundle workflow remains healthy; no new blocker discovered this cycle.
+
+### Audit workflow (cross-cutting)
+- **Blocker:** snapshot heading generation treated `--time-label` as opaque text; when callers passed copied cron labels like `self-improvement-audit-daily, 00:35 UTC`, the scaffold produced duplicated heading prefixes (`self-improvement-audit-daily, self-improvement-audit-daily, ...`), creating noisy headings and avoidable audit-churn diffs.
+- **Fix applied this cycle:** added `normalize_time_label()` in `scripts/notes/prepend-autonomy-audit-snapshot.py` to strip an optional leading `self-improvement-audit-daily,` prefix (case-insensitive) before rendering the heading, while still accepting plain `HH:MM UTC` labels.
+
+---
 ## Daily Audit Snapshot — 2026-04-12 (self-improvement-audit-daily, 00:35 UTC)
 
 ### PR review
@@ -730,6 +749,14 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Snapshot scaffolder now normalizes copied cron-style time labels (2026-04-13)
+Updated `scripts/notes/prepend-autonomy-audit-snapshot.py` with `normalize_time_label()` so heading rendering tolerates either plain `HH:MM UTC` labels or copied cron labels like `self-improvement-audit-daily, 00:35 UTC`:
+- strips an optional leading `self-improvement-audit-daily,` prefix (case-insensitive),
+- rejects empty post-normalization labels,
+- keeps heading output canonical (`(self-improvement-audit-daily, HH:MM UTC)`).
+
+**Rationale:** avoids duplicated heading prefixes and low-signal diffs when operators pass full cron-style labels from reminders.
 
 ### ✅ Consistency guard now blocks duplicate latest snapshot dates (2026-04-12)
 Updated `scripts/notes/check-autonomy-gaps-consistency.py` to validate snapshot-date uniqueness alongside gap/improvement contradiction checks:

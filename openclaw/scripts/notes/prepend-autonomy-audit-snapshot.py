@@ -27,6 +27,21 @@ REQUIRED_SECTIONS = [
     "Devnet debugging",
 ]
 
+TIME_LABEL_PREFIX = "self-improvement-audit-daily"
+
+
+def normalize_time_label(raw_time_label: str) -> str:
+    """Normalize user-provided time labels to avoid duplicated heading prefixes.
+
+    Accepts both:
+    - "HH:MM UTC" (preferred)
+    - "self-improvement-audit-daily, HH:MM UTC" (legacy / copied from cron text)
+    """
+    label = raw_time_label.strip()
+    prefix_pattern = re.compile(rf"^{re.escape(TIME_LABEL_PREFIX)}\s*,\s*", re.IGNORECASE)
+    label = prefix_pattern.sub("", label)
+    return label.strip()
+
 
 def build_snapshot_block(date_str: str, time_label: str, status_prefill: dict[str, str] | None = None) -> str:
     status_prefill = status_prefill or {}
@@ -112,7 +127,12 @@ def main() -> int:
 
     now = datetime.now(timezone.utc)
     date_str = args.date or now.strftime("%Y-%m-%d")
-    time_label = args.time_label or now.strftime("%H:%M UTC")
+    raw_time_label = args.time_label or now.strftime("%H:%M UTC")
+    time_label = normalize_time_label(raw_time_label)
+
+    if not time_label:
+        print("❌ Time label resolved to empty value after normalization", file=sys.stderr)
+        return 1
 
     path = Path(args.file)
     if not path.exists():
