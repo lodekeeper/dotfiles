@@ -14,7 +14,9 @@ OWNER_SELF = "lodekeeper"
 # Format: "owner/repo#number"
 EXCLUDED_PRS = {
     "ChainSafe/lodestar#8962",  # ensi321's EPBS import pipeline — not our PR
+    "ChainSafe/lodestar#8988",  # ensi321's gloas range sync — not our PR, fully triaged
     "ChainSafe/lodestar#8994",  # Giulio2002's SSZ Engine API — not our PR
+    "ChainSafe/lodestar#9100",  # ensi321's epbs-devnet-0 merge — not our PR, fully triaged
 }
 
 
@@ -790,6 +792,14 @@ def main() -> int:
     now_dt = dt.datetime.now(dt.timezone.utc)
     for item in checklist["items"].values():
         if item.get("status") != "open":
+            continue
+        # Auto-close items reported excessively without resolution (safety net for
+        # items that the auto-close logic can't reach, e.g. stale non-owned PR
+        # comments whose watermarks are already caught up).
+        if int(item.get("reportedCount", 0)) >= 20:
+            item["status"] = "done"
+            item["doneAt"] = now
+            item["doneReason"] = "auto-closed-excessive-reminders"
             continue
         last_reported = item.get("lastReportedAt")
         if not last_reported:
