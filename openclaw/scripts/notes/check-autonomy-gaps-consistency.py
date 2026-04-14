@@ -260,6 +260,10 @@ def main() -> int:
         print("⚠️ Historical snapshot-date duplicates detected (non-blocking):")
         for warning in snapshot_warnings:
             print(f"- {warning}")
+        print(
+            "ℹ️ Optional cleanup: python3 scripts/notes/dedupe-autonomy-audit-snapshots.py "
+            f"--file {path} --apply"
+        )
 
     all_conflicts = title_conflicts + ref_conflicts + snapshot_conflicts
     if not all_conflicts:

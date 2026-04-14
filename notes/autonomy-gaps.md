@@ -1,10 +1,29 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-04-13 (31st pass)
+> Updated: 2026-04-14 (31st pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-04-14 (self-improvement-audit-daily, 00:35 UTC)
+
+### PR review
+- **Status:** review-scope + follow-up guard workflow remains healthy; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** retry telemetry, rolling degradation checks, and log-fallback path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** extraction/compliance/vector-readiness gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident-bundle workflow remains healthy; no new blocker discovered this cycle.
+
+### Audit workflow (cross-cutting)
+- **Blocker:** historical duplicate snapshot dates were only surfaced as non-blocking warnings in preflight output, but there was no one-command cleanup path. That left recurring warning noise (for example the lingering 2026-03-15 duplicate) and made it easy to ignore stale-history hygiene.
+- **Fix applied this cycle:** added `scripts/notes/dedupe-autonomy-audit-snapshots.py` to detect/remove older duplicate snapshot blocks by date (keeping the newest copy), ran it to remove the historical 2026-03-15 duplicate from `notes/autonomy-gaps.md`, and updated `check-autonomy-gaps-consistency.py` warning output with an explicit optional cleanup command.
+
+---
 ## Daily Audit Snapshot — 2026-04-13 (self-improvement-audit-daily, 00:35 UTC)
 
 ### PR review
@@ -536,25 +555,6 @@
 
 ---
 
-## Daily Audit Snapshot — 2026-03-15 (self-improvement-audit-daily)
-
-### PR review
-- **Blocker (previous cycle):** stale-finding detection required manual invocation per PR.
-- **Fix applied this cycle:** added `scripts/review/stale-findings-report.sh` — batch scanner across all tracked PRs with cron-friendly exit codes and markdown report output.
-- **Next:** wire as a cron job on a weekly cadence (low urgency while PR tracking volume is low).
-
-### CI fix
-- **Blocker:** retry telemetry is surfaced in output, but no threshold-based escalation policy exists for sustained degradation detection.
-- **Proposed fix:** add rolling-window threshold check for `llm_retry_count`/`llm_retry_wait_s` in tracker.
-
-### Spec implementation
-- **Status:** compliance gate, artifact checks, and pre-PR wrapper all operational. No new gaps.
-
-### Devnet debugging
-- **Status:** incident bundle, triage, and correlator scripts operational. No new gaps.
-
----
-
 ## Daily Audit Snapshot — 2026-03-14 (self-improvement-audit-daily)
 
 ### PR review
@@ -749,6 +749,17 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Historical duplicate-snapshot cleanup helper added (2026-04-14)
+Added `scripts/notes/dedupe-autonomy-audit-snapshots.py` to clean up old duplicate snapshot dates without touching the newest entry for each day:
+- scans `## Daily Audit Snapshot — YYYY-MM-DD` blocks,
+- keeps the first/top-most block per date,
+- reports duplicates in dry-run mode,
+- removes older duplicate blocks with `--apply`.
+
+Also updated `scripts/notes/check-autonomy-gaps-consistency.py` to print an explicit optional cleanup command when historical duplicates are detected.
+
+**Rationale:** recurring non-blocking duplicate-date warnings create low-signal noise in daily preflight output; this turns stale-history cleanup into a one-command workflow instead of ad-hoc manual edits.
 
 ### ✅ Snapshot scaffolder now normalizes copied cron-style time labels (2026-04-13)
 Updated `scripts/notes/prepend-autonomy-audit-snapshot.py` with `normalize_time_label()` so heading rendering tolerates either plain `HH:MM UTC` labels or copied cron labels like `self-improvement-audit-daily, 00:35 UTC`:
