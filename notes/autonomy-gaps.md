@@ -1,10 +1,29 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-04-14 (31st pass)
+> Updated: 2026-04-15 (32nd pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-04-15 (self-improvement-audit-daily, 00:37 UTC)
+
+### PR review
+- **Status:** review-scope + follow-up guard workflow remains healthy; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** retry telemetry, rolling degradation checks, and log-fallback path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** extraction/compliance/vector-readiness gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident-bundle workflow remains healthy; no new blocker discovered this cycle.
+
+### Audit workflow (cross-cutting)
+- **Blocker:** fixed gap entries could still retain stale `**Proposed fix:**` wording, which creates contradictory historical state (marked fixed but phrased as pending) and can silently degrade trust in audit history.
+- **Fix applied this cycle:** extended `scripts/notes/check-autonomy-gaps-consistency.py` to fail when a fixed gap still contains `**Proposed fix:**`, then cleaned the lingering stale entry in `notes/autonomy-gaps.md` (LLM spec-compliance gap) to use explicit `**Fix applied:**` wording.
+
+---
 ## Daily Audit Snapshot — 2026-04-14 (self-improvement-audit-daily, 00:35 UTC)
 
 ### PR review
@@ -693,12 +712,9 @@ Use `dev-workflow` skill for multi-agent development. Codex/Claude CLI for imple
 **Fix applied:** added `scripts/spec/extract-spec-section.sh` to search spec markdown and follow symbol-import chains for related definitions.
 
 #### ~~🔴 No LLM spec compliance check (new — 2026-03-08)~~ ✅ FIXED (2026-03-09)
-After implementing a spec function in TypeScript, before opening a PR, I don't run a systematic check: "does this TS code faithfully implement the pseudocode?" I verify manually by reading both, which is slow and error-prone.
+After implementing a spec function in TypeScript, before opening a PR, I didn't have a systematic check for whether the TS implementation faithfully matched the pseudocode.
 
-**Proposed fix:** `scripts/spec/check-compliance.py <spec-function> <ts-file> <ts-function>` that:
-- Extracts the pseudocode block from `~/consensus-specs`
-- Sends it + the TS implementation to GPT/Codex: "do these match? what's missing?"
-- Outputs a diff-style compliance report: implemented ✅ / missing ⚠️ / diverged ❌
+**Fix applied:** added `scripts/spec/check-compliance.py` and integrated it into `skills/dev-workflow/SKILL.md` as the spec-compliance gate before PR/re-review.
 
 #### ~~🟡 No test-vector auto-download awareness~~ ✅ FIXED (2026-03-16)
 ~~When implementing spec functions, I sometimes forget to run against official test vectors. The vectors live in `~/consensus-specs/tests/` but need a separate download step.~~
@@ -749,6 +765,16 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Consistency guard now blocks stale "Proposed fix" wording inside fixed gaps (2026-04-15)
+Updated `scripts/notes/check-autonomy-gaps-consistency.py` with a fixed-gap wording guard:
+- parses fixed entries (`✅ FIXED`) in `### Gaps`,
+- fails consistency if a fixed entry body still contains `**Proposed fix:**`,
+- reports the exact conflicting heading.
+
+Also cleaned the one lingering stale case in `notes/autonomy-gaps.md` (`No LLM spec compliance check`) by replacing `**Proposed fix:**` with `**Fix applied:**` and the concrete integration path.
+
+**Rationale:** prevents contradictory historical state where an item is marked fixed but still described as pending, which can silently erode trust in audit-history quality.
 
 ### ✅ Historical duplicate-snapshot cleanup helper added (2026-04-14)
 Added `scripts/notes/dedupe-autonomy-audit-snapshots.py` to clean up old duplicate snapshot dates without touching the newest entry for each day:

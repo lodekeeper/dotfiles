@@ -205,6 +205,22 @@ def find_ref_conflicts(gaps: Iterable[GapItem], improvements: Iterable[Improveme
     return conflicts
 
 
+def find_fixed_gap_proposed_fix_conflicts(gaps: Iterable[GapItem]) -> list[str]:
+    conflicts: list[str] = []
+    proposed_fix_re = re.compile(r"^\s*(?:-\s*)?\*\*Proposed fix:\*\*", re.IGNORECASE | re.MULTILINE)
+
+    for gap in gaps:
+        if not gap.fixed:
+            continue
+        if proposed_fix_re.search(gap.body):
+            conflicts.append(
+                "Fixed gap still contains 'Proposed fix' wording: "
+                f"{gap.heading}"
+            )
+
+    return conflicts
+
+
 def find_duplicate_snapshot_dates(text: str) -> tuple[int, list[str], list[str]]:
     all_dates = [match.group(1) for match in SNAPSHOT_HEADING.finditer(text)]
     counts: dict[str, int] = {}
@@ -249,6 +265,7 @@ def main() -> int:
 
     title_conflicts = find_title_conflicts(gaps)
     ref_conflicts = find_ref_conflicts(gaps, improvements)
+    fixed_gap_proposed_fix_conflicts = find_fixed_gap_proposed_fix_conflicts(gaps)
     snapshot_count, snapshot_conflicts, snapshot_warnings = find_duplicate_snapshot_dates(text)
 
     print(f"Checked: {path}")
@@ -265,7 +282,12 @@ def main() -> int:
             f"--file {path} --apply"
         )
 
-    all_conflicts = title_conflicts + ref_conflicts + snapshot_conflicts
+    all_conflicts = (
+        title_conflicts
+        + ref_conflicts
+        + fixed_gap_proposed_fix_conflicts
+        + snapshot_conflicts
+    )
     if not all_conflicts:
         print("✅ No contradictions detected")
         return 0
