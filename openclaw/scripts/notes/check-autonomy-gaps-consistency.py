@@ -28,6 +28,7 @@ HEADING_H2 = re.compile(r"^##\s+")
 HEADING_H3 = re.compile(r"^###\s+")
 HEADING_H4 = re.compile(r"^####\s+")
 SNAPSHOT_HEADING = re.compile(r"^## Daily Audit Snapshot — (\d{4}-\d{2}-\d{2})\b", re.MULTILINE)
+UPDATED_LINE = re.compile(r"^>\s*Updated:\s*(\d{4}-\d{2}-\d{2})\s*\((\d+)(?:st|nd|rd|th)\s+pass\)\s*$", re.MULTILINE)
 
 CODE_SPAN = re.compile(r"`([^`]+)`")
 PATH_LIKE = re.compile(r"^(?:\.?\.?/)?(?:scripts|notes|skills|docs|config|openclaw)/[^\s`]+$")
@@ -221,7 +222,7 @@ def find_fixed_gap_proposed_fix_conflicts(gaps: Iterable[GapItem]) -> list[str]:
     return conflicts
 
 
-def find_duplicate_snapshot_dates(text: str) -> tuple[int, list[str], list[str]]:
+def find_duplicate_snapshot_dates(text: str) -> tuple[int, str | None, list[str], list[str]]:
     all_dates = [match.group(1) for match in SNAPSHOT_HEADING.finditer(text)]
     counts: dict[str, int] = {}
     for date_str in all_dates:
@@ -240,7 +241,36 @@ def find_duplicate_snapshot_dates(text: str) -> tuple[int, list[str], list[str]]
         else:
             warnings.append(message)
 
-    return len(all_dates), conflicts, warnings
+    return len(all_dates), latest_date, conflicts, warnings
+
+
+def find_updated_line_conflicts(text: str, snapshot_count: int, latest_snapshot_date: str | None) -> list[str]:
+    matches = list(UPDATED_LINE.finditer(text))
+    if not matches:
+        return [
+            "Missing or malformed '> Updated: YYYY-MM-DD (Nth pass)' metadata line"
+        ]
+
+    conflicts: list[str] = []
+    if len(matches) > 1:
+        conflicts.append(f"Multiple '> Updated:' metadata lines found ({len(matches)})")
+
+    updated_date = matches[0].group(1)
+    updated_pass_count = int(matches[0].group(2))
+
+    if latest_snapshot_date and updated_date != latest_snapshot_date:
+        conflicts.append(
+            "Updated metadata date does not match latest snapshot date: "
+            f"updated={updated_date}, latest_snapshot={latest_snapshot_date}"
+        )
+
+    if updated_pass_count != snapshot_count:
+        conflicts.append(
+            "Updated metadata pass count does not match snapshot heading count: "
+            f"updated={updated_pass_count}, snapshots={snapshot_count}"
+        )
+
+    return conflicts
 
 
 def main() -> int:
@@ -266,7 +296,8 @@ def main() -> int:
     title_conflicts = find_title_conflicts(gaps)
     ref_conflicts = find_ref_conflicts(gaps, improvements)
     fixed_gap_proposed_fix_conflicts = find_fixed_gap_proposed_fix_conflicts(gaps)
-    snapshot_count, snapshot_conflicts, snapshot_warnings = find_duplicate_snapshot_dates(text)
+    snapshot_count, latest_snapshot_date, snapshot_conflicts, snapshot_warnings = find_duplicate_snapshot_dates(text)
+    updated_line_conflicts = find_updated_line_conflicts(text, snapshot_count, latest_snapshot_date)
 
     print(f"Checked: {path}")
     print(f"- Gap items parsed: {len(gaps)}")
@@ -287,6 +318,7 @@ def main() -> int:
         + ref_conflicts
         + fixed_gap_proposed_fix_conflicts
         + snapshot_conflicts
+        + updated_line_conflicts
     )
     if not all_conflicts:
         print("✅ No contradictions detected")

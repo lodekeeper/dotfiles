@@ -1,10 +1,29 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-04-15 (32nd pass)
+> Updated: 2026-04-16 (33rd pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-04-16 (self-improvement-audit-daily, 00:37 UTC)
+
+### PR review
+- **Status:** review-scope + follow-up guard workflow remains healthy; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** retry telemetry, rolling degradation checks, and log-fallback path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** extraction/compliance/vector-readiness gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident-bundle workflow remains healthy; no new blocker discovered this cycle.
+
+### Audit workflow (cross-cutting)
+- **Blocker:** consistency checks validated gap/snapshot contradictions but did not validate whether the top-level `> Updated:` metadata still matched actual snapshot history. That allowed stale date/pass metadata to survive manual edits or interrupted close-out flows, weakening trust in audit recency.
+- **Fix applied this cycle:** extended `scripts/notes/check-autonomy-gaps-consistency.py` to parse `> Updated: YYYY-MM-DD (Nth pass)` and fail when metadata is missing/malformed, when the updated date diverges from the latest snapshot date, or when the pass count diverges from the total snapshot-heading count.
+
+---
 ## Daily Audit Snapshot — 2026-04-15 (self-improvement-audit-daily, 00:37 UTC)
 
 ### PR review
@@ -765,6 +784,15 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Consistency guard now validates top-level Updated metadata against snapshot history (2026-04-16)
+Updated `scripts/notes/check-autonomy-gaps-consistency.py` to validate audit-header integrity in addition to gap/snapshot contradiction checks:
+- parses `> Updated: YYYY-MM-DD (Nth pass)` with strict format validation,
+- fails when the line is missing/malformed or duplicated,
+- fails when updated date does not match the latest snapshot date,
+- fails when updated pass count does not match total snapshot-heading count.
+
+**Rationale:** stale top-level metadata can make audit recency/pass counters look correct when the underlying snapshots have diverged. Guarding this in consistency checks makes metadata drift explicit before close-out.
 
 ### ✅ Consistency guard now blocks stale "Proposed fix" wording inside fixed gaps (2026-04-15)
 Updated `scripts/notes/check-autonomy-gaps-consistency.py` with a fixed-gap wording guard:
