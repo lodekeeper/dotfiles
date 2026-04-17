@@ -1,10 +1,29 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-04-16 (33rd pass)
+> Updated: 2026-04-17 (34th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-04-17 (self-improvement-audit-daily, 00:37 UTC)
+
+### PR review
+- **Status:** review-scope + follow-up guard workflow remains healthy; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** retry telemetry, rolling degradation checks, and log-fallback path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** extraction/compliance/vector-readiness gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident-bundle workflow remains healthy; no new blocker discovered this cycle.
+
+### Audit workflow (cross-cutting)
+- **Blocker:** consistency checks validated duplicate dates and header metadata, but they did not validate that snapshot headings are ordered newest→oldest. A manual paste/merge conflict could place a newer date below an older one, causing previous-snapshot selection to become ambiguous and making delta/no-reply decisions unreliable.
+- **Fix applied this cycle:** extended `scripts/notes/check-autonomy-gaps-consistency.py` with snapshot-order validation that fails when any heading is out of descending date order (newest above oldest).
+
+---
 ## Daily Audit Snapshot — 2026-04-16 (self-improvement-audit-daily, 00:37 UTC)
 
 ### PR review
@@ -784,6 +803,14 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Consistency guard now enforces newest→oldest snapshot heading order (2026-04-17)
+Updated `scripts/notes/check-autonomy-gaps-consistency.py` with explicit snapshot-order validation:
+- parses all `## Daily Audit Snapshot — YYYY-MM-DD` headings in file order,
+- fails consistency when a newer date appears below an older date,
+- reports the exact out-of-order date pair to speed up manual repair.
+
+**Rationale:** delta/no-reply logic relies on deterministic "current vs previous" snapshot ordering. Guarding chronological heading order prevents silent miscomparison after manual edits or merge conflict resolution.
 
 ### ✅ Consistency guard now validates top-level Updated metadata against snapshot history (2026-04-16)
 Updated `scripts/notes/check-autonomy-gaps-consistency.py` to validate audit-header integrity in addition to gap/snapshot contradiction checks:

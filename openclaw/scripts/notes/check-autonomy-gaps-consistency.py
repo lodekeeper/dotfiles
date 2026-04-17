@@ -15,6 +15,7 @@ Exit codes:
 from __future__ import annotations
 
 import argparse
+from datetime import date
 import re
 import sys
 from dataclasses import dataclass
@@ -244,6 +245,26 @@ def find_duplicate_snapshot_dates(text: str) -> tuple[int, str | None, list[str]
     return len(all_dates), latest_date, conflicts, warnings
 
 
+def find_snapshot_order_conflicts(text: str) -> list[str]:
+    snapshot_dates: list[date] = []
+    for match in SNAPSHOT_HEADING.finditer(text):
+        snapshot_dates.append(date.fromisoformat(match.group(1)))
+
+    conflicts: list[str] = []
+    for i in range(len(snapshot_dates) - 1):
+        current_date = snapshot_dates[i]
+        next_date = snapshot_dates[i + 1]
+
+        # File order should be newest -> oldest (descending by date).
+        if next_date > current_date:
+            conflicts.append(
+                "Snapshot headings out of order (expected newest→oldest): "
+                f"{current_date.isoformat()} appears above newer {next_date.isoformat()}"
+            )
+
+    return conflicts
+
+
 def find_updated_line_conflicts(text: str, snapshot_count: int, latest_snapshot_date: str | None) -> list[str]:
     matches = list(UPDATED_LINE.finditer(text))
     if not matches:
@@ -297,6 +318,7 @@ def main() -> int:
     ref_conflicts = find_ref_conflicts(gaps, improvements)
     fixed_gap_proposed_fix_conflicts = find_fixed_gap_proposed_fix_conflicts(gaps)
     snapshot_count, latest_snapshot_date, snapshot_conflicts, snapshot_warnings = find_duplicate_snapshot_dates(text)
+    snapshot_order_conflicts = find_snapshot_order_conflicts(text)
     updated_line_conflicts = find_updated_line_conflicts(text, snapshot_count, latest_snapshot_date)
 
     print(f"Checked: {path}")
@@ -318,6 +340,7 @@ def main() -> int:
         + ref_conflicts
         + fixed_gap_proposed_fix_conflicts
         + snapshot_conflicts
+        + snapshot_order_conflicts
         + updated_line_conflicts
     )
     if not all_conflicts:
