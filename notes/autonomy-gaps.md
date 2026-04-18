@@ -646,34 +646,9 @@ Updated `scripts/ci/auto_fix_flaky.py`:
 
 ## Next Audit Priorities (next daily cycles)
 
-1. ~~Add LLM fallback classification for unknown CI failure patterns (`auto_fix_flaky.py`)~~ ✅ done
-2. ~~Add confidence scoring/check in CI autofix outputs (root-cause vs masking)~~ ✅ done
-3. ~~Add issue-linkage step to CI autofix cron prompt~~ ✅ done (2026-03-07)
-4. ~~Add reviewer file-scope injection to `lodestar-review` SKILL.md~~ ✅ done (2026-03-08)
-5. ~~Codify EPBS devnet-0 startup into `scripts/devnet/start-epbs-devnet.sh`~~ ✅ done (2026-03-08)
-6. ~~Add LLM-based fix *quality* check post-Codex~~ ✅ done (2026-03-08)
-7. ~~Review finding resolution tracker~~ ✅ done (2026-03-08)
-8. ~~CI auto-fix `auto-fix` label~~ ✅ done (2026-03-08)
-9. ~~**Implement multi-node log correlator** (`scripts/debug/correlate-logs.sh`)~~ ✅ done (2026-03-09)
-10. ~~**Implement spec compliance checker** (`scripts/spec/check-compliance.py`) — LLM-based "does this TS faithfully implement the pseudocode?"~~ ✅ done (2026-03-09)
-11. ~~**Test-vector auto-check** — add `pnpm test:spec` gate to dev-workflow skill before PR opening~~ ✅ done (2026-03-09)
-12. ~~**GitHub review-comment ingestion for finding tracker** — add API import path so `track-findings.py` can bootstrap from PR review comments without manual entry~~ ✅ done (2026-03-10)
-13. ~~**CI LLM retry + `Retry-After` handling in autofix detector** — bounded retry budget for 429/5xx and propagate LLM `fixable` verdict into actionable selection~~ ✅ done (2026-03-10)
-14. ~~**Finding tracker delta-sync from GitHub** — add `track-findings.py sync-gh` with checkpointed import + optional auto-reverify of touched findings~~ ✅ done (2026-03-11)
-15. ~~**Review-loop integration for finding delta sync** — add a codified follow-up step in `skills/lodestar-review/SKILL.md` to run `track-findings.py sync-gh` whenever new review comments land on a PR.~~ ✅ done (2026-03-12)
-16. ~~**Spec compliance artifact traceability** — add PR-template/tracker field that links generated `spec-compliance-*.md` reports for spec/protocol PRs.~~ ✅ done (2026-03-12)
-17. ~~**Compliance artifact presence check** — add a lightweight pre-PR check that verifies tracker + PR body include spec-compliance artifact references for spec/protocol changes.~~ ✅ done (2026-03-13)
-18. ~~**Stale unresolved-review escalation** — add `track-findings.py stale` command and wire into review workflow.~~ ✅ done (2026-03-13)
-19. ~~**CI retry telemetry surfacing** — include retry/backoff counters in cron detector summary output.~~ ✅ done (2026-03-14)
-20. ~~**Spec pre-PR compliance wrapper** — one command to run compliance checker + artifact-presence checks with a single pass/fail summary.~~ ✅ done (2026-03-14)
-21. ~~**Devnet incident bundle script** — package logs + metrics + timeline + env metadata into one shareable markdown artifact.~~ ✅ done (2026-03-15)
-22. ~~**PR stale-finding cron wrapper** — automate `track-findings.py stale --fail-on-match` into a backlog-facing report/escalation signal.~~ ✅ done (2026-03-15)
-23. ~~**CI retry telemetry threshold-based escalation** — add tracker-level threshold check for `llm_retry_count`/`llm_retry_wait_s` with explicit warning when sustained degradation is detected across rolling runs.~~ ✅ done (2026-03-15)
-24. ~~**Spec section auto-extraction** — write `scripts/spec/extract-spec-section.sh <feature>` to search consensus-specs for function/type definitions and follow import chains for related types.~~ ✅ done (2026-03-07)
-25. ~~**Wire stale-finding report into scheduled escalation** — add cron wrapper execution cadence (weekly) for `scripts/review/stale-findings-report.sh` and ensure output routes only when stale critical/major findings exist.~~ ✅ done (2026-03-16)
-26. ~~**Autonomy-gaps consistency guard** — add a lightweight checker script that flags contradictory states in `notes/autonomy-gaps.md` (e.g., item listed as fixed in improvements but still open in Gaps) before the next audit writes updates.~~ ✅ done (2026-03-17)
-27. ~~**Wire CI log fallback into autofix escalation path** — when detector classifies `logs-unavailable`, call `scripts/ci/fetch-run-logs.sh <run-id>` automatically (or emit the exact command) and persist the artifact path in tracker output for faster follow-up triage.~~ ✅ done (2026-03-18)
-28. ~~**Codify gpt-advisor timeout fallback in dev workflow** — keep `xhigh` as first pass but force deterministic fallback to `thinking: high` after repeated timeout/empty-output rounds, and require tracker logging of attempt outcomes.~~ ✅ done (2026-03-18)
-29. ~~**PR metadata drift guard** — add a lightweight checker (or scripted checklist) that compares PR title/body claims vs current diff after follow-up commits, so scope/title mismatches are caught before re-review.~~ ✅ done (2026-03-19)
-30. ~~**Auto-wire metadata drift guard into review loop docs** — add a mandatory re-review step in `skills/lodestar-review/SKILL.md` to run the checker on follow-up commits and record output in review notes.~~ ✅ done (2026-03-19)
-31. ~~**Review-loop command wrapper for metadata drift artifacts** — add a small helper (`scripts/review/run-followup-guards.sh` or equivalent) that runs `sync-gh` + metadata drift check together and prints the exact `gh pr edit` reminder when drift is detected.~~ ✅ done (2026-03-20)
+All previously listed priority items in this section are complete as of **2026-04-18**. To avoid stale reminder churn:
+
+1. Only add a new item here when the **latest daily audit snapshot** introduces a still-open blocker or concrete follow-up.
+2. If the latest snapshot is fully green, leave this section empty of filler work and use `BACKLOG.md` for unrelated concrete tasks.
+3. When repopulating the list, prefer one specific automation gap that is **not already marked `✅ done` elsewhere in this file**.
+4. If a reminder fires while this section has no live items, the correct outcome is routine silence / `NO_REPLY`.

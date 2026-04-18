@@ -248,16 +248,57 @@ async def query_chatgpt(prompt, cookies_path, timeout=3600, verbose=False):
         if verbose:
             print(f"Inserted {inserted} chars, sending...", file=sys.stderr, flush=True)
 
-        # Click send
-        send_btn = await page.query_selector('[data-testid="send-button"]')
-        if send_btn:
-            disabled = await send_btn.get_attribute("disabled")
-            if not disabled:
-                await send_btn.click()
-            else:
-                await page.keyboard.press("Enter")
-        else:
-            await page.keyboard.press("Enter")
+        # Submit prompt.
+        # Prefer keyboard Enter because ChatGPT's hover tooltip can intercept
+        # pointer events over the send button in headless runs.
+        initial_turns = await page.evaluate(
+            'document.querySelectorAll(\'[data-testid^="conversation-turn"]\').length'
+        )
+        await page.keyboard.press("Enter")
+        await asyncio.sleep(1)
+
+        submitted = await page.evaluate(
+            f"""
+            (() => {{
+                const turns = document.querySelectorAll(
+                    '[data-testid^="conversation-turn"]'
+                ).length;
+                const stopBtn = !!document.querySelector(
+                    '[data-testid="stop-button"]'
+                );
+                const textarea = document.querySelector('[id="prompt-textarea"]');
+                const remaining = textarea ? (textarea.innerText || '').trim().length : 0;
+                return stopBtn || turns > {initial_turns} || remaining === 0;
+            }})()
+            """
+        )
+
+        if not submitted:
+            send_btn = await page.query_selector('[data-testid="send-button"]')
+            if send_btn:
+                disabled = await send_btn.get_attribute("disabled")
+                if not disabled:
+                    # Use a DOM click to avoid tooltip/pointer interception issues.
+                    submitted = await page.evaluate(
+                        """
+                        (() => {
+                            const btn = document.querySelector(
+                                '[data-testid="send-button"]'
+                            );
+                            if (!btn || btn.disabled) return false;
+                            btn.click();
+                            return true;
+                        })()
+                        """
+                    )
+                    if submitted:
+                        await asyncio.sleep(1)
+
+        if not submitted:
+            return {
+                "status": "error",
+                "error": "Prompt submission failed — Enter and send-button fallback both failed",
+            }
 
         # Wait for response
         if verbose:
