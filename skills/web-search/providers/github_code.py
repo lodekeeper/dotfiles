@@ -1,31 +1,15 @@
 """GitHub Code Search API provider."""
 import os
-import subprocess
 import urllib.request
 import urllib.parse
 import json
 
 
-def _get_token() -> str:
-    token = os.environ.get("GITHUB_TOKEN", "")
-    if token:
-        return token
-    try:
-        result = subprocess.run(
-            ["gh", "auth", "token"], capture_output=True, text=True, timeout=5
-        )
-        if result.returncode == 0 and result.stdout.strip():
-            return result.stdout.strip()
-    except (FileNotFoundError, subprocess.TimeoutExpired):
-        pass
-    return ""
-
-
 def search(query: str, params: dict) -> list[dict]:
-    """Search code on GitHub via REST API. Uses GITHUB_TOKEN or gh CLI auth."""
-    token = _get_token()
+    """Search code on GitHub via REST API. Requires GITHUB_TOKEN."""
+    token = os.environ.get("GITHUB_TOKEN", "")
     if not token:
-        raise RuntimeError("GITHUB_TOKEN not set and gh CLI not authenticated")
+        raise RuntimeError("GITHUB_TOKEN not set")
 
     max_results = min(params.get("max_results", 10), 30)
     url = f"https://api.github.com/search/code?{urllib.parse.urlencode({'q': query, 'per_page': str(max_results)})}"

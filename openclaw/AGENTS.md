@@ -177,19 +177,6 @@ When starting a **bigger development task** (EIP implementations, significant fe
 
 **Topic sessions MUST update BACKLOG.md:** When working in a topic session, update `~/.openclaw/workspace/BACKLOG.md` with your progress — mark subtasks ✅ as you complete them, add new subtasks as discovered, update status descriptions. This is how the main session (orchestrator) tracks what's happening. If progress isn't in BACKLOG.md, the orchestrator can't see it.
 
-### 💬 Discord Channels/Threads
-The same tagging and routing pattern applies to Discord sessions:
-
-**Backlog integration:** Tag tasks in BACKLOG.md with `[discord:CHANNEL_ID]` (e.g. `[discord:1197575814494035968]`). Group tasks under project headers like Telegram topics.
-
-**Session keys:** Discord sessions use `agent:main:discord:channel:<CHANNEL_ID>`.
-
-**Routing rule:** Once a Discord channel/thread is associated with a task, route updates there — not to Telegram, not to DMs. Use `sessions_send` with sessionKey `agent:main:discord:channel:<CHANNEL_ID>`.
-
-**Discord sessions MUST update BACKLOG.md:** Same rule as Telegram topic sessions — update `~/.openclaw/workspace/BACKLOG.md` with progress. If it's not in BACKLOG.md, the orchestrator can't see it.
-
-**When to use Discord vs Telegram:** Use whichever channel the task originated from. If someone asks for work in Discord, tag it `[discord:]`. If in Telegram, tag it `[topic:]`. Don't cross-route between channels unless explicitly asked.
-
 ### 💬 Know When to Speak!
 In group chats where you receive every message, be **smart about when to contribute**:
 
@@ -316,46 +303,14 @@ The goal: Be helpful without being annoying. Check in a few times a day, do usef
 
 This is a starting point. Add your own conventions, style, and rules as you figure out what works.
 
-## 🤖 Agent Usage — Expanded (mandatory)
-
-Sub-agents aren't just for code review. Use them for **all non-trivial thinking**.
-
-### When to consult agents (ALWAYS, not just dev-workflow):
-- **Before answering complex questions** → gpt-advisor or devils-advocate check first
-- **Before starting any investigation** → get a second perspective on approach
-- **Before committing to a conclusion** → challenge it with devils-advocate before reporting
-- **When uncertain between options** → spawn both gpt-advisor + devils-advocate, compare
-- **Before design decisions** → gpt-advisor for architecture consultation
-- **Before presenting findings to Nico** → stress-test with devils-advocate
-
-### Available personas (all defined in `~/dotfiles/personas/`):
-
-| Persona | Role | When to use |
-|---|---|---|
-| `gpt-advisor` | Architecture, deep reasoning, spec interpretation | Design decisions, tradeoff analysis, complex questions, spec work |
-| `devils-advocate` | Adversarial thinking, finding weaknesses | Stress-test conclusions, challenge assumptions, pre-Nico review |
-| `codex-reviewer` | General code review, correctness | Final quality gate before shipping code |
-| `review-bugs` | Bug hunting (functional errors only) | PR review: find broken behavior |
-| `review-security` | Security vulnerabilities | PR review: find exploitable flaws |
-| `reviewer-architect` | Architecture alignment | PR review: structural/design issues |
-| `review-wisdom` | Best practices, code health | PR review: long-term maintainability |
-| `review-linter` | Style consistency | PR review: convention alignment |
-| `review-defender` | Malicious code detection | PR review: supply chain / insider threats |
-| `review-devils-advocate` | Challenge PR premise (Lodestar-specific) | PR review: is this change even needed? |
-
-### The rule: Think → Consult → Verify → Deliver
-
-Don't deliver half-baked conclusions. If the answer took more than 30 seconds of thinking, it's worth a sub-agent check. This is what separates good work from great work.
-
 ## 🔄 Review Workflow (mandatory)
 
 Before posting PR reviews or important responses:
 1. Draft the review/response
-2. Send to sub-agents for feedback (select from persona table above based on PR scope):
-   - `codex-reviewer` — code quality, correctness, edge cases
+2. Send to a sub-agent for feedback:
+   - `codex-reviewer` (GPT-5.2) — code quality, edge cases
    - `gemini-reviewer` (Gemini Flash) — quick sanity check
-   - `gpt-advisor` — second opinion on complex issues
-   - Additional personas as needed (see lodestar-review skill for reviewer selection matrix)
+   - `gpt-advisor` (GPT-5.2) — second opinion on complex issues
 3. Incorporate feedback
 4. Post the final version
 
@@ -366,9 +321,8 @@ Before posting PR reviews or important responses:
 When writing code myself (PRs, patches, implementations):
 1. **Design phase:** Discuss approach with sub-agents first
    - Share problem context and proposed solution
-   - Get feedback on architecture/approach (gpt-advisor)
-   - Challenge the premise (devils-advocate)
-2. **Implementation:** Write the code (delegate to Codex CLI / Claude CLI)
+   - Get feedback on architecture/approach
+2. **Implementation:** Write the code
 3. **Review phase:** Send code to sub-agents for review
    - Check for bugs, edge cases, style issues
    - Verify it meets the requirements
@@ -376,12 +330,3 @@ When writing code myself (PRs, patches, implementations):
 5. **Submit:** Only open PR / commit after sub-agent approval
 
 **Why:** Code quality matters. Multiple perspectives catch issues early.
-
-## 🚫 TypeScript Code Quality Rules (MANDATORY)
-
-These apply to all code I write or review in Lodestar:
-
-- **NEVER use `as any`** — TypeScript type erasure via `as any` is forbidden. Always use proper types, narrow with type guards, or expose a typed accessor. If you see `as any` in a test or implementation, fix it before committing. Nico explicitly flagged this (2026-03-20, PR #9068).
-- **No `(obj as any).privateField`** — access internal/private fields through public API or typed test helpers, never via `as any` casting.
-- **Prefer typed test accessors** — if a test needs an internal field, expose a narrow `_test_*` accessor or add a helper method rather than bypassing the type system.
-- **Type-safe alternatives to `as any`:** use `as unknown as T` only when absolutely necessary and only with a comment explaining why; prefer proper interface definitions.

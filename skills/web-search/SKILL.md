@@ -108,8 +108,3 @@ Without any API keys, 6 of 8 providers still work (DDG, HN, Wikipedia, Stack Exc
 
 - `state/cache.db` — SQLite WAL query cache (TTL + stale-while-revalidate + negative caching)
 - `state/rate_limits.db` — Per-provider token buckets + retry-after tracking
-
-
-## Self-Maintenance
-
-If any commands, file paths, URLs, or configurations in this skill are outdated or no longer work, update this SKILL.md with the correct information after completing your current task. Skills should stay accurate and self-healing — fix what you find broken.

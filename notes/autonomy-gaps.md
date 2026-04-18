@@ -1,489 +1,7 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-04-17 (34th pass)
-
----
-
-## Daily Audit Snapshot — 2026-04-17 (self-improvement-audit-daily, 00:37 UTC)
-
-### PR review
-- **Status:** review-scope + follow-up guard workflow remains healthy; no new PR-review blocker discovered this cycle.
-
-### CI fix
-- **Status:** retry telemetry, rolling degradation checks, and log-fallback path remain healthy; no new blocker discovered this cycle.
-
-### Spec implementation
-- **Status:** extraction/compliance/vector-readiness gates remain healthy; no new blocker discovered this cycle.
-
-### Devnet debugging
-- **Status:** triage/correlator/incident-bundle workflow remains healthy; no new blocker discovered this cycle.
-
-### Audit workflow (cross-cutting)
-- **Blocker:** consistency checks validated duplicate dates and header metadata, but they did not validate that snapshot headings are ordered newest→oldest. A manual paste/merge conflict could place a newer date below an older one, causing previous-snapshot selection to become ambiguous and making delta/no-reply decisions unreliable.
-- **Fix applied this cycle:** extended `scripts/notes/check-autonomy-gaps-consistency.py` with snapshot-order validation that fails when any heading is out of descending date order (newest above oldest).
-
----
-## Daily Audit Snapshot — 2026-04-16 (self-improvement-audit-daily, 00:37 UTC)
-
-### PR review
-- **Status:** review-scope + follow-up guard workflow remains healthy; no new PR-review blocker discovered this cycle.
-
-### CI fix
-- **Status:** retry telemetry, rolling degradation checks, and log-fallback path remain healthy; no new blocker discovered this cycle.
-
-### Spec implementation
-- **Status:** extraction/compliance/vector-readiness gates remain healthy; no new blocker discovered this cycle.
-
-### Devnet debugging
-- **Status:** triage/correlator/incident-bundle workflow remains healthy; no new blocker discovered this cycle.
-
-### Audit workflow (cross-cutting)
-- **Blocker:** consistency checks validated gap/snapshot contradictions but did not validate whether the top-level `> Updated:` metadata still matched actual snapshot history. That allowed stale date/pass metadata to survive manual edits or interrupted close-out flows, weakening trust in audit recency.
-- **Fix applied this cycle:** extended `scripts/notes/check-autonomy-gaps-consistency.py` to parse `> Updated: YYYY-MM-DD (Nth pass)` and fail when metadata is missing/malformed, when the updated date diverges from the latest snapshot date, or when the pass count diverges from the total snapshot-heading count.
-
----
-## Daily Audit Snapshot — 2026-04-15 (self-improvement-audit-daily, 00:37 UTC)
-
-### PR review
-- **Status:** review-scope + follow-up guard workflow remains healthy; no new PR-review blocker discovered this cycle.
-
-### CI fix
-- **Status:** retry telemetry, rolling degradation checks, and log-fallback path remain healthy; no new blocker discovered this cycle.
-
-### Spec implementation
-- **Status:** extraction/compliance/vector-readiness gates remain healthy; no new blocker discovered this cycle.
-
-### Devnet debugging
-- **Status:** triage/correlator/incident-bundle workflow remains healthy; no new blocker discovered this cycle.
-
-### Audit workflow (cross-cutting)
-- **Blocker:** fixed gap entries could still retain stale `**Proposed fix:**` wording, which creates contradictory historical state (marked fixed but phrased as pending) and can silently degrade trust in audit history.
-- **Fix applied this cycle:** extended `scripts/notes/check-autonomy-gaps-consistency.py` to fail when a fixed gap still contains `**Proposed fix:**`, then cleaned the lingering stale entry in `notes/autonomy-gaps.md` (LLM spec-compliance gap) to use explicit `**Fix applied:**` wording.
-
----
-## Daily Audit Snapshot — 2026-04-14 (self-improvement-audit-daily, 00:35 UTC)
-
-### PR review
-- **Status:** review-scope + follow-up guard workflow remains healthy; no new PR-review blocker discovered this cycle.
-
-### CI fix
-- **Status:** retry telemetry, rolling degradation checks, and log-fallback path remain healthy; no new blocker discovered this cycle.
-
-### Spec implementation
-- **Status:** extraction/compliance/vector-readiness gates remain healthy; no new blocker discovered this cycle.
-
-### Devnet debugging
-- **Status:** triage/correlator/incident-bundle workflow remains healthy; no new blocker discovered this cycle.
-
-### Audit workflow (cross-cutting)
-- **Blocker:** historical duplicate snapshot dates were only surfaced as non-blocking warnings in preflight output, but there was no one-command cleanup path. That left recurring warning noise (for example the lingering 2026-03-15 duplicate) and made it easy to ignore stale-history hygiene.
-- **Fix applied this cycle:** added `scripts/notes/dedupe-autonomy-audit-snapshots.py` to detect/remove older duplicate snapshot blocks by date (keeping the newest copy), ran it to remove the historical 2026-03-15 duplicate from `notes/autonomy-gaps.md`, and updated `check-autonomy-gaps-consistency.py` warning output with an explicit optional cleanup command.
-
----
-## Daily Audit Snapshot — 2026-04-13 (self-improvement-audit-daily, 00:35 UTC)
-
-### PR review
-- **Status:** review-scope + follow-up guard workflow remains healthy; no new PR-review blocker discovered this cycle.
-
-### CI fix
-- **Status:** retry telemetry, rolling degradation checks, and log-fallback path remain healthy; no new blocker discovered this cycle.
-
-### Spec implementation
-- **Status:** extraction/compliance/vector-readiness gates remain healthy; no new blocker discovered this cycle.
-
-### Devnet debugging
-- **Status:** triage/correlator/incident-bundle workflow remains healthy; no new blocker discovered this cycle.
-
-### Audit workflow (cross-cutting)
-- **Blocker:** snapshot heading generation treated `--time-label` as opaque text; when callers passed copied cron labels like `self-improvement-audit-daily, 00:35 UTC`, the scaffold produced duplicated heading prefixes (`self-improvement-audit-daily, self-improvement-audit-daily, ...`), creating noisy headings and avoidable audit-churn diffs.
-- **Fix applied this cycle:** added `normalize_time_label()` in `scripts/notes/prepend-autonomy-audit-snapshot.py` to strip an optional leading `self-improvement-audit-daily,` prefix (case-insensitive) before rendering the heading, while still accepting plain `HH:MM UTC` labels.
-
----
-## Daily Audit Snapshot — 2026-04-12 (self-improvement-audit-daily, 00:35 UTC)
-
-### PR review
-- **Status:** review-scope + follow-up guard workflow remains healthy; no new PR-review blocker discovered this cycle.
-
-### CI fix
-- **Status:** retry telemetry, rolling degradation checks, and log-fallback path remain healthy; no new blocker discovered this cycle.
-
-### Spec implementation
-- **Status:** extraction/compliance/vector-readiness gates remain healthy; no new blocker discovered this cycle.
-
-### Devnet debugging
-- **Status:** triage/correlator/incident-bundle workflow remains healthy; no new blocker discovered this cycle.
-
-### Audit workflow (cross-cutting)
-- **Blocker:** consistency checks did not inspect snapshot-date uniqueness, so accidental duplicate headings for the *latest* date (for example from a rerun with `--force` or retry turbulence) could silently skew delta comparison and produce misleading `NO_REPLY`/summary decisions.
-- **Fix applied this cycle:** extended `scripts/notes/check-autonomy-gaps-consistency.py` to parse snapshot headings and enforce duplicate-date hygiene for active runs: duplicate entries for the current latest snapshot date now fail consistency checks, while older historical duplicates are surfaced as non-blocking warnings for later cleanup.
-
----
-## Daily Audit Snapshot — 2026-04-11 (self-improvement-audit-daily, 00:35 UTC)
-
-### PR review
-- **Status:** review-scope + follow-up guard workflow remains healthy; no new PR-review blocker discovered this cycle.
-
-### CI fix
-- **Status:** retry telemetry, rolling degradation checks, and log-fallback path remain healthy; no new blocker discovered this cycle.
-
-### Spec implementation
-- **Status:** extraction/compliance/vector-readiness gates remain healthy; no new blocker discovered this cycle.
-
-### Devnet debugging
-- **Status:** triage/correlator/incident-bundle workflow remains healthy; no new blocker discovered this cycle.
-
-### Audit workflow (cross-cutting)
-- **Blocker:** `scripts/notes/run-autonomy-audit-preflight.sh` treated *all* non-zero cadence-check exits as advisory "missing-day gap" warnings, so real cadence-check failures (parse/runtime/config errors) could be silently downgraded and allow snapshot insertion on a broken preflight signal.
-- **Fix applied this cycle:** hardened `scripts/notes/run-autonomy-audit-preflight.sh` to continue only for cadence exit `2` (actual gap warning), and fail fast for any other non-zero exit with an explicit error.
-
----
-## Daily Audit Snapshot — 2026-04-10 (self-improvement-audit-daily, 00:35 UTC)
-
-### PR review
-- **Status:** review-scope + follow-up guard workflow remains healthy; no new PR-review blocker discovered this cycle.
-
-### CI fix
-- **Status:** retry telemetry, rolling degradation checks, and log-fallback path remain healthy; no new blocker discovered this cycle.
-
-### Spec implementation
-- **Status:** extraction/compliance/vector-readiness gates remain healthy; no new blocker discovered this cycle.
-
-### Devnet debugging
-- **Status:** triage/correlator/incident-bundle workflow remains healthy; no new blocker discovered this cycle.
-
-### Audit workflow (cross-cutting)
-- **Blocker:** `scripts/notes/close-autonomy-audit.sh` leaked finalize logs to stdout before printing `NO_REPLY`, so no-change runs could violate the strict "reply exactly NO_REPLY" contract expected by cron reminder handlers.
-- **Fix applied this cycle:** hardened `scripts/notes/close-autonomy-audit.sh` to capture finalize output, print only the final renderer result to stdout, and emit exact `NO_REPLY` on no-change while keeping optional diagnostic logs behind `--verbose` (stderr only).
-
----
-## Daily Audit Snapshot — 2026-04-09 (self-improvement-audit-daily, 00:35 UTC)
-
-### PR review
-- **Status:** review-scope + follow-up guard workflow remains healthy; no new PR-review blocker discovered this cycle.
-
-### CI fix
-- **Status:** retry telemetry, rolling degradation checks, and log-fallback path remain healthy; no new blocker discovered this cycle.
-
-### Spec implementation
-- **Status:** extraction/compliance/vector-readiness gates remain healthy; no new blocker discovered this cycle.
-
-### Devnet debugging
-- **Status:** triage/correlator/incident-bundle workflow remains healthy; no new blocker discovered this cycle.
-
-### Audit workflow (cross-cutting)
-- **Blocker:** cadence checks were still reporting historical missing-day gaps on every run, which creates alert fatigue and can hide *fresh* missed-day regressions once cadence has resumed.
-- **Fix applied this cycle:** added `--latest-only` mode to `scripts/notes/check-autonomy-audit-cadence.py` and wired `scripts/notes/run-autonomy-audit-preflight.sh` to use it by default, so daily preflight now focuses on the newest snapshot pair while full-history scans remain available for periodic audits.
-
----
-## Daily Audit Snapshot — 2026-04-08 (self-improvement-audit-daily, 00:35 UTC)
-
-### PR review
-- **Status:** review-scope + follow-up guard workflow remains healthy; no new PR-review blocker discovered this cycle.
-
-### CI fix
-- **Status:** retry telemetry, rolling degradation checks, and log-fallback path remain healthy; no new blocker discovered this cycle.
-
-### Spec implementation
-- **Status:** extraction/compliance/vector-readiness gates remain healthy; no new blocker discovered this cycle.
-
-### Devnet debugging
-- **Status:** triage/correlator/incident-bundle workflow remains healthy; no new blocker discovered this cycle.
-
-### Audit workflow (cross-cutting)
-- **Blocker:** missing-day gaps between snapshot entries (for example 2026-04-05 → 2026-04-08) were not surfaced automatically, so skipped daily audit runs could go unnoticed.
-- **Fix applied this cycle:** added `scripts/notes/check-autonomy-audit-cadence.py` and wired it into `scripts/notes/run-autonomy-audit-preflight.sh` as an advisory cadence check before snapshot insertion.
-
-### Oracle/bridge docs (cross-cutting)
-- **Blocker:** the Oracle bridge skill had drifted too far toward the 2026-04-01 failure mode and now overstated that a single `__Secure-next-auth.session-token` cookie is categorically insufficient. Tonight's recovery proved that a **fresh** single session-token can again restore authenticated Pro mode in Camoufox, so the doc had become pessimistic in a way that could slow recovery during future expiries.
-- **Fix applied this cycle:** updated `skills/oracle-bridge/SKILL.md` to reflect the newer reality: a full cookie export remains the safest default, but a freshly rotated single session-token may be enough and is worth trying first before assuming Oracle browser mode is still broken.
-
----
-## Daily Audit Snapshot — 2026-04-05 (self-improvement-audit-daily, 00:29 UTC)
-
-### PR review
-- **Status:** review-scope + follow-up guard workflow remains healthy; no new PR-review blocker discovered this cycle.
-
-### CI fix
-- **Status:** retry telemetry, rolling degradation checks, and log-fallback path remain healthy; no new blocker discovered this cycle.
-
-### Spec implementation
-- **Status:** extraction/compliance/vector-readiness gates remain healthy; no new blocker discovered this cycle.
-
-### Devnet debugging
-- **Status:** triage/correlator/incident-bundle workflow remains healthy; no new blocker discovered this cycle.
-
-### Audit workflow (cross-cutting)
-- **Blocker:** daily close-out still required two explicit commands (`finalize` then `render`) and manual handling of finalize exit code 3, which adds avoidable operator steps and can lead to inconsistent cron outputs.
-- **Fix applied this cycle:** added `scripts/notes/close-autonomy-audit.sh` to run finalize + response rendering in one command with built-in no-change handling (`NO_REPLY` on exit code 3), and updated `run-autonomy-audit-preflight.sh` guidance to use the new wrapper.
-
----
-## Daily Audit Snapshot — 2026-04-04 (self-improvement-audit-daily, 00:29 UTC)
-
-### PR review
-- **Status:** review-scope + follow-up guard workflow remains healthy; no new PR-review blocker discovered this cycle.
-
-### CI fix
-- **Status:** retry telemetry, rolling degradation checks, and log-fallback path remain healthy; no new blocker discovered this cycle.
-
-### Spec implementation
-- **Status:** extraction/compliance/vector-readiness gates remain healthy; no new blocker discovered this cycle.
-
-### Devnet debugging
-- **Status:** triage/correlator/incident-bundle workflow remains healthy; no new blocker discovered this cycle.
-
-### Audit workflow (cross-cutting)
-- **Blocker:** delta detection now works well, but converting that JSON into a policy-compliant final cron reply (`NO_REPLY` vs concise summary) was still manual, which risks inconsistent wording and accidental noise.
-- **Fix applied this cycle:** extended `scripts/notes/check-autonomy-audit-delta.py` with `changedNonRequiredSections`, then added `scripts/notes/render-autonomy-audit-response.py` + preflight guidance so the audit flow now has a one-command response renderer driven by structured delta JSON.
-
----
-## Daily Audit Snapshot — 2026-04-03 (self-improvement-audit-daily, 00:29 UTC)
-
-### PR review
-- **Status:** review-scope + follow-up guard workflow remains healthy; no new PR-review blocker discovered this cycle.
-
-### CI fix
-- **Status:** retry telemetry, rolling degradation checks, and log-fallback path remain healthy; no new blocker discovered this cycle.
-
-### Spec implementation
-- **Status:** extraction/compliance/vector-readiness gates remain healthy; no new blocker discovered this cycle.
-
-### Devnet debugging
-- **Status:** triage/correlator/incident-bundle workflow remains healthy; no new blocker discovered this cycle.
-
-### Audit workflow (cross-cutting)
-- **Blocker:** `check-autonomy-audit-delta.py --json` reported whether there was a delta, but it did not expose *which non-required sections* changed. When only `### Audit workflow (cross-cutting)` changed, automation still had to parse prose to craft a concise summary.
-- **Fix applied this cycle:** extended `scripts/notes/check-autonomy-audit-delta.py` JSON output with `addedSectionHeadings`, `removedSectionHeadings`, and per-section `statusDeltas` so cron/workflow wrappers can explain meaningful changes without brittle markdown parsing.
-
----
-## Daily Audit Snapshot — 2026-04-02 (self-improvement-audit-daily, 00:29 UTC)
-
-### PR review
-- **Status:** review-scope + follow-up guard workflow remains healthy; no new PR-review blocker discovered this cycle.
-
-### CI fix
-- **Status:** retry telemetry, rolling degradation checks, and log-fallback path remain healthy; no new blocker discovered this cycle.
-
-### Spec implementation
-- **Status:** extraction/compliance/vector-readiness gates remain healthy; no new blocker discovered this cycle.
-
-### Devnet debugging
-- **Status:** triage/correlator/incident-bundle workflow remains healthy; no new blocker discovered this cycle.
-
-### Audit workflow (cross-cutting)
-- **Blocker:** snapshot-delta checks were text-only, so automation wrappers had to parse prose output to consume section-level changes, making downstream reminder routing brittle.
-- **Fix applied this cycle:** added `--json` output mode to `scripts/notes/check-autonomy-audit-delta.py` (with `hasDelta`, changed required sections, and `noReplyRecommended`) so cron/workflow automation can consume structured results without string parsing.
-
----
-## Daily Audit Snapshot — 2026-04-01 (self-improvement-audit-daily, 00:14 UTC)
-
-### PR review
-- **Status:** review-scope + follow-up guard workflow remains healthy; no new PR-review blocker discovered this cycle.
-
-### CI fix
-- **Status:** retry telemetry, rolling degradation checks, and log-fallback path remain healthy; no new blocker discovered this cycle.
-
-### Spec implementation
-- **Status:** extraction/compliance/vector-readiness gates remain healthy; no new blocker discovered this cycle.
-
-### Devnet debugging
-- **Status:** triage/correlator/incident-bundle workflow remains healthy; no new blocker discovered this cycle.
-
-### Audit workflow (cross-cutting)
-- **Blocker:** daily snapshot kickoff still required manually rewriting repeated status lines when there was no domain change, adding low-signal edit churn and increasing the chance of accidental wording drift.
-- **Fix applied this cycle:** added `--carry-forward-status` to `scripts/notes/prepend-autonomy-audit-snapshot.py` and wired pass-through support in `scripts/notes/run-autonomy-audit-preflight.sh`, so required status lines can be prefilled from the latest snapshot before focused edits.
-
----
-
-## Daily Audit Snapshot — 2026-03-31 (self-improvement-audit-daily, 00:14 UTC)
-
-### PR review
-- **Status:** review-scope + follow-up guard workflow remains healthy; no new PR-review blocker discovered this cycle.
-
-### CI fix
-- **Status:** retry telemetry, rolling degradation checks, and log-fallback path remain healthy; no new blocker discovered this cycle.
-
-### Spec implementation
-- **Status:** extraction/compliance/vector-readiness gates remain healthy; no new blocker discovered this cycle.
-
-### Devnet debugging
-- **Status:** triage/correlator/incident-bundle workflow remains healthy; no new blocker discovered this cycle.
-
-### Audit workflow (cross-cutting)
-- **Blocker:** deciding whether to send a summary vs `NO_REPLY` is still a manual judgment call, so unchanged snapshots can accidentally emit noisy updates.
-- **Fix applied this cycle:** added `scripts/notes/check-autonomy-audit-delta.py` and wired it into `scripts/notes/finalize-autonomy-audit.py` (`--fail-on-no-change`) so close-out now computes snapshot deltas against the previous audit and can hard-stop with exit code 3 when no meaningful change exists.
-
----
-
-## Daily Audit Snapshot — 2026-03-29 (self-improvement-audit-daily, 23:51 UTC)
-
-### PR review
-- **Status:** review-scope + follow-up guard workflow remains healthy; no new PR-review blocker discovered this cycle.
-
-### CI fix
-- **Status:** retry telemetry, rolling degradation checks, and log-fallback path remain healthy; no new blocker discovered this cycle.
-
-### Spec implementation
-- **Status:** extraction/compliance/vector-readiness gates remain healthy; no new blocker discovered this cycle.
-
-### Devnet debugging
-- **Status:** triage/correlator/incident-bundle workflow remains healthy; no new blocker discovered this cycle.
-
----
-
-## Daily Audit Snapshot — 2026-03-28 (self-improvement-audit-daily, 23:51 UTC)
-
-### PR review
-- **Status:** review-scope + follow-up guard workflow remains healthy; no new PR-review blocker discovered this cycle.
-
-### CI fix
-- **Status:** retry telemetry, rolling degradation checks, and log-fallback path remain healthy; no new blocker discovered this cycle.
-
-### Spec implementation
-- **Status:** extraction/compliance/vector-readiness gates remain healthy; no new blocker discovered this cycle.
-
-### Devnet debugging
-- **Status:** triage/correlator/incident-bundle workflow remains healthy; no new blocker discovered this cycle.
-
-### Audit workflow (cross-cutting)
-- **Blocker:** the finalizer currently accepts multiple `- **Status:**` lines inside one required section and only validates the first match, which can hide conflicting status text after copy/paste edits.
-- **Fix applied this cycle:** hardened `scripts/notes/finalize-autonomy-audit.py` to require exactly one `- **Status:** ...` line per required section and fail with explicit section names when duplicates are present.
-
----
-
-## Daily Audit Snapshot — 2026-03-27 (self-improvement-audit-daily, 23:51 UTC)
-
-### PR review
-- **Status:** review-scope + follow-up guard workflow remains healthy; no new PR-review blocker discovered this cycle.
-
-### CI fix
-- **Status:** retry telemetry, rolling degradation checks, and log-fallback path remain healthy; no new blocker discovered this cycle.
-
-### Spec implementation
-- **Status:** extraction/compliance/vector-readiness gates remain healthy; no new blocker discovered this cycle.
-
-### Devnet debugging
-- **Status:** triage/correlator/incident-bundle workflow remains healthy; no new blocker discovered this cycle.
-
-### Audit workflow (cross-cutting)
-- **Blocker:** audit finalization enforced section headings and placeholder removal, but it could still pass if a required section kept an empty `- **Status:**` line (or omitted the status line entirely), allowing low-signal snapshots to be marked complete.
-- **Fix applied this cycle:** hardened `scripts/notes/finalize-autonomy-audit.py` to require a non-empty `- **Status:** ...` line in each required section (`PR review`, `CI fix`, `Spec implementation`, `Devnet debugging`) before finalization succeeds.
-
----
-
-## Daily Audit Snapshot — 2026-03-26 (self-improvement-audit-daily, 23:51 UTC)
-
-### PR review
-- **Status:** review-scope + follow-up guard workflow remains healthy; no new PR-review blocker discovered this cycle.
-
-### CI fix
-- **Status:** retry telemetry, rolling degradation checks, and log-fallback path remain healthy; no new blocker discovered this cycle.
-
-### Spec implementation
-- **Status:** extraction/compliance/vector-readiness gates remain healthy; no new blocker discovered this cycle.
-
-### Devnet debugging
-- **Status:** triage/correlator/incident-bundle workflow remains healthy; no new blocker discovered this cycle.
-
-### Audit workflow (cross-cutting)
-- **Blocker:** audit finalization only blocked placeholder markers; section headings could still be accidentally removed/renamed during edits, allowing incomplete snapshots to pass.
-- **Fix applied this cycle:** hardened `scripts/notes/finalize-autonomy-audit.py` to require all four canonical section headings (`PR review`, `CI fix`, `Spec implementation`, `Devnet debugging`) before allowing finalization.
-
----
-
-## Daily Audit Snapshot — 2026-03-25 (self-improvement-audit-daily, 23:50 UTC)
-
-### PR review
-- **Status:** review-scope + follow-up guard workflow remains healthy; no new PR-review blocker discovered this cycle.
-
-### CI fix
-- **Status:** retry telemetry, rolling degradation checks, and log-fallback path remain healthy; no new blocker discovered this cycle.
-
-### Spec implementation
-- **Status:** extraction/compliance/vector-readiness gates remain healthy; no new blocker discovered this cycle.
-
-### Devnet debugging
-- **Status:** triage/correlator/incident-bundle workflow remains healthy; no new blocker discovered this cycle.
-
-### Audit workflow (cross-cutting)
-- **Blocker:** audit completion still relied on manual post-edit steps (placeholder cleanup check + top-level `Updated` metadata refresh + final consistency rerun), which is easy to skip under time pressure.
-- **Fix applied this cycle:** added `scripts/notes/finalize-autonomy-audit.py` and updated preflight instructions so the close-out path is one command after filling the snapshot.
-
----
-
-## Daily Audit Snapshot — 2026-03-24 (self-improvement-audit-daily, 23:49 UTC)
-
-### PR review
-- **Status:** review-scope + follow-up guard workflow remains healthy; no new PR-review blocker discovered this cycle.
-
-### CI fix
-- **Status:** retry telemetry, rolling degradation checks, and log-fallback path remain healthy; no new blocker discovered this cycle.
-
-### Spec implementation
-- **Status:** extraction/compliance/vector-readiness gates remain healthy; no new blocker discovered this cycle.
-
-### Devnet debugging
-- **Status:** triage/correlator/incident-bundle workflow remains healthy; no new blocker discovered this cycle.
-
----
-
-## Daily Audit Snapshot — 2026-03-23 (self-improvement-audit-daily, 23:47 UTC)
-
-### PR review
-- **Status:** review-scope + follow-up guard workflow remains healthy; no new PR-review blocker discovered this cycle.
-
-### CI fix
-- **Status:** retry telemetry, rolling degradation checks, and log-fallback path remain healthy; no new blocker discovered this cycle.
-
-### Spec implementation
-- **Status:** extraction/compliance/vector-readiness gates remain healthy; no new blocker discovered this cycle.
-
-### Devnet debugging
-- **Status:** triage/correlator/incident-bundle workflow remains healthy; no new blocker discovered this cycle.
-
-### Audit workflow (cross-cutting)
-- **Blocker:** daily audit kickoff still required two manual commands (consistency check + scaffold insertion), so the consistency guard could be skipped under time pressure.
-- **Fix applied this cycle:** added `scripts/notes/run-autonomy-audit-preflight.sh` to run the consistency guard and snapshot scaffolder in one command with optional date/time overrides.
-
----
-
-## Daily Audit Snapshot — 2026-03-22 (self-improvement-audit-daily, 23:46 UTC)
-
-### PR review
-- **Status:** review-scope + follow-up guard workflow remains healthy; no new PR-review blocker discovered this cycle.
-
-### CI fix
-- **Status:** retry telemetry, rolling degradation checks, and log-fallback path remain healthy; no new blocker discovered this cycle.
-
-### Spec implementation
-- **Status:** extraction/compliance/vector-readiness gates remain healthy; no new blocker discovered this cycle.
-
-### Devnet debugging
-- **Status:** triage/correlator/incident-bundle workflow remains healthy; no new blocker discovered this cycle.
-
-### Audit workflow (cross-cutting)
-- **Blocker:** daily autonomy snapshots were still manually scaffolded, so required sections could be skipped and heading format could drift across days.
-- **Fix applied this cycle:** added `scripts/notes/prepend-autonomy-audit-snapshot.py` to auto-prepend a dated snapshot scaffold (PR review, CI fix, spec implementation, devnet debugging) with duplicate-date protection.
-
----
-
-## Daily Audit Snapshot — 2026-03-21 (self-improvement-audit-daily, 23:46 UTC)
-
-### PR review
-- **Blocker:** reviewer runs can still start from a dirty local worktree, which risks feeding sub-agents uncommitted or accidental diff scope (recently caused low-signal review rounds).
-- **Fix applied this cycle:** added `scripts/review/check-review-scope.sh` and wired it into `skills/lodestar-review/SKILL.md` Step 1/1.5 as the default local-review entrypoint.
-  - validates git worktree + base ref,
-  - fails fast on dirty trees by default,
-  - can emit both `CHANGED_FILES` and full diff artifacts in one command.
-
-### CI fix
-- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
-
-### Spec implementation
-- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
-
-### Devnet debugging
-- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+> Updated: 2026-03-20 (15th pass)
 
 ---
 
@@ -609,6 +127,25 @@
 
 ### Devnet debugging
 - **Status:** triage, correlator, and incident bundle scripts operational; no new gap discovered this cycle.
+
+---
+
+## Daily Audit Snapshot — 2026-03-15 (self-improvement-audit-daily)
+
+### PR review
+- **Blocker (previous cycle):** stale-finding detection required manual invocation per PR.
+- **Fix applied this cycle:** added `scripts/review/stale-findings-report.sh` — batch scanner across all tracked PRs with cron-friendly exit codes and markdown report output.
+- **Next:** wire as a cron job on a weekly cadence (low urgency while PR tracking volume is low).
+
+### CI fix
+- **Blocker:** retry telemetry is surfaced in output, but no threshold-based escalation policy exists for sustained degradation detection.
+- **Proposed fix:** add rolling-window threshold check for `llm_retry_count`/`llm_retry_wait_s` in tracker.
+
+### Spec implementation
+- **Status:** compliance gate, artifact checks, and pre-PR wrapper all operational. No new gaps.
+
+### Devnet debugging
+- **Status:** incident bundle, triage, and correlator scripts operational. No new gaps.
 
 ---
 
@@ -750,9 +287,12 @@ Use `dev-workflow` skill for multi-agent development. Codex/Claude CLI for imple
 **Fix applied:** added `scripts/spec/extract-spec-section.sh` to search spec markdown and follow symbol-import chains for related definitions.
 
 #### ~~🔴 No LLM spec compliance check (new — 2026-03-08)~~ ✅ FIXED (2026-03-09)
-After implementing a spec function in TypeScript, before opening a PR, I didn't have a systematic check for whether the TS implementation faithfully matched the pseudocode.
+After implementing a spec function in TypeScript, before opening a PR, I don't run a systematic check: "does this TS code faithfully implement the pseudocode?" I verify manually by reading both, which is slow and error-prone.
 
-**Fix applied:** added `scripts/spec/check-compliance.py` and integrated it into `skills/dev-workflow/SKILL.md` as the spec-compliance gate before PR/re-review.
+**Proposed fix:** `scripts/spec/check-compliance.py <spec-function> <ts-file> <ts-function>` that:
+- Extracts the pseudocode block from `~/consensus-specs`
+- Sends it + the TS implementation to GPT/Codex: "do these match? what's missing?"
+- Outputs a diff-style compliance report: implemented ✅ / missing ⚠️ / diverged ❌
 
 #### ~~🟡 No test-vector auto-download awareness~~ ✅ FIXED (2026-03-16)
 ~~When implementing spec functions, I sometimes forget to run against official test vectors. The vectors live in `~/consensus-specs/tests/` but need a separate download step.~~
@@ -803,198 +343,6 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
-
-### ✅ Consistency guard now enforces newest→oldest snapshot heading order (2026-04-17)
-Updated `scripts/notes/check-autonomy-gaps-consistency.py` with explicit snapshot-order validation:
-- parses all `## Daily Audit Snapshot — YYYY-MM-DD` headings in file order,
-- fails consistency when a newer date appears below an older date,
-- reports the exact out-of-order date pair to speed up manual repair.
-
-**Rationale:** delta/no-reply logic relies on deterministic "current vs previous" snapshot ordering. Guarding chronological heading order prevents silent miscomparison after manual edits or merge conflict resolution.
-
-### ✅ Consistency guard now validates top-level Updated metadata against snapshot history (2026-04-16)
-Updated `scripts/notes/check-autonomy-gaps-consistency.py` to validate audit-header integrity in addition to gap/snapshot contradiction checks:
-- parses `> Updated: YYYY-MM-DD (Nth pass)` with strict format validation,
-- fails when the line is missing/malformed or duplicated,
-- fails when updated date does not match the latest snapshot date,
-- fails when updated pass count does not match total snapshot-heading count.
-
-**Rationale:** stale top-level metadata can make audit recency/pass counters look correct when the underlying snapshots have diverged. Guarding this in consistency checks makes metadata drift explicit before close-out.
-
-### ✅ Consistency guard now blocks stale "Proposed fix" wording inside fixed gaps (2026-04-15)
-Updated `scripts/notes/check-autonomy-gaps-consistency.py` with a fixed-gap wording guard:
-- parses fixed entries (`✅ FIXED`) in `### Gaps`,
-- fails consistency if a fixed entry body still contains `**Proposed fix:**`,
-- reports the exact conflicting heading.
-
-Also cleaned the one lingering stale case in `notes/autonomy-gaps.md` (`No LLM spec compliance check`) by replacing `**Proposed fix:**` with `**Fix applied:**` and the concrete integration path.
-
-**Rationale:** prevents contradictory historical state where an item is marked fixed but still described as pending, which can silently erode trust in audit-history quality.
-
-### ✅ Historical duplicate-snapshot cleanup helper added (2026-04-14)
-Added `scripts/notes/dedupe-autonomy-audit-snapshots.py` to clean up old duplicate snapshot dates without touching the newest entry for each day:
-- scans `## Daily Audit Snapshot — YYYY-MM-DD` blocks,
-- keeps the first/top-most block per date,
-- reports duplicates in dry-run mode,
-- removes older duplicate blocks with `--apply`.
-
-Also updated `scripts/notes/check-autonomy-gaps-consistency.py` to print an explicit optional cleanup command when historical duplicates are detected.
-
-**Rationale:** recurring non-blocking duplicate-date warnings create low-signal noise in daily preflight output; this turns stale-history cleanup into a one-command workflow instead of ad-hoc manual edits.
-
-### ✅ Snapshot scaffolder now normalizes copied cron-style time labels (2026-04-13)
-Updated `scripts/notes/prepend-autonomy-audit-snapshot.py` with `normalize_time_label()` so heading rendering tolerates either plain `HH:MM UTC` labels or copied cron labels like `self-improvement-audit-daily, 00:35 UTC`:
-- strips an optional leading `self-improvement-audit-daily,` prefix (case-insensitive),
-- rejects empty post-normalization labels,
-- keeps heading output canonical (`(self-improvement-audit-daily, HH:MM UTC)`).
-
-**Rationale:** avoids duplicated heading prefixes and low-signal diffs when operators pass full cron-style labels from reminders.
-
-### ✅ Consistency guard now blocks duplicate latest snapshot dates (2026-04-12)
-Updated `scripts/notes/check-autonomy-gaps-consistency.py` to validate snapshot-date uniqueness alongside gap/improvement contradiction checks:
-- parses all `## Daily Audit Snapshot — YYYY-MM-DD` headings,
-- fails consistency when the **latest** snapshot date appears more than once,
-- reports older historical duplicate dates as non-blocking warnings.
-
-**Rationale:** duplicate headings for the active audit date can poison daily delta comparisons and lead to incorrect `NO_REPLY` vs summary behavior; this makes that failure mode explicit before close-out.
-
-### ✅ Preflight now distinguishes cadence gaps from hard cadence-check failures (2026-04-11)
-Updated `scripts/notes/run-autonomy-audit-preflight.sh` cadence guard handling:
-- treats exit `2` from `check-autonomy-audit-cadence.py` as advisory gap signal (continue with warning),
-- treats any other non-zero cadence exit as hard failure and aborts preflight,
-- emits an explicit error line with the failing exit code for faster triage.
-
-**Rationale:** prevents real cadence-check failures from being silently downgraded into "missing-day gap" warnings, so daily snapshot insertion only proceeds when the cadence guard itself is healthy.
-
-### ✅ Autonomy-audit close-out wrapper now preserves exact stdout contract (2026-04-10)
-Updated `scripts/notes/close-autonomy-audit.sh` to keep finalize diagnostics out of stdout:
-- captures `finalize-autonomy-audit.py` output to a temp log,
-- prints only final response text on stdout,
-- emits exact `NO_REPLY` (and nothing else) for no-change runs,
-- adds optional `--verbose` flag to surface finalize logs on stderr when debugging.
-
-**Rationale:** reminder handlers require exact `NO_REPLY` for silent cycles; leaking finalize chatter to stdout risked noisy/non-compliant cron replies.
-
-### ✅ Daily autonomy-audit cadence guard now supports fresh-gap-only mode (2026-04-09)
-Added `--latest-only` to `scripts/notes/check-autonomy-audit-cadence.py` so cadence checks can focus on the newest snapshot pair instead of re-reporting old historical gaps on every run.
-
-Also updated `scripts/notes/run-autonomy-audit-preflight.sh` to run cadence checks in latest-pair advisory mode by default.
-
-**Rationale:** once cadence resumes after a missed-day incident, repeated historical-gap alerts become noise. Latest-pair checks surface fresh regressions without drowning daily runs in already-known history, while full-history scans remain available when needed.
-
-### ✅ Daily autonomy-audit cadence guard added (2026-04-08)
-Added `scripts/notes/check-autonomy-audit-cadence.py` to detect missing-day gaps between snapshot entries:
-- parses `## Daily Audit Snapshot — YYYY-MM-DD` headings,
-- reports missing-day intervals across the snapshot date range,
-- supports `--fail-on-gap` for strict workflows.
-
-Also updated `scripts/notes/run-autonomy-audit-preflight.sh` to run the cadence check in advisory mode before inserting today's scaffold.
-
-**Rationale:** daily audits can silently skip days when a cron run is missed; surfacing cadence gaps makes these misses visible and turns them into explicit follow-up work instead of hidden drift.
-
-### ✅ One-command autonomy-audit close-out wrapper added (2026-04-05)
-Added `scripts/notes/close-autonomy-audit.sh` to collapse the daily close-out into one deterministic command:
-- runs `finalize-autonomy-audit.py --fail-on-no-change`,
-- maps finalize exit code `3` directly to exact `NO_REPLY`,
-- otherwise runs `render-autonomy-audit-response.py` for concise summary output,
-- supports `--file` and `--date` for cron/manual parity.
-
-Also updated `scripts/notes/run-autonomy-audit-preflight.sh` completion guidance to use the new one-command close-out path (with legacy two-step path still documented).
-
-**Rationale:** removes the last operator-owned handoff in daily audits (manual finalize→render sequencing and exit-code interpretation), reducing response drift and accidental noisy output.
-
-### ✅ Daily autonomy-audit response renderer added for deterministic NO_REPLY vs summary output (2026-04-04)
-Extended `scripts/notes/check-autonomy-audit-delta.py` + created `scripts/notes/render-autonomy-audit-response.py`, then updated `scripts/notes/run-autonomy-audit-preflight.sh` close-out guidance:
-- delta JSON now includes `changedNonRequiredSections` (for shared non-required sections with body changes),
-- response renderer consumes structured delta output directly,
-- prints exact `NO_REPLY` when no meaningful delta exists,
-- otherwise emits one concise summary line including required-status, non-required-section, and heading changes,
-- keeps wording deterministic so cron wrappers do not need ad-hoc prose parsing.
-
-**Rationale:** closes the last manual handoff between delta detection and outbound reminder text, reducing accidental notification noise while preserving concise updates when there is a real change.
-
-### ✅ Daily autonomy-audit delta JSON now includes section-level change context (2026-04-03)
-Updated `scripts/notes/check-autonomy-audit-delta.py` so automation can explain *what* changed when a snapshot delta is detected:
-- added `statusDeltas` map for required-section status changes (`current` vs `previous`),
-- added `addedSectionHeadings` and `removedSectionHeadings` for non-required-section visibility,
-- preserved existing fields (`hasDelta`, `changedRequiredSections`, `noReplyRecommended`) for backward compatibility.
-
-**Rationale:** daily reminder routing no longer needs brittle markdown/prose parsing to summarize cross-cutting changes (for example, `### Audit workflow (cross-cutting)` updates with unchanged core status lines).
-
-### ✅ Daily autonomy-audit carry-forward status prefill added (2026-04-01)
-Updated snapshot scaffolding so repeated daily status text can be reused deterministically:
-- added `--carry-forward-status` to `scripts/notes/prepend-autonomy-audit-snapshot.py`,
-- parses the latest snapshot and pre-fills required `- **Status:** ...` lines when available,
-- wired pass-through support in `scripts/notes/run-autonomy-audit-preflight.sh`, including usage text.
-
-**Rationale:** cuts repetitive low-signal edits during daily audits and reduces copy/paste drift while preserving explicit human review for any real status changes.
-
-### ✅ Daily autonomy-audit delta detector + no-change suppression gate added (2026-03-31)
-Added `scripts/notes/check-autonomy-audit-delta.py` and wired it into `scripts/notes/finalize-autonomy-audit.py`:
-- compares the target-day snapshot body to the previous snapshot body (normalized),
-- reports whether a meaningful delta exists and which required-section status lines changed,
-- supports `--fail-on-no-change` (exit code `3`) for cron-safe NO_REPLY suppression,
-- updated `scripts/notes/run-autonomy-audit-preflight.sh` guidance to use `finalize-autonomy-audit.py --fail-on-no-change`.
-
-**Rationale:** removes a fragile manual judgment step at audit close-out and enforces "no meaningful change => NO_REPLY" deterministically.
-
-### ✅ Daily autonomy-audit duplicate status-line guard added (2026-03-28)
-Updated `scripts/notes/finalize-autonomy-audit.py` to enforce one canonical status line per required section during close-out:
-- scans each required section body for `- **Status:** ...` occurrences,
-- fails finalization when a required section has zero or multiple status lines,
-- reports section-specific reasons (`missing status line`, `multiple status lines`, `empty/placeholder status value`).
-
-**Rationale:** prevents copy/paste drift where conflicting status lines could coexist in one section and still pass finalization by matching only the first line.
-
-### ✅ Daily autonomy-audit non-empty status-line guard added (2026-03-27)
-Updated `scripts/notes/finalize-autonomy-audit.py` to enforce status quality for required sections during close-out:
-- parses section bodies and requires a `- **Status:** ...` line in each required section,
-- rejects empty/missing placeholder status values before header refresh / consistency pass,
-- reports exact section names that need fixing.
-
-**Rationale:** closes a residual quality gap where snapshot headings existed but status content could still be blank, allowing low-signal daily audits to pass finalization.
-
-### ✅ Daily autonomy-audit required-section guard added (2026-03-26)
-Updated `scripts/notes/finalize-autonomy-audit.py` to enforce snapshot structure during close-out:
-- verifies all four required section headings are present in the target-day snapshot (`PR review`, `CI fix`, `Spec implementation`, `Devnet debugging`),
-- fails finalization with an explicit missing-section error before header refresh / consistency pass if any heading is missing.
-
-**Rationale:** closes a residual audit-quality gap where placeholder checks could pass even if one of the required status sections was accidentally removed or renamed.
-
-### ✅ Daily autonomy-audit finalizer added (2026-03-25)
-Created `scripts/notes/finalize-autonomy-audit.py` and updated `scripts/notes/run-autonomy-audit-preflight.sh` guidance:
-- verifies the current day's snapshot has no `_fill in_` placeholders,
-- refreshes the top-level `> Updated: YYYY-MM-DD (Nth pass)` metadata automatically,
-- runs `check-autonomy-gaps-consistency.py` as a required post-edit guard,
-- provides one deterministic close-out command after filling the snapshot.
-
-**Rationale:** closes the remaining manual handoff at audit end, so incomplete snapshots and stale header metadata are caught before cron completion.
-
-### ✅ Daily autonomy-audit preflight wrapper added (2026-03-23)
-Created `scripts/notes/run-autonomy-audit-preflight.sh`:
-- runs `check-autonomy-gaps-consistency.py` before any snapshot mutation,
-- runs `prepend-autonomy-audit-snapshot.py` in the same command,
-- supports `--file`, `--date`, `--time-label`, `--force`, and `--carry-forward-status` for deterministic cron/manual usage,
-- prints explicit next-step guidance to fill the inserted snapshot block.
-
-**Rationale:** removes a fragile two-command manual handoff at audit start, so consistency validation is no longer optional and daily snapshot setup stays deterministic.
-
-### ✅ Daily autonomy snapshot scaffolder added (2026-03-22)
-Created `scripts/notes/prepend-autonomy-audit-snapshot.py`:
-- prepends a correctly formatted `## Daily Audit Snapshot — YYYY-MM-DD` block at the top of `notes/autonomy-gaps.md`,
-- always includes the four required domains (PR review, CI fix, spec implementation, devnet debugging),
-- skips duplicate insertion for the same date unless `--force` is provided,
-- supports explicit `--date` and `--time-label` for deterministic cron output.
-
-**Rationale:** removes a recurring manual step that could drift or omit required sections, making daily autonomy audits more consistent and automatable.
-
-### ✅ Local review-scope guard script + skill wiring (2026-03-21)
-Added `scripts/review/check-review-scope.sh` and updated `skills/lodestar-review/SKILL.md` so local review runs default to:
-- validating the base ref (`origin/unstable`) exists,
-- failing on dirty worktrees unless `--allow-dirty` is explicitly set,
-- optionally emitting both changed-file and diff artifacts in one command.
-
-**Rationale:** closes a recurring low-signal failure mode where reviewers get accidental/uncommitted scope, improving reviewer precision and reducing wasted follow-up cycles.
 
 ### ✅ Follow-up stale-finding guard fused into wrapper + skill docs (2026-03-20)
 Expanded `scripts/review/run-followup-guards.sh` and refreshed `skills/lodestar-review/SKILL.md` so follow-up rounds now run three checks in one command:
@@ -1274,6 +622,34 @@ Updated `scripts/ci/auto_fix_flaky.py`:
 
 ## Next Audit Priorities (next daily cycles)
 
-1. No carried-forward audit priorities are currently pending — the previous backlog of spec/CI/devnet/autonomy workflow gaps is complete through 2026-03-31.
-2. When a new autonomy gap is discovered, replace this placeholder list with path-scoped follow-up items (script/doc/workflow target + why it matters).
-3. Until then, daily reminder sweeps should either advance a newly discovered blocker from `### Gaps` / `BACKLOG.md` or emit `NO_REPLY` if nothing actionable changed.
+1. ~~Add LLM fallback classification for unknown CI failure patterns (`auto_fix_flaky.py`)~~ ✅ done
+2. ~~Add confidence scoring/check in CI autofix outputs (root-cause vs masking)~~ ✅ done
+3. ~~Add issue-linkage step to CI autofix cron prompt~~ ✅ done (2026-03-07)
+4. ~~Add reviewer file-scope injection to `lodestar-review` SKILL.md~~ ✅ done (2026-03-08)
+5. ~~Codify EPBS devnet-0 startup into `scripts/devnet/start-epbs-devnet.sh`~~ ✅ done (2026-03-08)
+6. ~~Add LLM-based fix *quality* check post-Codex~~ ✅ done (2026-03-08)
+7. ~~Review finding resolution tracker~~ ✅ done (2026-03-08)
+8. ~~CI auto-fix `auto-fix` label~~ ✅ done (2026-03-08)
+9. ~~**Implement multi-node log correlator** (`scripts/debug/correlate-logs.sh`)~~ ✅ done (2026-03-09)
+10. ~~**Implement spec compliance checker** (`scripts/spec/check-compliance.py`) — LLM-based "does this TS faithfully implement the pseudocode?"~~ ✅ done (2026-03-09)
+11. ~~**Test-vector auto-check** — add `pnpm test:spec` gate to dev-workflow skill before PR opening~~ ✅ done (2026-03-09)
+12. ~~**GitHub review-comment ingestion for finding tracker** — add API import path so `track-findings.py` can bootstrap from PR review comments without manual entry~~ ✅ done (2026-03-10)
+13. ~~**CI LLM retry + `Retry-After` handling in autofix detector** — bounded retry budget for 429/5xx and propagate LLM `fixable` verdict into actionable selection~~ ✅ done (2026-03-10)
+14. ~~**Finding tracker delta-sync from GitHub** — add `track-findings.py sync-gh` with checkpointed import + optional auto-reverify of touched findings~~ ✅ done (2026-03-11)
+15. ~~**Review-loop integration for finding delta sync** — add a codified follow-up step in `skills/lodestar-review/SKILL.md` to run `track-findings.py sync-gh` whenever new review comments land on a PR.~~ ✅ done (2026-03-12)
+16. ~~**Spec compliance artifact traceability** — add PR-template/tracker field that links generated `spec-compliance-*.md` reports for spec/protocol PRs.~~ ✅ done (2026-03-12)
+17. ~~**Compliance artifact presence check** — add a lightweight pre-PR check that verifies tracker + PR body include spec-compliance artifact references for spec/protocol changes.~~ ✅ done (2026-03-13)
+18. ~~**Stale unresolved-review escalation** — add `track-findings.py stale` command and wire into review workflow.~~ ✅ done (2026-03-13)
+19. ~~**CI retry telemetry surfacing** — include retry/backoff counters in cron detector summary output.~~ ✅ done (2026-03-14)
+20. ~~**Spec pre-PR compliance wrapper** — one command to run compliance checker + artifact-presence checks with a single pass/fail summary.~~ ✅ done (2026-03-14)
+21. ~~**Devnet incident bundle script** — package logs + metrics + timeline + env metadata into one shareable markdown artifact.~~ ✅ done (2026-03-15)
+22. ~~**PR stale-finding cron wrapper** — automate `track-findings.py stale --fail-on-match` into a backlog-facing report/escalation signal.~~ ✅ done (2026-03-15)
+23. ~~**CI retry telemetry threshold-based escalation** — add tracker-level threshold check for `llm_retry_count`/`llm_retry_wait_s` with explicit warning when sustained degradation is detected across rolling runs.~~ ✅ done (2026-03-15)
+24. ~~**Spec section auto-extraction** — write `scripts/spec/extract-spec-section.sh <feature>` to search consensus-specs for function/type definitions and follow import chains for related types.~~ ✅ done (2026-03-07)
+25. ~~**Wire stale-finding report into scheduled escalation** — add cron wrapper execution cadence (weekly) for `scripts/review/stale-findings-report.sh` and ensure output routes only when stale critical/major findings exist.~~ ✅ done (2026-03-16)
+26. ~~**Autonomy-gaps consistency guard** — add a lightweight checker script that flags contradictory states in `notes/autonomy-gaps.md` (e.g., item listed as fixed in improvements but still open in Gaps) before the next audit writes updates.~~ ✅ done (2026-03-17)
+27. ~~**Wire CI log fallback into autofix escalation path** — when detector classifies `logs-unavailable`, call `scripts/ci/fetch-run-logs.sh <run-id>` automatically (or emit the exact command) and persist the artifact path in tracker output for faster follow-up triage.~~ ✅ done (2026-03-18)
+28. ~~**Codify gpt-advisor timeout fallback in dev workflow** — keep `xhigh` as first pass but force deterministic fallback to `thinking: high` after repeated timeout/empty-output rounds, and require tracker logging of attempt outcomes.~~ ✅ done (2026-03-18)
+29. ~~**PR metadata drift guard** — add a lightweight checker (or scripted checklist) that compares PR title/body claims vs current diff after follow-up commits, so scope/title mismatches are caught before re-review.~~ ✅ done (2026-03-19)
+30. ~~**Auto-wire metadata drift guard into review loop docs** — add a mandatory re-review step in `skills/lodestar-review/SKILL.md` to run the checker on follow-up commits and record output in review notes.~~ ✅ done (2026-03-19)
+31. ~~**Review-loop command wrapper for metadata drift artifacts** — add a small helper (`scripts/review/run-followup-guards.sh` or equivalent) that runs `sync-gh` + metadata drift check together and prints the exact `gh pr edit` reminder when drift is detected.~~ ✅ done (2026-03-20)

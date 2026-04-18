@@ -24,6 +24,12 @@ trust_level = "trusted"
 [projects."/home/openclaw/lodestar"]
 trust_level = "trusted"
 
+[projects."/home/openclaw/.openclaw/workspace"]
+trust_level = "trusted"
+
 [notice.model_migrations]
 "gpt-5.2-codex" = "gpt-5.3-codex"
 "gpt-5.3-codex" = "gpt-5.4"
+
+[plugins."github@openai-curated"]
+enabled = true

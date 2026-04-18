@@ -24,10 +24,9 @@ LOG_FILE="$LOG_DIR/memory-cycle-$(date -u +%F).log"
   echo "Step 3: rebuild local SQLite FTS index"
   python3 scripts/memory/rebuild_index.py
 
-  echo "Step 4: update QMD collections (skip embeddings on CPU)"
+  echo "Step 4: update QMD collections + embeddings"
   qmd update 2>&1 || true
-  # qmd embed disabled: CPU-only fallback causes 9+ min hangs
-  # Re-enable when CUDA or GPU acceleration available
+  qmd embed 2>&1 || true
 
   echo "Step 5: prune old cycle logs (keep last 14 days)"
   find "$LOG_DIR" -name "memory-cycle-*.log" -mtime +14 -delete 2>/dev/null || true

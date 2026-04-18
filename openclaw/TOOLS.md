@@ -76,6 +76,7 @@ Use worktrees to work on multiple branches without cross-contamination:
 ~/lodestar-lazy-slasher         → feat/lazy-slasher-clean
 ~/lodestar-proposer-preferences → feat/proposer-preferences
 ~/lodestar-ptr-compress         → feat/pointer-compression
+~/lodestar-rate-limit-fix       → fix/sync-rate-limit-backoff (PR #8924)
 ```
 
 **Commands:**
@@ -103,13 +104,6 @@ git branch -d <branch-name>  # optional: delete local branch
 - Force push = last resort only (when merge truly doesn't work)
 - Keep local `unstable` in sync: `git fetch origin && git checkout unstable && git pull`
 
-### Diff Verification (MANDATORY)
-**Always double-check the diff before pushing AND after the PR is open:**
-1. **Before push:** `git diff main...HEAD` (or `unstable...HEAD`) — verify only intended files/changes, no stray files (TASK.md, CODING_CONTEXT.md, etc.)
-2. **After push / PR open:** Check the GitHub diff in the browser or via `gh pr diff <number>` — confirm it matches what you expect
-3. **No "it looks fine" assumptions** — actually read the diff each time
-- Lesson: PR #3416 had a stray `TASK.md` and an overly aggressive guard that broke the close() flush path. Both caught by Nico asking "does the diff look good?" — I should have caught them myself.
-
 ## Beacon APIs
 - **Repo:** ~/beacon-APIs (ethereum/beacon-APIs)
 - **Key file:** `validator-flow.md` — validator client ↔ beacon node interaction reference
@@ -132,7 +126,6 @@ git branch -d <branch-name>  # optional: delete local branch
 - **gemini-reviewer:** Gemini 2.5 Pro — second perspective
 - **gpt-advisor:** GPT-5.3-Codex, **thinking: "xhigh"** — architecture & deep reasoning
   - ⚠️ `thinking` is NOT a valid agent config key — MUST pass `thinking: "xhigh"` at spawn time via `sessions_spawn`
-  - ⚠️ **Timeout: always use `runTimeoutSeconds: 3600` (1h).** Nico's directive (2026-03-20): use 1h timeout for all gpt-advisor runs. xhigh thinking on complex tasks can take 5-10+ minutes, and 600s still timed out on the fork-narrowing spec (2026-03-20). Never reduce thinking level to work around timeouts — increase the timeout instead.
 
 ## Coding Agents (Implementation)
 - **Codex CLI:** `codex exec --full-auto "..."` — best for focused implementation tasks
@@ -164,12 +157,6 @@ git branch -d <branch-name>  # optional: delete local branch
 
 Add whatever helps you do your job. This is your cheat sheet.
 
-## Codex CLI Sandbox Fix
-- **Issue:** `bwrap: loopback: Failed RTM_NEWADDR: Operation not permitted`
-- **Root cause:** bwrap 0.9.0 (Ubuntu 24.04) non-setuid doesn't write `uid_map` in unprivileged mode → child has no capabilities in user namespace → can't configure loopback in network namespace
-- **Fix:** `use_legacy_landlock = true` in `~/.codex/config.toml` under `[features]` — uses Landlock LSM instead of bwrap for sandboxing
-- **Date fixed:** 2026-03-27
-
 ## CI Auto-Fix Pipeline
 - **Cron ID:** `573d18ec` (hourly, Codex GPT-5.3)
 - **Detector:** `scripts/ci/auto_fix_flaky.py` — scans unstable CI for flaky sim/e2e failures
@@ -186,54 +173,9 @@ Add whatever helps you do your job. This is your cheat sheet.
 - **Prometheus datasource ID:** 1
 - **Loki datasource ID:** 4
 - **Skills:** `skills/release-metrics/` (Prometheus), `skills/grafana-loki/` (Loki logs)
-- ⚠️ **Exec session gotcha:** `GRAFANA_TOKEN` is NOT auto-loaded in `exec` shells — must run `eval "$(grep '^export GRAFANA' ~/.bashrc)"` before queries
-- ⚠️ **Heredoc scripts blocked** by obfuscation detector in exec — use individual `curl` calls instead
 
 ## Discord
 - **Bot:** @lodekeeper (ID: 1467247836117860547)
 - **Server:** ChainSafe (593655374469660673)
 - **Channel:** #🖥-lodestar-developer (1197575814494035968)
 - **Mode:** Mention required (@lodekeeper)
-
-### Discord Mentions (IMPORTANT)
-Plain text `@username` does NOT ping users on Discord. Use proper Discord mention format:
-- **Nico:** `<@586161934425128960>` (not `@nflaig`)
-- **Matthew Keil:** `<@931591385545584640>` (not `@matthewkeil`)
-- **MEK (bot):** `<@1484133729092763808>`
-- **lodekeeper-z (bot):** look up ID from channel reads
-Always use `<@USER_ID>` format in message sends to actually ping someone.
-
-## Oracle / ChatGPT on this server
-- **Direct working path:** `scripts/oracle/chatgpt-direct`
-  - Camoufox-based ChatGPT automation
-  - Best choice when I want ChatGPT Pro/browser access on this headless server
-- **Oracle-style wrapper:** `scripts/oracle/oracle-browser-camoufox`
-  - Simpler alias: `scripts/oracle/oracle-browser`
-  - Uses `oracle --render --render-plain` for prompt+file bundling, then sends the rendered bundle through the working Camoufox path
-  - Supports the common workflow plus a few Oracle-ish compatibility flags: `--auth-only`, `--cookies`, `--engine browser`, `--wait`, `--slug`, `--browser-model-strategy`, `--browser-inline-files`
-  - Use this instead of `oracle --engine browser` when I want Oracle-like browser workflow without fighting Chromium/CDP + Cloudflare
-- **Docs:** `scripts/oracle/README.md`
-- **Verification:** `scripts/oracle/check-wrapper.sh` (use `--live` for auth/pro + browser smoke checks)
-- **Current caveat:** stock Oracle browser mode is still unreliable here because the Chromium/CDP path hits launch quirks and/or Cloudflare anti-bot; prefer the wrapper unless explicitly testing Oracle-native browser behavior
-
-## Backlog inspection
-- **Safe helper:** `scripts/backlog/list_statuses.py`
-  - Use this to inspect `BACKLOG.md` headings/status lines instead of ad-hoc inline `python3 -` snippets.
-  - Example: `python3 ~/.openclaw/workspace/scripts/backlog/list_statuses.py --active-only`
-- **Why:** two separate runaway `python3 -` processes (2026-04-08, 2026-04-10) were caused by brittle inline loops that only advanced on `### ` headings and spun forever on `## ` section headers.
-
-## Review Royale
-- **API:** http://127.0.0.1:3456 (public: https://review-royale.nflaig.dev)
-- **Repos:** ChainSafe/lodestar, ChainSafe/lodestar-z
-- **Useful endpoints:**
-  - `GET /api/leaderboard?period=week|month|all&limit=10` — global leaderboard
-  - `GET /api/repos/:owner/:name/leaderboard?period=week|month|all&limit=10` — per-repo
-  - `GET /api/users/:username` — user profile
-  - `GET /api/users/:username/stats` — detailed stats
-  - `GET /api/achievements` — achievement catalog
-  - `POST /api/recalculate` — recalculate all XP
-  - `POST /api/categorize` — categorize uncategorized comments
-- **When someone asks about leaderboard, stats, reviews, XP, achievements, or roasts:** query the API and respond naturally. No special commands needed — just understand the intent and fetch the data.
-- **Docker:** `review-royale-api-1` (port 3456→3000), `review-royale-rr-postgres-1`, `review-royale-rr-redis-1`
-- **Crons:** weekly-digest (Tue 05:00), achievements (every 6h), post-sync-pipeline (every 6h offset)
-- **Config:** `~/review-royale/docker-compose.yml`, `~/review-royale/docker-compose.override.yml`

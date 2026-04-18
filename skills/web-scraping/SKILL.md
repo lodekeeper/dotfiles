@@ -812,8 +812,3 @@ resp = cffi_requests.get(url, impersonate="chrome136")
 - **Session reuse:** For multiple pages on the same site, reuse the browser instance (Camoufox/Playwright context).
 - **Trafilatura is the default extractor.** Only skip it when you need raw HTML or structured CSS-selector extraction.
 - **Test new sites at Tier 1 first** — most sites don't need a full browser.
-
-
-## Self-Maintenance
-
-If any commands, file paths, URLs, or configurations in this skill are outdated or no longer work, update this SKILL.md with the correct information after completing your current task. Skills should stay accurate and self-healing — fix what you find broken.

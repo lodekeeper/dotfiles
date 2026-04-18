@@ -6,7 +6,7 @@ CONTAINER="mainnet-consensus-1"
 SINCE="24h"
 
 # Grab recent logs, strip ANSI codes
-LOGS=$(docker logs "$CONTAINER" --since "$SINCE" --tail 5000 2>&1 | sed 's/\x1b\[[0-9;]*m//g')
+LOGS=$(docker logs "$CONTAINER" --since "$SINCE" 2>&1 | sed 's/\x1b\[[0-9;]*m//g')
 
 ALERTS=""
 

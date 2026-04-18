@@ -1,93 +1,100 @@
-# CODING_CONTEXT.md — Current Task
+# CODING_CONTEXT.md — Project Context for Sub-Agents
 
-## Task: Fix Gloas Withdrawals in Payload Attributes and State Transition
+Hand this file to Codex CLI or Claude CLI when spawning implementation tasks.
+It gives them enough context to work independently in a Lodestar worktree.
 
-Two related bugs where Gloas withdrawals are computed/stored incorrectly when the parent block is not full.
+## Project: Lodestar
 
-### Fix 1: `packages/state-transition/src/block/processWithdrawals.ts`
+- **What:** Ethereum consensus client (beacon node + validator client)
+- **Language:** TypeScript (strict mode)
+- **Monorepo:** pnpm workspaces, ~20 packages
+- **Runtime:** Node.js v24+
+- **Key packages:**
+  - `packages/beacon-node` — the beacon node (networking, sync, chain, API)
+  - `packages/validator` — validator client
+  - `packages/state-transition` — state transition logic (STF)
+  - `packages/fork-choice` — fork choice implementation
+  - `packages/types` — SSZ type definitions
+  - `packages/params` — chain parameters/constants
+  - `packages/cli` — CLI entry point
+  - `packages/reqresp` — request/response protocol (libp2p)
 
-The early-return path (line ~36) does NOT clear `state.payloadExpectedWithdrawals`, leaving stale data from a prior full block. This breaks envelope validation later.
+## Build & Test Commands
 
-**Current code (around line 34-37):**
-```typescript
-  if (fork >= ForkSeq.gloas && !isParentBlockFull(state as CachedBeaconStateGloas)) {
-    return;
-  }
+```bash
+# ALWAYS run from worktree root
+source ~/.nvm/nvm.sh && nvm use 24
+
+# Build (required before tests)
+pnpm build
+
+# Lint (biome — MANDATORY before every commit/push, fast check)
+# ⚠️ DO NOT commit or push without passing lint! No exceptions.
+pnpm lint
+
+# Type check
+pnpm check-types
+
+# Unit tests (specific file)
+pnpm vitest run --project unit <path/to/test.ts>
+
+# Unit tests (specific package)
+pnpm vitest run --project unit packages/<pkg>/test/unit/
 ```
 
-**Change to:**
+## Code Style
+
+- **Formatter:** Biome (not Prettier/ESLint)
+- **Import order:** Sorted alphabetically by package name (biome enforces this)
+- **No default exports** — always use named exports
+- **Error types:** Use `LodestarError<T>` with typed error codes (enum + union type)
+- **Logging:** `this.logger.debug/verbose/info/warn/error` — structured with metadata objects
+- **Metrics:** Prometheus-style via `this.metrics?.someMetric.inc({label: value})`
+
+## Git Conventions
+
+- **Commit messages:** Conventional commits — `fix:`, `feat:`, `chore:`, `refactor:`, `test:`
+- **Sign commits:** `git commit -S -m "..."`
+- **AI disclosure:** Add `🤖 Generated with AI assistance` to commit messages
+- **Push to fork:** `git push fork <branch-name>`
+- **PR target:** Usually `unstable` (or specific feature branch if noted)
+
+## SSZ Types Pattern
+
 ```typescript
-  if (fork >= ForkSeq.gloas && !isParentBlockFull(state as CachedBeaconStateGloas)) {
-    // Clear expected withdrawals so envelope validation doesn't use stale data from a prior full block
-    (state as CachedBeaconStateGloas).payloadExpectedWithdrawals = ssz.capella.Withdrawals.toViewDU([]);
-    return;
-  }
+// Types defined in packages/types/src/<fork>/
+export const MyType = new ContainerType({
+  field1: UintNumberType,
+  field2: RootType,
+}, {typeName: "MyType"});
 ```
 
-`ssz` is already imported at top of file (`import {..., ssz} from "@lodestar/types"`).
+## Network Protocol Pattern
 
-### Fix 2: `packages/beacon-node/src/chain/produceBlock/produceBlockBody.ts`
+- Gossip topics: `packages/beacon-node/src/network/gossip/`
+- Req/resp: `packages/beacon-node/src/network/reqresp/`
+- Handlers: `packages/beacon-node/src/network/processor/gossipHandlers.ts`
 
-In the `preparePayloadAttributes()` function (starts at line 744), the withdrawals computation at line ~777-778 is unconditional:
+## Key Patterns
 
-```typescript
-    (payloadAttributes as capella.SSEPayloadAttributes["payloadAttributes"]).withdrawals =
-      prepareState.getExpectedWithdrawals().expectedWithdrawals;
-```
+- **Fork-aware code:** Use `isForkPostDeneb()`, `isForkPostFulu()` etc.
+- **Config access:** `config.getForkName(slot)`, `config.getForkTypes(slot)`
+- **Async patterns:** Prefer `async/await`, use `wrapError()` for error-or-result patterns
+- **State access:** Via `chain.getHeadState()`, never hold references to old states
 
-For Gloas, if the parent block is not full, withdrawals should be `[]` (the EL should not include them).
+## ⚠️ Pre-Push Checklist (MANDATORY)
 
-**Replace the withdrawals section (lines ~773-779) with:**
-```typescript
-    if (!isStatePostCapella(prepareState)) {
-      throw new Error("Expected Capella state for withdrawals");
-    }
+Before EVERY commit and push, run these in order:
+1. `pnpm lint` — fast, catches formatting/import issues. **Must pass. No exceptions.**
+2. `pnpm check-types` — catches type errors
+3. Build if you changed exports: `pnpm build`
 
-    let withdrawals: capella.Withdrawal[];
-    if (ForkSeq[fork] >= ForkSeq.gloas && isStatePostGloas(prepareState) && !isParentBlockFull(prepareState)) {
-      // Gloas: parent block was not full → process_withdrawals returns early → no withdrawals
-      withdrawals = [];
-    } else {
-      withdrawals = prepareState.getExpectedWithdrawals().expectedWithdrawals;
-    }
+If lint fails, fix it before committing. `pnpm lint --write` auto-fixes most issues.
 
-    (payloadAttributes as capella.SSEPayloadAttributes["payloadAttributes"]).withdrawals = withdrawals;
-```
+## Important: What NOT to do
 
-**Add to the existing import from `@lodestar/state-transition` (line ~17-25):**
-```typescript
-  isParentBlockFull,
-```
-
-The import block already imports `isStatePostGloas` from `@lodestar/state-transition`. Just add `isParentBlockFull` to the same import statement.
-
-Also add `CachedBeaconStateGloas` to the types import IF `isParentBlockFull` requires it — but check the type signature first. Actually, `isParentBlockFull` takes `CachedBeaconStateGloas` as parameter. Since we gate on `isStatePostGloas(prepareState)`, the type narrows correctly. But `isParentBlockFull` expects `CachedBeaconStateGloas` specifically, so you may need a cast. Check the actual `IBeaconStateViewBellatrix` interface — if `isStatePostGloas` narrows to a type that has `latestExecutionPayloadBid` and `latestBlockHash`, it should work.
-
-If you need a cast, do:
-```typescript
-!isParentBlockFull(prepareState as unknown as CachedBeaconStateGloas)
-```
-But FIRST check if `isStatePostGloas` narrows enough. Prefer NO cast.
-
-### DO NOT change:
-- Any other functions in `produceBlockBody.ts`
-- Anything in `processExecutionPayloadEnvelope.ts`
-- Test fixtures or test infrastructure files
-
-### Tests
-Add a test in `packages/state-transition/test/unit/block/` if there is an existing `processWithdrawals.test.ts`. If not, create one with a minimal test:
-- Create a mock Gloas state where `isParentBlockFull` returns false
-- Run `processWithdrawals` on it
-- Assert `payloadExpectedWithdrawals` is empty (length 0)
-
-### Pre-push checklist
-1. `pnpm lint` — must pass (run `pnpm lint --write` to autofix)
-2. `pnpm check-types` — must pass
-3. `pnpm build` — must succeed
-4. Verify diff: only the 2-3 files above should be changed
-
-### Project conventions
-- Node v24: `source ~/.nvm/nvm.sh && nvm use 24`
-- Build: `pnpm build`
-- Lint: `pnpm lint` (MANDATORY before commit)
-- All commits must be signed with GPG
+- Don't modify files outside your worktree
+- Don't run `pnpm install` unless told to (already done in worktree setup)
+- Don't reformat files you didn't change (biome might want to, resist)
+- Don't add dependencies without explicit approval
+- **Don't commit or push without passing `pnpm lint`** — this is a hard rule from Nico

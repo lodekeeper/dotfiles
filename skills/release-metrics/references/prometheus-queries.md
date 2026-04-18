@@ -10,30 +10,6 @@ with actual group labels (e.g., `beta`, `stable`, `feat1`).
 - **API endpoint:** `GET /api/ds/query` or `GET /api/datasources/proxy/1/api/v1/query`
 - **Auth:** Bearer token (service account)
 
-## Verified Metric Names (confirmed live, v1.41.0-rc.2 run, 2026-03-19)
-
-Most Lodestar metrics do NOT use the `lodestar_` prefix for beacon/consensus metrics:
-```
-beacon_head_slot                           # current head slot
-beacon_finalized_epoch                     # current finalized epoch
-beacon_reorgs_total                        # reorg count (use increase([1h]))
-lodestar_block_processor_queue_length      # block processor backlog
-lodestar_gossip_block_elapsed_time_till_become_head_{sum,count}  # gossip→head latency
-lodestar_stfn_epoch_transition_seconds_{sum,count}               # epoch transition time
-lodestar_import_block_set_head_after_cutoff_total
-lodestar_gossip_block_process_block_errors  # label: error (e.g. BLOCK_ERROR_EXECUTION_ERROR)
-lodestar_version                            # labels: version, semver, group, instance
-lodestar_sync_status                        # 0=Synced
-app_beacon_node_peers                       # peer count (may be empty/sparse)
-nodejs_heap_size_used_bytes                 # V8 heap used
-nodejs_external_memory_bytes                # external memory
-nodejs_eventloop_lag_p99_seconds            # event loop lag p99
-validator_monitor_prev_epoch_on_chain_{head,target,source}_attester_{hit,miss}_total
-validator_monitor_prev_epoch_on_chain_inclusion_distance_{sum,count}
-```
-Note: Some query templates below use logical names (e.g., `lodestar_peer_count`) that may not
-exist in the actual Prometheus instance — prefer verified names above.
-
 ## Query Patterns
 
 Use `curl` with the Grafana proxy for Prometheus queries:

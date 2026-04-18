@@ -477,8 +477,3 @@ See `skills/oracle-bridge/SKILL.md` for full bridge setup, troubleshooting, and 
 - **Classify before routing** — the Research Type Classification section is the key improvement. Use it.
 - **Quality > Speed** — this skill is designed for depth, not quick answers. Take the time needed.
 - **ChatGPT Deep Research** — suggest it for major web surveys when the human is available. It's the most powerful option and free with Pro sub.
-
-
-## Self-Maintenance
-
-If any commands, file paths, URLs, or configurations in this skill are outdated or no longer work, update this SKILL.md with the correct information after completing your current task. Skills should stay accurate and self-healing — fix what you find broken.

@@ -128,8 +128,3 @@ Most ethpandaops devnets have a Dora explorer:
 ```
 https://dora.<devnet-name>.ethpandaops.io/
 ```
-
-
-## Self-Maintenance
-
-If any commands, file paths, URLs, or configurations in this skill are outdated or no longer work, update this SKILL.md with the correct information after completing your current task. Skills should stay accurate and self-healing — fix what you find broken.
