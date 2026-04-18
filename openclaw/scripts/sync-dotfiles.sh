@@ -87,10 +87,11 @@ fi
 [ -f "$HOME/lodekeeper-dash/scripts/update-status.sh" ] && cp "$HOME/lodekeeper-dash/scripts/update-status.sh" "$DOTFILES_DIR/scripts/update-status.sh"
 [ -f "$HOME/lodekeeper-dash/scripts/deploy.sh" ] && cp "$HOME/lodekeeper-dash/scripts/deploy.sh" "$DOTFILES_DIR/scripts/deploy.sh"
 
-# Workspace scripts (debug/spec tooling)
-mkdir -p "$DOTFILES_DIR/scripts/debug" "$DOTFILES_DIR/scripts/spec"
+# Workspace scripts (debug/spec/github tooling)
+mkdir -p "$DOTFILES_DIR/scripts/debug" "$DOTFILES_DIR/scripts/spec" "$DOTFILES_DIR/scripts/github"
 [ -f "$WORKSPACE/scripts/debug/devnet-triage.sh" ] && cp "$WORKSPACE/scripts/debug/devnet-triage.sh" "$DOTFILES_DIR/scripts/debug/devnet-triage.sh"
 [ -f "$WORKSPACE/scripts/spec/extract-spec-section.sh" ] && cp "$WORKSPACE/scripts/spec/extract-spec-section.sh" "$DOTFILES_DIR/scripts/spec/extract-spec-section.sh"
+rsync -a --exclude '__pycache__' --exclude '*.pyc' "$WORKSPACE/scripts/github/" "$DOTFILES_DIR/scripts/github/"
 
 # Research scripts (Cloudflare bypass + Oracle bridge)
 mkdir -p "$DOTFILES_DIR/research"
