@@ -69,11 +69,12 @@ else
 fi
 
 CHECK_CMD=(python3 "$WORKSPACE/scripts/notes/check-autonomy-gaps-consistency.py" --file "$TARGET_FILE")
-CADENCE_CMD=(python3 "$WORKSPACE/scripts/notes/check-autonomy-audit-cadence.py" --file "$TARGET_FILE" --latest-only --fail-on-gap)
+CADENCE_CMD=(python3 "$WORKSPACE/scripts/notes/check-autonomy-audit-cadence.py" --file "$TARGET_FILE" --latest-only --require-current --fail-on-gap)
 PREPEND_CMD=(python3 "$WORKSPACE/scripts/notes/prepend-autonomy-audit-snapshot.py" --file "$TARGET_FILE")
 
 if [[ -n "$DATE" ]]; then
   PREPEND_CMD+=(--date "$DATE")
+  CADENCE_CMD+=(--reference-date "$DATE")
 fi
 
 if [[ -n "$TIME_LABEL" ]]; then
@@ -91,7 +92,7 @@ fi
 echo "[1/3] Running consistency guard on $TARGET_FILE"
 "${CHECK_CMD[@]}"
 
-echo "[2/3] Running cadence guard (advisory, latest-pair)"
+echo "[2/3] Running cadence guard (advisory, latest-pair + current-date freshness)"
 set +e
 "${CADENCE_CMD[@]}"
 cadence_rc=$?

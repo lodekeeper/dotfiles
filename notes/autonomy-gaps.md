@@ -1,10 +1,25 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-03-20 (15th pass)
+> Updated: 2026-04-18 (11th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-04-18 (self-improvement-audit-daily, 00:38 UTC)
+
+### PR review
+- **Status:** audit-workflow blocker found and fixed this cycle: preflight cadence checks only compared the latest snapshot pair, so long outages after the latest snapshot could be silently missed. Added current-date freshness enforcement (`--require-current`) plus deterministic `--reference-date` support in `check-autonomy-audit-cadence.py`, and wired both into `run-autonomy-audit-preflight.sh`.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
 ## Daily Audit Snapshot — 2026-03-20 (self-improvement-audit-daily, 23:46 UTC)
 
 ### PR review
@@ -287,12 +302,12 @@ Use `dev-workflow` skill for multi-agent development. Codex/Claude CLI for imple
 **Fix applied:** added `scripts/spec/extract-spec-section.sh` to search spec markdown and follow symbol-import chains for related definitions.
 
 #### ~~🔴 No LLM spec compliance check (new — 2026-03-08)~~ ✅ FIXED (2026-03-09)
-After implementing a spec function in TypeScript, before opening a PR, I don't run a systematic check: "does this TS code faithfully implement the pseudocode?" I verify manually by reading both, which is slow and error-prone.
+Before this was implemented, spec-function ports could ship without a structured pseudocode-vs-TS parity check, relying on slow and error-prone manual reading.
 
-**Proposed fix:** `scripts/spec/check-compliance.py <spec-function> <ts-file> <ts-function>` that:
+**Fix applied:** `scripts/spec/check-compliance.py <spec-function> <ts-file> <ts-function>` now:
 - Extracts the pseudocode block from `~/consensus-specs`
-- Sends it + the TS implementation to GPT/Codex: "do these match? what's missing?"
-- Outputs a diff-style compliance report: implemented ✅ / missing ⚠️ / diverged ❌
+- Compares it against the TS implementation with an LLM pass
+- Emits a diff-style compliance report: implemented ✅ / missing ⚠️ / diverged ❌
 
 #### ~~🟡 No test-vector auto-download awareness~~ ✅ FIXED (2026-03-16)
 ~~When implementing spec functions, I sometimes forget to run against official test vectors. The vectors live in `~/consensus-specs/tests/` but need a separate download step.~~
@@ -343,6 +358,15 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Autonomy-audit freshness guard added to cadence checks (2026-04-18)
+Updated `scripts/notes/check-autonomy-audit-cadence.py` with:
+- `--require-current` to enforce latest-snapshot freshness against a reference date,
+- `--reference-date YYYY-MM-DD` for deterministic backfill/manual runs.
+
+Updated `scripts/notes/run-autonomy-audit-preflight.sh` to always run cadence checks with `--require-current`, and to pass the selected `--date` as `--reference-date` so preflight detects long audit outages instead of only comparing the latest two snapshot headings.
+
+**Rationale:** closes a workflow-integrity gap where a long pause in daily audits could go unnoticed once historical snapshot spacing looked clean.
 
 ### ✅ Follow-up stale-finding guard fused into wrapper + skill docs (2026-03-20)
 Expanded `scripts/review/run-followup-guards.sh` and refreshed `skills/lodestar-review/SKILL.md` so follow-up rounds now run three checks in one command:

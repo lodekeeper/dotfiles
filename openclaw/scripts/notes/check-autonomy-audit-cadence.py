@@ -8,7 +8,7 @@ Useful as an advisory guard so missed cron runs don't go unnoticed.
 from __future__ import annotations
 
 import argparse
-from datetime import date
+from datetime import date, datetime, timezone
 from pathlib import Path
 import re
 import sys
@@ -65,6 +65,19 @@ def main() -> int:
         help="Only check the latest snapshot pair (ignore historical gaps)",
     )
     parser.add_argument(
+        "--require-current",
+        action="store_true",
+        help=(
+            "Also enforce freshness from latest snapshot date to a reference date "
+            "(today UTC by default). Useful for detecting long audit outages even "
+            "when historical snapshot spacing is continuous."
+        ),
+    )
+    parser.add_argument(
+        "--reference-date",
+        help="Reference date YYYY-MM-DD for --require-current (default: current UTC date)",
+    )
+    parser.add_argument(
         "--fail-on-gap",
         action="store_true",
         help="Exit 2 when missing-day gaps are detected",
@@ -93,19 +106,42 @@ def main() -> int:
 
     gaps = find_gaps(check_dates, expected_every_days=args.expected_every_days)
 
+    tail_gap: tuple[date, date, int] | None = None
+    if args.require_current:
+        if args.reference_date:
+            reference_date = date.fromisoformat(args.reference_date)
+        else:
+            reference_date = datetime.now(timezone.utc).date()
+
+        latest = dates[-1]
+        delta_days = (reference_date - latest).days
+        missing_days = delta_days - args.expected_every_days
+        if missing_days > 0:
+            tail_gap = (latest, reference_date, missing_days)
+
     print(f"Cadence check: {path}")
     print(f"- Snapshots parsed: {len(dates)}")
     print(f"- Range (all): {dates[0].isoformat()} → {dates[-1].isoformat()}")
     if args.latest_only and len(dates) >= 2:
         print(f"- Scope: latest pair only ({check_dates[0].isoformat()} → {check_dates[-1].isoformat()})")
+    if args.require_current:
+        ref_display = args.reference_date or datetime.now(timezone.utc).date().isoformat()
+        print(f"- Freshness check to reference date: {ref_display}")
 
-    if not gaps:
+    if not gaps and tail_gap is None:
         print("✅ No missing-day cadence gaps detected")
         return 0
 
     print("⚠️ Missing-day cadence gaps detected:")
     for older, newer, missing_days in gaps:
         print(f"- {older.isoformat()} → {newer.isoformat()}: missing {missing_days} day(s)")
+    if tail_gap is not None:
+        older, newer, missing_days = tail_gap
+        print(
+            "- "
+            f"{older.isoformat()} → {newer.isoformat()} (latest snapshot freshness): "
+            f"missing {missing_days} day(s)"
+        )
 
     if args.fail_on_gap:
         return 2
