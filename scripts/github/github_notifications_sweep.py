@@ -35,12 +35,14 @@ def save_json(path: Path, obj: Any) -> None:
     path.write_text(json.dumps(obj, indent=2, sort_keys=True) + "\n")
 
 
-def parse_pr_key_from_subject_url(subject_url: str) -> Tuple[str, int]:
+def parse_thread_key_from_subject_url(subject_url: str) -> Tuple[str, int, str]:
     # e.g. https://api.github.com/repos/ChainSafe/lodestar/pulls/8739
-    m = re.search(r"/repos/([^/]+/[^/]+)/pulls/(\d+)$", subject_url)
+    #      https://api.github.com/repos/ChainSafe/lodestar/issues/9228
+    m = re.search(r"/repos/([^/]+/[^/]+)/(pulls|issues)/(\d+)$", subject_url)
     if not m:
-        raise ValueError(f"Not a PR URL: {subject_url}")
-    return m.group(1), int(m.group(2))
+        raise ValueError(f"Not a PR/Issue URL: {subject_url}")
+    kind = "pr" if m.group(2) == "pulls" else "issue"
+    return m.group(1), int(m.group(3)), kind
 
 
 def extract_handled_ids_from_backlog(backlog_text: str) -> set:
@@ -86,7 +88,7 @@ def fetch_notifications() -> List[Dict[str, Any]]:
             if not has_new:
                 continue
             subj = n.get("subject", {})
-            if subj.get("type") != "PullRequest":
+            if subj.get("type") not in ("PullRequest", "Issue"):
                 continue
             out.append(
                 {
@@ -94,6 +96,7 @@ def fetch_notifications() -> List[Dict[str, Any]]:
                     "title": subj.get("title"),
                     "url": subj.get("url"),
                     "updated_at": updated,
+                    "reason": n.get("reason"),
                 }
             )
         except Exception:
@@ -101,9 +104,13 @@ def fetch_notifications() -> List[Dict[str, Any]]:
     return out
 
 
-def fetch_pr_comments(repo: str, pr: int) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
-    review = run_gh_json([f"repos/{repo}/pulls/{pr}/comments?per_page=100"])
-    issue = run_gh_json([f"repos/{repo}/issues/{pr}/comments?per_page=100"])
+def fetch_thread_comments(repo: str, number: int, kind: str) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
+    # For PRs: fetch both inline review comments and the issue-style thread comments.
+    # For Issues: only the issue-style thread comments exist.
+    review: List[Dict[str, Any]] = []
+    if kind == "pr":
+        review = run_gh_json([f"repos/{repo}/pulls/{number}/comments?per_page=100"])
+    issue = run_gh_json([f"repos/{repo}/issues/{number}/comments?per_page=100"])
     return review, issue
 
 
@@ -140,7 +147,7 @@ def main() -> int:
 
     for n in notifications:
         try:
-            repo, pr = parse_pr_key_from_subject_url(n["url"])
+            repo, pr, kind = parse_thread_key_from_subject_url(n["url"])
         except Exception:
             continue
 
@@ -153,7 +160,7 @@ def main() -> int:
             },
         )
 
-        review_comments, issue_comments = fetch_pr_comments(repo, pr)
+        review_comments, issue_comments = fetch_thread_comments(repo, pr, kind)
 
         # Update watermark candidates
         max_review = pr_state.get("last_review_comment_id", 0)
