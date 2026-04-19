@@ -53,6 +53,8 @@ scripts/oracle/chatgpt-direct --prompt "..." --verbose
 | `--json` | off | JSON output with status/text/elapsed |
 | `--verbose` / `-v` | off | Show progress (thinking/generating) |
 | `--cookies` | `~/.oracle/chatgpt-cookies.json` | Cookie file path |
+| `--chatgpt-url` | `https://chatgpt.com` | Start from a specific ChatGPT project / folder / custom GPT URL |
+| `--auth-only` | off | Validate auth / Pro state only; do not send a prompt |
 | `--require-auth` | off | Fail unless the session is truly authenticated (not guest/free) |
 | `--require-pro` | off | Fail unless GPT-5.4 Pro is actually available |
 
@@ -97,6 +99,22 @@ The tool distinguishes thinking from response by checking:
 
 ### "Something went wrong" error
 - Transient ChatGPT error — tool retries automatically (new chat + resend)
+
+## Verification / regression guard
+
+Use the local verifier to lock the wrapper + direct-path contract in place:
+
+```bash
+scripts/oracle/check-wrapper.sh --json
+scripts/oracle/check-wrapper.sh --live --json
+```
+
+The static verifier now also asserts that `scripts/oracle/chatgpt-direct` still exposes the repaired auth-check interface:
+- `--chatgpt-url`
+- `--auth-only`
+- `--require-auth`
+- `--require-pro`
+- plus `python3 -m py_compile research/chatgpt-direct.py`
 
 ## Files
 

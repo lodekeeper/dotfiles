@@ -2,6 +2,7 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+WORKSPACE="$(cd "$SCRIPT_DIR/../.." && pwd)"
 WRAPPER="$SCRIPT_DIR/oracle-browser"
 TMP_DIR="${TMPDIR:-/tmp}/oracle-wrapper-check-$$"
 mkdir -p "$TMP_DIR"
@@ -20,6 +21,7 @@ DRY_RUN_RESULT="pending"
 RENDER_ALIAS_RESULT="pending"
 COPY_MARKDOWN_RESULT="pending"
 RECOVERY_HELPERS_RESULT="pending"
+CHATGPT_DIRECT_CONTRACT_RESULT="pending"
 MALFORMED_JSON_RESULT="pending"
 NON_OBJECT_JSON_RESULT="pending"
 INVALID_STATUS_JSON_RESULT="pending"
@@ -66,9 +68,9 @@ run() {
 emit_json() {
   python3 - <<'PY' \
     "$FINAL_STATUS" "$FINAL_MESSAGE" "$LIVE" "$COOKIE_FILE" \
-    "$SYNTAX_RESULT" "$HELP_RESULT" "$REJECT_RESULT" "$UNKNOWN_ARG_RESULT" "$DRY_RUN_RESULT" "$RENDER_ALIAS_RESULT" "$COPY_MARKDOWN_RESULT" "$RECOVERY_HELPERS_RESULT" "$MALFORMED_JSON_RESULT" "$NON_OBJECT_JSON_RESULT" "$INVALID_STATUS_JSON_RESULT" "$AUTH_RESULT" "$SMOKE_RESULT"
+    "$SYNTAX_RESULT" "$HELP_RESULT" "$REJECT_RESULT" "$UNKNOWN_ARG_RESULT" "$DRY_RUN_RESULT" "$RENDER_ALIAS_RESULT" "$COPY_MARKDOWN_RESULT" "$RECOVERY_HELPERS_RESULT" "$CHATGPT_DIRECT_CONTRACT_RESULT" "$MALFORMED_JSON_RESULT" "$NON_OBJECT_JSON_RESULT" "$INVALID_STATUS_JSON_RESULT" "$AUTH_RESULT" "$SMOKE_RESULT"
 import json, sys
-status, message, live, cookie_file, syntax, help_r, reject, unknown_arg, dry_run, render_alias, copy_markdown, recovery_helpers, malformed_json, non_object_json, invalid_status_json, auth, smoke = sys.argv[1:18]
+status, message, live, cookie_file, syntax, help_r, reject, unknown_arg, dry_run, render_alias, copy_markdown, recovery_helpers, chatgpt_direct_contract, malformed_json, non_object_json, invalid_status_json, auth, smoke = sys.argv[1:19]
 print(json.dumps({
     "status": status,
     "message": message,
@@ -83,6 +85,7 @@ print(json.dumps({
         "renderAlias": render_alias,
         "copyMarkdown": copy_markdown,
         "recoveryHelpers": recovery_helpers,
+        "chatgptDirectContract": chatgpt_direct_contract,
         "malformedBridgeJson": malformed_json,
         "nonObjectBridgeJson": non_object_json,
         "invalidStatusBridgeJson": invalid_status_json,
@@ -243,6 +246,16 @@ assert steps.get('chatgptDirectAuth') == 'pending', data
 assert steps.get('oracleWrapperAuth') == 'pending', data
 assert steps.get('checkWrapperLive') == 'pending', data
 PY
+}
+
+check_chatgpt_direct_contract() {
+  local help_out="$1"
+  run "$SCRIPT_DIR/chatgpt-direct" --help > "$help_out"
+  grep -q -- '--chatgpt-url' "$help_out"
+  grep -q -- '--auth-only' "$help_out"
+  grep -q -- '--require-auth' "$help_out"
+  grep -q -- '--require-pro' "$help_out"
+  run python3 -m py_compile "$WORKSPACE/research/chatgpt-direct.py"
 }
 
 check_install_chatgpt_cookies_helper() {
@@ -665,6 +678,16 @@ then
 else
   RECOVERY_HELPERS_RESULT="failed"
   finish_fail "recovery helper static checks failed"
+fi
+
+log "checking chatgpt-direct auth-contract/static CLI support"
+chatgpt_direct_help_out="$TMP_DIR/chatgpt-direct-help.txt"
+if check_chatgpt_direct_contract "$chatgpt_direct_help_out"
+then
+  CHATGPT_DIRECT_CONTRACT_RESULT="passed"
+else
+  CHATGPT_DIRECT_CONTRACT_RESULT="failed"
+  finish_fail "chatgpt-direct auth-contract static checks failed"
 fi
 
 log "checking malformed bridge JSON fallback"

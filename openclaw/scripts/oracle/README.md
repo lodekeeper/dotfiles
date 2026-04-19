@@ -122,6 +122,13 @@ All of those JSON shapes now also include a top-level contract marker:
 - `wrapper = "oracle-browser-camoufox"`
 - `wrapperSchemaVersion = 1`
 
+The static verifier (`scripts/oracle/check-wrapper.sh --json`) now also locks the repaired `chatgpt-direct` auth-contract in place by asserting that the direct CLI still exposes:
+- `--chatgpt-url`
+- `--auth-only`
+- `--require-auth`
+- `--require-pro`
+- plus a successful `python3 -m py_compile research/chatgpt-direct.py`
+
 For malformed bridge-output fallback envelopes, the top-level `error` object now also carries:
 - `code = "bridge-json-invalid"`
 - `bridgeExitStatus`
