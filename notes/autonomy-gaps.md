@@ -1,10 +1,25 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-04-18 (11th pass)
+> Updated: 2026-04-19 (11th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-04-19 (self-improvement-audit-daily, 00:39 UTC)
+
+### PR review
+- **Status:** audit-workflow integrity blocker found and fixed this cycle: duplicate snapshot dates could accumulate silently and drift `> Updated:` pass counts out of sync. Added a duplicate-snapshot guard to `run-autonomy-audit-preflight.sh` plus `--dedupe-apply` for one-command cleanup, then removed the stale duplicate `2026-03-15` snapshot block so preflight/finalize checks are deterministic again. Cadence guard still surfaces the historical 2026-03-20→2026-04-18 gap, but now does so explicitly on every run.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
 ## Daily Audit Snapshot — 2026-04-18 (self-improvement-audit-daily, 00:38 UTC)
 
 ### PR review
@@ -142,25 +157,6 @@
 
 ### Devnet debugging
 - **Status:** triage, correlator, and incident bundle scripts operational; no new gap discovered this cycle.
-
----
-
-## Daily Audit Snapshot — 2026-03-15 (self-improvement-audit-daily)
-
-### PR review
-- **Blocker (previous cycle):** stale-finding detection required manual invocation per PR.
-- **Fix applied this cycle:** added `scripts/review/stale-findings-report.sh` — batch scanner across all tracked PRs with cron-friendly exit codes and markdown report output.
-- **Next:** wire as a cron job on a weekly cadence (low urgency while PR tracking volume is low).
-
-### CI fix
-- **Blocker:** retry telemetry is surfaced in output, but no threshold-based escalation policy exists for sustained degradation detection.
-- **Proposed fix:** add rolling-window threshold check for `llm_retry_count`/`llm_retry_wait_s` in tracker.
-
-### Spec implementation
-- **Status:** compliance gate, artifact checks, and pre-PR wrapper all operational. No new gaps.
-
-### Devnet debugging
-- **Status:** incident bundle, triage, and correlator scripts operational. No new gaps.
 
 ---
 
@@ -358,6 +354,16 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Duplicate-snapshot guard wired into autonomy-audit preflight (2026-04-19)
+Updated `scripts/notes/run-autonomy-audit-preflight.sh` with a new step-zero duplicate check:
+- runs `dedupe-autonomy-audit-snapshots.py` before consistency/cadence checks,
+- fails fast when older duplicate snapshot dates exist,
+- supports `--dedupe-apply` for one-command cleanup during preflight.
+
+Also applied the cleanup to `notes/autonomy-gaps.md` this cycle (removed the stale duplicate `2026-03-15` block), then re-synced `> Updated:` metadata so pass counts match snapshot count.
+
+**Rationale:** prevents silent drift in audit history where duplicate date blocks break pass-count metadata and make finalize/preflight checks flaky.
 
 ### ✅ Autonomy-audit freshness guard added to cadence checks (2026-04-18)
 Updated `scripts/notes/check-autonomy-audit-cadence.py` with:
