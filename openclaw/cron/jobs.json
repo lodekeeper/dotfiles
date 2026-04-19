@@ -192,14 +192,14 @@
       "state": {
         "consecutiveErrors": 0,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 80426,
-        "lastRunAtMs": 1776575700002,
+        "lastDurationMs": 97055,
+        "lastRunAtMs": 1776597334861,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1776579300000,
+        "nextRunAtMs": 1776600900000,
         "lastDelivered": false
       },
-      "updatedAtMs": 1776575780428,
+      "updatedAtMs": 1776597431916,
       "wakeMode": "now"
     },
     {
@@ -230,13 +230,13 @@
         "consecutiveErrors": 0,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 169388,
-        "lastRunAtMs": 1776495604944,
+        "lastDurationMs": 116120,
+        "lastRunAtMs": 1776582000002,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1776582000000
+        "nextRunAtMs": 1776668400000
       },
-      "updatedAtMs": 1776495774332,
+      "updatedAtMs": 1776582116122,
       "wakeMode": "now"
     },
     {
@@ -265,14 +265,14 @@
       "state": {
         "consecutiveErrors": 0,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 80172,
-        "lastRunAtMs": 1776578220325,
+        "lastDurationMs": 89256,
+        "lastRunAtMs": 1776599951799,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1776578520325,
+        "nextRunAtMs": 1776600251799,
         "lastDelivered": false
       },
-      "updatedAtMs": 1776578300497,
+      "updatedAtMs": 1776600041055,
       "wakeMode": "now"
     },
     {
@@ -369,13 +369,13 @@
         "consecutiveErrors": 0,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 56182,
-        "lastRunAtMs": 1776574815551,
+        "lastDurationMs": 67345,
+        "lastRunAtMs": 1776589228505,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1776589215551
+        "nextRunAtMs": 1776603628505
       },
-      "updatedAtMs": 1776574871733,
+      "updatedAtMs": 1776589295850,
       "wakeMode": "now"
     },
     {
@@ -402,13 +402,13 @@
         "consecutiveErrors": 0,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 179481,
-        "lastRunAtMs": 1776563240139,
+        "lastDurationMs": 93265,
+        "lastRunAtMs": 1776584840147,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1776584840139
+        "nextRunAtMs": 1776606440147
       },
-      "updatedAtMs": 1776563419620,
+      "updatedAtMs": 1776584933412,
       "wakeMode": "now"
     },
     {
@@ -434,14 +434,14 @@
       "state": {
         "consecutiveErrors": 0,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 72815,
-        "lastRunAtMs": 1776577703559,
+        "lastDurationMs": 72363,
+        "lastRunAtMs": 1776599473070,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1776579503559,
+        "nextRunAtMs": 1776601273070,
         "lastDelivered": false
       },
-      "updatedAtMs": 1776577776374,
+      "updatedAtMs": 1776599545433,
       "wakeMode": "now"
     },
     {
@@ -534,13 +534,13 @@
         "consecutiveErrors": 0,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 9446,
-        "lastRunAtMs": 1776577784184,
+        "lastDurationMs": 8253,
+        "lastRunAtMs": 1776599546409,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1776579584184
+        "nextRunAtMs": 1776601346409
       },
-      "updatedAtMs": 1776577793630,
+      "updatedAtMs": 1776599554662,
       "wakeMode": "now"
     },
     {
@@ -556,7 +556,7 @@
       "name": "next-audit-priorities-reminder",
       "payload": {
         "kind": "agentTurn",
-        "message": "Daily reminder: execute one \"Next Audit Priorities\" item from notes/autonomy-gaps.md (or BACKLOG) if still pending.\n\nPriority list:\n1) scripts/spec/extract-spec-section.sh\n2) scripts/debug/devnet-triage.sh\n3) add issue-linkage step to CI autofix cron prompt\n4) notes/fork-implementation-checklist.md\n\nProcess:\n- Update BACKLOG.md status first\n- Do one concrete item (or advance nearest blocker)\n- If routine/non-urgent, post status to Lodestar WG topic #347 using exec + OpenClaw CLI:\n  /home/openclaw/.nvm/versions/node/v22.22.0/bin/openclaw message send --channel telegram --target -1003764039429 --thread-id 347 --message \"<status>\"\n- DM Nico only for blocker/urgent decision/critical deliverable:\n  /home/openclaw/.nvm/versions/node/v22.22.0/bin/openclaw message send --channel telegram --target 5774760693 --message \"<urgent>\"\n- Do NOT use sessions_send for Telegram delivery.\n- ⛔ HARD CONSTRAINT: Do NOT edit memory files (memory/*.md) under ANY circumstances. This will cause the cron to fail. Memory updates are handled exclusively by the nightly consolidation pipeline.\n- If nothing actionable, reply exactly NO_REPLY",
+        "message": "Daily reminder: check the live `## Next Audit Priorities (next daily cycles)` section in `notes/autonomy-gaps.md` and execute one still-open item if one exists.\n\nRules:\n- Do **not** resurrect historical completed items from older snapshots.\n- If the latest autonomy-gaps audit says that section has no live items, prefer one concrete autonomy/workflow maintenance item from `BACKLOG.md` (for example reminder/workflow drift, audit tooling gaps, or a nearby automation blocker).\n- If there is nothing small and actionable right now, reply exactly `NO_REPLY`.\n\nProcess:\n- Update `BACKLOG.md` status first.\n- Do one concrete item (or advance the nearest blocker).\n- If routine/non-urgent, post status to Lodestar WG topic #347 using exec + OpenClaw CLI:\n  /home/openclaw/.nvm/versions/node/v22.22.0/bin/openclaw message send --channel telegram --target -1003764039429 --thread-id 347 --message \"<status>\"\n- DM Nico only for blocker/urgent decision/critical deliverable:\n  /home/openclaw/.nvm/versions/node/v22.22.0/bin/openclaw message send --channel telegram --target 5774760693 --message \"<urgent>\"\n- Do NOT use sessions_send for Telegram delivery.\n- ⛔ HARD CONSTRAINT: Do NOT edit memory files (memory/*.md) under ANY circumstances. This will cause the cron to fail. Memory updates are handled exclusively by the nightly consolidation pipeline.\n- For routine cycles from Nico DM / cron contexts, final reply should normally be exactly `NO_REPLY`.",
         "model": "claude-cli/claude-sonnet-4-6",
         "timeoutSeconds": 900
       },
@@ -569,14 +569,14 @@
       "state": {
         "consecutiveErrors": 0,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 146659,
-        "lastRunAtMs": 1776504600002,
+        "lastDurationMs": 166820,
+        "lastRunAtMs": 1776591048933,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1776591000000,
+        "nextRunAtMs": 1776677400000,
         "lastDelivered": false
       },
-      "updatedAtMs": 1776504746661,
+      "updatedAtMs": 1776591215753,
       "wakeMode": "now"
     },
     {
@@ -605,15 +605,15 @@
       "state": {
         "consecutiveErrors": 0,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 14463,
-        "lastRunAtMs": 1776556954953,
+        "lastDurationMs": 27671,
+        "lastRunAtMs": 1776578493108,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1776578493107,
+        "nextRunAtMs": 1776600093107,
         "lastDelivered": false,
-        "runningAtMs": 1776578493107
+        "runningAtMs": 1776600093107
       },
-      "updatedAtMs": 1776556969416,
+      "updatedAtMs": 1776578520779,
       "wakeMode": "now"
     },
     {
@@ -637,14 +637,14 @@
       "state": {
         "consecutiveErrors": 0,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 14943,
-        "lastRunAtMs": 1776552373169,
+        "lastDurationMs": 15871,
+        "lastRunAtMs": 1776595573171,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1776595573169,
+        "nextRunAtMs": 1776638773171,
         "lastDelivered": false
       },
-      "updatedAtMs": 1776552388112,
+      "updatedAtMs": 1776595589042,
       "wakeMode": "now"
     },
     {
@@ -806,14 +806,14 @@
       "state": {
         "consecutiveErrors": 0,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 10541,
-        "lastRunAtMs": 1776578428855,
+        "lastDurationMs": 14657,
+        "lastRunAtMs": 1776600043060,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1776600028853,
+        "nextRunAtMs": 1776621628853,
         "lastDelivered": false
       },
-      "updatedAtMs": 1776578439396,
+      "updatedAtMs": 1776600057717,
       "wakeMode": "now"
     },
     {
@@ -838,14 +838,14 @@
       "state": {
         "consecutiveErrors": 0,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 92800,
-        "lastRunAtMs": 1776570300114,
+        "lastDurationMs": 33958,
+        "lastRunAtMs": 1776591215753,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1776591000000,
+        "nextRunAtMs": 1776612600000,
         "lastDelivered": false
       },
-      "updatedAtMs": 1776570392914,
+      "updatedAtMs": 1776591249711,
       "wakeMode": "now"
     }
   ]
