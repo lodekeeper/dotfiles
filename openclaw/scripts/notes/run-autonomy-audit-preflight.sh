@@ -8,6 +8,7 @@ TIME_LABEL=""
 FORCE=0
 CARRY_FORWARD_STATUS=0
 DEDUPE_APPLY=0
+STRICT_CADENCE=0
 
 usage() {
   cat <<'EOF'
@@ -26,6 +27,7 @@ Options:
   --carry-forward-status
                         Prefill required status lines from latest snapshot
   --dedupe-apply        Auto-remove older duplicate snapshot blocks before preflight
+  --strict-cadence      Treat cadence gaps as hard failures (default: advisory warning)
   -h, --help            Show this help
 EOF
 }
@@ -54,6 +56,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --dedupe-apply)
       DEDUPE_APPLY=1
+      shift
+      ;;
+    --strict-cadence)
+      STRICT_CADENCE=1
       shift
       ;;
     -h|--help)
@@ -122,6 +128,10 @@ set +e
 cadence_rc=$?
 set -e
 if [[ "$cadence_rc" -eq 2 ]]; then
+  if [[ "$STRICT_CADENCE" -eq 1 ]]; then
+    echo "❌ Cadence guard reported missing-day gaps and --strict-cadence is enabled. Resolve cadence drift before continuing." >&2
+    exit 2
+  fi
   echo "⚠️ Cadence guard reported missing-day gaps. Continue with today's snapshot, and document root cause/fix in the audit workflow section."
 elif [[ "$cadence_rc" -ne 0 ]]; then
   echo "❌ Cadence guard failed (exit $cadence_rc). Aborting preflight." >&2

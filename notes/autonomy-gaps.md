@@ -1,10 +1,25 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-04-19 (11th pass)
+> Updated: 2026-04-20 (12th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-04-20 (self-improvement-audit-daily, 00:40 UTC)
+
+### PR review
+- **Status:** no new PR-review blocker discovered this cycle; latest-pair cadence noise is now naturally clear with consecutive snapshots (`2026-04-19` → `2026-04-20`). Implemented a stricter preflight control in `run-autonomy-audit-preflight.sh`: new `--strict-cadence` mode hard-fails on missing-day gaps instead of advisory-only warnings.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
 ## Daily Audit Snapshot — 2026-04-19 (self-improvement-audit-daily, 00:39 UTC)
 
 ### PR review
@@ -354,6 +369,14 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Optional strict cadence enforcement added to autonomy-audit preflight (2026-04-20)
+Updated `scripts/notes/run-autonomy-audit-preflight.sh` with a new `--strict-cadence` flag:
+- keeps existing default behavior (cadence gaps are advisory warnings),
+- allows strict runs to hard-fail immediately when `check-autonomy-audit-cadence.py` reports missing-day gaps,
+- preserves deterministic preflight flow while giving scheduled runs a policy switch for stricter discipline.
+
+**Rationale:** turns cadence handling from one-size-fits-all into an explicit policy choice, so autonomous runs can enforce daily-audit continuity when needed instead of relying on warning-only behavior.
 
 ### ✅ Duplicate-snapshot guard wired into autonomy-audit preflight (2026-04-19)
 Updated `scripts/notes/run-autonomy-audit-preflight.sh` with a new step-zero duplicate check:
