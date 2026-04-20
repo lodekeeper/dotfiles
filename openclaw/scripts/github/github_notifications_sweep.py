@@ -59,6 +59,8 @@ def extract_handled_ids_from_backlog(backlog_text: str) -> set:
             handled.add(int(m))
         for m in re.findall(r"/pulls/comments/(\d+)", line):
             handled.add(int(m))
+        for m in re.findall(r"pullrequestreview-(\d+)", line):
+            handled.add(int(m))
     return handled
 
 
@@ -104,14 +106,33 @@ def fetch_notifications() -> List[Dict[str, Any]]:
     return out
 
 
-def fetch_thread_comments(repo: str, number: int, kind: str) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
-    # For PRs: fetch both inline review comments and the issue-style thread comments.
+def fetch_thread_comments(
+    repo: str, number: int, kind: str
+) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]], List[Dict[str, Any]]]:
+    # For PRs: fetch inline review comments, issue-style thread comments, and review bodies.
     # For Issues: only the issue-style thread comments exist.
     review: List[Dict[str, Any]] = []
+    review_bodies: List[Dict[str, Any]] = []
     if kind == "pr":
         review = run_gh_json([f"repos/{repo}/pulls/{number}/comments?per_page=100"])
+        # Review bodies: only count reviews that have a non-empty body (pure approvals
+        # without a comment have body == "" and are not actionable as comments).
+        raw_reviews = run_gh_json([f"repos/{repo}/pulls/{number}/reviews?per_page=100"])
+        for r in raw_reviews:
+            body = (r.get("body") or "").strip()
+            if not body:
+                continue
+            review_bodies.append(
+                {
+                    "id": r.get("id"),
+                    "user": r.get("user") or {},
+                    "html_url": r.get("html_url"),
+                    "created_at": r.get("submitted_at"),
+                    "body": body,
+                }
+            )
     issue = run_gh_json([f"repos/{repo}/issues/{number}/comments?per_page=100"])
-    return review, issue
+    return review, issue, review_bodies
 
 
 def main() -> int:
@@ -157,14 +178,18 @@ def main() -> int:
             {
                 "last_review_comment_id": 0,
                 "last_issue_comment_id": 0,
+                "last_review_body_id": 0,
             },
         )
+        # Backfill new watermark for existing state entries
+        pr_state.setdefault("last_review_body_id", 0)
 
-        review_comments, issue_comments = fetch_thread_comments(repo, pr, kind)
+        review_comments, issue_comments, review_bodies = fetch_thread_comments(repo, pr, kind)
 
         # Update watermark candidates
         max_review = pr_state.get("last_review_comment_id", 0)
         max_issue = pr_state.get("last_issue_comment_id", 0)
+        max_review_body = pr_state.get("last_review_body_id", 0)
 
         for c in review_comments:
             cid = int(c["id"])
@@ -220,8 +245,36 @@ def main() -> int:
             elif item is not None:
                 item["lastSeenAt"] = now
 
+        for c in review_bodies:
+            cid = int(c["id"])
+            max_review_body = max(max_review_body, cid)
+            author = (c.get("user") or {}).get("login", "")
+            if author.lower() == OWNER_SELF:
+                continue
+
+            item = checklist["items"].get(str(cid))
+            if item is None and cid > int(pr_state.get("last_review_body_id", 0)):
+                item = {
+                    "id": cid,
+                    "repo": repo,
+                    "pr": pr,
+                    "kind": "review_body",
+                    "author": author,
+                    "url": c.get("html_url"),
+                    "createdAt": c.get("created_at"),
+                    "status": "open",
+                    "firstSeenAt": now,
+                    "lastSeenAt": now,
+                    "reportedCount": 0,
+                }
+                checklist["items"][str(cid)] = item
+                actionable_new.append(item)
+            elif item is not None:
+                item["lastSeenAt"] = now
+
         pr_state["last_review_comment_id"] = max_review
         pr_state["last_issue_comment_id"] = max_issue
+        pr_state["last_review_body_id"] = max_review_body
 
     # Reminder for stale open entries (to avoid misses), throttled
     remind_delta = dt.timedelta(hours=float(args.remind_hours))
