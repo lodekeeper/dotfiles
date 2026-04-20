@@ -6,10 +6,10 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-CONFIG="$SCRIPT_DIR/config.json"
-STATE="$SCRIPT_DIR/state.json"
-REPO_PATH="$HOME/ethereum-repos/eth-rnd-archive"
-NOTES_PATH="$(python3 -c "import json; print(json.load(open('$CONFIG')).get('notesPath', '/home/openclaw/.openclaw/workspace/memory/eth-rnd-archive-notes'))")"
+CONFIG="${ETH_RND_ARCHIVE_CONFIG:-$SCRIPT_DIR/config.json}"
+STATE="${ETH_RND_ARCHIVE_STATE:-$SCRIPT_DIR/state.json}"
+REPO_PATH="${ETH_RND_ARCHIVE_REPO_PATH:-$(python3 -c "import json, os; print(os.path.expanduser(json.load(open('$CONFIG')).get('repoPath', '~/ethereum-repos/eth-rnd-archive')))")}"
+NOTES_PATH="$(python3 -c "import json, os; print(os.path.expanduser(json.load(open('$CONFIG')).get('notesPath', '/home/openclaw/.openclaw/workspace/memory/eth-rnd-archive-notes')))")"
 SPECIFIC_DATE="${1:-}"
 
 # Ensure notes directory exists
@@ -55,7 +55,7 @@ elif [ -z "$LAST_COMMIT" ] || [ "$LAST_COMMIT" = "$CURRENT_COMMIT" ]; then
     echo "}"
 else
     # Diff mode — find changed files since last commit
-    CHANGED_FILES=$(git diff --name-only "$LAST_COMMIT" "$CURRENT_COMMIT" 2>/dev/null || git diff --name-only HEAD~1 HEAD)
+    CHANGED_FILES=$(git -c core.quotePath=false diff --name-only "$LAST_COMMIT" "$CURRENT_COMMIT" 2>/dev/null || git -c core.quotePath=false diff --name-only HEAD~1 HEAD)
     
     echo "{"
     echo "  \"mode\": \"diff\","
@@ -67,7 +67,7 @@ else
         # Extract channel name (first path component)
         CHANNEL=$(echo "$file" | cut -d'/' -f1)
         # Check if this channel is tracked (also match _threads subdirs)
-        if echo "$CHANNELS" | grep -qx "$CHANNEL"; then
+        if echo "$CHANNELS" | grep -Fqx -- "$CHANNEL"; then
             if [[ "$file" == *.json ]] && [ -f "$REPO_PATH/$file" ]; then
                 if [ "$FIRST" = true ]; then FIRST=false; else echo ","; fi
                 MSG_COUNT=$(python3 -c "import json; print(len(json.load(open('$REPO_PATH/$file'))))" 2>/dev/null || echo "0")
