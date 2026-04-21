@@ -7,6 +7,8 @@ COOKIE_FILE="$HOME/.oracle/chatgpt-cookies.json"
 ARTIFACT_ROOT="$WORKSPACE/research/oracle"
 STAMP="$(date -u +%Y%m%dT%H%M%SZ)"
 ARTIFACT_DIR="$ARTIFACT_ROOT/refresh-verify-$STAMP"
+VERIFIER_NAME="verify-after-auth-refresh"
+VERIFIER_SCHEMA_VERSION=1
 
 TOKEN_MODE=""
 TOKEN_VALUE=""
@@ -136,12 +138,14 @@ emit_dry_run() {
   refresh_input="$(refresh_desc)"
 
   if $JSON; then
-    python3 - <<'PY' "$ARTIFACT_DIR" "$COOKIE_FILE" "$refresh_input"
+    python3 - <<'PY' "$ARTIFACT_DIR" "$COOKIE_FILE" "$refresh_input" "$VERIFIER_NAME" "$VERIFIER_SCHEMA_VERSION"
 import json, sys
-artifact_dir, cookie_file, refresh_desc = sys.argv[1:4]
+artifact_dir, cookie_file, refresh_desc, verifier_name, verifier_schema_version = sys.argv[1:6]
 print(json.dumps({
     "status": "ok",
     "mode": "dry-run",
+    "verifier": verifier_name,
+    "verifierSchemaVersion": int(verifier_schema_version),
     "artifactDir": artifact_dir,
     "cookieFile": cookie_file,
     "refreshInput": refresh_desc,
@@ -177,11 +181,13 @@ fail() {
   if $JSON; then
     python3 - <<'PY' \
       "$full_message" "$ARTIFACT_DIR" "$COOKIE_FILE" "$FAILED_STEP" "$FAILED_DETAIL" "$refresh_input" \
-      "$step_status" "$direct_status" "$wrapper_status" "$check_wrapper_status"
+      "$step_status" "$direct_status" "$wrapper_status" "$check_wrapper_status" "$VERIFIER_NAME" "$VERIFIER_SCHEMA_VERSION"
 import json, sys
-message, artifact_dir, cookie_file, failed_step, failed_detail, refresh_input, refresh_status, direct_status, wrapper_status, check_wrapper_status = sys.argv[1:11]
+message, artifact_dir, cookie_file, failed_step, failed_detail, refresh_input, refresh_status, direct_status, wrapper_status, check_wrapper_status, verifier_name, verifier_schema_version = sys.argv[1:13]
 print(json.dumps({
     "status": "error",
+    "verifier": verifier_name,
+    "verifierSchemaVersion": int(verifier_schema_version),
     "message": message,
     "artifactDir": artifact_dir,
     "cookieFile": cookie_file,
@@ -350,11 +356,13 @@ else
 fi
 
 if $JSON; then
-  python3 - <<'PY' "$ARTIFACT_DIR" "$COOKIE_FILE" "$(refresh_desc)" "$step_status" "$direct_status" "$wrapper_status" "$check_wrapper_status"
+  python3 - <<'PY' "$ARTIFACT_DIR" "$COOKIE_FILE" "$(refresh_desc)" "$step_status" "$direct_status" "$wrapper_status" "$check_wrapper_status" "$VERIFIER_NAME" "$VERIFIER_SCHEMA_VERSION"
 import json, sys
-artifact_dir, cookie_file, refresh_input, refresh_status, direct_status, wrapper_status, check_wrapper_status = sys.argv[1:8]
+artifact_dir, cookie_file, refresh_input, refresh_status, direct_status, wrapper_status, check_wrapper_status, verifier_name, verifier_schema_version = sys.argv[1:10]
 print(json.dumps({
     "status": "ok",
+    "verifier": verifier_name,
+    "verifierSchemaVersion": int(verifier_schema_version),
     "artifactDir": artifact_dir,
     "cookieFile": cookie_file,
     "refreshInput": refresh_input,

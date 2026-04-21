@@ -28,6 +28,8 @@ from urllib.parse import urlparse
 
 DEFAULT_COOKIES = os.path.expanduser("~/.oracle/chatgpt-cookies.json")
 DEFAULT_CHATGPT_URL = "https://chatgpt.com"
+BRIDGE_NAME = "chatgpt-direct"
+BRIDGE_SCHEMA_VERSION = 1
 
 
 def _clean_response(text):
@@ -765,6 +767,13 @@ async def query_chatgpt(
         }
 
 
+def _with_bridge_contract(result):
+    if isinstance(result, dict):
+        result.setdefault("bridge", BRIDGE_NAME)
+        result.setdefault("bridgeSchemaVersion", BRIDGE_SCHEMA_VERSION)
+    return result
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="Query ChatGPT via headless Camoufox browser",
@@ -803,22 +812,22 @@ Examples:
     parser.add_argument("--verbose", "-v", action="store_true")
     args = parser.parse_args()
 
-    prompt = args.prompt or ""
-    if not prompt and not sys.stdin.isatty():
-        prompt = sys.stdin.read().strip()
-
-    if args.file:
-        for file_group in args.file:
-            for file_path in file_group:
-                with open(file_path) as fh:
-                    content = fh.read()
-                prompt = f"{prompt}\n\n{content}" if prompt else content
-
-    if not args.auth_only and not prompt:
-        parser.print_help(sys.stderr)
-        sys.exit(1)
-
     try:
+        prompt = args.prompt or ""
+        if not prompt and not sys.stdin.isatty():
+            prompt = sys.stdin.read().strip()
+
+        if args.file:
+            for file_group in args.file:
+                for file_path in file_group:
+                    with open(file_path) as fh:
+                        content = fh.read()
+                    prompt = f"{prompt}\n\n{content}" if prompt else content
+
+        if not args.auth_only and not prompt:
+            parser.print_help(sys.stderr)
+            sys.exit(1)
+
         result = asyncio.run(
             query_chatgpt(
                 prompt,
@@ -831,6 +840,8 @@ Examples:
                 chatgpt_url=args.chatgpt_url,
             )
         )
+
+        result = _with_bridge_contract(result)
 
         if args.json:
             output = json.dumps(result, indent=2)
@@ -851,7 +862,7 @@ Examples:
         sys.exit(130)
     except Exception as e:
         if args.json:
-            print(json.dumps({"status": "error", "error": str(e)}))
+            print(json.dumps(_with_bridge_contract({"status": "error", "error": str(e)}), indent=2))
         else:
             print(f"ERROR: {e}", file=sys.stderr)
         sys.exit(1)

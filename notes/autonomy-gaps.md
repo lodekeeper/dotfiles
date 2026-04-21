@@ -1,10 +1,25 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-04-20 (12th pass)
+> Updated: 2026-04-21 (13th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-04-21 (self-improvement-audit-daily, 00:40 UTC)
+
+### PR review
+- **Status:** no new PR-review blocker discovered this cycle; implemented a close-out cadence guard in `scripts/notes/close-autonomy-audit.sh` so missing-day drift is checked even when someone runs close-out directly without preflight.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
 ## Daily Audit Snapshot — 2026-04-20 (self-improvement-audit-daily, 00:40 UTC)
 
 ### PR review
@@ -369,6 +384,14 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Close-out cadence guard added to autonomy-audit wrapper (2026-04-21)
+Updated `scripts/notes/close-autonomy-audit.sh` so daily close-out now runs `check-autonomy-audit-cadence.py` with `--require-current` against the selected audit date before rendering output.
+- Added `--strict-cadence` to hard-fail on missing-day gaps when desired.
+- Added `--skip-cadence-check` for explicit manual override/backfill flows.
+- Preserved existing `NO_REPLY` behavior when finalize reports no meaningful delta.
+
+**Rationale:** preflight already enforced cadence, but direct close-out calls could bypass that signal. This closes the workflow gap by keeping freshness/cadence checks on both entry and exit paths.
 
 ### ✅ Optional strict cadence enforcement added to autonomy-audit preflight (2026-04-20)
 Updated `scripts/notes/run-autonomy-audit-preflight.sh` with a new `--strict-cadence` flag:

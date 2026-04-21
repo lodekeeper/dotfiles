@@ -21,6 +21,12 @@ scripts/oracle/chatgpt-direct --auth-only --require-auth --require-pro --json
 scripts/oracle/chatgpt-direct --chatgpt-url "https://chatgpt.com/g/.../project" --prompt "Use this project context"
 ```
 
+When `--json` is used, direct output now also carries a stable contract marker:
+- `bridge = "chatgpt-direct"`
+- `bridgeSchemaVersion = 1`
+
+That JSON path now also stays structured on deterministic setup/input failures like a missing `--file` path, instead of dumping a raw Python traceback.
+
 ### `replace-session-token.py`
 Safe helper to patch a fresh `__Secure-next-auth.session-token` into the local
 ChatGPT cookie jar without hand-editing JSON.
@@ -85,6 +91,10 @@ scripts/oracle/verify-after-auth-refresh.sh --json
 It stores step artifacts under `research/oracle/refresh-verify-<timestamp>/`.
 In `--dry-run` mode it prints the planned sequence and artifact path **without**
 changing the cookie jar or creating the artifact directory.
+
+Its JSON output now also carries a stable verifier contract marker:
+- `verifier = "verify-after-auth-refresh"`
+- `verifierSchemaVersion = 1`
 
 On failure, its JSON output now also includes:
 - `failedStep` — which stage failed (`refreshInput`, `chatgptDirectAuth`, `oracleWrapperAuth`, `checkWrapperLive`)

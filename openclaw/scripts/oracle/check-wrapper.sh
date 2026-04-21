@@ -177,10 +177,13 @@ with open(sys.argv[1]) as f:
     data = json.load(f)
 assert data.get('status') == 'ok', data
 assert data.get('mode') == 'dry-run', data
+assert data.get('verifier') == 'verify-after-auth-refresh', data
+assert data.get('verifierSchemaVersion') == 1, data
 artifact_dir = data.get('artifactDir')
 assert artifact_dir and 'refresh-verify-' in artifact_dir, data
 assert not os.path.exists(artifact_dir), data
 assert data.get('refreshInput') == 'no refresh input; verify existing cookie jar only', data
+assert data.get('cookieFile'), data
 steps = data.get('steps') or []
 assert len(steps) == 3, data
 assert 'chatgpt-direct --auth-only' in steps[0], data
@@ -194,10 +197,13 @@ with open(sys.argv[1]) as f:
     data = json.load(f)
 assert data.get('status') == 'ok', data
 assert data.get('mode') == 'dry-run', data
+assert data.get('verifier') == 'verify-after-auth-refresh', data
+assert data.get('verifierSchemaVersion') == 1, data
 artifact_dir = data.get('artifactDir')
 assert artifact_dir and 'refresh-verify-' in artifact_dir, data
 assert not os.path.exists(artifact_dir), data
 assert data.get('refreshInput') == 'install full cookie export from: -', data
+assert data.get('cookieFile'), data
 steps = data.get('steps') or []
 assert len(steps) == 3, data
 assert 'chatgpt-direct --auth-only' in steps[0], data
@@ -212,9 +218,12 @@ import json, sys
 with open(sys.argv[1]) as f:
     data = json.load(f)
 assert data.get('status') == 'error', data
+assert data.get('verifier') == 'verify-after-auth-refresh', data
+assert data.get('verifierSchemaVersion') == 1, data
 assert data.get('failedStep') == 'refreshInput', data
 assert data.get('failedDetail'), data
 assert '/tmp/definitely-missing-chatgpt-cookies.json' in data.get('failedDetail', ''), data
+assert data.get('cookieFile'), data
 steps = data.get('steps') or {}
 assert steps.get('refreshInput') == 'error', data
 assert steps.get('chatgptDirectAuth') == 'pending', data
@@ -235,8 +244,11 @@ import json, sys
 with open(sys.argv[1]) as f:
     data = json.load(f)
 assert data.get('status') == 'error', data
+assert data.get('verifier') == 'verify-after-auth-refresh', data
+assert data.get('verifierSchemaVersion') == 1, data
 assert data.get('failedStep') == 'refreshInput', data
 detail = data.get('failedDetail') or ''
+assert data.get('cookieFile'), data
 assert "top-level shape is an object with a 'cookies' field (array)" in detail, data
 assert 'expects the cookie array itself' in detail, data
 assert sys.argv[2] in detail, data
@@ -250,12 +262,26 @@ PY
 
 check_chatgpt_direct_contract() {
   local help_out="$1"
+  local missing_file_json="$2"
+  local missing_path="/tmp/definitely-missing-chatgpt-direct-input.txt"
   run "$SCRIPT_DIR/chatgpt-direct" --help > "$help_out"
   grep -q -- '--chatgpt-url' "$help_out"
   grep -q -- '--auth-only' "$help_out"
   grep -q -- '--require-auth' "$help_out"
   grep -q -- '--require-pro' "$help_out"
   run python3 -m py_compile "$WORKSPACE/research/chatgpt-direct.py"
+  if "$SCRIPT_DIR/chatgpt-direct" --prompt 'hello' --file "$missing_path" --json > "$missing_file_json"; then
+    return 1
+  fi
+  python3 - <<'PY' "$missing_file_json" "$missing_path"
+import json, sys
+with open(sys.argv[1]) as f:
+    data = json.load(f)
+assert data.get('status') == 'error', data
+assert data.get('bridge') == 'chatgpt-direct', data
+assert data.get('bridgeSchemaVersion') == 1, data
+assert sys.argv[2] in (data.get('error') or ''), data
+PY
 }
 
 check_install_chatgpt_cookies_helper() {
@@ -682,7 +708,8 @@ fi
 
 log "checking chatgpt-direct auth-contract/static CLI support"
 chatgpt_direct_help_out="$TMP_DIR/chatgpt-direct-help.txt"
-if check_chatgpt_direct_contract "$chatgpt_direct_help_out"
+chatgpt_direct_missing_file_json="$TMP_DIR/chatgpt-direct-missing-file.json"
+if check_chatgpt_direct_contract "$chatgpt_direct_help_out" "$chatgpt_direct_missing_file_json"
 then
   CHATGPT_DIRECT_CONTRACT_RESULT="passed"
 else

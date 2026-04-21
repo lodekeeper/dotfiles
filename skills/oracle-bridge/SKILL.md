@@ -58,6 +58,10 @@ scripts/oracle/chatgpt-direct --prompt "..." --verbose
 | `--require-auth` | off | Fail unless the session is truly authenticated (not guest/free) |
 | `--require-pro` | off | Fail unless GPT-5.4 Pro is actually available |
 
+When `--json` is used, direct output now also carries:
+- `bridge = "chatgpt-direct"`
+- `bridgeSchemaVersion = 1`
+
 ## GPT-5.4 Pro Thinking Behavior
 
 GPT-5.4 Pro uses **extended thinking** mode:
@@ -108,6 +112,10 @@ Use the local verifier to lock the wrapper + direct-path contract in place:
 scripts/oracle/check-wrapper.sh --json
 scripts/oracle/check-wrapper.sh --live --json
 ```
+
+`verify-after-auth-refresh.sh --json` now also emits a stable verifier marker for automation:
+- `verifier = "verify-after-auth-refresh"`
+- `verifierSchemaVersion = 1`
 
 The static verifier now also asserts that `scripts/oracle/chatgpt-direct` still exposes the repaired auth-check interface:
 - `--chatgpt-url`
