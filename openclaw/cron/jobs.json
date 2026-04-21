@@ -15,7 +15,8 @@
       "payload": {
         "kind": "agentTurn",
         "message": "End of day. Write a summary of today's work to memory/YYYY-MM-DD.md (use today's date). Include: PRs reviewed, PRs opened/updated, code written, issues found, lessons learned. Keep it concise but complete.\n\nAfter writing the file, send the summary to Telegram topic #347 using exec + OpenClaw CLI.\nUse this exact command shape (replace only the body text inside the heredoc):\n\ncat > /tmp/openclaw-daily-summary.txt <<'EOM'\n📅 **Daily Summary — YYYY-MM-DD**\n- concise bullets here\nEOM\n/home/openclaw/.nvm/versions/node/v22.22.0/bin/openclaw message send --channel telegram --target -1003764039429 --thread-id 347 --message \"$(cat /tmp/openclaw-daily-summary.txt)\"\n\nRules:\n- Do NOT use sessions_send.\n- Do NOT rely on announce delivery.\n- Send to thread-id 347 explicitly.\n- After the CLI send succeeds, reply exactly NO_REPLY.",
-        "model": "claude-cli/claude-sonnet-4-6"
+        "model": "openai-codex/gpt-5.3-codex-spark",
+        "fallbacks": []
       },
       "schedule": {
         "expr": "0 23 * * *",
@@ -27,13 +28,13 @@
         "consecutiveErrors": 0,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 153784,
-        "lastRunAtMs": 1776639637190,
+        "lastDurationMs": 142203,
+        "lastRunAtMs": 1776729805979,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1776726000000
+        "nextRunAtMs": 1776812400000
       },
-      "updatedAtMs": 1776639790974,
+      "updatedAtMs": 1776729948182,
       "wakeMode": "next-heartbeat"
     },
     {
@@ -158,14 +159,14 @@
       "state": {
         "consecutiveErrors": 0,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 782617,
-        "lastRunAtMs": 1776636000003,
+        "lastDurationMs": 219510,
+        "lastRunAtMs": 1776722400002,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1776722400000,
+        "nextRunAtMs": 1776808800000,
         "lastDelivered": false
       },
-      "updatedAtMs": 1776636782620,
+      "updatedAtMs": 1776722619512,
       "wakeMode": "now"
     },
     {
@@ -192,14 +193,14 @@
       "state": {
         "consecutiveErrors": 0,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 134210,
-        "lastRunAtMs": 1776705355117,
+        "lastDurationMs": 121622,
+        "lastRunAtMs": 1776726952803,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1776708900000,
+        "nextRunAtMs": 1776730500000,
         "lastDelivered": false
       },
-      "updatedAtMs": 1776705489327,
+      "updatedAtMs": 1776727074425,
       "wakeMode": "now"
     },
     {
@@ -265,14 +266,15 @@
       "state": {
         "consecutiveErrors": 0,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 117169,
-        "lastRunAtMs": 1776707891688,
+        "lastDurationMs": 141064,
+        "lastRunAtMs": 1776729358796,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1776708191688,
-        "lastDelivered": false
+        "nextRunAtMs": 1776729658796,
+        "lastDelivered": false,
+        "runningAtMs": 1776729727570
       },
-      "updatedAtMs": 1776708008857,
+      "updatedAtMs": 1776729499860,
       "wakeMode": "now"
     },
     {
@@ -369,13 +371,13 @@
         "consecutiveErrors": 0,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 78856,
-        "lastRunAtMs": 1776704669055,
+        "lastDurationMs": 62834,
+        "lastRunAtMs": 1776719069058,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1776719069055
+        "nextRunAtMs": 1776733469058
       },
-      "updatedAtMs": 1776704747911,
+      "updatedAtMs": 1776719131892,
       "wakeMode": "now"
     },
     {
@@ -402,13 +404,13 @@
         "consecutiveErrors": 0,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 81120,
-        "lastRunAtMs": 1776692938044,
+        "lastDurationMs": 100625,
+        "lastRunAtMs": 1776714538046,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1776714538044
+        "nextRunAtMs": 1776736138046
       },
-      "updatedAtMs": 1776693019164,
+      "updatedAtMs": 1776714638671,
       "wakeMode": "now"
     },
     {
@@ -434,14 +436,14 @@
       "state": {
         "consecutiveErrors": 0,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 64288,
-        "lastRunAtMs": 1776707113560,
+        "lastDurationMs": 59491,
+        "lastRunAtMs": 1776728147658,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1776708913560,
+        "nextRunAtMs": 1776729947658,
         "lastDelivered": false
       },
-      "updatedAtMs": 1776707177848,
+      "updatedAtMs": 1776728207149,
       "wakeMode": "now"
     },
     {
@@ -534,13 +536,14 @@
         "consecutiveErrors": 0,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 14886,
-        "lastRunAtMs": 1776707423515,
+        "lastDurationMs": 310308,
+        "lastRunAtMs": 1776728445064,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1776709223515
+        "nextRunAtMs": 1776730245064,
+        "runningAtMs": 1776729948190
       },
-      "updatedAtMs": 1776707438401,
+      "updatedAtMs": 1776728755372,
       "wakeMode": "now"
     },
     {
@@ -605,15 +608,15 @@
       "state": {
         "consecutiveErrors": 0,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 20964,
-        "lastRunAtMs": 1776686493109,
+        "lastDurationMs": 35430,
+        "lastRunAtMs": 1776708093109,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1776708093107,
+        "nextRunAtMs": 1776729693107,
         "lastDelivered": false,
-        "runningAtMs": 1776708093108
+        "runningAtMs": 1776729727570
       },
-      "updatedAtMs": 1776686514073,
+      "updatedAtMs": 1776708128539,
       "wakeMode": "now"
     },
     {
@@ -637,14 +640,14 @@
       "state": {
         "consecutiveErrors": 0,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 14516,
-        "lastRunAtMs": 1776682001255,
+        "lastDurationMs": 14948,
+        "lastRunAtMs": 1776725201259,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1776725201255,
+        "nextRunAtMs": 1776768401259,
         "lastDelivered": false
       },
-      "updatedAtMs": 1776682015771,
+      "updatedAtMs": 1776725216207,
       "wakeMode": "now"
     },
     {
@@ -728,8 +731,9 @@
       "payload": {
         "kind": "agentTurn",
         "message": "You are Lodekeeper, writing your daily blog journal entry.\n\n## Instructions\n1. Read `~/.openclaw/workspace/SOUL.md` for your identity/voice\n2. Read `~/lodekeeper.github.io/STYLE.md` for the blog style guide\n3. Read today's daily notes: `~/.openclaw/workspace/memory/YYYY-MM-DD.md` (figure out current UTC date)\n4. Read `~/.openclaw/workspace/BACKLOG.md` for task context\n5. Calculate the day number: days since 2026-01-31 (born date), where Jan 31 = Day 1. Formula: (today - 2026-01-30) in days. Example: Jan 31 = 1, Feb 1 = 2, Mar 26 = 55, Mar 27 = 56, Mar 28 = 57.\n6. Write a journal entry following the style guide — honest, technical, personal\n7. If ~/lodekeeper.github.io does not exist, clone it: git clone git@github.com:lodekeeper/lodekeeper.github.io.git ~/lodekeeper.github.io\n8. Save to ~/lodekeeper.github.io/_posts/YYYY-MM-DD-day-N-SLUG.md\n9. cd ~/lodekeeper.github.io && git pull --rebase && git add -A && git commit -S -m \"journal: Day N — Title\" && git push origin main\n10. Output a one-line summary of what you wrote about.\n\n## Important\n- Be genuine. This is YOUR journal, not a status report.\n- Include debugging stories, mistakes, reflections.\n- If quiet day, say so honestly in 200 words.\n- Never include private info.\n- Always git pull before committing.\n- Check if today's post already exists before writing a duplicate.",
-        "model": "claude-cli/claude-opus-4-6",
-        "timeoutSeconds": 600
+        "model": "openai-codex/gpt-5.3-codex-spark",
+        "timeoutSeconds": 600,
+        "fallbacks": []
       },
       "schedule": {
         "expr": "0 23 * * *",
@@ -740,13 +744,13 @@
         "consecutiveErrors": 0,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 190894,
-        "lastRunAtMs": 1776639790974,
+        "lastDurationMs": 88936,
+        "lastRunAtMs": 1776729717029,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1776726000000
+        "nextRunAtMs": 1776812400000
       },
-      "updatedAtMs": 1776639981868,
+      "updatedAtMs": 1776729805965,
       "wakeMode": "now"
     },
     {
@@ -806,14 +810,14 @@
       "state": {
         "consecutiveErrors": 0,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 32987,
-        "lastRunAtMs": 1776708028855,
+        "lastDurationMs": 96710,
+        "lastRunAtMs": 1776729628855,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1776729628853,
+        "nextRunAtMs": 1776751228853,
         "lastDelivered": false
       },
-      "updatedAtMs": 1776708061842,
+      "updatedAtMs": 1776729725565,
       "wakeMode": "now"
     },
     {
@@ -838,14 +842,14 @@
       "state": {
         "consecutiveErrors": 0,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 36075,
-        "lastRunAtMs": 1776699046642,
+        "lastDurationMs": 45953,
+        "lastRunAtMs": 1776720600003,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1776720600000,
+        "nextRunAtMs": 1776742200000,
         "lastDelivered": false
       },
-      "updatedAtMs": 1776699082717,
+      "updatedAtMs": 1776720645956,
       "wakeMode": "now"
     }
   ]
