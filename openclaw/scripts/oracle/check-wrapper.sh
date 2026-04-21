@@ -22,6 +22,7 @@ RENDER_ALIAS_RESULT="pending"
 COPY_MARKDOWN_RESULT="pending"
 RECOVERY_HELPERS_RESULT="pending"
 CHATGPT_DIRECT_CONTRACT_RESULT="pending"
+VALID_BRIDGE_JSON_RESULT="pending"
 MALFORMED_JSON_RESULT="pending"
 NON_OBJECT_JSON_RESULT="pending"
 INVALID_STATUS_JSON_RESULT="pending"
@@ -68,9 +69,9 @@ run() {
 emit_json() {
   python3 - <<'PY' \
     "$FINAL_STATUS" "$FINAL_MESSAGE" "$LIVE" "$COOKIE_FILE" \
-    "$SYNTAX_RESULT" "$HELP_RESULT" "$REJECT_RESULT" "$UNKNOWN_ARG_RESULT" "$DRY_RUN_RESULT" "$RENDER_ALIAS_RESULT" "$COPY_MARKDOWN_RESULT" "$RECOVERY_HELPERS_RESULT" "$CHATGPT_DIRECT_CONTRACT_RESULT" "$MALFORMED_JSON_RESULT" "$NON_OBJECT_JSON_RESULT" "$INVALID_STATUS_JSON_RESULT" "$AUTH_RESULT" "$SMOKE_RESULT"
+    "$SYNTAX_RESULT" "$HELP_RESULT" "$REJECT_RESULT" "$UNKNOWN_ARG_RESULT" "$DRY_RUN_RESULT" "$RENDER_ALIAS_RESULT" "$COPY_MARKDOWN_RESULT" "$RECOVERY_HELPERS_RESULT" "$CHATGPT_DIRECT_CONTRACT_RESULT" "$VALID_BRIDGE_JSON_RESULT" "$MALFORMED_JSON_RESULT" "$NON_OBJECT_JSON_RESULT" "$INVALID_STATUS_JSON_RESULT" "$AUTH_RESULT" "$SMOKE_RESULT"
 import json, sys
-status, message, live, cookie_file, syntax, help_r, reject, unknown_arg, dry_run, render_alias, copy_markdown, recovery_helpers, chatgpt_direct_contract, malformed_json, non_object_json, invalid_status_json, auth, smoke = sys.argv[1:19]
+status, message, live, cookie_file, syntax, help_r, reject, unknown_arg, dry_run, render_alias, copy_markdown, recovery_helpers, chatgpt_direct_contract, valid_bridge_json, malformed_json, non_object_json, invalid_status_json, auth, smoke = sys.argv[1:20]
 print(json.dumps({
     "status": status,
     "message": message,
@@ -86,6 +87,7 @@ print(json.dumps({
         "copyMarkdown": copy_markdown,
         "recoveryHelpers": recovery_helpers,
         "chatgptDirectContract": chatgpt_direct_contract,
+        "validBridgeJsonPassThrough": valid_bridge_json,
         "malformedBridgeJson": malformed_json,
         "nonObjectBridgeJson": non_object_json,
         "invalidStatusBridgeJson": invalid_status_json,
@@ -715,6 +717,144 @@ then
 else
   CHATGPT_DIRECT_CONTRACT_RESULT="failed"
   finish_fail "chatgpt-direct auth-contract static checks failed"
+fi
+
+log "checking valid bridge JSON pass-through"
+valid_bridge_error_stub="$TMP_DIR/valid-bridge-error.sh"
+cat > "$valid_bridge_error_stub" <<'EOF'
+#!/usr/bin/env bash
+python3 - <<'PY'
+import json
+print(json.dumps({
+  "status": "error",
+  "error": "synthetic bridge error",
+  "bridge": "chatgpt-direct",
+  "bridgeSchemaVersion": 1,
+  "auth": {
+    "state": "stale",
+    "server": {
+      "state": "stale",
+      "planType": "pro",
+      "error": "RefreshAccessTokenError"
+    }
+  }
+}, indent=2))
+PY
+exit 7
+EOF
+chmod +x "$valid_bridge_error_stub"
+valid_bridge_error_json="$TMP_DIR/valid-bridge-error.json"
+set +e
+ORACLE_CHATGPT_DIRECT_BIN="$valid_bridge_error_stub" "$WRAPPER" --auth-only --json > "$valid_bridge_error_json" 2> "$TMP_DIR/valid-bridge-error.err"
+valid_bridge_error_status=$?
+set -e
+if [[ "$valid_bridge_error_status" -eq 0 ]]; then
+  VALID_BRIDGE_JSON_RESULT="failed"
+  finish_fail "expected valid bridge JSON error pass-through regression to fail with bridge exit status"
+fi
+if [[ "$valid_bridge_error_status" -ne 7 ]]; then
+  VALID_BRIDGE_JSON_RESULT="failed"
+  finish_fail "valid bridge JSON error pass-through did not preserve bridge exit status"
+fi
+if ! python3 - <<'PY' "$valid_bridge_error_json"
+import json, sys
+with open(sys.argv[1]) as f:
+    data = json.load(f)
+assert data.get('status') == 'error', data
+assert data.get('error') == 'synthetic bridge error', data
+assert data.get('bridge') == 'chatgpt-direct', data
+assert data.get('bridgeSchemaVersion') == 1, data
+assert data.get('wrapper') == 'oracle-browser-camoufox', data
+assert data.get('wrapperSchemaVersion') == 1, data
+auth = data.get('auth') or {}
+server = auth.get('server') or {}
+assert auth.get('state') == 'stale', data
+assert server.get('state') == 'stale', data
+assert server.get('planType') == 'pro', data
+assert server.get('error') == 'RefreshAccessTokenError', data
+plan = data.get('plan') or {}
+assert plan.get('authOnly') is True, data
+assert plan.get('promptProvided') is False, data
+assert plan.get('fileCount') == 0, data
+assert plan.get('jsonOutput') is True, data
+assert plan.get('bundleClass') == 'normal', data
+assert plan.get('recommendedAction') == 'none', data
+PY
+then
+  VALID_BRIDGE_JSON_RESULT="failed"
+  finish_fail "valid bridge JSON error pass-through check failed"
+fi
+
+valid_bridge_ok_stub="$TMP_DIR/valid-bridge-ok.sh"
+cat > "$valid_bridge_ok_stub" <<'EOF'
+#!/usr/bin/env bash
+python3 - <<'PY'
+import json
+print(json.dumps({
+  "status": "ok",
+  "text": "SYNTHETIC_OK",
+  "elapsed": 12,
+  "bridge": "chatgpt-direct",
+  "bridgeSchemaVersion": 1,
+  "usedPro": True,
+  "model": {
+    "name": "gpt-5.4-pro",
+    "isPro": True
+  },
+  "auth": {
+    "state": "authenticated",
+    "server": {
+      "state": "authenticated",
+      "planType": "pro"
+    }
+  }
+}, indent=2))
+PY
+exit 0
+EOF
+chmod +x "$valid_bridge_ok_stub"
+valid_bridge_ok_json="$TMP_DIR/valid-bridge-ok.json"
+set +e
+ORACLE_CHATGPT_DIRECT_BIN="$valid_bridge_ok_stub" "$WRAPPER" --auth-only --json > "$valid_bridge_ok_json" 2> "$TMP_DIR/valid-bridge-ok.err"
+valid_bridge_ok_status=$?
+set -e
+if [[ "$valid_bridge_ok_status" -ne 0 ]]; then
+  VALID_BRIDGE_JSON_RESULT="failed"
+  finish_fail "expected valid bridge JSON success pass-through regression to succeed"
+fi
+if python3 - <<'PY' "$valid_bridge_ok_json"
+import json, sys
+with open(sys.argv[1]) as f:
+    data = json.load(f)
+assert data.get('status') == 'ok', data
+assert data.get('text') == 'SYNTHETIC_OK', data
+assert data.get('elapsed') == 12, data
+assert data.get('bridge') == 'chatgpt-direct', data
+assert data.get('bridgeSchemaVersion') == 1, data
+assert data.get('wrapper') == 'oracle-browser-camoufox', data
+assert data.get('wrapperSchemaVersion') == 1, data
+assert data.get('usedPro') is True, data
+model = data.get('model') or {}
+assert model.get('name') == 'gpt-5.4-pro', data
+assert model.get('isPro') is True, data
+auth = data.get('auth') or {}
+server = auth.get('server') or {}
+assert auth.get('state') == 'authenticated', data
+assert server.get('state') == 'authenticated', data
+assert server.get('planType') == 'pro', data
+plan = data.get('plan') or {}
+assert plan.get('authOnly') is True, data
+assert plan.get('promptProvided') is False, data
+assert plan.get('fileCount') == 0, data
+assert plan.get('jsonOutput') is True, data
+assert plan.get('bundleClass') == 'normal', data
+assert plan.get('recommendedAction') == 'none', data
+PY
+then
+  VALID_BRIDGE_JSON_RESULT="passed"
+else
+  VALID_BRIDGE_JSON_RESULT="failed"
+  finish_fail "valid bridge JSON success pass-through check failed"
 fi
 
 log "checking malformed bridge JSON fallback"

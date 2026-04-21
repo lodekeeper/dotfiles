@@ -311,6 +311,9 @@ What it checks:
   - refresh-input failure classification in `verify-after-auth-refresh.sh` (missing path + wrong-top-level-shape cookie export)
   - `install-chatgpt-cookies.py` mixed-domain filtering + session-token preservation
   - direct helper failure UX for missing-path, malformed-JSON, and wrong-top-level-shape cookie exports
+- valid bridge JSON pass-through stays healthy too:
+  - wrapper preserves direct-tool fields for both structured `status=error` and structured `status=ok` bridge envelopes (`status`, `error`/`text`, `bridge`, `bridgeSchemaVersion`, `auth.*`, etc.) while adding `wrapper`, `wrapperSchemaVersion`, and `plan.*`
+  - wrapper also preserves direct-tool exit-status semantics for valid structured bridge JSON (for example structured error envelope with bridge exit 7 still exits 7)
 - optional live auth/pro smoke test
 - optional live browser-style prompt run with multi-file `--file` usage
 - optional custom cookie-jar verification via `--cookie-file <path>` for refresh/recovery flows

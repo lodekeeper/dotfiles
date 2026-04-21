@@ -124,6 +124,8 @@ The static verifier now also asserts that `scripts/oracle/chatgpt-direct` still 
 - `--require-pro`
 - plus `python3 -m py_compile research/chatgpt-direct.py`
 
+It also now locks the valid bridge-JSON pass-through path in place: when `chatgpt-direct` emits a valid structured JSON success or error envelope, the wrapper must preserve those direct-tool fields while adding wrapper metadata, and it must preserve the direct-tool exit-status semantics for valid structured bridge JSON.
+
 ## Files
 
 | File | Purpose |
