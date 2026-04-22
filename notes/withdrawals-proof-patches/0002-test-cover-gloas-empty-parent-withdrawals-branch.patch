@@ -1,0 +1,25 @@
+From 52404aff3f9e74e3755f82402a4e1c5cfd4d2a09 Mon Sep 17 00:00:00 2001
+From: lodekeeper <lodekeeper@users.noreply.github.com>
+Date: Wed, 22 Apr 2026 12:44:48 +0000
+Subject: [PATCH 2/2] test: cover gloas empty-parent withdrawals branch
+
+---
+ .../test/unit/api/impl/validator/produceBlockV3.test.ts         | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/packages/beacon-node/test/unit/api/impl/validator/produceBlockV3.test.ts b/packages/beacon-node/test/unit/api/impl/validator/produceBlockV3.test.ts
+index 10d64d143c..da9840a9c0 100644
+--- a/packages/beacon-node/test/unit/api/impl/validator/produceBlockV3.test.ts
++++ b/packages/beacon-node/test/unit/api/impl/validator/produceBlockV3.test.ts
+@@ -320,7 +320,7 @@ describe("api/validator - produceBlockV3", () => {
+     );
+   });
+ 
+-  it("uses payloadExpectedWithdrawals for Gloas empty-parent payload attributes", async () => {
++  it("uses getPayloadExpectedWithdrawals() for Gloas empty-parent payload attributes", async () => {
+     const gloasChainConfig = createChainForkConfig({
+       ...defaultChainConfig,
+       ALTAIR_FORK_EPOCH: 0,
+-- 
+2.43.0
+

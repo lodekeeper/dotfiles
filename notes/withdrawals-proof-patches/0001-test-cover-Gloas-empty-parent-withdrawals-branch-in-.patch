@@ -1,0 +1,136 @@
+From 45649c5c4ff69e03701fda7977003acbad824cde Mon Sep 17 00:00:00 2001
+From: lodekeeper <lodekeeper@users.noreply.github.com>
+Date: Wed, 22 Apr 2026 12:43:42 +0000
+Subject: [PATCH 1/2] test: cover Gloas empty-parent withdrawals branch in
+ produceBlockV3
+
+---
+ .../api/impl/validator/produceBlockV3.test.ts | 107 +++++++++++++++++-
+ 1 file changed, 106 insertions(+), 1 deletion(-)
+
+diff --git a/packages/beacon-node/test/unit/api/impl/validator/produceBlockV3.test.ts b/packages/beacon-node/test/unit/api/impl/validator/produceBlockV3.test.ts
+index aedb4eb098..10d64d143c 100644
+--- a/packages/beacon-node/test/unit/api/impl/validator/produceBlockV3.test.ts
++++ b/packages/beacon-node/test/unit/api/impl/validator/produceBlockV3.test.ts
+@@ -15,7 +15,7 @@ import {PayloadIdCache} from "../../../../../src/execution/index.js";
+ import {SyncState} from "../../../../../src/sync/interface.js";
+ import {toGraffitiBytes} from "../../../../../src/util/graffiti.js";
+ import {ApiTestModules, getApiTestModules} from "../../../../utils/api.js";
+-import {generateCachedBellatrixState, zeroProtoBlock} from "../../../../utils/state.js";
++import {generateCachedBellatrixState, generateCachedElectraState, zeroProtoBlock} from "../../../../utils/state.js";
+ import {generateProtoBlock} from "../../../../utils/typeGenerator.js";
+ 
+ describe("api/validator - produceBlockV3", () => {
+@@ -319,4 +319,109 @@ describe("api/validator - produceBlockV3", () => {
+       }
+     );
+   });
++
++  it("uses payloadExpectedWithdrawals for Gloas empty-parent payload attributes", async () => {
++    const gloasChainConfig = createChainForkConfig({
++      ...defaultChainConfig,
++      ALTAIR_FORK_EPOCH: 0,
++      BELLATRIX_FORK_EPOCH: 0,
++      CAPELLA_FORK_EPOCH: 0,
++      DENEB_FORK_EPOCH: 0,
++      ELECTRA_FORK_EPOCH: 0,
++      FULU_FORK_EPOCH: 0,
++      GLOAS_FORK_EPOCH: 0,
++    });
++    const gloasConfig = createBeaconConfig(gloasChainConfig, genesisValidatorsRoot);
++    const gloasModules = getApiTestModules({config: gloasConfig});
++
++    const parentRoot = ZERO_HASH_HEX;
++    const latestBlockHash = new Uint8Array(32).fill(2);
++    const latestBidBlockHash = new Uint8Array(32).fill(1);
++    const staleWithdrawals = [{index: 1, validatorIndex: 2, address: new Uint8Array(20).fill(3), amount: 4n}];
++    const freshWithdrawals = [{index: 11, validatorIndex: 12, address: new Uint8Array(20).fill(13), amount: 14n}];
++
++    const gloasState = new BeaconStateView(generateCachedElectraState({slot: SLOTS_PER_EPOCH}));
++    vi.spyOn(gloasState, "forkName", "get").mockReturnValue(ForkName.gloas);
++    Object.defineProperty(gloasState, "latestBlockHash", {get: () => latestBlockHash, configurable: true});
++    Object.defineProperty(gloasState, "latestExecutionPayloadBid", {
++      value: {blockHash: latestBidBlockHash},
++      configurable: true,
++    });
++
++    const getPayloadExpectedWithdrawals = vi
++      .spyOn(gloasState, "getPayloadExpectedWithdrawals")
++      .mockReturnValue(staleWithdrawals);
++    const getExpectedWithdrawals = vi.spyOn(gloasState, "getExpectedWithdrawals").mockReturnValue({
++      processedValidatorSweepCount: 0,
++      expectedWithdrawals: freshWithdrawals,
++    });
++
++    gloasModules.chain["opPool"].getSlashingsAndExits.mockReturnValue([[], [], [], []]);
++    gloasModules.chain["aggregatedAttestationPool"].getAttestationsForBlock.mockReturnValue([]);
++    gloasModules.chain["syncContributionAndProofPool"].getAggregate.mockReturnValue({
++      syncCommitteeBits: ssz.altair.SyncCommitteeBits.defaultValue(),
++      syncCommitteeSignature: G2_POINT_AT_INFINITY,
++    });
++    gloasModules.forkChoice.getJustifiedBlock.mockReturnValue({} as ProtoBlock);
++    gloasModules.forkChoice.getFinalizedBlock.mockReturnValue({} as ProtoBlock);
++
++    gloasModules.chain["executionEngine"].payloadIdCache = new PayloadIdCache();
++    gloasModules.chain["executionEngine"].notifyForkchoiceUpdate.mockResolvedValue("0x");
++    gloasModules.chain["executionEngine"].getPayload.mockResolvedValue({
++      executionPayload: ssz.electra.ExecutionPayload.defaultValue(),
++      executionPayloadValue: 0n,
++      shouldOverrideBuilder: false,
++      blobsBundle: ssz.fulu.BlobsBundle.defaultValue(),
++      executionRequests: ssz.fulu.ExecutionRequests.defaultValue(),
++    });
++
++    const randaoReveal = ssz.electra.BeaconBlock.defaultValue().body.randaoReveal;
++    const graffiti = toGraffitiBytes("g".repeat(32));
++    const slot = 100000;
++    const feeRecipient = "0xccccccccccccccccccccccccccccccccccccccaa";
++
++    const createCommonBlockBodyPromise = async () => ({
++      attestations: [],
++      attesterSlashings: [],
++      proposerSlashings: [],
++      voluntaryExits: [],
++      blsToExecutionChanges: [],
++      syncAggregate: ssz.altair.SyncAggregate.defaultValue(),
++      eth1Data: ssz.phase0.Eth1Data.defaultValue(),
++      deposits: [],
++      randaoReveal,
++      graffiti,
++    });
++
++    await produceBlockBody.call(gloasModules.chain as unknown as BeaconChain, BlockType.Full, gloasState, {
++      randaoReveal,
++      graffiti,
++      slot,
++      feeRecipient,
++      parentBlock: generateProtoBlock({blockRoot: parentRoot}),
++      proposerIndex: 0,
++      proposerPubKey: new Uint8Array(32).fill(1),
++      commonBlockBodyPromise: createCommonBlockBodyPromise(),
++    });
++
++    expect(gloasModules.chain["executionEngine"].notifyForkchoiceUpdate).toHaveBeenCalledTimes(1);
++    const [fork, headBlockHash, safeBlockHash, finalizedBlockHash, payloadAttributes] =
++      gloasModules.chain["executionEngine"].notifyForkchoiceUpdate.mock.calls[0];
++
++    expect(fork).toBe(ForkName.gloas);
++    expect(headBlockHash).toBe(toRootHex(latestBlockHash));
++    expect(safeBlockHash).toBe(ZERO_HASH_HEX);
++    expect(finalizedBlockHash).toBe(ZERO_HASH_HEX);
++    expect(payloadAttributes).toEqual(
++      expect.objectContaining({
++        timestamp: computeTimeAtSlot(gloasModules.config, gloasState.slot, gloasState.genesisTime),
++        prevRandao: new Uint8Array(32),
++        suggestedFeeRecipient: feeRecipient,
++        withdrawals: staleWithdrawals,
++        parentBeaconBlockRoot: new Uint8Array(32),
++      })
++    );
++    expect(getPayloadExpectedWithdrawals).toHaveBeenCalledOnce();
++    expect(getExpectedWithdrawals).not.toHaveBeenCalled();
++  });
+ });
+-- 
+2.43.0
+

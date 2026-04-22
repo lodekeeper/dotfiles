@@ -1,11 +1,33 @@
 # withdrawals-mismatch — Tracker
 
-Last updated: 2026-04-22 03:48 UTC
+Last updated: 2026-04-22 12:5X UTC
 
 ## Status: INVALIDATED (2026-04-22)
 The real v1.42.0 "Withdrawal mismatch at index=0" regression is fixed by PR #9246 (loadState cache aliasing — `clone()` → `clone(true)`), approved and pending merge. Do not open follow-up PRs from this tracker.
 
 The overnight heartbeat chain (`861864a327` → `d0139e5fda`) mis-identified the documented `stateRoot: ZERO_HASH` placeholder in `getExecutionPayloadEnvelope()` as a bug. That field is intentional scaffolding scheduled for removal under deferred-payload-processing (see TODO at `packages/beacon-node/src/api/impl/validator/index.ts:1652-1654`). The proposed fix runs counter to the planned spec direction and must not be pushed.
+
+## Post-invalidation artifact status (2026-04-22)
+This tracker remains historical/invalidated, but the later **Gloas withdrawals higher-level proof** work was preserved separately as a local-only artifact bundle.
+
+Current local proof artifacts:
+- worktree/branch: `~/lodestar-gloas-withdrawals` / `feat/gloas-withdrawals`
+- commits:
+  - `45649c5c4f` — `test: cover Gloas empty-parent withdrawals branch in produceBlockV3`
+  - `52404aff3f` — `test: cover gloas empty-parent withdrawals branch`
+- portable patch bundle:
+  - `notes/withdrawals-proof-patches/README.md`
+  - `notes/withdrawals-proof-patches/0001-test-cover-Gloas-empty-parent-withdrawals-branch-in-.patch`
+  - `notes/withdrawals-proof-patches/0002-test-cover-gloas-empty-parent-withdrawals-branch.patch`
+
+Scope caveat:
+- this later proof stack is a **branch-selection proof**, not full real-Gloas stale-field provenance
+- it proves the forced Gloas empty-parent path chooses `getPayloadExpectedWithdrawals()` over `getExpectedWithdrawals()` at the higher-level `produceBlockBody()` -> `notifyForkchoiceUpdate(...)` seam
+- it does **not** remove the need for a minimal real `CachedBeaconStateGloas` fixture if stronger provenance proof is later required
+
+Important boundary:
+- there is no live PR attachment for these proof commits from this worktree (`feat/gloas-withdrawals` has no upstream configured there, and historical fork PR `lodekeeper/lodestar#15` is closed)
+- if this evidence needs to move again, do it deliberately via fresh branch/cherry-pick/`git am`; do **not** reopen the stale `fix/gloas-envelope-state-root` path from this tracker
 
 ## Goal (historical)
 Either reproduce the original withdrawals mismatch in a higher-level runtime scenario, or falsify the remaining hypothesis by showing the runtime parent-selection / payload-extension bundle stays coherent under realistic Gloas flow.
