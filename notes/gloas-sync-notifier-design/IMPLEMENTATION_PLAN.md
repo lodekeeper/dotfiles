@@ -10,8 +10,8 @@ Last updated: 2026-04-21 UTC
 ## Goal
 Implement the converged notifier design:
 - `exec-block:` = execution block the node would currently build on for the next block
-- `payload:` only for Gloas exceptional states (`pending` / `empty`)
-- no `payload:` row in normal FULL case
+- `payload-outcome:` only for Gloas exceptional states (`pending` / `empty`)
+- no outcome annotation in normal FULL case
 - no `prev-payload:` row
 - degraded fallback = `exec-block: unresolved(<hash>)`
 - derive rows from one atomic head/fork-choice snapshot
@@ -22,7 +22,7 @@ Implement the converged notifier design:
 Capture the head/fork-choice view once and thread it through helper calls.
 
 Intent:
-- avoid recomputing `headInfo` / parent resolution separately for `exec-block:` and `payload:`
+- avoid recomputing `headInfo` / parent resolution separately for `exec-block:` and `payload-outcome:`
 - prevent mixed-snapshot output if the head changes mid-log
 
 ### 2. Replace the current Gloas-specific execution helper
@@ -37,11 +37,11 @@ Introduce or reshape helpers around this split:
   - Gloas PENDING / EMPTY: resolve the inherited execution anchor from the bid parent hash / parent variant
   - degraded fallback: `unresolved(<hash>)`
 
-- `getGloasPayloadInfo(...)`
+- `getGloasPayloadOutcomeInfo(...)`
   - only for post-Gloas heads
   - returns:
-    - `payload: pending`
-    - `payload: empty`
+    - `payload-outcome: pending`
+    - `payload-outcome: empty`
     - otherwise `null`
 
 ### 3. Delete / drop `prev-payload:` logic
@@ -58,13 +58,13 @@ When the anchor hash is known but status/number are not:
 ### 5. Keep FULL happy path compact
 For Gloas FULL:
 - emit only `exec-block:`
-- suppress `payload:`
+- suppress `payload-outcome:`
 
 ## Likely helper boundaries in `notifier.ts`
 
 Potential structure:
 - `getHeadExecutionInfo(...)` -> renamed or narrowed into current-build-target semantics
-- `getGloasPayloadInfo(...)` -> exceptional-state-only
+- `getGloasPayloadOutcomeInfo(...)` -> exceptional-state-only
 - `formatExecBlockResolved(...)`
 - `formatExecBlockUnresolved(...)`
 
@@ -75,15 +75,15 @@ Potential structure:
 
 2. **Gloas FULL**
    - `exec-block:` present
-   - no `payload:` row
+   - no `payload-outcome:` annotation
 
 3. **Gloas PENDING**
    - `exec-block:` for inherited execution anchor
-   - `payload: pending`
+   - `payload-outcome: pending`
 
 4. **Gloas EMPTY**
    - `exec-block:` for inherited execution anchor
-   - `payload: empty`
+   - `payload-outcome: empty`
 
 5. **Degraded fallback**
    - only hash known
@@ -102,7 +102,7 @@ Potential structure:
 - [ ] no lingering `payload: full` wording in code/tests
 - [ ] no user-facing `prev-payload:` row remains
 - [ ] fallback uses explicit `unresolved(<hash>)`
-- [ ] `exec-block:` + `payload:` come from one snapshot
+- [ ] `exec-block:` + `payload-outcome:` come from one snapshot
 
 ## Minimal patch philosophy
 Keep this PR scoped to notifier semantics only.

@@ -1,6 +1,6 @@
 # Withdrawals mismatch root-cause recommendation
 
-_Last updated: 2026-04-21 16:52 UTC_
+_Last updated: 2026-04-22 11:49 UTC_
 
 ## Current recommendation
 
@@ -96,11 +96,36 @@ That matters because `processExecutionPayloadEnvelope()` is the pure validation 
 
 So the scheduler-side and state-transition-side contracts are both now directly covered in focused local tests.
 
+## Higher-level production proof is now present too
+
+The investigation is no longer resting only on tiny scheduler seams.
+
+A new focused regression in:
+- `packages/beacon-node/test/unit/api/impl/validator/produceBlockV3.test.ts`
+
+now proves the higher-level production behavior directly:
+- it drives the real `produceBlockBody()` path
+- it forces the **Gloas empty-parent** branch
+- it shows `executionEngine.notifyForkchoiceUpdate(...)` receives **stale `payloadExpectedWithdrawals`**, not fresh `getExpectedWithdrawals()` output
+
+Important nuance:
+- this proof currently uses a valid cached **Electra** state as the base fixture and layers the minimal Gloas-only view behavior needed for the branch under test
+- that is acceptable for the proving goal here, because the target question is the production-side withdrawals-source selection at the FCU seam
+- it means the generic reusable Fulu/Gloas cached-state fixture problem is still unsolved, but it is no longer blocking the main explanatory proof
+
+Practical consequence:
+- the leading explanation is now supported at three levels:
+  1. scheduler-side branch tests (`prepareNextSlot`, `getPayloadAttributesForSSE`)
+  2. state-transition-side envelope validation tests (`processExecutionPayloadEnvelope`)
+  3. a higher-level production-path regression (`produceBlockV3` / `produceBlockBody`)
+- that makes broad `loadState()` cache-poisoning rollback work an even worse first move unless a fresh reproducer contradicts this stack
+
 ## Next good step
 
 If more work is needed, keep it narrow:
-- preserve the focused regression tests that now pin both the scheduler-side parent-hash / withdrawals-source behavior and the state-transition-side withdrawals-root validation
+- preserve the focused regression tests that now pin the scheduler-side parent-hash / withdrawals-source behavior, the state-transition-side withdrawals-root validation, **and** the production-path FCU withdrawals-source handoff
 - treat `aef726e58b` as a possible tiny follow-up PR, not the mainline `#9209` resolution
+- package the current conclusion around the focused Electra-base `produceBlockV3` proof rather than pretending the generic Gloas cached-state fixture is already solved
 - recover or rebuild the **current unstable reproducer path** for the original mismatch before making broader code changes
 - if reproduction still fails after the current semantics are pinned, instrument the runtime path around the actual parent-status / ancestry inputs rather than jumping back to broad cache-isolation work
-- only reopen the cache-isolation branch if a fresh runtime reproduction survives the parent-semantics explanation and the new envelope-validation coverage
+- only reopen the cache-isolation branch if a fresh runtime reproduction survives the parent-semantics explanation and the new envelope-validation + production-path coverage
