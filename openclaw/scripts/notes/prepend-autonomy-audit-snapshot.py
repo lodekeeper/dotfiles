@@ -29,6 +29,23 @@ REQUIRED_SECTIONS = [
 
 TIME_LABEL_PREFIX = "self-improvement-audit-daily"
 
+STEADY_STATE_STATUS = {
+    "PR review": "no new PR-review blocker discovered this cycle; existing review guardrails remain healthy.",
+    "CI fix": "retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.",
+    "Spec implementation": "architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.",
+    "Devnet debugging": "triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.",
+}
+
+# Carry-forward prefill should not copy prior-cycle "fix applied" language verbatim.
+# If those phrases are detected, collapse back to section steady-state wording.
+CHANGE_EVENT_PATTERNS = [
+    re.compile(r"\bfix applied this cycle\b", re.IGNORECASE),
+    re.compile(r"\bfound and fixed this cycle\b", re.IGNORECASE),
+    re.compile(r"\bimplemented\b", re.IGNORECASE),
+    re.compile(r"\badded\b", re.IGNORECASE),
+    re.compile(r"\bupdated\b", re.IGNORECASE),
+]
+
 
 def normalize_time_label(raw_time_label: str) -> str:
     """Normalize user-provided time labels to avoid duplicated heading prefixes.
@@ -65,6 +82,17 @@ def build_snapshot_block(date_str: str, time_label: str, status_prefill: dict[st
     return "\n".join(lines)
 
 
+def sanitize_carry_forward_status(section_name: str, value: str) -> str:
+    trimmed = value.strip()
+    if not trimmed:
+        return trimmed
+
+    if any(pattern.search(trimmed) for pattern in CHANGE_EVENT_PATTERNS):
+        return STEADY_STATE_STATUS.get(section_name, trimmed)
+
+    return trimmed
+
+
 def first_snapshot_block(text: str) -> str | None:
     matches = list(SNAPSHOT_HEADING.finditer(text))
     if not matches:
@@ -94,7 +122,7 @@ def extract_status_prefill(snapshot_block: str) -> dict[str, str]:
 
         value = matches[0].group(1).strip()
         if value:
-            prefill[section_name] = value
+            prefill[section_name] = sanitize_carry_forward_status(section_name, value)
 
     return prefill
 

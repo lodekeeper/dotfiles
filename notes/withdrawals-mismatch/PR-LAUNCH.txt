@@ -1,0 +1,12 @@
+INVALIDATED 2026-04-22 04:06 UTC — DO NOT LAUNCH
+
+This investigation was invalidated by Nico. The real regression is fixed by PR #9246.
+The proposed envelope-state-root fix targets intentional scaffolding (see TODO at
+packages/beacon-node/src/api/impl/validator/index.ts:1652-1654, scheduled for removal
+under deferred-payload-processing).
+
+Both attempted PRs were closed:
+- #9255 (closed 2026-04-22)
+- #9256 (closed 2026-04-22, duplicate auto-reopen)
+
+Fork branch `fix/gloas-envelope-state-root` has been deleted. Do not re-attempt.

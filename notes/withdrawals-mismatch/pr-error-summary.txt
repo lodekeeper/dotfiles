@@ -1,0 +1,4 @@
+err1=Warning: 7 uncommitted changes
+out1=EMPTY
+err2=gh: Validation Failed (HTTP 422)
+out2={"message":"Validation Failed","errors":[{"resource":"PullRequest","code":"custom","message":"A pull request already exists for lodekeeper:fix/gloas-envelope-state-root."}],"documentation_url":"https://docs.github.com/rest/pulls/pulls#create-a-pull-request","status":"422"}

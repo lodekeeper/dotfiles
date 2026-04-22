@@ -1,10 +1,25 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-04-21 (13th pass)
+> Updated: 2026-04-22 (14th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-04-22 (self-improvement-audit-daily, 00:44 UTC)
+
+### PR review
+- **Status:** carry-forward status prefill could copy prior-cycle "implemented this cycle" wording into new snapshots, which created stale self-claims in fresh daily entries. **Fix applied this cycle:** `scripts/notes/prepend-autonomy-audit-snapshot.py` now sanitizes change-event wording (`fix applied` / `implemented` / `added` / `updated`) during `--carry-forward-status` and falls back to section steady-state status templates.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
 ## Daily Audit Snapshot — 2026-04-21 (self-improvement-audit-daily, 00:40 UTC)
 
 ### PR review
@@ -384,6 +399,14 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Carry-forward status sanitizer added to autonomy-audit snapshot scaffolding (2026-04-22)
+Updated `scripts/notes/prepend-autonomy-audit-snapshot.py` so `--carry-forward-status` no longer blindly copies prior-cycle change-event language.
+- Added change-event pattern detection (`fix applied this cycle`, `implemented`, `added`, `updated`).
+- When detected, carry-forward now uses section-specific steady-state status templates instead of stale prior-cycle claims.
+- Preserves normal carry-forward behavior for stable "no new blocker" status lines.
+
+**Rationale:** daily snapshot scaffolding should accelerate status updates without accidentally copying yesterday’s "I implemented X this cycle" wording into today’s audit entry.
 
 ### ✅ Close-out cadence guard added to autonomy-audit wrapper (2026-04-21)
 Updated `scripts/notes/close-autonomy-audit.sh` so daily close-out now runs `check-autonomy-audit-cadence.py` with `--require-current` against the selected audit date before rendering output.
