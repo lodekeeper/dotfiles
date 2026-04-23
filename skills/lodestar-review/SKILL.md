@@ -102,6 +102,17 @@ sessions_spawn(
 
 Spawn all selected reviewers in parallel (no dependencies between them).
 
+**Durable-output requirement (mandatory):** include this block at the end of every reviewer task so findings survive announce/session transport issues:
+
+```
+After finishing the review:
+1) Write your full findings markdown to `~/.openclaw/workspace/notes/review-reports/pr-<PR>-<agent-id>.md`.
+   - If there are no findings, write a short "No findings" report anyway.
+2) In your final chat response, include the exact file path you wrote.
+```
+
+(For pre-PR local review, replace `<PR>` with a stable branch/task slug, e.g. `local-<branch>`.)
+
 > ⚠️ **`agentId` is MANDATORY for every reviewer spawn.** Without it, the subagent inherits the parent's
 > default model instead of the reviewer's configured model. This caused bugs+security reviewers to run on
 > Claude Opus instead of GPT-5.3-Codex, leading to timeouts on PR #8962 (105KB diff).
@@ -121,6 +132,18 @@ Spawn all selected reviewers in parallel (no dependencies between them).
 ### 4. Wait for results
 
 All spawned reviewers will announce their findings back to the main session. Wait for ALL to complete before synthesizing.
+
+### 4.1 Transport-failure fallback (mandatory)
+
+If a reviewer announces completion but the actual findings are missing/truncated, do **not** proceed with partial context.
+
+1. Read the reviewer artifact directly from `notes/review-reports/pr-<PR>-<agent-id>.md` (from Step 3 durable-output requirement).
+2. If the file is missing for any reviewer, re-run only that reviewer.
+3. Only synthesize once every selected reviewer has either:
+   - a complete announce payload, or
+   - a complete on-disk artifact file.
+
+This avoids losing findings when sub-agent message transport is flaky.
 
 ### 5. Act on findings
 

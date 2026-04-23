@@ -1,10 +1,25 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-04-22 (14th pass)
+> Updated: 2026-04-23 (15th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-04-23 (self-improvement-audit-daily, 00:44 UTC)
+
+### PR review
+- **Status:** reviewer-result transport can fail (completion pings without full findings payload), which can silently drop review input in follow-up loops. **Fix applied this cycle:** updated `skills/lodestar-review/SKILL.md` to require durable per-reviewer report artifacts in `notes/review-reports/pr-<PR>-<agent-id>.md` and added a mandatory transport-failure fallback step (read artifact/re-run missing reviewer before synthesis).
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
 ## Daily Audit Snapshot — 2026-04-22 (self-improvement-audit-daily, 00:44 UTC)
 
 ### PR review
@@ -399,6 +414,14 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Durable reviewer-artifact fallback added to lodestar-review workflow (2026-04-23)
+Updated `skills/lodestar-review/SKILL.md` to harden PR-review autonomy against flaky sub-agent result transport:
+- reviewer spawn tasks now include a mandatory durable-output contract (`notes/review-reports/pr-<PR>-<agent-id>.md`),
+- reviewers must always write a report artifact (including explicit "no findings" cases),
+- synthesis workflow now includes a mandatory transport-failure fallback step (read artifact directly / re-run missing reviewer before proceeding).
+
+**Rationale:** prevents silent loss of reviewer findings when completion announces arrive without full payloads, preserving deterministic review loops without depending on session-message transport alone.
 
 ### ✅ Carry-forward status sanitizer added to autonomy-audit snapshot scaffolding (2026-04-22)
 Updated `scripts/notes/prepend-autonomy-audit-snapshot.py` so `--carry-forward-status` no longer blindly copies prior-cycle change-event language.
