@@ -274,7 +274,8 @@
         "lastRunStatus": "ok",
         "lastStatus": "ok",
         "nextRunAtMs": 1777051736447,
-        "lastDelivered": false
+        "lastDelivered": false,
+        "runningAtMs": 1777051736447
       },
       "updatedAtMs": 1777051579466,
       "wakeMode": "now"
