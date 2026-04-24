@@ -297,3 +297,42 @@ Focus on **hydration/bootstrap boundary** rather than broad network diffs:
 1. compare **healthy vs failing hydration markers** on `/c/<id>`,
 2. inspect what prevents the embedded React Router stream payload from turning into live runtime globals,
 3. explore whether the bridge can avoid relying on the fragile conversation-route bootstrap entirely if root-page / backend-stream observation is sufficient.
+
+## Continuation results — 2026-04-24 17:16 UTC
+
+### 15) Backend websocket survives the page crash
+- New probes: `camoufox_websocket_probe.py`, `camoufox_websocket_parse_probe.py`
+- In a failing run where the visible page still ended at:
+  - URL `/c/<id>`
+  - title `Application Error!`
+- the authenticated backend websocket `wss://ws.chatgpt.com/...` remained alive and continued emitting structured `conversation-update` frames.
+
+### 16) Critical breakthrough: assistant text is present on the websocket even when the page is broken
+- The structured websocket parse probe extracted, from a crash run, a completed assistant message:
+  - role `assistant`
+  - status `finished_successfully`
+  - text **`WS_PARSE_OK`**
+  - metadata still indicating `model_slug: gpt-5-5-pro`
+- That means the model/backend path can finish successfully **even while the conversation route is visibly dead in the browser UI**.
+- In the same run:
+  - the page had already crashed around ~2.4s with the familiar React Router render errors,
+  - but the websocket later delivered the final assistant message around ~18.1s.
+
+### 17) What this changes
+This is a much stronger narrowing than the prior hydration-only framing:
+- The problem is **not** that the backend generation necessarily fails.
+- The real failure is that the **browser UI/hydration path becomes unable to display a response that the backend already produced**.
+- Therefore the bridge may not need to solve the page crash in order to become reliable.
+
+### 18) Secondary negative result
+- `camoufox_conversation_api_probe.py` attempted to recover the result after crash via `fetch('/backend-api/conversation/<id>')` from the live browser session.
+- In this run it returned `404 conversation_not_found`, so that direct conversation-lookup path is not a reliable immediate fallback (or the endpoint/path is wrong for this phase).
+- So the websocket is currently the most promising non-DOM recovery surface.
+
+## Revised highest-value next step
+The new best path is now:
+1. implement a **websocket-backed response collector** in `research/chatgpt-direct.py`, using DOM only for auth/model selection/send and websocket frames for final assistant text,
+2. keep the DOM-path as a fast primary path when it works,
+3. use websocket extraction as fallback when `/c/...` crashes or hydration never completes.
+
+This is the first evidence that we may be able to make the bridge reliable **without** solving the ChatGPT conversation-page crash itself.
