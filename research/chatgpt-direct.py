@@ -444,6 +444,8 @@ async def query_chatgpt(
 
     async with AsyncCamoufox(headless=True) as browser:
         page = await browser.new_page()
+        page_errors = []
+        page.on("pageerror", lambda exc: page_errors.append(str(exc)))
 
         for c in auth_cookies:
             await page.context.add_cookies([
@@ -660,8 +662,17 @@ async def query_chatgpt(
             data = await page.evaluate(
                 """
                 (() => {
+                    const bodyText = (document.body?.innerText || '').trim();
                     const turns = document.querySelectorAll('[data-testid^="conversation-turn"]');
                     if (turns.length < 2) {
+                        if (/application error/i.test(bodyText)) {
+                            return JSON.stringify({
+                                s: 'error',
+                                t: bodyText.slice(0, 1200),
+                                n: turns.length,
+                                appError: true,
+                            });
+                        }
                         return JSON.stringify({s: 'wait', t: '', n: turns.length});
                     }
 
@@ -681,7 +692,7 @@ async def query_chatgpt(
                     const fullText = (last?.innerText || '').trim();
 
                     let status;
-                    if (/something went wrong|network error|error generating/i.test(fullText)) {
+                    if (/application error|something went wrong|network error|error generating/i.test(fullText)) {
                         status = 'error';
                     } else if (stopBtn && !responseText) {
                         status = 'thinking';
@@ -693,10 +704,11 @@ async def query_chatgpt(
 
                     return JSON.stringify({
                         s: status,
-                        t: responseText,
+                        t: responseText || fullText,
                         n: turns.length,
                         stop: stopBtn,
                         mdLen: responseText.length,
+                        appError: /application error/i.test(fullText),
                     });
                 })()
                 """
@@ -720,12 +732,21 @@ async def query_chatgpt(
                 saw_thinking = True
 
             if status == "error":
-                return {
+                error_message = (
+                    "ChatGPT application error after prompt submission"
+                    if d.get("appError")
+                    else "ChatGPT returned an error while generating a response"
+                )
+                result = {
                     "status": "error",
+                    "error": error_message,
                     "text": text,
                     "model": model_info,
                     "auth": auth,
                 }
+                if page_errors:
+                    result["pageErrors"] = page_errors[-5:]
+                return result
 
             if status == "done" and text:
                 if text == last_text:
