@@ -773,3 +773,5 @@ All previously listed priority items in this section are complete as of **2026-0
 2. If the latest snapshot is fully green, leave this section empty of filler work and use `BACKLOG.md` for unrelated concrete tasks.
 3. When repopulating the list, prefer one specific automation gap that is **not already marked `✅ done` elsewhere in this file**.
 4. If a reminder fires while this section has no live items, the correct outcome is routine silence / `NO_REPLY`.
+
+Helper: `python3 scripts/notes/check-next-audit-priorities.py --json` returns whether this section contains live items or only the default empty-state guidance.
