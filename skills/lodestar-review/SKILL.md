@@ -143,6 +143,18 @@ If a reviewer announces completion but the actual findings are missing/truncated
    - a complete announce payload, or
    - a complete on-disk artifact file.
 
+Quick verifier command (recommended before synthesis):
+
+```bash
+bash ~/.openclaw/workspace/scripts/review/check-review-artifacts.sh \
+  --pr <PR> \
+  --agents <agent-id-1> <agent-id-2> ... \
+  --allow-empty-no-findings
+```
+
+- Exit `0`: every expected reviewer artifact exists and is usable.
+- Exit `2`: at least one expected artifact is missing/invalid — re-run only the missing reviewer(s), then re-check.
+
 This avoids losing findings when sub-agent message transport is flaky.
 
 ### 5. Act on findings

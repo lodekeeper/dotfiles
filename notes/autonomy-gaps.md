@@ -1,10 +1,25 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-04-23 (15th pass)
+> Updated: 2026-04-24 (16th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-04-24 (self-improvement-audit-daily, 00:44 UTC)
+
+### PR review
+- **Status:** transport-failure fallback required reviewer artifacts, but there was no one-command guard to verify all expected reviewer files exist before synthesis. **Fix applied this cycle:** added `scripts/review/check-review-artifacts.sh` (checks `pr-<PR>-<agent-id>.md` presence/size and supports `--allow-empty-no-findings`) and wired its usage into `skills/lodestar-review/SKILL.md` Step 4.1 so missing reviewer outputs are caught immediately.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
 ## Daily Audit Snapshot — 2026-04-23 (self-improvement-audit-daily, 00:44 UTC)
 
 ### PR review
@@ -414,6 +429,14 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Reviewer-artifact completeness guard script added (2026-04-24)
+Added `scripts/review/check-review-artifacts.sh` and updated `skills/lodestar-review/SKILL.md` to call it during transport-failure fallback before synthesis.
+- validates expected reviewer artifacts: `notes/review-reports/pr-<PR>-<agent-id>.md`
+- flags missing/undersized files with exit `2`
+- supports `--allow-empty-no-findings` so intentional "No findings" reports pass
+
+**Rationale:** durable artifacts only help if every expected reviewer actually wrote one. This turns that check into a fast deterministic guard instead of a manual file-by-file scan.
 
 ### ✅ Durable reviewer-artifact fallback added to lodestar-review workflow (2026-04-23)
 Updated `skills/lodestar-review/SKILL.md` to harden PR-review autonomy against flaky sub-agent result transport:
