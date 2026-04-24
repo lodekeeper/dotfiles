@@ -269,15 +269,14 @@
       "state": {
         "consecutiveErrors": 0,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 196029,
-        "lastRunAtMs": 1777051136440,
+        "lastDurationMs": 143019,
+        "lastRunAtMs": 1777051436447,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1777051436440,
-        "lastDelivered": false,
-        "runningAtMs": 1777051436441
+        "nextRunAtMs": 1777051736447,
+        "lastDelivered": false
       },
-      "updatedAtMs": 1777051332469,
+      "updatedAtMs": 1777051579466,
       "wakeMode": "now"
     },
     {
