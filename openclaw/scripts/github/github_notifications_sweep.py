@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
 OWNER_SELF = "lodekeeper"
+CHECKLIST_RESERVED_KEYS = {"version", "items", "updatedAt"}
 
 
 def utc_now_iso() -> str:
@@ -71,10 +72,86 @@ def normalize_state(state: Dict[str, Any]) -> Dict[str, Any]:
     return state
 
 
+def parse_legacy_checklist_key(key: str) -> Dict[str, Any] | None:
+    m = re.match(r"^(?P<repo>[^#]+/[^#]+)#(?P<pr>\d+):(?P<suffix>.+)$", key)
+    if not m:
+        return None
+    suffix = m.group("suffix")
+    id_match = re.search(r"(\d+)$", suffix)
+    if not id_match:
+        return None
+
+    kind = "legacy"
+    if suffix.startswith("review-body:"):
+        kind = "review_body"
+    elif suffix.startswith("issue:"):
+        kind = "issue"
+    elif suffix.startswith("review:") or suffix.startswith("r"):
+        kind = "review"
+
+    return {
+        "repo": m.group("repo"),
+        "pr": int(m.group("pr")),
+        "kind": kind,
+        "id": int(id_match.group(1)),
+    }
+
+
 def normalize_checklist(checklist: Dict[str, Any]) -> Dict[str, Any]:
     checklist.setdefault("version", 1)
-    checklist.setdefault("items", {})
+    items = checklist.setdefault("items", {})
     checklist.setdefault("updatedAt", utc_now_iso())
+
+    # Legacy handled entries were historically stored at the checklist top level
+    # (e.g. ChainSafe/lodestar#9221:review-body:4169103826). Migrate/overlay
+    # those statuses into the numeric items map so already-handled reminders do
+    # not get resurfaced as open entries forever.
+    for key, legacy in list(checklist.items()):
+        if key in CHECKLIST_RESERVED_KEYS or not isinstance(legacy, dict):
+            continue
+
+        parsed = parse_legacy_checklist_key(key)
+        if not parsed:
+            continue
+
+        legacy_status = str(legacy.get("status") or "").lower()
+        if legacy_status not in {"handled", "done", "closed"}:
+            continue
+
+        item = items.setdefault(
+            str(parsed["id"]),
+            {
+                "id": parsed["id"],
+                "repo": parsed["repo"],
+                "pr": parsed["pr"],
+                "kind": parsed["kind"],
+            },
+        )
+        item.setdefault("id", parsed["id"])
+        item.setdefault("repo", parsed["repo"])
+        item.setdefault("pr", parsed["pr"])
+        item.setdefault("kind", parsed["kind"])
+
+        if legacy_status == "closed":
+            item["status"] = "closed"
+            if legacy.get("closed_at") is not None:
+                item["closed_at"] = legacy.get("closed_at")
+            if legacy.get("close_reason"):
+                item["close_reason"] = legacy.get("close_reason")
+        elif legacy_status == "done":
+            item["status"] = "done"
+            if legacy.get("handled_at"):
+                item.setdefault("doneAt", legacy.get("handled_at"))
+        else:
+            item["status"] = "handled"
+            if legacy.get("handled_at"):
+                item.setdefault("handledAt", legacy.get("handled_at"))
+
+        if legacy.get("note"):
+            item.setdefault("note", legacy.get("note"))
+        if legacy.get("action"):
+            item.setdefault("action", legacy.get("action"))
+
     return checklist
 
 
