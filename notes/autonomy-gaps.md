@@ -1,10 +1,25 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-04-24 (16th pass)
+> Updated: 2026-04-25 (17th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-04-25 (self-improvement-audit-daily, 00:44 UTC)
+
+### PR review
+- **Status:** reviewer artifact presence/size checks existed, but stale files from prior review rounds could still pass and be mistaken as fresh output. **Fix applied this cycle:** extended `scripts/review/check-review-artifacts.sh` with `--max-age-minutes` stale-artifact enforcement and updated `skills/lodestar-review/SKILL.md` Step 4.1 to run the verifier with age bounds (`--max-age-minutes 180`).
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
 ## Daily Audit Snapshot — 2026-04-24 (self-improvement-audit-daily, 00:44 UTC)
 
 ### PR review
@@ -429,6 +444,14 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Reviewer-artifact freshness guard added (2026-04-25)
+Extended `scripts/review/check-review-artifacts.sh` so the verifier can reject stale reviewer artifacts with a new `--max-age-minutes <n>` option.
+- adds stale-age validation via artifact mtime (summary now reports `stale=<count>`)
+- keeps existing missing/invalid checks and `--allow-empty-no-findings` behavior
+- updated `skills/lodestar-review/SKILL.md` Step 4.1 quick verifier to include `--max-age-minutes 180` and stale-artifact guidance
+
+**Rationale:** presence checks alone can pass old reviewer files from a previous diff. Age-bounding the artifact set ensures synthesis uses fresh findings from the current review round.
 
 ### ✅ Reviewer-artifact completeness guard script added (2026-04-24)
 Added `scripts/review/check-review-artifacts.sh` and updated `skills/lodestar-review/SKILL.md` to call it during transport-failure fallback before synthesis.

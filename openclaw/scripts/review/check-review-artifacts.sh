@@ -16,6 +16,7 @@ Options:
   --agents <ids...>            One or more reviewer agent ids (required)
   --reports-dir <path>         Artifact directory (default: ~/.openclaw/workspace/notes/review-reports)
   --min-bytes <n>              Minimum non-empty size threshold (default: 32)
+  --max-age-minutes <n>        Mark artifacts invalid if older than n minutes (optional)
   --allow-empty-no-findings    Accept tiny files if they include "No findings"
   -h, --help                   Show help
 
@@ -29,6 +30,7 @@ EOF
 PR=""
 REPORTS_DIR="$HOME/.openclaw/workspace/notes/review-reports"
 MIN_BYTES=32
+MAX_AGE_MINUTES=""
 ALLOW_EMPTY_NO_FINDINGS=0
 AGENTS=()
 
@@ -56,6 +58,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --min-bytes)
       MIN_BYTES="${2:-}"
+      shift 2
+      ;;
+    --max-age-minutes)
+      MAX_AGE_MINUTES="${2:-}"
       shift 2
       ;;
     --allow-empty-no-findings)
@@ -91,11 +97,24 @@ if ! [[ "$MIN_BYTES" =~ ^[0-9]+$ ]]; then
   exit 1
 fi
 
+if [[ -n "$MAX_AGE_MINUTES" ]] && ! [[ "$MAX_AGE_MINUTES" =~ ^[0-9]+$ ]]; then
+  echo "ERROR: --max-age-minutes must be a non-negative integer" >&2
+  exit 1
+fi
+
 mkdir -p "$REPORTS_DIR"
 
 missing=0
 invalid=0
+stale=0
 ok=0
+
+now_epoch=""
+max_age_seconds=""
+if [[ -n "$MAX_AGE_MINUTES" ]]; then
+  now_epoch="$(date +%s)"
+  max_age_seconds=$((MAX_AGE_MINUTES * 60))
+fi
 
 echo "Checking reviewer artifacts for PR/slug: $PR"
 echo "Reports directory: $REPORTS_DIR"
@@ -112,26 +131,50 @@ for agent in "${AGENTS[@]}"; do
 
   bytes=$(wc -c < "$path" | tr -d ' ')
 
+  accepted_empty_no_findings=0
   if [[ "$bytes" -lt "$MIN_BYTES" ]]; then
     if [[ "$ALLOW_EMPTY_NO_FINDINGS" -eq 1 ]] && grep -qi "no findings" "$path"; then
-      echo "✅ OK       $agent -> $path (${bytes} bytes, accepted: contains 'No findings')"
-      ok=$((ok + 1))
+      accepted_empty_no_findings=1
+    else
+      echo "❌ INVALID  $agent -> $path (${bytes} bytes, below min ${MIN_BYTES})"
+      invalid=$((invalid + 1))
+      continue
+    fi
+  fi
+
+  if [[ -n "$MAX_AGE_MINUTES" ]]; then
+    mtime_epoch="$(stat -c %Y "$path" 2>/dev/null || true)"
+    if ! [[ "$mtime_epoch" =~ ^[0-9]+$ ]]; then
+      echo "❌ INVALID  $agent -> $path (unable to read mtime for age check)"
+      invalid=$((invalid + 1))
       continue
     fi
 
-    echo "❌ INVALID  $agent -> $path (${bytes} bytes, below min ${MIN_BYTES})"
-    invalid=$((invalid + 1))
-    continue
+    age_seconds=$((now_epoch - mtime_epoch))
+    if [[ "$age_seconds" -lt 0 ]]; then
+      age_seconds=0
+    fi
+
+    if [[ "$age_seconds" -gt "$max_age_seconds" ]]; then
+      age_minutes=$((age_seconds / 60))
+      echo "❌ STALE    $agent -> $path (${age_minutes}m old, exceeds ${MAX_AGE_MINUTES}m max age)"
+      stale=$((stale + 1))
+      continue
+    fi
   fi
 
-  echo "✅ OK       $agent -> $path (${bytes} bytes)"
+  if [[ "$accepted_empty_no_findings" -eq 1 ]]; then
+    echo "✅ OK       $agent -> $path (${bytes} bytes, accepted: contains 'No findings')"
+  else
+    echo "✅ OK       $agent -> $path (${bytes} bytes)"
+  fi
   ok=$((ok + 1))
 done
 
 echo ""
-echo "Summary: ok=$ok missing=$missing invalid=$invalid total=${#AGENTS[@]}"
+echo "Summary: ok=$ok missing=$missing invalid=$invalid stale=$stale total=${#AGENTS[@]}"
 
-if [[ "$missing" -gt 0 || "$invalid" -gt 0 ]]; then
+if [[ "$missing" -gt 0 || "$invalid" -gt 0 || "$stale" -gt 0 ]]; then
   exit 2
 fi
 

@@ -149,11 +149,14 @@ Quick verifier command (recommended before synthesis):
 bash ~/.openclaw/workspace/scripts/review/check-review-artifacts.sh \
   --pr <PR> \
   --agents <agent-id-1> <agent-id-2> ... \
-  --allow-empty-no-findings
+  --allow-empty-no-findings \
+  --max-age-minutes 180
 ```
 
 - Exit `0`: every expected reviewer artifact exists and is usable.
-- Exit `2`: at least one expected artifact is missing/invalid — re-run only the missing reviewer(s), then re-check.
+- Exit `2`: at least one expected artifact is missing/invalid/stale — re-run only the missing reviewer(s), then re-check.
+
+`--max-age-minutes` prevents stale artifacts from a prior review round from being mistaken as fresh output for the current diff.
 
 This avoids losing findings when sub-agent message transport is flaky.
 
@@ -396,4 +399,3 @@ Also available: `import --markdown <file>` (parse free-form reviewer output), `i
 ## Self-Maintenance
 
 If any commands, file paths, URLs, or configurations in this skill are outdated or no longer work, update this SKILL.md with the correct information after completing your current task. Skills should stay accurate and self-healing — fix what you find broken.
-
