@@ -1,0 +1,52 @@
+# glamsterdam-devnet-0 local repro using PR #9273 branch nflaig/gloas-genesis
+# Same Kurtosis args as the previous repro, but with a fresh local Lodestar image
+# built from PR #9273 instead of latest origin/unstable.
+
+participants_matrix:
+  el:
+    - el_type: geth
+      el_image: ethpandaops/geth:mariusvanderwijden-bal-devnet-4
+  cl:
+    - cl_type: lodestar
+      cl_image: lodestar:gloas-genesis-pr9273
+  count: 3
+
+network_params:
+  gloas_fork_epoch: 0
+  preset: minimal
+  withdrawal_type: "0x01"
+  validator_balance: 40000
+  num_validator_keys_per_node: 1000
+
+additional_services:
+  - dora
+  - assertoor
+  - spamoor
+  - checkpointz
+
+spamoor_params:
+  image: ethpandaops/spamoor:master
+  spammers:
+    - scenario: eoatx
+      config:
+        throughput: 100
+
+assertoor_params:
+  image: ethpandaops/assertoor:master
+  run_stability_check: false
+  run_block_proposal_check: false
+  tests:
+    - {file: "https://raw.githubusercontent.com/ethpandaops/assertoor/refs/heads/master/playbooks/gloas-dev/builder-lifecycle.yaml"}
+
+snooper_enabled: false
+global_log_level: debug
+
+port_publisher:
+  additional_services:
+    enabled: true
+
+dora_params:
+  image: ethpandaops/dora:master
+
+checkpointz_params:
+  image: ethpandaops/checkpointz:latest
