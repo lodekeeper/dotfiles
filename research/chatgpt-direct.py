@@ -30,6 +30,7 @@ DEFAULT_COOKIES = os.path.expanduser("~/.oracle/chatgpt-cookies.json")
 DEFAULT_CHATGPT_URL = "https://chatgpt.com"
 BRIDGE_NAME = "chatgpt-direct"
 BRIDGE_SCHEMA_VERSION = 1
+WEBSOCKET_FALLBACK_GRACE_SECONDS = 25
 
 
 def _clean_response(text):
@@ -84,6 +85,68 @@ def _find_first_nested(obj, keys, max_depth=5):
             if found is not None:
                 return found
     return None
+
+
+def _extract_messages(obj, out):
+    if isinstance(obj, dict):
+        author = obj.get("author")
+        if isinstance(author, dict):
+            role = author.get("role")
+            content = obj.get("content") or {}
+            parts = content.get("parts") if isinstance(content, dict) else None
+            text = None
+            if isinstance(parts, list):
+                text = "\n".join(str(p) for p in parts if p).strip()
+            if role:
+                out.append(
+                    {
+                        "role": role,
+                        "status": obj.get("status"),
+                        "text": text,
+                        "id": obj.get("id"),
+                        "metadata": obj.get("metadata") or {},
+                    }
+                )
+        for value in obj.values():
+            _extract_messages(value, out)
+    elif isinstance(obj, list):
+        for value in obj:
+            _extract_messages(value, out)
+
+
+def _messages_from_websocket_payload(payload):
+    text = payload if isinstance(payload, str) else payload.decode("utf-8", errors="replace")
+    parsed = json.loads(text)
+    messages = []
+    _extract_messages(parsed, messages)
+    return messages
+
+
+def _websocket_success_result(ws_state, elapsed, model_info, auth, saw_thinking, page_errors, *, reason=None):
+    text = (ws_state.get("finalAssistantText") or "").strip()
+    if not text:
+        return None
+
+    result = {
+        "status": "ok",
+        "text": _clean_response(text),
+        "elapsed": elapsed,
+        "model": model_info,
+        "auth": auth,
+        "usedPro": saw_thinking or model_info.get("isPro", False),
+        "responseSource": "websocket",
+        "websocketFallback": {
+            "reason": reason or "dom-unavailable",
+            "frames": ws_state.get("frames", 0),
+            "opened": ws_state.get("opened", 0),
+            "assistantStatus": ws_state.get("finalAssistantStatus"),
+            "assistantMessageId": ws_state.get("finalAssistantMessageId"),
+            "assistantModelSlug": ws_state.get("finalAssistantModelSlug"),
+        },
+    }
+    if page_errors:
+        result["pageErrors"] = page_errors[-5:]
+    return result
 
 
 def _derive_server_auth(raw):
@@ -445,7 +508,51 @@ async def query_chatgpt(
     async with AsyncCamoufox(headless=True) as browser:
         page = await browser.new_page()
         page_errors = []
+        ws_state = {
+            "opened": 0,
+            "frames": 0,
+            "parseErrors": [],
+            "finalAssistantText": "",
+            "finalAssistantStatus": None,
+            "finalAssistantMessageId": None,
+            "finalAssistantModelSlug": None,
+        }
+
         page.on("pageerror", lambda exc: page_errors.append(str(exc)))
+
+        def on_ws(ws):
+            ws_state["opened"] += 1
+
+            def handle_frame(payload):
+                ws_state["frames"] += 1
+                try:
+                    messages = _messages_from_websocket_payload(payload)
+                except Exception as exc:
+                    if len(ws_state["parseErrors"]) < 5:
+                        ws_state["parseErrors"].append(repr(exc))
+                    return
+
+                for message in messages:
+                    if message.get("role") != "assistant":
+                        continue
+                    if message.get("status") != "finished_successfully":
+                        continue
+                    text = (message.get("text") or "").strip()
+                    if not text:
+                        continue
+                    metadata = message.get("metadata") or {}
+                    ws_state["finalAssistantText"] = text
+                    ws_state["finalAssistantStatus"] = message.get("status")
+                    ws_state["finalAssistantMessageId"] = message.get("id")
+                    ws_state["finalAssistantModelSlug"] = metadata.get("model_slug")
+
+            try:
+                ws.on("framereceived", handle_frame)
+            except Exception as exc:
+                if len(ws_state["parseErrors"]) < 5:
+                    ws_state["parseErrors"].append(repr(exc))
+
+        page.on("websocket", on_ws)
 
         for c in auth_cookies:
             await page.context.add_cookies([
@@ -655,6 +762,7 @@ async def query_chatgpt(
         stable_count = 0
         last_status_print = 0
         saw_thinking = False
+        app_error_seen_at = None
 
         while time.time() - start < timeout:
             await asyncio.sleep(2)
@@ -719,6 +827,16 @@ async def query_chatgpt(
             status = d["s"]
             text = d["t"]
 
+            ws_result = _websocket_success_result(
+                ws_state,
+                elapsed,
+                model_info,
+                auth,
+                saw_thinking,
+                page_errors,
+                reason=("page-app-error" if app_error_seen_at is not None else "dom-stalled"),
+            )
+
             if verbose and elapsed - last_status_print >= 10:
                 snippet = (text or "(empty)")[:60]
                 print(
@@ -731,7 +849,25 @@ async def query_chatgpt(
             if status == "thinking":
                 saw_thinking = True
 
+            if ws_result and status in ("wait", "thinking", "generating"):
+                return ws_result
+
             if status == "error":
+                if ws_result:
+                    return ws_result
+
+                if d.get("appError"):
+                    if app_error_seen_at is None:
+                        app_error_seen_at = time.time()
+                        if verbose:
+                            print(
+                                "Detected ChatGPT application-error page; waiting briefly for websocket recovery...",
+                                file=sys.stderr,
+                                flush=True,
+                            )
+                    if time.time() - app_error_seen_at < WEBSOCKET_FALLBACK_GRACE_SECONDS:
+                        continue
+
                 error_message = (
                     "ChatGPT application error after prompt submission"
                     if d.get("appError")
@@ -759,6 +895,7 @@ async def query_chatgpt(
                             "model": model_info,
                             "auth": auth,
                             "usedPro": saw_thinking or model_info.get("isPro", False),
+                            "responseSource": "dom",
                         }
                         if (
                             not saw_thinking
@@ -779,12 +916,25 @@ async def query_chatgpt(
                 stable_count = 0
 
         return {
-            "status": "timeout",
-            "text": _clean_response(last_text) if last_text else "",
-            "elapsed": round(time.time() - start),
-            "model": model_info,
-            "auth": auth,
-            "usedPro": saw_thinking,
+            **(
+                _websocket_success_result(
+                    ws_state,
+                    round(time.time() - start),
+                    model_info,
+                    auth,
+                    saw_thinking,
+                    page_errors,
+                    reason="timeout",
+                )
+                or {
+                    "status": "timeout",
+                    "text": _clean_response(last_text) if last_text else "",
+                    "elapsed": round(time.time() - start),
+                    "model": model_info,
+                    "auth": auth,
+                    "usedPro": saw_thinking,
+                }
+            )
         }
 
 
