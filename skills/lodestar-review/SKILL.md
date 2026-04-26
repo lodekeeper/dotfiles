@@ -105,8 +105,12 @@ Spawn all selected reviewers in parallel (no dependencies between them).
 **Durable-output requirement (mandatory):** include this block at the end of every reviewer task so findings survive announce/session transport issues:
 
 ```
+Context metadata for this run:
+- Reviewed commit: <HEAD_SHA>
+
 After finishing the review:
 1) Write your full findings markdown to `~/.openclaw/workspace/notes/review-reports/pr-<PR>-<agent-id>.md`.
+   - Include the exact metadata line `Reviewed commit: <HEAD_SHA>` near the top of the artifact.
    - If there are no findings, write a short "No findings" report anyway.
 2) In your final chat response, include the exact file path you wrote.
 ```
@@ -150,13 +154,15 @@ bash ~/.openclaw/workspace/scripts/review/check-review-artifacts.sh \
   --pr <PR> \
   --agents <agent-id-1> <agent-id-2> ... \
   --allow-empty-no-findings \
-  --max-age-minutes 180
+  --max-age-minutes 180 \
+  --require-text "Reviewed commit: <HEAD_SHA>"
 ```
 
 - Exit `0`: every expected reviewer artifact exists and is usable.
 - Exit `2`: at least one expected artifact is missing/invalid/stale — re-run only the missing reviewer(s), then re-check.
 
 `--max-age-minutes` prevents stale artifacts from a prior review round from being mistaken as fresh output for the current diff.
+`--require-text "Reviewed commit: <HEAD_SHA>"` prevents fresh-but-wrong artifacts (written for a different head commit) from being accepted.
 
 This avoids losing findings when sub-agent message transport is flaky.
 

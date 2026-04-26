@@ -17,6 +17,7 @@ Options:
   --reports-dir <path>         Artifact directory (default: ~/.openclaw/workspace/notes/review-reports)
   --min-bytes <n>              Minimum non-empty size threshold (default: 32)
   --max-age-minutes <n>        Mark artifacts invalid if older than n minutes (optional)
+  --require-text <value>       Require each artifact to contain this exact text (repeatable)
   --allow-empty-no-findings    Accept tiny files if they include "No findings"
   -h, --help                   Show help
 
@@ -33,6 +34,7 @@ MIN_BYTES=32
 MAX_AGE_MINUTES=""
 ALLOW_EMPTY_NO_FINDINGS=0
 AGENTS=()
+REQUIRED_TEXTS=()
 
 if [[ $# -eq 0 ]]; then
   usage
@@ -62,6 +64,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --max-age-minutes)
       MAX_AGE_MINUTES="${2:-}"
+      shift 2
+      ;;
+    --require-text)
+      REQUIRED_TEXTS+=("${2:-}")
       shift 2
       ;;
     --allow-empty-no-findings)
@@ -102,11 +108,19 @@ if [[ -n "$MAX_AGE_MINUTES" ]] && ! [[ "$MAX_AGE_MINUTES" =~ ^[0-9]+$ ]]; then
   exit 1
 fi
 
+for required_text in "${REQUIRED_TEXTS[@]}"; do
+  if [[ -z "$required_text" ]]; then
+    echo "ERROR: --require-text cannot be empty" >&2
+    exit 1
+  fi
+done
+
 mkdir -p "$REPORTS_DIR"
 
 missing=0
 invalid=0
 stale=0
+missing_text=0
 ok=0
 
 now_epoch=""
@@ -119,6 +133,12 @@ fi
 echo "Checking reviewer artifacts for PR/slug: $PR"
 echo "Reports directory: $REPORTS_DIR"
 echo "Expected agents: ${AGENTS[*]}"
+if [[ ${#REQUIRED_TEXTS[@]} -gt 0 ]]; then
+  echo "Required text markers (${#REQUIRED_TEXTS[@]}):"
+  for marker in "${REQUIRED_TEXTS[@]}"; do
+    echo "  - $marker"
+  done
+fi
 echo ""
 
 for agent in "${AGENTS[@]}"; do
@@ -163,6 +183,19 @@ for agent in "${AGENTS[@]}"; do
     fi
   fi
 
+  missing_marker=""
+  for marker in "${REQUIRED_TEXTS[@]}"; do
+    if ! grep -Fq -- "$marker" "$path"; then
+      missing_marker="$marker"
+      break
+    fi
+  done
+  if [[ -n "$missing_marker" ]]; then
+    echo "❌ INVALID  $agent -> $path (missing required text marker: $missing_marker)"
+    missing_text=$((missing_text + 1))
+    continue
+  fi
+
   if [[ "$accepted_empty_no_findings" -eq 1 ]]; then
     echo "✅ OK       $agent -> $path (${bytes} bytes, accepted: contains 'No findings')"
   else
@@ -172,9 +205,9 @@ for agent in "${AGENTS[@]}"; do
 done
 
 echo ""
-echo "Summary: ok=$ok missing=$missing invalid=$invalid stale=$stale total=${#AGENTS[@]}"
+echo "Summary: ok=$ok missing=$missing invalid=$invalid stale=$stale missing_text=$missing_text total=${#AGENTS[@]}"
 
-if [[ "$missing" -gt 0 || "$invalid" -gt 0 || "$stale" -gt 0 ]]; then
+if [[ "$missing" -gt 0 || "$invalid" -gt 0 || "$stale" -gt 0 || "$missing_text" -gt 0 ]]; then
   exit 2
 fi
 

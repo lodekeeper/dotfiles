@@ -1,10 +1,25 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-04-25 (17th pass)
+> Updated: 2026-04-26 (18th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-04-26 (self-improvement-audit-daily, 00:45 UTC)
+
+### PR review
+- **Status:** reviewer artifact freshness checks existed, but they still accepted files from the wrong head commit when those files were recently regenerated. **Fix applied this cycle:** extended `scripts/review/check-review-artifacts.sh` with repeatable `--require-text` markers and updated `skills/lodestar-review/SKILL.md` to stamp/verify `Reviewed commit: <HEAD_SHA>` in each reviewer artifact.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
 ## Daily Audit Snapshot — 2026-04-25 (self-improvement-audit-daily, 00:44 UTC)
 
 ### PR review
@@ -444,6 +459,14 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Reviewer-artifact commit-affinity guard added (2026-04-26)
+Extended `scripts/review/check-review-artifacts.sh` with repeatable `--require-text <value>` markers so artifact validation can enforce run-specific metadata (for example, exact head SHA markers).
+- new repeatable CLI option: `--require-text "..."`
+- verifier now prints required markers and fails with exit `2` when a marker is missing (`missing_text=<count>` in summary)
+- updated `skills/lodestar-review/SKILL.md` to require reviewer artifacts to include `Reviewed commit: <HEAD_SHA>` and to verify that marker during Step 4.1
+
+**Rationale:** age checks catch stale files, but they do not prove the artifact belongs to the current head commit. Marker-based validation blocks fresh-but-wrong artifacts from previous review rounds.
 
 ### ✅ Reviewer-artifact freshness guard added (2026-04-25)
 Extended `scripts/review/check-review-artifacts.sh` so the verifier can reject stale reviewer artifacts with a new `--max-age-minutes <n>` option.
