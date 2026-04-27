@@ -18,6 +18,8 @@ Options:
   --min-bytes <n>              Minimum non-empty size threshold (default: 32)
   --max-age-minutes <n>        Mark artifacts invalid if older than n minutes (optional)
   --require-text <value>       Require each artifact to contain this exact text (repeatable)
+  --require-reviewed-head      Require marker "Reviewed commit: <HEAD_SHA>" (resolved from git)
+  --head-repo <path>           Repo path for --require-reviewed-head (default: current directory)
   --allow-empty-no-findings    Accept tiny files if they include "No findings"
   -h, --help                   Show help
 
@@ -35,6 +37,8 @@ MAX_AGE_MINUTES=""
 ALLOW_EMPTY_NO_FINDINGS=0
 AGENTS=()
 REQUIRED_TEXTS=()
+REQUIRE_REVIEWED_HEAD=0
+HEAD_REPO="."
 
 if [[ $# -eq 0 ]]; then
   usage
@@ -68,6 +72,14 @@ while [[ $# -gt 0 ]]; do
       ;;
     --require-text)
       REQUIRED_TEXTS+=("${2:-}")
+      shift 2
+      ;;
+    --require-reviewed-head)
+      REQUIRE_REVIEWED_HEAD=1
+      shift
+      ;;
+    --head-repo)
+      HEAD_REPO="${2:-}"
       shift 2
       ;;
     --allow-empty-no-findings)
@@ -114,6 +126,20 @@ for required_text in "${REQUIRED_TEXTS[@]}"; do
     exit 1
   fi
 done
+
+if [[ "$REQUIRE_REVIEWED_HEAD" -eq 1 ]]; then
+  if [[ ! -d "$HEAD_REPO" ]]; then
+    echo "ERROR: --head-repo path does not exist: $HEAD_REPO" >&2
+    exit 1
+  fi
+
+  if ! head_sha="$(git -C "$HEAD_REPO" rev-parse HEAD 2>/dev/null)"; then
+    echo "ERROR: --require-reviewed-head could not resolve git HEAD in: $HEAD_REPO" >&2
+    exit 1
+  fi
+
+  REQUIRED_TEXTS+=("Reviewed commit: $head_sha")
+fi
 
 mkdir -p "$REPORTS_DIR"
 

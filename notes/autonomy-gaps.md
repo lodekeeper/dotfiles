@@ -1,10 +1,25 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-04-26 (18th pass)
+> Updated: 2026-04-27 (19th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-04-27 (self-improvement-audit-daily, 00:46 UTC)
+
+### PR review
+- **Status:** reviewer commit-affinity checks still relied on manually interpolating `Reviewed commit: <HEAD_SHA>` text in verifier commands, which is easy to mistype/skip during fast follow-up loops. **Fix applied this cycle:** extended `scripts/review/check-review-artifacts.sh` with `--require-reviewed-head` (auto-resolves `Reviewed commit: <HEAD_SHA>` from git) plus `--head-repo <path>`, and updated `skills/lodestar-review/SKILL.md` Step 4.1 to use the new deterministic guard.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
 ## Daily Audit Snapshot — 2026-04-26 (self-improvement-audit-daily, 00:45 UTC)
 
 ### PR review
@@ -459,6 +474,15 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Reviewer HEAD-marker auto-resolution guard added (2026-04-27)
+Extended `scripts/review/check-review-artifacts.sh` with built-in reviewed-commit marker resolution so follow-up verifier commands no longer rely on manual SHA interpolation.
+- new CLI option: `--require-reviewed-head` (requires marker `Reviewed commit: <HEAD_SHA>`)
+- new CLI option: `--head-repo <path>` (deterministic HEAD source; defaults to current directory)
+- verifier now fails fast if HEAD cannot be resolved from the selected repo
+- updated `skills/lodestar-review/SKILL.md` Step 4.1 quick verifier to use `--require-reviewed-head --head-repo /absolute/path/to/repo`
+
+**Rationale:** keeps commit-affinity checks deterministic in autonomous follow-up loops and reduces accidental false passes from hand-written SHA marker strings.
 
 ### ✅ Reviewer-artifact commit-affinity guard added (2026-04-26)
 Extended `scripts/review/check-review-artifacts.sh` with repeatable `--require-text <value>` markers so artifact validation can enforce run-specific metadata (for example, exact head SHA markers).

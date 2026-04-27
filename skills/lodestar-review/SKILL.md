@@ -155,14 +155,16 @@ bash ~/.openclaw/workspace/scripts/review/check-review-artifacts.sh \
   --agents <agent-id-1> <agent-id-2> ... \
   --allow-empty-no-findings \
   --max-age-minutes 180 \
-  --require-text "Reviewed commit: <HEAD_SHA>"
+  --require-reviewed-head \
+  --head-repo /absolute/path/to/repo
 ```
 
 - Exit `0`: every expected reviewer artifact exists and is usable.
 - Exit `2`: at least one expected artifact is missing/invalid/stale — re-run only the missing reviewer(s), then re-check.
 
 `--max-age-minutes` prevents stale artifacts from a prior review round from being mistaken as fresh output for the current diff.
-`--require-text "Reviewed commit: <HEAD_SHA>"` prevents fresh-but-wrong artifacts (written for a different head commit) from being accepted.
+`--require-reviewed-head` prevents fresh-but-wrong artifacts (written for a different head commit) from being accepted.
+`--head-repo` should point at the exact PR worktree so HEAD resolution is deterministic.
 
 This avoids losing findings when sub-agent message transport is flaky.
 
