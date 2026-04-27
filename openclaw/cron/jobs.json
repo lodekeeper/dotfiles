@@ -193,14 +193,14 @@
       "state": {
         "consecutiveErrors": 0,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 86179,
-        "lastRunAtMs": 1777245368764,
+        "lastDurationMs": 119907,
+        "lastRunAtMs": 1777248971753,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1777248900000,
+        "nextRunAtMs": 1777252500000,
         "lastDelivered": false
       },
-      "updatedAtMs": 1777245454943,
+      "updatedAtMs": 1777249091660,
       "wakeMode": "now"
     },
     {
@@ -266,14 +266,14 @@
       "state": {
         "consecutiveErrors": 0,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 129911,
-        "lastRunAtMs": 1777247938314,
+        "lastDurationMs": 118460,
+        "lastRunAtMs": 1777249138335,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1777248238314,
+        "nextRunAtMs": 1777249438335,
         "lastDelivered": false
       },
-      "updatedAtMs": 1777248068225,
+      "updatedAtMs": 1777249256795,
       "wakeMode": "now"
     },
     {
@@ -473,7 +473,8 @@
         "lastRunStatus": "ok",
         "lastStatus": "ok",
         "nextRunAtMs": 1777249155010,
-        "lastDelivered": false
+        "lastDelivered": false,
+        "runningAtMs": 1777249258798
       },
       "updatedAtMs": 1776990059696,
       "wakeMode": "now"
@@ -534,14 +535,14 @@
       "state": {
         "consecutiveErrors": 0,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 9714,
-        "lastRunAtMs": 1777246401941,
+        "lastDurationMs": 10549,
+        "lastRunAtMs": 1777248201944,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1777248201941,
+        "nextRunAtMs": 1777250001944,
         "lastDelivered": false
       },
-      "updatedAtMs": 1777246411655,
+      "updatedAtMs": 1777248212493,
       "wakeMode": "now"
     },
     {
@@ -604,18 +605,16 @@
       },
       "sessionTarget": "isolated",
       "state": {
-        "consecutiveErrors": 1,
+        "consecutiveErrors": 0,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 45379,
-        "lastRunAtMs": 1777226496481,
-        "lastRunStatus": "error",
-        "lastStatus": "error",
-        "nextRunAtMs": 1777248093107,
-        "lastDelivered": false,
-        "lastDeliveryError": "⚠️ 📝 Edit: `in ~/.openclaw/workspace/memory/2026-04-26.md` failed",
-        "runningAtMs": 1777248093108
+        "lastDurationMs": 23108,
+        "lastRunAtMs": 1777248093109,
+        "lastRunStatus": "ok",
+        "lastStatus": "ok",
+        "nextRunAtMs": 1777269693107,
+        "lastDelivered": false
       },
-      "updatedAtMs": 1777226541860,
+      "updatedAtMs": 1777248116217,
       "wakeMode": "now"
     },
     {
