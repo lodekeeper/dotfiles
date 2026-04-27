@@ -10,6 +10,7 @@ from typing import Any, Dict, List, Tuple
 
 OWNER_SELF = "lodekeeper"
 CHECKLIST_RESERVED_KEYS = {"version", "items", "updatedAt"}
+HANDLED_STATUS_RE = re.compile(r"^\s*-\s+\*\*Status:\*\*\s*(?:Addressed|Done|Closed|Handled)\b", re.IGNORECASE)
 
 
 def utc_now_iso() -> str:
@@ -46,22 +47,41 @@ def parse_thread_key_from_subject_url(subject_url: str) -> Tuple[str, int, str]:
     return m.group(1), int(m.group(3)), kind
 
 
-def extract_handled_ids_from_backlog(backlog_text: str) -> set:
+def extract_handled_ids_from_text(text: str) -> set[int]:
     handled = set()
-    in_done = False
+    for m in re.findall(r"issuecomment-(\d+)", text):
+        handled.add(int(m))
+    for m in re.findall(r"discussion_r(\d+)", text):
+        handled.add(int(m))
+    for m in re.findall(r"/pulls/comments/(\d+)", text):
+        handled.add(int(m))
+    for m in re.findall(r"pullrequestreview-(\d+)", text):
+        handled.add(int(m))
+    return handled
+
+
+def extract_handled_ids_from_backlog(backlog_text: str) -> set[int]:
+    handled = set()
+    section_lines: List[str] = []
+    section_handled = False
+
+    def flush_section() -> None:
+        nonlocal handled, section_lines, section_handled
+        if section_handled and section_lines:
+            handled.update(extract_handled_ids_from_text("\n".join(section_lines)))
+
     for line in backlog_text.splitlines():
         if line.startswith("### "):
-            in_done = line.startswith("### ✅")
-        if not in_done:
+            flush_section()
+            section_lines = [line]
+            section_handled = line.startswith("### ✅")
             continue
-        for m in re.findall(r"issuecomment-(\d+)", line):
-            handled.add(int(m))
-        for m in re.findall(r"discussion_r(\d+)", line):
-            handled.add(int(m))
-        for m in re.findall(r"/pulls/comments/(\d+)", line):
-            handled.add(int(m))
-        for m in re.findall(r"pullrequestreview-(\d+)", line):
-            handled.add(int(m))
+
+        section_lines.append(line)
+        if HANDLED_STATUS_RE.match(line):
+            section_handled = True
+
+    flush_section()
     return handled
 
 
