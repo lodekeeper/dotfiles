@@ -106,10 +106,12 @@ Spawn all selected reviewers in parallel (no dependencies between them).
 
 ```
 Context metadata for this run:
+- Reviewer: <agent-id>
 - Reviewed commit: <HEAD_SHA>
 
 After finishing the review:
 1) Write your full findings markdown to `~/.openclaw/workspace/notes/review-reports/pr-<PR>-<agent-id>.md`.
+   - Include the exact metadata line `Reviewer: <agent-id>` near the top of the artifact.
    - Include the exact metadata line `Reviewed commit: <HEAD_SHA>` near the top of the artifact.
    - If there are no findings, write a short "No findings" report anyway.
 2) In your final chat response, include the exact file path you wrote.
@@ -155,6 +157,7 @@ bash ~/.openclaw/workspace/scripts/review/check-review-artifacts.sh \
   --agents <agent-id-1> <agent-id-2> ... \
   --allow-empty-no-findings \
   --max-age-minutes 180 \
+  --require-agent-marker \
   --require-reviewed-head \
   --head-repo /absolute/path/to/repo
 ```
@@ -163,6 +166,7 @@ bash ~/.openclaw/workspace/scripts/review/check-review-artifacts.sh \
 - Exit `2`: at least one expected artifact is missing/invalid/stale — re-run only the missing reviewer(s), then re-check.
 
 `--max-age-minutes` prevents stale artifacts from a prior review round from being mistaken as fresh output for the current diff.
+`--require-agent-marker` prevents cross-agent artifact mix-ups by requiring each file to contain `Reviewer: <agent-id>`.
 `--require-reviewed-head` prevents fresh-but-wrong artifacts (written for a different head commit) from being accepted.
 `--head-repo` should point at the exact PR worktree so HEAD resolution is deterministic.
 

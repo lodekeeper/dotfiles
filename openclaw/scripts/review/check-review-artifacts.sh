@@ -18,6 +18,7 @@ Options:
   --min-bytes <n>              Minimum non-empty size threshold (default: 32)
   --max-age-minutes <n>        Mark artifacts invalid if older than n minutes (optional)
   --require-text <value>       Require each artifact to contain this exact text (repeatable)
+  --require-agent-marker       Require each artifact to contain "Reviewer: <agent-id>"
   --require-reviewed-head      Require marker "Reviewed commit: <HEAD_SHA>" (resolved from git)
   --head-repo <path>           Repo path for --require-reviewed-head (default: current directory)
   --allow-empty-no-findings    Accept tiny files if they include "No findings"
@@ -38,6 +39,7 @@ ALLOW_EMPTY_NO_FINDINGS=0
 AGENTS=()
 REQUIRED_TEXTS=()
 REQUIRE_REVIEWED_HEAD=0
+REQUIRE_AGENT_MARKER=0
 HEAD_REPO="."
 
 if [[ $# -eq 0 ]]; then
@@ -73,6 +75,10 @@ while [[ $# -gt 0 ]]; do
     --require-text)
       REQUIRED_TEXTS+=("${2:-}")
       shift 2
+      ;;
+    --require-agent-marker)
+      REQUIRE_AGENT_MARKER=1
+      shift
       ;;
     --require-reviewed-head)
       REQUIRE_REVIEWED_HEAD=1
@@ -147,6 +153,7 @@ missing=0
 invalid=0
 stale=0
 missing_text=0
+missing_agent_marker=0
 ok=0
 
 now_epoch=""
@@ -222,6 +229,15 @@ for agent in "${AGENTS[@]}"; do
     continue
   fi
 
+  if [[ "$REQUIRE_AGENT_MARKER" -eq 1 ]]; then
+    expected_agent_marker="Reviewer: $agent"
+    if ! grep -Fq -- "$expected_agent_marker" "$path"; then
+      echo "❌ INVALID  $agent -> $path (missing required agent marker: $expected_agent_marker)"
+      missing_agent_marker=$((missing_agent_marker + 1))
+      continue
+    fi
+  fi
+
   if [[ "$accepted_empty_no_findings" -eq 1 ]]; then
     echo "✅ OK       $agent -> $path (${bytes} bytes, accepted: contains 'No findings')"
   else
@@ -231,9 +247,9 @@ for agent in "${AGENTS[@]}"; do
 done
 
 echo ""
-echo "Summary: ok=$ok missing=$missing invalid=$invalid stale=$stale missing_text=$missing_text total=${#AGENTS[@]}"
+echo "Summary: ok=$ok missing=$missing invalid=$invalid stale=$stale missing_text=$missing_text missing_agent_marker=$missing_agent_marker total=${#AGENTS[@]}"
 
-if [[ "$missing" -gt 0 || "$invalid" -gt 0 || "$stale" -gt 0 || "$missing_text" -gt 0 ]]; then
+if [[ "$missing" -gt 0 || "$invalid" -gt 0 || "$stale" -gt 0 || "$missing_text" -gt 0 || "$missing_agent_marker" -gt 0 ]]; then
   exit 2
 fi
 

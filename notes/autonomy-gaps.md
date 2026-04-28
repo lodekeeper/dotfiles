@@ -1,10 +1,25 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-04-27 (19th pass)
+> Updated: 2026-04-28 (20th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-04-28 (self-improvement-audit-daily, 00:46 UTC)
+
+### PR review
+- **Status:** reviewer artifact verification still accepted agent-swapped files when commit markers matched, so cross-agent copy mistakes could pass synthesis checks. **Fix applied this cycle:** extended `scripts/review/check-review-artifacts.sh` with `--require-agent-marker` (enforces `Reviewer: <agent-id>` per artifact) and updated `skills/lodestar-review/SKILL.md` durable-output + Step 4.1 verifier instructions to stamp and verify reviewer ownership markers.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
 ## Daily Audit Snapshot — 2026-04-27 (self-improvement-audit-daily, 00:46 UTC)
 
 ### PR review
@@ -474,6 +489,17 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Reviewer artifact ownership guard added (2026-04-28)
+Extended `scripts/review/check-review-artifacts.sh` with a per-agent ownership check so artifact verification can reject cross-agent file mix-ups.
+- new CLI option: `--require-agent-marker` (requires each artifact to contain `Reviewer: <agent-id>`)
+- verifier summary now reports `missing_agent_marker=<count>` and fails with exit `2` when marker checks fail
+- updated `skills/lodestar-review/SKILL.md` durable-output contract to require both metadata lines:
+  - `Reviewer: <agent-id>`
+  - `Reviewed commit: <HEAD_SHA>`
+- updated Step 4.1 quick verifier command to include `--require-agent-marker`
+
+**Rationale:** commit-affinity checks prove *which head* an artifact reviewed, but not *which reviewer* authored it. Agent-marker enforcement closes that integrity gap and prevents accidental cross-agent artifact reuse during autonomous synthesis loops.
 
 ### ✅ Reviewer HEAD-marker auto-resolution guard added (2026-04-27)
 Extended `scripts/review/check-review-artifacts.sh` with built-in reviewed-commit marker resolution so follow-up verifier commands no longer rely on manual SHA interpolation.
