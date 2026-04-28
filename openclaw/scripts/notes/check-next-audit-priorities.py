@@ -6,8 +6,9 @@ This helper distinguishes between:
 - real live items that a reminder should act on.
 
 Exit codes:
-- 0: success
+- 0: success / no live items
 - 2: target section missing
+- 3: live items present when --fail-if-live is set
 - 1: runtime/usage error
 """
 
@@ -75,6 +76,12 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Check whether Next Audit Priorities has live actionable items")
     parser.add_argument("--file", default="notes/autonomy-gaps.md", help="Path to autonomy-gaps markdown")
     parser.add_argument("--json", action="store_true", help="Emit machine-readable JSON")
+    parser.add_argument("--quiet", action="store_true", help="Suppress normal stdout output")
+    parser.add_argument(
+        "--fail-if-live",
+        action="store_true",
+        help="Exit 3 when live items are present (useful for shell/cron guards)",
+    )
     args = parser.parse_args()
 
     path = Path(args.file)
@@ -98,13 +105,16 @@ def main() -> int:
 
     if args.json:
         print(json.dumps(payload, ensure_ascii=False))
-    else:
+    elif not args.quiet:
         if live_items:
             print("LIVE_ITEMS_PRESENT")
             for item in live_items:
                 print(item)
         else:
             print("NO_LIVE_ITEMS")
+
+    if args.fail_if_live and live_items:
+        return 3
 
     return 0
 

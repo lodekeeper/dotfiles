@@ -870,4 +870,4 @@ All previously listed priority items in this section are complete as of **2026-0
 3. When repopulating the list, prefer one specific automation gap that is **not already marked `✅ done` elsewhere in this file**.
 4. If a reminder fires while this section has no live items, the correct outcome is routine silence / `NO_REPLY`.
 
-Helper: `python3 scripts/notes/check-next-audit-priorities.py --json` returns whether this section contains live items or only the default empty-state guidance.
+Helper: `python3 scripts/notes/check-next-audit-priorities.py --json` returns whether this section contains live items or only the default empty-state guidance. For shell/cron guards, use `python3 scripts/notes/check-next-audit-priorities.py --quiet --fail-if-live` (`exit 0` = no live items, `exit 3` = live items present).
