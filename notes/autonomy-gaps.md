@@ -1,10 +1,25 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-04-28 (20th pass)
+> Updated: 2026-04-29 (21st pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-04-29 (self-improvement-audit-daily, 00:46 UTC)
+
+### PR review
+- **Status:** reviewer artifacts still depended on manual metadata stamping in reviewer prompts, so marker omissions could break `check-review-artifacts.sh` gating and force avoidable reruns. **Fix applied this cycle:** added `scripts/review/write-review-artifact.sh` to stamp `Reviewer:` + `Reviewed commit:` markers automatically from `--agent` and repo HEAD, and updated `skills/lodestar-review/SKILL.md` durable-output instructions to prefer the helper.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
 ## Daily Audit Snapshot — 2026-04-28 (self-improvement-audit-daily, 00:46 UTC)
 
 ### PR review
@@ -489,6 +504,17 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Reviewer artifact metadata writer helper added (2026-04-29)
+Added `scripts/review/write-review-artifact.sh` to make reviewer artifact creation deterministic and marker-safe.
+- writes `notes/review-reports/pr-<PR>-<agent-id>.md` with required metadata lines:
+  - `Reviewer: <agent-id>`
+  - `Reviewed commit: <HEAD_SHA>` (auto-resolved from `--head-repo`)
+- accepts body via `--body-file` or stdin and falls back to `No findings.` when empty
+- prints the artifact path for easy inclusion in reviewer completion messages
+- updated `skills/lodestar-review/SKILL.md` durable-output section to recommend this helper in reviewer tasks
+
+**Rationale:** we already verify metadata markers at synthesis time; this helper prevents marker drift at write time, reducing avoidable reruns from missing marker lines.
 
 ### ✅ Reviewer artifact ownership guard added (2026-04-28)
 Extended `scripts/review/check-review-artifacts.sh` with a per-agent ownership check so artifact verification can reject cross-agent file mix-ups.

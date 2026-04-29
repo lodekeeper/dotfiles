@@ -111,6 +111,8 @@ Context metadata for this run:
 
 After finishing the review:
 1) Write your full findings markdown to `~/.openclaw/workspace/notes/review-reports/pr-<PR>-<agent-id>.md`.
+   - Preferred helper (avoids marker drift):
+     `bash ~/.openclaw/workspace/scripts/review/write-review-artifact.sh --pr <PR> --agent <agent-id> --head-repo /absolute/path/to/repo <<'EOF'\n<findings markdown>\nEOF`
    - Include the exact metadata line `Reviewer: <agent-id>` near the top of the artifact.
    - Include the exact metadata line `Reviewed commit: <HEAD_SHA>` near the top of the artifact.
    - If there are no findings, write a short "No findings" report anyway.
