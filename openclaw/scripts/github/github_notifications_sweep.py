@@ -11,6 +11,10 @@ from typing import Any, Dict, List, Tuple
 OWNER_SELF = "lodekeeper"
 CHECKLIST_RESERVED_KEYS = {"version", "items", "updatedAt"}
 HANDLED_STATUS_RE = re.compile(r"^\s*-\s+\*\*Status:\*\*\s*(?:Addressed|Done|Closed|Handled)\b", re.IGNORECASE)
+EXPLICIT_HANDLED_TEXT_RE = re.compile(
+    r"\b(?:already handled|already answered|nothing new to answer|nothing new to answer or clear|marked checklist item|no remaining .* notification threads|thread is already fully handled|currently clean)\b",
+    re.IGNORECASE,
+)
 
 
 def utc_now_iso() -> str:
@@ -57,6 +61,8 @@ def extract_handled_ids_from_text(text: str) -> set[int]:
         handled.add(int(m))
     for m in re.findall(r"pullrequestreview-(\d+)", text):
         handled.add(int(m))
+    for m in re.findall(r"\b(?:checklist item|comment(?: id)?|review(?: body)? id)\s*`?(\d{6,})`?", text, re.IGNORECASE):
+        handled.add(int(m))
     return handled
 
 
@@ -71,6 +77,9 @@ def extract_handled_ids_from_backlog(backlog_text: str) -> set[int]:
             handled.update(extract_handled_ids_from_text("\n".join(section_lines)))
 
     for line in backlog_text.splitlines():
+        if EXPLICIT_HANDLED_TEXT_RE.search(line):
+            handled.update(extract_handled_ids_from_text(line))
+
         if line.startswith("### "):
             flush_section()
             section_lines = [line]
