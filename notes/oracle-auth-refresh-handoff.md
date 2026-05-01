@@ -1,13 +1,17 @@
 # Oracle auth refresh handoff
 
-Status as of 2026-04-21 18:17 UTC:
+Status as of 2026-05-01:
 - Local wrapper/tooling path is healthy.
-- The active blocker is **stale ChatGPT auth material**, not Cloudflare bypass or missing local scripts.
-- Best remaining recovery path is a **fresh full cookie export** or a **fresh `__Secure-next-auth.session-token`**.
+- We also recovered and decrypted a fuller local ChatGPT/OpenAI cookie jar directly from `~/.oracle/stealth-profile/Default/Cookies`.
+- That improved diagnosis but did **not** unblock auth: stale `cf_*` cookies were one layer of failure, but after stripping them and letting Camoufox mint fresh clearance, the underlying NextAuth session still resolves to **stale Pro auth** (`RefreshAccessTokenError`).
+- The active blocker remains **stale ChatGPT auth material**, not Cloudflare bypass or missing local scripts.
+- Best remaining recovery path is still a **fresh full cookie export** or a **fresh `__Secure-next-auth.session-token`**.
 
 ## What is already verified
 - `scripts/oracle/check-wrapper.sh --json` is green.
 - `scripts/oracle/chatgpt-direct --auth-only --require-auth --require-pro --json` works as the canonical direct auth probe.
+- A recovered full local cookie jar can reach a better diagnosis path than the one-cookie jar, but only after **removing stale Cloudflare cookies** so Camoufox can mint fresh clearance.
+- After that cleanup, direct auth still bottoms out at the real blocker: `server.state=stale`, `planType=pro`, `error=RefreshAccessTokenError`.
 - `scripts/oracle/verify-after-auth-refresh.sh --dry-run --json` plans the exact post-refresh sequence:
   1. `chatgpt-direct --auth-only --require-auth --require-pro --cookies <cookieFile> --json`
   2. `oracle-browser --auth-only --require-auth --require-pro --cookies <cookieFile> --json`
