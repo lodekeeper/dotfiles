@@ -30,6 +30,20 @@ HEADING_H3 = re.compile(r"^###\s+")
 HEADING_H4 = re.compile(r"^####\s+")
 SNAPSHOT_HEADING = re.compile(r"^## Daily Audit Snapshot — (\d{4}-\d{2}-\d{2})\b", re.MULTILINE)
 UPDATED_LINE = re.compile(r"^>\s*Updated:\s*(\d{4}-\d{2}-\d{2})\s*\((\d+)(?:st|nd|rd|th)\s+pass\)\s*$", re.MULTILINE)
+SNAPSHOT_SECTION_HEADING = re.compile(r"^###\s+(.+?)\s*$", re.MULTILINE)
+SNAPSHOT_STATUS_LINE = re.compile(r"^\s*-\s+\*\*Status:\*\*\s*(.+?)\s*$", re.MULTILINE)
+SNAPSHOT_LEGACY_MARKER = re.compile(
+    r"^\s*-\s+\*\*(?:Blocker|Fix applied this cycle|Proposed fix|Status):\*\*",
+    re.MULTILINE,
+)
+
+REQUIRED_SNAPSHOT_SECTIONS = [
+    "PR review",
+    "CI fix",
+    "Spec implementation",
+    "Devnet debugging",
+]
+STATUS_PLACEHOLDERS = {"", "_fill in_", "fill in", "tbd", "todo"}
 
 CODE_SPAN = re.compile(r"`([^`]+)`")
 PATH_LIKE = re.compile(r"^(?:\.?\.?/)?(?:scripts|notes|skills|docs|config|openclaw)/[^\s`]+$")
@@ -265,6 +279,72 @@ def find_snapshot_order_conflicts(text: str) -> list[str]:
     return conflicts
 
 
+def iter_snapshot_blocks(text: str) -> list[tuple[str, str]]:
+    matches = list(SNAPSHOT_HEADING.finditer(text))
+    blocks: list[tuple[str, str]] = []
+
+    for i, match in enumerate(matches):
+        date_str = match.group(1)
+        start = match.start()
+        end = matches[i + 1].start() if i + 1 < len(matches) else len(text)
+        blocks.append((date_str, text[start:end]))
+
+    return blocks
+
+
+def section_blocks(snapshot_block: str) -> dict[str, str]:
+    matches = list(SNAPSHOT_SECTION_HEADING.finditer(snapshot_block))
+    sections: dict[str, str] = {}
+
+    for i, match in enumerate(matches):
+        name = match.group(1).strip().lower()
+        start = match.end()
+        end = matches[i + 1].start() if i + 1 < len(matches) else len(snapshot_block)
+        sections[name] = snapshot_block[start:end]
+
+    return sections
+
+
+def find_snapshot_structure_conflicts(text: str) -> list[str]:
+    conflicts: list[str] = []
+
+    for date_str, block in iter_snapshot_blocks(text):
+        sections = section_blocks(block)
+
+        for section_name in REQUIRED_SNAPSHOT_SECTIONS:
+            body = sections.get(section_name.lower())
+            if body is None:
+                conflicts.append(
+                    f"Snapshot {date_str} missing required section heading: {section_name}"
+                )
+                continue
+
+            status_matches = list(SNAPSHOT_STATUS_LINE.finditer(body))
+            if len(status_matches) > 1:
+                conflicts.append(
+                    f"Snapshot {date_str} section '{section_name}' must contain at most one status line; found {len(status_matches)}"
+                )
+                continue
+
+            if len(status_matches) == 1:
+                status_value = status_matches[0].group(1).strip().strip("`").lower()
+                if status_value in STATUS_PLACEHOLDERS:
+                    conflicts.append(
+                        f"Snapshot {date_str} section '{section_name}' has empty/placeholder status value"
+                    )
+                continue
+
+            # Legacy snapshots may use blocker/fix/proposed-fix bullets instead of
+            # normalized status lines. Require at least one structured marker so
+            # fully empty sections are still rejected.
+            if not SNAPSHOT_LEGACY_MARKER.search(body):
+                conflicts.append(
+                    f"Snapshot {date_str} section '{section_name}' has no structured status/blocker/fix marker"
+                )
+
+    return conflicts
+
+
 def find_updated_line_conflicts(text: str, snapshot_count: int, latest_snapshot_date: str | None) -> list[str]:
     matches = list(UPDATED_LINE.finditer(text))
     if not matches:
@@ -319,6 +399,7 @@ def main() -> int:
     fixed_gap_proposed_fix_conflicts = find_fixed_gap_proposed_fix_conflicts(gaps)
     snapshot_count, latest_snapshot_date, snapshot_conflicts, snapshot_warnings = find_duplicate_snapshot_dates(text)
     snapshot_order_conflicts = find_snapshot_order_conflicts(text)
+    snapshot_structure_conflicts = find_snapshot_structure_conflicts(text)
     updated_line_conflicts = find_updated_line_conflicts(text, snapshot_count, latest_snapshot_date)
 
     print(f"Checked: {path}")
@@ -341,6 +422,7 @@ def main() -> int:
         + fixed_gap_proposed_fix_conflicts
         + snapshot_conflicts
         + snapshot_order_conflicts
+        + snapshot_structure_conflicts
         + updated_line_conflicts
     )
     if not all_conflicts:

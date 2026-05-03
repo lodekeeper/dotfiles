@@ -1,10 +1,25 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-04-30 (22nd pass)
+> Updated: 2026-05-03 (23rd pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-05-03 (self-improvement-audit-daily, 03:19 UTC)
+
+### PR review
+- **Status:** audit-integrity gap found and fixed this cycle: consistency checks validated snapshot order/dedup metadata but did not verify required section structure across historical snapshots. **Fix applied this cycle:** extended `scripts/notes/check-autonomy-gaps-consistency.py` with snapshot-structure validation (required domains + structured status/blocker/fix markers), including backward-compatible handling for legacy snapshots that use `Blocker/Fix applied` bullets instead of normalized `Status` lines.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
 ## Daily Audit Snapshot — 2026-04-30 (self-improvement-audit-daily, 00:57 UTC)
 
 ### PR review
@@ -519,6 +534,15 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Historical snapshot-structure guard added to autonomy consistency checks (2026-05-03)
+Extended `scripts/notes/check-autonomy-gaps-consistency.py` so it now validates **every** daily snapshot block (not just top-level metadata):
+- verifies required domains are present in each snapshot (`PR review`, `CI fix`, `Spec implementation`, `Devnet debugging`),
+- requires structured progress markers per section,
+- accepts both modern `- **Status:** ...` entries and legacy `Blocker/Fix applied/Proposed fix` formats for backward compatibility,
+- fails with explicit per-snapshot/per-section errors when structure is missing.
+
+**Rationale:** catches malformed historical snapshots early and keeps close-out consistency checks durable across both old and new audit formats.
 
 ### ✅ Reviewer artifact metadata writer helper added (2026-04-29)
 Added `scripts/review/write-review-artifact.sh` to make reviewer artifact creation deterministic and marker-safe.
