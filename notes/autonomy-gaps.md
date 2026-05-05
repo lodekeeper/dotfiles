@@ -1,10 +1,25 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-05-03 (23rd pass)
+> Updated: 2026-05-05 (24th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-05-05 (self-improvement-audit-daily, 03:19 UTC)
+
+### PR review
+- **Status:** audit-closeout integrity gap found and fixed this cycle: `close-autonomy-audit.sh` could emit `NO_REPLY` when finalize reported no delta even if `## Next Audit Priorities` still had live items. **Fix applied this cycle:** added a default guard in `scripts/notes/close-autonomy-audit.sh` that runs `check-next-audit-priorities.py --fail-if-live` before emitting `NO_REPLY`, with explicit override flag `--allow-live-priorities-no-reply` for intentional bypasses.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
 ## Daily Audit Snapshot — 2026-05-03 (self-improvement-audit-daily, 03:19 UTC)
 
 ### PR review
@@ -534,6 +549,14 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Close-out NO_REPLY guard against live priority leakage (2026-05-05)
+Updated `scripts/notes/close-autonomy-audit.sh` so finalize `NO_CHANGE` no longer auto-emits `NO_REPLY` blindly.
+- added default `Next Audit Priorities` live-item guard via `check-next-audit-priorities.py --fail-if-live`
+- when live items still exist, close-out now fails fast with actionable stderr guidance
+- added explicit override flag `--allow-live-priorities-no-reply` for deliberate/manual bypasses
+
+**Rationale:** prevents silent routine replies from masking pending autonomy-follow-up items that should keep the audit loop active.
 
 ### ✅ Historical snapshot-structure guard added to autonomy consistency checks (2026-05-03)
 Extended `scripts/notes/check-autonomy-gaps-consistency.py` so it now validates **every** daily snapshot block (not just top-level metadata):

@@ -7,6 +7,7 @@ DATE=""
 VERBOSE=0
 STRICT_CADENCE=0
 SKIP_CADENCE_CHECK=0
+ALLOW_LIVE_PRIORITIES_NO_REPLY=0
 
 usage() {
   cat <<'EOF'
@@ -21,6 +22,8 @@ Options:
   --date <YYYY-MM-DD>   Snapshot date (default: current UTC date)
   --strict-cadence      Treat cadence gaps as hard failures (default: advisory warning)
   --skip-cadence-check  Skip cadence guard during close-out
+  --allow-live-priorities-no-reply
+                        Allow NO_REPLY even when "Next Audit Priorities" has live items
   -v, --verbose         Print finalize logs to stderr
   -h, --help            Show this help
 EOF
@@ -42,6 +45,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --skip-cadence-check)
       SKIP_CADENCE_CHECK=1
+      shift
+      ;;
+    --allow-live-priorities-no-reply)
+      ALLOW_LIVE_PRIORITIES_NO_REPLY=1
       shift
       ;;
     -v|--verbose)
@@ -138,6 +145,29 @@ if [[ "$SKIP_CADENCE_CHECK" -ne 1 ]]; then
 fi
 
 if [[ "$finalize_rc" -eq 3 ]]; then
+  if [[ "$ALLOW_LIVE_PRIORITIES_NO_REPLY" -ne 1 ]]; then
+    NEXT_PRIORITIES_CMD=(
+      python3 "$WORKSPACE/scripts/notes/check-next-audit-priorities.py"
+      --file "$TARGET_FILE"
+      --quiet
+      --fail-if-live
+    )
+
+    set +e
+    "${NEXT_PRIORITIES_CMD[@]}" >/dev/null 2>&1
+    priorities_rc=$?
+    set -e
+
+    if [[ "$priorities_rc" -eq 3 ]]; then
+      echo "❌ close-autonomy-audit: finalize reported NO_CHANGE, but 'Next Audit Priorities' still has live items." >&2
+      echo "   Resolve/remove those items first, or rerun with --allow-live-priorities-no-reply to override." >&2
+      exit 3
+    elif [[ "$priorities_rc" -ne 0 ]]; then
+      echo "❌ close-autonomy-audit: next-priorities check failed (exit $priorities_rc)." >&2
+      exit "$priorities_rc"
+    fi
+  fi
+
   echo "NO_REPLY"
   exit 0
 fi
