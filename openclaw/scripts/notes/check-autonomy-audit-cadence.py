@@ -8,12 +8,32 @@ Useful as an advisory guard so missed cron runs don't go unnoticed.
 from __future__ import annotations
 
 import argparse
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 import re
 import sys
 
 SNAPSHOT_HEADING = re.compile(r"^## Daily Audit Snapshot — (\d{4}-\d{2}-\d{2})\b", re.MULTILINE)
+
+
+def list_missing_dates(older: date, newer: date, limit: int = 10) -> tuple[list[str], int]:
+    """Return missing in-between dates (ISO), capped for concise logging.
+
+    Example:
+      older=2026-05-03, newer=2026-05-06 -> [2026-05-04, 2026-05-05]
+    """
+    missing: list[str] = []
+    cursor = older + timedelta(days=1)
+    hidden = 0
+
+    while cursor < newer:
+        if len(missing) < limit:
+            missing.append(cursor.isoformat())
+        else:
+            hidden += 1
+        cursor += timedelta(days=1)
+
+    return missing, hidden
 
 
 def parse_dates(text: str) -> list[date]:
@@ -134,13 +154,22 @@ def main() -> int:
 
     print("⚠️ Missing-day cadence gaps detected:")
     for older, newer, missing_days in gaps:
-        print(f"- {older.isoformat()} → {newer.isoformat()}: missing {missing_days} day(s)")
+        missing_dates, hidden = list_missing_dates(older, newer)
+        missing_display = ", ".join(missing_dates) if missing_dates else "none"
+        hidden_suffix = f" (+{hidden} more)" if hidden else ""
+        print(
+            f"- {older.isoformat()} → {newer.isoformat()}: missing {missing_days} day(s) "
+            f"[{missing_display}{hidden_suffix}]"
+        )
     if tail_gap is not None:
         older, newer, missing_days = tail_gap
+        missing_dates, hidden = list_missing_dates(older, newer)
+        missing_display = ", ".join(missing_dates) if missing_dates else "none"
+        hidden_suffix = f" (+{hidden} more)" if hidden else ""
         print(
             "- "
             f"{older.isoformat()} → {newer.isoformat()} (latest snapshot freshness): "
-            f"missing {missing_days} day(s)"
+            f"missing {missing_days} day(s) [{missing_display}{hidden_suffix}]"
         )
 
     if args.fail_on_gap:

@@ -1,10 +1,25 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-05-05 (24th pass)
+> Updated: 2026-05-06 (25th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-05-06 (self-improvement-audit-daily, 03:22 UTC)
+
+### PR review
+- **Status:** audit-workflow diagnostics gap found and fixed this cycle: cadence warnings reported only missing-day counts, which made backfill root-cause tracing slower during missed-cron investigations. **Fix applied this cycle:** extended `scripts/notes/check-autonomy-audit-cadence.py` to print explicit missing in-between dates (capped list + overflow count) for each detected cadence gap.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
 ## Daily Audit Snapshot — 2026-05-05 (self-improvement-audit-daily, 03:19 UTC)
 
 ### PR review
@@ -549,6 +564,14 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Cadence-gap output now includes exact missing dates (2026-05-06)
+Updated `scripts/notes/check-autonomy-audit-cadence.py` to enrich missing-day diagnostics with concrete in-between dates.
+- each gap line now includes a bounded list of missing dates (for example, `2026-05-04`),
+- large gaps are still concise via `(+N more)` overflow suffix,
+- freshness-gap output (`--require-current`) uses the same date-list format for consistency.
+
+**Rationale:** when a daily audit is missed, concrete missing dates are faster to triage and backfill than raw day-counts alone, especially in autonomous cron runs where log context is limited.
 
 ### ✅ Close-out NO_REPLY guard against live priority leakage (2026-05-05)
 Updated `scripts/notes/close-autonomy-audit.sh` so finalize `NO_CHANGE` no longer auto-emits `NO_REPLY` blindly.
