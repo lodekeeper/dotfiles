@@ -1,0 +1,37 @@
+{
+  "pr": 9329,
+  "created": "2026-05-06T12:57:28Z",
+  "updated": "2026-05-06T12:57:29Z",
+  "findings": [
+    {
+      "id": "3d1294",
+      "file": "packages/beacon-node/src/chain/blocks/index.ts",
+      "line": 130,
+      "severity": "nit",
+      "reviewer": "gemini-code-assist[bot]",
+      "body": "![medium](https://www.gstatic.com/codereviewagent/medium-priority.svg)\n\nThe `blockSlots` variable is redundant. You can initialize `slotSet` directly from the `blocks` map and remove `blockSlots`.\n\n```suggestion\n    const slotSet = new Set<Slot>(blocks.map((b) => b.getBlock().message.slot));\n```",
+      "status": "open",
+      "addressed_commit": null,
+      "note": null,
+      "source": {
+        "kind": "github-review-comment",
+        "id": "3193933572",
+        "repo": "ChainSafe/lodestar",
+        "pr": 9329,
+        "url": "https://github.com/ChainSafe/lodestar/pull/9329#discussion_r3193933572"
+      },
+      "created": "2026-05-06T12:57:29Z",
+      "updated": "2026-05-06T12:57:29Z"
+    }
+  ],
+  "sync": {
+    "github": {
+      "ChainSafe/lodestar": {
+        "last_comment_id": "3193933572",
+        "last_synced": "2026-05-06T12:57:29Z",
+        "last_imported": 1,
+        "last_reverify_updates": 0
+      }
+    }
+  }
+}
