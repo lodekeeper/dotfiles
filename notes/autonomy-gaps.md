@@ -1,10 +1,25 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-05-06 (25th pass)
+> Updated: 2026-05-07 (26th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-05-07 (self-improvement-audit-daily, 03:23 UTC)
+
+### PR review
+- **Status:** audit-workflow ergonomics gap found and fixed this cycle: preflight inserted blank placeholder status lines by default even though stable carry-forward logic already existed, which adds avoidable manual churn and placeholder-leak risk. **Fix applied this cycle:** changed `scripts/notes/run-autonomy-audit-preflight.sh` to enable carry-forward status prefill by default, with explicit `--no-carry-forward-status` opt-out for intentional blank scaffolds.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
 ## Daily Audit Snapshot — 2026-05-06 (self-improvement-audit-daily, 03:22 UTC)
 
 ### PR review
@@ -564,6 +579,14 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Autonomy preflight now defaults to carry-forward status prefill (2026-05-07)
+Updated `scripts/notes/run-autonomy-audit-preflight.sh` to reduce avoidable blank-snapshot churn.
+- enabled `--carry-forward-status` behavior by default,
+- added explicit `--no-carry-forward-status` override to intentionally insert blank placeholders,
+- updated usage/help text + close-out hint wording to reflect review/update flow instead of fill-only flow.
+
+**Rationale:** the audit pipeline already has carry-forward sanitization and delta guards; defaulting to prefilled status lines improves autonomous reliability by reducing manual placeholder handling and accidental `_fill in_` leakage.
 
 ### ✅ Cadence-gap output now includes exact missing dates (2026-05-06)
 Updated `scripts/notes/check-autonomy-audit-cadence.py` to enrich missing-day diagnostics with concrete in-between dates.

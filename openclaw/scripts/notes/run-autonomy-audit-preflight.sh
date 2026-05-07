@@ -6,7 +6,7 @@ FILE="notes/autonomy-gaps.md"
 DATE=""
 TIME_LABEL=""
 FORCE=0
-CARRY_FORWARD_STATUS=0
+CARRY_FORWARD_STATUS=1
 DEDUPE_APPLY=0
 STRICT_CADENCE=0
 
@@ -25,7 +25,9 @@ Options:
   --time-label <label>  Snapshot time label (default: current UTC HH:MM UTC)
   --force               Allow duplicate date scaffold insertion
   --carry-forward-status
-                        Prefill required status lines from latest snapshot
+                        Prefill required status lines from latest snapshot (default)
+  --no-carry-forward-status
+                        Disable status prefill and insert blank placeholders
   --dedupe-apply        Auto-remove older duplicate snapshot blocks before preflight
   --strict-cadence      Treat cadence gaps as hard failures (default: advisory warning)
   -h, --help            Show this help
@@ -52,6 +54,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --carry-forward-status)
       CARRY_FORWARD_STATUS=1
+      shift
+      ;;
+    --no-carry-forward-status)
+      CARRY_FORWARD_STATUS=0
       shift
       ;;
     --dedupe-apply)
@@ -141,5 +147,5 @@ fi
 echo "[3/4] Inserting daily snapshot scaffold"
 "${PREPEND_CMD[@]}"
 
-echo "✅ Preflight complete. Fill the new snapshot status blocks, then run scripts/notes/close-autonomy-audit.sh --date ${DATE:-$(date -u +%F)}"
+echo "✅ Preflight complete. Review/update the new snapshot status blocks, then run scripts/notes/close-autonomy-audit.sh --date ${DATE:-$(date -u +%F)}"
 echo "   (legacy two-step still works: finalize-autonomy-audit.py --fail-on-no-change + render-autonomy-audit-response.py)"
