@@ -1,10 +1,25 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-05-07 (26th pass)
+> Updated: 2026-05-08 (27th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-05-08 (self-improvement-audit-daily, 03:24 UTC)
+
+### PR review
+- **Status:** audit-continuity gap found and fixed this cycle: daily autonomy preflight assumed `memory/<date>.md` already existed, so a fresh day could start without the required daily-note file and force manual repair later. **Fix applied this cycle:** updated `scripts/notes/run-autonomy-audit-preflight.sh` to ensure `memory/<date>.md` exists by default before snapshot insertion, with explicit opt-out via `--no-ensure-daily-memory-note`.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
 ## Daily Audit Snapshot — 2026-05-07 (self-improvement-audit-daily, 03:23 UTC)
 
 ### PR review
@@ -579,6 +594,14 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Autonomy preflight now auto-creates the daily memory note scaffold (2026-05-08)
+Updated `scripts/notes/run-autonomy-audit-preflight.sh` to enforce daily-note continuity during audit runs.
+- added default guard that ensures `memory/<date>.md` exists before autonomy snapshot insertion,
+- creates missing daily note files with canonical heading `# Daily Notes — <YYYY-MM-DD>`,
+- added explicit opt-out flag `--no-ensure-daily-memory-note` (and matching help text) for intentional bypasses.
+
+**Rationale:** AGENTS continuity rules expect today's memory note to exist every session; making preflight enforce this removes a recurring manual setup step and prevents avoidable note-gap drift.
 
 ### ✅ Autonomy preflight now defaults to carry-forward status prefill (2026-05-07)
 Updated `scripts/notes/run-autonomy-audit-preflight.sh` to reduce avoidable blank-snapshot churn.

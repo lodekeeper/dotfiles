@@ -9,6 +9,7 @@ FORCE=0
 CARRY_FORWARD_STATUS=1
 DEDUPE_APPLY=0
 STRICT_CADENCE=0
+ENSURE_DAILY_MEMORY_NOTE=1
 
 usage() {
   cat <<'EOF'
@@ -30,6 +31,10 @@ Options:
                         Disable status prefill and insert blank placeholders
   --dedupe-apply        Auto-remove older duplicate snapshot blocks before preflight
   --strict-cadence      Treat cadence gaps as hard failures (default: advisory warning)
+  --ensure-daily-memory-note
+                        Ensure memory/<date>.md exists before snapshot insertion (default)
+  --no-ensure-daily-memory-note
+                        Skip creating/checking memory/<date>.md
   -h, --help            Show this help
 EOF
 }
@@ -68,6 +73,14 @@ while [[ $# -gt 0 ]]; do
       STRICT_CADENCE=1
       shift
       ;;
+    --ensure-daily-memory-note)
+      ENSURE_DAILY_MEMORY_NOTE=1
+      shift
+      ;;
+    --no-ensure-daily-memory-note)
+      ENSURE_DAILY_MEMORY_NOTE=0
+      shift
+      ;;
     -h|--help)
       usage
       exit 0
@@ -85,6 +98,8 @@ if [[ "$FILE" = /* ]]; then
 else
   TARGET_FILE="$WORKSPACE/$FILE"
 fi
+
+TARGET_DATE="${DATE:-$(date -u +%F)}"
 
 DEDUPE_CMD=(python3 "$WORKSPACE/scripts/notes/dedupe-autonomy-audit-snapshots.py" --file "$TARGET_FILE")
 CHECK_CMD=(python3 "$WORKSPACE/scripts/notes/check-autonomy-gaps-consistency.py" --file "$TARGET_FILE")
@@ -112,7 +127,18 @@ if [[ "$DEDUPE_APPLY" -eq 1 ]]; then
   DEDUPE_CMD+=(--apply)
 fi
 
-echo "[0/4] Running duplicate-snapshot guard"
+if [[ "$ENSURE_DAILY_MEMORY_NOTE" -eq 1 ]]; then
+  DAILY_MEMORY_FILE="$WORKSPACE/memory/$TARGET_DATE.md"
+  mkdir -p "$(dirname "$DAILY_MEMORY_FILE")"
+  if [[ ! -f "$DAILY_MEMORY_FILE" ]]; then
+    printf "# Daily Notes — %s\n\n" "$TARGET_DATE" > "$DAILY_MEMORY_FILE"
+    echo "📝 Created missing daily memory note: $DAILY_MEMORY_FILE"
+  else
+    echo "ℹ️ Daily memory note already exists: $DAILY_MEMORY_FILE"
+  fi
+fi
+
+echo "[0/5] Running duplicate-snapshot guard"
 set +e
 "${DEDUPE_CMD[@]}"
 dedupe_rc=$?
@@ -125,10 +151,10 @@ elif [[ "$dedupe_rc" -ne 0 ]]; then
   exit "$dedupe_rc"
 fi
 
-echo "[1/4] Running consistency guard on $TARGET_FILE"
+echo "[1/5] Running consistency guard on $TARGET_FILE"
 "${CHECK_CMD[@]}"
 
-echo "[2/4] Running cadence guard (advisory, latest-pair + current-date freshness)"
+echo "[2/5] Running cadence guard (advisory, latest-pair + current-date freshness)"
 set +e
 "${CADENCE_CMD[@]}"
 cadence_rc=$?
@@ -144,8 +170,8 @@ elif [[ "$cadence_rc" -ne 0 ]]; then
   exit "$cadence_rc"
 fi
 
-echo "[3/4] Inserting daily snapshot scaffold"
+echo "[3/5] Inserting daily snapshot scaffold"
 "${PREPEND_CMD[@]}"
 
-echo "✅ Preflight complete. Review/update the new snapshot status blocks, then run scripts/notes/close-autonomy-audit.sh --date ${DATE:-$(date -u +%F)}"
+echo "✅ Preflight complete. Review/update the new snapshot status blocks, then run scripts/notes/close-autonomy-audit.sh --date $TARGET_DATE"
 echo "   (legacy two-step still works: finalize-autonomy-audit.py --fail-on-no-change + render-autonomy-audit-response.py)"
