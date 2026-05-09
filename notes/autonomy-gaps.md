@@ -1,10 +1,25 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-05-08 (27th pass)
+> Updated: 2026-05-09 (28th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-05-09 (self-improvement-audit-daily, 03:25 UTC)
+
+### PR review
+- **Status:** audit-trace continuity gap found and fixed this cycle: preflight could create `memory/<date>.md` but still leave the day without an explicit autonomy-audit note stub, making close-out journaling easy to forget. **Fix applied this cycle:** updated `scripts/notes/run-autonomy-audit-preflight.sh` to append a one-time `self-improvement-audit-daily (preflight)` entry stub in `memory/<date>.md` by default, with explicit opt-out via `--no-seed-audit-memory-entry`.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
 ## Daily Audit Snapshot — 2026-05-08 (self-improvement-audit-daily, 03:24 UTC)
 
 ### PR review
@@ -594,6 +609,14 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Autonomy preflight now seeds a daily audit memory-log stub (2026-05-09)
+Updated `scripts/notes/run-autonomy-audit-preflight.sh` to bridge the last continuity gap between snapshot scaffolding and daily journaling.
+- added default daily-note stub appender (`self-improvement-audit-daily (preflight)`) in `memory/<date>.md`,
+- writes a one-time entry per day with snapshot date + close-out reminder,
+- added explicit opt-out flag `--no-seed-audit-memory-entry` (and matching help text).
+
+**Rationale:** creating the daily note file alone is not enough; seeding the audit stub makes it much harder to forget writing the same-day audit trace in memory notes.
 
 ### ✅ Autonomy preflight now auto-creates the daily memory note scaffold (2026-05-08)
 Updated `scripts/notes/run-autonomy-audit-preflight.sh` to enforce daily-note continuity during audit runs.

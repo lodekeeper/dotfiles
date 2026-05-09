@@ -10,6 +10,7 @@ CARRY_FORWARD_STATUS=1
 DEDUPE_APPLY=0
 STRICT_CADENCE=0
 ENSURE_DAILY_MEMORY_NOTE=1
+SEED_AUDIT_MEMORY_ENTRY=1
 
 usage() {
   cat <<'EOF'
@@ -35,6 +36,10 @@ Options:
                         Ensure memory/<date>.md exists before snapshot insertion (default)
   --no-ensure-daily-memory-note
                         Skip creating/checking memory/<date>.md
+  --seed-audit-memory-entry
+                        Append a one-time daily audit log stub to memory/<date>.md (default)
+  --no-seed-audit-memory-entry
+                        Skip appending the daily audit log stub
   -h, --help            Show this help
 EOF
 }
@@ -81,6 +86,14 @@ while [[ $# -gt 0 ]]; do
       ENSURE_DAILY_MEMORY_NOTE=0
       shift
       ;;
+    --seed-audit-memory-entry)
+      SEED_AUDIT_MEMORY_ENTRY=1
+      shift
+      ;;
+    --no-seed-audit-memory-entry)
+      SEED_AUDIT_MEMORY_ENTRY=0
+      shift
+      ;;
     -h|--help)
       usage
       exit 0
@@ -100,6 +113,7 @@ else
 fi
 
 TARGET_DATE="${DATE:-$(date -u +%F)}"
+TARGET_TIME_LABEL="${TIME_LABEL:-$(date -u '+%H:%M UTC')}"
 
 DEDUPE_CMD=(python3 "$WORKSPACE/scripts/notes/dedupe-autonomy-audit-snapshots.py" --file "$TARGET_FILE")
 CHECK_CMD=(python3 "$WORKSPACE/scripts/notes/check-autonomy-gaps-consistency.py" --file "$TARGET_FILE")
@@ -135,6 +149,20 @@ if [[ "$ENSURE_DAILY_MEMORY_NOTE" -eq 1 ]]; then
     echo "📝 Created missing daily memory note: $DAILY_MEMORY_FILE"
   else
     echo "ℹ️ Daily memory note already exists: $DAILY_MEMORY_FILE"
+  fi
+
+  if [[ "$SEED_AUDIT_MEMORY_ENTRY" -eq 1 ]]; then
+    if grep -Fq "self-improvement-audit-daily (preflight)" "$DAILY_MEMORY_FILE"; then
+      echo "ℹ️ Daily audit memory stub already present: $DAILY_MEMORY_FILE"
+    else
+      {
+        printf "## %s — self-improvement-audit-daily (preflight)\n" "$TARGET_TIME_LABEL"
+        printf '%s\n' "- Started daily autonomy-audit preflight for notes/autonomy-gaps.md."
+        printf '%s\n' "- Snapshot date: ${TARGET_DATE}."
+        printf '%s\n\n' "- Outcome: _fill in after close-out_."
+      } >> "$DAILY_MEMORY_FILE"
+      echo "📝 Appended daily audit memory stub: $DAILY_MEMORY_FILE"
+    fi
   fi
 fi
 
