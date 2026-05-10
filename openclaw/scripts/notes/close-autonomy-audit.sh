@@ -8,6 +8,7 @@ VERBOSE=0
 STRICT_CADENCE=0
 SKIP_CADENCE_CHECK=0
 ALLOW_LIVE_PRIORITIES_NO_REPLY=0
+SKIP_MEMORY_OUTCOME_CHECK=0
 
 usage() {
   cat <<'EOF'
@@ -24,6 +25,8 @@ Options:
   --skip-cadence-check  Skip cadence guard during close-out
   --allow-live-priorities-no-reply
                         Allow NO_REPLY even when "Next Audit Priorities" has live items
+  --skip-memory-outcome-check
+                        Skip guard that requires today's daily-note audit outcome to be filled
   -v, --verbose         Print finalize logs to stderr
   -h, --help            Show this help
 EOF
@@ -49,6 +52,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --allow-live-priorities-no-reply)
       ALLOW_LIVE_PRIORITIES_NO_REPLY=1
+      shift
+      ;;
+    --skip-memory-outcome-check)
+      SKIP_MEMORY_OUTCOME_CHECK=1
       shift
       ;;
     -v|--verbose)
@@ -141,6 +148,22 @@ if [[ "$SKIP_CADENCE_CHECK" -ne 1 ]]; then
     fi
     echo "❌ Cadence guard failed during close-out (exit $cadence_rc)." >&2
     exit "$cadence_rc"
+  fi
+fi
+
+if [[ "$SKIP_MEMORY_OUTCOME_CHECK" -ne 1 ]]; then
+  DAILY_MEMORY_FILE="$WORKSPACE/memory/$TARGET_DATE.md"
+  if [[ ! -f "$DAILY_MEMORY_FILE" ]]; then
+    echo "❌ close-autonomy-audit: missing daily memory note $DAILY_MEMORY_FILE" >&2
+    echo "   Run preflight first (or create the note), then update the audit outcome before close-out." >&2
+    echo "   Override only if intentional: --skip-memory-outcome-check" >&2
+    exit 2
+  fi
+
+  if grep -Fq -- "- Outcome: _fill in after close-out_." "$DAILY_MEMORY_FILE"; then
+    echo "❌ close-autonomy-audit: daily audit outcome is still a placeholder in $DAILY_MEMORY_FILE" >&2
+    echo "   Update the preflight audit note outcome before closing out (or override with --skip-memory-outcome-check)." >&2
+    exit 3
   fi
 fi
 

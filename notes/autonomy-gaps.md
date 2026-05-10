@@ -1,10 +1,25 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-05-09 (28th pass)
+> Updated: 2026-05-10 (29th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-05-10 (self-improvement-audit-daily, 03:24 UTC)
+
+### PR review
+- **Status:** audit-closeout continuity gap found and fixed this cycle: close-out could complete while today's seeded memory stub still had `Outcome: _fill in after close-out_.`, which made daily audit journaling easy to leave incomplete. **Fix applied this cycle:** added a default memory-outcome guard in `scripts/notes/close-autonomy-audit.sh` that requires `memory/<date>.md` to exist and rejects unresolved outcome placeholders unless explicitly overridden with `--skip-memory-outcome-check`.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
 ## Daily Audit Snapshot — 2026-05-09 (self-improvement-audit-daily, 03:25 UTC)
 
 ### PR review
@@ -609,6 +624,15 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Close-out now enforces daily memory-audit outcome completion (2026-05-10)
+Updated `scripts/notes/close-autonomy-audit.sh` to guard against unresolved daily-note audit placeholders.
+- added default check for `memory/<date>.md` presence during close-out,
+- close-out now fails when the seeded preflight line still contains `- Outcome: _fill in after close-out_.`,
+- added explicit override flag `--skip-memory-outcome-check` for intentional/manual bypass scenarios,
+- updated usage/help text to document the new guard behavior.
+
+**Rationale:** preflight now seeds daily audit stubs by default, so close-out should enforce that those stubs are actually completed rather than silently carrying placeholder text into archived notes.
 
 ### ✅ Autonomy preflight now seeds a daily audit memory-log stub (2026-05-09)
 Updated `scripts/notes/run-autonomy-audit-preflight.sh` to bridge the last continuity gap between snapshot scaffolding and daily journaling.
