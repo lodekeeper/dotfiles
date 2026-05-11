@@ -141,31 +141,6 @@ if [[ "$DEDUPE_APPLY" -eq 1 ]]; then
   DEDUPE_CMD+=(--apply)
 fi
 
-if [[ "$ENSURE_DAILY_MEMORY_NOTE" -eq 1 ]]; then
-  DAILY_MEMORY_FILE="$WORKSPACE/memory/$TARGET_DATE.md"
-  mkdir -p "$(dirname "$DAILY_MEMORY_FILE")"
-  if [[ ! -f "$DAILY_MEMORY_FILE" ]]; then
-    printf "# Daily Notes — %s\n\n" "$TARGET_DATE" > "$DAILY_MEMORY_FILE"
-    echo "📝 Created missing daily memory note: $DAILY_MEMORY_FILE"
-  else
-    echo "ℹ️ Daily memory note already exists: $DAILY_MEMORY_FILE"
-  fi
-
-  if [[ "$SEED_AUDIT_MEMORY_ENTRY" -eq 1 ]]; then
-    if grep -Fq "self-improvement-audit-daily (preflight)" "$DAILY_MEMORY_FILE"; then
-      echo "ℹ️ Daily audit memory stub already present: $DAILY_MEMORY_FILE"
-    else
-      {
-        printf "## %s — self-improvement-audit-daily (preflight)\n" "$TARGET_TIME_LABEL"
-        printf '%s\n' "- Started daily autonomy-audit preflight for notes/autonomy-gaps.md."
-        printf '%s\n' "- Snapshot date: ${TARGET_DATE}."
-        printf '%s\n\n' "- Outcome: _fill in after close-out_."
-      } >> "$DAILY_MEMORY_FILE"
-      echo "📝 Appended daily audit memory stub: $DAILY_MEMORY_FILE"
-    fi
-  fi
-fi
-
 echo "[0/5] Running duplicate-snapshot guard"
 set +e
 "${DEDUPE_CMD[@]}"
@@ -198,7 +173,35 @@ elif [[ "$cadence_rc" -ne 0 ]]; then
   exit "$cadence_rc"
 fi
 
-echo "[3/5] Inserting daily snapshot scaffold"
+if [[ "$ENSURE_DAILY_MEMORY_NOTE" -eq 1 ]]; then
+  echo "[3/5] Ensuring daily memory note + audit stub"
+  DAILY_MEMORY_FILE="$WORKSPACE/memory/$TARGET_DATE.md"
+  mkdir -p "$(dirname "$DAILY_MEMORY_FILE")"
+  if [[ ! -f "$DAILY_MEMORY_FILE" ]]; then
+    printf "# Daily Notes — %s\n\n" "$TARGET_DATE" > "$DAILY_MEMORY_FILE"
+    echo "📝 Created missing daily memory note: $DAILY_MEMORY_FILE"
+  else
+    echo "ℹ️ Daily memory note already exists: $DAILY_MEMORY_FILE"
+  fi
+
+  if [[ "$SEED_AUDIT_MEMORY_ENTRY" -eq 1 ]]; then
+    if grep -Fq "self-improvement-audit-daily (preflight)" "$DAILY_MEMORY_FILE"; then
+      echo "ℹ️ Daily audit memory stub already present: $DAILY_MEMORY_FILE"
+    else
+      {
+        printf "## %s — self-improvement-audit-daily (preflight)\n" "$TARGET_TIME_LABEL"
+        printf '%s\n' "- Started daily autonomy-audit preflight for notes/autonomy-gaps.md."
+        printf '%s\n' "- Snapshot date: ${TARGET_DATE}."
+        printf '%s\n\n' "- Outcome: _fill in after close-out_."
+      } >> "$DAILY_MEMORY_FILE"
+      echo "📝 Appended daily audit memory stub: $DAILY_MEMORY_FILE"
+    fi
+  fi
+else
+  echo "[3/5] Skipping daily memory note creation (--no-ensure-daily-memory-note)"
+fi
+
+echo "[4/5] Inserting daily snapshot scaffold"
 "${PREPEND_CMD[@]}"
 
 echo "✅ Preflight complete. Review/update the new snapshot status blocks, then run scripts/notes/close-autonomy-audit.sh --date $TARGET_DATE"

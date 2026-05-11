@@ -1,10 +1,25 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-05-10 (29th pass)
+> Updated: 2026-05-11 (30th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-05-11 (self-improvement-audit-daily, 03:24 UTC)
+
+### PR review
+- **Status:** audit-side-effect gap found and fixed this cycle: preflight wrote `memory/<date>.md` scaffolding before duplicate/consistency/cadence guards, so failed preflight runs could leave orphaned placeholder notes without a corresponding snapshot. **Fix applied this cycle:** updated `scripts/notes/run-autonomy-audit-preflight.sh` to run note/stub writes only after all guard checks pass (new explicit step `[3/5]`), with snapshot insertion moved to `[4/5]`.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
 ## Daily Audit Snapshot — 2026-05-10 (self-improvement-audit-daily, 03:24 UTC)
 
 ### PR review
@@ -624,6 +639,15 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Preflight now writes memory scaffolding only after guard checks pass (2026-05-11)
+Updated `scripts/notes/run-autonomy-audit-preflight.sh` to avoid side effects before guard validation.
+- moved daily note creation + audit-stub append from pre-guard phase to post-cadence phase,
+- new explicit `[3/5]` step now handles memory note/stub writes only when duplicate/consistency/cadence guards succeeded,
+- snapshot scaffold insertion now runs at `[4/5]`,
+- when note creation is intentionally disabled, preflight now logs explicit skip status for that step.
+
+**Rationale:** failed preflight runs should be side-effect free on memory notes; guard-first ordering avoids orphaned `_fill in after close-out_` placeholders when a run aborts before snapshot insertion.
 
 ### ✅ Close-out now enforces daily memory-audit outcome completion (2026-05-10)
 Updated `scripts/notes/close-autonomy-audit.sh` to guard against unresolved daily-note audit placeholders.
