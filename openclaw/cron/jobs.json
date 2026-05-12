@@ -25,17 +25,16 @@
       },
       "sessionTarget": "isolated",
       "state": {
-        "consecutiveErrors": 1,
-        "lastDeliveryStatus": "not-requested",
-        "lastDurationMs": 104987,
-        "lastRunAtMs": 1778454000003,
-        "lastRunStatus": "error",
-        "lastStatus": "error",
-        "nextRunAtMs": 1778540400000,
-        "lastError": "FailoverError: LLM request timed out.",
-        "lastErrorReason": "timeout"
+        "consecutiveErrors": 0,
+        "lastDeliveryStatus": "not-delivered",
+        "lastDurationMs": 47970,
+        "lastRunAtMs": 1778540547646,
+        "lastRunStatus": "ok",
+        "lastStatus": "ok",
+        "nextRunAtMs": 1778626800000,
+        "lastDelivered": false
       },
-      "updatedAtMs": 1778454104990,
+      "updatedAtMs": 1778540595616,
       "wakeMode": "next-heartbeat"
     },
     {
@@ -126,14 +125,14 @@
       "state": {
         "consecutiveErrors": 0,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 13418,
-        "lastRunAtMs": 1778443619872,
+        "lastDurationMs": 27825,
+        "lastRunAtMs": 1778530019874,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1778530019872,
+        "nextRunAtMs": 1778616419874,
         "lastDelivered": false
       },
-      "updatedAtMs": 1778443633290,
+      "updatedAtMs": 1778530047699,
       "wakeMode": "now"
     },
     {
@@ -160,14 +159,14 @@
       "state": {
         "consecutiveErrors": 0,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 382014,
-        "lastRunAtMs": 1778450400005,
+        "lastDurationMs": 236774,
+        "lastRunAtMs": 1778536800006,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1778536800000,
+        "nextRunAtMs": 1778623200000,
         "lastDelivered": false
       },
-      "updatedAtMs": 1778450782019,
+      "updatedAtMs": 1778537036780,
       "wakeMode": "now"
     },
     {
@@ -194,14 +193,14 @@
       "state": {
         "consecutiveErrors": 0,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 85884,
-        "lastRunAtMs": 1778519722849,
+        "lastDurationMs": 60849,
+        "lastRunAtMs": 1778541333108,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1778523300000,
+        "nextRunAtMs": 1778544900000,
         "lastDelivered": false
       },
-      "updatedAtMs": 1778519808733,
+      "updatedAtMs": 1778541393957,
       "wakeMode": "now"
     },
     {
@@ -254,7 +253,7 @@
       "payload": {
         "kind": "agentTurn",
         "lightContext": false,
-        "message": "Check GitHub notifications for lodekeeper using deterministic checklist dedupe.\n\nRun:\npython3 /home/openclaw/.openclaw/workspace/scripts/github/github_notifications_sweep.py --state /home/openclaw/gh-notif-state.json --checklist /home/openclaw/gh-notif-checklist.json --backlog /home/openclaw/.openclaw/workspace/BACKLOG.md\n\nBehavior:\n1) If script output is exactly HEARTBEAT_OK, reply HEARTBEAT_OK (no delivery anywhere).\n2) Otherwise:\n   a) Check if output contains \"TOPIC-ROUTED\" sections. For each topic listed:\n      - Fetch the full review/issue comments for that PR/issue from GitHub (gh api repos/{repo}/pulls/{pr}/comments AND gh api repos/{repo}/issues/{n}/comments)\n      - Use sessions_send to nudge the topic session with sessionKey shown in the output (e.g. agent:main:telegram:group:-1003764039429:topic:64)\n      - Include the actual comment content (author, file, line, body) in the nudge message so the topic session can address them directly\n      - Tell the topic session to: address the comments, push fixes, reply on GitHub, and update BACKLOG.md\n   b) For UNROUTED items (no topic tag in BACKLOG.md):\n      - Fetch the full comments from GitHub\n      - Use sessions_send to nudge the PR Reviews session: sessionKey \"agent:main:telegram:group:-1003764039429:topic:50\"\n      - Include the actual comment content and tell it to: address the comments, push fixes, reply on GitHub, and update BACKLOG.md\n   c) Post a concise summary to Lodestar WG topic #347 using: message action=send target=-1003764039429 threadId=347\n      - For topic-routed items: \"Nudged topic:XX to address N comments on repo#PR/issue\"\n      - For unrouted items: \"Nudged topic:50 (PR Reviews) to address N comments on repo#PR/issue\"\n   d) Ensure BACKLOG has a matching task for each newly reported PR/issue only if missing (no duplicate/empty-sweep entries).\n3) Do NOT perform code changes on PRs here (detect/report/route only).\n4) Keep reviewer-bot comments included; ignore only lodekeeper self comments.\n5) **EVERY inline review comment must be addressed — bot or human, even if the comment is wrong.** Inline review comments (`gh api repos/{repo}/pulls/{pr}/comments`) and review bodies that contain substantive feedback (perf observations, suggested code changes, correctness concerns, questions) MUST be routed to topic:50 (or the matching topic) for an in-thread reply. If the comment is wrong/non-actionable, the topic session must still reply explaining why — NEVER silently park it. Do NOT mark such items `done` in the checklist with reason `routine-*` based purely on the author being a `[bot]` account (gemini-code-assist[bot], coderabbitai[bot], codex-bot, etc.).\n6) **EVERY issue comment that mentions @lodekeeper or asks lodekeeper to do something must also be addressed.** Treat them like inline review comments: route to topic:50 (or matching topic) so a topic session does the requested work, replies on GitHub, and only then marks the item `done`. Issue comments addressed to lodekeeper must NEVER sit at `status: open` with `reportedCount > 1` — that means the routing failed and needs escalation. Do NOT mark such items `done` with reason `routine-*`.\n7) The ONLY items that may be parked in topic #347 with no further routing are pure status/metadata: Codecov coverage reports, CI status updates, \"PR is X commits behind base\" reminders, \"approved by reviewer X\" plain approvals with no comment body, and similar non-substantive notifications. When in doubt, route for action.\n8) NEVER DM Nico (target=5774760693) about his own comments/reviews — he already knows what he wrote. If Nico (nflaig) is the comment author, just silently route it to the correct topic and act on it, no DM. DM Nico ONLY for blocking feedback from OTHER reviewers that requires Nico's decision. CI failures on my own PRs are NOT urgent — fix them myself.\n9) If nothing new → HEARTBEAT_OK (no output anywhere).",
+        "message": "Check GitHub notifications for lodekeeper using deterministic checklist dedupe.\n\nRun:\npython3 /home/openclaw/.openclaw/workspace/scripts/github/github_notifications_sweep.py --state /home/openclaw/gh-notif-state.json --checklist /home/openclaw/gh-notif-checklist.json --backlog /home/openclaw/.openclaw/workspace/BACKLOG.md\n\nBehavior:\n1) If script output is exactly HEARTBEAT_OK, reply HEARTBEAT_OK (no delivery anywhere).\n2) Otherwise:\n   a) Check if output contains \"TOPIC-ROUTED\" sections. For each topic listed:\n      - Fetch the full review/issue comments for that PR/issue from GitHub (gh api repos/{repo}/pulls/{pr}/comments AND gh api repos/{repo}/issues/{n}/comments)\n      - Nudge the topic session via the helper script (NOT sessions_send — that tool isn't exposed in this claude-cli cron context). Use exec:\n          /home/openclaw/.openclaw/workspace/scripts/notify/nudge-topic-session.sh \\\n            \"<sessionKey from the output, e.g. agent:main:telegram:group:-1003764039429:topic:64>\" \\\n            \"<full nudge body — see below>\"\n        Helper validates the sessionKey via `openclaw gateway call sessions.resolve` and then calls `openclaw gateway call sessions.send` so the target session actually wakes and runs a turn. Exit codes: 0 ok, 2 bad invocation, 3 sessionKey not found (escalate to topic:347), 4 gateway send failed (retry once then escalate).\n      - Include the actual comment content (author, file, line, body, URLs) in the nudge body so the topic session can address them directly\n      - Tell the topic session to: address the comments, push fixes, reply on GitHub, and update BACKLOG.md\n   b) For UNROUTED items (no topic tag in BACKLOG.md):\n      - Fetch the full comments from GitHub\n      - Nudge the PR Reviews session via the helper script:\n          /home/openclaw/.openclaw/workspace/scripts/notify/nudge-topic-session.sh \\\n            \"agent:main:telegram:group:-1003764039429:topic:50\" \\\n            \"<full nudge body with comment content + instructions>\"\n      - Include the actual comment content and tell it to: address the comments, push fixes, reply on GitHub, and update BACKLOG.md\n   c) Post a concise summary to Lodestar WG topic #347 using exec + OpenClaw CLI direct send (NOT sessions_send):\n          /home/openclaw/.nvm/versions/node/v22.22.0/bin/openclaw message send --channel telegram --target -1003764039429 --thread-id 347 --message \"<summary>\"\n      - For topic-routed items: \"Nudged topic:XX to address N comments on repo#PR/issue\"\n      - For unrouted items: \"Nudged topic:50 (PR Reviews) to address N comments on repo#PR/issue\"\n   d) Ensure BACKLOG has a matching task for each newly reported PR/issue only if missing (no duplicate/empty-sweep entries).\n3) Do NOT perform code changes on PRs here (detect/report/route only).\n4) Keep reviewer-bot comments included; ignore only lodekeeper self comments.\n5) **EVERY inline review comment must be addressed — bot or human, even if the comment is wrong.** Inline review comments (`gh api repos/{repo}/pulls/{pr}/comments`) and review bodies that contain substantive feedback (perf observations, suggested code changes, correctness concerns, questions) MUST be routed to topic:50 (or the matching topic) for an in-thread reply. If the comment is wrong/non-actionable, the topic session must still reply explaining why — NEVER silently park it. Do NOT mark such items `done` in the checklist with reason `routine-*` based purely on the author being a `[bot]` account (gemini-code-assist[bot], coderabbitai[bot], codex-bot, etc.).\n6) **EVERY issue comment that mentions @lodekeeper or asks lodekeeper to do something must also be addressed.** Treat them like inline review comments: route to topic:50 (or matching topic) so a topic session does the requested work, replies on GitHub, and only then marks the item `done`. Issue comments addressed to lodekeeper must NEVER sit at `status: open` with `reportedCount > 1` — that means the routing failed and needs escalation. Do NOT mark such items `done` with reason `routine-*`.\n7) The ONLY items that may be parked in topic #347 with no further routing are pure status/metadata: Codecov coverage reports, CI status updates, \"PR is X commits behind base\" reminders, \"approved by reviewer X\" plain approvals with no comment body, and similar non-substantive notifications. When in doubt, route for action.\n8) NEVER DM Nico (target=5774760693) about his own comments/reviews — he already knows what he wrote. If Nico (nflaig) is the comment author, just silently route it to the correct topic and act on it, no DM. DM Nico ONLY for blocking feedback from OTHER reviewers that requires Nico's decision. CI failures on my own PRs are NOT urgent — fix them myself.\n9) Only mark a checklist item `handled`/`done` AFTER the nudge helper exits 0 (successful sessionKey wake). If the helper exits non-zero (sessionKey missing, agent run failed), do NOT mark the item handled — leave it open so the next sweep retries, and post a brief escalation note to topic:347.\n10) If nothing new → HEARTBEAT_OK (no output anywhere).",
         "model": "claude-cli/claude-sonnet-4-6",
         "timeoutSeconds": 1200
       },
@@ -267,14 +266,14 @@
       "state": {
         "consecutiveErrors": 0,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 235706,
-        "lastRunAtMs": 1778522336876,
+        "lastDurationMs": 82927,
+        "lastRunAtMs": 1778543950376,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1778522636876,
+        "nextRunAtMs": 1778544250376,
         "lastDelivered": false
       },
-      "updatedAtMs": 1778522572582,
+      "updatedAtMs": 1778544033303,
       "wakeMode": "now"
     },
     {
@@ -338,14 +337,14 @@
       "state": {
         "consecutiveErrors": 0,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 54394,
-        "lastRunAtMs": 1778487295155,
+        "lastDurationMs": 99210,
+        "lastRunAtMs": 1778530597596,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1778530495155,
+        "nextRunAtMs": 1778573797596,
         "lastDelivered": false
       },
-      "updatedAtMs": 1778487349549,
+      "updatedAtMs": 1778530696806,
       "wakeMode": "now"
     },
     {
@@ -371,13 +370,13 @@
         "consecutiveErrors": 0,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 9920,
-        "lastRunAtMs": 1778517875827,
+        "lastDurationMs": 7322,
+        "lastRunAtMs": 1778532329633,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1778532275827
+        "nextRunAtMs": 1778546729633
       },
-      "updatedAtMs": 1778517885747,
+      "updatedAtMs": 1778532336955,
       "wakeMode": "now"
     },
     {
@@ -401,18 +400,16 @@
       },
       "sessionTarget": "isolated",
       "state": {
-        "consecutiveErrors": 1,
+        "consecutiveErrors": 0,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 118819,
-        "lastRunAtMs": 1778510106540,
-        "lastRunStatus": "error",
-        "lastStatus": "error",
-        "nextRunAtMs": 1778531706540,
-        "lastError": "⚠️ 🩹 Apply Patch failed",
-        "lastDeliveryError": "⚠️ 🩹 Apply Patch failed"
+        "lastDurationMs": 105200,
+        "lastRunAtMs": 1778531737781,
+        "lastRunStatus": "ok",
+        "lastStatus": "ok",
+        "nextRunAtMs": 1778553337781
       },
-      "updatedAtMs": 1778510225359,
+      "updatedAtMs": 1778531842981,
       "wakeMode": "now"
     },
     {
@@ -438,14 +435,14 @@
       "state": {
         "consecutiveErrors": 0,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 46939,
-        "lastRunAtMs": 1778520923836,
+        "lastDurationMs": 41167,
+        "lastRunAtMs": 1778542874806,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1778522723836,
+        "nextRunAtMs": 1778544674806,
         "lastDelivered": false
       },
-      "updatedAtMs": 1778520970775,
+      "updatedAtMs": 1778542915973,
       "wakeMode": "now"
     },
     {
@@ -537,14 +534,14 @@
       "state": {
         "consecutiveErrors": 0,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 12690,
-        "lastRunAtMs": 1778521294815,
+        "lastDurationMs": 10629,
+        "lastRunAtMs": 1778543027943,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1778523094815,
+        "nextRunAtMs": 1778544827943,
         "lastDelivered": false
       },
-      "updatedAtMs": 1778521307505,
+      "updatedAtMs": 1778543038572,
       "wakeMode": "now"
     },
     {
@@ -609,15 +606,15 @@
       "state": {
         "consecutiveErrors": 0,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 21199,
-        "lastRunAtMs": 1778500893109,
+        "lastDurationMs": 37647,
+        "lastRunAtMs": 1778522575071,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1778522493107,
+        "nextRunAtMs": 1778544093107,
         "lastDelivered": false,
-        "runningAtMs": 1778522575070
+        "runningAtMs": 1778544093109
       },
-      "updatedAtMs": 1778500914308,
+      "updatedAtMs": 1778522612718,
       "wakeMode": "now"
     },
     {
@@ -641,14 +638,14 @@
       "state": {
         "consecutiveErrors": 0,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 16159,
-        "lastRunAtMs": 1778485998318,
+        "lastDurationMs": 15046,
+        "lastRunAtMs": 1778529198321,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1778529198318,
+        "nextRunAtMs": 1778572398321,
         "lastDelivered": false
       },
-      "updatedAtMs": 1778486014477,
+      "updatedAtMs": 1778529213367,
       "wakeMode": "now",
       "delivery": {
         "mode": "none"
@@ -749,13 +746,13 @@
         "consecutiveErrors": 0,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 65675,
-        "lastRunAtMs": 1778454104990,
+        "lastDurationMs": 52082,
+        "lastRunAtMs": 1778540595616,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1778540400000
+        "nextRunAtMs": 1778626800000
       },
-      "updatedAtMs": 1778454170665,
+      "updatedAtMs": 1778540647698,
       "wakeMode": "now"
     },
     {
@@ -816,15 +813,14 @@
       "state": {
         "consecutiveErrors": 0,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 33475,
-        "lastRunAtMs": 1778500835717,
+        "lastDurationMs": 19776,
+        "lastRunAtMs": 1778544036062,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1778522428853,
-        "lastDelivered": false,
-        "runningAtMs": 1778522575070
+        "nextRunAtMs": 1778565628853,
+        "lastDelivered": false
       },
-      "updatedAtMs": 1778500869192,
+      "updatedAtMs": 1778544055838,
       "wakeMode": "now"
     },
     {
@@ -849,14 +845,14 @@
       "state": {
         "consecutiveErrors": 0,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 62982,
-        "lastRunAtMs": 1778513434915,
+        "lastDurationMs": 57137,
+        "lastRunAtMs": 1778535031680,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1778535000000,
+        "nextRunAtMs": 1778556600000,
         "lastDelivered": false
       },
-      "updatedAtMs": 1778513497897,
+      "updatedAtMs": 1778535088817,
       "wakeMode": "now"
     }
   ]
