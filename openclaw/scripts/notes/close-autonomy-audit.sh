@@ -9,6 +9,7 @@ STRICT_CADENCE=0
 SKIP_CADENCE_CHECK=0
 ALLOW_LIVE_PRIORITIES_NO_REPLY=0
 SKIP_MEMORY_OUTCOME_CHECK=0
+MEMORY_OUTCOME=""
 
 usage() {
   cat <<'EOF'
@@ -21,6 +22,10 @@ Runs daily autonomy-audit close-out in one command:
 Options:
   --file <path>         Target markdown file (default: notes/autonomy-gaps.md)
   --date <YYYY-MM-DD>   Snapshot date (default: current UTC date)
+  --update-memory-outcome <text>
+                        Replace the "_fill in after close-out_." placeholder in
+                        memory/<date>.md with <text> before the outcome guard runs.
+                        Eliminates the separate manual edit step.
   --strict-cadence      Treat cadence gaps as hard failures (default: advisory warning)
   --skip-cadence-check  Skip cadence guard during close-out
   --allow-live-priorities-no-reply
@@ -40,6 +45,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --date)
       DATE="$2"
+      shift 2
+      ;;
+    --update-memory-outcome)
+      MEMORY_OUTCOME="$2"
       shift 2
       ;;
     --strict-cadence)
@@ -151,6 +160,23 @@ if [[ "$SKIP_CADENCE_CHECK" -ne 1 ]]; then
   fi
 fi
 
+if [[ -n "$MEMORY_OUTCOME" ]]; then
+  DAILY_MEMORY_FILE="$WORKSPACE/memory/$TARGET_DATE.md"
+  if [[ ! -f "$DAILY_MEMORY_FILE" ]]; then
+    echo "❌ close-autonomy-audit: --update-memory-outcome set but daily memory note is missing: $DAILY_MEMORY_FILE" >&2
+    exit 2
+  fi
+  PLACEHOLDER="- Outcome: _fill in after close-out_."
+  if grep -Fq -- "$PLACEHOLDER" "$DAILY_MEMORY_FILE"; then
+    TMP_MEMORY="$(mktemp --tmpdir="$(dirname "$DAILY_MEMORY_FILE")")"
+    sed "s|${PLACEHOLDER}|- Outcome: ${MEMORY_OUTCOME}|g" "$DAILY_MEMORY_FILE" >"$TMP_MEMORY"
+    mv "$TMP_MEMORY" "$DAILY_MEMORY_FILE"
+    echo "✅ Updated memory outcome in $DAILY_MEMORY_FILE"
+  else
+    echo "ℹ️  --update-memory-outcome: placeholder not found in $DAILY_MEMORY_FILE; skipping update."
+  fi
+fi
+
 if [[ "$SKIP_MEMORY_OUTCOME_CHECK" -ne 1 ]]; then
   DAILY_MEMORY_FILE="$WORKSPACE/memory/$TARGET_DATE.md"
   if [[ ! -f "$DAILY_MEMORY_FILE" ]]; then
@@ -162,7 +188,7 @@ if [[ "$SKIP_MEMORY_OUTCOME_CHECK" -ne 1 ]]; then
 
   if grep -Fq -- "- Outcome: _fill in after close-out_." "$DAILY_MEMORY_FILE"; then
     echo "❌ close-autonomy-audit: daily audit outcome is still a placeholder in $DAILY_MEMORY_FILE" >&2
-    echo "   Update the preflight audit note outcome before closing out (or override with --skip-memory-outcome-check)." >&2
+    echo "   Update the preflight audit note outcome before closing out (or use --update-memory-outcome <text>)." >&2
     exit 3
   fi
 fi
