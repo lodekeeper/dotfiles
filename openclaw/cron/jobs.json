@@ -193,14 +193,14 @@
       "state": {
         "consecutiveErrors": 0,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 44024,
-        "lastRunAtMs": 1778800500003,
+        "lastDurationMs": 295003,
+        "lastRunAtMs": 1778804100003,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1778804100000,
+        "nextRunAtMs": 1778807700000,
         "lastDelivered": false
       },
-      "updatedAtMs": 1778800544027,
+      "updatedAtMs": 1778804395006,
       "wakeMode": "now"
     },
     {
@@ -266,14 +266,14 @@
       "state": {
         "consecutiveErrors": 0,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 82145,
-        "lastRunAtMs": 1778803050778,
+        "lastDurationMs": 86623,
+        "lastRunAtMs": 1778804397575,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1778803350778,
+        "nextRunAtMs": 1778804697575,
         "lastDelivered": false
       },
-      "updatedAtMs": 1778803132923,
+      "updatedAtMs": 1778804484198,
       "wakeMode": "now"
     },
     {
@@ -473,7 +473,8 @@
         "lastRunStatus": "ok",
         "lastStatus": "ok",
         "nextRunAtMs": 1778804467737,
-        "lastDelivered": false
+        "lastDelivered": false,
+        "runningAtMs": 1778804486210
       },
       "updatedAtMs": 1778545408342,
       "wakeMode": "now"
@@ -606,15 +607,14 @@
       "state": {
         "consecutiveErrors": 0,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 44562,
-        "lastRunAtMs": 1778781693109,
+        "lastDurationMs": 38708,
+        "lastRunAtMs": 1778803293109,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1778803293107,
-        "lastDelivered": false,
-        "runningAtMs": 1778803293108
+        "nextRunAtMs": 1778824893107,
+        "lastDelivered": false
       },
-      "updatedAtMs": 1778781737671,
+      "updatedAtMs": 1778803331817,
       "wakeMode": "now"
     },
     {
