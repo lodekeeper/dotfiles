@@ -1,10 +1,25 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-05-13 (32nd pass)
+> Updated: 2026-05-15 (33rd pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-05-15 (self-improvement-audit-daily, 03:23 UTC)
+
+### PR review
+- **Status:** audit-closeout safety gap found and fixed this cycle: `close-autonomy-audit.sh --update-memory-outcome` previously used raw `sed` replacement, so outcome text containing replacement metacharacters (notably `&`) could be mangled during placeholder updates. **Fix applied this cycle:** replaced the `sed` substitution with a Python atomic rewrite (`read_text` → `replace` → temp-file + `mv`) so arbitrary outcome text is preserved exactly.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
 ## Daily Audit Snapshot — 2026-05-13 (self-improvement-audit-daily, 12:18 UTC)
 
 ### PR review
@@ -669,6 +684,14 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Close-out memory-outcome replacement now preserves arbitrary text safely (2026-05-15)
+Updated `scripts/notes/close-autonomy-audit.sh` to remove shell-substitution edge cases from `--update-memory-outcome`.
+- replaced raw `sed` substitution with a Python text rewrite (`placeholder` → `outcome`) written to a temp file,
+- kept atomic replacement semantics via tmp-file + `mv`,
+- prevents mangled output when the outcome text includes `&` or other replacement metacharacters.
+
+**Rationale:** autonomous close-out should accept natural free-form outcome text (URLs, ampersands, punctuation) without requiring manual escaping.
 
 ### ✅ Preflight now writes memory scaffolding only after guard checks pass (2026-05-11)
 Updated `scripts/notes/run-autonomy-audit-preflight.sh` to avoid side effects before guard validation.

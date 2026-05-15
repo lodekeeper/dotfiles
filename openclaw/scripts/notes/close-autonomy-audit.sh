@@ -169,7 +169,19 @@ if [[ -n "$MEMORY_OUTCOME" ]]; then
   PLACEHOLDER="- Outcome: _fill in after close-out_."
   if grep -Fq -- "$PLACEHOLDER" "$DAILY_MEMORY_FILE"; then
     TMP_MEMORY="$(mktemp --tmpdir="$(dirname "$DAILY_MEMORY_FILE")")"
-    sed "s|${PLACEHOLDER}|- Outcome: ${MEMORY_OUTCOME}|g" "$DAILY_MEMORY_FILE" >"$TMP_MEMORY"
+    python3 - "$DAILY_MEMORY_FILE" "$TMP_MEMORY" "$MEMORY_OUTCOME" <<'PY'
+from pathlib import Path
+import sys
+
+source = Path(sys.argv[1])
+target = Path(sys.argv[2])
+outcome = sys.argv[3]
+placeholder = "- Outcome: _fill in after close-out_."
+replacement = f"- Outcome: {outcome}"
+text = source.read_text(encoding="utf-8")
+text = text.replace(placeholder, replacement)
+target.write_text(text, encoding="utf-8")
+PY
     mv "$TMP_MEMORY" "$DAILY_MEMORY_FILE"
     echo "✅ Updated memory outcome in $DAILY_MEMORY_FILE"
   else
