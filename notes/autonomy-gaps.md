@@ -1,10 +1,25 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-05-15 (33rd pass)
+> Updated: 2026-05-16 (34th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-05-16 (self-improvement-audit-daily, 03:23 UTC)
+
+### PR review
+- **Status:** audit-closeout safety gap found and fixed this cycle: `close-autonomy-audit.sh --update-memory-outcome` replaced **all** `_fill in after close-out_` placeholders in `memory/<date>.md`, which could overwrite multiple unresolved entries with one shared outcome and hide incomplete notes. **Fix applied this cycle:** replacement is now single-target (`replace(..., 1)`), and close-out emits a warning when multiple placeholders are detected so follow-up cleanup stays explicit.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
 ## Daily Audit Snapshot — 2026-05-15 (self-improvement-audit-daily, 03:23 UTC)
 
 ### PR review
@@ -684,6 +699,14 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Close-out outcome updater now edits only one placeholder and warns on duplicates (2026-05-16)
+Updated `scripts/notes/close-autonomy-audit.sh` to tighten `--update-memory-outcome` replacement scope.
+- switched placeholder rewrite from global replacement to single-target replacement (`replace(..., 1)`),
+- emit an explicit warning when multiple unresolved placeholders are detected in `memory/<date>.md`,
+- preserves existing close-out guard behavior while preventing accidental bulk overwrite of unresolved entries.
+
+**Rationale:** autonomous close-out should only resolve the current audit stub by default; silently rewriting every matching placeholder can hide journaling gaps and degrade note integrity.
 
 ### ✅ Close-out memory-outcome replacement now preserves arbitrary text safely (2026-05-15)
 Updated `scripts/notes/close-autonomy-audit.sh` to remove shell-substitution edge cases from `--update-memory-outcome`.
