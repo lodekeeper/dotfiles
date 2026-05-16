@@ -27,14 +27,14 @@
       "state": {
         "consecutiveErrors": 0,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 56636,
-        "lastRunAtMs": 1778799600003,
+        "lastDurationMs": 52988,
+        "lastRunAtMs": 1778886000001,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1778886000000,
+        "nextRunAtMs": 1778972400000,
         "lastDelivered": false
       },
-      "updatedAtMs": 1778799656639,
+      "updatedAtMs": 1778886052989,
       "wakeMode": "next-heartbeat"
     },
     {
@@ -58,13 +58,13 @@
       "state": {
         "consecutiveErrors": 0,
         "lastDeliveryStatus": "not-requested",
-        "lastDurationMs": 5338,
-        "lastRunAtMs": 1778278333005,
+        "lastDurationMs": 5801,
+        "lastRunAtMs": 1778883133008,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1778883133005
+        "nextRunAtMs": 1779487933008
       },
-      "updatedAtMs": 1778278338343,
+      "updatedAtMs": 1778883138809,
       "wakeMode": "now"
     },
     {
@@ -91,14 +91,14 @@
       "state": {
         "consecutiveErrors": 0,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 270990,
-        "lastRunAtMs": 1778615725033,
+        "lastDurationMs": 356659,
+        "lastRunAtMs": 1778874953465,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1778874925033,
+        "nextRunAtMs": 1779134153465,
         "lastDelivered": false
       },
-      "updatedAtMs": 1778615996023,
+      "updatedAtMs": 1778875310124,
       "wakeMode": "now"
     },
     {
@@ -125,14 +125,14 @@
       "state": {
         "consecutiveErrors": 0,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 20597,
-        "lastRunAtMs": 1778789219886,
+        "lastDurationMs": 8770,
+        "lastRunAtMs": 1778875619890,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1778875619886,
+        "nextRunAtMs": 1778962019890,
         "lastDelivered": false
       },
-      "updatedAtMs": 1778789240483,
+      "updatedAtMs": 1778875628660,
       "wakeMode": "now"
     },
     {
@@ -159,14 +159,14 @@
       "state": {
         "consecutiveErrors": 0,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 389957,
-        "lastRunAtMs": 1778796000018,
+        "lastDurationMs": 448325,
+        "lastRunAtMs": 1778882400002,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1778882400000,
+        "nextRunAtMs": 1778968800000,
         "lastDelivered": false
       },
-      "updatedAtMs": 1778796389975,
+      "updatedAtMs": 1778882848327,
       "wakeMode": "now"
     },
     {
@@ -193,14 +193,14 @@
       "state": {
         "consecutiveErrors": 0,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 36760,
-        "lastRunAtMs": 1778865344810,
+        "lastDurationMs": 92788,
+        "lastRunAtMs": 1778886900002,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1778868900000,
+        "nextRunAtMs": 1778890500000,
         "lastDelivered": false
       },
-      "updatedAtMs": 1778865381570,
+      "updatedAtMs": 1778886992790,
       "wakeMode": "now"
     },
     {
@@ -266,14 +266,14 @@
       "state": {
         "consecutiveErrors": 0,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 83902,
-        "lastRunAtMs": 1778867954323,
+        "lastDurationMs": 80785,
+        "lastRunAtMs": 1778889450960,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1778868254323,
+        "nextRunAtMs": 1778889750960,
         "lastDelivered": false
       },
-      "updatedAtMs": 1778868038225,
+      "updatedAtMs": 1778889531745,
       "wakeMode": "now"
     },
     {
@@ -336,14 +336,14 @@
       "state": {
         "consecutiveErrors": 0,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 88213,
-        "lastRunAtMs": 1778833240035,
+        "lastDurationMs": 40962,
+        "lastRunAtMs": 1778876440036,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1778876440035,
+        "nextRunAtMs": 1778919640036,
         "lastDelivered": false
       },
-      "updatedAtMs": 1778833328248,
+      "updatedAtMs": 1778876480998,
       "wakeMode": "now"
     },
     {
@@ -369,13 +369,13 @@
         "consecutiveErrors": 0,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 11545,
-        "lastRunAtMs": 1778863844790,
+        "lastDurationMs": 12983,
+        "lastRunAtMs": 1778878244793,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1778878244790
+        "nextRunAtMs": 1778892644793
       },
-      "updatedAtMs": 1778863856335,
+      "updatedAtMs": 1778878257776,
       "wakeMode": "now"
     },
     {
@@ -402,13 +402,13 @@
         "consecutiveErrors": 0,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 60690,
-        "lastRunAtMs": 1778856050083,
+        "lastDurationMs": 71304,
+        "lastRunAtMs": 1778877650085,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1778877650083
+        "nextRunAtMs": 1778899250085
       },
-      "updatedAtMs": 1778856110773,
+      "updatedAtMs": 1778877721389,
       "wakeMode": "now"
     },
     {
@@ -434,14 +434,14 @@
       "state": {
         "consecutiveErrors": 0,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 45302,
-        "lastRunAtMs": 1778866338139,
+        "lastDurationMs": 41844,
+        "lastRunAtMs": 1778888336325,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1778868138139,
+        "nextRunAtMs": 1778890136325,
         "lastDelivered": false
       },
-      "updatedAtMs": 1778866383441,
+      "updatedAtMs": 1778888378169,
       "wakeMode": "now"
     },
     {
@@ -533,14 +533,14 @@
       "state": {
         "consecutiveErrors": 0,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 13249,
-        "lastRunAtMs": 1778867752791,
+        "lastDurationMs": 11331,
+        "lastRunAtMs": 1778888379462,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1778869552791,
+        "nextRunAtMs": 1778890179462,
         "lastDelivered": false
       },
-      "updatedAtMs": 1778867766040,
+      "updatedAtMs": 1778888390793,
       "wakeMode": "now"
     },
     {
@@ -605,15 +605,15 @@
       "state": {
         "consecutiveErrors": 0,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 37139,
-        "lastRunAtMs": 1778846493113,
+        "lastDurationMs": 25695,
+        "lastRunAtMs": 1778868093109,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1778868093107,
+        "nextRunAtMs": 1778889693107,
         "lastDelivered": false,
-        "runningAtMs": 1778868093108
+        "runningAtMs": 1778889693108
       },
-      "updatedAtMs": 1778846530252,
+      "updatedAtMs": 1778868118804,
       "wakeMode": "now"
     },
     {
@@ -637,14 +637,14 @@
       "state": {
         "consecutiveErrors": 0,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 14095,
-        "lastRunAtMs": 1778831782007,
+        "lastDurationMs": 17746,
+        "lastRunAtMs": 1778875413661,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1778874982007,
+        "nextRunAtMs": 1778918613661,
         "lastDelivered": false
       },
-      "updatedAtMs": 1778831796102,
+      "updatedAtMs": 1778875431407,
       "wakeMode": "now",
       "delivery": {
         "mode": "none"
@@ -744,13 +744,13 @@
         "consecutiveErrors": 0,
         "lastDelivered": false,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 61329,
-        "lastRunAtMs": 1778799656639,
+        "lastDurationMs": 56160,
+        "lastRunAtMs": 1778886052989,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1778886000000
+        "nextRunAtMs": 1778972400000
       },
-      "updatedAtMs": 1778799717968,
+      "updatedAtMs": 1778886109149,
       "wakeMode": "now"
     },
     {
@@ -810,14 +810,14 @@
       "state": {
         "consecutiveErrors": 0,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 32363,
-        "lastRunAtMs": 1778868040233,
+        "lastDurationMs": 9800,
+        "lastRunAtMs": 1778889628855,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1778889628853,
+        "nextRunAtMs": 1778911228853,
         "lastDelivered": false
       },
-      "updatedAtMs": 1778868072596,
+      "updatedAtMs": 1778889638655,
       "wakeMode": "now"
     },
     {
@@ -842,14 +842,14 @@
       "state": {
         "consecutiveErrors": 0,
         "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 53489,
-        "lastRunAtMs": 1778859049583,
+        "lastDurationMs": 41476,
+        "lastRunAtMs": 1778880600002,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "nextRunAtMs": 1778880600000,
+        "nextRunAtMs": 1778902200000,
         "lastDelivered": false
       },
-      "updatedAtMs": 1778859103072,
+      "updatedAtMs": 1778880641478,
       "wakeMode": "now"
     }
   ]
