@@ -1,10 +1,25 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-05-16 (34th pass)
+> Updated: 2026-05-17 (35th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-05-17 (self-improvement-audit-daily, 03:23 UTC)
+
+### PR review
+- **Status:** close-out ordering gap found and fixed this cycle: `close-autonomy-audit.sh` ran `finalize-autonomy-audit.py` **before** memory outcome guards, so a missing/placeholder outcome could fail close-out after mutating `notes/autonomy-gaps.md` (partial side effects and noisy rerun paths). **Fix applied this cycle:** moved `--update-memory-outcome` + daily-memory outcome guard to run **before** finalize/cadence, making close-out fail fast without touching audit snapshots when memory stubs are incomplete.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
 ## Daily Audit Snapshot — 2026-05-16 (self-improvement-audit-daily, 03:23 UTC)
 
 ### PR review
@@ -699,6 +714,14 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Close-out now fails memory-outcome guards before snapshot mutation (2026-05-17)
+Updated `scripts/notes/close-autonomy-audit.sh` to reorder close-out steps so memory-note integrity checks run before snapshot finalization.
+- moved `--update-memory-outcome` handling to pre-finalize phase,
+- moved daily memory outcome placeholder guard (`--skip-memory-outcome-check` path) to pre-finalize phase,
+- keeps finalize/cadence/render behavior unchanged once memory guards pass.
+
+**Rationale:** close-out should fail fast before mutating `notes/autonomy-gaps.md` when today's memory outcome is missing/placeholder; this removes partial side effects and makes reruns deterministic.
 
 ### ✅ Close-out outcome updater now edits only one placeholder and warns on duplicates (2026-05-16)
 Updated `scripts/notes/close-autonomy-audit.sh` to tighten `--update-memory-outcome` replacement scope.

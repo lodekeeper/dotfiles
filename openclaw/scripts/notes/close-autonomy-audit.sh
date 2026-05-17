@@ -91,6 +91,57 @@ fi
 
 TARGET_DATE="${DATE:-$(date -u +%F)}"
 
+if [[ -n "$MEMORY_OUTCOME" ]]; then
+  DAILY_MEMORY_FILE="$WORKSPACE/memory/$TARGET_DATE.md"
+  if [[ ! -f "$DAILY_MEMORY_FILE" ]]; then
+    echo "❌ close-autonomy-audit: --update-memory-outcome set but daily memory note is missing: $DAILY_MEMORY_FILE" >&2
+    exit 2
+  fi
+  PLACEHOLDER="- Outcome: _fill in after close-out_."
+  if grep -Fq -- "$PLACEHOLDER" "$DAILY_MEMORY_FILE"; then
+    TMP_MEMORY="$(mktemp --tmpdir="$(dirname "$DAILY_MEMORY_FILE")")"
+    python3 - "$DAILY_MEMORY_FILE" "$TMP_MEMORY" "$MEMORY_OUTCOME" <<'PY'
+from pathlib import Path
+import sys
+
+source = Path(sys.argv[1])
+target = Path(sys.argv[2])
+outcome = sys.argv[3]
+placeholder = "- Outcome: _fill in after close-out_."
+replacement = f"- Outcome: {outcome}"
+text = source.read_text(encoding="utf-8")
+count = text.count(placeholder)
+text = text.replace(placeholder, replacement, 1)
+target.write_text(text, encoding="utf-8")
+if count > 1:
+    print(
+        f"⚠️ close-autonomy-audit: found {count} unresolved outcome placeholders in {source}; updated only the first one.",
+        file=sys.stderr,
+    )
+PY
+    mv "$TMP_MEMORY" "$DAILY_MEMORY_FILE"
+    echo "✅ Updated memory outcome in $DAILY_MEMORY_FILE"
+  else
+    echo "ℹ️  --update-memory-outcome: placeholder not found in $DAILY_MEMORY_FILE; skipping update."
+  fi
+fi
+
+if [[ "$SKIP_MEMORY_OUTCOME_CHECK" -ne 1 ]]; then
+  DAILY_MEMORY_FILE="$WORKSPACE/memory/$TARGET_DATE.md"
+  if [[ ! -f "$DAILY_MEMORY_FILE" ]]; then
+    echo "❌ close-autonomy-audit: missing daily memory note $DAILY_MEMORY_FILE" >&2
+    echo "   Run preflight first (or create the note), then update the audit outcome before close-out." >&2
+    echo "   Override only if intentional: --skip-memory-outcome-check" >&2
+    exit 2
+  fi
+
+  if grep -Fq -- "- Outcome: _fill in after close-out_." "$DAILY_MEMORY_FILE"; then
+    echo "❌ close-autonomy-audit: daily audit outcome is still a placeholder in $DAILY_MEMORY_FILE" >&2
+    echo "   Update the preflight audit note outcome before closing out (or use --update-memory-outcome <text>)." >&2
+    exit 3
+  fi
+fi
+
 FINALIZE_CMD=(
   python3 "$WORKSPACE/scripts/notes/finalize-autonomy-audit.py"
   --file "$TARGET_FILE"
@@ -157,57 +208,6 @@ if [[ "$SKIP_CADENCE_CHECK" -ne 1 ]]; then
     fi
     echo "❌ Cadence guard failed during close-out (exit $cadence_rc)." >&2
     exit "$cadence_rc"
-  fi
-fi
-
-if [[ -n "$MEMORY_OUTCOME" ]]; then
-  DAILY_MEMORY_FILE="$WORKSPACE/memory/$TARGET_DATE.md"
-  if [[ ! -f "$DAILY_MEMORY_FILE" ]]; then
-    echo "❌ close-autonomy-audit: --update-memory-outcome set but daily memory note is missing: $DAILY_MEMORY_FILE" >&2
-    exit 2
-  fi
-  PLACEHOLDER="- Outcome: _fill in after close-out_."
-  if grep -Fq -- "$PLACEHOLDER" "$DAILY_MEMORY_FILE"; then
-    TMP_MEMORY="$(mktemp --tmpdir="$(dirname "$DAILY_MEMORY_FILE")")"
-    python3 - "$DAILY_MEMORY_FILE" "$TMP_MEMORY" "$MEMORY_OUTCOME" <<'PY'
-from pathlib import Path
-import sys
-
-source = Path(sys.argv[1])
-target = Path(sys.argv[2])
-outcome = sys.argv[3]
-placeholder = "- Outcome: _fill in after close-out_."
-replacement = f"- Outcome: {outcome}"
-text = source.read_text(encoding="utf-8")
-count = text.count(placeholder)
-text = text.replace(placeholder, replacement, 1)
-target.write_text(text, encoding="utf-8")
-if count > 1:
-    print(
-        f"⚠️ close-autonomy-audit: found {count} unresolved outcome placeholders in {source}; updated only the first one.",
-        file=sys.stderr,
-    )
-PY
-    mv "$TMP_MEMORY" "$DAILY_MEMORY_FILE"
-    echo "✅ Updated memory outcome in $DAILY_MEMORY_FILE"
-  else
-    echo "ℹ️  --update-memory-outcome: placeholder not found in $DAILY_MEMORY_FILE; skipping update."
-  fi
-fi
-
-if [[ "$SKIP_MEMORY_OUTCOME_CHECK" -ne 1 ]]; then
-  DAILY_MEMORY_FILE="$WORKSPACE/memory/$TARGET_DATE.md"
-  if [[ ! -f "$DAILY_MEMORY_FILE" ]]; then
-    echo "❌ close-autonomy-audit: missing daily memory note $DAILY_MEMORY_FILE" >&2
-    echo "   Run preflight first (or create the note), then update the audit outcome before close-out." >&2
-    echo "   Override only if intentional: --skip-memory-outcome-check" >&2
-    exit 2
-  fi
-
-  if grep -Fq -- "- Outcome: _fill in after close-out_." "$DAILY_MEMORY_FILE"; then
-    echo "❌ close-autonomy-audit: daily audit outcome is still a placeholder in $DAILY_MEMORY_FILE" >&2
-    echo "   Update the preflight audit note outcome before closing out (or use --update-memory-outcome <text>)." >&2
-    exit 3
   fi
 fi
 
