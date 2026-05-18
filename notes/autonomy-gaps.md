@@ -1,10 +1,25 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-05-17 (35th pass)
+> Updated: 2026-05-18 (36th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-05-18 (self-improvement-audit-daily, 03:23 UTC)
+
+### PR review
+- **Status:** close-out targeting gap found and fixed this cycle: when `memory/<date>.md` had multiple unresolved `- Outcome: _fill in after close-out_.` lines (for example after a retried preflight), `close-autonomy-audit.sh --update-memory-outcome` replaced the **first** placeholder, which could update an older stub and leave today's latest audit outcome unresolved. **Fix applied this cycle:** switched replacement to target the **most recent** placeholder via `rsplit(..., 1)`, and updated the warning text accordingly.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
 ## Daily Audit Snapshot — 2026-05-17 (self-improvement-audit-daily, 03:23 UTC)
 
 ### PR review
@@ -714,6 +729,14 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Close-out now updates the most recent unresolved memory outcome placeholder (2026-05-18)
+Updated `scripts/notes/close-autonomy-audit.sh` so `--update-memory-outcome` no longer targets the first unresolved placeholder in `memory/<date>.md`.
+- switched replacement logic from first-match `replace(..., 1)` to last-match replacement (`rsplit(..., 1)`),
+- updated warning text to reflect the new behavior (`updated only the most recent one`),
+- keeps single-target safety (does not rewrite all placeholders).
+
+**Rationale:** if preflight is retried and multiple unresolved stubs exist in the same daily note, close-out should resolve the latest/current audit stub by default, not an older one.
 
 ### ✅ Close-out now fails memory-outcome guards before snapshot mutation (2026-05-17)
 Updated `scripts/notes/close-autonomy-audit.sh` to reorder close-out steps so memory-note integrity checks run before snapshot finalization.

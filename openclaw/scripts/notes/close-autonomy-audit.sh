@@ -111,11 +111,13 @@ placeholder = "- Outcome: _fill in after close-out_."
 replacement = f"- Outcome: {outcome}"
 text = source.read_text(encoding="utf-8")
 count = text.count(placeholder)
-text = text.replace(placeholder, replacement, 1)
+if count > 0:
+    parts = text.rsplit(placeholder, 1)
+    text = replacement.join(parts)
 target.write_text(text, encoding="utf-8")
 if count > 1:
     print(
-        f"⚠️ close-autonomy-audit: found {count} unresolved outcome placeholders in {source}; updated only the first one.",
+        f"⚠️ close-autonomy-audit: found {count} unresolved outcome placeholders in {source}; updated only the most recent one.",
         file=sys.stderr,
     )
 PY
