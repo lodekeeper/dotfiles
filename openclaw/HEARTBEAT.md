@@ -43,6 +43,8 @@ Before sending anything to Nico DM from a heartbeat flow, all of these must be c
    **Session keys by channel:**
    - Telegram topics: `agent:main:telegram:group:-1003764039429:topic:<ID>` (Lodestar WG forum)
    - Discord channels: `agent:main:discord:channel:<CHANNEL_ID>`
+
+   **Provider-surface guard:** if a next step requires Discord/Telegram posting, thread follow-up, browser work, or other OpenClaw-only tooling, keep it in the OpenClaw main/channel session. Do **not** reroute it into Claude Code / Codex CLI / other plain CLI sessions just because they were the last worker.
 4. If the only remaining items are passive monitoring (awaiting review, watching threads) → proceed to Step 2
 5. Add any new tasks discovered from notifications/Discord
 6. If a newly discovered task is a **bigger development task**:
@@ -73,6 +75,7 @@ Heartbeat should not duplicate these cron-owned checks unless Nico asks or a cro
 ## Monitor my Discord threads / mentions
 Discord mentions are push-based (instant delivery) and remain monitored through normal incoming events.
 Use `memory/discord-threads.json` for tracked thread context when needed.
+If Discord-thread work needs to continue and you're not already in the Discord channel session, nudge `agent:main:discord:channel:<CHANNEL_ID>` (or handle it in the OpenClaw main session) rather than delegating to a plain CLI session.
 
 ## 🧹 Periodic cleanup (every ~6 hours)
 - Automated by dedicated cron job: `workspace-periodic-cleanup` (id `92fa6d55-4abe-47d4-b0a6-3b9af366b444`).

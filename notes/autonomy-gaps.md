@@ -1,10 +1,25 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-05-21 (38th pass)
+> Updated: 2026-05-22 (39th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-05-22 (self-improvement-audit-daily, 03:23 UTC)
+
+### PR review
+- **Status:** no new PR-review blocker discovered this cycle; existing review guardrails remain healthy.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** tool-surface routing gap found and fixed this cycle: Discord / channel follow-up work that needed OpenClaw provider tools could still get bounced into plain Claude Code / CLI sessions with no provider access. **Fix applied this cycle:** codified a provider-surface routing guard in `AGENTS.md` and `HEARTBEAT.md` — keep Discord/Telegram/browser/message follow-ups in the OpenClaw main or channel session, and use `sessions_send` back to `agent:main:discord:channel:<ID>` / topic sessions instead of delegating those steps to plain CLI continuations.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
 ## Daily Audit Snapshot — 2026-05-21 (self-improvement-audit-daily, 03:23 UTC)
 
 ### PR review
@@ -759,6 +774,14 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ OpenClaw-only provider follow-ups now stay out of plain CLI sessions (2026-05-22)
+Updated `AGENTS.md` and `HEARTBEAT.md` to codify a provider-surface routing guard for channel work.
+- added an explicit rule that Discord/Telegram posting, thread follow-up, browser work, and other OpenClaw-only tooling stay in the OpenClaw main/channel session,
+- directs tagged follow-up back through `sessions_send` to the real session (`agent:main:discord:channel:<ID>` / Telegram topic session) instead of Claude Code / Codex CLI continuation sessions,
+- documents the concrete failure mode exposed by the consensus-specs Discord follow-up that landed in a provider-less CLI session.
+
+**Rationale:** plain CLI coding sessions can continue code investigation, but they may lack provider access and channel context. Routing channel-bound follow-up there creates silent dead ends and missed replies.
 
 ### ✅ Close-out now updates the most recent unresolved memory outcome placeholder (2026-05-18)
 Updated `scripts/notes/close-autonomy-audit.sh` so `--update-memory-outcome` no longer targets the first unresolved placeholder in `memory/<date>.md`.

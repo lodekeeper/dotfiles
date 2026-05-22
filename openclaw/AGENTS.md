@@ -173,6 +173,8 @@ When starting a **bigger development task** (EIP implementations, significant fe
 
 **Backlog integration:** Tag tasks in BACKLOG.md with `[topic:ID]` (e.g. `[topic:22]`). Group tasks under project headers (`## 📌 Project Name [topic:ID]`). During heartbeats, check each section and route updates to the correct forum topic. Untagged tasks go under `## 📌 General (no topic)`.
 
+**Provider-surface routing guard (critical):** If the next step requires Discord/Telegram posting, thread follow-up, browser work, or other OpenClaw-only provider tooling, keep it in the OpenClaw main/channel session. Do **not** bounce that follow-up into Claude Code / Codex CLI / other plain CLI sessions just because they were the last worker — those sessions may lack provider access and silently dead-end. Route tagged work back through `sessions_send` to the real session (`agent:main:discord:channel:<ID>` / Telegram topic session) or handle it directly in the main OpenClaw session.
+
 **Nico DM routing preference (critical):** Routine heartbeat/backlog progress updates do **not** go to Nico DM. Send routine status to Lodestar WG topic `#347` (`Routine Status Updates`, https://t.me/c/3764039429/347) and keep Nico DM for blockers, urgent decisions, and critical deliverables only.
 
 **Topic sessions MUST update BACKLOG.md:** When working in a topic session, update `~/.openclaw/workspace/BACKLOG.md` with your progress — mark subtasks ✅ as you complete them, add new subtasks as discovered, update status descriptions. This is how the main session (orchestrator) tracks what's happening. If progress isn't in BACKLOG.md, the orchestrator can't see it.
