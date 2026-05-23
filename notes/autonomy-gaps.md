@@ -1,7 +1,7 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-05-22 (39th pass)
+> Updated: 2026-05-23 (40th pass)
 
 ---
 
@@ -11,7 +11,7 @@
 - **Status:** no new PR-review blocker discovered this cycle; existing review guardrails remain healthy.
 
 ### CI fix
-- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+- **Status:** no new CI-fix blocker discovered this cycle. Gap found and fixed this cycle: GH-dependent crons (github-notifications, ci-autofix-unstable, monitor-open-pr-ci) had no shared pre-flight guard to short-circuit when the account is suspended. Each fired independently, burned full prompt context, and only hit 403 mid-execution. **Fix applied this cycle:** added `scripts/github/check-github-access.sh` — a cached guard (10-min TTL) that cron prompts can call at startup; exits 0 when accessible, exits 2 when suspended, caches the result to avoid repeated API hammering.
 
 ### Spec implementation
 - **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
@@ -789,6 +789,16 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Shared GitHub-access guard added for GH-dependent crons (2026-05-23)
+Added `scripts/github/check-github-access.sh` as a pre-flight guard for any cron that calls `gh`.
+- calls `gh api user --jq '.login'` with a short timeout
+- exits 0 (ok) or 2 (suspended/inaccessible), never blocks unexpectedly
+- caches the result in `tmp/github-access-state.json` for up to 10 minutes (configurable) to avoid repeated API calls when multiple crons fire close together
+- clear status output: `GITHUB_ACCESS: ok` / `GITHUB_ACCESS: suspended — skip GH-dependent work`
+- supports `--max-age-minutes` and `--state-file` overrides for testing
+
+**Rationale:** during account suspension, crons like `github-notifications`, `ci-autofix-unstable`, and `monitor-open-pr-ci` each ran full prompt context before hitting the 403 wall. A single cached guard call at the top of any GH-dependent prompt lets the cron bail immediately, preserving tokens for productive work and reducing noise in cron logs.
 
 ### ✅ OpenClaw-only provider follow-ups now stay out of plain CLI sessions (2026-05-22)
 Updated `AGENTS.md` and `HEARTBEAT.md` to codify a provider-surface routing guard for channel work.
