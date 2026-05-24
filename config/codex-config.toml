@@ -1,5 +1,6 @@
 model = "gpt-5.5"
 model_reasoning_effort = "xhigh"
+sandbox_mode = "danger-full-access"
 
 tool_output_token_limit = 25000
 
@@ -10,13 +11,8 @@ suppress_unstable_features_warning = true
 [features]
 #undo = false
 unified_exec = true
-apply_patch_freeform = true
 skills = true
 shell_snapshot = true
-# Use Landlock instead of bwrap for Linux sandbox
-# bwrap fails on this system: "loopback: Failed RTM_NEWADDR: Operation not permitted"
-# Root cause: bwrap 0.9.0 (Ubuntu 24.04) non-setuid doesn't write uid_map in unprivileged mode
-use_legacy_landlock = true
 
 [projects."/home/openclaw"]
 trust_level = "trusted"
@@ -25,6 +21,9 @@ trust_level = "trusted"
 trust_level = "trusted"
 
 [projects."/home/openclaw/.openclaw/workspace"]
+trust_level = "trusted"
+
+[projects."/tmp"]
 trust_level = "trusted"
 
 [notice.model_migrations]

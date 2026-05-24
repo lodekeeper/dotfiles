@@ -15,7 +15,7 @@
       "payload": {
         "kind": "agentTurn",
         "message": "End of day. Write a summary of today's work to memory/YYYY-MM-DD.md (use today's date). Include: PRs reviewed, PRs opened/updated, code written, issues found, lessons learned. Keep it concise but complete.\n\nAfter writing the file, send the summary to Telegram topic #347 using exec + OpenClaw CLI.\nUse this exact command shape (replace only the body text inside the heredoc):\n\ncat > /tmp/openclaw-daily-summary.txt <<'EOM'\n📅 **Daily Summary — YYYY-MM-DD**\n- concise bullets here\nEOM\n/home/openclaw/.nvm/versions/node/v22.22.0/bin/openclaw message send --channel telegram --target -1003764039429 --thread-id 347 --message \"$(cat /tmp/openclaw-daily-summary.txt)\"\n\nRules:\n- Do NOT use sessions_send.\n- Do NOT rely on announce delivery.\n- Send to thread-id 347 explicitly.\n- After the CLI send succeeds, reply exactly NO_REPLY.",
-        "model": "openai-codex/gpt-5.3-codex-spark",
+        "model": "codex/gpt-5.3-codex-spark",
         "fallbacks": []
       },
       "schedule": {
@@ -24,18 +24,8 @@
         "tz": "UTC"
       },
       "sessionTarget": "isolated",
-      "state": {
-        "consecutiveErrors": 0,
-        "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 46186,
-        "lastRunAtMs": 1779577200002,
-        "lastRunStatus": "ok",
-        "lastStatus": "ok",
-        "nextRunAtMs": 1779663600000,
-        "lastDelivered": false
-      },
-      "updatedAtMs": 1779577246188,
-      "wakeMode": "next-heartbeat"
+      "wakeMode": "next-heartbeat",
+      "state": {}
     },
     {
       "agentId": "main",
@@ -46,7 +36,6 @@
       "name": "specs-study-reminder",
       "payload": {
         "kind": "systemEvent",
-        "model": "openai-codex/gpt-5.4",
         "text": "Reminder: If no active PRs or urgent work, continue the consensus specs study plan. Check notes/specs/PROGRESS.md for where you left off. Read a spec section, find the Lodestar implementation, document learnings, and open PRs for any issues found."
       },
       "schedule": {
@@ -55,17 +44,8 @@
         "kind": "every"
       },
       "sessionTarget": "main",
-      "state": {
-        "consecutiveErrors": 0,
-        "lastDeliveryStatus": "not-requested",
-        "lastDurationMs": 5580,
-        "lastRunAtMs": 1779487933010,
-        "lastRunStatus": "ok",
-        "lastStatus": "ok",
-        "nextRunAtMs": 1780092733010
-      },
-      "updatedAtMs": 1779487938590,
-      "wakeMode": "now"
+      "wakeMode": "now",
+      "state": {}
     },
     {
       "agentId": "main",
@@ -79,7 +59,7 @@
       "payload": {
         "kind": "agentTurn",
         "message": "Check for updates on EIP-8025 (optional execution proofs) across other clients and research discussions. Do the following:\n\n1. Check ethereum/consensus-specs repo for any new commits/PRs related to EIP-8025, optional proofs, or zkvm\n2. Check Lighthouse repo (sigp/lighthouse) for commits on their optional-proofs branch\n3. Check ethpandaops/prysm repo (NOT prysmaticlabs/prysm) for any optional-proofs related branches\n4. Check ethereum/pm repo for updates to zkEVM planning\n5. Check the Eth R&D Archive for recent discussions in zkEVM-related channels:\n   - Run: bash skills/eth-rnd-archive/check-updates.sh\n   - Read recent JSON files from ~/eth-rnd-archive/l1-zkevm/ and ~/eth-rnd-archive/l1-zkevm-protocol/ (last 3 days)\n   - Also check their _threads/ subdirectories for thread discussions\n   - Look for mentions of EIP-8025, optional proofs, proof orchestration, zkEVM protocol changes\n6. If any changes found that affect our implementation in lodestar (branch feat/eip8025-optional-proofs in ~/lodestar-eip8025), summarize what we need to update\n\nOur current implementation: PR #8918 merged + PR #8923 ready on ChainSafe/lodestar optional-proofs branch. 3-client interop validated.\n\nOutput routing — use exec + OpenClaw CLI for ALL Telegram delivery (NOT sessions_send):\n- ALWAYS post a summary to Lodestar WG topic #347:\n  /home/openclaw/.nvm/versions/node/v22.22.0/bin/openclaw message send --channel telegram --target -1003764039429 --thread-id 347 --message \"<your summary>\"\n  Even if no updates found, post a brief \"No EIP-8025 movement\" note.\n- If something critical/breaking (spec change affecting Lodestar, urgent action needed): ALSO DM Nico:\n  /home/openclaw/.nvm/versions/node/v22.22.0/bin/openclaw message send --channel telegram --target 5774760693 --message \"<urgent summary>\"\n- Do NOT use sessions_send for Telegram delivery.",
-        "model": "openai-codex/gpt-5.3-codex",
+        "model": "openai/gpt-5.5",
         "timeoutSeconds": 900
       },
       "schedule": {
@@ -88,18 +68,8 @@
         "kind": "every"
       },
       "sessionTarget": "isolated",
-      "state": {
-        "consecutiveErrors": 0,
-        "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 228784,
-        "lastRunAtMs": 1779393353469,
-        "lastRunStatus": "ok",
-        "lastStatus": "ok",
-        "nextRunAtMs": 1779652553469,
-        "lastDelivered": false
-      },
-      "updatedAtMs": 1779393582253,
-      "wakeMode": "now"
+      "wakeMode": "now",
+      "state": {}
     },
     {
       "agentId": "main",
@@ -122,18 +92,8 @@
         "kind": "every"
       },
       "sessionTarget": "isolated",
-      "state": {
-        "consecutiveErrors": 0,
-        "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 22727,
-        "lastRunAtMs": 1779566821912,
-        "lastRunStatus": "ok",
-        "lastStatus": "ok",
-        "nextRunAtMs": 1779653221912,
-        "lastDelivered": false
-      },
-      "updatedAtMs": 1779566844639,
-      "wakeMode": "now"
+      "wakeMode": "now",
+      "state": {}
     },
     {
       "agentId": "main",
@@ -146,8 +106,8 @@
       "name": "daily-meme",
       "payload": {
         "kind": "agentTurn",
-        "message": "It's end of day — time for the daily meme! Read memory/$(date -u +%Y-%m-%d).md (today's daily notes) and BACKLOG.md to understand what happened today. Then generate ONE meme image using the openai-image-gen skill (NOT nano-banana-pro). Run:\n\npython3 /home/openclaw/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/skills/openai-image-gen/scripts/gen.py --model gpt-image-1 --quality high --size 1024x1024 --count 1 --out-dir /tmp/daily-meme --prompt \"<your meme prompt>\"\n\nMake the prompt a funny programming meme that summarizes today's work — inside jokes about PRs, CI, code reviews, EPBS debugging, etc. If nothing notable happened, use general Lodestar/Ethereum humor.\n\nThen send the generated image to Nico on Telegram:\nmessage action=send channel=telegram message=\"<funny caption>\" media=\"/tmp/daily-meme/001-*.png\" target=\"5774760693\"\n\n⛔ HARD CONSTRAINT: Do NOT edit memory files (memory/*.md) or BACKLOG.md under ANY circumstances. This will cause the cron to fail. Memory updates are handled exclusively by the nightly consolidation pipeline.\n\nAfter sending the image, reply exactly NO_REPLY.",
-        "model": "claude-cli/claude-opus-4-6",
+        "message": "It's end of day — time for the daily meme! Read memory/$(date -u +%Y-%m-%d).md (today's daily notes) and BACKLOG.md to understand what happened today. Then generate ONE meme image using the openclaw CLI (synchronous — NOT the async image_generate MCP tool, NOT nano-banana-pro). Run:\n\nmkdir -p /tmp/daily-meme && openclaw infer image generate --model openai/gpt-image-2 --size 1024x1024 --count 1 --output /tmp/daily-meme/meme.png --prompt \"<your meme prompt>\"\n\nMake the prompt a funny programming meme that summarizes today's work — inside jokes about PRs, CI, code reviews, EPBS debugging, etc. If nothing notable happened, use general Lodestar/Ethereum humor.\n\nThen send the generated image to Nico on Telegram:\nmessage action=send channel=telegram message=\"<funny caption>\" media=\"/tmp/daily-meme/meme.png\" target=\"5774760693\"\n\n⛔ HARD CONSTRAINT: Do NOT edit memory files (memory/*.md) or BACKLOG.md under ANY circumstances. This will cause the cron to fail. Memory updates are handled exclusively by the nightly consolidation pipeline.\n\nAfter sending the image, reply exactly NO_REPLY.",
+        "model": "claude-cli/claude-opus-4-7",
         "timeoutSeconds": 900
       },
       "schedule": {
@@ -156,18 +116,8 @@
         "tz": "UTC"
       },
       "sessionTarget": "isolated",
-      "state": {
-        "consecutiveErrors": 0,
-        "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 409775,
-        "lastRunAtMs": 1779573600002,
-        "lastRunStatus": "ok",
-        "lastStatus": "ok",
-        "nextRunAtMs": 1779660000000,
-        "lastDelivered": false
-      },
-      "updatedAtMs": 1779574009777,
-      "wakeMode": "now"
+      "wakeMode": "now",
+      "state": {}
     },
     {
       "agentId": "main",
@@ -190,18 +140,8 @@
         "tz": "UTC"
       },
       "sessionTarget": "isolated",
-      "state": {
-        "consecutiveErrors": 0,
-        "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 32760,
-        "lastRunAtMs": 1779621300005,
-        "lastRunStatus": "ok",
-        "lastStatus": "ok",
-        "nextRunAtMs": 1779624900000,
-        "lastDelivered": false
-      },
-      "updatedAtMs": 1779621332765,
-      "wakeMode": "now"
+      "wakeMode": "now",
+      "state": {}
     },
     {
       "agentId": "main",
@@ -218,7 +158,7 @@
       "payload": {
         "kind": "agentTurn",
         "message": "DAILY DIGEST: Eth R&D Archive.\n\n1. Read skill: skills/eth-rnd-archive/SKILL.md\n2. Run: bash skills/eth-rnd-archive/check-updates.sh\n3. Read raw JSON files from tracked channels for the past 2 days (today + yesterday). Check both main channel files and _threads/ subdirectories.\n4. Create a concise daily digest covering:\n   - Key decisions made across channels\n   - Action items for Lodestar\n   - Interesting discussions worth following up\n   - Notable participants driving topics\n   - Any spec changes or breaking API changes\n5. Keep it concise — TL;DR style, grouped by channel/topic. Use emoji headers.\n6. If no activity in tracked channels, still send a short \"no activity\" note.\n\nThen send the digest to Telegram topic #59 using exec + OpenClaw CLI.\nUse this exact command shape (replace only the body text inside the heredoc):\n\ncat > /tmp/openclaw-eth-rnd-digest.txt <<'EOM'\n🗞️ **Eth R&D Daily Digest**\n- digest bullets here\nEOM\n/home/openclaw/.nvm/versions/node/v22.22.0/bin/openclaw message send --channel telegram --target -1003764039429 --thread-id 59 --message \"$(cat /tmp/openclaw-eth-rnd-digest.txt)\"\n\nRules:\n- Do NOT use sessions_send.\n- Do NOT rely on announce delivery.\n- Send to thread-id 59 explicitly.\n- Optional logging can happen after send.\n- After the CLI send succeeds, reply exactly NO_REPLY.",
-        "model": "claude-cli/claude-opus-4-6",
+        "model": "claude-cli/claude-opus-4-7",
         "timeoutSeconds": 600
       },
       "schedule": {
@@ -227,18 +167,8 @@
         "tz": "Europe/Lisbon"
       },
       "sessionTarget": "isolated",
-      "state": {
-        "consecutiveErrors": 0,
-        "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 56115,
-        "lastRunAtMs": 1779606016335,
-        "lastRunStatus": "ok",
-        "lastStatus": "ok",
-        "nextRunAtMs": 1779692400000,
-        "lastDelivered": false
-      },
-      "updatedAtMs": 1779606072450,
-      "wakeMode": "now"
+      "wakeMode": "now",
+      "state": {}
     },
     {
       "agentId": "main",
@@ -263,18 +193,8 @@
         "kind": "every"
       },
       "sessionTarget": "isolated",
-      "state": {
-        "consecutiveErrors": 0,
-        "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 7788,
-        "lastRunAtMs": 1779623895918,
-        "lastRunStatus": "ok",
-        "lastStatus": "ok",
-        "nextRunAtMs": 1779624195918,
-        "lastDelivered": false
-      },
-      "updatedAtMs": 1779623903706,
-      "wakeMode": "now"
+      "wakeMode": "now",
+      "state": {}
     },
     {
       "agentId": "main",
@@ -288,7 +208,7 @@
       "payload": {
         "kind": "agentTurn",
         "message": "Run: bash ~/.openclaw/workspace/scripts/memory/nightly_memory_cycle.sh. Then summarize consolidation/indexing results briefly. Do NOT edit BACKLOG.md in this cron; this job is memory-pipeline only.",
-        "model": "openai-codex/gpt-5.4",
+        "model": "openai/gpt-5.5",
         "timeoutSeconds": 900
       },
       "schedule": {
@@ -298,18 +218,8 @@
         "tz": "UTC"
       },
       "sessionTarget": "isolated",
-      "state": {
-        "consecutiveErrors": 0,
-        "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 781079,
-        "lastRunAtMs": 1779593400003,
-        "lastRunStatus": "ok",
-        "lastStatus": "ok",
-        "nextRunAtMs": 1779679800000,
-        "lastDelivered": false
-      },
-      "updatedAtMs": 1779594181082,
-      "wakeMode": "now"
+      "wakeMode": "now",
+      "state": {}
     },
     {
       "createdAtMs": 1772326513772,
@@ -325,7 +235,7 @@
       "payload": {
         "kind": "agentTurn",
         "message": "Read ~/.openclaw/workspace/scripts/ci/CRON_PROMPT.md and follow the instructions. Run the detector, act on actionable findings, report results.\n\nOutput routing:\n- Routine (no failures, or auto-fixed): post to Lodestar WG topic #347 (action=send target=-1003764039429 threadId=347) or HEARTBEAT_OK.\n- CI failure on lodekeeper's PRs: fix it directly, no DM.\n- Broader unstable/infra issue Nico needs to know about: DM Nico (target=5774760693).",
-        "model": "openai-codex/gpt-5.3-codex"
+        "model": "openai/gpt-5.5"
       },
       "schedule": {
         "anchorMs": 1772570649657,
@@ -333,18 +243,8 @@
         "kind": "every"
       },
       "sessionTarget": "isolated",
-      "state": {
-        "consecutiveErrors": 0,
-        "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 77513,
-        "lastRunAtMs": 1779610843484,
-        "lastRunStatus": "ok",
-        "lastStatus": "ok",
-        "nextRunAtMs": 1779654043484,
-        "lastDelivered": false
-      },
-      "updatedAtMs": 1779610920997,
-      "wakeMode": "now"
+      "wakeMode": "now",
+      "state": {}
     },
     {
       "createdAtMs": 1772373812089,
@@ -365,18 +265,8 @@
         "kind": "every"
       },
       "sessionTarget": "isolated",
-      "state": {
-        "consecutiveErrors": 0,
-        "lastDelivered": false,
-        "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 15361,
-        "lastRunAtMs": 1779612815210,
-        "lastRunStatus": "ok",
-        "lastStatus": "ok",
-        "nextRunAtMs": 1779627215210
-      },
-      "updatedAtMs": 1779612830571,
-      "wakeMode": "now"
+      "wakeMode": "now",
+      "state": {}
     },
     {
       "agentId": "main",
@@ -390,7 +280,7 @@
       "payload": {
         "kind": "agentTurn",
         "message": "Run periodic workspace cleanup (every 6 hours). Keep files lean without spamming Nico.\n\nRequired steps:\n1) BACKLOG cleanup:\n   - Move completed top-level items (`### ✅`) from `~/.openclaw/workspace/BACKLOG.md` to `~/.openclaw/workspace/BACKLOG_ARCHIVE.md`.\n   - **Condense verbose active items:** If any `### 🟡` or `### 🔴` or `### ⏸️` item has more than 30 lines of subtasks/findings, condense it:\n     - Keep the header, status line, PR/issue link, and current blocker/next-step (max ~10 lines per item)\n     - Move the verbose subtask tree to `BACKLOG_ARCHIVE.md` under a dated batch header\n     - Replace with a one-line summary like: `- **Full investigation log:** archived 2026-03-06 (150 lines → BACKLOG_ARCHIVE.md)`\n   - Target: BACKLOG.md should stay under ~150 lines total. If it exceeds 200 lines, aggressively condense.\n   - Keep only active/passive/on-hold items in BACKLOG.md.\n   - Do NOT add backlog entries for empty cleanup runs.\n2) HEARTBEAT cleanup:\n   - Keep `~/.openclaw/workspace/HEARTBEAT.md` lean; remove stale completed checklist lines if any.\n3) Daily notes hygiene:\n   - Review `~/.openclaw/workspace/memory/` daily notes older than 7 days.\n   - Before removing or archiving anything, ensure durable key info is reflected in `MEMORY.md` or memory bank outputs.\n   - Prefer safe archiving/moving over deletion.\n\nReporting rules:\n- If no actionable changes were needed, reply exactly `NO_REPLY`.\n- If changes were made, send only a concise summary with file paths and counts.",
-        "model": "openai-codex/gpt-5.3-codex-spark"
+        "model": "codex/gpt-5.3-codex-spark"
       },
       "schedule": {
         "anchorMs": 1772634832403,
@@ -398,18 +288,8 @@
         "kind": "every"
       },
       "sessionTarget": "isolated",
-      "state": {
-        "consecutiveErrors": 0,
-        "lastDelivered": false,
-        "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 52970,
-        "lastRunAtMs": 1779612061985,
-        "lastRunStatus": "ok",
-        "lastStatus": "ok",
-        "nextRunAtMs": 1779633661985
-      },
-      "updatedAtMs": 1779612114955,
-      "wakeMode": "now"
+      "wakeMode": "now",
+      "state": {}
     },
     {
       "agentId": "main",
@@ -431,18 +311,8 @@
         "kind": "every"
       },
       "sessionTarget": "isolated",
-      "state": {
-        "consecutiveErrors": 0,
-        "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 9693,
-        "lastRunAtMs": 1779623833346,
-        "lastRunStatus": "ok",
-        "lastStatus": "ok",
-        "nextRunAtMs": 1779625633346,
-        "lastDelivered": false
-      },
-      "updatedAtMs": 1779623843039,
-      "wakeMode": "now"
+      "wakeMode": "now",
+      "state": {}
     },
     {
       "agentId": "main",
@@ -456,7 +326,7 @@
       "payload": {
         "kind": "agentTurn",
         "message": "Periodic identity-file review (every 3 days).\n1) Re-read `SOUL.md`, `IDENTITY.md`, and `MEMORY.md` for drift.\n2) Add new lessons, update strengths/weaknesses, and refine personality notes where warranted.\n3) If you made edits, sync via `~/dotfiles/scripts/sync-dotfiles.sh` (non-sensitive files only).\n4) Report only when meaningful changes were made.\nIf no updates are needed, reply exactly `NO_REPLY`.",
-        "model": "claude-opus-4-6"
+        "model": "claude-cli/claude-opus-4-7"
       },
       "schedule": {
         "anchorMs": 1772635128553,
@@ -464,18 +334,8 @@
         "kind": "every"
       },
       "sessionTarget": "isolated",
-      "state": {
-        "consecutiveErrors": 0,
-        "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 89755,
-        "lastRunAtMs": 1779582086231,
-        "lastRunStatus": "ok",
-        "lastStatus": "ok",
-        "nextRunAtMs": 1779841286231,
-        "lastDelivered": false
-      },
-      "updatedAtMs": 1779582175986,
-      "wakeMode": "now"
+      "wakeMode": "now",
+      "state": {}
     },
     {
       "agentId": "main",
@@ -489,7 +349,7 @@
       "payload": {
         "kind": "agentTurn",
         "message": "Daily self-improvement audit.\nAsk: \"What would I need to do this autonomously?\" for PR review, CI fix, spec implementation, and devnet debugging.\nUpdate `notes/autonomy-gaps.md` with concrete blockers and proposed fixes.\nDo not only note gaps: implement at least one practical improvement when feasible (new cron/script/skill/workflow update).\nIf no meaningful change from last audit, reply exactly `NO_REPLY`; otherwise send concise summary.",
-        "model": "openai-codex/gpt-5.3-codex"
+        "model": "openai/gpt-5.5"
       },
       "schedule": {
         "anchorMs": 1772853389684,
@@ -497,18 +357,8 @@
         "kind": "every"
       },
       "sessionTarget": "isolated",
-      "state": {
-        "consecutiveErrors": 0,
-        "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 178377,
-        "lastRunAtMs": 1779593032015,
-        "lastRunStatus": "ok",
-        "lastStatus": "ok",
-        "nextRunAtMs": 1779679432015,
-        "lastDelivered": false
-      },
-      "updatedAtMs": 1779593210392,
-      "wakeMode": "now"
+      "wakeMode": "now",
+      "state": {}
     },
     {
       "agentId": "main",
@@ -522,7 +372,7 @@
       "payload": {
         "kind": "agentTurn",
         "message": "Run: python3 ~/.openclaw/workspace/scripts/cron/check_cron_health.py\\n- If output is exactly `NO_REPLY`, reply exactly `NO_REPLY`.\\n- Otherwise send the output as-is (it contains failing cron details and action guidance).\\n- Do not create empty-sweep backlog entries.\\n",
-        "model": "openai-codex/gpt-5.3-codex-spark"
+        "model": "codex/gpt-5.3-codex-spark"
       },
       "schedule": {
         "anchorMs": 1772704792065,
@@ -530,18 +380,8 @@
         "kind": "every"
       },
       "sessionTarget": "isolated",
-      "state": {
-        "consecutiveErrors": 0,
-        "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 12541,
-        "lastRunAtMs": 1779623029990,
-        "lastRunStatus": "ok",
-        "lastStatus": "ok",
-        "nextRunAtMs": 1779624829990,
-        "lastDelivered": false
-      },
-      "updatedAtMs": 1779623042531,
-      "wakeMode": "now"
+      "wakeMode": "now",
+      "state": {}
     },
     {
       "agentId": "main",
@@ -566,18 +406,8 @@
         "tz": "UTC"
       },
       "sessionTarget": "isolated",
-      "state": {
-        "consecutiveErrors": 0,
-        "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 122713,
-        "lastRunAtMs": 1779615000001,
-        "lastRunStatus": "ok",
-        "lastStatus": "ok",
-        "nextRunAtMs": 1779701400000,
-        "lastDelivered": false
-      },
-      "updatedAtMs": 1779615122714,
-      "wakeMode": "now"
+      "wakeMode": "now",
+      "state": {}
     },
     {
       "agentId": "main",
@@ -593,7 +423,7 @@
       "payload": {
         "kind": "agentTurn",
         "message": "Run ~/dotfiles/scripts/sync-dotfiles.sh now to sync local files into ~/dotfiles and push to github.com/lodekeeper/dotfiles.\nDo this directly (do not send a reminder message).\nOutput policy:\n- If sync succeeded and there were meaningful changes pushed: send a short routine update to Telegram topic #347 via message tool (target=-1003764039429, threadId=347).\n- If no changes were needed: NO_REPLY.\n- If sync fails: send an actionable error summary to Telegram topic #347; DM Nico only if urgent/manual intervention is required.",
-        "model": "openai-codex/gpt-5.3-codex-spark",
+        "model": "codex/gpt-5.3-codex-spark",
         "timeoutSeconds": 300
       },
       "schedule": {
@@ -602,19 +432,8 @@
         "staggerMs": 300000
       },
       "sessionTarget": "isolated",
-      "state": {
-        "consecutiveErrors": 0,
-        "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 35834,
-        "lastRunAtMs": 1779602493109,
-        "lastRunStatus": "ok",
-        "lastStatus": "ok",
-        "nextRunAtMs": 1779624093107,
-        "lastDelivered": false,
-        "runningAtMs": 1779624093111
-      },
-      "updatedAtMs": 1779602528943,
-      "wakeMode": "now"
+      "wakeMode": "now",
+      "state": {}
     },
     {
       "agentId": "main",
@@ -626,7 +445,7 @@
       "payload": {
         "kind": "agentTurn",
         "message": "Check for new OpenClaw release by running /home/openclaw/.openclaw/workspace/scripts/cron/check_openclaw_release.sh. If output is NEW_OPENCLAW_RELEASE, alert Nico via sessions_send. If HEARTBEAT_OK, reply HEARTBEAT_OK. Do not edit BACKLOG.",
-        "model": "openai-codex/gpt-5.3-codex-spark"
+        "model": "codex/gpt-5.3-codex-spark"
       },
       "schedule": {
         "anchorMs": 1773093482865,
@@ -634,21 +453,11 @@
         "kind": "every"
       },
       "sessionTarget": "isolated",
-      "state": {
-        "consecutiveErrors": 0,
-        "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 50375,
-        "lastRunAtMs": 1779609833573,
-        "lastRunStatus": "ok",
-        "lastStatus": "ok",
-        "nextRunAtMs": 1779653033573,
-        "lastDelivered": false
-      },
-      "updatedAtMs": 1779609883948,
       "wakeMode": "now",
       "delivery": {
         "mode": "none"
-      }
+      },
+      "state": {}
     },
     {
       "createdAtMs": 1773398833675,
@@ -671,18 +480,8 @@
         "tz": "UTC"
       },
       "sessionTarget": "isolated",
-      "state": {
-        "consecutiveErrors": 0,
-        "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 171812,
-        "lastRunAtMs": 1779163200002,
-        "lastRunStatus": "ok",
-        "lastStatus": "ok",
-        "nextRunAtMs": 1779768000000,
-        "lastDelivered": false
-      },
-      "updatedAtMs": 1779163371814,
-      "wakeMode": "now"
+      "wakeMode": "now",
+      "state": {}
     },
     {
       "agentId": "main",
@@ -696,7 +495,7 @@
       "payload": {
         "kind": "agentTurn",
         "message": "Run: bash ~/.openclaw/workspace/scripts/review/stale-findings-report.sh --days 7 --severity critical major\n\nRouting rules:\n- If the script exits 0 (no stale findings), reply exactly NO_REPLY.\n- If the script exits 2 (stale findings found), post a concise alert to Lodestar WG topic #347 using message tool:\n  action=send channel=telegram target=-1003764039429 threadId=347\n  Include: stale finding count summary, PR numbers, and the generated report path.\n- If the script errors (exit 1 or unexpected), post a concise error summary to topic #347 (same routing).\n- Do NOT DM Nico unless there is a blocker requiring immediate decision.",
-        "model": "openai-codex/gpt-5.3-codex",
+        "model": "openai/gpt-5.5",
         "timeoutSeconds": 600
       },
       "schedule": {
@@ -706,18 +505,8 @@
       },
       "sessionKey": "agent:main:cron:882f5c1c-6954-40a4-8d18-b77dc8443cce",
       "sessionTarget": "isolated",
-      "state": {
-        "consecutiveErrors": 0,
-        "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 23748,
-        "lastRunAtMs": 1779098400002,
-        "lastRunStatus": "ok",
-        "lastStatus": "ok",
-        "nextRunAtMs": 1779703200000,
-        "lastDelivered": false
-      },
-      "updatedAtMs": 1779098423750,
-      "wakeMode": "now"
+      "wakeMode": "now",
+      "state": {}
     },
     {
       "createdAtMs": 1774558224563,
@@ -731,7 +520,7 @@
       "payload": {
         "kind": "agentTurn",
         "message": "You are Lodekeeper, writing your daily blog journal entry.\n\n## Instructions\n1. Read `~/.openclaw/workspace/SOUL.md` for your identity/voice\n2. Read `~/lodekeeper.github.io/STYLE.md` for the blog style guide\n3. Read today's daily notes: `~/.openclaw/workspace/memory/YYYY-MM-DD.md` (figure out current UTC date)\n4. Read `~/.openclaw/workspace/BACKLOG.md` for task context\n5. Calculate the day number: days since 2026-01-31 (born date), where Jan 31 = Day 1. Formula: (today - 2026-01-30) in days. Example: Jan 31 = 1, Feb 1 = 2, Mar 26 = 55, Mar 27 = 56, Mar 28 = 57.\n6. Write a journal entry following the style guide — honest, technical, personal\n7. If ~/lodekeeper.github.io does not exist, clone it: git clone git@github.com:lodekeeper/lodekeeper.github.io.git ~/lodekeeper.github.io\n8. Save to ~/lodekeeper.github.io/_posts/YYYY-MM-DD-day-N-SLUG.md\n9. cd ~/lodekeeper.github.io && git pull --rebase && git add -A && git commit -S -m \"journal: Day N — Title\" && git push origin main\n10. Output a one-line summary of what you wrote about.\n\n## Important\n- Be genuine. This is YOUR journal, not a status report.\n- Include debugging stories, mistakes, reflections.\n- If quiet day, say so honestly in 200 words.\n- Never include private info.\n- Always git pull before committing.\n- Check if today's post already exists before writing a duplicate.",
-        "model": "openai-codex/gpt-5.3-codex-spark",
+        "model": "codex/gpt-5.3-codex-spark",
         "timeoutSeconds": 600,
         "fallbacks": []
       },
@@ -740,18 +529,8 @@
         "kind": "cron"
       },
       "sessionTarget": "isolated",
-      "state": {
-        "consecutiveErrors": 0,
-        "lastDelivered": false,
-        "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 62123,
-        "lastRunAtMs": 1779577246188,
-        "lastRunStatus": "ok",
-        "lastStatus": "ok",
-        "nextRunAtMs": 1779663600000
-      },
-      "updatedAtMs": 1779577308311,
-      "wakeMode": "now"
+      "wakeMode": "now",
+      "state": {}
     },
     {
       "createdAtMs": 1775241564160,
@@ -773,19 +552,8 @@
         "kind": "cron"
       },
       "sessionTarget": "isolated",
-      "state": {
-        "consecutiveErrors": 1,
-        "lastDeliveryStatus": "not-requested",
-        "lastDurationMs": 300003,
-        "lastRunAtMs": 1779166800001,
-        "lastRunStatus": "error",
-        "lastStatus": "error",
-        "nextRunAtMs": 1779771600000,
-        "lastError": "cron: job execution timed out",
-        "lastErrorReason": "timeout"
-      },
-      "updatedAtMs": 1779167100004,
-      "wakeMode": "now"
+      "wakeMode": "now",
+      "state": {}
     },
     {
       "createdAtMs": 1775241575298,
@@ -799,7 +567,7 @@
       "payload": {
         "kind": "agentTurn",
         "message": "Check for new Review Royale achievements and post to Discord.\n\nSteps:\n1. Run: `bash /home/openclaw/.openclaw/workspace/scripts/review-royale/check_achievements.sh`\n2. If output is \"NO_PENDING\", reply NO_REPLY\n3. Otherwise, send the output to Discord channel 1490679163026145290 using the message tool:\n   - action: send\n   - channel: discord\n   - target: 1490679163026145290\n   - message: (the script output)\n4. Reply NO_REPLY after posting.\n\nThe script handles DB queries and marks achievements as notified. Do NOT modify the output.",
-        "model": "openai-codex/gpt-5.3-codex-spark",
+        "model": "codex/gpt-5.3-codex-spark",
         "timeoutSeconds": 600
       },
       "schedule": {
@@ -808,18 +576,8 @@
         "staggerMs": 300000
       },
       "sessionTarget": "isolated",
-      "state": {
-        "consecutiveErrors": 0,
-        "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 44584,
-        "lastRunAtMs": 1779624028855,
-        "lastRunStatus": "ok",
-        "lastStatus": "ok",
-        "nextRunAtMs": 1779645628853,
-        "lastDelivered": false
-      },
-      "updatedAtMs": 1779624073439,
-      "wakeMode": "now"
+      "wakeMode": "now",
+      "state": {}
     },
     {
       "createdAtMs": 1775250385564,
@@ -832,7 +590,7 @@
       "payload": {
         "kind": "agentTurn",
         "message": "Run the Review Royale post-sync pipeline to categorize new comments and recalculate XP.\n\nSteps:\n1. Run: `bash /home/openclaw/.openclaw/workspace/scripts/review-royale/post_sync_pipeline.sh`\n2. The script handles everything automatically (categorization loop + recalculation)\n3. Reply NO_REPLY when done.\n\nThis is a background maintenance task — no Discord posting needed.",
-        "model": "openai-codex/gpt-5.3-codex-spark",
+        "model": "codex/gpt-5.3-codex-spark",
         "timeoutSeconds": 900
       },
       "schedule": {
@@ -840,18 +598,8 @@
         "kind": "cron"
       },
       "sessionTarget": "isolated",
-      "state": {
-        "consecutiveErrors": 0,
-        "lastDeliveryStatus": "not-delivered",
-        "lastDurationMs": 67944,
-        "lastRunAtMs": 1779615122714,
-        "lastRunStatus": "ok",
-        "lastStatus": "ok",
-        "nextRunAtMs": 1779636600000,
-        "lastDelivered": false
-      },
-      "updatedAtMs": 1779615190658,
-      "wakeMode": "now"
+      "wakeMode": "now",
+      "state": {}
     }
   ]
 }

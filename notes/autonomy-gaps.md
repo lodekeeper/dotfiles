@@ -1,7 +1,23 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-05-23 (40th pass)
+> Updated: 2026-05-24 (41st pass)
+
+---
+
+## Daily Audit Snapshot — 2026-05-24 (self-improvement-audit-daily, 03:23 UTC)
+
+### PR review
+- **Status:** PR-review guardrails remain healthy; no new blocker discovered this cycle.
+
+### CI fix
+- **Status:** GH-dependent cron callers had no script-level guard against the active GitHub suspension, so each invocation crashed mid-`gh api` rather than short-circuiting cleanly. Gap fixed this cycle: pushed the access guard down into the scripts themselves. **Fix applied this cycle:** added `bail_if_github_suspended()` to `scripts/github/github_notifications_sweep.py` (288 runs/day at every-5-min cadence) and `scripts/github/monitor_open_pr_ci.py` (every 30 min). Both call `scripts/github/check-github-access.sh` at the top of `main()` and print the cron's expected silent signal (`HEARTBEAT_OK` / `NO_REPLY`) before any `gh api` call, so the bail is clean regardless of which cron/human invokes the script.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
 
 ---
 
@@ -789,6 +805,15 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Script-level GH-access guard for high-frequency cron callers (2026-05-24)
+Wired the shared access guard into the two highest-frequency GH-dependent scripts so the bail is enforced at the script level, not just in cron prompts.
+- added `bail_if_github_suspended()` to `scripts/github/github_notifications_sweep.py` — fires `HEARTBEAT_OK` and exits 0 cleanly when the guard returns rc=2,
+- added `bail_if_github_suspended()` to `scripts/github/monitor_open_pr_ci.py` — fires `NO_REPLY` and exits 0 cleanly when the guard returns rc=2,
+- guard call wraps `subprocess.run([...], timeout=20)` so transient guard failures degrade safely (return to normal flow rather than blocking),
+- end-to-end verified: simulated suspended-cache run produces the expected silent signal with rc=0 and no `gh api` invocation.
+
+**Rationale:** `github-notifications` runs every 5 min (288×/day) and `monitor-open-pr-ci` every 30 min. With GitHub suspension active, each previously burned ~18s of context per fire on a 403 crash. Pushing the guard from the cron prompt down into the script means *any* caller (cron, manual run, future cron prompt edits) benefits automatically, and the cached check keeps the bail near-zero-cost.
 
 ### ✅ Shared GitHub-access guard added for GH-dependent crons (2026-05-23)
 Added `scripts/github/check-github-access.sh` as a pre-flight guard for any cron that calls `gh`.

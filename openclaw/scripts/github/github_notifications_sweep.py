@@ -9,6 +9,22 @@ from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
 OWNER_SELF = "lodekeeper"
+GH_ACCESS_GUARD = "/home/openclaw/.openclaw/workspace/scripts/github/check-github-access.sh"
+
+
+def bail_if_github_suspended(silent_signal: str = "HEARTBEAT_OK") -> None:
+    """Pre-flight guard: short-circuit cleanly when GitHub access is gone.
+
+    Calls the cached access guard; on exit code 2 (suspended) prints the
+    given silent signal and exits 0 so cron callers handle it as a no-op.
+    """
+    try:
+        result = subprocess.run([GH_ACCESS_GUARD], capture_output=True, text=True, timeout=20)
+    except Exception:
+        return
+    if result.returncode == 2:
+        print(silent_signal)
+        sys.exit(0)
 CHECKLIST_RESERVED_KEYS = {"version", "items", "updatedAt"}
 HANDLED_STATUS_RE = re.compile(r"^\s*-\s+\*\*Status:\*\*\s*(?:Addressed|Done|Closed|Handled)\b", re.IGNORECASE)
 EXPLICIT_HANDLED_TEXT_RE = re.compile(
@@ -248,6 +264,8 @@ def main() -> int:
     ap.add_argument("--backlog", default="/home/openclaw/.openclaw/workspace/BACKLOG.md")
     ap.add_argument("--remind-hours", type=float, default=12.0)
     args = ap.parse_args()
+
+    bail_if_github_suspended("HEARTBEAT_OK")
 
     state_path = Path(args.state)
     checklist_path = Path(args.checklist)
