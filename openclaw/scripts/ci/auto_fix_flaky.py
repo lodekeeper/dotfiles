@@ -13,6 +13,7 @@ With --apply: updates the tracker file with new findings.
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import sys
 from datetime import datetime, timezone
@@ -21,6 +22,7 @@ from typing import Any
 
 WORKSPACE = Path(__file__).resolve().parents[2]
 TRACKER_PATH = WORKSPACE / "memory" / "unstable-ci-tracker.json"
+GH_ACCESS_GUARD = WORKSPACE / "scripts" / "github" / "check-github-access.sh"
 REPO = "ChainSafe/lodestar"
 
 # Only these workflows, and only specific job name patterns
@@ -52,6 +54,23 @@ SKIP_PATTERNS = [
     "dependabot",
     "docker-teardown",
 ]
+
+
+def bail_if_github_suspended(silent_signal: str = "GITHUB_SUSPENDED_SKIP") -> None:
+    """Short-circuit cleanly when GitHub access is currently unavailable."""
+    cmd = [str(GH_ACCESS_GUARD)]
+    if state_file := os.environ.get("GITHUB_ACCESS_STATE_FILE"):
+        cmd.extend(["--state-file", state_file])
+    if max_age := os.environ.get("GITHUB_ACCESS_MAX_AGE_MINUTES"):
+        cmd.extend(["--max-age-minutes", max_age])
+
+    try:
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=20)
+    except Exception:
+        return
+    if result.returncode == 2:
+        print(silent_signal)
+        sys.exit(0)
 
 
 def gh_json(args: list[str]) -> Any:
@@ -265,6 +284,8 @@ def main() -> None:
     ap = argparse.ArgumentParser(description="Detect and classify flaky CI failures on unstable")
     ap.add_argument("--apply", action="store_true", help="Update tracker with findings")
     args = ap.parse_args()
+
+    bail_if_github_suspended()
 
     findings = scan(apply=args.apply)
 

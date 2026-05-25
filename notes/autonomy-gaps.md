@@ -1,10 +1,25 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-05-24 (41st pass)
+> Updated: 2026-05-25 (42nd pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-05-25 (self-improvement-audit-daily, 03:23 UTC)
+
+### PR review
+- **Status:** PR-review guardrails remain healthy; no new blocker discovered this cycle.
+
+### CI fix
+- **Status:** prompt-level GitHub-access guards were not enough for CI autonomy: `scripts/ci/auto_fix_flaky.py` still went straight into `gh` calls when invoked directly, so future prompt drift or manual runs could crash during the active suspension. Gap fixed this cycle: added a script-level `bail_if_github_suspended()` guard to the detector. It calls the shared cached guard before scanning, prints the cron's expected `GITHUB_SUSPENDED_SKIP`, exits 0 on suspension, and exposes `GITHUB_ACCESS_STATE_FILE` / `GITHUB_ACCESS_MAX_AGE_MINUTES` overrides for deterministic tests.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
 ## Daily Audit Snapshot — 2026-05-24 (self-improvement-audit-daily, 03:23 UTC)
 
 ### PR review
@@ -805,6 +820,16 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ CI auto-fix detector now has script-level GitHub-access bail-out (2026-05-25)
+Wired the shared GitHub-access guard into `scripts/ci/auto_fix_flaky.py` itself.
+- calls `scripts/github/check-github-access.sh` before `scan()`,
+- exits cleanly with `GITHUB_SUSPENDED_SKIP` when the cached guard reports suspension,
+- keeps unexpected guard failures non-blocking so normal detector errors still surface,
+- supports `GITHUB_ACCESS_STATE_FILE` and `GITHUB_ACCESS_MAX_AGE_MINUTES` env overrides for deterministic suspended-cache tests,
+- updated `scripts/ci/CRON_PROMPT.md` to document that Step 0 remains mandatory even though the detector now has this fail-safe.
+
+**Rationale:** yesterday's guard covered high-frequency notification/PR-CI scripts, but `ci-autofix-unstable` still depended on prompt discipline. Moving the guard into the detector makes the suspension bail-out resilient to direct/manual runs and future cron prompt edits.
 
 ### ✅ Script-level GH-access guard for high-frequency cron callers (2026-05-24)
 Wired the shared access guard into the two highest-frequency GH-dependent scripts so the bail is enforced at the script level, not just in cron prompts.

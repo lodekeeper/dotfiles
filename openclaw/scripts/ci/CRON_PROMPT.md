@@ -12,6 +12,9 @@ Run the flaky test detector and act on findings.
 - Exit 2 → GitHub suspended. Reply with exactly `GITHUB_SUSPENDED_SKIP` and stop. Do not run the detector or attempt any `gh` calls.
 - Exit 1 → Unexpected error. Log the error output and stop.
 
+The detector also has the same script-level guard as a fail-safe, but Step 0
+stays mandatory so suspended runs skip before loading/scanning CI state.
+
 ## Step 1: Detect
 ```bash
 cd ~/.openclaw/workspace && python3 scripts/ci/auto_fix_flaky.py --apply
