@@ -1,10 +1,25 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-05-25 (42nd pass)
+> Updated: 2026-05-26 (43rd pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-05-26 (self-improvement-audit-daily, 03:23 UTC)
+
+### PR review
+- **Status:** PR-review guardrails remain healthy; no new blocker discovered this cycle.
+
+### CI fix
+- **Status:** GitHub suspension handling was now implemented in scripts, but there was no coverage guard to prove the guard stayed wired into every GH-dependent cron path after future prompt/script edits. Gap fixed this cycle: added `scripts/github/check-github-guard-coverage.sh` and wired the CI auto-fix prompt to run it before any GitHub access. The verifier checks the shared access guard plus the current notification, PR-CI, and flaky-CI guard callsites and fails before `gh` calls if coverage drifts.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
 ## Daily Audit Snapshot — 2026-05-25 (self-improvement-audit-daily, 03:23 UTC)
 
 ### PR review
@@ -820,6 +835,15 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ GitHub guard coverage verifier for CI automation (2026-05-26)
+Added `scripts/github/check-github-guard-coverage.sh` to catch regression in the recent GitHub-suspension bail-out work.
+- verifies `scripts/github/check-github-access.sh` exists and is executable,
+- verifies the high-frequency GitHub automation callsites still include their script-level bail-out functions and expected silent outputs,
+- verifies `scripts/ci/CRON_PROMPT.md` still requires the shared guard and `GITHUB_SUSPENDED_SKIP`,
+- wired the CI auto-fix prompt to run this verifier before GitHub access, so prompt/script drift fails before any `gh` call.
+
+**Rationale:** the previous fixes moved suspension handling into scripts, but nothing prevented a future edit from accidentally removing one guard. A cheap local coverage check makes that class of drift visible before a suspended cron burns context or crashes mid-run.
 
 ### ✅ CI auto-fix detector now has script-level GitHub-access bail-out (2026-05-25)
 Wired the shared GitHub-access guard into `scripts/ci/auto_fix_flaky.py` itself.

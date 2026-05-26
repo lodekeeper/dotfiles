@@ -2,7 +2,16 @@
 
 Run the flaky test detector and act on findings.
 
-## Step 0: GitHub pre-flight (MANDATORY — run before anything else)
+## Step 0a: GitHub guard coverage (MANDATORY — run before GitHub access)
+
+```bash
+cd ~/.openclaw/workspace && scripts/github/check-github-guard-coverage.sh
+```
+
+- Exit 0 → guard coverage is intact; continue to Step 0b.
+- Non-zero → report the coverage failure and stop before any `gh` calls.
+
+## Step 0b: GitHub pre-flight (MANDATORY — run before detector/state scans)
 
 ```bash
 ~/.openclaw/workspace/scripts/github/check-github-access.sh
@@ -12,7 +21,7 @@ Run the flaky test detector and act on findings.
 - Exit 2 → GitHub suspended. Reply with exactly `GITHUB_SUSPENDED_SKIP` and stop. Do not run the detector or attempt any `gh` calls.
 - Exit 1 → Unexpected error. Log the error output and stop.
 
-The detector also has the same script-level guard as a fail-safe, but Step 0
+The detector also has the same script-level guard as a fail-safe, but Step 0b
 stays mandatory so suspended runs skip before loading/scanning CI state.
 
 ## Step 1: Detect
