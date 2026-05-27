@@ -48,6 +48,26 @@ timeout 120 ./lodestar beacon \
 | `--checkpointSyncUrl` | Checkpoint sync endpoint | `https://beaconstate-mainnet.chainsafe.io` for mainnet |
 | `--forceCheckpointSync` | Force checkpoint sync even if DB exists | Clean start each run |
 
+## Catch-Up Repro Depth Guard
+
+For sync-depth or OOM repros, validate the checkpoint is far enough behind head before launching the node. A latest-finalized checkpoint is usually too shallow for catch-up backlog investigations.
+
+```bash
+# Direct slot check. For a 1000-epoch repro, checkpoint must be at least 32000 slots behind head.
+~/.openclaw/workspace/scripts/debug/check-catchup-depth.sh \
+  --head-slot 14415648 \
+  --checkpoint-slot 14383648 \
+  --min-epochs 1000
+
+# Beacon API-assisted check. Fetches head from --beacon-url and finalized checkpoint from --checkpoint-sync-url.
+~/.openclaw/workspace/scripts/debug/check-catchup-depth.sh \
+  --beacon-url http://127.0.0.1:5052 \
+  --checkpoint-sync-url https://beaconstate-mainnet.chainsafe.io \
+  --min-epochs 1000
+```
+
+Exit `2` means the checkpoint is too shallow or ahead of head; find an older `/eth/v2/debug/beacon/states/<slot>` state and use `--checkpointState` instead of starting the repro.
+
 ## Metrics Scraping
 
 ```bash
@@ -199,4 +219,3 @@ rm -rf ~/.local/share/lodestar/mainnet
 ## Self-Maintenance
 
 If any commands, file paths, URLs, or configurations in this skill are outdated or no longer work, update this SKILL.md with the correct information after completing your current task. Skills should stay accurate and self-healing — fix what you find broken.
-

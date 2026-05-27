@@ -1,10 +1,25 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-05-26 (43rd pass)
+> Updated: 2026-05-27 (44th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-05-27 (self-improvement-audit-daily, 03:24 UTC)
+
+### PR review
+- **Status:** PR-review guardrails remain healthy; no new blocker discovered this cycle.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** catch-up/OOM repro setup had no deterministic guard against launching from a checkpoint that is too close to head, which wastes runs and masks the intended deep-sync backlog. Gap fixed this cycle: added `scripts/debug/check-catchup-depth.sh` and wired it into `skills/local-mainnet-debug/SKILL.md`; it validates head/checkpoint slot distance, supports Beacon API-assisted slot fetches, and exits `2` before launch when the checkpoint is too shallow.
+
+---
 ## Daily Audit Snapshot — 2026-05-26 (self-improvement-audit-daily, 03:23 UTC)
 
 ### PR review
@@ -835,6 +850,15 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Catch-up repro checkpoint-depth guard added (2026-05-27)
+Added `scripts/debug/check-catchup-depth.sh` to prevent shallow checkpoint starts for sync-depth and OOM repros.
+- accepts direct `--head-slot` / `--checkpoint-slot` inputs or fetches slots through Beacon API URLs,
+- enforces configurable `--min-epochs` / `--slots-per-epoch` thresholds,
+- exits `2` with a clear `too_shallow` signal when the checkpoint cannot exercise the intended catch-up backlog,
+- documented the guard in `skills/local-mainnet-debug/SKILL.md` before the launch workflow.
+
+**Rationale:** the active OOM sync repro showed that a latest-finalized checkpoint can look like a successful setup while being too shallow to reproduce the failure. A pre-launch depth guard turns that assumption into a deterministic check and points the next run toward an older `--checkpointState` when needed.
 
 ### ✅ GitHub guard coverage verifier for CI automation (2026-05-26)
 Added `scripts/github/check-github-guard-coverage.sh` to catch regression in the recent GitHub-suspension bail-out work.
