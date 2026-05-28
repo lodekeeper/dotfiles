@@ -538,7 +538,7 @@
         "channel": "last",
         "mode": "none"
       },
-      "enabled": true,
+      "enabled": false,
       "id": "12b3b2a8-96bb-438d-a346-edf9e83a2def",
       "name": "review-royale-weekly-digest",
       "payload": {
@@ -561,7 +561,7 @@
         "channel": "last",
         "mode": "none"
       },
-      "enabled": true,
+      "enabled": false,
       "id": "9dfcea87-b11d-4a90-83eb-7483289373f8",
       "name": "review-royale-achievements",
       "payload": {
@@ -584,7 +584,7 @@
       "delivery": {
         "mode": "none"
       },
-      "enabled": true,
+      "enabled": false,
       "id": "96db177e-e73a-4e10-b612-4c1549aef8b9",
       "name": "review-royale-post-sync",
       "payload": {
