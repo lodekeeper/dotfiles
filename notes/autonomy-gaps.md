@@ -1,10 +1,25 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-05-27 (44th pass)
+> Updated: 2026-05-28 (45th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-05-28 (self-improvement-audit-daily, 03:24 UTC)
+
+### PR review
+- **Status:** PR review follow-up automation still had one direct GitHub path without the shared suspension pre-flight: `scripts/review/track-findings.py import-gh` / `sync-gh` could start local review-state work and then crash on `gh api` during the active account suspension. Proposed fix was to push the existing cached GitHub guard into the finding tracker itself. Gap fixed this cycle: added `bail_if_github_suspended()` to `track-findings.py`, made suspended-cache runs exit `2` with `GITHUB_SUSPENDED_SKIP` before any review-comment fetch, and expanded `scripts/github/check-github-guard-coverage.sh` so this review workflow stays covered by future guard-drift checks.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
 ## Daily Audit Snapshot — 2026-05-27 (self-improvement-audit-daily, 03:24 UTC)
 
 ### PR review
@@ -724,6 +739,15 @@ Multi-persona review via `lodestar-review` skill. Parallel spawning, persona pro
 
 ### Gaps
 
+#### ~~🟡 GitHub review-comment import lacked suspension pre-flight~~ ✅ FIXED (2026-05-28)
+~~The review finding tracker had `import-gh` / `sync-gh` commands for PR review-comment follow-up, but those commands invoked `gh api` directly. During GitHub suspension they could fail only after entering the review workflow, which made autonomous review follow-up brittle and inconsistent with the newer cron guards.~~
+
+**Fix applied:** added `bail_if_github_suspended()` to `scripts/review/track-findings.py`:
+- calls the shared cached `scripts/github/check-github-access.sh` guard before `import-gh` and `sync-gh`,
+- supports `GITHUB_ACCESS_STATE_FILE` / `GITHUB_ACCESS_MAX_AGE_MINUTES` overrides for deterministic tests,
+- exits `2` with `GITHUB_SUSPENDED_SKIP` before review-comment fetching when GitHub is known suspended,
+- extended `scripts/github/check-github-guard-coverage.sh` to verify the finding tracker remains guarded.
+
 #### ~~🔴 Reviewer false positives~~ ✅ FIXED (2026-03-08)
 ~~Sub-agents sometimes flag files **not in the PR diff** (confirmed on PR #8993: `dataColumns.ts`, `gloas.ts` flagged but not changed). This wastes effort and can lead to spurious follow-up commits.~~
 
@@ -850,6 +874,15 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Review finding tracker now pre-flights GitHub suspension (2026-05-28)
+Wired the shared GitHub-access guard into `scripts/review/track-findings.py`.
+- `import-gh` and `sync-gh` now call `bail_if_github_suspended()` before `gh api` review-comment fetches,
+- suspended-cache runs exit `2` with `GITHUB_SUSPENDED_SKIP`, making the external blocker explicit without doing partial GitHub work,
+- the guard supports `GITHUB_ACCESS_STATE_FILE` and `GITHUB_ACCESS_MAX_AGE_MINUTES` env overrides for deterministic tests,
+- `scripts/github/check-github-guard-coverage.sh` now verifies the finding tracker remains in the guarded surface.
+
+**Rationale:** review follow-up should degrade as cleanly as CI/notification automation while the GitHub account is suspended. PR review autonomy depends on knowing the blocker before fetching comments, not after a mid-workflow `gh` crash.
 
 ### ✅ Catch-up repro checkpoint-depth guard added (2026-05-27)
 Added `scripts/debug/check-catchup-depth.sh` to prevent shallow checkpoint starts for sync-depth and OOM repros.

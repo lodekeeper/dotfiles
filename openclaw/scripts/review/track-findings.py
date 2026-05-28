@@ -24,6 +24,7 @@ Status values:   open, addressed, acknowledged, wontfix
 import argparse
 import base64
 import json
+import os
 import re
 import subprocess
 import sys
@@ -31,8 +32,10 @@ import uuid
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
+WORKSPACE = Path(__file__).resolve().parents[2]
 FINDINGS_DIR = Path(__file__).parent.parent / "notes" / "review-findings"
 FINDINGS_DIR.mkdir(parents=True, exist_ok=True)
+GH_ACCESS_GUARD = WORKSPACE / "scripts" / "github" / "check-github-access.sh"
 
 SEVERITY_ORDER = {"critical": 0, "major": 1, "minor": 2, "nit": 3, "question": 4}
 SEVERITY_EMOJI = {"critical": "🔴", "major": "🟠", "minor": "🟡", "nit": "⚪", "question": "❓"}
@@ -63,6 +66,27 @@ def save(pr: int, data: dict):
 
 def now() -> str:
     return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def bail_if_github_suspended() -> None:
+    """Fail early when GitHub access is known to be unavailable."""
+    if not GH_ACCESS_GUARD.exists():
+        return
+
+    cmd = [str(GH_ACCESS_GUARD)]
+    if state_file := os.environ.get("GITHUB_ACCESS_STATE_FILE"):
+        cmd.extend(["--state-file", state_file])
+    if max_age := os.environ.get("GITHUB_ACCESS_MAX_AGE_MINUTES"):
+        cmd.extend(["--max-age-minutes", max_age])
+
+    try:
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=20)
+    except Exception:
+        return
+
+    if result.returncode == 2:
+        print("GITHUB_SUSPENDED_SKIP", file=sys.stderr)
+        sys.exit(2)
 
 
 def parse_utc(ts: str | None) -> datetime | None:
@@ -342,6 +366,7 @@ def cmd_import_gh(args):
     Import PR review comments from GitHub API via gh CLI.
     Endpoint: repos/{owner}/{repo}/pulls/{pr}/comments
     """
+    bail_if_github_suspended()
     data = load(args.pr)
 
     cmd = [
@@ -424,6 +449,7 @@ def cmd_sync_gh(args):
     - For each new comment, tags matching existing findings with re-verification metadata
     - Persists checkpoint in PR data under data.sync.github[repo]
     """
+    bail_if_github_suspended()
     data = load(args.pr)
 
     sync = data.setdefault("sync", {})
