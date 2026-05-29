@@ -1,10 +1,25 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-05-28 (45th pass)
+> Updated: 2026-05-29 (46th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-05-29 (self-improvement-audit-daily, 03:24 UTC)
+
+### PR review
+- **Status:** PR metadata-drift checking still had one standalone direct-GitHub path without the shared suspension pre-flight: `scripts/github/check-pr-metadata-drift.py` called `gh pr view` / `gh pr diff` directly, so direct metadata-drift checks could crash during the active account suspension instead of producing an explicit skip signal. Gap fixed this cycle: added `bail_if_github_suspended()` to the checker, made suspended-cache runs exit `4` with `GITHUB_SUSPENDED_SKIP` before any PR metadata fetch, and expanded `scripts/github/check-github-guard-coverage.sh` so this PR-review guard surface stays covered by future guard-drift checks.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
 ## Daily Audit Snapshot — 2026-05-28 (self-improvement-audit-daily, 03:24 UTC)
 
 ### PR review
@@ -739,6 +754,15 @@ Multi-persona review via `lodestar-review` skill. Parallel spawning, persona pro
 
 ### Gaps
 
+#### ~~🟡 PR metadata-drift checker lacked suspension pre-flight~~ ✅ FIXED (2026-05-29)
+~~The metadata drift checker was part of the PR review follow-up guardrail surface, but `scripts/github/check-pr-metadata-drift.py` still invoked `gh pr view` / `gh pr diff` directly. During GitHub suspension, direct checker runs could fail only after entering the metadata workflow instead of taking the shared cached skip path.~~
+
+**Fix applied:** added `bail_if_github_suspended()` to `scripts/github/check-pr-metadata-drift.py`:
+- calls the shared cached `scripts/github/check-github-access.sh` guard before PR metadata/diff fetches,
+- supports `GITHUB_ACCESS_STATE_FILE` / `GITHUB_ACCESS_MAX_AGE_MINUTES` overrides for deterministic tests,
+- exits `4` with `GITHUB_SUSPENDED_SKIP` before direct `gh pr` calls when GitHub is known suspended,
+- extended `scripts/github/check-github-guard-coverage.sh` to verify the metadata-drift checker remains guarded.
+
 #### ~~🟡 GitHub review-comment import lacked suspension pre-flight~~ ✅ FIXED (2026-05-28)
 ~~The review finding tracker had `import-gh` / `sync-gh` commands for PR review-comment follow-up, but those commands invoked `gh api` directly. During GitHub suspension they could fail only after entering the review workflow, which made autonomous review follow-up brittle and inconsistent with the newer cron guards.~~
 
@@ -874,6 +898,15 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ PR metadata-drift checker now pre-flights GitHub suspension (2026-05-29)
+Wired the shared GitHub-access guard into `scripts/github/check-pr-metadata-drift.py`.
+- direct metadata checks now call `bail_if_github_suspended()` before `gh pr view` / `gh pr diff`,
+- suspended-cache runs exit `4` with `GITHUB_SUSPENDED_SKIP`, making the external blocker explicit without doing partial PR metadata work,
+- the guard supports `GITHUB_ACCESS_STATE_FILE` and `GITHUB_ACCESS_MAX_AGE_MINUTES` env overrides for deterministic tests,
+- `scripts/github/check-github-guard-coverage.sh` now verifies the metadata-drift checker remains in the guarded surface.
+
+**Rationale:** PR review follow-up depends on metadata drift checks before re-review. The checker should degrade as cleanly as comment sync and CI automation while GitHub access is suspended, especially when it is run standalone outside the wrapper flow.
 
 ### ✅ Review finding tracker now pre-flights GitHub suspension (2026-05-28)
 Wired the shared GitHub-access guard into `scripts/review/track-findings.py`.

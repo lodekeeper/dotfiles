@@ -47,6 +47,8 @@ require_pattern "scripts/ci/CRON_PROMPT.md" "scripts/github/check-github-access.
 require_pattern "scripts/ci/CRON_PROMPT.md" "GITHUB_SUSPENDED_SKIP"
 require_pattern "scripts/review/track-findings.py" "bail_if_github_suspended"
 require_pattern "scripts/review/track-findings.py" "GITHUB_SUSPENDED_SKIP"
+require_pattern "scripts/github/check-pr-metadata-drift.py" "bail_if_github_suspended"
+require_pattern "scripts/github/check-pr-metadata-drift.py" "GITHUB_SUSPENDED_SKIP"
 
 if [[ "$failures" -ne 0 ]]; then
   echo "GitHub guard coverage: FAILED ($failures issue(s))" >&2

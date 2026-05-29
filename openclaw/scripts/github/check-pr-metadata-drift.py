@@ -11,6 +11,7 @@ Checks for common stale-metadata patterns:
 Exit codes:
   0 -> no drift signals found
   2 -> potential drift detected (review title/body)
+  4 -> GitHub access currently unavailable/suspended
   1 -> runtime/tooling error
 """
 
@@ -18,9 +19,11 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import subprocess
 import sys
+from pathlib import Path
 from typing import Iterable
 
 
@@ -30,6 +33,8 @@ DIRECT_PATH_RE = re.compile(r"\b(?:[A-Za-z0-9_.-]+/)+[A-Za-z0-9_.-]+\.[A-Za-z0-9
 FULL_PATH_RE = re.compile(r"^(?:[A-Za-z0-9_.-]+/)+[A-Za-z0-9_.-]+\.[A-Za-z0-9]+$")
 SEMVER_RE = re.compile(r"\b\d+\.\d+\.\d+\b")
 NARROW_SCOPE_RE = re.compile(r"\b(only|just|single|one-file)\b", re.IGNORECASE)
+WORKSPACE = Path(__file__).resolve().parents[2]
+GH_ACCESS_GUARD = WORKSPACE / "scripts" / "github" / "check-github-access.sh"
 
 
 def run(cmd: list[str]) -> str:
@@ -37,6 +42,27 @@ def run(cmd: list[str]) -> str:
     if p.returncode != 0:
         raise RuntimeError(f"Command failed ({' '.join(cmd)}):\n{p.stderr.strip()}")
     return p.stdout
+
+
+def bail_if_github_suspended() -> None:
+    """Fail early when GitHub access is known to be unavailable."""
+    if not GH_ACCESS_GUARD.exists():
+        return
+
+    cmd = [str(GH_ACCESS_GUARD)]
+    if state_file := os.environ.get("GITHUB_ACCESS_STATE_FILE"):
+        cmd.extend(["--state-file", state_file])
+    if max_age := os.environ.get("GITHUB_ACCESS_MAX_AGE_MINUTES"):
+        cmd.extend(["--max-age-minutes", max_age])
+
+    try:
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=20)
+    except Exception:
+        return
+
+    if result.returncode == 2:
+        print("GITHUB_SUSPENDED_SKIP")
+        sys.exit(4)
 
 
 def norm_path(value: str) -> str:
@@ -85,6 +111,8 @@ def main() -> int:
     args = parser.parse_args()
 
     try:
+        bail_if_github_suspended()
+
         pr_json = run(
             [
                 "gh",
