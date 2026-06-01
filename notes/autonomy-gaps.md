@@ -1,10 +1,25 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-05-29 (46th pass)
+> Updated: 2026-06-01 (47th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-06-01 (self-improvement-audit-daily, 03:24 UTC)
+
+### PR review
+- **Status:** PR follow-up guardrails still had a wrapper-level suspension gap: `scripts/review/run-followup-guards.sh` invoked `sync-gh` and metadata drift checks without its own pre-flight, so a suspended GitHub account could fail mid-wrapper or leave partial artifacts even though the child scripts now had guards. Gap fixed this cycle: added a wrapper-level `bail_if_github_suspended()` that honors `GITHUB_ACCESS_STATE_FILE` / `GITHUB_ACCESS_MAX_AGE_MINUTES`, exits `4` with `GITHUB_SUSPENDED_SKIP` before artifact creation, and expanded `scripts/github/check-github-guard-coverage.sh` so this wrapper remains covered.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
 ## Daily Audit Snapshot — 2026-05-29 (self-improvement-audit-daily, 03:24 UTC)
 
 ### PR review
@@ -754,6 +769,15 @@ Multi-persona review via `lodestar-review` skill. Parallel spawning, persona pro
 
 ### Gaps
 
+#### ~~🟡 PR follow-up wrapper lacked suspension pre-flight~~ ✅ FIXED (2026-06-01)
+~~The review follow-up wrapper `scripts/review/run-followup-guards.sh` invoked `track-findings.py sync-gh` and `check-pr-metadata-drift.py` without a wrapper-level GitHub access pre-flight. During account suspension, the wrapper could fail after entering step 1 or after creating report paths instead of producing one explicit skip signal before side effects.~~
+
+**Fix applied:** added `bail_if_github_suspended()` to `scripts/review/run-followup-guards.sh`:
+- calls the shared cached `scripts/github/check-github-access.sh` guard before sync/artifact steps,
+- supports `GITHUB_ACCESS_STATE_FILE` / `GITHUB_ACCESS_MAX_AGE_MINUTES` overrides for deterministic tests,
+- exits `4` with `GITHUB_SUSPENDED_SKIP` before partial follow-up guard work when GitHub is known suspended,
+- extended `scripts/github/check-github-guard-coverage.sh` to verify the wrapper remains in the guarded surface.
+
 #### ~~🟡 PR metadata-drift checker lacked suspension pre-flight~~ ✅ FIXED (2026-05-29)
 ~~The metadata drift checker was part of the PR review follow-up guardrail surface, but `scripts/github/check-pr-metadata-drift.py` still invoked `gh pr view` / `gh pr diff` directly. During GitHub suspension, direct checker runs could fail only after entering the metadata workflow instead of taking the shared cached skip path.~~
 
@@ -898,6 +922,15 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ PR follow-up guard wrapper now pre-flights GitHub suspension (2026-06-01)
+Wired the shared GitHub-access guard into `scripts/review/run-followup-guards.sh`.
+- the wrapper now calls `bail_if_github_suspended()` before `sync-gh`, metadata-drift, stale-finding, or report-artifact work,
+- suspended-cache runs exit `4` with `GITHUB_SUSPENDED_SKIP`, making the external blocker explicit without creating partial follow-up artifacts,
+- the guard supports `GITHUB_ACCESS_STATE_FILE` and `GITHUB_ACCESS_MAX_AGE_MINUTES` env overrides for deterministic tests,
+- `scripts/github/check-github-guard-coverage.sh` now verifies the follow-up wrapper remains in the guarded surface.
+
+**Rationale:** PR review follow-up is normally run as a single wrapper command. Guarding only the child scripts still leaves the wrapper vulnerable to mid-step exits and partial side effects. A wrapper-level pre-flight turns a known external blocker into one clear skip signal before any PR review follow-up state is touched.
 
 ### ✅ PR metadata-drift checker now pre-flights GitHub suspension (2026-05-29)
 Wired the shared GitHub-access guard into `scripts/github/check-pr-metadata-drift.py`.

@@ -24,6 +24,12 @@ Behavior:
   2) Runs check-pr-metadata-drift.py and writes markdown artifact
   3) Runs track-findings.py stale and writes markdown artifact
   4) If metadata drift is detected (exit 2), prints exact gh pr edit reminder command
+
+Exit codes:
+  0 = guards passed
+  2 = metadata drift detected
+  3 = stale findings detected with --fail-on-stale
+  4 = GitHub access currently unavailable/suspended
 EOF
 }
 
@@ -114,6 +120,31 @@ SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 WORKSPACE_ROOT="$(cd -- "$SCRIPT_DIR/../.." && pwd)"
 TRACK_FINDINGS="$WORKSPACE_ROOT/scripts/review/track-findings.py"
 METADATA_CHECKER="$WORKSPACE_ROOT/scripts/github/check-pr-metadata-drift.py"
+GH_ACCESS_GUARD="$WORKSPACE_ROOT/scripts/github/check-github-access.sh"
+
+bail_if_github_suspended() {
+  [[ -x "$GH_ACCESS_GUARD" ]] || return 0
+
+  local guard_cmd=("$GH_ACCESS_GUARD")
+  if [[ -n "${GITHUB_ACCESS_STATE_FILE:-}" ]]; then
+    guard_cmd+=(--state-file "$GITHUB_ACCESS_STATE_FILE")
+  fi
+  if [[ -n "${GITHUB_ACCESS_MAX_AGE_MINUTES:-}" ]]; then
+    guard_cmd+=(--max-age-minutes "$GITHUB_ACCESS_MAX_AGE_MINUTES")
+  fi
+
+  local guard_output=""
+  local guard_rc=0
+  set +e
+  guard_output="$(timeout 20s "${guard_cmd[@]}" 2>&1)"
+  guard_rc=$?
+  set -e
+
+  if [[ "$guard_rc" -eq 2 ]]; then
+    echo "GITHUB_SUSPENDED_SKIP"
+    exit 4
+  fi
+}
 
 if [[ -z "$METADATA_REPORT" ]]; then
   METADATA_REPORT="$WORKSPACE_ROOT/notes/review-reports/pr-${PR}-metadata-drift.md"
@@ -122,6 +153,8 @@ fi
 if [[ -z "$STALE_REPORT" ]]; then
   STALE_REPORT="$WORKSPACE_ROOT/notes/review-reports/pr-${PR}-stale-findings.md"
 fi
+
+bail_if_github_suspended
 
 mkdir -p "$(dirname -- "$METADATA_REPORT")"
 mkdir -p "$(dirname -- "$STALE_REPORT")"
