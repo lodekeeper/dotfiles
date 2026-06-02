@@ -1,11 +1,15 @@
 #!/usr/bin/env python3
 import json
+import subprocess
 import time
 from pathlib import Path
 from datetime import datetime, timezone
 
 JOBS_PATH = Path('/home/openclaw/.openclaw/cron/jobs.json')
 STATE_PATH = Path('/home/openclaw/cron-health-state.json')
+WORKSPACE_PATH = Path('/home/openclaw/.openclaw/workspace')
+AUTONOMY_CADENCE_JOB_ID = 'virtual:autonomy-audit-cadence'
+AUTONOMY_CADENCE_NAME = 'autonomy-audit-cadence'
 
 
 def load_json(path: Path, default):
@@ -56,6 +60,94 @@ def is_job_failing(job):
     return False
 
 
+def compact_details(output):
+    lines = [line.strip() for line in output.splitlines() if line.strip()]
+    interesting = [
+        line for line in lines
+        if (
+            line.startswith('- ')
+            or 'missing' in line.lower()
+            or 'File not found' in line
+        )
+    ]
+    return ' | '.join(interesting[:6]) or (lines[-1] if lines else 'no output')
+
+
+def check_autonomy_audit_cadence(now):
+    """Return a virtual failing-job entry when the daily audit snapshot is stale.
+
+    Cron status alone can miss a successful-looking job that failed to update
+    notes/autonomy-gaps.md. Treat the latest-pair cadence guard as a virtual
+    cron failure so the existing watchdog state/dedup logic handles it.
+    """
+    script = WORKSPACE_PATH / 'scripts/notes/check-autonomy-audit-cadence.py'
+    target = WORKSPACE_PATH / 'notes/autonomy-gaps.md'
+
+    if not script.exists():
+        output = f'MISSING guard script: {script}'
+        return {
+            'name': AUTONOMY_CADENCE_NAME,
+            'id': AUTONOMY_CADENCE_JOB_ID,
+            'signature': f'{AUTONOMY_CADENCE_JOB_ID}:missing-script:{script}',
+            'lastStatus': 'missing-script',
+            'lastDeliveryStatus': 'n/a',
+            'consecutiveErrors': 1,
+            'lastRunAtMs': now,
+            'nextRunAtMs': None,
+            'details': output,
+        }
+
+    cmd = [
+        'python3',
+        str(script),
+        '--file',
+        str(target),
+        '--latest-only',
+        '--require-current',
+        '--fail-on-gap',
+    ]
+
+    try:
+        result = subprocess.run(
+            cmd,
+            text=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            timeout=20,
+            check=False,
+        )
+    except subprocess.TimeoutExpired as exc:
+        output = (exc.stdout or '') if isinstance(exc.stdout, str) else ''
+        output = output.strip() or 'autonomy cadence guard timed out'
+        return {
+            'name': AUTONOMY_CADENCE_NAME,
+            'id': AUTONOMY_CADENCE_JOB_ID,
+            'signature': f'{AUTONOMY_CADENCE_JOB_ID}:timeout:{output}',
+            'lastStatus': 'timeout',
+            'lastDeliveryStatus': 'n/a',
+            'consecutiveErrors': 1,
+            'lastRunAtMs': now,
+            'nextRunAtMs': None,
+            'details': compact_details(output),
+        }
+
+    if result.returncode == 0:
+        return None
+
+    output = result.stdout or ''
+    return {
+        'name': AUTONOMY_CADENCE_NAME,
+        'id': AUTONOMY_CADENCE_JOB_ID,
+        'signature': f'{AUTONOMY_CADENCE_JOB_ID}:{result.returncode}:{output.strip()}',
+        'lastStatus': 'gap' if result.returncode == 2 else f'guard-error-{result.returncode}',
+        'lastDeliveryStatus': 'n/a',
+        'consecutiveErrors': 1,
+        'lastRunAtMs': now,
+        'nextRunAtMs': None,
+        'details': compact_details(output),
+    }
+
+
 def main():
     now = int(time.time() * 1000)
 
@@ -91,6 +183,13 @@ def main():
         if prev is None or prev.get('signature') != sig:
             new_alerts.append(info)
 
+    cadence_failure = check_autonomy_audit_cadence(now)
+    if cadence_failure is not None:
+        current[AUTONOMY_CADENCE_JOB_ID] = cadence_failure
+        prev = active_failures.get(AUTONOMY_CADENCE_JOB_ID)
+        if prev is None or prev.get('signature') != cadence_failure.get('signature'):
+            new_alerts.append(cadence_failure)
+
     # detect recoveries (was failing before, not now)
     for old_id in active_failures.keys():
         if old_id not in current:
@@ -113,6 +212,8 @@ def main():
                 f"delivery={a['lastDeliveryStatus']}, consecutiveErrors={a['consecutiveErrors']}, "
                 f"lastRun={fmt_ms(a['lastRunAtMs'])}, nextRun={fmt_ms(a['nextRunAtMs'])}"
             )
+            if a.get('details'):
+                lines.append(f"  details: {a['details']}")
         lines.append('Action: investigate and fix the failing cron(s) now.')
 
     if recovered:

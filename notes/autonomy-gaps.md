@@ -1,10 +1,25 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-06-01 (47th pass)
+> Updated: 2026-06-02 (48th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-06-02 (self-improvement-audit-daily, 03:24 UTC)
+
+### PR review
+- **Status:** no new PR-review blocker discovered this cycle; existing review guardrails remain healthy.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy. Cross-automation watchdog gap found and fixed this cycle: missed daily audit snapshots for 2026-05-30 and 2026-05-31 only surfaced inside the next audit preflight, not through the 30-minute cron watchdog. Gap fixed this cycle: `scripts/cron/check_cron_health.py` now treats `scripts/notes/check-autonomy-audit-cadence.py --latest-only --require-current --fail-on-gap` as a virtual failing cron with the existing state/dedup alert path, so future stale autonomy-audit cadence failures alert independently of the audit cron itself.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
 ## Daily Audit Snapshot — 2026-06-01 (self-improvement-audit-daily, 03:24 UTC)
 
 ### PR review
@@ -922,6 +937,14 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Cron health watchdog now checks autonomy-audit cadence (2026-06-02)
+Extended `scripts/cron/check_cron_health.py` with a virtual `autonomy-audit-cadence` failure source.
+- it runs `scripts/notes/check-autonomy-audit-cadence.py --latest-only --require-current --fail-on-gap` on each watchdog pass,
+- fresh stale-audit gaps and guard errors enter the existing cron-health active-failure state/dedup path,
+- recovered cadence failures are reported through the same recovery path as real cron jobs.
+
+**Rationale:** daily audit cadence drift can be the thing the audit cron is supposed to detect, so relying on the next successful audit run leaves blind spots. A virtual watchdog entry makes missed snapshots visible during the regular 30-minute cron-health sweep without adding a separate cron/config change.
 
 ### ✅ PR follow-up guard wrapper now pre-flights GitHub suspension (2026-06-01)
 Wired the shared GitHub-access guard into `scripts/review/run-followup-guards.sh`.
