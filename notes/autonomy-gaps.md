@@ -1,10 +1,25 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-06-02 (48th pass)
+> Updated: 2026-06-03 (49th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-06-03 (self-improvement-audit-daily, 03:24 UTC)
+
+### PR review
+- **Status:** no new PR-review blocker discovered this cycle; existing review guardrails remain healthy.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy. Cron-watchdog testability gap found and fixed this cycle: the virtual autonomy-audit cadence check was hardwired to the live workspace/date/state, so regression-testing stale-audit alerts required mutating real notes/state or waiting for UTC date drift. Gap fixed this cycle: `scripts/cron/check_cron_health.py` now honors `CRON_JOBS_PATH`, `CRON_HEALTH_STATE_PATH`, `WORKSPACE_PATH`, `AUTONOMY_CADENCE_SCRIPT`, `AUTONOMY_CADENCE_FILE`, `AUTONOMY_CADENCE_REFERENCE_DATE`, and `AUTONOMY_CADENCE_EXPECTED_EVERY_DAYS` env overrides, so the virtual failure/recovery path is reproducible against temp fixtures without polluting production watchdog state.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
 ## Daily Audit Snapshot — 2026-06-02 (self-improvement-audit-daily, 03:24 UTC)
 
 ### PR review
@@ -937,6 +952,18 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Cron watchdog autonomy-cadence check now has deterministic test controls (2026-06-03)
+Extended `scripts/cron/check_cron_health.py` so its virtual `autonomy-audit-cadence` check can be exercised against controlled fixtures.
+- `CRON_JOBS_PATH` overrides the jobs registry,
+- `CRON_HEALTH_STATE_PATH` overrides the watchdog state file,
+- `WORKSPACE_PATH` overrides the workspace root used for default helper paths,
+- `AUTONOMY_CADENCE_SCRIPT` overrides the cadence guard script path,
+- `AUTONOMY_CADENCE_FILE` overrides the target autonomy-gaps markdown file,
+- `AUTONOMY_CADENCE_REFERENCE_DATE` passes a deterministic freshness reference date,
+- `AUTONOMY_CADENCE_EXPECTED_EVERY_DAYS` passes a deterministic expected spacing.
+
+**Rationale:** the watchdog should be testable without editing the real `notes/autonomy-gaps.md`, touching production failure state, or waiting for live UTC-date drift. This makes stale-audit regression checks reproducible and keeps the virtual cron failure path easier to validate after future watchdog edits.
 
 ### ✅ Cron health watchdog now checks autonomy-audit cadence (2026-06-02)
 Extended `scripts/cron/check_cron_health.py` with a virtual `autonomy-audit-cadence` failure source.

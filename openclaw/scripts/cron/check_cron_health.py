@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 import json
+import os
 import subprocess
 import time
-from pathlib import Path
 from datetime import datetime, timezone
+from pathlib import Path
 
-JOBS_PATH = Path('/home/openclaw/.openclaw/cron/jobs.json')
-STATE_PATH = Path('/home/openclaw/cron-health-state.json')
-WORKSPACE_PATH = Path('/home/openclaw/.openclaw/workspace')
+JOBS_PATH = Path(os.environ.get('CRON_JOBS_PATH', '/home/openclaw/.openclaw/cron/jobs.json'))
+STATE_PATH = Path(os.environ.get('CRON_HEALTH_STATE_PATH', '/home/openclaw/cron-health-state.json'))
+WORKSPACE_PATH = Path(os.environ.get('WORKSPACE_PATH', '/home/openclaw/.openclaw/workspace'))
 AUTONOMY_CADENCE_JOB_ID = 'virtual:autonomy-audit-cadence'
 AUTONOMY_CADENCE_NAME = 'autonomy-audit-cadence'
 
@@ -80,8 +81,16 @@ def check_autonomy_audit_cadence(now):
     notes/autonomy-gaps.md. Treat the latest-pair cadence guard as a virtual
     cron failure so the existing watchdog state/dedup logic handles it.
     """
-    script = WORKSPACE_PATH / 'scripts/notes/check-autonomy-audit-cadence.py'
-    target = WORKSPACE_PATH / 'notes/autonomy-gaps.md'
+    script = Path(os.environ.get(
+        'AUTONOMY_CADENCE_SCRIPT',
+        str(WORKSPACE_PATH / 'scripts/notes/check-autonomy-audit-cadence.py'),
+    ))
+    target = Path(os.environ.get(
+        'AUTONOMY_CADENCE_FILE',
+        str(WORKSPACE_PATH / 'notes/autonomy-gaps.md'),
+    ))
+    reference_date = os.environ.get('AUTONOMY_CADENCE_REFERENCE_DATE')
+    expected_every_days = os.environ.get('AUTONOMY_CADENCE_EXPECTED_EVERY_DAYS')
 
     if not script.exists():
         output = f'MISSING guard script: {script}'
@@ -106,6 +115,10 @@ def check_autonomy_audit_cadence(now):
         '--require-current',
         '--fail-on-gap',
     ]
+    if reference_date:
+        cmd.extend(['--reference-date', reference_date])
+    if expected_every_days:
+        cmd.extend(['--expected-every-days', expected_every_days])
 
     try:
         result = subprocess.run(
