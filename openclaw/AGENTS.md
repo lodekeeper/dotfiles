@@ -332,3 +332,14 @@ When writing code myself (PRs, patches, implementations):
 5. **Submit:** Only open PR / commit after sub-agent approval
 
 **Why:** Code quality matters. Multiple perspectives catch issues early.
+
+## 🎯 Scope Test Runs Narrowly
+
+When verifying or investigating one change, pick the narrowest invocation that answers the question — broad suites burn wall time and bury the signal.
+
+- One file: `pnpm vitest run --project spec-minimal test/spec/presets/transition.test.ts` (~6s, 1 file)
+- One pyspec case: append `-t "<name>"` (~1.5s, runs the matched case only)
+- `pnpm test:spec:minimal` (~3min, 53k cases) only when actually investigating broadly
+- Same shape applies to `--project unit` for unit tests and `--project spec-mainnet` for mainnet-preset spec
+
+See `[[feedback_narrow_spec_test_scope]]`.
