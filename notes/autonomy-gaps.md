@@ -1,10 +1,25 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-06-03 (49th pass)
+> Updated: 2026-06-04 (50th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-06-04 (self-improvement-audit-daily, 03:24 UTC)
+
+### PR review
+- **Status:** no new PR-review blocker discovered this cycle; existing review guardrails remain healthy.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** incident-bundle telemetry-preflight gap found and fixed this cycle: `scripts/debug/build-incident-bundle.sh` could intentionally degrade into partial bundles when Grafana token/tooling was missing, but there was no fast dry-run guard to make that choice explicit before a debugging run. Gap fixed this cycle: added `--check-only` and `--require-grafana` to validate helper scripts, output path, and telemetry prerequisites before fetching logs or writing bundles, and documented the preflight in `skills/local-mainnet-debug/SKILL.md`.
+
+---
 ## Daily Audit Snapshot — 2026-06-03 (self-improvement-audit-daily, 03:24 UTC)
 
 ### PR review
@@ -1533,6 +1548,13 @@ Updated `scripts/ci/auto_fix_flaky.py`:
 - Added `Retry-After` header/message parsing and exponential backoff fallback
 - Fixed LLM fixability propagation: `classify_failure()` now returns `llm_fixable`, and `scan()` passes it to `is_fixable()`
 - Persisted `llm_fixable` into findings/tracker entries for auditability
+
+### ✅ Devnet incident-bundle preflight guard (2026-06-04)
+Updated `scripts/debug/build-incident-bundle.sh` and `skills/local-mainnet-debug/SKILL.md`:
+- Added `--check-only` to validate node/peer inputs, helper script presence, and output-path writability without querying Grafana or writing a bundle.
+- Added `--require-grafana` to fail early when `GRAFANA_TOKEN`, `curl`, or `jq` are missing instead of silently producing a partial telemetry bundle.
+- Documented the preflight command in the local mainnet debugging skill so longer devnet debugging runs can fail fast on missing observability prerequisites.
+- Verified with `bash -n`, optional preflight success, and missing-token failure under `env -u GRAFANA_TOKEN`.
 
 ---
 

@@ -19,6 +19,8 @@ Options:
   --port <n>            Forwarded to devnet-triage.sh (repeatable)
   --selector <expr>     Forwarded PromQL selector for devnet-triage.sh
   --loki-query <expr>   Forwarded LogQL override for devnet-triage.sh
+  --check-only          Validate inputs/tooling and exit before fetching logs or writing output
+  --require-grafana     Fail early when Grafana telemetry prerequisites are missing
   -h, --help            Show help
 
 Env:
@@ -29,6 +31,11 @@ Examples:
   build-incident-bundle.sh --node epbs-devnet-0 --peer lh-b2 --peer teku-b2
   build-incident-bundle.sh --node lodestar-b2 --window 1h --output notes/incidents/lh-b2-incident.md
 EOF
+}
+
+fail() {
+  echo "error: $*" >&2
+  exit 1
 }
 
 NODE_NAME=""
@@ -44,6 +51,8 @@ SELECTOR=""
 LOKI_QUERY=""
 PEERS=()
 PORTS=()
+CHECK_ONLY=0
+REQUIRE_GRAFANA=0
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -99,27 +108,32 @@ while [[ $# -gt 0 ]]; do
       LOKI_QUERY="${2:-}"
       shift 2
       ;;
+    --check-only)
+      CHECK_ONLY=1
+      shift
+      ;;
+    --require-grafana)
+      REQUIRE_GRAFANA=1
+      shift
+      ;;
     -h|--help)
       usage
       exit 0
       ;;
     *)
-      echo "error: unknown argument '$1'" >&2
-      usage
-      exit 1
+      usage >&2
+      fail "unknown argument '$1'"
       ;;
   esac
 done
 
 if [[ -z "$NODE_NAME" ]]; then
-  echo "error: --node is required" >&2
-  usage
-  exit 1
+  usage >&2
+  fail "--node is required"
 fi
 
 if ! [[ "$ERROR_LIMIT" =~ ^[0-9]+$ ]]; then
-  echo "error: --errors must be an integer" >&2
-  exit 1
+  fail "--errors must be an integer"
 fi
 
 if [[ -z "$FROM_RAW" ]]; then
@@ -137,12 +151,10 @@ TRIAGE_SCRIPT="${SCRIPT_DIR}/devnet-triage.sh"
 CORRELATE_SCRIPT="${SCRIPT_DIR}/correlate-logs.sh"
 
 if [[ ! -f "$TRIAGE_SCRIPT" ]]; then
-  echo "error: missing helper script: $TRIAGE_SCRIPT" >&2
-  exit 1
+  fail "missing helper script: $TRIAGE_SCRIPT"
 fi
 if [[ ! -f "$CORRELATE_SCRIPT" ]]; then
-  echo "error: missing helper script: $CORRELATE_SCRIPT" >&2
-  exit 1
+  fail "missing helper script: $CORRELATE_SCRIPT"
 fi
 
 TIMESTAMP="$(date -u +%Y%m%d-%H%M%SZ)"
@@ -154,6 +166,54 @@ INCIDENT_ID="incident-${INCIDENT_SLUG}-${TIMESTAMP}"
 
 if [[ -z "$OUTPUT" ]]; then
   OUTPUT="${OUT_DIR}/${INCIDENT_ID}.md"
+fi
+
+validate_output_path() {
+  local output_dir parent
+  output_dir="$(dirname "$OUTPUT")"
+
+  if [[ -e "$output_dir" && ! -d "$output_dir" ]]; then
+    fail "output parent exists but is not a directory: $output_dir"
+  fi
+
+  if [[ -d "$output_dir" ]]; then
+    [[ -w "$output_dir" ]] || fail "output directory is not writable: $output_dir"
+    return 0
+  fi
+
+  parent="$output_dir"
+  while [[ ! -e "$parent" && "$parent" != "/" ]]; do
+    parent="$(dirname "$parent")"
+  done
+
+  [[ -d "$parent" ]] || fail "nearest output parent is not a directory: $parent"
+  [[ -w "$parent" ]] || fail "nearest output parent is not writable: $parent"
+}
+
+if [[ "$REQUIRE_GRAFANA" -eq 1 ]]; then
+  [[ -n "${GRAFANA_TOKEN:-}" ]] || fail "--require-grafana set but GRAFANA_TOKEN is not set"
+  command -v curl >/dev/null 2>&1 || fail "--require-grafana set but curl is not available"
+  command -v jq >/dev/null 2>&1 || fail "--require-grafana set but jq is not available"
+fi
+
+if [[ "$CHECK_ONLY" -eq 1 ]]; then
+  validate_output_path
+  echo "✅ incident-bundle preflight OK"
+  echo "Primary node: $NODE_NAME"
+  if ((${#PEERS[@]} > 0)); then
+    printf 'Peer nodes:'
+    printf ' %s' "${PEERS[@]}"
+    printf '\n'
+  else
+    echo "Peer nodes: (none)"
+  fi
+  echo "Output path: $OUTPUT"
+  if [[ "$REQUIRE_GRAFANA" -eq 1 ]]; then
+    echo "Grafana telemetry prerequisites: required and present"
+  else
+    echo "Grafana telemetry prerequisites: optional"
+  fi
+  exit 0
 fi
 
 mkdir -p "$(dirname "$OUTPUT")"

@@ -86,6 +86,21 @@ curl -s http://localhost:8008/metrics | grep -E \
   'lodestar_peers_by_client|libp2p_identify|peer_count|connected_peers'
 ```
 
+## Incident Bundle Preflight
+
+Before starting a longer incident bundle or devnet triage run, validate that the helper scripts, output path, and telemetry prerequisites are usable. Use `--require-grafana` when a partial bundle without Grafana logs/metrics would not answer the question.
+
+```bash
+~/.openclaw/workspace/scripts/debug/build-incident-bundle.sh \
+  --node lodestar-b2 \
+  --peer lighthouse-b2 \
+  --window 1h \
+  --require-grafana \
+  --check-only
+```
+
+Exit non-zero means fix the missing token/tooling/output path before collecting data. Omit `--require-grafana` only when a local/process-only bundle is intentionally sufficient.
+
 ## Debugging Techniques
 
 ### 1. Instrument libp2p Internals (Monkeypatching)
