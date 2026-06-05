@@ -10,20 +10,23 @@ Options:
   --repo <owner/repo>         GitHub repo (default: ChainSafe/lodestar)
   --include-replies           Include in-thread reply comments for sync-gh
   --match-window-lines <n>    Line distance window for sync-gh matching (default: 5)
+  --discussion-report <path>  Output path for full PR discussion coverage report
   --metadata-report <path>    Output path for metadata drift report
   --stale-report <path>       Output path for stale-findings report
   --stale-days <n>            Staleness threshold in days (default: 7)
   --stale-use-created         Compute staleness from created timestamp (default: updated)
+  --skip-discussion-scan      Skip full PR discussion coverage scan
   --skip-stale-check          Skip stale-findings guard step
   --fail-on-stale             Exit non-zero when stale findings are detected
   --sync-dry-run              Run sync-gh in dry-run mode (no tracker writes)
   -h, --help                  Show this help
 
 Behavior:
-  1) Runs track-findings.py sync-gh for the PR
-  2) Runs check-pr-metadata-drift.py and writes markdown artifact
-  3) Runs track-findings.py stale and writes markdown artifact
-  4) If metadata drift is detected (exit 2), prints exact gh pr edit reminder command
+  1) Fetches all PR discussion surfaces (issue comments, inline comments, review bodies)
+  2) Runs track-findings.py sync-gh for the PR
+  3) Runs check-pr-metadata-drift.py and writes markdown artifact
+  4) Runs track-findings.py stale and writes markdown artifact
+  If metadata drift is detected (exit 2), prints exact gh pr edit reminder command
 
 Exit codes:
   0 = guards passed
@@ -43,10 +46,12 @@ REPO="ChainSafe/lodestar"
 INCLUDE_REPLIES=0
 MATCH_WINDOW_LINES=5
 SYNC_DRY_RUN=0
+DISCUSSION_REPORT=""
 METADATA_REPORT=""
 STALE_REPORT=""
 STALE_DAYS=7
 STALE_USE_CREATED=0
+SKIP_DISCUSSION_SCAN=0
 SKIP_STALE_CHECK=0
 FAIL_ON_STALE=0
 
@@ -80,6 +85,10 @@ while [[ $# -gt 0 ]]; do
       METADATA_REPORT="${2:-}"
       shift 2
       ;;
+    --discussion-report)
+      DISCUSSION_REPORT="${2:-}"
+      shift 2
+      ;;
     --stale-report)
       STALE_REPORT="${2:-}"
       shift 2
@@ -90,6 +99,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --stale-use-created)
       STALE_USE_CREATED=1
+      shift
+      ;;
+    --skip-discussion-scan)
+      SKIP_DISCUSSION_SCAN=1
       shift
       ;;
     --skip-stale-check)
@@ -119,6 +132,7 @@ done
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 WORKSPACE_ROOT="$(cd -- "$SCRIPT_DIR/../.." && pwd)"
 TRACK_FINDINGS="$WORKSPACE_ROOT/scripts/review/track-findings.py"
+DISCUSSION_FETCHER="$WORKSPACE_ROOT/scripts/review/fetch-pr-discussion.py"
 METADATA_CHECKER="$WORKSPACE_ROOT/scripts/github/check-pr-metadata-drift.py"
 GH_ACCESS_GUARD="$WORKSPACE_ROOT/scripts/github/check-github-access.sh"
 
@@ -150,16 +164,32 @@ if [[ -z "$METADATA_REPORT" ]]; then
   METADATA_REPORT="$WORKSPACE_ROOT/notes/review-reports/pr-${PR}-metadata-drift.md"
 fi
 
+if [[ -z "$DISCUSSION_REPORT" ]]; then
+  DISCUSSION_REPORT="$WORKSPACE_ROOT/notes/review-reports/pr-${PR}-discussion.md"
+fi
+
 if [[ -z "$STALE_REPORT" ]]; then
   STALE_REPORT="$WORKSPACE_ROOT/notes/review-reports/pr-${PR}-stale-findings.md"
 fi
 
 bail_if_github_suspended
 
+mkdir -p "$(dirname -- "$DISCUSSION_REPORT")"
 mkdir -p "$(dirname -- "$METADATA_REPORT")"
 mkdir -p "$(dirname -- "$STALE_REPORT")"
 
-echo "==> [1/3] sync-gh guard (PR #$PR, repo: $REPO)"
+if [[ "$SKIP_DISCUSSION_SCAN" -eq 0 ]]; then
+  echo "==> [1/4] full PR discussion scan (artifact: $DISCUSSION_REPORT)"
+  python3 "$DISCUSSION_FETCHER" "$PR" --repo "$REPO" > "$DISCUSSION_REPORT"
+  cat "$DISCUSSION_REPORT"
+  echo ""
+  echo "Discussion report saved: $DISCUSSION_REPORT"
+else
+  echo "==> [1/4] skipping full PR discussion scan (--skip-discussion-scan)"
+fi
+
+echo ""
+echo "==> [2/4] sync-gh guard (PR #$PR, repo: $REPO)"
 SYNC_CMD=(python3 "$TRACK_FINDINGS" sync-gh "$PR" --repo "$REPO" --match-window-lines "$MATCH_WINDOW_LINES")
 if [[ "$INCLUDE_REPLIES" -eq 1 ]]; then
   SYNC_CMD+=(--include-replies)
@@ -170,7 +200,7 @@ fi
 "${SYNC_CMD[@]}"
 
 echo ""
-echo "==> [2/3] metadata drift guard (artifact: $METADATA_REPORT)"
+echo "==> [3/4] metadata drift guard (artifact: $METADATA_REPORT)"
 set +e
 python3 "$METADATA_CHECKER" --pr "$PR" --repo "$REPO" > "$METADATA_REPORT"
 DRIFT_RC=$?
@@ -184,7 +214,7 @@ echo "Metadata report saved: $METADATA_REPORT"
 STALE_RC=0
 if [[ "$SKIP_STALE_CHECK" -eq 0 ]]; then
   echo ""
-  echo "==> [3/3] stale-finding guard (artifact: $STALE_REPORT)"
+  echo "==> [4/4] stale-finding guard (artifact: $STALE_REPORT)"
   STALE_CMD=(python3 "$TRACK_FINDINGS" stale "$PR" --days "$STALE_DAYS" --severity critical major --fail-on-match)
   if [[ "$STALE_USE_CREATED" -eq 1 ]]; then
     STALE_CMD+=(--use-created)

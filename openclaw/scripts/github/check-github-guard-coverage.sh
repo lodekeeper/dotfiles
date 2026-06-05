@@ -52,6 +52,10 @@ require_pattern "scripts/github/check-pr-metadata-drift.py" "GITHUB_SUSPENDED_SK
 require_pattern "scripts/review/run-followup-guards.sh" "bail_if_github_suspended"
 require_pattern "scripts/review/run-followup-guards.sh" "GITHUB_SUSPENDED_SKIP"
 require_pattern "scripts/review/run-followup-guards.sh" "GITHUB_ACCESS_STATE_FILE"
+require_executable "scripts/review/fetch-pr-discussion.py"
+require_pattern "scripts/review/fetch-pr-discussion.py" "bail_if_github_suspended"
+require_pattern "scripts/review/fetch-pr-discussion.py" "GITHUB_SUSPENDED_SKIP"
+require_pattern "scripts/review/fetch-pr-discussion.py" "GITHUB_ACCESS_STATE_FILE"
 
 if [[ "$failures" -ne 0 ]]; then
   echo "GitHub guard coverage: FAILED ($failures issue(s))" >&2

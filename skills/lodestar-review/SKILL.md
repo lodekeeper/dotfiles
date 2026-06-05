@@ -349,8 +349,16 @@ Use `scripts/review/track-findings.py` to track which findings get addressed in 
    bash ~/.openclaw/workspace/scripts/review/run-followup-guards.sh <PR> \
      --repo ChainSafe/lodestar
    ```
+   The wrapper also writes a full PR discussion coverage report before syncing findings. This report fetches all three GitHub surfaces:
+   - Issue-level PR comments: `repos/<repo>/issues/<PR>/comments`
+   - Inline review comments: `repos/<repo>/pulls/<PR>/comments`
+   - Review bodies: `repos/<repo>/pulls/<PR>/reviews`
+
+   Before saying "no one replied", "lodekeeper is not in any thread", or "only bot comments exist", check this coverage report. Inline-only scans miss issue comments and review bodies.
+
    Optional flags:
    - `--include-replies` when maintainer discussion in reply threads matters for re-verification
+   - `--skip-discussion-scan` only when you have already fetched all three surfaces separately
    - `--fail-on-stale` to make stale unresolved critical/major findings block the loop
    - `--stale-days <n>` to tune the stale threshold (default `7`)
 
@@ -360,13 +368,17 @@ Use `scripts/review/track-findings.py` to track which findings get addressed in 
    - Exit `3`: stale findings detected when `--fail-on-stale` is set.
 
    Default artifacts:
+   - `~/.openclaw/workspace/notes/review-reports/pr-<PR>-discussion.md`
    - `~/.openclaw/workspace/notes/review-reports/pr-<PR>-metadata-drift.md`
    - `~/.openclaw/workspace/notes/review-reports/pr-<PR>-stale-findings.md`
 
    Manual equivalent (if needed):
    ```bash
-   python3 ~/.openclaw/workspace/scripts/review/track-findings.py sync-gh <PR> --repo ChainSafe/lodestar
    mkdir -p ~/.openclaw/workspace/notes/review-reports
+   python3 ~/.openclaw/workspace/scripts/review/fetch-pr-discussion.py <PR> \
+     --repo ChainSafe/lodestar \
+     > ~/.openclaw/workspace/notes/review-reports/pr-<PR>-discussion.md
+   python3 ~/.openclaw/workspace/scripts/review/track-findings.py sync-gh <PR> --repo ChainSafe/lodestar
    python3 ~/.openclaw/workspace/scripts/github/check-pr-metadata-drift.py \
      --pr <PR> --repo ChainSafe/lodestar \
      > ~/.openclaw/workspace/notes/review-reports/pr-<PR>-metadata-drift.md

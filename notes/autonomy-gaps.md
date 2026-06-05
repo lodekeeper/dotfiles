@@ -1,10 +1,25 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-06-04 (50th pass)
+> Updated: 2026-06-05 (51st pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-06-05 (self-improvement-audit-daily, 03:25 UTC)
+
+### PR review
+- **Status:** PR follow-up coverage gap found and fixed this cycle: `scripts/review/track-findings.py sync-gh` and the follow-up wrapper centered on inline review comments, so a sweep could falsely conclude that lodekeeper had not replied or that only bot chatter existed while issue-level PR comments or review bodies carried the real state. Gap fixed this cycle: added `scripts/review/fetch-pr-discussion.py` to fetch issue comments, inline review comments, and review bodies in one report; wired it into `scripts/review/run-followup-guards.sh` as the default first step; added guard-coverage checks; and documented the full-surface scan requirement in `skills/lodestar-review/SKILL.md`.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
 ## Daily Audit Snapshot — 2026-06-04 (self-improvement-audit-daily, 03:24 UTC)
 
 ### PR review
@@ -967,6 +982,17 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ PR follow-up guards now scan all PR discussion surfaces (2026-06-05)
+Added `scripts/review/fetch-pr-discussion.py` and wired it into `scripts/review/run-followup-guards.sh`.
+- fetches issue-level PR comments, inline review comments, and review bodies in one compact report,
+- writes the default artifact to `notes/review-reports/pr-<PR>-discussion.md` through the follow-up wrapper,
+- supports author filtering and compact body previews for fast "did we answer this?" checks,
+- keeps the shared GitHub suspension guard and `GITHUB_ACCESS_STATE_FILE` / `GITHUB_ACCESS_MAX_AGE_MINUTES` overrides,
+- expanded `scripts/github/check-github-guard-coverage.sh` so this new GitHub-dependent surface stays guarded,
+- documented the full-surface scan requirement in `skills/lodestar-review/SKILL.md`.
+
+**Rationale:** PR follow-up autonomy should not depend on remembering which GitHub endpoint carries the latest state. Inline-only scans can miss issue comments and review bodies, which recently produced a false "lodekeeper not in any thread" conclusion.
 
 ### ✅ Cron watchdog autonomy-cadence check now has deterministic test controls (2026-06-03)
 Extended `scripts/cron/check_cron_health.py` so its virtual `autonomy-audit-cadence` check can be exercised against controlled fixtures.
