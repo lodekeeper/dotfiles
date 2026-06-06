@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import argparse
 import base64
+from datetime import datetime, timezone
 import json
 import os
 from pathlib import Path
@@ -228,10 +229,25 @@ def main() -> int:
             return 1
 
     if args.check_only:
-        print("PR discussion scan preflight OK")
-        print(f"Repo: {args.repo}")
-        print(f"PR: {args.pr}")
-        print("GitHub guard: enabled" if not args.skip_github_guard else "GitHub guard: skipped")
+        if args.json:
+            print(
+                json.dumps(
+                    {
+                        "repo": args.repo,
+                        "pr": args.pr,
+                        "checkOnly": True,
+                        "githubGuardEnabled": not args.skip_github_guard,
+                        "generatedAt": datetime.now(tz=timezone.utc).isoformat(),
+                    },
+                    indent=2,
+                    sort_keys=True,
+                )
+            )
+        else:
+            print("PR discussion scan preflight OK")
+            print(f"Repo: {args.repo}")
+            print(f"PR: {args.pr}")
+            print("GitHub guard: enabled" if not args.skip_github_guard else "GitHub guard: skipped")
         return 0
 
     bail_if_github_suspended(args.skip_github_guard)

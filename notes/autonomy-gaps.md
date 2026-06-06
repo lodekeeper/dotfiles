@@ -1,10 +1,25 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-06-05 (51st pass)
+> Updated: 2026-06-06 (52nd pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-06-06 (self-improvement-audit-daily, 03:25 UTC)
+
+### PR review
+- **Status:** PR discussion scanner machine-readable preflight gap found and fixed this cycle: yesterday's new `scripts/review/fetch-pr-discussion.py` had a JSON output path that depended on `datetime` / `timezone` without importing them, and `--check-only` never exercised JSON output, so autonomous wrappers could still discover the bug only during a live PR sweep. Gap fixed this cycle: imported the missing symbols, made `--check-only --json` emit a real JSON preflight payload, and wired `scripts/github/check-github-guard-coverage.sh` to execute that preflight so the full-discussion report's machine-readable path stays covered without calling GitHub.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
 ## Daily Audit Snapshot — 2026-06-05 (self-improvement-audit-daily, 03:25 UTC)
 
 ### PR review

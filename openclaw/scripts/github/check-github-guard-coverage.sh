@@ -56,6 +56,10 @@ require_executable "scripts/review/fetch-pr-discussion.py"
 require_pattern "scripts/review/fetch-pr-discussion.py" "bail_if_github_suspended"
 require_pattern "scripts/review/fetch-pr-discussion.py" "GITHUB_SUSPENDED_SKIP"
 require_pattern "scripts/review/fetch-pr-discussion.py" "GITHUB_ACCESS_STATE_FILE"
+if ! python3 "$WORKSPACE/scripts/review/fetch-pr-discussion.py" 1 --repo ChainSafe/lodestar --check-only --json >/dev/null; then
+  echo "FAILED check-only JSON preflight: scripts/review/fetch-pr-discussion.py" >&2
+  failures=$((failures + 1))
+fi
 
 if [[ "$failures" -ne 0 ]]; then
   echo "GitHub guard coverage: FAILED ($failures issue(s))" >&2
