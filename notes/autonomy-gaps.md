@@ -1,10 +1,25 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-06-06 (52nd pass)
+> Updated: 2026-06-07 (53rd pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-06-07 (self-improvement-audit-daily, 03:25 UTC)
+
+### PR review
+- **Status:** no new PR-review blocker discovered this cycle; existing review guardrails remain healthy.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** remote-devnet routing preflight gap found and fixed this cycle: the `investigate` skill asked agents to run `panda datasources --json`, but the command can exit successfully while returning `{"datasources": null}` when panda auth/server datasource access is not ready, which makes a missing-auth/tooling state look like "network not found." Gap fixed this cycle: added `scripts/debug/check-devnet-routing-readiness.py`, documented it in the `investigate` skill, and verified it returns `PANDA_DATASOURCES_UNAVAILABLE` exit `2` for the current `glamsterdam-devnet-5` auth-blocked state before any long investigation starts.
+
+---
 ## Daily Audit Snapshot — 2026-06-06 (self-improvement-audit-daily, 03:25 UTC)
 
 ### PR review
@@ -966,9 +981,18 @@ Before this was implemented, spec-function ports could ship without a structured
 ## 4. Devnet Debugging
 
 ### Current State
-`grafana-loki` skill for log queries. `join-devnet` skill for local beacon node. `kurtosis-devnet` skill for full multi-client devnets. `local-mainnet-debug` skill for mainnet simulation. Good tooling, but each debugging session starts from scratch.
+`grafana-loki` skill for log queries. `join-devnet` skill for local beacon node. `kurtosis-devnet` skill for full multi-client devnets. `local-mainnet-debug` skill for mainnet simulation. `investigate` now has a routing preflight for local Kurtosis vs remote panda datasource readiness. Good tooling, but each debugging session starts from scratch.
 
 ### Gaps
+
+#### ~~🟡 Remote devnet routing treated panda datasource null as network absence~~ ✅ FIXED (2026-06-07)
+~~The `investigate` skill routed remote deployments by asking agents to run `panda datasources --json`, but panda can exit successfully with `{"datasources": null}` when auth/server datasource access is not ready. That lets an auth/tooling blocker masquerade as "target network not found" and can waste a debugging session before any useful data collection starts.~~
+
+**Fix applied:** added `scripts/debug/check-devnet-routing-readiness.py` and wired it into `~/.agents/skills/investigate/SKILL.md`:
+- classifies a target as local Kurtosis or remote panda datasource,
+- treats `datasources=null`, empty datasource names, invalid JSON, or panda command failure as explicit preflight failures,
+- exits `2` with `PANDA_DATASOURCES_UNAVAILABLE` before long remote investigations when panda access is not ready,
+- supports `--json` for wrapper/crons and verified the current auth-blocked `glamsterdam-devnet-5` state.
 
 #### ~~🔴 No multi-node log correlator~~ ✅ FIXED (2026-03-09)
 When debugging consensus failures across a devnet, logs from 4-8 nodes all matter. Today I query Loki once per node and manually cross-reference timestamps. A script that fetches logs from multiple nodes in parallel, merges + sorts by timestamp, and highlights consensus-relevant events (proposal, attestation, fork-choice updates) would turn a 30-min investigation into a 5-min one.
@@ -997,6 +1021,15 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Remote devnet routing preflight detects panda datasource readiness (2026-06-07)
+Added `scripts/debug/check-devnet-routing-readiness.py` and documented it in the `investigate` skill.
+- checks local Kurtosis enclaves and remote panda datasources in one preflight,
+- classifies matching targets as `local-kurtosis` or `remote-panda`,
+- treats `panda datasources --json` returning `{"datasources": null}` as an explicit `PANDA_DATASOURCES_UNAVAILABLE` exit `2`,
+- supports `--json` output for future wrappers and cron guards.
+
+**Rationale:** autonomous devnet debugging should distinguish "network absent" from "data access not ready" before spawning long investigations. The current panda-auth blocked state is exactly the failure mode this catches.
 
 ### ✅ PR follow-up guards now scan all PR discussion surfaces (2026-06-05)
 Added `scripts/review/fetch-pr-discussion.py` and wired it into `scripts/review/run-followup-guards.sh`.
