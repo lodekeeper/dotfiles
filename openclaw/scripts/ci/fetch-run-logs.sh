@@ -13,6 +13,34 @@ Examples:
 EOF
 }
 
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+WORKSPACE_ROOT="$(cd -- "$SCRIPT_DIR/../.." && pwd)"
+GH_ACCESS_GUARD="$WORKSPACE_ROOT/scripts/github/check-github-access.sh"
+
+bail_if_github_suspended() {
+  [[ -x "$GH_ACCESS_GUARD" ]] || return 0
+
+  local guard_cmd=("$GH_ACCESS_GUARD")
+  if [[ -n "${GITHUB_ACCESS_STATE_FILE:-}" ]]; then
+    guard_cmd+=(--state-file "$GITHUB_ACCESS_STATE_FILE")
+  fi
+  if [[ -n "${GITHUB_ACCESS_MAX_AGE_MINUTES:-}" ]]; then
+    guard_cmd+=(--max-age-minutes "$GITHUB_ACCESS_MAX_AGE_MINUTES")
+  fi
+
+  local guard_output=""
+  local guard_rc=0
+  set +e
+  guard_output="$(timeout 20s "${guard_cmd[@]}" 2>&1)"
+  guard_rc=$?
+  set -e
+
+  if [[ "$guard_rc" -eq 2 ]]; then
+    echo "GITHUB_SUSPENDED_SKIP"
+    exit 4
+  fi
+}
+
 if [[ $# -eq 0 ]]; then
   usage >&2
   exit 1
@@ -56,6 +84,8 @@ while [[ $# -gt 0 ]]; do
       ;;
   esac
 done
+
+bail_if_github_suspended
 
 mkdir -p "$(dirname "$out")"
 err_file="${out}.err"

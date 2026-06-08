@@ -1,7 +1,23 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-06-07 (53rd pass)
+> Updated: 2026-06-08 (54th pass)
+
+---
+
+## Daily Audit Snapshot — 2026-06-08 (self-improvement-audit-daily, 03:25 UTC)
+
+### PR review
+- **Status:** full-surface PR discussion scanner + metadata/stale finding guards remain healthy; no new blocker discovered this cycle.
+
+### CI fix
+- **Status:** CI log acquisition still had one direct-GitHub helper path outside the cached suspension guard coverage: `scripts/ci/fetch-run-logs.sh` calls `gh run view --log-failed` / full-log fallback directly, so an autonomous CI fixer could fail mid-triage during a known GitHub suspension instead of cleanly short-circuiting. The helper also lacked its executable bit despite being documented as a direct command. Gap fixed this cycle: added `bail_if_github_suspended()` to `fetch-run-logs.sh`, made it emit `GITHUB_SUSPENDED_SKIP` and exit `4` before any `gh run view` call when the cached guard reports suspension, set the helper executable, and expanded `scripts/github/check-github-guard-coverage.sh` to keep this CI helper covered.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** remote-devnet routing readiness preflight remains healthy; no new blocker discovered this cycle.
 
 ---
 
@@ -926,6 +942,11 @@ CI autofix cron (`573d18ec`) runs hourly, classifies flaky failures, applies pat
 
 ### Gaps
 
+#### ~~🟡 CI log fetch helper bypassed GitHub suspension guard~~ ✅ FIXED (2026-06-08)
+~~`scripts/ci/fetch-run-logs.sh` called `gh run view --log-failed` / `--log` directly, so an autonomous CI fixer could still fail mid-triage during a known cached GitHub suspension. It also lacked the executable bit despite being documented as a direct command.~~
+
+**Fix applied:** added `bail_if_github_suspended()` to `fetch-run-logs.sh`, set the helper executable, and expanded `scripts/github/check-github-guard-coverage.sh` to require its guard strings and executable bit. Suspended-cache runs now emit `GITHUB_SUSPENDED_SKIP` and exit `4` before any `gh run view` call.
+
 #### ~~🟡 No auto-linkage to existing GitHub issues~~ ✅ FIXED (2026-03-07)
 ~~When CI autofix opens a fix PR, it doesn't check whether an open issue already tracks that failure, and doesn't reference/close it.~~
 
@@ -1021,6 +1042,16 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ CI run-log fetch helper now pre-flights GitHub suspension (2026-06-08)
+Wired the shared GitHub-access guard into `scripts/ci/fetch-run-logs.sh`.
+- calls `scripts/github/check-github-access.sh` before `gh run view --log-failed` / full-log fallback,
+- supports `GITHUB_ACCESS_STATE_FILE` and `GITHUB_ACCESS_MAX_AGE_MINUTES` env overrides for deterministic tests,
+- suspended-cache runs emit `GITHUB_SUSPENDED_SKIP` and exit `4` before touching GitHub,
+- set the helper executable so its documented direct invocation works,
+- expanded `scripts/github/check-github-guard-coverage.sh` to verify the guard wiring and executable bit.
+
+**Rationale:** autonomous CI triage often starts by fetching failed run logs. That helper should degrade as cleanly as the detector and PR-CI monitor when GitHub access is externally blocked.
 
 ### ✅ Remote devnet routing preflight detects panda datasource readiness (2026-06-07)
 Added `scripts/debug/check-devnet-routing-readiness.py` and documented it in the `investigate` skill.
