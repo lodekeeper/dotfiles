@@ -125,6 +125,16 @@ Capture what matters. Decisions, context, things to remember. Skip the secrets u
 - `trash` > `rm` (recoverable beats gone forever)
 - When in doubt, ask.
 
+### 🪪 Git Identity
+Always commit as `lodekeeper <lodekeeper@users.noreply.github.com>`.
+
+- Never invent or guess an email. The only correct values are:
+  - `user.name = lodekeeper`
+  - `user.email = lodekeeper@users.noreply.github.com`
+- **NEVER** set `user.email` to placeholders like `lodekeeper@noreply.invalid`, `lodekeeper@local`, `lodekeeper@example.com`, or any `.invalid`/`.local`/`.test` TLD.
+- When committing in a fresh worktree (e.g. `/tmp/lodestar-*`), pin identity explicitly: `git -c user.name=lodekeeper -c user.email=lodekeeper@users.noreply.github.com commit -S -m "..."` rather than relying on whatever was injected into the environment.
+- Co-authored-by trailers must use the same canonical email.
+
 ### 🔒 Config Changes (CRITICAL)
 **NEVER** use `config.patch`, `config.apply`, or the `gateway` tool for config changes without **explicit permission from Nico**.
 
