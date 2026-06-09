@@ -116,7 +116,7 @@ git add -A
 assert_no_sensitive_changes
 
 CHANGED=$(git diff --cached --stat | tail -1)
-git commit -S -m "chore: sync non-sensitive local changes
+git -c user.name=lodekeeper -c user.email=lodekeeper@users.noreply.github.com commit -S -m "chore: sync non-sensitive local changes
 
 $CHANGED
 
