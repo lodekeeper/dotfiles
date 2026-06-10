@@ -10,6 +10,8 @@ SKIP_CADENCE_CHECK=0
 ALLOW_LIVE_PRIORITIES_NO_REPLY=0
 SKIP_MEMORY_OUTCOME_CHECK=0
 MEMORY_OUTCOME=""
+CADENCE_GAP_DETECTED=0
+CADENCE_GAP_SUMMARY=""
 
 usage() {
   cat <<'EOF'
@@ -196,6 +198,25 @@ if [[ "$SKIP_CADENCE_CHECK" -ne 1 ]]; then
   fi
 
   if [[ "$cadence_rc" -eq 2 ]]; then
+    CADENCE_GAP_DETECTED=1
+    CADENCE_GAP_SUMMARY="$(
+      python3 - "$cadence_log" <<'PY'
+from pathlib import Path
+import sys
+
+lines = [
+    line.strip()
+    for line in Path(sys.argv[1]).read_text(encoding="utf-8").splitlines()
+    if line.strip()
+]
+interesting = [
+    line
+    for line in lines
+    if line.startswith("- ") and ("missing" in line.lower() or "latest snapshot freshness" in line.lower())
+]
+print(" | ".join(interesting[:3]) or "missing-day gaps detected by cadence guard")
+PY
+    )"
     if [[ "$VERBOSE" -ne 1 && -s "$cadence_log" ]]; then
       cat "$cadence_log" >&2
     fi
@@ -214,6 +235,11 @@ if [[ "$SKIP_CADENCE_CHECK" -ne 1 ]]; then
 fi
 
 if [[ "$finalize_rc" -eq 3 ]]; then
+  if [[ "$CADENCE_GAP_DETECTED" -eq 1 ]]; then
+    echo "Autonomy audit cadence gap detected for $TARGET_DATE: $CADENCE_GAP_SUMMARY. Document/resolve the missing snapshot before returning NO_REPLY."
+    exit 0
+  fi
+
   if [[ "$ALLOW_LIVE_PRIORITIES_NO_REPLY" -ne 1 ]]; then
     NEXT_PRIORITIES_CMD=(
       python3 "$WORKSPACE/scripts/notes/check-next-audit-priorities.py"

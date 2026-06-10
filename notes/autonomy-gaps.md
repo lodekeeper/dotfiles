@@ -1,10 +1,28 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-06-08 (54th pass)
+> Updated: 2026-06-10 (55th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-06-10 (self-improvement-audit-daily, 03:25 UTC)
+
+### PR review
+- **Status:** full-surface PR discussion scanner + metadata/stale finding guards remain healthy; no new blocker discovered this cycle.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** remote-devnet routing readiness preflight remains healthy; no new blocker discovered this cycle.
+
+### Audit workflow
+- **Status:** cadence drift blocker found this cycle: the previous snapshot was 2026-06-08, so 2026-06-09 is missing. The watchdog virtual cadence check detects the gap, but `close-autonomy-audit.sh` could still return `NO_REPLY` in advisory mode when the four required status lines carried forward unchanged. Gap fixed this cycle: close-out now treats advisory cadence gaps as meaningful output and returns a concise cadence-gap summary instead of `NO_REPLY`, so a missed daily snapshot cannot be silently masked by unchanged required sections.
+
+---
 ## Daily Audit Snapshot — 2026-06-08 (self-improvement-audit-daily, 03:25 UTC)
 
 ### PR review
@@ -1042,6 +1060,14 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Close-out now reports cadence gaps instead of silent NO_REPLY (2026-06-10)
+Updated `scripts/notes/close-autonomy-audit.sh` so advisory cadence gaps become visible output even when finalization otherwise sees no snapshot delta.
+- captures missing-day cadence details from `check-autonomy-audit-cadence.py`,
+- preserves `--strict-cadence` as the hard-fail path,
+- in advisory mode, prevents the `finalize NO_CHANGE -> NO_REPLY` branch from hiding missed daily snapshots.
+
+**Rationale:** today’s preflight found a missing 2026-06-09 audit snapshot. The watchdog already detects this, but close-out should also refuse routine silence when cadence drift is present.
 
 ### ✅ CI run-log fetch helper now pre-flights GitHub suspension (2026-06-08)
 Wired the shared GitHub-access guard into `scripts/ci/fetch-run-logs.sh`.
