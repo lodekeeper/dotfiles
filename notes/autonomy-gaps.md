@@ -1,10 +1,28 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-06-10 (55th pass)
+> Updated: 2026-06-11 (56th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-06-11 (self-improvement-audit-daily, 03:25 UTC)
+
+### PR review
+- **Status:** full-surface PR discussion scanner + metadata/stale finding guards remain healthy; no new blocker discovered this cycle.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** remote-devnet routing readiness preflight remains healthy; no new blocker discovered this cycle.
+
+### Audit workflow
+- **Status:** delta-notification noise blocker found and fixed this cycle: when the previous snapshot included a one-off non-required section such as `Audit workflow`, a green carry-forward day with all four required status lines unchanged still looked meaningful because `check-autonomy-audit-delta.py` compared whole snapshot bodies and treated removal of the previous advisory section as an update. Gap fixed this cycle: the delta detector now treats required status changes plus added/changed current non-required sections as meaningful, while reporting removed non-required headings without forcing output; verified today’s green snapshot rendered `NO_REPLY` when the only difference was removal of yesterday’s advisory section.
+
+---
 ## Daily Audit Snapshot — 2026-06-10 (self-improvement-audit-daily, 03:25 UTC)
 
 ### PR review
@@ -1060,6 +1078,14 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Delta detector ignores removed one-off advisory sections (2026-06-11)
+Updated `scripts/notes/check-autonomy-audit-delta.py` so routine green days after a one-off advisory section no longer produce notification noise.
+- `hasDelta` now comes from changed required statuses, added non-required sections, changed current non-required sections, or removed required headings.
+- Removed non-required headings are still included in JSON diagnostics but do not trigger output by themselves.
+- Verified `render-autonomy-audit-response.py` returned `NO_REPLY` when the only current difference was removal of the prior `Audit workflow` section.
+
+**Rationale:** daily audit autonomy should distinguish new current information from yesterday-only advisory context aging out. Otherwise a successful return to steady state can still generate a needless summary.
 
 ### ✅ Close-out now reports cadence gaps instead of silent NO_REPLY (2026-06-10)
 Updated `scripts/notes/close-autonomy-audit.sh` so advisory cadence gaps become visible output even when finalization otherwise sees no snapshot delta.

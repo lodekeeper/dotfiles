@@ -4,9 +4,12 @@
 This helps decide whether the daily audit should emit a summary or `NO_REPLY`.
 
 Meaningful delta heuristic:
-- Compare the target snapshot body to the previous snapshot body (excluding heading line)
-- If body text differs after light normalization, it's a meaningful change
-- Also reports which required section status lines changed for quick triage
+- Required-section status changes are meaningful
+- Added or changed non-required sections in the target snapshot are meaningful
+- Removed non-required sections from the previous snapshot are reported but do not
+  make the target meaningful on their own. This avoids a noisy follow-up alert
+  when yesterday had a one-off advisory section and today's required statuses
+  returned to steady state.
 - Optional `--json` mode emits machine-readable output for cron wrappers
 
 Exit codes:
@@ -165,10 +168,6 @@ def main() -> int:
         print(f"❌ {exc}", file=sys.stderr)
         return 2
 
-    current_norm = normalize_text(current.body)
-    previous_norm = normalize_text(previous.body)
-    has_delta = current_norm != previous_norm
-
     current_statuses = get_required_statuses(current.body)
     previous_statuses = get_required_statuses(previous.body)
     changed_required_sections = [
@@ -183,10 +182,12 @@ def main() -> int:
     current_headings = [name.strip() for name in current_sections.keys()]
     previous_headings = [name.strip() for name in previous_sections.keys()]
 
+    required_lookup = {name.lower() for name in REQUIRED_SECTIONS}
     added_headings = [name for name in current_headings if name not in previous_headings]
     removed_headings = [name for name in previous_headings if name not in current_headings]
+    added_non_required_headings = [name for name in added_headings if name.lower() not in required_lookup]
+    removed_non_required_headings = [name for name in removed_headings if name.lower() not in required_lookup]
 
-    required_lookup = {name.lower() for name in REQUIRED_SECTIONS}
     shared_non_required = [
         name
         for name in current_sections.keys()
@@ -197,6 +198,12 @@ def main() -> int:
         for name in shared_non_required
         if normalize_text(current_sections[name]) != normalize_text(previous_sections[name])
     ]
+    has_delta = bool(
+        changed_required_sections
+        or added_non_required_headings
+        or changed_non_required_sections
+        or any(name.lower() in required_lookup for name in removed_headings)
+    )
 
     status_deltas = {
         section: {
@@ -215,6 +222,8 @@ def main() -> int:
         "changedNonRequiredSections": changed_non_required_sections,
         "addedSectionHeadings": added_headings,
         "removedSectionHeadings": removed_headings,
+        "addedNonRequiredSectionHeadings": added_non_required_headings,
+        "removedNonRequiredSectionHeadings": removed_non_required_headings,
         "noReplyRecommended": (not has_delta),
     }
 
