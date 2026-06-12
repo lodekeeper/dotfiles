@@ -9,6 +9,28 @@ from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
 OWNER_SELF = "lodekeeper"
+GH_ACCESS_GUARD = "/home/openclaw/.openclaw/workspace/scripts/github/check-github-access.sh"
+
+
+def bail_if_github_suspended(silent_signal: str = "HEARTBEAT_OK") -> None:
+    """Pre-flight guard: short-circuit cleanly when GitHub access is gone.
+
+    Calls the cached access guard; on exit code 2 (suspended) prints the
+    given silent signal and exits 0 so cron callers handle it as a no-op.
+    """
+    try:
+        result = subprocess.run([GH_ACCESS_GUARD], capture_output=True, text=True, timeout=20)
+    except Exception:
+        return
+    if result.returncode == 2:
+        print(silent_signal)
+        sys.exit(0)
+CHECKLIST_RESERVED_KEYS = {"version", "items", "updatedAt"}
+HANDLED_STATUS_RE = re.compile(r"^\s*-\s+\*\*Status:\*\*\s*(?:Addressed|Done|Closed|Handled)\b", re.IGNORECASE)
+EXPLICIT_HANDLED_TEXT_RE = re.compile(
+    r"\b(?:already handled|already answered|nothing new to answer|nothing new to answer or clear|marked checklist item|no remaining .* notification threads|thread is already fully handled|currently clean)\b",
+    re.IGNORECASE,
+)
 
 
 def utc_now_iso() -> str:
@@ -45,22 +67,46 @@ def parse_thread_key_from_subject_url(subject_url: str) -> Tuple[str, int, str]:
     return m.group(1), int(m.group(3)), kind
 
 
-def extract_handled_ids_from_backlog(backlog_text: str) -> set:
+def extract_handled_ids_from_text(text: str) -> set[int]:
     handled = set()
-    in_done = False
+    for m in re.findall(r"issuecomment-(\d+)", text):
+        handled.add(int(m))
+    for m in re.findall(r"discussion_r(\d+)", text):
+        handled.add(int(m))
+    for m in re.findall(r"/pulls/comments/(\d+)", text):
+        handled.add(int(m))
+    for m in re.findall(r"pullrequestreview-(\d+)", text):
+        handled.add(int(m))
+    for m in re.findall(r"\b(?:checklist item|comment(?: id)?|review(?: body)? id)\s*`?(\d{6,})`?", text, re.IGNORECASE):
+        handled.add(int(m))
+    return handled
+
+
+def extract_handled_ids_from_backlog(backlog_text: str) -> set[int]:
+    handled = set()
+    section_lines: List[str] = []
+    section_handled = False
+
+    def flush_section() -> None:
+        nonlocal handled, section_lines, section_handled
+        if section_handled and section_lines:
+            handled.update(extract_handled_ids_from_text("\n".join(section_lines)))
+
     for line in backlog_text.splitlines():
+        if EXPLICIT_HANDLED_TEXT_RE.search(line):
+            handled.update(extract_handled_ids_from_text(line))
+
         if line.startswith("### "):
-            in_done = line.startswith("### ✅")
-        if not in_done:
+            flush_section()
+            section_lines = [line]
+            section_handled = line.startswith("### ✅")
             continue
-        for m in re.findall(r"issuecomment-(\d+)", line):
-            handled.add(int(m))
-        for m in re.findall(r"discussion_r(\d+)", line):
-            handled.add(int(m))
-        for m in re.findall(r"/pulls/comments/(\d+)", line):
-            handled.add(int(m))
-        for m in re.findall(r"pullrequestreview-(\d+)", line):
-            handled.add(int(m))
+
+        section_lines.append(line)
+        if HANDLED_STATUS_RE.match(line):
+            section_handled = True
+
+    flush_section()
     return handled
 
 
@@ -71,10 +117,86 @@ def normalize_state(state: Dict[str, Any]) -> Dict[str, Any]:
     return state
 
 
+def parse_legacy_checklist_key(key: str) -> Dict[str, Any] | None:
+    m = re.match(r"^(?P<repo>[^#]+/[^#]+)#(?P<pr>\d+):(?P<suffix>.+)$", key)
+    if not m:
+        return None
+    suffix = m.group("suffix")
+    id_match = re.search(r"(\d+)$", suffix)
+    if not id_match:
+        return None
+
+    kind = "legacy"
+    if suffix.startswith("review-body:"):
+        kind = "review_body"
+    elif suffix.startswith("issue:"):
+        kind = "issue"
+    elif suffix.startswith("review:") or suffix.startswith("r"):
+        kind = "review"
+
+    return {
+        "repo": m.group("repo"),
+        "pr": int(m.group("pr")),
+        "kind": kind,
+        "id": int(id_match.group(1)),
+    }
+
+
 def normalize_checklist(checklist: Dict[str, Any]) -> Dict[str, Any]:
     checklist.setdefault("version", 1)
-    checklist.setdefault("items", {})
+    items = checklist.setdefault("items", {})
     checklist.setdefault("updatedAt", utc_now_iso())
+
+    # Legacy handled entries were historically stored at the checklist top level
+    # (e.g. ChainSafe/lodestar#9221:review-body:4169103826). Migrate/overlay
+    # those statuses into the numeric items map so already-handled reminders do
+    # not get resurfaced as open entries forever.
+    for key, legacy in list(checklist.items()):
+        if key in CHECKLIST_RESERVED_KEYS or not isinstance(legacy, dict):
+            continue
+
+        parsed = parse_legacy_checklist_key(key)
+        if not parsed:
+            continue
+
+        legacy_status = str(legacy.get("status") or "").lower()
+        if legacy_status not in {"handled", "done", "closed"}:
+            continue
+
+        item = items.setdefault(
+            str(parsed["id"]),
+            {
+                "id": parsed["id"],
+                "repo": parsed["repo"],
+                "pr": parsed["pr"],
+                "kind": parsed["kind"],
+            },
+        )
+        item.setdefault("id", parsed["id"])
+        item.setdefault("repo", parsed["repo"])
+        item.setdefault("pr", parsed["pr"])
+        item.setdefault("kind", parsed["kind"])
+
+        if legacy_status == "closed":
+            item["status"] = "closed"
+            if legacy.get("closed_at") is not None:
+                item["closed_at"] = legacy.get("closed_at")
+            if legacy.get("close_reason"):
+                item["close_reason"] = legacy.get("close_reason")
+        elif legacy_status == "done":
+            item["status"] = "done"
+            if legacy.get("handled_at"):
+                item.setdefault("doneAt", legacy.get("handled_at"))
+        else:
+            item["status"] = "handled"
+            if legacy.get("handled_at"):
+                item.setdefault("handledAt", legacy.get("handled_at"))
+
+        if legacy.get("note"):
+            item.setdefault("note", legacy.get("note"))
+        if legacy.get("action"):
+            item.setdefault("action", legacy.get("action"))
+
     return checklist
 
 
@@ -142,6 +264,8 @@ def main() -> int:
     ap.add_argument("--backlog", default="/home/openclaw/.openclaw/workspace/BACKLOG.md")
     ap.add_argument("--remind-hours", type=float, default=12.0)
     args = ap.parse_args()
+
+    bail_if_github_suspended("HEARTBEAT_OK")
 
     state_path = Path(args.state)
     checklist_path = Path(args.checklist)

@@ -1,12 +1,24 @@
 #!/usr/bin/env python3
 import json
 import subprocess
+import sys
 from pathlib import Path
 from datetime import datetime, timezone
 
 STATE_PATH = Path('/home/openclaw/gh-pr-ci-state.json')
+GH_ACCESS_GUARD = "/home/openclaw/.openclaw/workspace/scripts/github/check-github-access.sh"
 
 BAD_CONCLUSIONS = {"failure", "cancelled", "timed_out", "action_required"}
+
+
+def bail_if_github_suspended(silent_signal: str = "NO_REPLY") -> None:
+    try:
+        result = subprocess.run([GH_ACCESS_GUARD], capture_output=True, text=True, timeout=20)
+    except Exception:
+        return
+    if result.returncode == 2:
+        print(silent_signal)
+        sys.exit(0)
 
 
 def run(cmd: str) -> str:
@@ -59,6 +71,8 @@ def get_bad_checks(repo: str, sha: str) -> list[dict]:
 
 
 def main() -> int:
+    bail_if_github_suspended("NO_REPLY")
+
     state = load_state()
     known = state.setdefault("failures", {})
 
