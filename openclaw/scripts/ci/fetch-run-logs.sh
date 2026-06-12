@@ -3,13 +3,19 @@ set -euo pipefail
 
 usage() {
   cat <<'EOF'
-Usage: fetch-run-logs.sh <run-id> [--repo owner/repo] [--output <path>]
+Usage:
+  fetch-run-logs.sh <run-id> [--repo owner/repo] [--output <path>]
+  fetch-run-logs.sh --check-only
 
 Fetch failed logs for a GitHub Actions run with a full-log fallback.
 
 Examples:
+  scripts/ci/fetch-run-logs.sh --check-only
   scripts/ci/fetch-run-logs.sh 23124218154
   scripts/ci/fetch-run-logs.sh 23124218154 --repo ChainSafe/lodestar --output tmp/ci-logs/run-23124218154.log
+
+Options:
+  --check-only  Validate local prerequisites without calling GitHub
 EOF
 }
 
@@ -41,30 +47,17 @@ bail_if_github_suspended() {
   fi
 }
 
-if [[ $# -eq 0 ]]; then
-  usage >&2
-  exit 1
-fi
-
-if [[ "$1" == "-h" || "$1" == "--help" ]]; then
-  usage
-  exit 0
-fi
-
-run_id="$1"
-shift
-
-if ! [[ "$run_id" =~ ^[0-9]+$ ]]; then
-  echo "Run ID must be numeric: $run_id" >&2
-  usage >&2
-  exit 1
-fi
-
 repo="ChainSafe/lodestar"
-out="tmp/ci-logs/run-${run_id}.log"
+out=""
+run_id=""
+check_only=0
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
+    --check-only)
+      check_only=1
+      shift
+      ;;
     --repo)
       repo="$2"
       shift 2
@@ -78,12 +71,46 @@ while [[ $# -gt 0 ]]; do
       exit 0
       ;;
     *)
-      echo "Unknown argument: $1" >&2
-      usage >&2
-      exit 1
+      if [[ -n "$run_id" ]]; then
+        echo "Unexpected extra argument: $1" >&2
+        usage >&2
+        exit 1
+      fi
+      run_id="$1"
+      shift
       ;;
   esac
 done
+
+if [[ "$check_only" -eq 1 ]]; then
+  if ! command -v gh >/dev/null 2>&1; then
+    echo "ERROR: gh CLI is not available" >&2
+    exit 1
+  fi
+  if [[ ! -x "$GH_ACCESS_GUARD" ]]; then
+    echo "ERROR: GitHub access guard is missing or not executable: $GH_ACCESS_GUARD" >&2
+    exit 1
+  fi
+  echo "CI log fetch preflight OK"
+  echo "Repo: $repo"
+  echo "GitHub guard: $GH_ACCESS_GUARD"
+  exit 0
+fi
+
+if [[ -z "$run_id" ]]; then
+  usage >&2
+  exit 1
+fi
+
+if ! [[ "$run_id" =~ ^[0-9]+$ ]]; then
+  echo "Run ID must be numeric: $run_id" >&2
+  usage >&2
+  exit 1
+fi
+
+if [[ -z "$out" ]]; then
+  out="tmp/ci-logs/run-${run_id}.log"
+fi
 
 bail_if_github_suspended
 

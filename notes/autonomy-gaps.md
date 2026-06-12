@@ -1,10 +1,25 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-06-11 (56th pass)
+> Updated: 2026-06-12 (57th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-06-12 (self-improvement-audit-daily, 03:25 UTC)
+
+### PR review
+- **Status:** full-surface PR discussion scanner + metadata/stale finding guards remain healthy; no new blocker discovered this cycle.
+
+### CI fix
+- **Status:** CI log acquisition had no local-only preflight for `scripts/ci/fetch-run-logs.sh`: guard coverage could verify static strings, but could not execute the helper's prerequisite path without a real Actions run id. Gap fixed this cycle: added `--check-only` to validate `gh` + the cached GitHub access guard without calling GitHub, and wired that preflight into `scripts/github/check-github-guard-coverage.sh`.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** remote-devnet routing readiness preflight remains healthy; no new blocker discovered this cycle.
+
+---
 ## Daily Audit Snapshot — 2026-06-11 (self-improvement-audit-daily, 03:25 UTC)
 
 ### PR review
@@ -978,6 +993,15 @@ CI autofix cron (`573d18ec`) runs hourly, classifies flaky failures, applies pat
 
 ### Gaps
 
+#### ~~🟡 CI log fetch helper lacked local-only preflight~~ ✅ FIXED (2026-06-12)
+~~`scripts/ci/fetch-run-logs.sh` had a guarded live path, but no `--check-only` mode. Guard coverage could assert strings/executable bits, but it could not execute the helper's local prerequisite path without a real Actions run id. That left a small gap where syntax/argument handling or missing local tooling could drift until the next live CI failure triage.~~
+
+**Fix applied:** added `--check-only` to `fetch-run-logs.sh`:
+- validates the `gh` CLI and `scripts/github/check-github-access.sh` executable guard without calling GitHub,
+- allows preflight execution without a run id,
+- keeps the live path unchanged for `gh run view --log-failed` / full-log fallback,
+- wired the preflight into `scripts/github/check-github-guard-coverage.sh`.
+
 #### ~~🟡 CI log fetch helper bypassed GitHub suspension guard~~ ✅ FIXED (2026-06-08)
 ~~`scripts/ci/fetch-run-logs.sh` called `gh run view --log-failed` / `--log` directly, so an autonomous CI fixer could still fail mid-triage during a known cached GitHub suspension. It also lacked the executable bit despite being documented as a direct command.~~
 
@@ -1078,6 +1102,14 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ CI run-log fetch helper now has local-only preflight (2026-06-12)
+Added `--check-only` to `scripts/ci/fetch-run-logs.sh` and wired it into `scripts/github/check-github-guard-coverage.sh`.
+- validates local prerequisites (`gh` and the cached GitHub access guard) without requiring a workflow run id,
+- lets the guard coverage script execute the helper's preflight path without calling GitHub,
+- keeps live log fetching unchanged for `gh run view --log-failed` with full-log fallback.
+
+**Rationale:** the CI fixer depends on run logs during triage. A cheap offline preflight makes helper drift visible before a live failed-run investigation needs it.
 
 ### ✅ Delta detector ignores removed one-off advisory sections (2026-06-11)
 Updated `scripts/notes/check-autonomy-audit-delta.py` so routine green days after a one-off advisory section no longer produce notification noise.

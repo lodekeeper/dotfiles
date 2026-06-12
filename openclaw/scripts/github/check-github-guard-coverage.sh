@@ -47,6 +47,11 @@ require_executable "scripts/ci/fetch-run-logs.sh"
 require_pattern "scripts/ci/fetch-run-logs.sh" "bail_if_github_suspended"
 require_pattern "scripts/ci/fetch-run-logs.sh" "GITHUB_SUSPENDED_SKIP"
 require_pattern "scripts/ci/fetch-run-logs.sh" "GITHUB_ACCESS_STATE_FILE"
+require_pattern "scripts/ci/fetch-run-logs.sh" "--check-only"
+if ! bash "$WORKSPACE/scripts/ci/fetch-run-logs.sh" --check-only >/dev/null; then
+  echo "FAILED check-only preflight: scripts/ci/fetch-run-logs.sh" >&2
+  failures=$((failures + 1))
+fi
 require_pattern "scripts/ci/CRON_PROMPT.md" "scripts/github/check-github-access.sh"
 require_pattern "scripts/ci/CRON_PROMPT.md" "GITHUB_SUSPENDED_SKIP"
 require_pattern "scripts/review/track-findings.py" "bail_if_github_suspended"
