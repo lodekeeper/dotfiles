@@ -4,6 +4,8 @@ set -euo pipefail
 usage() {
   cat <<'EOF'
 Usage:
+  scripts/spec/prepr-compliance-gate.sh --check-only
+
   scripts/spec/prepr-compliance-gate.sh \
     --tracker notes/<feature>/TRACKER.md \
     --pr-body /tmp/pr-<feature>.md \
@@ -26,6 +28,7 @@ Arguments:
   --min-verdict <level>   Minimum acceptable verdict: faithful|partial
                           Default: partial
   --skip-spec-checks      Only run artifact presence validation
+  --check-only            Validate local prerequisites without requiring PR inputs
   -h, --help              Show this help
 
 Exit code:
@@ -63,6 +66,7 @@ pr_body=""
 summary_out=""
 min_verdict="partial"
 skip_spec_checks=0
+check_only=0
 declare -a checks=()
 
 while [[ $# -gt 0 ]]; do
@@ -96,6 +100,10 @@ while [[ $# -gt 0 ]]; do
       skip_spec_checks=1
       shift
       ;;
+    --check-only)
+      check_only=1
+      shift
+      ;;
     -h|--help)
       usage
       exit 0
@@ -105,6 +113,46 @@ while [[ $# -gt 0 ]]; do
       ;;
   esac
 done
+
+workspace_root="$(cd "$(dirname "$0")/../.." && pwd)"
+check_compliance_py="$workspace_root/scripts/spec/check-compliance.py"
+check_artifacts_sh="$workspace_root/scripts/spec/check-compliance-artifacts.sh"
+
+if [[ "$check_only" -eq 1 ]]; then
+  failures=0
+
+  if ! command -v python3 >/dev/null 2>&1; then
+    echo "ERROR: python3 is not available" >&2
+    failures=$((failures + 1))
+  fi
+
+  for script in "$check_compliance_py" "$check_artifacts_sh"; do
+    if [[ ! -f "$script" ]]; then
+      echo "ERROR: missing helper: $script" >&2
+      failures=$((failures + 1))
+    fi
+  done
+
+  if [[ -f "$check_compliance_py" ]] && ! python3 "$check_compliance_py" --help >/dev/null; then
+    echo "ERROR: check-compliance.py help path failed" >&2
+    failures=$((failures + 1))
+  fi
+
+  if [[ -f "$check_artifacts_sh" ]] && ! bash -n "$check_artifacts_sh"; then
+    echo "ERROR: check-compliance-artifacts.sh syntax check failed" >&2
+    failures=$((failures + 1))
+  fi
+
+  if [[ "$failures" -ne 0 ]]; then
+    exit 2
+  fi
+
+  echo "Pre-PR spec compliance gate preflight OK"
+  echo "Workspace: $workspace_root"
+  echo "Compliance checker: $check_compliance_py"
+  echo "Artifact checker: $check_artifacts_sh"
+  exit 0
+fi
 
 [[ -n "$tracker" ]] || fail "--tracker is required"
 [[ -n "$pr_body" ]] || fail "--pr-body is required"
@@ -121,10 +169,6 @@ fi
 tracker="$(expand_path "$tracker")"
 pr_body="$(expand_path "$pr_body")"
 summary_out="$(expand_path "$summary_out")"
-
-workspace_root="$(cd "$(dirname "$0")/../.." && pwd)"
-check_compliance_py="$workspace_root/scripts/spec/check-compliance.py"
-check_artifacts_sh="$workspace_root/scripts/spec/check-compliance-artifacts.sh"
 
 [[ -f "$check_compliance_py" ]] || fail "Missing script: $check_compliance_py"
 [[ -f "$check_artifacts_sh" ]] || fail "Missing script: $check_artifacts_sh"

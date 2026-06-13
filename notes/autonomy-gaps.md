@@ -1,10 +1,25 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-06-12 (57th pass)
+> Updated: 2026-06-13 (58th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-06-13 (self-improvement-audit-daily, 03:27 UTC)
+
+### PR review
+- **Status:** full-surface PR discussion scanner + metadata/stale finding guards remain healthy; no new blocker discovered this cycle.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** spec-compliance gate preflight gap found and fixed this cycle: `scripts/spec/prepr-compliance-gate.sh` could only validate prerequisites after PR/tracker inputs were already assembled, so missing compliance helper/tooling state would surface late in a spec implementation. Gap fixed this cycle: added `--check-only` to validate `python3`, `check-compliance.py`, and `check-compliance-artifacts.sh` without PR inputs, and documented the preflight in `skills/dev-workflow/SKILL.md` before the Phase 4 spec-compliance command.
+
+### Devnet debugging
+- **Status:** remote-devnet routing readiness preflight remains healthy; no new blocker discovered this cycle.
+
+---
 ## Daily Audit Snapshot — 2026-06-12 (self-improvement-audit-daily, 03:25 UTC)
 
 ### PR review
@@ -1102,6 +1117,14 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Spec compliance gate now has local-only preflight (2026-06-13)
+Added `--check-only` to `scripts/spec/prepr-compliance-gate.sh` and wired it into `skills/dev-workflow/SKILL.md`.
+- validates `python3` and the required compliance helper scripts without requiring tracker, PR body, or spec tuple inputs,
+- checks `check-compliance.py --help` and shell syntax for `check-compliance-artifacts.sh`,
+- keeps normal pre-PR report generation and metadata validation unchanged.
+
+**Rationale:** spec implementation autonomy should fail fast on local compliance-gate drift before a PR body/tracker is assembled or review is requested.
 
 ### ✅ CI run-log fetch helper now has local-only preflight (2026-06-12)
 Added `--check-only` to `scripts/ci/fetch-run-logs.sh` and wired it into `scripts/github/check-github-guard-coverage.sh`.

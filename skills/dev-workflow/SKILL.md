@@ -301,6 +301,8 @@ process action:list
    **Spec-compliance gate (required for spec/protocol-facing changes before PR):**
    ```bash
    cd ~/.openclaw/workspace
+   bash scripts/spec/prepr-compliance-gate.sh --check-only
+
    python3 scripts/spec/check-compliance.py \
      --spec-query "<spec function or section>" \
      --ts-file "~/lodestar-<feature-name>/<path/to/file>.ts" \
