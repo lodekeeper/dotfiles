@@ -1,10 +1,25 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-06-13 (58th pass)
+> Updated: 2026-06-14 (59th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-06-14 (self-improvement-audit-daily, 03:27 UTC)
+
+### PR review
+- **Status:** full-surface PR discussion scanner + metadata/stale finding guards remain healthy; no new blocker discovered this cycle.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** spec-compliance preflight machine-readability gap found and fixed this cycle: yesterday's `scripts/spec/prepr-compliance-gate.sh --check-only` made local prerequisite drift detectable before PR assembly, but autonomous wrappers still had to parse prose to tell a clean pass from missing tooling. Proposed fix was to add a JSON preflight output path and document it where spec implementations run the gate. Gap fixed this cycle: added `--check-only --json` with structured helper/pass fields, kept `--json` rejected outside preflight mode, and documented the automation form in `skills/dev-workflow/SKILL.md`.
+
+### Devnet debugging
+- **Status:** remote-devnet routing readiness preflight remains healthy; no new blocker discovered this cycle.
+
+---
 ## Daily Audit Snapshot — 2026-06-13 (self-improvement-audit-daily, 03:27 UTC)
 
 ### PR review
@@ -1046,6 +1061,14 @@ Use `dev-workflow` skill for multi-agent development. Codex/Claude CLI for imple
 
 ### Gaps
 
+#### ~~🟡 Spec compliance preflight lacked machine-readable output~~ ✅ FIXED (2026-06-14)
+~~`scripts/spec/prepr-compliance-gate.sh --check-only` could validate local prerequisites, but only emitted prose. Autonomous wrappers needed brittle text parsing to distinguish a clean pass from missing compliance tooling. Proposed fix: add a JSON output path for check-only preflight and document it in the dev workflow.~~
+
+**Fix applied:** added `--check-only --json` to `scripts/spec/prepr-compliance-gate.sh` and documented the automation form in `skills/dev-workflow/SKILL.md`.
+- emits structured `ok`, `python3Available`, workspace, and helper-specific `present` / `helpOk` / `syntaxOk` fields,
+- exits `2` on failed preflight while preserving machine-readable stdout,
+- rejects `--json` outside `--check-only` so the full PR-gate path remains unchanged.
+
 #### ~~🔴 No automated spec section extraction~~ ✅ FIXED (2026-03-07)
 ~~I manually grep `~/consensus-specs` for relevant pseudocode when implementing. This is slow and error-prone (easy to miss related functions/types across files).~~
 
@@ -1117,6 +1140,14 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Spec compliance preflight now has JSON output (2026-06-14)
+Added `--check-only --json` to `scripts/spec/prepr-compliance-gate.sh` and wired the command into `skills/dev-workflow/SKILL.md`.
+- reports `ok`, `python3Available`, workspace, and helper-specific readiness fields,
+- keeps the existing human-readable `--check-only` output unchanged,
+- rejects `--json` for the full PR-gate mode to avoid implying a JSON summary for report generation.
+
+**Rationale:** spec implementation autonomy needs a stable machine-readable preflight result before spawning implementation/review workers or assembling PR metadata.
 
 ### ✅ Spec compliance gate now has local-only preflight (2026-06-13)
 Added `--check-only` to `scripts/spec/prepr-compliance-gate.sh` and wired it into `skills/dev-workflow/SKILL.md`.

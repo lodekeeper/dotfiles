@@ -302,6 +302,8 @@ process action:list
    ```bash
    cd ~/.openclaw/workspace
    bash scripts/spec/prepr-compliance-gate.sh --check-only
+   # Automation wrappers should use:
+   bash scripts/spec/prepr-compliance-gate.sh --check-only --json
 
    python3 scripts/spec/check-compliance.py \
      --spec-query "<spec function or section>" \
@@ -462,4 +464,3 @@ instrument → rebuild (Dockerfile.dev) → rerun kurtosis → analyze → fix �
 ## Self-Maintenance
 
 If any commands, file paths, URLs, or configurations in this skill are outdated or no longer work, update this SKILL.md with the correct information after completing your current task. Skills should stay accurate and self-healing — fix what you find broken.
-

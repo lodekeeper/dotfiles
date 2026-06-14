@@ -5,6 +5,7 @@ usage() {
   cat <<'EOF'
 Usage:
   scripts/spec/prepr-compliance-gate.sh --check-only
+  scripts/spec/prepr-compliance-gate.sh --check-only --json
 
   scripts/spec/prepr-compliance-gate.sh \
     --tracker notes/<feature>/TRACKER.md \
@@ -29,6 +30,7 @@ Arguments:
                           Default: partial
   --skip-spec-checks      Only run artifact presence validation
   --check-only            Validate local prerequisites without requiring PR inputs
+  --json                  Emit machine-readable output for --check-only
   -h, --help              Show this help
 
 Exit code:
@@ -67,6 +69,7 @@ summary_out=""
 min_verdict="partial"
 skip_spec_checks=0
 check_only=0
+json=0
 declare -a checks=()
 
 while [[ $# -gt 0 ]]; do
@@ -104,6 +107,10 @@ while [[ $# -gt 0 ]]; do
       check_only=1
       shift
       ;;
+    --json)
+      json=1
+      shift
+      ;;
     -h|--help)
       usage
       exit 0
@@ -120,27 +127,104 @@ check_artifacts_sh="$workspace_root/scripts/spec/check-compliance-artifacts.sh"
 
 if [[ "$check_only" -eq 1 ]]; then
   failures=0
+  python_available=0
+  check_compliance_present=0
+  check_compliance_help_ok=0
+  check_artifacts_present=0
+  check_artifacts_syntax_ok=0
 
-  if ! command -v python3 >/dev/null 2>&1; then
-    echo "ERROR: python3 is not available" >&2
+  if command -v python3 >/dev/null 2>&1; then
+    python_available=1
+  else
+    if [[ "$json" -ne 1 ]]; then
+      echo "ERROR: python3 is not available" >&2
+    fi
     failures=$((failures + 1))
   fi
 
-  for script in "$check_compliance_py" "$check_artifacts_sh"; do
-    if [[ ! -f "$script" ]]; then
-      echo "ERROR: missing helper: $script" >&2
+  if [[ -f "$check_compliance_py" ]]; then
+    check_compliance_present=1
+  else
+    if [[ "$json" -ne 1 ]]; then
+      echo "ERROR: missing helper: $check_compliance_py" >&2
+    fi
+    failures=$((failures + 1))
+  fi
+
+  if [[ -f "$check_artifacts_sh" ]]; then
+    check_artifacts_present=1
+  else
+    if [[ "$json" -ne 1 ]]; then
+      echo "ERROR: missing helper: $check_artifacts_sh" >&2
+    fi
+    failures=$((failures + 1))
+  fi
+
+  if [[ "$python_available" -eq 1 && "$check_compliance_present" -eq 1 ]]; then
+    if python3 "$check_compliance_py" --help >/dev/null 2>&1; then
+      check_compliance_help_ok=1
+    else
+      if [[ "$json" -ne 1 ]]; then
+        echo "ERROR: check-compliance.py help path failed" >&2
+      fi
       failures=$((failures + 1))
     fi
-  done
-
-  if [[ -f "$check_compliance_py" ]] && ! python3 "$check_compliance_py" --help >/dev/null; then
-    echo "ERROR: check-compliance.py help path failed" >&2
-    failures=$((failures + 1))
   fi
 
-  if [[ -f "$check_artifacts_sh" ]] && ! bash -n "$check_artifacts_sh"; then
-    echo "ERROR: check-compliance-artifacts.sh syntax check failed" >&2
-    failures=$((failures + 1))
+  if [[ "$check_artifacts_present" -eq 1 ]]; then
+    if bash -n "$check_artifacts_sh" >/dev/null 2>&1; then
+      check_artifacts_syntax_ok=1
+    else
+      if [[ "$json" -ne 1 ]]; then
+        echo "ERROR: check-compliance-artifacts.sh syntax check failed" >&2
+      fi
+      failures=$((failures + 1))
+    fi
+  fi
+
+  if [[ "$json" -eq 1 ]]; then
+    if [[ "$python_available" -eq 1 ]]; then
+      python3 - \
+        "$failures" \
+        "$workspace_root" \
+        "$python_available" \
+        "$check_compliance_py" \
+        "$check_compliance_present" \
+        "$check_compliance_help_ok" \
+        "$check_artifacts_sh" \
+        "$check_artifacts_present" \
+        "$check_artifacts_syntax_ok" <<'PY'
+import json
+import sys
+
+failures = int(sys.argv[1])
+payload = {
+    "ok": failures == 0,
+    "workspace": sys.argv[2],
+    "python3Available": bool(int(sys.argv[3])),
+    "helpers": {
+        "checkCompliance": {
+            "path": sys.argv[4],
+            "present": bool(int(sys.argv[5])),
+            "helpOk": bool(int(sys.argv[6])),
+        },
+        "checkComplianceArtifacts": {
+            "path": sys.argv[7],
+            "present": bool(int(sys.argv[8])),
+            "syntaxOk": bool(int(sys.argv[9])),
+        },
+    },
+}
+print(json.dumps(payload, sort_keys=True))
+PY
+    else
+      printf '{"helpers":{},"ok":false,"python3Available":false,"workspace":"%s"}\n' "$workspace_root"
+    fi
+
+    if [[ "$failures" -ne 0 ]]; then
+      exit 2
+    fi
+    exit 0
   fi
 
   if [[ "$failures" -ne 0 ]]; then
@@ -152,6 +236,10 @@ if [[ "$check_only" -eq 1 ]]; then
   echo "Compliance checker: $check_compliance_py"
   echo "Artifact checker: $check_artifacts_sh"
   exit 0
+fi
+
+if [[ "$json" -eq 1 ]]; then
+  fail "--json is only supported with --check-only"
 fi
 
 [[ -n "$tracker" ]] || fail "--tracker is required"
