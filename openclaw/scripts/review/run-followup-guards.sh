@@ -5,9 +5,12 @@ usage() {
   cat <<'EOF'
 Usage:
   scripts/review/run-followup-guards.sh <PR_NUMBER> [options]
+  scripts/review/run-followup-guards.sh --check-only [--json]
 
 Options:
   --repo <owner/repo>         GitHub repo (default: ChainSafe/lodestar)
+  --check-only                Validate local prerequisites without calling GitHub or writing reports
+  --json                      Emit machine-readable output for --check-only
   --include-replies           Include in-thread reply comments for sync-gh
   --match-window-lines <n>    Line distance window for sync-gh matching (default: 5)
   --discussion-report <path>  Output path for full PR discussion coverage report
@@ -36,13 +39,10 @@ Exit codes:
 EOF
 }
 
-if [[ $# -lt 1 ]]; then
-  usage
-  exit 1
-fi
-
 PR=""
 REPO="ChainSafe/lodestar"
+CHECK_ONLY=0
+JSON=0
 INCLUDE_REPLIES=0
 MATCH_WINDOW_LINES=5
 SYNC_DRY_RUN=0
@@ -55,20 +55,16 @@ SKIP_DISCUSSION_SCAN=0
 SKIP_STALE_CHECK=0
 FAIL_ON_STALE=0
 
-if [[ "${1:-}" =~ ^[0-9]+$ ]]; then
-  PR="$1"
-  shift
-elif [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
-  usage
-  exit 0
-else
-  echo "ERROR: First argument must be PR number" >&2
-  usage
-  exit 1
-fi
-
 while [[ $# -gt 0 ]]; do
   case "$1" in
+    --check-only)
+      CHECK_ONLY=1
+      shift
+      ;;
+    --json)
+      JSON=1
+      shift
+      ;;
     --repo)
       REPO="${2:-}"
       shift 2
@@ -122,9 +118,14 @@ while [[ $# -gt 0 ]]; do
       exit 0
       ;;
     *)
-      echo "ERROR: Unknown argument: $1" >&2
-      usage
-      exit 1
+      if [[ "$1" =~ ^[0-9]+$ && -z "$PR" ]]; then
+        PR="$1"
+        shift
+      else
+        echo "ERROR: Unknown argument: $1" >&2
+        usage
+        exit 1
+      fi
       ;;
   esac
 done
@@ -135,6 +136,17 @@ TRACK_FINDINGS="$WORKSPACE_ROOT/scripts/review/track-findings.py"
 DISCUSSION_FETCHER="$WORKSPACE_ROOT/scripts/review/fetch-pr-discussion.py"
 METADATA_CHECKER="$WORKSPACE_ROOT/scripts/github/check-pr-metadata-drift.py"
 GH_ACCESS_GUARD="$WORKSPACE_ROOT/scripts/github/check-github-access.sh"
+
+if [[ "$JSON" -eq 1 && "$CHECK_ONLY" -ne 1 ]]; then
+  echo "ERROR: --json is only supported with --check-only" >&2
+  exit 1
+fi
+
+if [[ "$CHECK_ONLY" -ne 1 && -z "$PR" ]]; then
+  echo "ERROR: First argument must be PR number unless --check-only is set" >&2
+  usage
+  exit 1
+fi
 
 bail_if_github_suspended() {
   [[ -x "$GH_ACCESS_GUARD" ]] || return 0
@@ -159,6 +171,190 @@ bail_if_github_suspended() {
     exit 4
   fi
 }
+
+if [[ "$CHECK_ONLY" -eq 1 ]]; then
+  failures=0
+  python_available=0
+  gh_available=0
+  self_syntax_ok=0
+  track_findings_present=0
+  track_findings_help_ok=0
+  discussion_fetcher_present=0
+  discussion_fetcher_preflight_ok=0
+  metadata_checker_present=0
+  metadata_checker_help_ok=0
+  github_guard_executable=0
+  report_dir_ready=0
+
+  if command -v python3 >/dev/null 2>&1; then
+    python_available=1
+  else
+    [[ "$JSON" -eq 1 ]] || echo "ERROR: python3 is not available" >&2
+    failures=$((failures + 1))
+  fi
+
+  if command -v gh >/dev/null 2>&1; then
+    gh_available=1
+  else
+    [[ "$JSON" -eq 1 ]] || echo "ERROR: gh CLI is not available" >&2
+    failures=$((failures + 1))
+  fi
+
+  if bash -n "$0" >/dev/null 2>&1; then
+    self_syntax_ok=1
+  else
+    [[ "$JSON" -eq 1 ]] || echo "ERROR: run-followup-guards.sh syntax check failed" >&2
+    failures=$((failures + 1))
+  fi
+
+  if [[ -f "$TRACK_FINDINGS" ]]; then
+    track_findings_present=1
+  else
+    [[ "$JSON" -eq 1 ]] || echo "ERROR: missing helper: $TRACK_FINDINGS" >&2
+    failures=$((failures + 1))
+  fi
+
+  if [[ "$python_available" -eq 1 && "$track_findings_present" -eq 1 ]]; then
+    if python3 "$TRACK_FINDINGS" --help >/dev/null 2>&1; then
+      track_findings_help_ok=1
+    else
+      [[ "$JSON" -eq 1 ]] || echo "ERROR: track-findings.py help path failed" >&2
+      failures=$((failures + 1))
+    fi
+  fi
+
+  if [[ -x "$DISCUSSION_FETCHER" ]]; then
+    discussion_fetcher_present=1
+  else
+    [[ "$JSON" -eq 1 ]] || echo "ERROR: missing or non-executable helper: $DISCUSSION_FETCHER" >&2
+    failures=$((failures + 1))
+  fi
+
+  if [[ "$python_available" -eq 1 && "$discussion_fetcher_present" -eq 1 ]]; then
+    if python3 "$DISCUSSION_FETCHER" 1 --repo "$REPO" --check-only --json >/dev/null 2>&1; then
+      discussion_fetcher_preflight_ok=1
+    else
+      [[ "$JSON" -eq 1 ]] || echo "ERROR: fetch-pr-discussion.py check-only JSON preflight failed" >&2
+      failures=$((failures + 1))
+    fi
+  fi
+
+  if [[ -f "$METADATA_CHECKER" ]]; then
+    metadata_checker_present=1
+  else
+    [[ "$JSON" -eq 1 ]] || echo "ERROR: missing helper: $METADATA_CHECKER" >&2
+    failures=$((failures + 1))
+  fi
+
+  if [[ "$python_available" -eq 1 && "$metadata_checker_present" -eq 1 ]]; then
+    if python3 "$METADATA_CHECKER" --help >/dev/null 2>&1; then
+      metadata_checker_help_ok=1
+    else
+      [[ "$JSON" -eq 1 ]] || echo "ERROR: check-pr-metadata-drift.py help path failed" >&2
+      failures=$((failures + 1))
+    fi
+  fi
+
+  if [[ -x "$GH_ACCESS_GUARD" ]]; then
+    github_guard_executable=1
+  else
+    [[ "$JSON" -eq 1 ]] || echo "ERROR: GitHub access guard is missing or not executable: $GH_ACCESS_GUARD" >&2
+    failures=$((failures + 1))
+  fi
+
+  report_dir="$WORKSPACE_ROOT/notes/review-reports"
+  if { [[ -d "$report_dir" && -w "$report_dir" ]] || [[ ! -e "$report_dir" && -d "$(dirname -- "$report_dir")" && -w "$(dirname -- "$report_dir")" ]]; }; then
+    report_dir_ready=1
+  else
+    [[ "$JSON" -eq 1 ]] || echo "ERROR: report directory is not writable or creatable: $report_dir" >&2
+    failures=$((failures + 1))
+  fi
+
+  if [[ "$JSON" -eq 1 ]]; then
+    if [[ "$python_available" -eq 1 ]]; then
+      python3 - \
+        "$failures" \
+        "$WORKSPACE_ROOT" \
+        "$REPO" \
+        "$python_available" \
+        "$gh_available" \
+        "$self_syntax_ok" \
+        "$TRACK_FINDINGS" \
+        "$track_findings_present" \
+        "$track_findings_help_ok" \
+        "$DISCUSSION_FETCHER" \
+        "$discussion_fetcher_present" \
+        "$discussion_fetcher_preflight_ok" \
+        "$METADATA_CHECKER" \
+        "$metadata_checker_present" \
+        "$metadata_checker_help_ok" \
+        "$GH_ACCESS_GUARD" \
+        "$github_guard_executable" \
+        "$report_dir" \
+        "$report_dir_ready" <<'PY'
+import json
+import sys
+
+failures = int(sys.argv[1])
+payload = {
+    "ok": failures == 0,
+    "workspace": sys.argv[2],
+    "repo": sys.argv[3],
+    "python3Available": bool(int(sys.argv[4])),
+    "ghAvailable": bool(int(sys.argv[5])),
+    "selfSyntaxOk": bool(int(sys.argv[6])),
+    "helpers": {
+        "trackFindings": {
+            "path": sys.argv[7],
+            "present": bool(int(sys.argv[8])),
+            "helpOk": bool(int(sys.argv[9])),
+        },
+        "fetchPrDiscussion": {
+            "path": sys.argv[10],
+            "present": bool(int(sys.argv[11])),
+            "checkOnlyJsonOk": bool(int(sys.argv[12])),
+        },
+        "checkPrMetadataDrift": {
+            "path": sys.argv[13],
+            "present": bool(int(sys.argv[14])),
+            "helpOk": bool(int(sys.argv[15])),
+        },
+        "githubAccessGuard": {
+            "path": sys.argv[16],
+            "executable": bool(int(sys.argv[17])),
+        },
+    },
+    "reportDirectory": {
+        "path": sys.argv[18],
+        "ready": bool(int(sys.argv[19])),
+    },
+}
+print(json.dumps(payload, sort_keys=True))
+PY
+    else
+      printf '{"helpers":{},"ok":false,"python3Available":false,"workspace":"%s"}\n' "$WORKSPACE_ROOT"
+    fi
+
+    if [[ "$failures" -ne 0 ]]; then
+      exit 2
+    fi
+    exit 0
+  fi
+
+  if [[ "$failures" -ne 0 ]]; then
+    exit 2
+  fi
+
+  echo "PR follow-up guard preflight OK"
+  echo "Workspace: $WORKSPACE_ROOT"
+  echo "Repo: $REPO"
+  echo "Discussion fetcher: $DISCUSSION_FETCHER"
+  echo "Finding tracker: $TRACK_FINDINGS"
+  echo "Metadata checker: $METADATA_CHECKER"
+  echo "GitHub guard: $GH_ACCESS_GUARD"
+  echo "Report directory: $report_dir"
+  exit 0
+fi
 
 if [[ -z "$METADATA_REPORT" ]]; then
   METADATA_REPORT="$WORKSPACE_ROOT/notes/review-reports/pr-${PR}-metadata-drift.md"

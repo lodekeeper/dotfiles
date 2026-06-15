@@ -346,6 +346,11 @@ Use `scripts/review/track-findings.py` to track which findings get addressed in 
    ```
 2. **Follow-up rounds (mandatory when revisiting a PR with new review comments):** run the one-command guard wrapper so GitHub delta sync + metadata drift + stale-finding checks happen together.
    ```bash
+   bash ~/.openclaw/workspace/scripts/review/run-followup-guards.sh --check-only --json
+   ```
+   Run this local preflight first in autonomous wrappers when you need a machine-readable check that the helper scripts, GitHub guard, CLI, and report directory are ready without fetching GitHub data or writing artifacts.
+
+   ```bash
    bash ~/.openclaw/workspace/scripts/review/run-followup-guards.sh <PR> \
      --repo ChainSafe/lodestar
    ```

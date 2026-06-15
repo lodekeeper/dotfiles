@@ -1,10 +1,25 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-06-14 (59th pass)
+> Updated: 2026-06-15 (60th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-06-15 (self-improvement-audit-daily, 03:27 UTC)
+
+### PR review
+- **Status:** PR follow-up wrapper preflight gap found and fixed this cycle: `scripts/review/run-followup-guards.sh` had guarded live execution, but autonomous wrappers could not validate the full helper chain without supplying a real PR and risking GitHub fetch/report side effects. Gap fixed this cycle: added `--check-only --json` to validate `python3`, `gh`, shell syntax, discussion fetcher preflight, finding tracker, metadata checker, GitHub access guard, and report-directory readiness without calling GitHub or writing artifacts; wired it into `scripts/github/check-github-guard-coverage.sh`; documented the machine-readable preflight in `skills/lodestar-review/SKILL.md`.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** remote-devnet routing readiness preflight remains healthy; no new blocker discovered this cycle.
+
+---
 ## Daily Audit Snapshot — 2026-06-14 (self-improvement-audit-daily, 03:27 UTC)
 
 ### PR review
@@ -955,6 +970,15 @@
 Multi-persona review via `lodestar-review` skill. Parallel spawning, persona prompts, inline GitHub comment posting. Works well when diff scope is clear.
 
 ### Gaps
+
+#### ~~🟡 PR follow-up wrapper lacked machine-readable local preflight~~ ✅ FIXED (2026-06-15)
+~~`scripts/review/run-followup-guards.sh` had guarded live execution, but autonomous PR-review wrappers could not validate the full helper chain without supplying a real PR and risking GitHub fetch/report side effects. That left helper drift detectable only during an actual follow-up run.~~
+
+**Fix applied:** added `--check-only --json` to `scripts/review/run-followup-guards.sh`:
+- validates `python3`, `gh`, wrapper shell syntax, `fetch-pr-discussion.py --check-only --json`, `track-findings.py --help`, `check-pr-metadata-drift.py --help`, the executable GitHub access guard, and review-report directory readiness,
+- keeps the live follow-up path unchanged and rejects `--json` outside `--check-only`,
+- wired the preflight into `scripts/github/check-github-guard-coverage.sh`,
+- documented the machine-readable preflight in `skills/lodestar-review/SKILL.md`.
 
 #### ~~🟡 PR follow-up wrapper lacked suspension pre-flight~~ ✅ FIXED (2026-06-01)
 ~~The review follow-up wrapper `scripts/review/run-followup-guards.sh` invoked `track-findings.py sync-gh` and `check-pr-metadata-drift.py` without a wrapper-level GitHub access pre-flight. During account suspension, the wrapper could fail after entering step 1 or after creating report paths instead of producing one explicit skip signal before side effects.~~

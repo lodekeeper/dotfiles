@@ -61,6 +61,11 @@ require_pattern "scripts/github/check-pr-metadata-drift.py" "GITHUB_SUSPENDED_SK
 require_pattern "scripts/review/run-followup-guards.sh" "bail_if_github_suspended"
 require_pattern "scripts/review/run-followup-guards.sh" "GITHUB_SUSPENDED_SKIP"
 require_pattern "scripts/review/run-followup-guards.sh" "GITHUB_ACCESS_STATE_FILE"
+require_pattern "scripts/review/run-followup-guards.sh" "--check-only"
+if ! bash "$WORKSPACE/scripts/review/run-followup-guards.sh" --check-only --json >/dev/null; then
+  echo "FAILED check-only JSON preflight: scripts/review/run-followup-guards.sh" >&2
+  failures=$((failures + 1))
+fi
 require_executable "scripts/review/fetch-pr-discussion.py"
 require_pattern "scripts/review/fetch-pr-discussion.py" "bail_if_github_suspended"
 require_pattern "scripts/review/fetch-pr-discussion.py" "GITHUB_SUSPENDED_SKIP"
