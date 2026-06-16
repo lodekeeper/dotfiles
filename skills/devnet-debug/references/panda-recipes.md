@@ -33,6 +33,27 @@ WHERE ResourceAttributes['network']='glamsterdam-devnet-5'
 - Narrow a known incident window with explicit bounds: `Timestamp >= '2026-06-15 10:30:00' AND Timestamp < '2026-06-15 11:30:00'`.
 - Local Kurtosis enclaves instead use `EnclaveName` + `ServiceName LIKE 'cl-%'/'el-%'` (see `panda search examples --dataset otel-logs`).
 
+## Prefer `panda execute` for breadth (aggregate in-sandbox)
+
+Raw `panda clickhouse query` returns every row into context — costly and context-rotting. For anything beyond a tiny result, aggregate in the sandbox and return only a summary. The Python (run via `panda execute`):
+
+```python
+from ethpandaops import clickhouse
+df = clickhouse.query("clickhouse-raw", """
+  SELECT ResourceAttributes['host.name'] AS host,
+         substring(replaceRegexpAll(Body, '\x1b\\[[0-9;]*m', ''), 1, 80) AS sig,
+         count() AS n
+  FROM external.otel_logs
+  WHERE ResourceAttributes['network'] = 'glamsterdam-devnet-5'
+    AND ResourceAttributes['host.name'] LIKE 'prysm-%'
+    AND Timestamp >= now() - INTERVAL 1 HOUR
+    AND match(Body, '(?i)(err|fatal|warn)')
+  GROUP BY host, sig ORDER BY n DESC LIMIT 25
+""")
+print(df.to_string())   # ranked error signatures, not thousands of raw lines
+```
+Pass with `panda execute --code '<above>'` (mind shell quoting — for gnarly SQL keep the code in a heredoc, `--code "$(cat <<'PY' … PY)"`). Then drill into one signature with a small raw `LIMIT 5` query. Multi-step: cache a big pull with `df.to_parquet("/workspace/x.parquet")` in one `panda execute --session <id>` call and `pd.read_parquet(...)` it back in the next. The `ethpandaops` lib also exposes `prometheus`, `loki`, `dora`, and `specs` (`specs.get_constant("…")`), so cross-source correlation (metrics → logs → chain data) runs in one analysis.
+
 ## Xatu block / chain data (clickhouse-raw, `default.*`)
 
 - Latest head seen + event volume:

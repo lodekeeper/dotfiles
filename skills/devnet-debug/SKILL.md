@@ -21,6 +21,18 @@ Not this skill: local Kurtosis → `kurtosis-devnet`; join with a local node →
 3. **Apply the Lodestar lens** (below).
 4. **Drop to ChainSafe infra** (below) only when you need Lodestar internals panda doesn't ship.
 
+## Query discipline — prefer `panda execute`
+
+panda's whole point is the **sandbox Python runtime**, not raw SQL dumps. A `panda clickhouse query` returning thousands of rows floods context ("context rot") — the exact thing panda was built to avoid (see the ethpandaops panda post). So:
+
+- **Aggregate in the sandbox, return summaries.** `panda execute --code '...'` with the `ethpandaops` lib (`clickhouse`/`prometheus`/`loki`/`dora`/`specs`) → return `df.describe()`, group-by counts, or top-N — not raw rows.
+- **Logs:** group by error signature, return the top distinct patterns + counts, then drill into a couple of examples. Don't dump hundreds of lines.
+- **Raw `panda clickhouse query` only for tiny results** (a count, a handful of rows).
+- **Sessions** for multi-step: `panda execute --session <id>` keeps the sandbox warm; cache an expensive pull to `/workspace/*.parquet` and reuse it next call.
+- **Spec constants inline:** `from ethpandaops import specs; specs.get_constant("MAX_EFFECTIVE_BALANCE")`.
+
+Execute-based otel-logs example: `references/panda-recipes.md`.
+
 ## Lodestar lens — is it us?
 
 On an interop devnet the high-value move: when a client is stuck/forked, read **that client's own** logs — don't infer its bug from Lodestar's peer view. The runbook's `external.otel_logs` carries every client; key by network + `host.name` (`<cl>-<el>-<n>`, e.g. `prysm-nethermind-2`), split CL/EL via `log.file.name`, match severity on `Body`. Confirm current table/column names via `panda schema` / `panda search examples` before trusting any literal.
