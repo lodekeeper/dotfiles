@@ -60,3 +60,15 @@ Use when you need Lodestar internals panda doesn't carry: live fork-choice dump,
 - **ChainSafe Grafana Loki:** ChainSafe's own Lodestar devnet nodes ship **debug-level** logs to Loki (datasource 4) under `group="beacon_devnet"`, `network="dev"`, instances `devnet-ax41-0..3`. Faster than panda for Lodestar peer/disconnect/sync digs, no OIDC. Token: `eval "$(grep '^export GRAFANA' ~/.bashrc)"`. See `grafana-loki` skill.
 
 Full commands + "which POV when": `references/chainsafe-infra.md`.
+
+## Self-Maintenance
+
+If any commands, file paths, URLs, or configurations in this skill are outdated or no longer work, update this SKILL.md with the correct information after completing your current task. Skills should stay accurate and self-healing — fix what you find broken.
+
+## Iteration Log
+
+Track what works and what doesn't after each use:
+
+| Date | Network / issue | What worked | What to improve |
+|------|-----------------|-------------|-----------------|
+| 2026-06-16 | glamsterdam-devnet-5 — Prysm "every node a fork" | Cross-client `otel-logs` surfaced Prysm's own `Execution payload envelope … not found in forkchoice` lines — named the mechanism, not just "looks like Prysm". `config/api/v1/nodes/inventory` + the `bn-` gateway gave topology/versions/live beacon API without SSH. | First pass dumped raw log rows into context (costly) → switched to `panda execute` aggregation. Confirm live table/datasource names via `panda schema` / `search examples` before querying — don't trust the literals here. |
