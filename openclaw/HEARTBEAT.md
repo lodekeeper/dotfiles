@@ -66,6 +66,7 @@ Before sending anything to Nico DM from a heartbeat flow, all of these must be c
 - Open PR CI watch: cron `monitor-open-pr-ci` (every 30 min)
 - Unstable CI autofix: cron `ci-autofix-unstable`
 - Dotfiles sync: cron `Sync dotfiles repo` (every 6h)
+- Devnet health monitor: cron `Devnet health monitor` (every 2h) — net-health on active Lodestar devnets; opens a thread in #lodestar-developer per new issue; deduped via `memory/devnet-health/state.json`
 - Weekly autonomy audit: cron `self-improvement-audit-weekly`
 - Identity-file review: cron `review-identity-files` (every 3 days)
 - Periodic cleanup: cron `workspace-periodic-cleanup` (every 6h)
