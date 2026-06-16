@@ -21,6 +21,16 @@ Not this skill: local Kurtosis → `kurtosis-devnet`; join with a local node →
 3. **Apply the Lodestar lens** (below).
 4. **Drop to ChainSafe infra** (below) only when you need Lodestar internals panda doesn't ship.
 
+## Network metadata & explorers
+
+Every hosted devnet has a landing page `https://<network>.ethpandaops.io/` linking all services + machine-readable config — scope a network from there.
+
+- **`config.<network>.ethpandaops.io`:** `/api/v1/nodes/inventory` (authoritative node→client map — client, image tag, ENR, peer_id, `bn-` beacon URI per node), `/api/v1/nodes/validator-ranges` (validator index → node), `/cl/config.yaml` (fork schedule, e.g. `GLOAS_FORK_EPOCH`; far-future `18446744073709551615` = not scheduled), `/cl/genesis.ssz`, `/el/genesis.json`. Client versions also in repo `ethpandaops/<network>s` (`…/images.yaml`).
+- **Services:** `rpc.` (EL RPC), `beacon.` (public CL REST), `dora.`, `forkmon.`, `syncoor.`, `assertoor.`, `checkpoint-sync.`, `faucet.`.
+- **Dora — prefer the panda module:** `from ethpandaops import dora` → `dora.get_network_overview(net)` (epoch/slot/finality/participation/validator counts), `get_epoch`/`get_slot`/`get_validator(s)`, `link_*`. Quick raw curl (no auth): `/api/v1/epoch/latest` (finality + participation), `/api/v1/slot/<n>`, `/api/v1/slots`, `/api/v1/validators`, `/api/v1/validator/<idx>` (JSON); `/forks` is the HTML fork view (one row per fork = a split).
+
+Full endpoint catalog + examples: `references/network-metadata.md`.
+
 ## Query discipline — prefer `panda execute`
 
 panda's whole point is the **sandbox Python runtime**, not raw SQL dumps. A `panda clickhouse query` returning thousands of rows floods context ("context rot") — the exact thing panda was built to avoid (see the ethpandaops panda post). So:
