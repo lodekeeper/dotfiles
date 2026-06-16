@@ -1,10 +1,25 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-06-15 (60th pass)
+> Updated: 2026-06-16 (61st pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-06-16 (self-improvement-audit-daily, 03:16 UTC)
+
+### PR review
+- **Status:** no new PR-review blocker discovered this cycle; existing review guardrails remain healthy.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** spec-vector readiness preflight machine-readability gap found and fixed this cycle: `scripts/spec/check-test-vector-readiness.sh` only emitted prose and could pick generated cache/report files as its sample, so autonomous wrappers had to parse human output and could receive a misleading readiness signal. Gap fixed this cycle: added `--json` with structured readiness/staleness fields, filtered generated cache/report files from sample discovery, made the script executable, and verified human/JSON success plus stale failure paths.
+
+### Devnet debugging
+- **Status:** remote-devnet routing readiness preflight remains healthy; no new blocker discovered this cycle.
+
+---
 ## Daily Audit Snapshot — 2026-06-15 (self-improvement-audit-daily, 03:27 UTC)
 
 ### PR review
@@ -1085,6 +1100,15 @@ Use `dev-workflow` skill for multi-agent development. Codex/Claude CLI for imple
 
 ### Gaps
 
+#### ~~🟡 Spec vector readiness preflight lacked machine-readable output~~ ✅ FIXED (2026-06-16)
+~~`scripts/spec/check-test-vector-readiness.sh` verified the local `~/consensus-specs/tests/` tree, but only emitted prose and could select generated cache/report files as its sample path. Autonomous spec-work wrappers needed brittle text parsing to distinguish ready/stale/missing-vector states, and the sample path could make a cache-only or report-only tree look healthier than it was.~~
+
+**Fix applied:** added `--json` to `scripts/spec/check-test-vector-readiness.sh` and made the script executable.
+- emits structured `ok`, `status`, `stale`, `testsAgeDays`, `maxAgeDays`, `sampleFile`, repo/head metadata, and failure statuses for missing repo/tests/vector data,
+- preserves existing human-readable output and exit codes,
+- filters `__pycache__`, `.pyc`, and `test-reports` files from sample discovery,
+- verified JSON success, JSON stale failure (`--max-age-days 0 --require-fresh`), human output, shell syntax, and missing-repo JSON failure.
+
 #### ~~🟡 Spec compliance preflight lacked machine-readable output~~ ✅ FIXED (2026-06-14)
 ~~`scripts/spec/prepr-compliance-gate.sh --check-only` could validate local prerequisites, but only emitted prose. Autonomous wrappers needed brittle text parsing to distinguish a clean pass from missing compliance tooling. Proposed fix: add a JSON output path for check-only preflight and document it in the dev workflow.~~
 
@@ -1164,6 +1188,15 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Spec vector readiness now has JSON output (2026-06-16)
+Added `--json` to `scripts/spec/check-test-vector-readiness.sh` and made the script executable.
+- reports structured ready/stale/missing states with repo/head metadata and `testsAgeDays`,
+- keeps existing human-readable output and exit codes unchanged,
+- excludes generated cache/report files from sample discovery so readiness evidence points at source test content,
+- verified success, stale-failure, missing-repo, syntax, and human-output paths.
+
+**Rationale:** autonomous spec implementation needs a stable machine-readable vector-readiness preflight before spawning implementation/review workers or deciding whether a stale consensus-specs checkout must be refreshed.
 
 ### ✅ Spec compliance preflight now has JSON output (2026-06-14)
 Added `--check-only --json` to `scripts/spec/prepr-compliance-gate.sh` and wired the command into `skills/dev-workflow/SKILL.md`.
