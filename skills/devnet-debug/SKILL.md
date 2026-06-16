@@ -21,12 +21,28 @@ Not this skill: local Kurtosis → `kurtosis-devnet`; join with a local node →
 3. **Apply the Lodestar lens** (below).
 4. **Drop to ChainSafe infra** (below) only when you need Lodestar internals panda doesn't ship.
 
+## Triage — symptom → first look
+
+Quick public snapshot (no auth/panda): `skills/devnet-debug/scripts/net-health.sh <network>` → finality, active forks, node→client topology. Then:
+
+| Symptom | First look |
+|---------|-----------|
+| Not finalizing / low participation | `dora.get_network_overview` (or `/api/v1/epoch/latest`: `finalized`, participation) → per-client error signatures in `otel-logs` |
+| A client stuck / on its own fork | Dora `/forks` (who diverged) → that client's **own** `otel-logs` → its live beacon API via the `bn-` gateway |
+| ePBS / Gloas (glamsterdam) | payload-envelope / PTC / builder errors in the stuck client's logs (e.g. `payload envelope … not found in forkchoice`); confirm `GLOAS_FORK_EPOCH` (`cl/config.yaml`) is actually active |
+| PeerDAS data columns missing | data-column-sidecar tables (discover via `panda schema` / `search`) + custody/sampling errors in CL logs |
+| Peers dropping / low count | Lodestar `lodestar_peers_by_client_count` (`:5054` / Prometheus); peer/disconnect lines in `otel-logs`; pin the offending client |
+| Lodestar block production failing | SSH `:5052` `/eth/v1/debug/fork_choice`; ChainSafe Loki debug logs; `scripts/debug/devnet-triage.sh <node>` |
+| Did the network pass its tests? | Assertoor `/api/v1/test_runs` (failed runs) |
+
+Always read the **failing client's own** logs — don't infer its bug from Lodestar's side. Once root-caused, hand the mechanism + the exact log lines to that client's team (don't just say "looks like X").
+
 ## Network metadata & explorers
 
 Every hosted devnet has a landing page `https://<network>.ethpandaops.io/` linking all services + machine-readable config — scope a network from there.
 
 - **`config.<network>.ethpandaops.io`:** `/api/v1/nodes/inventory` (authoritative node→client map — client, image tag, ENR, peer_id, `bn-` beacon URI per node), `/api/v1/nodes/validator-ranges` (validator index → node), `/cl/config.yaml` (fork schedule, e.g. `GLOAS_FORK_EPOCH`; far-future `18446744073709551615` = not scheduled), `/cl/genesis.ssz`, `/el/genesis.json`. Client versions also in repo `ethpandaops/<network>s` (`…/images.yaml`).
-- **Services:** `rpc.` (EL RPC), `beacon.` (public CL REST), `dora.`, `forkmon.`, `syncoor.`, `assertoor.`, `checkpoint-sync.`, `faucet.`.
+- **Services:** `rpc.` (EL RPC), `beacon.` (public CL REST), `dora.`, `forkmon.`, `syncoor.` (sync tests), `assertoor.` (network test runner — `/api/v1/test_runs` & `/api/v1/tests` JSON for pass/fail), `checkpoint-sync.`, `faucet.`.
 - **Dora — prefer the panda module:** `from ethpandaops import dora` → `dora.get_network_overview(net)` (epoch/slot/finality/participation/validator counts), `get_epoch`/`get_slot`/`get_validator(s)`, `link_*`. Quick raw curl (no auth): `/api/v1/epoch/latest` (finality + participation), `/api/v1/slot/<n>`, `/api/v1/slots`, `/api/v1/validators`, `/api/v1/validator/<idx>` (JSON); `/forks` is the HTML fork view (one row per fork = a split).
 
 Full endpoint catalog + examples: `references/network-metadata.md`.
@@ -58,6 +74,7 @@ Use when you need Lodestar internals panda doesn't carry: live fork-choice dump,
 - **SSH (Lodestar nodes only):** `ssh devops@lodestar-<el>-<n>.srv.<network>.ethpandaops.io` (key `~/.ssh/id_ed25519` = the lodekeeper.keys entry). Beacon REST `localhost:5052`, metrics `localhost:5054/metrics`. Other-client nodes reject the key — read theirs via panda otel-logs (logs) or the `bn-` gateway below (live beacon API). Peer-by-client: `lodestar_peers_by_client_count{client="Prysm"}`.
 - **Any-client beacon API (`bn-` gateway):** reaches **every** client's beacon API (Prysm/LH/Teku/Nimbus/Grandine/Lodestar), unlike the SSH key. `AUTH=$(awk -F': ' '/^<network>:/{print $2}' ~/.config/ethpandaops/bn-basic-auth)` then `curl "https://$AUTH@bn-<cl>-<el>-<n>.srv.<network>.ethpandaops.io/<beacon-path>"` — HTTP basic auth (user `eth`). Use for live head/finality/peers/version/syncing of a stuck *non-Lodestar* node, and Lodestar debug routes (`/eth/v1/lodestar/...`) on ours. Password is per-devnet and **not in this repo** — stored `0600` at `~/.config/ethpandaops/bn-basic-auth`; get fresh per-devnet creds from Nico / the devnet config. (Bare `<node>.<network>` without `bn-` 404s.)
 - **ChainSafe Grafana Loki:** ChainSafe's own Lodestar devnet nodes ship **debug-level** logs to Loki (datasource 4) under `group="beacon_devnet"`, `network="dev"`, instances `devnet-ax41-0..3`. Faster than panda for Lodestar peer/disconnect/sync digs, no OIDC. Token: `eval "$(grep '^export GRAFANA' ~/.bashrc)"`. See `grafana-loki` skill.
+- **One-shot per-node snapshot:** `scripts/debug/devnet-triage.sh <node>` pulls that node's recent error logs (Loki) + key metrics (Prometheus) into a markdown report (needs `GRAFANA_TOKEN`).
 
 Full commands + "which POV when": `references/chainsafe-infra.md`.
 

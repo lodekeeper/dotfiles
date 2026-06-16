@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+# Quick public-endpoint health snapshot for a hosted ethpandaops devnet.
+# No auth, no panda — just curl+jq against the devnet's public Dora/config endpoints.
+# Use as the "first 60 seconds": finality, active forks, topology. Then go deeper with panda.
+set -euo pipefail
+N="${1:?usage: net-health.sh <network>   e.g. glamsterdam-devnet-5}"
+DORA="https://dora.$N.ethpandaops.io"
+CFG="https://config.$N.ethpandaops.io"
+
+echo "# $N — health snapshot ($(date -u +%Y-%m-%dT%H:%MZ))"
+
+echo; echo "## finality / participation (dora /api/v1/epoch/latest)"
+curl -fsS --max-time 15 "$DORA/api/v1/epoch/latest" \
+  | jq '(.data // .) | {epoch, finalized, participation_pct: .globalparticipationrate, validators: .validatorscount, proposed: .proposedblocks, missed: .missedblocks, orphaned: .orphanedblocks}' \
+  || echo "  (dora epoch endpoint unreachable)"
+
+echo; echo "## scheduled forks (epoch != far-future)"
+curl -fsS --max-time 15 "$CFG/cl/config.yaml" 2>/dev/null \
+  | grep -E "_FORK_EPOCH" | grep -v "18446744073709551615" \
+  || echo "  (cl/config.yaml unreachable)"
+
+echo; echo "## topology — node -> CL/EL client (+ CL image tag)"
+curl -fsS --max-time 15 "$CFG/api/v1/nodes/inventory" 2>/dev/null \
+  | jq -r '.ethereum_pairs | to_entries[] | "  \(.key): \(.value.consensus.client)/\(.value.execution.client)   \(.value.consensus.image)"' \
+  || echo "  (nodes/inventory unreachable)"
+
+echo; echo "## drill-down links"
+echo "  forks:     $DORA/forks"
+echo "  assertoor: https://assertoor.$N.ethpandaops.io  (tests: /api/v1/test_runs)"
+echo "  syncoor:   https://syncoor.$N.ethpandaops.io"
