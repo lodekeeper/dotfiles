@@ -1,0 +1,39 @@
+---
+name: devnet-debug
+description: "Debug hosted/remote Ethereum devnets (ethpandaops networks like glamsterdam-devnet-N) with a Lodestar lens. Builds on the panda `query` + `investigate` skills and the 'debug devnet' runbook for the data/procedure; adds the cross-client 'read the failing client's own logs' method and a ChainSafe infra POV (SSH to Lodestar nodes, ChainSafe Grafana Loki). Hosted devnets, not local Kurtosis."
+---
+
+# Devnet debugging (hosted / remote) — Lodestar lens
+
+This skill **layers on panda's own debugging skills** — it does not replace them. For the data and the procedure, use panda:
+
+- **`query` skill** — the panda data/query API. Discover datasources, tables, and worked queries *live* (`panda getting-started`, `panda schema`, `panda search examples "<topic>"`). **Don't hardcode datasource/table names** — they're owned by the proxy and change.
+- **`investigate` skill** — routes local-vs-remote and loads the canonical runbook. For a hosted devnet, run `panda search runbooks "debug devnet"` and follow it: it owns the flow (Dora shape, `external.otel_logs`, ethnode RPC, debug-report output).
+
+devnet-debug adds only what panda has no knowledge of: the **Lodestar interpretation**, the cross-client correlation **method**, and a **ChainSafe infra secondary POV**.
+
+Not this skill: local Kurtosis → `kurtosis-devnet`; join with a local node → `join-devnet`; mainnet networking repro → `local-mainnet-debug`; Lodestar RC metrics → `release-metrics`; heap leaks → `lodestar-heapsnapshots`; bulk log triage → `log-reader`.
+
+## Flow
+
+1. **Preflight panda.** `skills/devnet-debug/scripts/ensure-panda-auth.sh` (re-auths if the 1h token lapsed → `scripts/panda/panda-reauth`). Then panda's own readiness check: `scripts/debug/check-devnet-routing-readiness.py <network>` (exit 2 = datasources not ready — fix auth first; `panda datasources --json` returning `{"datasources": null}` means *not ready*, not "network absent").
+2. **Run the panda procedure.** `panda search runbooks "debug devnet"` → follow it. Use the `query` skill / `panda search examples` for query patterns; discover names live.
+3. **Apply the Lodestar lens** (below).
+4. **Drop to ChainSafe infra** (below) only when you need Lodestar internals panda doesn't ship.
+
+## Lodestar lens — is it us?
+
+On an interop devnet the high-value move: when a client is stuck/forked, read **that client's own** logs — don't infer its bug from Lodestar's peer view. The runbook's `external.otel_logs` carries every client; key by network + `host.name` (`<cl>-<el>-<n>`, e.g. `prysm-nethermind-2`), split CL/EL via `log.file.name`, match severity on `Body`. Confirm current table/column names via `panda schema` / `panda search examples` before trusting any literal.
+
+When Lodestar **is** implicated, cross-check head/finality/peers, then go to the secondary POV for internals.
+
+Worked example (Prysm "every node a fork" on glam-devnet-5 → `Execution payload envelope … not found in forkchoice`) and the exact otel-logs query pattern: `references/panda-recipes.md`.
+
+## Secondary POV — ChainSafe infra (panda has none of this)
+
+Use when you need Lodestar internals panda doesn't carry: live fork-choice dump, debug-level logs, heap/CPU profiles, exact peer-by-client counts.
+
+- **SSH (Lodestar nodes only):** `ssh devops@lodestar-<el>-<n>.srv.<network>.ethpandaops.io` (key `~/.ssh/id_ed25519` = the lodekeeper.keys entry). Beacon REST `localhost:5052`, metrics `localhost:5054/metrics`. Other-client nodes reject the key — read theirs via panda otel-logs. Peer-by-client: `lodestar_peers_by_client_count{client="Prysm"}`.
+- **ChainSafe Grafana Loki:** ChainSafe's own Lodestar devnet nodes ship **debug-level** logs to Loki (datasource 4) under `group="beacon_devnet"`, `network="dev"`, instances `devnet-ax41-0..3`. Faster than panda for Lodestar peer/disconnect/sync digs, no OIDC. Token: `eval "$(grep '^export GRAFANA' ~/.bashrc)"`. See `grafana-loki` skill.
+
+Full commands + "which POV when": `references/chainsafe-infra.md`.

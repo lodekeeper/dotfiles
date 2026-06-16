@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# Unattended panda re-auth via Camoufox + transplanted GitHub session cookies.
+# Re-mints the 1h panda-proxy access token without human interaction by driving
+# the authentik device flow (GitHub federated login) in a headless browser.
+#
+# Usage:
+#   scripts/panda/panda-reauth            # run full re-auth
+#   scripts/panda/panda-reauth --recon    # capture device-page DOM/screenshots only
+#
+# Cookies: ~/.config/panda/github-cookies.json (durable github.com session,
+# valid until 2026-06-30). When that lapses, Nico must re-export the jar.
+set -euo pipefail
+source "$HOME/camoufox-env/bin/activate"
+exec python3 "$HOME/.openclaw/workspace/scripts/panda/panda-reauth.py" "$@"

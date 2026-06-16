@@ -1,0 +1,70 @@
+#!/usr/bin/env bash
+# Pre-flight guard for panda auth.
+#
+# Ensures a valid panda-proxy access token before panda is used. If the current
+# token is expired or within THRESHOLD seconds of expiring, it re-mints one via
+# scripts/panda/panda-reauth (headless Camoufox + stored GitHub cookies). If the
+# token is still fresh this is a fast no-op (~one `panda auth status` call).
+#
+# Usage:
+#   scripts/panda/panda-ensure-auth                 # ensure auth (re-auth if <10m left)
+#   THRESHOLD=300 scripts/panda/panda-ensure-auth   # custom freshness window (seconds)
+#   scripts/panda/panda-ensure-auth panda networks  # ensure, then exec the given command
+#
+# Exit 0 = token valid (was fresh, or re-auth succeeded).
+# Exit 1 = token invalid and re-auth failed (cookie jar likely lapsed 2026-06-30;
+#          Nico must re-export ~/.config/panda/github-cookies.json).
+set -euo pipefail
+
+THRESHOLD="${THRESHOLD:-600}"          # re-auth when fewer than this many seconds remain
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+LOG="$HOME/.config/panda/reauth.log"
+LOCK="$HOME/.config/panda/.reauth.lock"
+
+log() { echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] panda-ensure-auth: $*" | tee -a "$LOG" >&2; }
+
+# Echo seconds-until-expiry to stdout; empty output if not authenticated / unparseable.
+remaining_secs() {
+  local out exp exp_epoch now
+  out="$(panda auth status 2>/dev/null)" || return 0
+  grep -qi 'Authenticated' <<<"$out" || return 0
+  exp="$(grep -i 'Expires at:' <<<"$out" | awk '{print $NF}')" || return 0
+  [ -n "$exp" ] || return 0
+  exp_epoch="$(date -d "$exp" +%s 2>/dev/null)" || return 0
+  now="$(date +%s)"
+  echo $(( exp_epoch - now ))
+}
+
+fresh() {  # fresh "<remaining>" -> true if a known value above the threshold
+  local rem="$1"
+  [ -n "$rem" ] && [ "$rem" -gt "$THRESHOLD" ]
+}
+
+ensure() {
+  local rem rc=0
+  rem="$(remaining_secs)"
+  if fresh "$rem"; then return 0; fi
+
+  # Serialize: Camoufox is heavy, never run two re-auths at once.
+  exec 9>"$LOCK"
+  flock 9
+  # Re-check under the lock — a concurrent caller may have just refreshed.
+  rem="$(remaining_secs)"
+  if fresh "$rem"; then exec 9>&-; return 0; fi
+
+  log "token ${rem:-expired/absent}s left (< ${THRESHOLD}s) — re-authing"
+  if "$DIR/panda-reauth" >>"$LOG" 2>&1; then
+    rem="$(remaining_secs)"
+    log "re-auth OK — ${rem:-unknown}s left"
+  else
+    log "re-auth FAILED — cookie jar may have lapsed; see $LOG"
+    rc=1
+  fi
+  exec 9>&-
+  return $rc
+}
+
+ensure
+if [ "$#" -gt 0 ]; then
+  exec "$@"
+fi
