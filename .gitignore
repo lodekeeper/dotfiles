@@ -24,3 +24,8 @@ kurtosis/tmp-*/
 
 # 3) Runtime state DBs (example: web-search cache/rate-limit state)
 skills/web-search/state/*.db
+
+# 4) Never commit on-disk credentials (they live outside the repo; defense-in-depth if one ever lands inside)
+*bn-basic-auth*
+*-cookies.json
+*.cred
