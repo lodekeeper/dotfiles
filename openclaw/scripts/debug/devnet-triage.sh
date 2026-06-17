@@ -15,6 +15,8 @@ Options:
   --selector <expr>    PromQL label selector (default: instance=~".*<node>.*")
   --loki-query <expr>  Override LogQL query for error snapshot
   --output <path>      Write markdown report to file
+  --check-only         Validate local prerequisites without querying Grafana or writing a report
+  --require-grafana    In --check-only mode, fail if Grafana token/tooling is unavailable
   -h, --help           Show help
 
 Env:
@@ -42,6 +44,8 @@ OUTPUT=""
 PORTS=(9000 9596 5052)
 SELECTOR=""
 USER_LOKI_QUERY=""
+CHECK_ONLY=0
+REQUIRE_GRAFANA=0
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -68,6 +72,14 @@ while [[ $# -gt 0 ]]; do
     --output)
       OUTPUT="${2:-}"
       shift 2
+      ;;
+    --check-only)
+      CHECK_ONLY=1
+      shift
+      ;;
+    --require-grafana)
+      REQUIRE_GRAFANA=1
+      shift
       ;;
     -h|--help)
       usage
@@ -146,13 +158,57 @@ END_NS="${NOW_S}000000000"
 
 have_jq=true
 have_lsof=true
+have_curl=true
 command -v jq >/dev/null 2>&1 || have_jq=false
 command -v lsof >/dev/null 2>&1 || have_lsof=false
+command -v curl >/dev/null 2>&1 || have_curl=false
+
+if [[ "$CHECK_ONLY" -eq 1 ]]; then
+  missing_required=()
+
+  for tool in pgrep ps sed head wc date; do
+    if ! command -v "$tool" >/dev/null 2>&1; then
+      missing_required+=("$tool")
+    fi
+  done
+
+  if [[ "${#missing_required[@]}" -gt 0 ]]; then
+    printf 'ERROR: missing required tool(s): %s\n' "${missing_required[*]}" >&2
+    exit 1
+  fi
+
+  if [[ "$REQUIRE_GRAFANA" -eq 1 ]]; then
+    grafana_missing=()
+    [[ -n "${GRAFANA_TOKEN:-}" ]] || grafana_missing+=("GRAFANA_TOKEN")
+    [[ "$have_curl" == true ]] || grafana_missing+=("curl")
+    [[ "$have_jq" == true ]] || grafana_missing+=("jq")
+
+    if [[ "${#grafana_missing[@]}" -gt 0 ]]; then
+      printf 'ERROR: missing Grafana prerequisite(s): %s\n' "${grafana_missing[*]}" >&2
+      exit 2
+    fi
+  fi
+
+  echo "Devnet triage preflight OK"
+  echo "Node: $NODE_NAME"
+  echo "Window: $WINDOW"
+  echo "Selector: $SELECTOR"
+  if [[ "$have_lsof" != true ]]; then
+    echo "Optional: lsof unavailable; port listener section will be skipped"
+  fi
+  if [[ "$have_jq" != true || "$have_curl" != true || -z "${GRAFANA_TOKEN:-}" ]]; then
+    echo "Grafana: unavailable unless run with token plus curl+jq"
+  else
+    echo "Grafana: prerequisites available"
+  fi
+  exit 0
+fi
 
 prom_query_first_value() {
   local query="$1"
   [[ -n "${GRAFANA_TOKEN:-}" ]] || return 1
   [[ "$have_jq" == true ]] || return 1
+  [[ "$have_curl" == true ]] || return 1
 
   local resp
   if ! resp="$(curl -fsS -G \
@@ -182,6 +238,7 @@ loki_query_lines() {
   local limit="$2"
   [[ -n "${GRAFANA_TOKEN:-}" ]] || return 1
   [[ "$have_jq" == true ]] || return 1
+  [[ "$have_curl" == true ]] || return 1
 
   local resp
   if ! resp="$(curl -fsS -G \

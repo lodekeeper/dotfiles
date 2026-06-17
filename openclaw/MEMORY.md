@@ -35,7 +35,7 @@
 - **gpt-advisor:** GPT-5.3-Codex, thinking: xhigh — architecture & deep reasoning
 - **Codex CLI:** GPT-5.3-Codex — implementation in worktrees (focused tasks, structured code)
 - **Claude CLI:** Claude — implementation in worktrees (broader reasoning, refactoring, debugging)
-- **Me (main):** GPT-5.3 Codex (default) with Claude Opus fallback — **orchestrator**: coordination, delegation, quality control, communication
+- **Me (main):** Claude Opus `claude-cli/claude-opus-4-8` (as of 2026-06-15; model strategy has flip-flopped GPT-5.3 Codex ↔ Claude Opus — verify live via `session_status`/config before relying) — **orchestrator**: coordination, delegation, quality control, communication
 - **Context file:** `CODING_CONTEXT.md` — always provide to coding agents for project conventions
 
 ## Channels

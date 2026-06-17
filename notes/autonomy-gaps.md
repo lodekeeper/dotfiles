@@ -1,10 +1,25 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-06-16 (61st pass)
+> Updated: 2026-06-17 (62nd pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-06-17 (self-improvement-audit-daily, 03:16 UTC)
+
+### PR review
+- **Status:** no new PR-review blocker discovered this cycle; existing review guardrails remain healthy.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage telemetry preflight gap found and fixed this cycle: `scripts/debug/devnet-triage.sh` could intentionally degrade when `GRAFANA_TOKEN`, `curl`, or `jq` were missing, but there was no cheap dry-run for autonomous devnet-debugging wrappers to prove whether Loki/Prometheus telemetry would be present before starting a longer investigation. Gap fixed this cycle: added `--check-only` plus `--require-grafana`, made the live query helpers fail closed when `curl` is absent, documented the preflight in `skills/devnet-debug/SKILL.md`, and verified syntax, optional dry-run success, required-Grafana failure, and existing GitHub guard coverage.
+
+---
 ## Daily Audit Snapshot — 2026-06-16 (self-improvement-audit-daily, 03:16 UTC)
 
 ### PR review
@@ -1152,6 +1167,15 @@ Before this was implemented, spec-function ports could ship without a structured
 
 ### Gaps
 
+#### ~~🟡 Devnet triage had no telemetry preflight~~ ✅ FIXED (2026-06-17)
+~~`scripts/debug/devnet-triage.sh` could skip Loki/Prometheus sections when Grafana prerequisites were missing, but autonomous devnet-debugging wrappers had no no-side-effect way to validate that state before a longer investigation. That made it easy to discover missing telemetry only after starting data collection.~~
+
+**Fix applied:** added `--check-only` and `--require-grafana` to `scripts/debug/devnet-triage.sh`, and documented the preflight in `skills/devnet-debug/SKILL.md`:
+- validates local required tools without querying Grafana or writing a report,
+- treats `--require-grafana` as a hard preflight for `GRAFANA_TOKEN`, `curl`, and `jq`,
+- reports optional `lsof` / Grafana availability in the dry-run output,
+- guards live Loki/Prometheus helpers against missing `curl`.
+
 #### ~~🟡 Remote devnet routing treated panda datasource null as network absence~~ ✅ FIXED (2026-06-07)
 ~~The `investigate` skill routed remote deployments by asking agents to run `panda datasources --json`, but panda can exit successfully with `{"datasources": null}` when auth/server datasource access is not ready. That lets an auth/tooling blocker masquerade as "target network not found" and can waste a debugging session before any useful data collection starts.~~
 
@@ -1188,6 +1212,15 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Devnet triage now has a no-side-effect telemetry preflight (2026-06-17)
+Added `--check-only` and `--require-grafana` to `scripts/debug/devnet-triage.sh`, and wired the command into `skills/devnet-debug/SKILL.md`.
+- validates required local tools without querying Grafana or writing a report,
+- lets agents fail fast when Loki/Prometheus telemetry is required but `GRAFANA_TOKEN`, `curl`, or `jq` are missing,
+- keeps partial, best-effort live triage behavior unchanged when telemetry is optional,
+- verified `bash -n`, optional preflight success, required-Grafana missing-token failure, and existing GitHub guard coverage.
+
+**Rationale:** autonomous devnet debugging should know before data collection whether it is about to produce a telemetry-backed report or a local-only partial report.
 
 ### ✅ Spec vector readiness now has JSON output (2026-06-16)
 Added `--json` to `scripts/spec/check-test-vector-readiness.sh` and made the script executable.
