@@ -1,0 +1,90 @@
+#!/usr/bin/env bash
+# panda-token-refresh — refresh panda's OIDC access token using the stored refresh token.
+#
+# Why this exists (proven 2026-06-18): authentik's panda-proxy provider DOES honor
+# refresh_token grants for the public client `panda-proxy` (no client secret). panda-server's
+# OWN background refresher is broken — it gets `invalid_grant` every 60s — but a direct
+# refresh works. So we refresh out-of-band here and write the rotated tokens back into the
+# creds file in-place. panda-server reads the access token from that file for queries, so no
+# restart is needed.
+#
+# Notes:
+#  - authentik ROTATES the refresh token on every use; this script persists the new one.
+#  - The authentik token endpoint sits behind Cloudflare, which bot-blocks non-browser
+#    clients (error 1010) — hence the Firefox User-Agent on curl.
+#  - Single-flight via flock so a cron run never races itself.
+#  - By default only refreshes when < MIN_REMAINING seconds are left, so it's safe to run
+#    often and is cheap when the token is still fresh. MIN_REMAINING=0 forces a refresh.
+#
+# Exit codes: 0 ok/skip, 3 no refresh token (needs device login), 4/5 refresh failed.
+set -euo pipefail
+
+CREDS_DIR="${PANDA_CREDS_DIR:-/home/openclaw/.config/panda/credentials}"
+CREDS="${PANDA_CREDS:-$(ls -t "$CREDS_DIR"/*.json 2>/dev/null | head -1)}"
+TOKEN_URL="${PANDA_TOKEN_URL:-https://authentik.analytics.production.platform.ethpandaops.io/application/o/token/}"
+CLIENT_ID="${PANDA_CLIENT_ID:-panda-proxy}"
+UA="Mozilla/5.0 (X11; Linux x86_64; rv:128.0) Gecko/20100101 Firefox/128.0"
+MIN_REMAINING="${MIN_REMAINING:-1500}"   # refresh only if fewer than this many seconds remain
+LOG="${PANDA_REFRESH_LOG:-/home/openclaw/.config/panda/token-refresh.log}"
+LOCK="/tmp/panda-token-refresh.lock"
+
+log(){ printf '%s %s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$*" | tee -a "$LOG" >&2; }
+
+[ -n "$CREDS" ] && [ -f "$CREDS" ] || { log "ERROR: no creds file found in $CREDS_DIR"; exit 2; }
+
+exec 9>"$LOCK"
+flock -n 9 || { log "another refresh holds the lock; skipping"; exit 0; }
+
+python3 - "$CREDS" "$TOKEN_URL" "$CLIENT_ID" "$UA" "$MIN_REMAINING" "$LOG" <<'PY'
+import json, sys, subprocess, datetime, tempfile, os
+creds, token_url, client_id, ua, min_remaining, logp = sys.argv[1:7]
+min_remaining = int(min_remaining)
+def log(m):
+    line = f"{datetime.datetime.now(datetime.timezone.utc):%Y-%m-%dT%H:%M:%SZ} {m}"
+    sys.stderr.write(line + "\n")
+    with open(logp, "a") as f: f.write(line + "\n")
+
+d = json.load(open(creds))
+try:
+    exp = datetime.datetime.fromisoformat(d["expires_at"].replace("Z", "+00:00"))
+    remaining = int((exp - datetime.datetime.now(datetime.timezone.utc)).total_seconds())
+except Exception:
+    remaining = -1
+if min_remaining > 0 and remaining > min_remaining:
+    log(f"token has {remaining}s left (> {min_remaining}); no refresh needed"); print("SKIP"); sys.exit(0)
+
+rt = d.get("refresh_token")
+if not rt:
+    log("no refresh_token in creds; cannot refresh — needs a device login"); print("NO_RT"); sys.exit(3)
+
+resp = tempfile.mktemp()
+code = subprocess.run(
+    ["curl", "-sS", "-o", resp, "-w", "%{http_code}", "-X", "POST", token_url,
+     "-A", ua, "-H", "Accept: application/json",
+     "--data-urlencode", "grant_type=refresh_token",
+     "--data-urlencode", f"client_id={client_id}",
+     "--data-urlencode", f"refresh_token={rt}"],
+    capture_output=True, text=True, timeout=45).stdout.strip()
+body = open(resp).read(); os.unlink(resp)
+try:
+    j = json.loads(body)
+except Exception:
+    log(f"HTTP {code} non-JSON response: {body[:200]!r}"); print("FAIL"); sys.exit(4)
+if code != "200" or not j.get("access_token"):
+    log(f"HTTP {code} refresh failed: {j.get('error')} / {j.get('error_description')}"); print("FAIL"); sys.exit(5)
+
+now = datetime.datetime.now(datetime.timezone.utc)
+ts = lambda t: t.strftime("%Y-%m-%dT%H:%M:%S.%f000Z")
+d["access_token"] = j["access_token"]
+d["token_type"] = j.get("token_type", "Bearer")
+if j.get("expires_in"):
+    d["expires_in"] = int(j["expires_in"])
+    d["expires_at"] = ts(now + datetime.timedelta(seconds=int(j["expires_in"])))
+rotated = bool(j.get("refresh_token")) and j["refresh_token"] != rt
+if j.get("refresh_token"):
+    d["refresh_token"] = j["refresh_token"]; d["refresh_token_issued_at"] = ts(now)
+with open(creds, "w") as f:   # in-place write keeps inode → preserves owner/group/perms
+    json.dump(d, f)
+log(f"refreshed OK; expires_in={j.get('expires_in')} rotated_refresh={rotated} (had {remaining}s left)")
+print("OK")
+PY
