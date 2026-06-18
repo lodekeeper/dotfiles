@@ -148,14 +148,35 @@ def normalize_checklist(checklist: Dict[str, Any]) -> Dict[str, Any]:
     checklist.setdefault("updatedAt", utc_now_iso())
 
     # Legacy handled entries were historically stored at the checklist top level
-    # (e.g. ChainSafe/lodestar#9221:review-body:4169103826). Migrate/overlay
-    # those statuses into the numeric items map so already-handled reminders do
-    # not get resurfaced as open entries forever.
+    # in two formats:
+    #   1. "ChainSafe/lodestar#9221:review-body:4169103826" (old structured key)
+    #   2. "4726747119" (bare numeric comment ID, written by earlier sweep runs)
+    # Migrate/overlay those statuses into the numeric items map so already-handled
+    # reminders do not get resurfaced as open entries forever.
     for key, legacy in list(checklist.items()):
         if key in CHECKLIST_RESERVED_KEYS or not isinstance(legacy, dict):
             continue
 
         parsed = parse_legacy_checklist_key(key)
+        # Fallback: bare numeric top-level key (comment ID written directly)
+        if not parsed and key.isdigit():
+            legacy_status = str(legacy.get("status") or "").lower()
+            if legacy_status in {"handled", "done", "closed"}:
+                comment_id = int(key)
+                item = items.get(key)
+                if item and item.get("status") == "open":
+                    if legacy_status == "closed":
+                        item["status"] = "closed"
+                    elif legacy_status == "done":
+                        item["status"] = "done"
+                        if legacy.get("doneAt"):
+                            item.setdefault("doneAt", legacy["doneAt"])
+                        if legacy.get("doneReason"):
+                            item.setdefault("doneReason", legacy["doneReason"])
+                    else:
+                        item["status"] = "handled"
+            continue
+
         if not parsed:
             continue
 
