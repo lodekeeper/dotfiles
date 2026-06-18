@@ -1,7 +1,23 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-06-17 (62nd pass)
+> Updated: 2026-06-18 (63rd pass)
+
+---
+
+## Daily Audit Snapshot — 2026-06-18 (self-improvement-audit-daily, 03:16 UTC)
+
+### PR review
+- **Status:** no new PR-review blocker discovered this cycle; existing review guardrails remain healthy.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage preflight machine-readability gap found and fixed this cycle: yesterday's `scripts/debug/devnet-triage.sh --check-only --require-grafana` made telemetry availability explicit, but autonomous wrappers still had to parse prose to decide whether Grafana/Loki/Prometheus were ready or intentionally unavailable. Gap fixed this cycle: added `--json` for check-only mode with structured node/window/query/tool/Grafana readiness fields, rejected `--json` outside preflight mode, documented the automation form in `skills/devnet-debug/SKILL.md`, and verified syntax, prose preflight, JSON success, JSON required-Grafana failure, and invalid non-preflight JSON usage.
 
 ---
 

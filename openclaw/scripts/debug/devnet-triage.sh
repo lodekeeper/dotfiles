@@ -17,6 +17,7 @@ Options:
   --output <path>      Write markdown report to file
   --check-only         Validate local prerequisites without querying Grafana or writing a report
   --require-grafana    In --check-only mode, fail if Grafana token/tooling is unavailable
+  --json               Emit machine-readable output for --check-only
   -h, --help           Show help
 
 Env:
@@ -46,6 +47,7 @@ SELECTOR=""
 USER_LOKI_QUERY=""
 CHECK_ONLY=0
 REQUIRE_GRAFANA=0
+JSON_OUTPUT=0
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -81,6 +83,10 @@ while [[ $# -gt 0 ]]; do
       REQUIRE_GRAFANA=1
       shift
       ;;
+    --json)
+      JSON_OUTPUT=1
+      shift
+      ;;
     -h|--help)
       usage
       exit 0
@@ -101,6 +107,11 @@ done
 if [[ -z "$NODE_NAME" ]]; then
   echo "error: missing <node-name>" >&2
   usage
+  exit 1
+fi
+
+if [[ "$JSON_OUTPUT" -eq 1 && "$CHECK_ONLY" -ne 1 ]]; then
+  echo "error: --json is only supported with --check-only" >&2
   exit 1
 fi
 
@@ -173,20 +184,94 @@ if [[ "$CHECK_ONLY" -eq 1 ]]; then
   done
 
   if [[ "${#missing_required[@]}" -gt 0 ]]; then
-    printf 'ERROR: missing required tool(s): %s\n' "${missing_required[*]}" >&2
+    if [[ "$JSON_OUTPUT" -ne 1 ]]; then
+      printf 'ERROR: missing required tool(s): %s\n' "${missing_required[*]}" >&2
+    fi
+    check_rc=1
+  else
+    check_rc=0
+  fi
+
+  grafana_missing=()
+  [[ -n "${GRAFANA_TOKEN:-}" ]] || grafana_missing+=("GRAFANA_TOKEN")
+  [[ "$have_curl" == true ]] || grafana_missing+=("curl")
+  [[ "$have_jq" == true ]] || grafana_missing+=("jq")
+
+  if [[ "$REQUIRE_GRAFANA" -eq 1 && "${#grafana_missing[@]}" -gt 0 ]]; then
+    if [[ "$JSON_OUTPUT" -ne 1 ]]; then
+      printf 'ERROR: missing Grafana prerequisite(s): %s\n' "${grafana_missing[*]}" >&2
+    fi
+    if [[ "$check_rc" -eq 0 ]]; then
+      check_rc=2
+    fi
+  fi
+
+  if [[ "$JSON_OUTPUT" -eq 1 ]]; then
+    if ! command -v python3 >/dev/null 2>&1; then
+      echo "ERROR: python3 is required for --json output" >&2
+      exit 1
+    fi
+
+    missing_required_json="$(printf '%s\n' "${missing_required[@]}" | python3 -c 'import json,sys; print(json.dumps([line for line in sys.stdin.read().splitlines() if line]))')"
+    grafana_missing_json="$(printf '%s\n' "${grafana_missing[@]}" | python3 -c 'import json,sys; print(json.dumps([line for line in sys.stdin.read().splitlines() if line]))')"
+    python3 - \
+      "$check_rc" \
+      "$NODE_NAME" \
+      "$WINDOW" \
+      "$WINDOW_S" \
+      "$SELECTOR" \
+      "$LOKI_QUERY" \
+      "$GRAFANA_URL" \
+      "$PROM_DS_ID" \
+      "$LOKI_DS_ID" \
+      "$REQUIRE_GRAFANA" \
+      "$have_lsof" \
+      "$have_curl" \
+      "$have_jq" \
+      "${GRAFANA_TOKEN:+1}" \
+      "$missing_required_json" \
+      "$grafana_missing_json" <<'PY'
+import json
+import sys
+
+rc = int(sys.argv[1])
+missing_required = json.loads(sys.argv[15])
+grafana_missing = json.loads(sys.argv[16])
+payload = {
+    "ok": rc == 0,
+    "status": "ready" if rc == 0 else ("missing_grafana" if rc == 2 else "missing_required_tools"),
+    "node": sys.argv[2],
+    "window": sys.argv[3],
+    "windowSeconds": int(sys.argv[4]),
+    "selector": sys.argv[5],
+    "lokiQuery": sys.argv[6],
+    "grafana": {
+        "url": sys.argv[7],
+        "prometheusDatasourceId": sys.argv[8],
+        "lokiDatasourceId": sys.argv[9],
+        "required": bool(int(sys.argv[10])),
+        "available": not grafana_missing,
+        "missing": grafana_missing,
+    },
+    "tools": {
+        "missingRequired": missing_required,
+        "lsofAvailable": sys.argv[11] == "true",
+        "curlAvailable": sys.argv[12] == "true",
+        "jqAvailable": sys.argv[13] == "true",
+    },
+    "grafanaTokenPresent": bool(sys.argv[14]),
+}
+print(json.dumps(payload, sort_keys=True))
+PY
+    exit "$check_rc"
+  fi
+
+  if [[ "$check_rc" -eq 1 ]]; then
     exit 1
   fi
 
   if [[ "$REQUIRE_GRAFANA" -eq 1 ]]; then
-    grafana_missing=()
-    [[ -n "${GRAFANA_TOKEN:-}" ]] || grafana_missing+=("GRAFANA_TOKEN")
-    [[ "$have_curl" == true ]] || grafana_missing+=("curl")
-    [[ "$have_jq" == true ]] || grafana_missing+=("jq")
-
-    if [[ "${#grafana_missing[@]}" -gt 0 ]]; then
-      printf 'ERROR: missing Grafana prerequisite(s): %s\n' "${grafana_missing[*]}" >&2
-      exit 2
-    fi
+    [[ "$check_rc" -ne 2 ]] || exit 2
   fi
 
   echo "Devnet triage preflight OK"
