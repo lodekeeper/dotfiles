@@ -16,7 +16,7 @@ Not this skill: local Kurtosis → `kurtosis-devnet`; join with a local node →
 
 ## Flow
 
-1. **Preflight panda.** `skills/devnet-debug/scripts/ensure-panda-auth.sh` (re-auths if the 1h token lapsed → `scripts/panda/panda-reauth`). Then panda's own readiness check: `scripts/debug/check-devnet-routing-readiness.py <network>` (exit 2 = datasources not ready — fix auth first; `panda datasources --json` returning `{"datasources": null}` means *not ready*, not "network absent").
+1. **Preflight panda.** `skills/devnet-debug/scripts/ensure-panda-auth.sh` — heals the cred-file perms so the containerized `panda-server` can read them, and reports auth state. **Token refresh is handled by `panda-server` itself; do NOT run `scripts/panda/panda-reauth`** (the browser/GitHub-cookie device flow is disabled per nflaig 2026-06-19). If `datasources=null` persists, a human runs `panda auth login` once. Then panda's own readiness check: `scripts/debug/check-devnet-routing-readiness.py <network>` (exit 2 = datasources not ready; `panda datasources --json` returning `{"datasources": null}` means *not ready*, not "network absent").
 2. **Run the panda procedure.** `panda search runbooks "debug devnet"` → follow it. Use the `query` skill / `panda search examples` for query patterns; discover names live.
 3. **Apply the Lodestar lens** (below).
 4. **Drop to ChainSafe infra** (below) only when you need Lodestar internals panda doesn't ship.
