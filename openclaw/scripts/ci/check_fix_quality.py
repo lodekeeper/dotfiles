@@ -30,10 +30,14 @@ Outputs JSON:
 Exit codes:
   0 — check completed (inspect verdict)
   1 — error (missing API key, LLM failure, no diff)
+
+Environment preflight:
+    python3 scripts/ci/check_fix_quality.py --check-only
 """
 from __future__ import annotations
 
 import argparse
+import importlib.util
 import json
 import os
 import sys
@@ -84,6 +88,30 @@ Respond ONLY with a JSON object:
 _LLM_MODEL = os.environ.get("OPENAI_CI_MODEL", "gpt-5.3-codex-spark")
 _LLM_FALLBACK_MODEL = "gpt-4o-mini"
 _MAX_DIFF_CHARS = 8000  # Limit diff size sent to LLM
+
+
+def check_environment() -> dict[str, Any]:
+    """Validate local prerequisites without sending a diff to the LLM."""
+    api_key_set = bool(os.environ.get("OPENAI_API_KEY"))
+    openai_available = importlib.util.find_spec("openai") is not None
+    checks = {
+        "openaiApiKey": api_key_set,
+        "openaiPackage": openai_available,
+    }
+    missing = [name for name, ok in checks.items() if not ok]
+    return {
+        "ok": not missing,
+        "status": "ready" if not missing else "missing_prerequisites",
+        "message": (
+            "CI fix quality gate prerequisites are available"
+            if not missing
+            else "Missing prerequisite(s): " + ", ".join(missing)
+        ),
+        "checks": checks,
+        "model": _LLM_MODEL,
+        "fallbackModel": _LLM_FALLBACK_MODEL,
+        "maxDiffChars": _MAX_DIFF_CHARS,
+    }
 
 
 def _openai_completion(client: Any, messages: list[dict[str, str]]) -> Any:
@@ -196,7 +224,17 @@ def main() -> None:
     ap.add_argument("--classification", help="Failure classification from detector")
     ap.add_argument("--error", help="Original error message snippet")
     ap.add_argument("--fix-hint", help="Fix hint from classifier")
+    ap.add_argument(
+        "--check-only",
+        action="store_true",
+        help="Validate local prerequisites without reading a diff or calling the LLM",
+    )
     args = ap.parse_args()
+
+    if args.check_only:
+        result = check_environment()
+        print(json.dumps(result, indent=2))
+        sys.exit(0 if result["ok"] else 1)
 
     # Read diff
     if args.diff_file:

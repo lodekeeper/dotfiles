@@ -1,7 +1,23 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-06-18 (63rd pass)
+> Updated: 2026-06-19 (64th pass)
+
+---
+
+## Daily Audit Snapshot — 2026-06-19 (self-improvement-audit-daily, 03:17 UTC)
+
+### PR review
+- **Status:** no new PR-review blocker discovered this cycle; full-surface discussion scan + metadata/stale-finding guards remain healthy.
+
+### CI fix
+- **Status:** CI auto-fix quality-gate gap found and fixed this cycle: `scripts/ci/check_fix_quality.py` existed to catch masking flaky-test fixes, but autonomous runs had no cheap preflight for its API/package prerequisites and `scripts/ci/CRON_PROMPT.md` did not require the gate before committing/opening a fix PR. Proposed fix was to make the gate preflightable and wire it into the fix workflow. Gap fixed this cycle: added `--check-only` JSON prerequisite output to `check_fix_quality.py`, documented the mandatory per-fix preflight plus staged-diff gate in `CRON_PROMPT.md`, and verified Python syntax, success with a dummy API key, and the real missing-key failure path.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage telemetry preflight + JSON readiness path remain healthy; no new blocker discovered this cycle.
 
 ---
 
