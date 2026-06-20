@@ -125,3 +125,54 @@ All slot component timings are adjusted for Gloas epoch:
 
 ---
 *Next: builder.md, then p2p-interface.md*
+
+---
+
+## Re-verification pass — 2026-06-19
+
+Spec churned heavily since the Feb surface read (cluster of fork-choice PRs merged
+into `consensus-specs` master through 2026-06-01+). Re-checked Lodestar
+(`~/lodestar` @ 116c4e097c) against **`origin/master`** of consensus-specs.
+
+⚠️ **Local-checkout gotcha:** `~/consensus-specs` was detached at `af6e128ca`
+(2026-06-01), **18 days stale**. Comparing against local HEAD produced a false
+"discrepancy" in `should_build_on_full`. **Always `git fetch` + diff against
+`origin/master`, never the local detached HEAD, before claiming a spec gap.**
+
+### ✅ `should_build_on_full` — IN SYNC
+Current spec (post #5210 "force reorg late payloads", merged 2026-06-01):
+```python
+if slot+1 != current:  return head.payload_status == FULL
+if EMPTY:              return False
+if not timely:         return False     # payload_timeliness(..., timely=False)
+if not available:      return False     # payload_data_availability(..., available=False)
+return True
+```
+Lodestar `protoArray.shouldBuildOnFull(head, slot)`: EMPTY→false; earlier-slot→true;
+data-not-available→false; `return !isPayloadNotTimely(...)`.
+Case analysis (earlier-slot FULL/EMPTY; previous-slot EMPTY/not-avail/not-timely/else)
+→ **identical results**. Check ordering differs (Lodestar tests EMPTY before the
+slot branch) but the earlier-slot branch returns `status==FULL` either way, so no
+behavioral divergence. No action.
+
+### ⚠️ `update_proposer_boost_root` — CANDIDATE GAP (#5306, future-fork lag)
+Spec modified in Gloas (`#5306 "Apply proposer boost if dependent roots match"`,
+merged into master):
+```python
+is_same_dependent_root = get_dependent_root(store, root) == get_dependent_root(store, head)
+if is_timely and is_first_block and is_same_dependent_root:
+    store.proposer_boost_root = root
+```
+Lodestar `forkChoice.ts:703-714` (the sole proposer-boost assignment, in `onBlock`):
+guards on `isTimely` + `proposerBoostRoot === null` (is_first_block) +
+`proposerIndex === expectedProposerIndex` — **no `is_same_dependent_root` guard.**
+`getDependentRoot(block, epochDifference)` already exists (forkChoice.ts:1452, has a
+Gloas branch at :1484), so the machinery is present; the condition just isn't wired
+into proposer boost.
+
+**Assessment:** Real lag vs current spec master, but Gloas is unreleased and under
+active development (Nico's area); #5306 is part of a very recent fork-choice cluster.
+Likely tracked / not-yet-implemented rather than an oversight. **Not opening a PR**
+(consensus-critical, owner's active work). Documented for when Gloas fork-choice is
+next touched; mention to Nico if the topic comes up (it's adjacent to the current
+Nimbus dependent-root off-by-one discussion).

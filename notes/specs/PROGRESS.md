@@ -74,6 +74,19 @@ Read specs alongside Lodestar code. Document learnings. Open PRs for any issues 
 - [x] Validator (validator custody scaling, sidecar construction, distributed blob publishing)
 
 ---
+
+## Re-verification passes (post-completion)
+
+Forks are surface-read; Gloas/EPBS keeps churning, so spot-re-verify the hot areas
+against **`origin/master`** (never a stale local checkout — `~/consensus-specs` was
+detached 18 days behind on 2026-06-19 and faked a discrepancy).
+
+### 2026-06-19 — Gloas fork-choice (proposer boost + payload build) [notes: gloas-fork-choice.md]
+- ✅ `should_build_on_full` (post #5210 timeliness change) — **in sync**, no action.
+- ⚠️ `update_proposer_boost_root` missing `is_same_dependent_root` guard from **#5306** —
+  candidate gap, but future-fork lag in Nico's active area. Documented, no PR/no ping.
+
+---
 *Started: 2026-02-15*
-*Last updated: 2026-02-18 — Gloas/EPBS ✅, Phase0 ✅, Altair ✅, Bellatrix ✅, Capella ✅, Deneb ✅, Electra ✅, Fulu/PeerDAS ✅*
-*🎉 ALL FORKS COMPLETE*
+*Last updated: 2026-06-19 — re-verification pass on Gloas fork-choice (should_build_on_full ✅ in sync; update_proposer_boost_root ⚠️ #5306 dependent-root guard not yet wired)*
+*🎉 ALL FORKS COMPLETE (surface read 2026-02-18); now in spot-re-verify mode*
