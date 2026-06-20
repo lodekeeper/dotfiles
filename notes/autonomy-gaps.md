@@ -1,10 +1,28 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-06-19 (64th pass)
+> Updated: 2026-06-20 (65th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-06-20 (self-improvement-audit-daily, 03:17 UTC)
+
+### PR review
+- **Status:** follow-up guard preflight verified through the new consolidated domain runner; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** fix-quality gate preflight verified through the new consolidated domain runner. The runner defaults to a dummy `OPENAI_API_KEY` only when the cron shell lacks one, so it can validate local package/import readiness without leaking or requiring a secret; strict mode correctly fails when the real key is absent.
+
+### Spec implementation
+- **Status:** pre-PR spec-compliance preflight verified through the new consolidated domain runner; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight verified through the new consolidated domain runner; telemetry remains optional in this shell because `GRAFANA_TOKEN` is absent, and no new devnet-debugging blocker was discovered this cycle.
+
+### Audit workflow
+- **Status:** cross-domain audit verification gap found and fixed this cycle: the four required autonomy domains had separate preflight guards, but the daily audit had no single side-effect-free command to prove all of them were still runnable before carrying forward healthy status lines. Gap fixed this cycle: added `scripts/notes/check-autonomy-domain-preflights.py`, which runs PR-review, CI-fix, spec-implementation, and devnet-debugging preflights, normalizes JSON/exit codes, supports a strict CI-key mode, and returns a single cron-friendly pass/fail result.
+
+---
 ## Daily Audit Snapshot — 2026-06-19 (self-improvement-audit-daily, 03:17 UTC)
 
 ### PR review
@@ -1244,6 +1262,15 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Daily autonomy audit now has one cross-domain preflight runner (2026-06-20)
+Added `scripts/notes/check-autonomy-domain-preflights.py`.
+- runs the side-effect-free PR-review, CI-fix, spec-implementation, and devnet-debugging preflights from one command,
+- normalizes each helper's JSON/prose output plus exit code into one machine-readable payload,
+- uses a dummy `OPENAI_API_KEY` only for local CI quality-gate package/import readiness when the shell lacks the real key, with `--strict-ci-api-key` available for hard enforcement,
+- verified default JSON success, strict CI-key failure in the current no-key shell, and Python syntax.
+
+**Rationale:** the daily audit should be able to prove the four autonomy guardrails are still runnable together instead of manually carrying forward "healthy" status lines from separate helpers.
 
 ### ✅ Devnet triage now has a no-side-effect telemetry preflight (2026-06-17)
 Added `--check-only` and `--require-grafana` to `scripts/debug/devnet-triage.sh`, and wired the command into `skills/devnet-debug/SKILL.md`.

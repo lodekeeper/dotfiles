@@ -40,7 +40,7 @@ Skills are shared. Your setup is yours. Keeping them apart means you can update 
   1. Create branch from `unstable`
   2. Make changes, commit
   3. Push to `fork`
-  4. Create PR via API
+  4. Create PR with local `gh pr create` as `lodekeeper` (verify `gh auth status` first). Avoid the GitHub connector for PR creation unless its acting user has been explicitly verified; on 2026-06-20 it opened PR #9536 as `nflaig` despite using a `lodekeeper` fork branch.
 
 ### PR Metadata Hygiene (MANDATORY)
 - If PR scope changes after review feedback (or any follow-up commits), re-check that **PR title + description still match the actual diff**.
