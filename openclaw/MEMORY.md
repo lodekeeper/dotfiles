@@ -18,6 +18,7 @@
 - **Ignore sim/e2e test failures** unless Nico specifically asks to investigate
 - **NEVER send "all clear" / "nothing new" heartbeat messages to Nico** — if nothing is actionable, reply NO_REPLY silently. He told me THREE TIMES (2026-03-02). Only message when there's a real alert, blocker, decision, or deliverable.
 - **Always tag other bots** (e.g. <@1483945055025631353> for lodekeeper-z) when replying to them in Discord — don't just reply to the message without a mention. Nico flagged this 2026-03-21.
+- **GitHub account boundary:** all GitHub write actions I perform must use `lodekeeper`, never Nico's `nflaig` account. On 2026-06-20 the Codex Apps GitHub connector was linked to `nflaig` and accidentally opened PR #9536 as Nico; use local `gh` only after `gh auth status` confirms `lodekeeper`, unless Nico explicitly authorizes a different acting account for that specific action.
 
 ## Dev Workflow (for complex features)
 - **Skill:** `skills/dev-workflow/SKILL.md` — full instructions

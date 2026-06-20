@@ -36,11 +36,12 @@ Skills are shared. Your setup is yours. Keeping them apart means you can update 
 ## GitHub
 - **Username:** lodekeeper
 - **Fork:** https://github.com/lodekeeper/lodestar
+- **Hard account boundary:** All GitHub write actions I perform must use the `lodekeeper` account only. Do **not** use Codex Apps / GitHub connector writes while it is linked to `nflaig`; on 2026-06-20 the connector exposed `nflaig` with write/maintain permissions and accidentally opened ChainSafe/lodestar PR #9536 as Nico. Use local `gh` after `gh auth status` confirms `lodekeeper`, unless Nico explicitly authorizes a different acting account for that specific action.
 - **Workflow:** 
   1. Create branch from `unstable`
   2. Make changes, commit
   3. Push to `fork`
-  4. Create PR with local `gh pr create` as `lodekeeper` (verify `gh auth status` first). Avoid the GitHub connector for PR creation unless its acting user has been explicitly verified; on 2026-06-20 it opened PR #9536 as `nflaig` despite using a `lodekeeper` fork branch.
+  4. Create PR with local `gh pr create` as `lodekeeper` (verify `gh auth status` first). Avoid the GitHub connector for PR creation and all other GitHub mutations unless its acting user has been explicitly verified and Nico approved that actor for the action.
 
 ### PR Metadata Hygiene (MANDATORY)
 - If PR scope changes after review feedback (or any follow-up commits), re-check that **PR title + description still match the actual diff**.
