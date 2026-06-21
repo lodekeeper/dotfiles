@@ -1,10 +1,25 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-06-20 (65th pass)
+> Updated: 2026-06-21 (66th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-06-21 (self-improvement-audit-daily, 03:18 UTC)
+
+### PR review
+- **Status:** follow-up guard preflight verified through the new consolidated domain runner; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** fix-quality gate preflight verified through the new consolidated domain runner. The runner defaults to a dummy `OPENAI_API_KEY` only when the cron shell lacks one, so it can validate local package/import readiness without leaking or requiring a secret; strict mode correctly fails when the real key is absent.
+
+### Spec implementation
+- **Status:** pre-PR spec-compliance preflight verified through the new consolidated domain runner; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight verified through the new consolidated domain runner; telemetry remains optional in this shell because `GRAFANA_TOKEN` is absent, and no new devnet-debugging blocker was discovered this cycle.
+
+---
 ## Daily Audit Snapshot — 2026-06-20 (self-improvement-audit-daily, 03:17 UTC)
 
 ### PR review
