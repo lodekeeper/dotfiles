@@ -1,10 +1,25 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-06-21 (66th pass)
+> Updated: 2026-06-22 (67th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-06-22 (self-improvement-audit-daily, 03:18 UTC)
+
+### PR review
+- **Status:** follow-up guard preflight verified through the new consolidated domain runner; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** fix-quality gate preflight verified through the new consolidated domain runner. The runner defaults to a dummy `OPENAI_API_KEY` only when the cron shell lacks one, so it can validate local package/import readiness without leaking or requiring a secret; strict mode correctly fails when the real key is absent.
+
+### Spec implementation
+- **Status:** pre-PR spec-compliance preflight verified through the new consolidated domain runner; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet strict-telemetry gap found and fixed this cycle: the consolidated domain runner verified the devnet-triage JSON preflight only in optional telemetry mode, so autonomous live devnet-debugging wrappers could accidentally prove local shell readiness while missing `GRAFANA_TOKEN`. Proposed fix was to expose a strict devnet telemetry mode and keep optional mode explicit. Gap fixed this cycle: added `--require-devnet-grafana` to `scripts/notes/check-autonomy-domain-preflights.py`, added an optional-mode warning when `GRAFANA_TOKEN` is absent, verified the normal JSON preflight still passes, and verified strict mode now fails early with `status=missing_grafana` until the cron shell has Grafana credentials.
+
+---
 ## Daily Audit Snapshot — 2026-06-21 (self-improvement-audit-daily, 03:18 UTC)
 
 ### PR review

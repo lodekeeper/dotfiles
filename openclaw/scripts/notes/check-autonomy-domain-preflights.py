@@ -86,6 +86,21 @@ def build_checks(args: argparse.Namespace, workspace: Path) -> list[tuple[str, s
             "OPENAI_API_KEY was absent; used a dummy value to verify package/import readiness only"
         )
 
+    devnet_command = [
+        "bash",
+        "scripts/debug/devnet-triage.sh",
+        "autonomy-preflight",
+        "--check-only",
+        "--json",
+    ]
+    devnet_warnings: list[str] = []
+    if args.require_devnet_grafana:
+        devnet_command.append("--require-grafana")
+    elif not base_env.get("GRAFANA_TOKEN"):
+        devnet_warnings.append(
+            "GRAFANA_TOKEN was absent; verified local devnet triage tooling only"
+        )
+
     return [
         (
             "prReview",
@@ -111,15 +126,9 @@ def build_checks(args: argparse.Namespace, workspace: Path) -> list[tuple[str, s
         (
             "devnetDebugging",
             "devnetTriage",
-            [
-                "bash",
-                "scripts/debug/devnet-triage.sh",
-                "autonomy-preflight",
-                "--check-only",
-                "--json",
-            ],
+            devnet_command,
             base_env,
-            [],
+            devnet_warnings,
         ),
     ]
 
@@ -138,6 +147,11 @@ def main() -> int:
         "--strict-ci-api-key",
         action="store_true",
         help="Require the real CI quality-gate OPENAI_API_KEY instead of using a dummy import preflight",
+    )
+    parser.add_argument(
+        "--require-devnet-grafana",
+        action="store_true",
+        help="Require Grafana token/tooling for the devnet-debugging preflight",
     )
     parser.add_argument(
         "--timeout-seconds",
@@ -164,6 +178,7 @@ def main() -> int:
         "ok": all(check["ok"] for check in checks),
         "workspace": str(workspace),
         "strictCiApiKey": args.strict_ci_api_key,
+        "requireDevnetGrafana": args.require_devnet_grafana,
         "checks": checks,
     }
 
