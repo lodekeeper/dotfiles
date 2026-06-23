@@ -9,6 +9,9 @@ FORCE=0
 CARRY_FORWARD_STATUS=1
 DEDUPE_APPLY=0
 STRICT_CADENCE=0
+RUN_DOMAIN_PREFLIGHTS=1
+STRICT_CI_API_KEY=0
+REQUIRE_DEVNET_GRAFANA=0
 ENSURE_DAILY_MEMORY_NOTE=1
 SEED_AUDIT_MEMORY_ENTRY=1
 
@@ -32,6 +35,12 @@ Options:
                         Disable status prefill and insert blank placeholders
   --dedupe-apply        Auto-remove older duplicate snapshot blocks before preflight
   --strict-cadence      Treat cadence gaps as hard failures (default: advisory warning)
+  --check-domains       Run side-effect-free PR/CI/spec/devnet domain preflights (default)
+  --skip-domain-preflights
+                        Skip domain preflights before snapshot insertion
+  --strict-ci-api-key   Require a real OPENAI_API_KEY in the CI-fix quality-gate preflight
+  --require-devnet-grafana
+                        Require Grafana token/tooling in the devnet-debugging preflight
   --ensure-daily-memory-note
                         Ensure memory/<date>.md exists before snapshot insertion (default)
   --no-ensure-daily-memory-note
@@ -78,6 +87,22 @@ while [[ $# -gt 0 ]]; do
       STRICT_CADENCE=1
       shift
       ;;
+    --check-domains)
+      RUN_DOMAIN_PREFLIGHTS=1
+      shift
+      ;;
+    --skip-domain-preflights)
+      RUN_DOMAIN_PREFLIGHTS=0
+      shift
+      ;;
+    --strict-ci-api-key)
+      STRICT_CI_API_KEY=1
+      shift
+      ;;
+    --require-devnet-grafana)
+      REQUIRE_DEVNET_GRAFANA=1
+      shift
+      ;;
     --ensure-daily-memory-note)
       ENSURE_DAILY_MEMORY_NOTE=1
       shift
@@ -118,6 +143,7 @@ TARGET_TIME_LABEL="${TIME_LABEL:-$(date -u '+%H:%M UTC')}"
 DEDUPE_CMD=(python3 "$WORKSPACE/scripts/notes/dedupe-autonomy-audit-snapshots.py" --file "$TARGET_FILE")
 CHECK_CMD=(python3 "$WORKSPACE/scripts/notes/check-autonomy-gaps-consistency.py" --file "$TARGET_FILE")
 CADENCE_CMD=(python3 "$WORKSPACE/scripts/notes/check-autonomy-audit-cadence.py" --file "$TARGET_FILE" --latest-only --require-current --fail-on-gap)
+DOMAIN_PREFLIGHT_CMD=(python3 "$WORKSPACE/scripts/notes/check-autonomy-domain-preflights.py")
 PREPEND_CMD=(python3 "$WORKSPACE/scripts/notes/prepend-autonomy-audit-snapshot.py" --file "$TARGET_FILE")
 
 if [[ -n "$DATE" ]]; then
@@ -141,7 +167,15 @@ if [[ "$DEDUPE_APPLY" -eq 1 ]]; then
   DEDUPE_CMD+=(--apply)
 fi
 
-echo "[0/5] Running duplicate-snapshot guard"
+if [[ "$STRICT_CI_API_KEY" -eq 1 ]]; then
+  DOMAIN_PREFLIGHT_CMD+=(--strict-ci-api-key)
+fi
+
+if [[ "$REQUIRE_DEVNET_GRAFANA" -eq 1 ]]; then
+  DOMAIN_PREFLIGHT_CMD+=(--require-devnet-grafana)
+fi
+
+echo "[0/6] Running duplicate-snapshot guard"
 set +e
 "${DEDUPE_CMD[@]}"
 dedupe_rc=$?
@@ -154,10 +188,10 @@ elif [[ "$dedupe_rc" -ne 0 ]]; then
   exit "$dedupe_rc"
 fi
 
-echo "[1/5] Running consistency guard on $TARGET_FILE"
+echo "[1/6] Running consistency guard on $TARGET_FILE"
 "${CHECK_CMD[@]}"
 
-echo "[2/5] Running cadence guard (advisory, latest-pair + current-date freshness)"
+echo "[2/6] Running cadence guard (advisory, latest-pair + current-date freshness)"
 set +e
 "${CADENCE_CMD[@]}"
 cadence_rc=$?
@@ -173,8 +207,15 @@ elif [[ "$cadence_rc" -ne 0 ]]; then
   exit "$cadence_rc"
 fi
 
+if [[ "$RUN_DOMAIN_PREFLIGHTS" -eq 1 ]]; then
+  echo "[3/6] Running autonomy domain preflights"
+  "${DOMAIN_PREFLIGHT_CMD[@]}"
+else
+  echo "[3/6] Skipping autonomy domain preflights (--skip-domain-preflights)"
+fi
+
 if [[ "$ENSURE_DAILY_MEMORY_NOTE" -eq 1 ]]; then
-  echo "[3/5] Ensuring daily memory note + audit stub"
+  echo "[4/6] Ensuring daily memory note + audit stub"
   DAILY_MEMORY_FILE="$WORKSPACE/memory/$TARGET_DATE.md"
   mkdir -p "$(dirname "$DAILY_MEMORY_FILE")"
   if [[ ! -f "$DAILY_MEMORY_FILE" ]]; then
@@ -198,10 +239,10 @@ if [[ "$ENSURE_DAILY_MEMORY_NOTE" -eq 1 ]]; then
     fi
   fi
 else
-  echo "[3/5] Skipping daily memory note creation (--no-ensure-daily-memory-note)"
+  echo "[4/6] Skipping daily memory note creation (--no-ensure-daily-memory-note)"
 fi
 
-echo "[4/5] Inserting daily snapshot scaffold"
+echo "[5/6] Inserting daily snapshot scaffold"
 "${PREPEND_CMD[@]}"
 
 echo "✅ Preflight complete. Review/update the new snapshot status blocks, then run scripts/notes/close-autonomy-audit.sh --date $TARGET_DATE"

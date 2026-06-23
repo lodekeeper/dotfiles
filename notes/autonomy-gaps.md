@@ -1,10 +1,28 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-06-22 (67th pass)
+> Updated: 2026-06-23 (68th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-06-23 (self-improvement-audit-daily, 03:18 UTC)
+
+### PR review
+- **Status:** follow-up guard preflight verified through the consolidated domain runner and now through the audit preflight wrapper; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** fix-quality gate preflight verified through the consolidated domain runner and now through the audit preflight wrapper. The runner defaults to a dummy `OPENAI_API_KEY` only when the cron shell lacks one, so it can validate local package/import readiness without leaking or requiring a secret; strict mode remains available for real-key enforcement.
+
+### Spec implementation
+- **Status:** pre-PR spec-compliance preflight verified through the consolidated domain runner and now through the audit preflight wrapper; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight verified through the consolidated domain runner and now through the audit preflight wrapper; optional telemetry warnings remain explicit when `GRAFANA_TOKEN` is absent, and no new devnet-debugging blocker discovered this cycle.
+
+### Audit workflow
+- **Status:** audit-preflight verification gap found and fixed this cycle: `run-autonomy-audit-preflight.sh` scaffolded/carried forward daily statuses but did not run `check-autonomy-domain-preflights.py`, so a scheduled audit could document healthy PR/CI/spec/devnet autonomy without first proving those domain checks still passed. Proposed fix was to make domain preflights part of the default audit preflight while preserving explicit strict-mode and skip flags. Gap fixed this cycle: added default domain preflight execution plus `--skip-domain-preflights`, `--strict-ci-api-key`, and `--require-devnet-grafana` options to `scripts/notes/run-autonomy-audit-preflight.sh`.
+
+---
 ## Daily Audit Snapshot — 2026-06-22 (self-improvement-audit-daily, 03:18 UTC)
 
 ### PR review
@@ -1292,6 +1310,15 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Daily autonomy audit preflight now verifies all domains by default (2026-06-23)
+Updated `scripts/notes/run-autonomy-audit-preflight.sh`.
+- runs `scripts/notes/check-autonomy-domain-preflights.py` before daily memory scaffolding and snapshot insertion,
+- keeps explicit `--skip-domain-preflights` for intentional bypasses,
+- passes through `--strict-ci-api-key` and `--require-devnet-grafana` so CI/devnet credential readiness can be enforced at audit-preflight time,
+- verified shell syntax, standalone domain JSON output, and a rerun of the integrated preflight against the existing 2026-06-23 snapshot.
+
+**Rationale:** the daily audit preflight should not carry forward PR-review, CI-fix, spec-implementation, or devnet-debugging status lines without first proving the corresponding domain checks still run.
 
 ### ✅ Daily autonomy audit now has one cross-domain preflight runner (2026-06-20)
 Added `scripts/notes/check-autonomy-domain-preflights.py`.
