@@ -11,6 +11,14 @@ from pathlib import Path
 from typing import Any
 
 
+VALID_DOMAINS = [
+    "prReview",
+    "ciFix",
+    "specImplementation",
+    "devnetDebugging",
+]
+
+
 def _truncate(text: str, limit: int = 4000) -> str:
     if len(text) <= limit:
         return text
@@ -159,9 +167,24 @@ def main() -> int:
         default=30,
         help="Per-check timeout in seconds (default: 30)",
     )
+    parser.add_argument(
+        "--domain",
+        action="append",
+        choices=VALID_DOMAINS,
+        help="Run only the selected domain preflight; may be passed more than once",
+    )
     args = parser.parse_args()
 
     workspace = Path(args.workspace).expanduser().resolve()
+    check_defs = build_checks(args, workspace)
+    if args.domain:
+        selected_domains = set(args.domain)
+        check_defs = [
+            check_def
+            for check_def in check_defs
+            if check_def[0] in selected_domains
+        ]
+
     checks = [
         run_check(
             workspace=workspace,
@@ -172,13 +195,14 @@ def main() -> int:
             timeout_s=args.timeout_seconds,
             warnings=warnings,
         )
-        for domain, name, command, env, warnings in build_checks(args, workspace)
+        for domain, name, command, env, warnings in check_defs
     ]
     payload = {
         "ok": all(check["ok"] for check in checks),
         "workspace": str(workspace),
         "strictCiApiKey": args.strict_ci_api_key,
         "requireDevnetGrafana": args.require_devnet_grafana,
+        "selectedDomains": args.domain or VALID_DOMAINS,
         "checks": checks,
     }
 

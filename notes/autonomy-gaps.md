@@ -1,10 +1,28 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-06-23 (68th pass)
+> Updated: 2026-06-24 (69th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-06-24 (self-improvement-audit-daily, 03:19 UTC)
+
+### PR review
+- **Status:** follow-up guard preflight verified through the consolidated domain runner and now through the audit preflight wrapper; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** fix-quality gate preflight verified through the consolidated domain runner and now through the audit preflight wrapper. The runner defaults to a dummy `OPENAI_API_KEY` only when the cron shell lacks one, so it can validate local package/import readiness without leaking or requiring a secret; strict mode remains available for real-key enforcement.
+
+### Spec implementation
+- **Status:** pre-PR spec-compliance preflight verified through the consolidated domain runner and now through the audit preflight wrapper; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight verified through the consolidated domain runner and now through the audit preflight wrapper; optional telemetry warnings remain explicit when `GRAFANA_TOKEN` is absent, and no new devnet-debugging blocker discovered this cycle.
+
+### Audit workflow
+- **Status:** targeted-domain preflight triage gap found and fixed this cycle: `check-autonomy-domain-preflights.py` could only run every PR/CI/spec/devnet preflight together, so a single-domain failure would force noisy full reruns during autonomous diagnosis. Gap fixed this cycle: added repeatable `--domain {prReview,ciFix,specImplementation,devnetDebugging}` filtering plus `selectedDomains` in JSON output, and verified default, single-domain, and multi-domain JSON runs.
+
+---
 ## Daily Audit Snapshot — 2026-06-23 (self-improvement-audit-daily, 03:18 UTC)
 
 ### PR review
@@ -1310,6 +1328,15 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Autonomy domain preflight runner supports targeted checks (2026-06-24)
+Updated `scripts/notes/check-autonomy-domain-preflights.py`.
+- adds repeatable `--domain` filters for `prReview`, `ciFix`, `specImplementation`, and `devnetDebugging`,
+- reports `selectedDomains` in JSON output for wrapper/debug traceability,
+- keeps the default full cross-domain run unchanged for daily audits,
+- verified Python syntax, default JSON output, single-domain CI-fix output, and multi-domain CI/devnet output.
+
+**Rationale:** autonomous audit/debug loops need a cheap way to rerun the one failing domain preflight without producing unrelated PR/spec/devnet noise.
 
 ### ✅ Daily autonomy audit preflight now verifies all domains by default (2026-06-23)
 Updated `scripts/notes/run-autonomy-audit-preflight.sh`.
