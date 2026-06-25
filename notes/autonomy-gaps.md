@@ -1,10 +1,28 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-06-24 (69th pass)
+> Updated: 2026-06-25 (70th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-06-25 (self-improvement-audit-daily, 03:19 UTC)
+
+### PR review
+- **Status:** follow-up guard preflight verified through the consolidated domain runner and now through the audit preflight wrapper; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** fix-quality gate preflight verified through the consolidated domain runner and now through the audit preflight wrapper. The runner defaults to a dummy `OPENAI_API_KEY` only when the cron shell lacks one, so it can validate local package/import readiness without leaking or requiring a secret; strict mode remains available for real-key enforcement.
+
+### Spec implementation
+- **Status:** pre-PR spec-compliance preflight verified through the consolidated domain runner and now through the audit preflight wrapper; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight and local/remote routing readiness are now verified through the consolidated domain runner and audit preflight wrapper. Optional telemetry warnings remain explicit when `GRAFANA_TOKEN` is absent; panda datasource discovery is currently ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`, `xatu-experimental`).
+
+### Audit workflow
+- **Status:** devnet-debugging routing-preflight gap found and fixed this cycle: the daily domain preflight proved the Grafana triage helper was runnable, but it did not prove whether an autonomous investigation could classify local Kurtosis vs hosted panda-backed devnets before starting. Proposed fix was to include the existing side-effect-free routing readiness helper in the devnet-debugging domain checks. Gap fixed this cycle: `check-autonomy-domain-preflights.py` now runs `scripts/debug/check-devnet-routing-readiness.py --json`, surfaces it as `devnetDebugging/devnetRoutingReadiness`, and was verified in targeted devnet mode plus the full PR/CI/spec/devnet preflight run.
+
+---
 ## Daily Audit Snapshot — 2026-06-24 (self-improvement-audit-daily, 03:19 UTC)
 
 ### PR review

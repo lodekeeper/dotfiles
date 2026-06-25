@@ -138,6 +138,19 @@ def build_checks(args: argparse.Namespace, workspace: Path) -> list[tuple[str, s
             base_env,
             devnet_warnings,
         ),
+        (
+            "devnetDebugging",
+            "devnetRoutingReadiness",
+            [
+                python,
+                "scripts/debug/check-devnet-routing-readiness.py",
+                "--json",
+                "--timeout",
+                str(args.timeout_seconds),
+            ],
+            base_env,
+            [],
+        ),
     ]
 
 
