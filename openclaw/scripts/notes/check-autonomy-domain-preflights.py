@@ -118,6 +118,19 @@ def build_checks(args: argparse.Namespace, workspace: Path) -> list[tuple[str, s
             [],
         ),
         (
+            "prReview",
+            "githubActorBoundary",
+            [
+                python,
+                "scripts/github/check-gh-actor-boundary.py",
+                "--expected",
+                args.expected_github_actor,
+                "--json",
+            ],
+            base_env,
+            [],
+        ),
+        (
             "ciFix",
             "fixQualityGate",
             [python, "scripts/ci/check_fix_quality.py", "--check-only"],
@@ -181,6 +194,11 @@ def main() -> int:
         help="Per-check timeout in seconds (default: 30)",
     )
     parser.add_argument(
+        "--expected-github-actor",
+        default=os.environ.get("GITHUB_EXPECTED_ACTOR", "lodekeeper"),
+        help="Expected GitHub login for write-action preflights (default: lodekeeper)",
+    )
+    parser.add_argument(
         "--domain",
         action="append",
         choices=VALID_DOMAINS,
@@ -215,6 +233,7 @@ def main() -> int:
         "workspace": str(workspace),
         "strictCiApiKey": args.strict_ci_api_key,
         "requireDevnetGrafana": args.require_devnet_grafana,
+        "expectedGitHubActor": args.expected_github_actor,
         "selectedDomains": args.domain or VALID_DOMAINS,
         "checks": checks,
     }

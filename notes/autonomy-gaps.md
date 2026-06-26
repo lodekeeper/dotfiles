@@ -1,10 +1,28 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-06-25 (70th pass)
+> Updated: 2026-06-26 (71st pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-06-26 (self-improvement-audit-daily, 03:19 UTC)
+
+### PR review
+- **Status:** PR-review actor-boundary gap found and fixed this cycle: the domain preflight verified that `gh` and review helper chains were present, but did not prove that later GitHub write actions would execute as the allowed `lodekeeper` account. Gap fixed this cycle: added `scripts/github/check-gh-actor-boundary.py` and wired it into `scripts/notes/check-autonomy-domain-preflights.py` as `prReview/githubActorBoundary`; verified success for the current `lodekeeper` actor, failure for a mismatched expected actor, targeted PR-review JSON output, and the full PR/CI/spec/devnet preflight run.
+
+### CI fix
+- **Status:** fix-quality gate preflight verified through the consolidated domain runner and now through the audit preflight wrapper. The runner defaults to a dummy `OPENAI_API_KEY` only when the cron shell lacks one, so it can validate local package/import readiness without leaking or requiring a secret; strict mode remains available for real-key enforcement.
+
+### Spec implementation
+- **Status:** pre-PR spec-compliance preflight verified through the consolidated domain runner and now through the audit preflight wrapper; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight and local/remote routing readiness are now verified through the consolidated domain runner and audit preflight wrapper. Optional telemetry warnings remain explicit when `GRAFANA_TOKEN` is absent; panda datasource discovery is currently ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`, `xatu-experimental`).
+
+### Audit workflow
+- **Status:** GitHub actor-boundary preflight added this cycle so autonomous PR-review/write workflows fail before any external mutation when the active `gh` account is not `lodekeeper`. This directly covers the 2026-06-20 account-boundary lesson from the GitHub connector/PR creation incident.
+
+---
 ## Daily Audit Snapshot — 2026-06-25 (self-improvement-audit-daily, 03:19 UTC)
 
 ### PR review
@@ -1346,6 +1364,16 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ GitHub actor boundary preflight added to autonomy checks (2026-06-26)
+Added `scripts/github/check-gh-actor-boundary.py` and wired it into `scripts/notes/check-autonomy-domain-preflights.py`.
+- verifies the active GitHub CLI actor against the expected write account (`lodekeeper` by default),
+- emits machine-readable JSON with expected/actual actor, `gh` availability, and status,
+- surfaces the check as `prReview/githubActorBoundary` in the consolidated domain preflight output,
+- supports `GITHUB_EXPECTED_ACTOR` / `--expected-github-actor` for explicit override in controlled runs,
+- verified success for the current `lodekeeper` actor, wrong-actor failure, targeted PR-review JSON output, full-domain JSON output, and Python syntax.
+
+**Rationale:** autonomous PR review and follow-up workflows can eventually post reviews, comments, PR metadata edits, or PRs. They should fail early if `gh` is authenticated as any account other than the allowed writer instead of discovering the account boundary after an external mutation.
 
 ### ✅ Autonomy domain preflight runner supports targeted checks (2026-06-24)
 Updated `scripts/notes/check-autonomy-domain-preflights.py`.
