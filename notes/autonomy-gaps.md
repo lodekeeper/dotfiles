@@ -1,10 +1,28 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-06-26 (71st pass)
+> Updated: 2026-06-27 (72nd pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-06-27 (self-improvement-audit-daily, 03:22 UTC)
+
+### PR review
+- **Status:** no new PR-review blocker discovered this cycle; existing review guardrails remain healthy.
+
+### CI fix
+- **Status:** CI-fix targeted actor-boundary gap found and fixed this cycle: the all-domain audit run verified `prReview/githubActorBoundary`, but `--domain ciFix` only checked the fix-quality gate even though autonomous CI fixes can push branches, open PRs, and label PRs. Gap fixed this cycle: `scripts/notes/check-autonomy-domain-preflights.py` now also runs `ciFix/githubActorBoundary`, so targeted CI-fix preflights fail before any GitHub mutation if `gh` is not authenticated as `lodekeeper`; verified success for the current actor and wrong-actor failure.
+
+### Spec implementation
+- **Status:** pre-PR spec-compliance preflight verified through the consolidated domain runner and now through the audit preflight wrapper; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight and local/remote routing readiness are now verified through the consolidated domain runner and audit preflight wrapper. Optional telemetry warnings remain explicit when `GRAFANA_TOKEN` is absent; panda datasource discovery is currently ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`, `xatu-experimental`).
+
+### Audit workflow
+- **Status:** CI-fix targeted preflight now carries the same GitHub account boundary as PR-review, closing the hole where focused CI automation could validate local fix tooling without proving the eventual GitHub writer account.
+
+---
 ## Daily Audit Snapshot — 2026-06-26 (self-improvement-audit-daily, 03:19 UTC)
 
 ### PR review
@@ -1364,6 +1382,14 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ CI-fix targeted actor boundary preflight added (2026-06-27)
+Updated `scripts/notes/check-autonomy-domain-preflights.py` so `--domain ciFix` runs both the fix-quality prerequisite check and `scripts/github/check-gh-actor-boundary.py`.
+- surfaces the account check as `ciFix/githubActorBoundary`,
+- keeps the expected actor defaulting to `lodekeeper` with `GITHUB_EXPECTED_ACTOR` / `--expected-github-actor` override support,
+- verified Python syntax, targeted CI-fix JSON success for the current actor, and targeted CI-fix wrong-actor failure.
+
+**Rationale:** autonomous CI-fix workflows can eventually push branches, open PRs, label PRs, and post comments. A focused CI-fix preflight should prove the GitHub write actor before those steps, not rely on a separate PR-review domain check that may be skipped during targeted diagnosis.
 
 ### ✅ GitHub actor boundary preflight added to autonomy checks (2026-06-26)
 Added `scripts/github/check-gh-actor-boundary.py` and wired it into `scripts/notes/check-autonomy-domain-preflights.py`.
