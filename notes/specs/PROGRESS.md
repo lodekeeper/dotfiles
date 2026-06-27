@@ -86,7 +86,22 @@ detached 18 days behind on 2026-06-19 and faked a discrepancy).
 - ⚠️ `update_proposer_boost_root` missing `is_same_dependent_root` guard from **#5306** —
   candidate gap, but future-fork lag in Nico's active area. Documented, no PR/no ping.
 
+### 2026-06-26 — phase0 fast-confirmation `is_confirmed_chain_safe` (#5288) [Lodestar: packages/fork-choice/src/forkChoice/fastConfirmation/utils.ts]
+- Context: re-verified against `origin/master` (local consensus-specs is on my own monotonicity
+  proposal branch `ab546e161`, 65 behind master — intentional for the open proposal PR).
+- **#5288** (Mikhail Kalinin, 2026-05-29) changed `is_confirmed_chain_safe`: instead of
+  `is_ancestor(confirmed_root, GU.root)`, it now checks
+  `GU == get_checkpoint_for_block(confirmed_root, GU.epoch)` — verifies the (root, epoch) pair,
+  not just root ancestry.
+- ✅ **Lodestar already in sync.** `isConfirmedChainSafe` (utils.ts:760) uses
+  `getCheckpointForBlock(confirmedRoot, GU.epoch)` + `equalCheckpointWithHex` against
+  `currentEpochObservedJustifiedCheckpoint` — exactly the post-#5288 form. `getCheckpointForBlock`
+  (utils.ts:72) matches `get_checkpoint_for_block` (ancestor at epoch-start slot). No PR needed.
+- Note: master's `get_latest_confirmed` keeps the epoch-boundary `is_confirmed_chain_safe` revert;
+  my open monotonicity-guard proposal (consensus-specs branch + Lodestar PR) is the divergence,
+  not adopted upstream. Consistent with prior understanding — see [[project-fast-confirmation-resets]].
+
 ---
 *Started: 2026-02-15*
-*Last updated: 2026-06-19 — re-verification pass on Gloas fork-choice (should_build_on_full ✅ in sync; update_proposer_boost_root ⚠️ #5306 dependent-root guard not yet wired)*
+*Last updated: 2026-06-26 — re-verification pass on phase0 fast-confirmation: Lodestar `isConfirmedChainSafe` ✅ in sync with #5288 (checkpoint-in-chain check, not is_ancestor)*
 *🎉 ALL FORKS COMPLETE (surface read 2026-02-18); now in spot-re-verify mode*
