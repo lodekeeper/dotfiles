@@ -1,10 +1,28 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-06-27 (72nd pass)
+> Updated: 2026-06-28 (73rd pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-06-28 (self-improvement-audit-daily, 03:22 UTC)
+
+### PR review
+- **Status:** follow-up guard and GitHub actor-boundary preflights remain healthy; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** fix-quality gate and GitHub actor-boundary preflights remain healthy; no new CI-fix blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** spec-implementation actor-boundary gap found and fixed this cycle: autonomous spec implementation uses the pre-PR compliance gate before shipping, but the targeted `--domain specImplementation` preflight did not prove that later GitHub write actions would run as `lodekeeper`. Gap fixed this cycle: `scripts/notes/check-autonomy-domain-preflights.py` now also runs `specImplementation/githubActorBoundary`; verified targeted spec preflight success, wrong-actor failure, Python syntax, and full PR/CI/spec/devnet preflight success.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight and local/remote routing readiness are now verified through the consolidated domain runner and audit preflight wrapper. Optional telemetry warnings remain explicit when `GRAFANA_TOKEN` is absent; panda datasource discovery is currently ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`, `xatu-experimental`).
+
+### Audit workflow
+- **Status:** spec-implementation targeted preflight now carries the same GitHub account-boundary guard as PR-review and CI-fix, closing the hole where focused spec automation could validate local compliance tooling without proving the eventual GitHub writer account.
+
+---
 ## Daily Audit Snapshot — 2026-06-27 (self-improvement-audit-daily, 03:22 UTC)
 
 ### PR review

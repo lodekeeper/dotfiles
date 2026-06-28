@@ -158,6 +158,19 @@ def build_checks(args: argparse.Namespace, workspace: Path) -> list[tuple[str, s
             [],
         ),
         (
+            "specImplementation",
+            "githubActorBoundary",
+            [
+                python,
+                "scripts/github/check-gh-actor-boundary.py",
+                "--expected",
+                args.expected_github_actor,
+                "--json",
+            ],
+            base_env,
+            [],
+        ),
+        (
             "devnetDebugging",
             "devnetTriage",
             devnet_command,
