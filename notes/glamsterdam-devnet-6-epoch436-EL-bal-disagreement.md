@@ -7,6 +7,16 @@
 - **Lodestar is NOT affected** (source-audited, branch `review/alpha.11`): carries BAL end-to-end as an opaque ByteList passthrough (gossip decode → PayloadEnvelopeInput → importExecutionPayload → notifyNewPayload → serializeExecutionPayload populates `blockAccessList` from real bytes → `engine_newPayloadV5`); `parseExecutionPayload` hard-errors if a gloas payload lacks a BAL. Prysm's bug came from re-encoding a *structured* BAL container into the engine request; Lodestar's opaque-passthrough makes that class unreachable. Proof: types/src/gloas/sszTypes.ts:208-217; beacon-node/src/execution/engine/types.ts:315-319 & 416-422; engine/http.ts:219-257; chain/blocks/importExecutionPayload.ts:170-176.
 - CAVEAT: could NOT independently re-pull the otel logs to show the empty-BAL line myself — panda/ClickHouse auth down (ethpandaops authentik 503 + expired local creds owned by `nico`). Confidence rests on pk910+barnabasbusa (full data access) + the corroborating Lodestar source audit, not my own log pull. Capture the smoking-gun line when panda recovers.
 
+## 2026-06-29 ~11:30 — EMPIRICAL per-CL confirmation (panda recovered) — closes the caveat above
+Nico asked in-thread: "were the BAL errors only on ELs with Prysm as CL?" Pulled it myself (panda session bf7ea0abbe4b, `external.otel_logs`, network filter, 06-27 08:00 → 06-29 00:00).
+- **BAL rejects across ALL 19 hosts = only 3 EL containers**, and in the **live incident window (08:00→10:02:27Z) all are Prysm-paired**:
+  - `prysm-besu-1` (CL=prysm): besu `Invalid block access list encoding` ×10 (09:32 12474 → 10:02:27 12609).
+  - `bootnode-1` (**CL=Prysm** — beacon logs are Prysm format: `blockchain: Synced new block … builderIndex= … chainServiceProcessedTime`; the `Lighthouse/v8.2.0` string was a remote peer): geth `failed to decode BAL: EOF` ×2, last 10:02:27 on block 12609.
+  - All 4 other besu (lodestar/lighthouse/nimbus/teku-besu) + every other geth/ethrex: **0** BAL rejects in-window.
+- **`lodestar-geth-1` = 10,396 is NOT a counterexample**: entirely post-incident (15:30 06-27 → 22:30 06-28), a retry loop **wedged on ~1 early block** (#9940 `0x921c11`, ~01:00Z, re-sent every ~2s) it fell back to after peer-starving (separate Lodestar net bugs: PR #9560 + DIAL_ERROR self-ban). Other geth nodes (lighthouse/prysm/teku-geth) referenced 921c11 once, never wedged.
+- **Lodestar BAL serialization empirically clean**: `lodestar-besu-1` = **0** BAL rejects over the whole window (alive to 06-28 22:59). besu strict-rejects bad BALs (proven on prysm-besu) ⇒ if Lodestar emptied BALs, lodestar-besu would've rejected too. It didn't. geth-vs-besu split = decoder strictness, not Lodestar.
+- **Mechanism nailed**: block `e52da8` (slot 13961, the smoking gun) carried `builderIndex = 18446744073709551615` (2^64−1 = **self-built, no external builder**). Prysm produced the local payload with an empty/malformed BAL → handed to its own ELs → besu+geth both correctly rejected (empty byte-list ⇒ geth "EOF" / besu "Invalid encoding"). Non-Prysm CLs followed a different competing 12609 and never fed that bad BAL to their ELs. **Confirms pk910: CL (Prysm), not the EL.**
+
 ## devnet-6 Lodestar footprint (from ethpandaops/glamsterdam-devnets k8s config, pulled 2026-06-28 while panda down)
 Lodestar nodes on glamsterdam-devnet-6 (4):
 - **lodestar-besu-1** (Lodestar + Besu)
@@ -49,6 +59,20 @@ Q: why did the Lodestar nodes fall out of sync — Lodestar bug or not? Analyzed
 - **Honest scope:** #9560 explains the post-restart peer-bootstrap failure but is likely not the complete story — the 3,406 "peer banned this node" events suggest peers also actively banned our node (plausibly a far-behind supernode failing to serve data-column reqresp → downscored = spiral once behind). Fully attributing the bans needs deeper reqresp/gossip analysis.
 - onDiscovered TypeError = only 12× steady 06-27 but spams on every restart (bootENR loop) — consistent with the init-order cause.
 - **Recovery:** all 3 reachable nodes checkpoint-synced back to head via `--unsafeCheckpointState` from ethrex-1's head (geth/besu/ethrex dist 0, peers 16/13/10). `buildoor-lodestar-besu-1` still stuck (no SSH access). NOTE: deployed image still has the bug + my temp containers carry checkpoint flags, so a restart may re-wedge until #9560 ships in the devnet image. Lesson: don't swap back to the original container during non-finality (it reloads an old archived state → reverts far behind).
+
+## 2026-06-29 ~10:45 — RESOLVED: swapped back to original config (network recovered)
+Network recovered (finalized **889**, was stuck 435), so original config now loads a recent finalized state (no far revert). Swapped geth-1 + besu-1 back to original containers (removed `--unsafeCheckpointState/--forceCheckpointSync` footgun); ethrex-1 untouched.
+- **Bump 1 (my error):** swap-back crash-looped on `EACCES open /data/beacon-2026-06-29.log` — my cpsync containers ran as **root** (I didn't replicate the original `--user 1006`) and created today's log root-owned → original uid 1006 couldn't write it. Fix: `sudo chown -R 1006:0 /data/lodestar`. LESSON: replicate `Config.User` (`--user`) when recreating ethpandaops containers.
+- **Bump 2:** besu-1 came up peer-starved (0 peers, falling behind) on original config — a restart re-rolled discv5 discovery → 11 peers, caught up. Consistent with the #9560 bug (unreliable bootnode bootstrap on restart).
+- **FINAL:** all 3 reachable nodes on ORIGINAL config, at head (dist 0), healthy peers (geth 14, besu 11, ethrex synced). `buildoor-lodestar-besu-1` still blocked (no SSH). Durable fix = PR #9560 merged + devnet image rebuilt.
+
+## 2026-06-29 ~11:10 — POINT 4 ROOT CAUSE (panda back): self-inflicted peer-ban via dial-failure scoring
+Why peer-starved: **our node banned ~3,154 peers itself** on 06-27. "Peer banned this node" = GoodByeReasonCode **251** = the reason Lodestar sends when IT bans a peer (`constants/network.ts:26`).
+- Mechanism: `reqresp/score.ts:34-38` penalizes a peer with `LowToleranceError` on `DIAL_ERROR`/`DIAL_TIMEOUT`. 06-27 outgoing reqresp errors: DIAL_ERROR **3217** + DIAL_TIMEOUT **2415** (~5.6k dial-failure penalties); SERVER_ERROR 1526 (Mid). EMPTY_RESPONSE **7176** + RATE_LIMITED 2463 = **NOT** penalized (`return null`). Penalty-reason logs confirm DIAL_ERROR/DIAL_TIMEOUT dominate → ~3,154 bans → peer starvation → wedge.
+- **Ruled OUT:** empty-by-range downscore — EMPTY_RESPONSE is not penalized.
+- **The issue:** banning peers for `DIAL_ERROR`/`DIAL_TIMEOUT` (our-side/transient, not reliably the peer's fault) is too aggressive — `score.ts` already exempts rate-limit errors with "could come from ourself, not the peer," yet penalizes dial failures. In a degraded net Lodestar bans its way to 0 peers; Lighthouse (stayed synced same net) likely doesn't ban on dial failures. **DOMINANT driver of the sustained starvation; #9560 (startup bootnode dial) is secondary.**
+- Fix direction: don't apply a ban-leading penalty on DIAL_ERROR/DIAL_TIMEOUT (no penalty, or much higher tolerance). Vehicle: GitHub issue for team discussion (scoring change), not a unilateral unverified PR.
+- Confidence: source + ~5.6k dial-failure counts + penalty logs + 3154 ban count all align. Not yet traced individual peer score→ban curves slot-by-slot.
 
 --- ORIGINAL (WRONG) ANALYSIS BELOW, kept for audit trail ---
 
