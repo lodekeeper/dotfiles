@@ -1,10 +1,28 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-06-28 (73rd pass)
+> Updated: 2026-06-29 (74th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-06-29 (self-improvement-audit-daily, 03:22 UTC)
+
+### PR review
+- **Status:** follow-up guard and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** fix-quality gate and GitHub actor-boundary preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`, `xatu-experimental`).
+
+### Audit workflow
+- **Status:** status-scaffold freshness gap found and fixed this cycle: `run-autonomy-audit-preflight.sh` ran current domain preflights but still inserted required status lines by carrying forward yesterday's prose, so a healthy-looking snapshot could miss current warnings such as the dummy CI key or absent Grafana token. Gap fixed this cycle: added `scripts/notes/render-autonomy-domain-statuses.py`, added `--status-prefill-json` to `prepend-autonomy-audit-snapshot.py`, and wired the audit preflight wrapper to render required status lines from fresh domain preflight JSON whenever domain checks run; carry-forward remains only a fallback when domain preflights are explicitly skipped.
+
+---
 ## Daily Audit Snapshot — 2026-06-28 (self-improvement-audit-daily, 03:22 UTC)
 
 ### PR review

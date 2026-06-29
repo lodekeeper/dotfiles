@@ -11,6 +11,7 @@ Keeps snapshot formatting consistent and ensures all four required domains are a
 from __future__ import annotations
 
 import argparse
+import json
 from datetime import datetime, timezone
 from pathlib import Path
 import re
@@ -127,6 +128,22 @@ def extract_status_prefill(snapshot_block: str) -> dict[str, str]:
     return prefill
 
 
+def load_status_prefill_json(path: str) -> dict[str, str]:
+    payload = json.loads(Path(path).read_text(encoding="utf-8"))
+    if isinstance(payload, dict) and isinstance(payload.get("statuses"), dict):
+        payload = payload["statuses"]
+    if not isinstance(payload, dict):
+        raise ValueError("status prefill JSON must be an object or contain a 'statuses' object")
+
+    prefill: dict[str, str] = {}
+    for section_name in REQUIRED_SECTIONS:
+        value = payload.get(section_name)
+        if not isinstance(value, str) or not value.strip():
+            raise ValueError(f"status prefill JSON is missing a non-empty status for {section_name!r}")
+        prefill[section_name] = value.strip()
+    return prefill
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(
         description="Prepend a consistent daily snapshot scaffold to autonomy-gaps.md"
@@ -151,6 +168,10 @@ def main() -> int:
         action="store_true",
         help="Prefill required section status lines using the latest existing snapshot",
     )
+    parser.add_argument(
+        "--status-prefill-json",
+        help="JSON file containing required section status lines; overrides carry-forward prefill",
+    )
     args = parser.parse_args()
 
     now = datetime.now(timezone.utc)
@@ -174,7 +195,14 @@ def main() -> int:
         return 0
 
     status_prefill: dict[str, str] | None = None
-    if args.carry_forward_status:
+    if args.status_prefill_json:
+        try:
+            status_prefill = load_status_prefill_json(args.status_prefill_json)
+        except (OSError, json.JSONDecodeError, ValueError) as exc:
+            print(f"❌ Could not load status prefill JSON: {exc}", file=sys.stderr)
+            return 2
+        print("ℹ️ Status prefill loaded from domain preflight JSON")
+    elif args.carry_forward_status:
         latest_snapshot = first_snapshot_block(text)
         if latest_snapshot:
             status_prefill = extract_status_prefill(latest_snapshot)

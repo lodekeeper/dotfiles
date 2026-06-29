@@ -14,6 +14,14 @@ STRICT_CI_API_KEY=0
 REQUIRE_DEVNET_GRAFANA=0
 ENSURE_DAILY_MEMORY_NOTE=1
 SEED_AUDIT_MEMORY_ENTRY=1
+TEMP_FILES=()
+
+cleanup_temp_files() {
+  if [[ "${#TEMP_FILES[@]}" -gt 0 ]]; then
+    rm -f "${TEMP_FILES[@]}"
+  fi
+}
+trap cleanup_temp_files EXIT
 
 usage() {
   cat <<'EOF'
@@ -144,6 +152,7 @@ DEDUPE_CMD=(python3 "$WORKSPACE/scripts/notes/dedupe-autonomy-audit-snapshots.py
 CHECK_CMD=(python3 "$WORKSPACE/scripts/notes/check-autonomy-gaps-consistency.py" --file "$TARGET_FILE")
 CADENCE_CMD=(python3 "$WORKSPACE/scripts/notes/check-autonomy-audit-cadence.py" --file "$TARGET_FILE" --latest-only --require-current --fail-on-gap)
 DOMAIN_PREFLIGHT_CMD=(python3 "$WORKSPACE/scripts/notes/check-autonomy-domain-preflights.py")
+DOMAIN_STATUS_RENDER_CMD=(python3 "$WORKSPACE/scripts/notes/render-autonomy-domain-statuses.py")
 PREPEND_CMD=(python3 "$WORKSPACE/scripts/notes/prepend-autonomy-audit-snapshot.py" --file "$TARGET_FILE")
 
 if [[ -n "$DATE" ]]; then
@@ -210,6 +219,12 @@ fi
 if [[ "$RUN_DOMAIN_PREFLIGHTS" -eq 1 ]]; then
   echo "[3/6] Running autonomy domain preflights"
   "${DOMAIN_PREFLIGHT_CMD[@]}"
+  DOMAIN_PREFLIGHT_JSON="$(mktemp)"
+  DOMAIN_STATUS_JSON="$(mktemp)"
+  TEMP_FILES+=("$DOMAIN_PREFLIGHT_JSON" "$DOMAIN_STATUS_JSON")
+  "${DOMAIN_PREFLIGHT_CMD[@]}" --json > "$DOMAIN_PREFLIGHT_JSON"
+  "${DOMAIN_STATUS_RENDER_CMD[@]}" --preflight-json "$DOMAIN_PREFLIGHT_JSON" --json > "$DOMAIN_STATUS_JSON"
+  PREPEND_CMD+=(--status-prefill-json "$DOMAIN_STATUS_JSON")
 else
   echo "[3/6] Skipping autonomy domain preflights (--skip-domain-preflights)"
 fi
