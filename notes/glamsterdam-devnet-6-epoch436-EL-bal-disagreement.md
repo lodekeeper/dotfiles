@@ -74,6 +74,17 @@ Why peer-starved: **our node banned ~3,154 peers itself** on 06-27. "Peer banned
 - Fix direction: don't apply a ban-leading penalty on DIAL_ERROR/DIAL_TIMEOUT (no penalty, or much higher tolerance). Vehicle: GitHub issue for team discussion (scoring change), not a unilateral unverified PR.
 - Confidence: source + ~5.6k dial-failure counts + penalty logs + 3154 ban count all align. Not yet traced individual peer score→ban curves slot-by-slot.
 
+## 2026-06-29 ~12:50 — Ping/Status dial-timeout ban: WHY the timeouts + issue #9562
+Dug the "why do the ping/status dials time out" layer (panda Prometheus `devnets`, instance=glamsterdam-devnet-6-lodestar-geth-1):
+- **NOT our event-loop overload:** `network_worker_nodejs_eventloop_lag_p99_seconds` was a healthy **0.04–0.09 s** all of 06-27. So the dial-timeouts were **peer/network-side** (peers slow / restarting / half-connected in the degraded net), not our worker blocking. (Disproved my "our overload" hypothesis.)
+- => the clean "it's our fault, don't penalize" fix is weaker; the right fix is a scoring-design judgment call (DoS-sensitive). So I documented it rather than rush an unverified scoring PR.
+- **Opened https://github.com/ChainSafe/lodestar/issues/9562** — mechanism (Ping/Status `DIAL_TIMEOUT` → −10 `LowToleranceError` → ban after 5 + 5–240min cooldown → starvation), the evidence (3,154 self-bans, ping 513/status 477 vs blocks 51, event-loop-healthy), and 3 proposed fix directions (downgrade dial-timeout penalty / disconnect-not-ban / adaptive timeout). Did NOT open a PR (no confident verifiable fix; team picks the direction; offered to PR then).
+- Both Lodestar findings now filed: **PR #9560** (bootnode-dial transports init bug — ready+verified+regression test) and **issue #9562** (dominant peer-scoring cause).
+
+## 2026-06-29 ~13:12 — buildoor recovered → ALL 4 Lodestar nodes back
+Nico added my SSH key to the buildoor box (devops@ now connects). buildoor-lodestar-besu-1 was wedged at head 14783 / finalized 435 (frozen 4 days, 3 peers). Recovered via **`--checkpointSyncUrl https://eth:***@bn-lighthouse-besu-1...`** (source finalized epoch 913, recent → standard checkpoint sync works now that the net recovered) + **`--user 1006`** (no EACCES) + **NO `--forceCheckpointSync`** (restart-safe: future restarts load the db since it's within WS). Result: `Initialized checkpoint state slot=29216 epoch=913`; CL at head (dist 0), **19 peers**, restartCount 0, EL catching up.
+**ALL 4 Lodestar nodes on glamsterdam-devnet-6 now recovered** (geth/besu/ethrex on original config; buildoor on a restart-safe checkpoint-sync container — can swap to exact-original if desired, not necessary). Recovery side fully closed. Remaining: #9560 (review) + #9562 (issue→PR direction).
+
 --- ORIGINAL (WRONG) ANALYSIS BELOW, kept for audit trail ---
 
 # glamsterdam-devnet-6 — participation collapse epoch 436 — ROOT CAUSE: EL BAL disagreement
