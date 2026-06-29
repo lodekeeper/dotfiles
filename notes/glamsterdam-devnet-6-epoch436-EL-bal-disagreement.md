@@ -1,3 +1,57 @@
+# ⚠️ CORRECTED 2026-06-28 — ROOT CAUSE IS CL (PRYSM), NOT EL
+
+**The original verdict in this file ("EL BAL non-interop") was WRONG.** Corrected:
+- pk910 (ethpandaops, 2026-06-27 ~20:00 UTC, #interop-🌃 "Flamingos or beavers?") identified the real cause: **Prysm sent `engine_newPayload` to its EL with an EMPTY block access list (BAL)**. The EL then *correctly* rejected it (besu: "Invalid block access list encoding"; geth: "failed to decode BAL: EOF"). An empty byte-list BAL explains BOTH signatures — far more parsimoniously than "two ELs independently disagree." barnabasbusa + pk910 were right.
+- So EL rejections were the SYMPTOM; the CL (Prysm) emptying the BAL before newPayload was the CAUSE.
+- My analytical error: I attributed cause by which EL *built* each block (extraData "bes…"/ethrex), not by which CL *relayed* it. Rejections actually clustered on the common relaying CL (Prysm) — the tell I missed. I also explicitly flagged the CL-envelope hypothesis then deprioritized it because it "didn't implicate Lodestar" — letting "not our client" bias me off the right answer.
+- **Lodestar is NOT affected** (source-audited, branch `review/alpha.11`): carries BAL end-to-end as an opaque ByteList passthrough (gossip decode → PayloadEnvelopeInput → importExecutionPayload → notifyNewPayload → serializeExecutionPayload populates `blockAccessList` from real bytes → `engine_newPayloadV5`); `parseExecutionPayload` hard-errors if a gloas payload lacks a BAL. Prysm's bug came from re-encoding a *structured* BAL container into the engine request; Lodestar's opaque-passthrough makes that class unreachable. Proof: types/src/gloas/sszTypes.ts:208-217; beacon-node/src/execution/engine/types.ts:315-319 & 416-422; engine/http.ts:219-257; chain/blocks/importExecutionPayload.ts:170-176.
+- CAVEAT: could NOT independently re-pull the otel logs to show the empty-BAL line myself — panda/ClickHouse auth down (ethpandaops authentik 503 + expired local creds owned by `nico`). Confidence rests on pk910+barnabasbusa (full data access) + the corroborating Lodestar source audit, not my own log pull. Capture the smoking-gun line when panda recovers.
+
+## devnet-6 Lodestar footprint (from ethpandaops/glamsterdam-devnets k8s config, pulled 2026-06-28 while panda down)
+Lodestar nodes on glamsterdam-devnet-6 (4):
+- **lodestar-besu-1** (Lodestar + Besu)
+- **lodestar-geth-1** (Lodestar + Geth)
+- **lodestar-ethrex-1** (Lodestar + Ethrex; image `ethpandaops/lodestar:deathstar-devnet-6`; ethrex-paired → likely caught in the SEPARATE ethrex desync = ethrex's bug, not ours)
+- **buildoor-lodestar-besu-1** (Lodestar + Besu, ePBS builder/"buildoor")
+
+Full CL roster: {lighthouse,lodestar,nimbus,prysm,teku} × {besu,ethrex,geth} + buildoors {lighthouse-geth, lodestar-besu, prysm-ethrex} + bootnode-1.
+
+So Lodestar WAS on devnet-6 — my earlier "no lodestar node involved" rationale was wrong. Correct basis for "not affected" = the source audit + (pending) absence of lodestar-besu BAL-rejects in the wild.
+
+WILD TEST when panda recovers (turns the source-audit into empirical proof):
+1. `lodestar-besu-1` besu (container.name=execution): expect ZERO "Invalid block access list encoding" around epoch 436 — prysm-besu-1 had them; lodestar-besu-1 should not.
+2. `buildoor-lodestar-besu-1`: blocks it BUILT should carry a non-empty BAL and be accepted network-wide.
+3. Confirm the empty-BAL rejections trace to prysm-* relays.
+CAVEAT: source audit was branch `review/alpha.11`; deployed devnet-6 image is `deathstar-devnet-6` — the wild check closes that code-identity gap.
+
+## 2026-06-28 ~22:00 — SSH RE-VERIFICATION (panda still down; went to the boxes directly via devops@<node>.srv.glamsterdam-devnet-6...)
+- **Images (ground truth ≠ config):** all 3 reachable Lodestar nodes run `ethpandaops/lodestar:glamsterdam-devnet-6` — NOT the `deathstar-devnet-6` in ansible host_vars (watchtower auto-updates; the config tag is stale). ELs: besu/geth/ethrex:glamsterdam-devnet-6. `buildoor-lodestar-besu-1`: SSH publickey denied (not checked).
+- **Lodestar is NOT the cause — EMPIRICAL proof (closes the source-audit caveat):** `lodestar-besu-1` besu logged **ZERO** BAL/payload rejects in 60h while its EL advanced to **block 13556** (past the incident). Lodestar fed besu valid BALs the whole time → no Prysm-class empty-BAL bug on the *deployed* image.
+- **Per-node "fell out of sync" (all downstream; none a Lodestar bug):**
+  - `lodestar-geth-1`: **geth** rejected besu-built blocks `failed to decode BAL: EOF` — **10,369×** over 06-27 15:30→06-28 09:02, blocks 9940–11072 → couldn't import → wedged at slot 12671 / exec block 11435; beacon restarted ~06-28 09:02, now stuck re-syncing (finalized 393). Separate minor geth bug: 211× "Failed to decode blob limbo entry" (BlobTxCellSidecar RLP).
+  - `lodestar-besu-1`: besu clean but **peer-starved (1–3 peers)** → stuck at slot 16098 (epoch 503). Post-collapse fragmentation, not an EL/CL error.
+  - `lodestar-ethrex-1`: healthiest — at chain tip (head slot−1/−2, finalized 435, ethrex block 18018); only fails `producePayloadAttestationData` ("No canonical block found") because the net isn't producing canonical blocks.
+- **Refined root cause (two layers):** (1) TRIGGER — empty/truncated BAL in gossiped payloads [pk910: Prysm]; (2) FORK MECHANISM — ELs disagree on the bad BAL: **geth strict-rejects ("EOF"), besu tolerates** (besu node reached block 13556 / 0 rejects; geth node wedged at 11435). The besu↔geth split fractured the net — downstream of the CL trigger, not the cause. My original "EL disagreement" sensed layer (2) but missed the CL trigger (1).
+
+## 2026-06-28 ~22:30 — CROSS-CLIENT CHECK walks back "none a Lodestar bug"
+`/eth/v1/node/syncing` across clients (bn-basic-auth, user `eth`; cred file has a comment header — parse non-`#` lines). Clock slot ~24848:
+- **SYNCED to tip (dist 0):** lighthouse-{geth,besu,ethrex}, teku-geth, nimbus-geth, **lodestar-ethrex**.
+- **STUCK (syncing, far behind):** lodestar-geth (12671, dist 12177), lodestar-besu (16098, dist 8750), prysm-geth (18653, dist 6195).
+=> **NOT network-wide and NOT "Lodestar just follows the EL".** Lighthouse/Teku/Nimbus reached the tip on the SAME geth/besu ELs while Lodestar+geth, Lodestar+besu, and Prysm+geth did not. Lodestar nodes are specifically failing to recover. (My "all downstream; none a Lodestar bug" above was too strong.)
+- STILL DEFENSIBLE: Lodestar BAL *serialization* is fine (lodestar-besu besu = 0 BAL rejects; snooper shows geth returning VALID to Lodestar newPayloads) — not emptying BALs wholesale.
+- OPEN LODESTAR QUESTION (do NOT hand-wave as "not our client"): why can't Lodestar+geth / Lodestar+besu resync past the bad-BAL region when Lighthouse can? Hypotheses: (a) ops checkpoint-resynced LH/teku/nimbus (skip the bad region) while Lodestar/Prysm forward-sync and wedge on the EL-rejected historical block; (b) a Lodestar (and Prysm?) sync/fork-choice recovery issue. lodestar-ethrex at the tip => EL-interaction-specific, not a blanket Lodestar bug.
+- NEXT: compare lodestar-geth-1 (forward-wedged 12671) vs lighthouse-geth-1 (tip) — checkpoint vs forward sync; is Lodestar fork-choice stuck on the bad fork / can it abandon it.
+
+## 2026-06-28 ~23:10 — ROOT-CAUSE INVESTIGATION (per Nico) + Lodestar fix PR #9560
+Q: why did the Lodestar nodes fall out of sync — Lodestar bug or not? Analyzed on-disk debug logs (`/data/lodestar/beacon-2026-06-27.log`, 14M lines, sudo-readable).
+- **Wedge cause = PEER STARVATION, not the EL.** geth-1 ran at **0–2 peers almost all of 06-27** (peers:0 ×2907, :1 ×2606, :2 ×1406; rarely >3). No peers → can't sync. Churn was massive: 40,517 Connected / 29,230 goodbye / **3,406 "reason=Peer banned this node"** + reqresp DIAL_ERROR/TIMEOUT/EMPTY_RESPONSE.
+- **Lodestar BUG found + FIXED → PR https://github.com/ChainSafe/lodestar/pull/9560.** `PeerDiscovery` constructor init-order: `this.transports` is read by `handleDiscoveredPeer()` but assigned at the END of the constructor; with `--network.connectToDiscv5Bootnodes` (set on these supernodes), every bootENR is processed first → `this.transports` undefined → throws `Cannot read properties of undefined (reading 'includes')` → **node never dials its bootnodes on startup** (worst right after a restart). Reproduced: every restart I did left the node stuck at 1 peer. Fix moves the init above the bootENR loop. Present in `unstable` too.
+- **Honest scope:** #9560 explains the post-restart peer-bootstrap failure but is likely not the complete story — the 3,406 "peer banned this node" events suggest peers also actively banned our node (plausibly a far-behind supernode failing to serve data-column reqresp → downscored = spiral once behind). Fully attributing the bans needs deeper reqresp/gossip analysis.
+- onDiscovered TypeError = only 12× steady 06-27 but spams on every restart (bootENR loop) — consistent with the init-order cause.
+- **Recovery:** all 3 reachable nodes checkpoint-synced back to head via `--unsafeCheckpointState` from ethrex-1's head (geth/besu/ethrex dist 0, peers 16/13/10). `buildoor-lodestar-besu-1` still stuck (no SSH access). NOTE: deployed image still has the bug + my temp containers carry checkpoint flags, so a restart may re-wedge until #9560 ships in the devnet image. Lesson: don't swap back to the original container during non-finality (it reloads an old archived state → reverts far behind).
+
+--- ORIGINAL (WRONG) ANALYSIS BELOW, kept for audit trail ---
+
 # glamsterdam-devnet-6 — participation collapse epoch 436 — ROOT CAUSE: EL BAL disagreement
 
 Investigated 2026-06-27 (Nico asked in Discord thread, then pointed at "ELs not agreeing").
