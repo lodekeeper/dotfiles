@@ -72,6 +72,21 @@ def _warning_text(checks: list[dict[str, Any]]) -> list[str]:
     return warnings
 
 
+def _code_identifier(value: str) -> str:
+    return f"`{value}`"
+
+
+def _code_list(values: list[str]) -> str:
+    return ", ".join(_code_identifier(value) for value in values)
+
+
+def _format_warning(value: str) -> str:
+    return value.replace("OPENAI_API_KEY", _code_identifier("OPENAI_API_KEY")).replace(
+        "GRAFANA_TOKEN",
+        _code_identifier("GRAFANA_TOKEN"),
+    )
+
+
 def _actor(check: dict[str, Any] | None) -> str:
     stdout = (check or {}).get("stdout")
     if isinstance(stdout, dict):
@@ -92,7 +107,7 @@ def _devnet_details(domain_checks: dict[str, dict[str, Any]]) -> tuple[str | Non
         if isinstance(grafana, dict) and grafana.get("available") is False:
             missing = grafana.get("missing") or []
             if "GRAFANA_TOKEN" in missing:
-                grafana_note = "GRAFANA_TOKEN is absent, so telemetry remains optional/local-only"
+                grafana_note = "`GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only"
 
     panda_names: list[str] = []
     if isinstance(routing_stdout, dict):
@@ -134,7 +149,7 @@ def render_statuses(payload: dict[str, Any]) -> dict[str, str]:
                 "no new CI-fix blocker discovered this cycle."
             )
             if warnings:
-                status += f" Warning: {'; '.join(warnings)}."
+                status += f" Warning: {'; '.join(_format_warning(warning) for warning in warnings)}."
             statuses[section] = status
         elif domain == "specImplementation":
             actor = _actor(domain_checks.get("githubActorBoundary"))
@@ -148,7 +163,7 @@ def render_statuses(payload: dict[str, Any]) -> dict[str, str]:
             if grafana_note:
                 details.append(grafana_note)
             if panda_names:
-                details.append(f"panda datasource discovery is ready (`{', '.join(panda_names)}`)")
+                details.append(f"panda datasource discovery is ready ({_code_list(panda_names)})")
             suffix = f" {'; '.join(details)}." if details else ""
             statuses[section] = (
                 "devnet-triage JSON preflight and local/remote routing readiness verified from current preflight output; "

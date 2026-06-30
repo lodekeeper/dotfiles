@@ -1,10 +1,28 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-06-29 (74th pass)
+> Updated: 2026-06-30 (75th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-06-30 (self-improvement-audit-daily, 03:23 UTC)
+
+### PR review
+- **Status:** follow-up guard and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** fix-quality gate and GitHub actor-boundary preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`, `xatu-experimental`).
+
+### Audit workflow
+- **Status:** generated-status formatting gap found and fixed this cycle: yesterday's fresh preflight status renderer produced correct current data, but today's generated markdown dropped code formatting around warning identifiers and collapsed panda datasource names into one code span, making the audit harder to scan and causing avoidable status diffs. Gap fixed this cycle: updated `scripts/notes/render-autonomy-domain-statuses.py` to format environment identifiers and datasource lists consistently, then verified Python compilation plus live JSON status rendering.
+
+---
 ## Daily Audit Snapshot — 2026-06-29 (self-improvement-audit-daily, 03:22 UTC)
 
 ### PR review
