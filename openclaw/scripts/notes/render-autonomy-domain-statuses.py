@@ -17,8 +17,8 @@ SECTION_BY_DOMAIN = {
 
 EXPECTED_CHECKS = {
     "prReview": ["followupGuards", "githubActorBoundary"],
-    "ciFix": ["fixQualityGate", "githubActorBoundary"],
-    "specImplementation": ["prePrComplianceGate", "githubActorBoundary"],
+    "ciFix": ["fixQualityGate", "githubActorBoundary", "gitIdentityBoundary"],
+    "specImplementation": ["prePrComplianceGate", "githubActorBoundary", "gitIdentityBoundary"],
     "devnetDebugging": ["devnetTriage", "devnetRoutingReadiness"],
 }
 
@@ -145,7 +145,7 @@ def render_statuses(payload: dict[str, Any]) -> dict[str, str]:
             )
         elif domain == "ciFix":
             status = (
-                "fix-quality gate and GitHub actor-boundary preflights verified from current preflight output; "
+                "fix-quality gate, GitHub actor-boundary, and git identity preflights verified from current preflight output; "
                 "no new CI-fix blocker discovered this cycle."
             )
             if warnings:
@@ -154,7 +154,7 @@ def render_statuses(payload: dict[str, Any]) -> dict[str, str]:
         elif domain == "specImplementation":
             actor = _actor(domain_checks.get("githubActorBoundary"))
             statuses[section] = (
-                "pre-PR compliance gate and GitHub actor-boundary preflights verified from current preflight output "
+                "pre-PR compliance gate, GitHub actor-boundary, and git identity preflights verified from current preflight output "
                 f"as `{actor}`; no new spec-implementation blocker discovered this cycle."
             )
         elif domain == "devnetDebugging":

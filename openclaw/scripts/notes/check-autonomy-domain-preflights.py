@@ -85,6 +85,13 @@ def run_check(
 def build_checks(args: argparse.Namespace, workspace: Path) -> list[tuple[str, str, list[str], dict[str, str], list[str]]]:
     base_env = os.environ.copy()
     python = sys.executable
+    git_identity_boundary = [
+        python,
+        "scripts/git/check-git-identity-boundary.py",
+        "--cwd",
+        str(workspace),
+        "--json",
+    ]
 
     ci_env = base_env.copy()
     ci_warnings: list[str] = []
@@ -151,6 +158,13 @@ def build_checks(args: argparse.Namespace, workspace: Path) -> list[tuple[str, s
             [],
         ),
         (
+            "ciFix",
+            "gitIdentityBoundary",
+            git_identity_boundary,
+            base_env,
+            [],
+        ),
+        (
             "specImplementation",
             "prePrComplianceGate",
             ["bash", "scripts/spec/prepr-compliance-gate.sh", "--check-only", "--json"],
@@ -167,6 +181,13 @@ def build_checks(args: argparse.Namespace, workspace: Path) -> list[tuple[str, s
                 args.expected_github_actor,
                 "--json",
             ],
+            base_env,
+            [],
+        ),
+        (
+            "specImplementation",
+            "gitIdentityBoundary",
+            git_identity_boundary,
             base_env,
             [],
         ),

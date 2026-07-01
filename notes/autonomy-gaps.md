@@ -1,10 +1,28 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-06-30 (75th pass)
+> Updated: 2026-07-01 (76th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-07-01 (self-improvement-audit-daily, 03:23 UTC)
+
+### PR review
+- **Status:** follow-up guard and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** fix-quality gate, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`, `xatu-experimental`).
+
+### Audit workflow
+- **Status:** git-author identity gap found and fixed this cycle: CI-fix and spec-implementation autonomy already proved the GitHub write actor was `lodekeeper`, but did not prove local commits would use the canonical `lodekeeper <lodekeeper@users.noreply.github.com>` identity before creating a branch/PR. Proposed fix was to add a side-effect-free git identity boundary preflight alongside the existing GitHub actor boundary. Gap fixed this cycle: added `scripts/git/check-git-identity-boundary.py`, wired it into `scripts/notes/check-autonomy-domain-preflights.py` for `ciFix` and `specImplementation`, updated `scripts/notes/render-autonomy-domain-statuses.py` to require/report the new check, and verified success plus wrong-identity failure.
+
+---
 ## Daily Audit Snapshot — 2026-06-30 (self-improvement-audit-daily, 03:23 UTC)
 
 ### PR review
@@ -1436,6 +1454,16 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Git identity boundary preflight added for autonomous code paths (2026-07-01)
+Added `scripts/git/check-git-identity-boundary.py` and wired it into `scripts/notes/check-autonomy-domain-preflights.py` for `ciFix` and `specImplementation`.
+- verifies effective local git author config against `lodekeeper <lodekeeper@users.noreply.github.com>`,
+- emits machine-readable JSON with expected/actual identity, `git` availability, cwd, and status,
+- surfaces failures as missing/failed `gitIdentityBoundary` domain checks before autonomous CI/spec work can proceed toward commits,
+- updates `scripts/notes/render-autonomy-domain-statuses.py` so daily audit status lines require/report the new check,
+- verified Python syntax, success for the current identity, wrong-identity failure, full domain preflight success, and rendered status output.
+
+**Rationale:** autonomous CI fixes and spec implementations can create commits and PRs. GitHub actor checks prove the external writer account, but they do not prove the local commit author identity. This closes that gap before branch/commit work starts.
 
 ### ✅ CI-fix targeted actor boundary preflight added (2026-06-27)
 Updated `scripts/notes/check-autonomy-domain-preflights.py` so `--domain ciFix` runs both the fix-quality prerequisite check and `scripts/github/check-gh-actor-boundary.py`.
