@@ -1,10 +1,28 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-07-01 (76th pass)
+> Updated: 2026-07-02 (77th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-07-02 (self-improvement-audit-daily, 03:23 UTC)
+
+### PR review
+- **Status:** follow-up guard and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`, `xatu-experimental`).
+
+### Audit workflow
+- **Status:** CI-log acquisition preflight gap found and fixed this cycle: autonomous CI-fix runs already had a `scripts/ci/fetch-run-logs.sh --check-only` guard, but the consolidated autonomy-domain preflight did not run it, so the daily audit could report CI-fix readiness without proving failed-run log acquisition still worked. Gap fixed this cycle: added `ciFix/runLogFetch` to `scripts/notes/check-autonomy-domain-preflights.py`, updated `scripts/notes/render-autonomy-domain-statuses.py` to require/report it, and verified Python syntax plus targeted/full preflight rendering.
+
+---
 ## Daily Audit Snapshot — 2026-07-01 (self-improvement-audit-daily, 03:23 UTC)
 
 ### PR review
@@ -1454,6 +1472,15 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ CI-fix domain preflight now proves run-log acquisition (2026-07-02)
+Updated `scripts/notes/check-autonomy-domain-preflights.py` and `scripts/notes/render-autonomy-domain-statuses.py`.
+- adds `ciFix/runLogFetch`, backed by `scripts/ci/fetch-run-logs.sh --check-only`,
+- keeps the check side-effect-free while proving the GitHub Actions log-fetch helper and cached GitHub access guard are available before autonomous CI triage,
+- requires the check in rendered daily CI-fix status lines so missing log-acquisition readiness cannot be hidden behind a green fix-quality gate,
+- verified Python syntax, targeted `--domain ciFix --json` output, and full preflight status rendering.
+
+**Rationale:** autonomous CI fixes need failed-run logs before they can classify or repair a failure. The daily CI-fix preflight should prove that acquisition path alongside the LLM quality gate, actor boundary, and git identity boundary.
 
 ### ✅ Git identity boundary preflight added for autonomous code paths (2026-07-01)
 Added `scripts/git/check-git-identity-boundary.py` and wired it into `scripts/notes/check-autonomy-domain-preflights.py` for `ciFix` and `specImplementation`.

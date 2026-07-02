@@ -146,6 +146,13 @@ def build_checks(args: argparse.Namespace, workspace: Path) -> list[tuple[str, s
         ),
         (
             "ciFix",
+            "runLogFetch",
+            ["bash", "scripts/ci/fetch-run-logs.sh", "--check-only"],
+            base_env,
+            [],
+        ),
+        (
+            "ciFix",
             "githubActorBoundary",
             [
                 python,
