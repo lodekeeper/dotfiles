@@ -9,10 +9,22 @@ CFG="https://config.$N.ethpandaops.io"
 
 echo "# $N — health snapshot ($(date -u +%Y-%m-%dT%H:%MZ))"
 
-echo; echo "## finality / participation (dora /api/v1/epoch/latest)"
-curl -fsS --max-time 15 "$DORA/api/v1/epoch/latest" \
-  | jq '(.data // .) | {epoch, finalized, participation_pct: .globalparticipationrate, validators: .validatorscount, proposed: .proposedblocks, missed: .missedblocks, orphaned: .orphanedblocks}' \
-  || echo "  (dora epoch endpoint unreachable)"
+echo; echo "## finality / participation"
+# NOTE: /api/v1/epoch/latest is the IN-PROGRESS epoch — its participation_pct is
+# partial (attestations still being included) and routinely reads ~55-60% mid-epoch.
+# Do NOT judge "not finalizing" from it. The last COMPLETED epoch is the real signal.
+LATEST=$(curl -fsS --max-time 15 "$DORA/api/v1/epoch/latest" 2>/dev/null || echo '{}')
+CUR_EPOCH=$(echo "$LATEST" | jq -r '(.data // .).epoch // empty')
+echo "$LATEST" \
+  | jq '(.data // .) | {epoch, note: "IN-PROGRESS — partial", participation_pct_partial: .globalparticipationrate, finalized}' \
+  || echo "  (dora epoch/latest unreachable)"
+if [ -n "$CUR_EPOCH" ]; then
+  DONE=$((CUR_EPOCH - 1))
+  echo "  -> last COMPLETED epoch ($DONE) — judge finalization from THIS:"
+  curl -fsS --max-time 15 "$DORA/api/v1/epoch/$DONE" \
+    | jq '(.data // .) | {epoch, finalized, participation_pct: .globalparticipationrate, validators: .validatorscount, proposed: .proposedblocks, payloads_ok: .proposedpayloads, payloads_missed: .missedpayloads}' \
+    || echo "  (dora epoch/$DONE unreachable)"
+fi
 
 echo; echo "## scheduled forks (epoch != far-future)"
 curl -fsS --max-time 15 "$CFG/cl/config.yaml" 2>/dev/null \
