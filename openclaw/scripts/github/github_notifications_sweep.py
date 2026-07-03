@@ -37,7 +37,7 @@ def utc_now_iso() -> str:
     return dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
 
-def run_gh_json(args: List[str], retries: int = 3) -> Any:
+def run_gh_json(args: List[str], retries: int = 4) -> Any:
     import time
     cmd = ["gh", "api"] + args
     last_err = None
@@ -48,10 +48,19 @@ def run_gh_json(args: List[str], retries: int = 3) -> Any:
         except subprocess.CalledProcessError as e:
             last_err = e
             stderr = (e.stderr or "").lower()
-            if "bad credentials" in stderr or "401" in stderr:
-                if attempt < retries - 1:
-                    time.sleep(2 ** attempt)
-                    continue
+            stdout = (e.output or "").lower()
+            is_transient = (
+                "bad credentials" in stderr
+                or "401" in stderr
+                or "502" in stderr
+                or "503" in stderr
+                or "504" in stderr
+                or "502" in stdout
+                or "unicorn" in stdout
+            )
+            if is_transient and attempt < retries - 1:
+                time.sleep(2 ** attempt)
+                continue
             raise
     raise last_err
 
