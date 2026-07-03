@@ -152,6 +152,7 @@ DEDUPE_CMD=(python3 "$WORKSPACE/scripts/notes/dedupe-autonomy-audit-snapshots.py
 CHECK_CMD=(python3 "$WORKSPACE/scripts/notes/check-autonomy-gaps-consistency.py" --file "$TARGET_FILE")
 CADENCE_CMD=(python3 "$WORKSPACE/scripts/notes/check-autonomy-audit-cadence.py" --file "$TARGET_FILE" --latest-only --require-current --fail-on-gap)
 DOMAIN_PREFLIGHT_CMD=(python3 "$WORKSPACE/scripts/notes/check-autonomy-domain-preflights.py")
+DOMAIN_SUMMARY_RENDER_CMD=(python3 "$WORKSPACE/scripts/notes/summarize-autonomy-domain-preflights.py")
 DOMAIN_STATUS_RENDER_CMD=(python3 "$WORKSPACE/scripts/notes/render-autonomy-domain-statuses.py")
 PREPEND_CMD=(python3 "$WORKSPACE/scripts/notes/prepend-autonomy-audit-snapshot.py" --file "$TARGET_FILE")
 
@@ -218,11 +219,24 @@ fi
 
 if [[ "$RUN_DOMAIN_PREFLIGHTS" -eq 1 ]]; then
   echo "[3/6] Running autonomy domain preflights"
-  "${DOMAIN_PREFLIGHT_CMD[@]}"
   DOMAIN_PREFLIGHT_JSON="$(mktemp)"
   DOMAIN_STATUS_JSON="$(mktemp)"
-  TEMP_FILES+=("$DOMAIN_PREFLIGHT_JSON" "$DOMAIN_STATUS_JSON")
-  "${DOMAIN_PREFLIGHT_CMD[@]}" --json > "$DOMAIN_PREFLIGHT_JSON"
+  DOMAIN_PREFLIGHT_STDERR="$(mktemp)"
+  TEMP_FILES+=("$DOMAIN_PREFLIGHT_JSON" "$DOMAIN_STATUS_JSON" "$DOMAIN_PREFLIGHT_STDERR")
+  set +e
+  "${DOMAIN_PREFLIGHT_CMD[@]}" --json > "$DOMAIN_PREFLIGHT_JSON" 2> "$DOMAIN_PREFLIGHT_STDERR"
+  domain_preflight_rc=$?
+  set -e
+  if [[ -s "$DOMAIN_PREFLIGHT_JSON" ]]; then
+    "${DOMAIN_SUMMARY_RENDER_CMD[@]}" --preflight-json "$DOMAIN_PREFLIGHT_JSON" || true
+  fi
+  if [[ "$domain_preflight_rc" -ne 0 ]]; then
+    if [[ -s "$DOMAIN_PREFLIGHT_STDERR" ]]; then
+      cat "$DOMAIN_PREFLIGHT_STDERR" >&2
+    fi
+    echo "❌ Autonomy domain preflights failed (exit $domain_preflight_rc). Aborting preflight." >&2
+    exit "$domain_preflight_rc"
+  fi
   "${DOMAIN_STATUS_RENDER_CMD[@]}" --preflight-json "$DOMAIN_PREFLIGHT_JSON" --json > "$DOMAIN_STATUS_JSON"
   PREPEND_CMD+=(--status-prefill-json "$DOMAIN_STATUS_JSON")
 else
