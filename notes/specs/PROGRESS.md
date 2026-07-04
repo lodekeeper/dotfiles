@@ -101,7 +101,15 @@ detached 18 days behind on 2026-06-19 and faked a discrepancy).
   my open monotonicity-guard proposal (consensus-specs branch + Lodestar PR) is the divergence,
   not adopted upstream. Consistent with prior understanding — see [[project-fast-confirmation-resets]].
 
+### 2026-07-03 — Gloas builder constants [notes: gloas-builder-constants-drift.md]
+- Re-verified vs `origin/master` (batch of gloas constant PRs all merged 2026-07-03).
+- ⚠️ **3 stale constants on Lodestar `unstable`** (Nico's active area — documented, no autonomous PR):
+  - `BUILDER_WITHDRAWAL_PREFIX` `0x03` → spec `0xB0` (#5416)
+  - `MAX_BUILDER_DEPOSIT_REQUESTS_PER_PAYLOAD` `256` → spec `64` (#5420, mainnet+minimal preset)
+  - `MIN_BUILDER_WITHDRAWABILITY_DELAY` mainnet `8192` → spec `64` (#5426); minimal `2` ✅ matches
+- No live-devnet break (spec pins lag today's master); forward-alignment work. Captured in BACKLOG for next main-session sweep (cron blocked from #347); PR only on Nico's go.
+
 ---
 *Started: 2026-02-15*
-*Last updated: 2026-06-26 — re-verification pass on phase0 fast-confirmation: Lodestar `isConfirmedChainSafe` ✅ in sync with #5288 (checkpoint-in-chain check, not is_ancestor)*
+*Last updated: 2026-07-03 — Gloas builder-constants re-verify: 3 stale constants (prefix 0x03→0xB0, deposit-req 256→64, withdrawability-delay 8192→64) all from spec PRs merged same day; documented, flagged to Nico, no autonomous PR (his active area)*
 *🎉 ALL FORKS COMPLETE (surface read 2026-02-18); now in spot-re-verify mode*
