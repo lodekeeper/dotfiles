@@ -1,10 +1,28 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-07-04 (79th pass)
+> Updated: 2026-07-05 (80th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-07-05 (self-improvement-audit-daily, 03:25 UTC)
+
+### PR review
+- **Status:** follow-up guard and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** dotfiles publish-surface guard gap found and fixed this cycle: today's public-dotfiles exposure showed that the sync guard blocked some sensitive additions but did not fail closed when already tracked private workspace files (`openclaw/USER.md`, `openclaw/MEMORY.md`, `openclaw/TOOLS.md`, `openclaw/BACKLOG.md`) were headed to a public remote. Gap fixed this cycle: added `--check-only` plus a remote-visibility guard to `~/dotfiles/scripts/sync-dotfiles.sh`; it now blocks private workspace files whenever the remote is public or visibility cannot be verified, while still passing when `DOTFILES_REPO_VISIBILITY=private` is explicitly confirmed. Verified syntax, private override success, public override failure, and real current-repo failure against the public remote.
+
+---
 ## Daily Audit Snapshot — 2026-07-04 (self-improvement-audit-daily, 03:25 UTC)
 
 ### PR review
