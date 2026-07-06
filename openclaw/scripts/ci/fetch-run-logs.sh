@@ -5,7 +5,7 @@ usage() {
   cat <<'EOF'
 Usage:
   fetch-run-logs.sh <run-id> [--repo owner/repo] [--output <path>]
-  fetch-run-logs.sh --check-only
+  fetch-run-logs.sh --check-only [--json]
 
 Fetch failed logs for a GitHub Actions run with a full-log fallback.
 
@@ -16,6 +16,7 @@ Examples:
 
 Options:
   --check-only  Validate local prerequisites without calling GitHub
+  --json        Emit machine-readable output for --check-only
 EOF
 }
 
@@ -51,11 +52,16 @@ repo="ChainSafe/lodestar"
 out=""
 run_id=""
 check_only=0
+json_output=0
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --check-only)
       check_only=1
+      shift
+      ;;
+    --json)
+      json_output=1
       shift
       ;;
     --repo)
@@ -83,18 +89,61 @@ while [[ $# -gt 0 ]]; do
 done
 
 if [[ "$check_only" -eq 1 ]]; then
-  if ! command -v gh >/dev/null 2>&1; then
-    echo "ERROR: gh CLI is not available" >&2
-    exit 1
-  fi
+  gh_path="$(command -v gh 2>/dev/null || true)"
+  guard_executable=1
+  status="ready"
+  ok=1
+
   if [[ ! -x "$GH_ACCESS_GUARD" ]]; then
-    echo "ERROR: GitHub access guard is missing or not executable: $GH_ACCESS_GUARD" >&2
-    exit 1
+    guard_executable=0
   fi
-  echo "CI log fetch preflight OK"
-  echo "Repo: $repo"
-  echo "GitHub guard: $GH_ACCESS_GUARD"
-  exit 0
+
+  if [[ -z "$gh_path" ]]; then
+    status="missing_gh"
+    ok=0
+  elif [[ "$guard_executable" -ne 1 ]]; then
+    status="missing_github_access_guard"
+    ok=0
+  fi
+
+  if [[ "$json_output" -eq 1 ]]; then
+    python3 - "$ok" "$status" "$repo" "$gh_path" "$GH_ACCESS_GUARD" "$guard_executable" <<'PY'
+import json
+import sys
+
+ok, status, repo, gh_path, guard, guard_executable = sys.argv[1:]
+print(json.dumps({
+    "ok": ok == "1",
+    "status": status,
+    "repo": repo,
+    "ghAvailable": bool(gh_path),
+    "ghPath": gh_path or None,
+    "githubGuard": guard,
+    "githubGuardExecutable": guard_executable == "1",
+}, sort_keys=True))
+PY
+  else
+    if [[ "$ok" -ne 1 ]]; then
+      case "$status" in
+        missing_gh)
+          echo "ERROR: gh CLI is not available" >&2
+          ;;
+        missing_github_access_guard)
+          echo "ERROR: GitHub access guard is missing or not executable: $GH_ACCESS_GUARD" >&2
+          ;;
+      esac
+      exit 1
+    fi
+    echo "CI log fetch preflight OK"
+    echo "Repo: $repo"
+    echo "GitHub guard: $GH_ACCESS_GUARD"
+  fi
+  exit "$((1 - ok))"
+fi
+
+if [[ "$json_output" -eq 1 ]]; then
+  echo "ERROR: --json is only supported with --check-only" >&2
+  exit 1
 fi
 
 if [[ -z "$run_id" ]]; then

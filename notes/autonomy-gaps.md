@@ -1,10 +1,25 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-07-05 (80th pass)
+> Updated: 2026-07-06 (81st pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-07-06 (self-improvement-audit-daily, 03:25 UTC)
+
+### PR review
+- **Status:** follow-up guard and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** CI-log fetch machine-readability gap found and fixed this cycle: `scripts/ci/fetch-run-logs.sh --check-only` only emitted prose, so the consolidated CI-fix preflight could prove the helper exited successfully but not preserve structured details about `gh` and the GitHub access guard. Proposed fix was to add a JSON check-only mode and make the domain preflight consume it. Gap fixed this cycle: added `--json` support to the log-fetch preflight, wired `ciFix/runLogFetch` to call it, and verified shell syntax, Python syntax, direct JSON output, and targeted CI-fix domain preflight JSON. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+---
 ## Daily Audit Snapshot — 2026-07-05 (self-improvement-audit-daily, 03:25 UTC)
 
 ### PR review
