@@ -37,6 +37,18 @@ REQUIRED_SECTIONS = [
     "Spec implementation",
     "Devnet debugging",
 ]
+CHANGE_EVENT_PATTERNS = [
+    re.compile(r"\bfix applied this cycle\b", re.IGNORECASE),
+    re.compile(r"\bfound and fixed this cycle\b", re.IGNORECASE),
+    re.compile(r"\bgap fixed this cycle\b", re.IGNORECASE),
+    re.compile(r"\bimplemented\b", re.IGNORECASE),
+    re.compile(r"\badded\b", re.IGNORECASE),
+    re.compile(r"\bupdated\b", re.IGNORECASE),
+]
+STEADY_STATE_PATTERNS = [
+    re.compile(r"\bno new .+ blocker discovered this cycle\b", re.IGNORECASE),
+    re.compile(r"\bverified from current preflight output\b", re.IGNORECASE),
+]
 
 
 @dataclass
@@ -119,6 +131,29 @@ def get_required_statuses(body: str) -> dict[str, str]:
     return statuses
 
 
+def is_change_event_status(status: str | None) -> bool:
+    if not status:
+        return False
+    return any(pattern.search(status) for pattern in CHANGE_EVENT_PATTERNS)
+
+
+def is_steady_state_status(status: str | None) -> bool:
+    if not status:
+        return False
+    return any(pattern.search(status) for pattern in STEADY_STATE_PATTERNS)
+
+
+def is_return_to_steady_state(previous_status: str | None, current_status: str | None) -> bool:
+    """Ignore noise after yesterday's required-section one-off fix rolls off.
+
+    Required domain sections are status snapshots, so the day after a fix often
+    changes from "gap fixed this cycle" back to the generated healthy preflight
+    status. That should not produce a user-facing alert by itself.
+    """
+
+    return is_change_event_status(previous_status) and is_steady_state_status(current_status)
+
+
 def find_snapshot_with_previous(snapshots: list[Snapshot], date_str: str | None) -> tuple[Snapshot, Snapshot]:
     if not snapshots:
         raise ValueError("No snapshots found")
@@ -170,10 +205,21 @@ def main() -> int:
 
     current_statuses = get_required_statuses(current.body)
     previous_statuses = get_required_statuses(previous.body)
-    changed_required_sections = [
+    raw_changed_required_sections = [
         section
         for section in REQUIRED_SECTIONS
         if current_statuses.get(section) != previous_statuses.get(section)
+    ]
+    ignored_return_to_steady_state_sections = [
+        section
+        for section in raw_changed_required_sections
+        if is_return_to_steady_state(previous_statuses.get(section), current_statuses.get(section))
+    ]
+    ignored_return_to_steady_state_lookup = set(ignored_return_to_steady_state_sections)
+    changed_required_sections = [
+        section
+        for section in raw_changed_required_sections
+        if section not in ignored_return_to_steady_state_lookup
     ]
 
     current_sections = parse_sections(current.body)
@@ -218,6 +264,8 @@ def main() -> int:
         "previousDate": previous.date,
         "hasDelta": has_delta,
         "changedRequiredSections": changed_required_sections,
+        "rawChangedRequiredSections": raw_changed_required_sections,
+        "ignoredReturnToSteadyStateRequiredSections": ignored_return_to_steady_state_sections,
         "statusDeltas": status_deltas,
         "changedNonRequiredSections": changed_non_required_sections,
         "addedSectionHeadings": added_headings,
