@@ -1,10 +1,25 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-07-08 (83rd pass)
+> Updated: 2026-07-09 (84th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-07-09 (self-improvement-audit-daily, 03:27 UTC)
+
+### PR review
+- **Status:** follow-up guard and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** CI detector entrypoint preflight gap found and fixed this cycle: the daily CI-fix domain checked the quality gate, run-log fetcher, GitHub actor, and git identity, but did not prove `auto_fix_flaky.py` itself could be checked side-effect-free before scanning CI or mutating the tracker. Gap fixed this cycle: added `auto_fix_flaky.py --check-only --json`, wired it into `ciFix/detectorEntrypoint`, updated rendered CI-fix status text and `CRON_PROMPT.md`, and verified Python syntax, direct detector JSON, targeted CI-fix domain JSON, and full domain status rendering. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+---
 ## Daily Audit Snapshot — 2026-07-08 (self-improvement-audit-daily, 03:27 UTC)
 
 ### PR review
@@ -1574,6 +1589,16 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ CI auto-fix detector now has a local-only preflight (2026-07-09)
+Updated `scripts/ci/auto_fix_flaky.py`, `scripts/notes/check-autonomy-domain-preflights.py`, `scripts/notes/render-autonomy-domain-statuses.py`, and `scripts/ci/CRON_PROMPT.md`.
+- adds `--check-only --json` to the detector without calling GitHub or mutating `memory/unstable-ci-tracker.json`,
+- validates `gh`, the cached GitHub access guard, and tracker-parent writability before CI scanning starts,
+- wires the check into the daily CI-fix domain as `ciFix/detectorEntrypoint`,
+- updates the CI cron instructions so the detector preflight runs before `--apply`,
+- verified Python syntax, direct detector JSON, targeted `--domain ciFix --json`, and full domain status rendering.
+
+**Rationale:** autonomous CI fixes should prove the detector entrypoint itself is locally usable before the cron scans unstable or writes tracker state. The prior daily CI-fix preflight covered downstream helpers but could miss detector drift until a live CI-fix run.
 
 ### ✅ CI-fix domain preflight now proves run-log acquisition (2026-07-02)
 Updated `scripts/notes/check-autonomy-domain-preflights.py` and `scripts/notes/render-autonomy-domain-statuses.py`.

@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import json
 import os
+import shutil
 import subprocess
 import sys
 from datetime import datetime, timezone
@@ -71,6 +72,36 @@ def bail_if_github_suspended(silent_signal: str = "GITHUB_SUSPENDED_SKIP") -> No
     if result.returncode == 2:
         print(silent_signal)
         sys.exit(0)
+
+
+def check_environment() -> dict[str, Any]:
+    """Validate detector prerequisites without calling GitHub or mutating tracker state."""
+    tracker_parent = TRACKER_PATH.parent
+    tracker_parent_ready = (
+        (tracker_parent.exists() and os.access(tracker_parent, os.W_OK))
+        or (not tracker_parent.exists() and os.access(tracker_parent.parent, os.W_OK))
+    )
+    checks = {
+        "ghCli": shutil.which("gh") is not None,
+        "githubAccessGuard": GH_ACCESS_GUARD.is_file() and os.access(GH_ACCESS_GUARD, os.X_OK),
+        "trackerParentWritable": tracker_parent_ready,
+    }
+    missing = [name for name, ok in checks.items() if not ok]
+    return {
+        "ok": not missing,
+        "status": "ready" if not missing else "missing_prerequisites",
+        "message": (
+            "CI auto-fix detector prerequisites are available"
+            if not missing
+            else "Missing prerequisite(s): " + ", ".join(missing)
+        ),
+        "checks": checks,
+        "repo": REPO,
+        "tracker": str(TRACKER_PATH),
+        "githubAccessGuard": str(GH_ACCESS_GUARD),
+        "targetWorkflows": TARGET_WORKFLOWS,
+        "targetJobPatterns": TARGET_JOB_PATTERNS,
+    }
 
 
 def gh_json(args: list[str]) -> Any:
@@ -283,7 +314,27 @@ def main() -> None:
     import argparse
     ap = argparse.ArgumentParser(description="Detect and classify flaky CI failures on unstable")
     ap.add_argument("--apply", action="store_true", help="Update tracker with findings")
+    ap.add_argument(
+        "--check-only",
+        action="store_true",
+        help="Validate local prerequisites without calling GitHub or updating tracker state",
+    )
+    ap.add_argument("--json", action="store_true", help="Emit machine-readable output for --check-only")
     args = ap.parse_args()
+
+    if args.json and not args.check_only:
+        print("ERROR: --json is only supported with --check-only", file=sys.stderr)
+        sys.exit(1)
+
+    if args.check_only:
+        result = check_environment()
+        if args.json:
+            print(json.dumps(result, indent=2, sort_keys=True))
+        else:
+            print(result["message"])
+            for name, ok in result["checks"].items():
+                print(f"- {name}: {'OK' if ok else 'MISSING'}")
+        sys.exit(0 if result["ok"] else 2)
 
     bail_if_github_suspended()
 

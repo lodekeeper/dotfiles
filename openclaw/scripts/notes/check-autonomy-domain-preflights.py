@@ -139,6 +139,13 @@ def build_checks(args: argparse.Namespace, workspace: Path) -> list[tuple[str, s
         ),
         (
             "ciFix",
+            "detectorEntrypoint",
+            [python, "scripts/ci/auto_fix_flaky.py", "--check-only", "--json"],
+            base_env,
+            [],
+        ),
+        (
+            "ciFix",
             "fixQualityGate",
             [python, "scripts/ci/check_fix_quality.py", "--check-only"],
             ci_env,

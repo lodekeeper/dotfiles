@@ -24,6 +24,15 @@ cd ~/.openclaw/workspace && scripts/github/check-github-guard-coverage.sh
 The detector also has the same script-level guard as a fail-safe, but Step 0b
 stays mandatory so suspended runs skip before loading/scanning CI state.
 
+## Step 0c: Detector pre-flight (MANDATORY — run before scanning CI)
+
+```bash
+cd ~/.openclaw/workspace && python3 scripts/ci/auto_fix_flaky.py --check-only
+```
+
+- Exit 0 → detector prerequisites are intact; continue to Step 1.
+- Non-zero → report the missing prerequisite(s) and stop before scanning CI or mutating the tracker.
+
 ## Step 1: Detect
 ```bash
 cd ~/.openclaw/workspace && python3 scripts/ci/auto_fix_flaky.py --apply
