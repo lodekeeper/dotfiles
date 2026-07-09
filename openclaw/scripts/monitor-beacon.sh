@@ -20,14 +20,14 @@ if [ -n "$ERRORS" ]; then
   ALERTS+='```\n\n'
 fi
 
-# 2. Check sync status from latest info line
-LATEST_INFO=$(echo "$LOGS" | grep 'info.*Synced' | tail -1)
+# 2. Check sync status (Lodestar "info Synced" or Nimbus "sync=synced")
+LATEST_INFO=$(echo "$LOGS" | grep -iE 'info.*Synced|sync=synced' | tail -1)
 if [ -z "$LATEST_INFO" ]; then
   # No "Synced" line in last 24h — node may be struggling
   ALERTS+="🔴 **No 'Synced' log line in last $SINCE** — node may be down or stuck\n\n"
 else
   # Check peer count
-  PEERS=$(echo "$LATEST_INFO" | grep -oP 'peers: \K[0-9]+')
+  PEERS=$(echo "$LATEST_INFO" | grep -oP 'peers[:=] ?\K[0-9]+')
   if [ -n "$PEERS" ] && [ "$PEERS" -lt 50 ]; then
     ALERTS+="🟡 **Low peer count: $PEERS** (expected ~200)\n\n"
   fi
