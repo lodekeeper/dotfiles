@@ -179,6 +179,8 @@ if [[ "$CHECK_ONLY" -eq 1 ]]; then
   self_syntax_ok=0
   track_findings_present=0
   track_findings_help_ok=0
+  track_findings_sync_gh_help_ok=0
+  track_findings_stale_help_ok=0
   discussion_fetcher_present=0
   discussion_fetcher_preflight_ok=0
   metadata_checker_present=0
@@ -219,6 +221,20 @@ if [[ "$CHECK_ONLY" -eq 1 ]]; then
       track_findings_help_ok=1
     else
       [[ "$JSON" -eq 1 ]] || echo "ERROR: track-findings.py help path failed" >&2
+      failures=$((failures + 1))
+    fi
+
+    if python3 "$TRACK_FINDINGS" sync-gh --help >/dev/null 2>&1; then
+      track_findings_sync_gh_help_ok=1
+    else
+      [[ "$JSON" -eq 1 ]] || echo "ERROR: track-findings.py sync-gh help path failed" >&2
+      failures=$((failures + 1))
+    fi
+
+    if python3 "$TRACK_FINDINGS" stale --help >/dev/null 2>&1; then
+      track_findings_stale_help_ok=1
+    else
+      [[ "$JSON" -eq 1 ]] || echo "ERROR: track-findings.py stale help path failed" >&2
       failures=$((failures + 1))
     fi
   fi
@@ -282,6 +298,8 @@ if [[ "$CHECK_ONLY" -eq 1 ]]; then
         "$TRACK_FINDINGS" \
         "$track_findings_present" \
         "$track_findings_help_ok" \
+        "$track_findings_sync_gh_help_ok" \
+        "$track_findings_stale_help_ok" \
         "$DISCUSSION_FETCHER" \
         "$discussion_fetcher_present" \
         "$discussion_fetcher_preflight_ok" \
@@ -308,25 +326,27 @@ payload = {
             "path": sys.argv[7],
             "present": bool(int(sys.argv[8])),
             "helpOk": bool(int(sys.argv[9])),
+            "syncGhHelpOk": bool(int(sys.argv[10])),
+            "staleHelpOk": bool(int(sys.argv[11])),
         },
         "fetchPrDiscussion": {
-            "path": sys.argv[10],
-            "present": bool(int(sys.argv[11])),
-            "checkOnlyJsonOk": bool(int(sys.argv[12])),
+            "path": sys.argv[12],
+            "present": bool(int(sys.argv[13])),
+            "checkOnlyJsonOk": bool(int(sys.argv[14])),
         },
         "checkPrMetadataDrift": {
-            "path": sys.argv[13],
-            "present": bool(int(sys.argv[14])),
-            "helpOk": bool(int(sys.argv[15])),
+            "path": sys.argv[15],
+            "present": bool(int(sys.argv[16])),
+            "helpOk": bool(int(sys.argv[17])),
         },
         "githubAccessGuard": {
-            "path": sys.argv[16],
-            "executable": bool(int(sys.argv[17])),
+            "path": sys.argv[18],
+            "executable": bool(int(sys.argv[19])),
         },
     },
     "reportDirectory": {
-        "path": sys.argv[18],
-        "ready": bool(int(sys.argv[19])),
+        "path": sys.argv[20],
+        "ready": bool(int(sys.argv[21])),
     },
 }
 print(json.dumps(payload, sort_keys=True))
