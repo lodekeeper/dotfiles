@@ -55,3 +55,19 @@ Gateway healthy post-reboot; no action needed on OpenClaw itself. Load was brief
 **Non-crash, pre-existing warts (not urgent):**
 - mainnet-tempo-1 restart-loop: tempo.yaml `compactor` field rejected by image version (config drift). Tracing only.
 - Charon EL version-check points at non-existent `nethermind:8545` (cosmetic telemetry, unrelated to outage).
+
+## RESOLVED (verified ~13:03 UTC, full recovery)
+
+Crash recovery is complete:
+- erigon EL: `eth_syncing:false` — fully synced.
+- Lodestar beacon: `is_optimistic:false`, `sync_distance:0`, health 200 — at head, validated.
+- Vero (main VC): attested continuously throughout (2-of-3 remote beacon fallback). ✅
+- Charon/Obol DVT: recovered when beacon de-optimized — "Successfully submitted v2 attestations". ✅
+- All containers up.
+
+**Correction to earlier note — Vouch/Dirk (vouchdirk-3, "vouch2", val-1) was NOT a crash casualty:**
+- Its Dirk slashing-rejections ("target epoch <= previous signed target epoch") started **07:10 UTC**, ~53 min BEFORE the 08:03 crash. Pre-existing, unrelated.
+- Single account `val-1`; pubkey `0xb742...fcbe4` returns **404 "Validator pubkey not found in state"** on the mainnet beacon → NOT a registered mainnet validator. Test/lab key, nothing at stake.
+- Benign standby/redundant-instance noise. No action taken (would not touch a distributed-signer stack regardless — slashing risk).
+
+**Net:** crash was a one-off hard power/hardware reset; everything real recovered on its own. No missed mainnet attestations of consequence.
