@@ -1,10 +1,25 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-07-10 (85th pass)
+> Updated: 2026-07-11 (86th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-07-11 (self-improvement-audit-daily, 03:27 UTC)
+
+### PR review
+- **Status:** PR-review metadata-checker preflight gap found and fixed this cycle: `run-followup-guards.sh --check-only` verified `check-pr-metadata-drift.py --help`, but not a checker-owned side-effect-free prerequisite path, so `gh pr` subcommand/help or GitHub-access guard drift could pass daily readiness and fail only during a live PR follow-up. Gap fixed this cycle: added `check-pr-metadata-drift.py --check-only --json`, updated `run-followup-guards.sh --check-only --json` to require it and expose `checkOnlyJsonOk`, extended `check-github-guard-coverage.sh` to run it, and verified Python compile, shell syntax, direct checker JSON, wrapper JSON, guard coverage, and the full PR-review domain preflight. GitHub actor-boundary still verifies as `lodekeeper`.
+
+### CI fix
+- **Status:** detector entrypoint, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+---
 ## Daily Audit Snapshot — 2026-07-10 (self-improvement-audit-daily, 03:27 UTC)
 
 ### PR review
@@ -1392,6 +1407,14 @@
 Multi-persona review via `lodestar-review` skill. Parallel spawning, persona prompts, inline GitHub comment posting. Works well when diff scope is clear.
 
 ### Gaps
+
+#### ~~🟡 PR metadata checker lacked checker-owned local preflight~~ ✅ FIXED (2026-07-11)
+~~`scripts/review/run-followup-guards.sh --check-only` could validate that `check-pr-metadata-drift.py --help` parsed, but it could not exercise the metadata checker's own side-effect-free prerequisite path without a real PR. That left `gh pr view`/`gh pr diff` helper drift or a broken GitHub-access guard detectable only during a live follow-up run.~~
+
+**Fix applied:** added `--check-only --json` to `scripts/github/check-pr-metadata-drift.py`:
+- validates `gh`, `gh pr view --help`, `gh pr diff --help`, non-empty repo input, and the executable GitHub access guard without fetching PR metadata,
+- updated `scripts/review/run-followup-guards.sh --check-only --json` to require that checker-owned preflight and expose `checkOnlyJsonOk`,
+- extended `scripts/github/check-github-guard-coverage.sh` so the direct checker preflight remains covered alongside the wrapper.
 
 #### ~~🟡 PR follow-up wrapper lacked machine-readable local preflight~~ ✅ FIXED (2026-06-15)
 ~~`scripts/review/run-followup-guards.sh` had guarded live execution, but autonomous PR-review wrappers could not validate the full helper chain without supplying a real PR and risking GitHub fetch/report side effects. That left helper drift detectable only during an actual follow-up run.~~

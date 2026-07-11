@@ -185,6 +185,7 @@ if [[ "$CHECK_ONLY" -eq 1 ]]; then
   discussion_fetcher_preflight_ok=0
   metadata_checker_present=0
   metadata_checker_help_ok=0
+  metadata_checker_check_only_json_ok=0
   github_guard_executable=0
   report_dir_ready=0
 
@@ -269,6 +270,13 @@ if [[ "$CHECK_ONLY" -eq 1 ]]; then
       [[ "$JSON" -eq 1 ]] || echo "ERROR: check-pr-metadata-drift.py help path failed" >&2
       failures=$((failures + 1))
     fi
+
+    if python3 "$METADATA_CHECKER" --repo "$REPO" --check-only --json >/dev/null 2>&1; then
+      metadata_checker_check_only_json_ok=1
+    else
+      [[ "$JSON" -eq 1 ]] || echo "ERROR: check-pr-metadata-drift.py check-only JSON preflight failed" >&2
+      failures=$((failures + 1))
+    fi
   fi
 
   if [[ -x "$GH_ACCESS_GUARD" ]]; then
@@ -306,6 +314,7 @@ if [[ "$CHECK_ONLY" -eq 1 ]]; then
         "$METADATA_CHECKER" \
         "$metadata_checker_present" \
         "$metadata_checker_help_ok" \
+        "$metadata_checker_check_only_json_ok" \
         "$GH_ACCESS_GUARD" \
         "$github_guard_executable" \
         "$report_dir" \
@@ -338,15 +347,16 @@ payload = {
             "path": sys.argv[15],
             "present": bool(int(sys.argv[16])),
             "helpOk": bool(int(sys.argv[17])),
+            "checkOnlyJsonOk": bool(int(sys.argv[18])),
         },
         "githubAccessGuard": {
-            "path": sys.argv[18],
-            "executable": bool(int(sys.argv[19])),
+            "path": sys.argv[19],
+            "executable": bool(int(sys.argv[20])),
         },
     },
     "reportDirectory": {
-        "path": sys.argv[20],
-        "ready": bool(int(sys.argv[21])),
+        "path": sys.argv[21],
+        "ready": bool(int(sys.argv[22])),
     },
 }
 print(json.dumps(payload, sort_keys=True))

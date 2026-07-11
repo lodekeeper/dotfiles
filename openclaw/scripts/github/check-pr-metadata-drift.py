@@ -21,6 +21,7 @@ import argparse
 import json
 import os
 import re
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -98,9 +99,61 @@ def extract_semvers(lines: Iterable[str]) -> set[str]:
     return out
 
 
+def command_ok(command: list[str], timeout_s: int = 10) -> bool:
+    try:
+        return (
+            subprocess.run(
+                command,
+                text=True,
+                capture_output=True,
+                timeout=timeout_s,
+                check=False,
+            ).returncode
+            == 0
+        )
+    except subprocess.TimeoutExpired:
+        return False
+
+
+def check_only(repo: str) -> dict[str, object]:
+    gh_path = shutil.which("gh")
+    guard_exists = GH_ACCESS_GUARD.exists()
+    guard_executable = os.access(GH_ACCESS_GUARD, os.X_OK)
+
+    gh_pr_view_help_ok = False
+    gh_pr_diff_help_ok = False
+    if gh_path:
+        gh_pr_view_help_ok = command_ok(["gh", "pr", "view", "--help"])
+        gh_pr_diff_help_ok = command_ok(["gh", "pr", "diff", "--help"])
+
+    payload = {
+        "repo": repo,
+        "ghAvailable": bool(gh_path),
+        "ghPath": gh_path,
+        "ghPrViewHelpOk": gh_pr_view_help_ok,
+        "ghPrDiffHelpOk": gh_pr_diff_help_ok,
+        "githubAccessGuard": {
+            "path": str(GH_ACCESS_GUARD),
+            "exists": guard_exists,
+            "executable": guard_executable,
+        },
+    }
+    payload["ok"] = all(
+        [
+            payload["ghAvailable"],
+            payload["ghPrViewHelpOk"],
+            payload["ghPrDiffHelpOk"],
+            guard_exists,
+            guard_executable,
+            bool(repo.strip()),
+        ]
+    )
+    return payload
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Check PR title/body for metadata drift against current diff")
-    parser.add_argument("--pr", type=int, required=True, help="PR number")
+    parser.add_argument("--pr", type=int, help="PR number")
     parser.add_argument("--repo", default="ChainSafe/lodestar", help="owner/repo (default: ChainSafe/lodestar)")
     parser.add_argument(
         "--scope-threshold",
@@ -108,7 +161,39 @@ def main() -> int:
         default=8,
         help="Warn when narrow-scope language is used and changed file count exceeds this threshold",
     )
+    parser.add_argument(
+        "--check-only",
+        action="store_true",
+        help="Validate local prerequisites without fetching PR metadata",
+    )
+    parser.add_argument(
+        "--json",
+        action="store_true",
+        help="Emit machine-readable output for --check-only",
+    )
     args = parser.parse_args()
+
+    if args.json and not args.check_only:
+        parser.error("--json is only supported with --check-only")
+
+    if args.check_only:
+        payload = check_only(args.repo)
+        if args.json:
+            print(json.dumps(payload, sort_keys=True))
+        else:
+            status = "OK" if payload["ok"] else "FAIL"
+            print(f"metadata drift checker preflight: {status}")
+            print(f"repo: {payload['repo']}")
+            print(f"gh available: {payload['ghAvailable']}")
+            print(f"gh pr view --help: {payload['ghPrViewHelpOk']}")
+            print(f"gh pr diff --help: {payload['ghPrDiffHelpOk']}")
+            guard = payload["githubAccessGuard"]
+            if isinstance(guard, dict):
+                print(f"github access guard: {guard['path']} (executable: {guard['executable']})")
+        return 0 if payload["ok"] else 2
+
+    if args.pr is None:
+        parser.error("--pr is required unless --check-only is set")
 
     try:
         bail_if_github_suspended()

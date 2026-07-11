@@ -58,6 +58,11 @@ require_pattern "scripts/review/track-findings.py" "bail_if_github_suspended"
 require_pattern "scripts/review/track-findings.py" "GITHUB_SUSPENDED_SKIP"
 require_pattern "scripts/github/check-pr-metadata-drift.py" "bail_if_github_suspended"
 require_pattern "scripts/github/check-pr-metadata-drift.py" "GITHUB_SUSPENDED_SKIP"
+require_pattern "scripts/github/check-pr-metadata-drift.py" "--check-only"
+if ! python3 "$WORKSPACE/scripts/github/check-pr-metadata-drift.py" --check-only --json >/dev/null; then
+  echo "FAILED check-only JSON preflight: scripts/github/check-pr-metadata-drift.py" >&2
+  failures=$((failures + 1))
+fi
 require_pattern "scripts/review/run-followup-guards.sh" "bail_if_github_suspended"
 require_pattern "scripts/review/run-followup-guards.sh" "GITHUB_SUSPENDED_SKIP"
 require_pattern "scripts/review/run-followup-guards.sh" "GITHUB_ACCESS_STATE_FILE"
