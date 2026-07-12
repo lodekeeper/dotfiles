@@ -20,15 +20,27 @@ if [ -n "$ERRORS" ]; then
   ALERTS+='```\n\n'
 fi
 
-# 2. Check sync status (Lodestar "info Synced" or Nimbus "sync=synced")
-LATEST_INFO=$(echo "$LOGS" | grep -iE 'info.*Synced|sync=synced' | tail -1)
-if [ -z "$LATEST_INFO" ]; then
-  # No "Synced" line in last 24h — node may be struggling
-  ALERTS+="🔴 **No 'Synced' log line in last $SINCE** — node may be down or stuck\n\n"
+# 2. Sync + liveness via the REST API — authoritative source of truth.
+#    (This container logs to a FILE, not docker stdout: `docker logs` is empty and the
+#    info-level "Synced" line never reaches stdout, so the old grep always false-fired.)
+BN_IP=$(docker inspect "$CONTAINER" --format '{{range .NetworkSettings.Networks}}{{.IPAddress}} {{end}}' 2>/dev/null | awk '{print $1}')
+SYNCING=$(curl -s --max-time 8 "http://${BN_IP}:5052/eth/v1/node/syncing" 2>/dev/null)
+if [ -z "$SYNCING" ] || ! echo "$SYNCING" | grep -q '"head_slot"'; then
+  # REST unreachable = the real "node down / unresponsive" signal
+  ALERTS+="🔴 **Beacon REST API unreachable** (http://${BN_IP}:5052) — node may be down or unresponsive\n\n"
 else
-  # Check peer count
-  PEERS=$(echo "$LATEST_INFO" | grep -oP 'peers[:=] ?\K[0-9]+')
-  if [ -n "$PEERS" ] && [ "$PEERS" -lt 50 ]; then
+  SYNC_DIST=$(echo "$SYNCING" | python3 -c "import sys,json;print(json.load(sys.stdin)['data']['sync_distance'])" 2>/dev/null || echo "")
+  IS_SYNCING=$(echo "$SYNCING" | python3 -c "import sys,json;print(json.load(sys.stdin)['data']['is_syncing'])" 2>/dev/null || echo "?")
+  EL_OFFLINE=$(echo "$SYNCING" | python3 -c "import sys,json;print(json.load(sys.stdin)['data'].get('el_offline',False))" 2>/dev/null || echo "?")
+  if [ -n "$SYNC_DIST" ] && [ "$SYNC_DIST" -gt 10 ] 2>/dev/null; then
+    ALERTS+="🔴 **Node behind head: sync_distance=$SYNC_DIST slots** (is_syncing=$IS_SYNCING) — may be stuck/struggling\n\n"
+  fi
+  if [ "$EL_OFFLINE" = "True" ]; then
+    ALERTS+="🔴 **Execution client offline** (el_offline=true)\n\n"
+  fi
+  # Peer count via REST
+  PEERS=$(curl -s --max-time 8 "http://${BN_IP}:5052/eth/v1/node/peer_count" 2>/dev/null | python3 -c "import sys,json;print(json.load(sys.stdin)['data']['connected'])" 2>/dev/null || echo "")
+  if [ -n "$PEERS" ] && [ "$PEERS" -lt 50 ] 2>/dev/null; then
     ALERTS+="🟡 **Low peer count: $PEERS** (expected ~200)\n\n"
   fi
 fi
