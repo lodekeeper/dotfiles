@@ -69,6 +69,42 @@ def _failed_check_names(domain_checks: dict[str, dict[str, Any]], expected_names
     ]
 
 
+def _failure_detail(check: dict[str, Any] | None) -> str | None:
+    if check is None:
+        return "missing"
+
+    stdout = check.get("stdout")
+    if isinstance(stdout, dict):
+        error = stdout.get("error")
+        if isinstance(error, str) and error.strip():
+            return error.strip()
+
+        panda = stdout.get("panda")
+        if isinstance(panda, dict):
+            error = panda.get("error")
+            if isinstance(error, str) and error.strip():
+                return error.strip()
+
+    stderr = check.get("stderr")
+    if isinstance(stderr, str) and stderr.strip():
+        return stderr.strip()
+
+    return None
+
+
+def _failure_summary(domain_checks: dict[str, dict[str, Any]], failed_names: list[str]) -> str:
+    details: list[str] = []
+    for name in failed_names:
+        detail = _failure_detail(domain_checks.get(name))
+        if detail:
+            details.append(f"{name}: {detail}")
+
+    if not details:
+        return ""
+
+    return f" Details: {'; '.join(details)}."
+
+
 def _warning_text(checks: list[dict[str, Any]]) -> list[str]:
     warnings: list[str] = []
     for check in checks:
@@ -137,9 +173,15 @@ def render_statuses(payload: dict[str, Any]) -> dict[str, str]:
         warnings = _warning_text(checks)
 
         if failed:
-            statuses[section] = (
-                f"BLOCKER: domain preflight check(s) failed or were missing: {', '.join(failed)}. "
-                "Proposed fix: inspect the failing preflight JSON/stderr before continuing autonomous work in this domain."
+            failure_summary = _failure_summary(domain_checks, failed)
+            statuses[section] = " ".join(
+                part
+                for part in [
+                    f"BLOCKER: domain preflight check(s) failed or were missing: {', '.join(failed)}.",
+                    failure_summary,
+                    "Proposed fix: inspect the failing preflight JSON/stderr before continuing autonomous work in this domain.",
+                ]
+                if part
             )
             continue
 

@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import argparse
 import json
+from pathlib import Path
 import re
 import shutil
 import subprocess
@@ -19,6 +20,8 @@ from typing import Any
 LOCAL_STATUSES = {"RUNNING", "STOPPED", "STOPPING"}
 NAME_KEYS = ("name", "id", "network", "cluster", "slug", "title")
 ANSI_RE = re.compile(r"\x1b\[[0-9;]*[A-Za-z]")
+AUTH_STATUS_LINE = re.compile(r"^Status:\s*(.+?)\s*$", re.MULTILINE)
+REFRESH_TOKEN_LINE = re.compile(r"^Refresh token:\s*(.+?)\s*$", re.MULTILINE)
 
 
 def run_command(cmd: list[str], timeout: int) -> tuple[int | None, str, str]:
@@ -77,6 +80,122 @@ def datasource_name(item: Any) -> str | None:
     return None
 
 
+def collect_panda_auth_status(timeout: int) -> dict[str, Any]:
+    if shutil.which("panda") is None:
+        return {"state": "missing", "error": "panda not found"}
+
+    rc, stdout, stderr = run_command(["panda", "auth", "status"], timeout)
+    raw = (stdout or stderr).strip()
+    if rc != 0:
+        return {
+            "state": "error",
+            "error": raw,
+            "returncode": rc,
+        }
+
+    status_match = AUTH_STATUS_LINE.search(raw)
+    refresh_match = REFRESH_TOKEN_LINE.search(raw)
+    return {
+        "state": "ready",
+        "status": status_match.group(1).strip() if status_match else None,
+        "refreshToken": refresh_match.group(1).strip() if refresh_match else None,
+        "raw": raw,
+    }
+
+
+def collect_panda_credential_permissions() -> dict[str, Any]:
+    credentials_dir = Path.home() / ".config" / "panda" / "credentials"
+    if not credentials_dir.exists():
+        return {
+            "state": "missing",
+            "path": str(credentials_dir),
+            "error": "panda credentials directory not found",
+        }
+
+    entries: list[dict[str, Any]] = []
+    problems: list[str] = []
+    for path in sorted(credentials_dir.glob("*.json")):
+        stat_result = path.stat()
+        mode = stat_result.st_mode & 0o777
+        entry = {
+            "path": str(path),
+            "mode": oct(mode),
+            "groupReadable": bool(mode & 0o040),
+        }
+        entries.append(entry)
+        if not entry["groupReadable"]:
+            problems.append(f"{path} is not group-readable")
+
+    if not entries:
+        return {
+            "state": "empty",
+            "path": str(credentials_dir),
+            "entries": [],
+            "error": "no panda credential JSON files found",
+        }
+
+    return {
+        "state": "problem" if problems else "ready",
+        "path": str(credentials_dir),
+        "entries": entries,
+        "problems": problems,
+    }
+
+
+def collect_recent_panda_server_auth_errors(timeout: int) -> dict[str, Any]:
+    if shutil.which("docker") is None:
+        return {"state": "missing", "error": "docker not found"}
+
+    rc, stdout, stderr = run_command(
+        ["docker", "logs", "--since", "20m", "--tail", "200", "panda-server"],
+        timeout,
+    )
+    raw = (stdout or stderr).strip()
+    if rc != 0:
+        return {
+            "state": "error",
+            "error": raw,
+            "returncode": rc,
+        }
+
+    markers = [
+        "invalid_grant",
+        "Background datasource refresh failed",
+        "permission denied",
+        "proxy authentication required",
+    ]
+    matched = [marker for marker in markers if marker in raw]
+    return {
+        "state": "ready",
+        "markers": matched,
+        "invalidGrant": "invalid_grant" in matched,
+        "permissionDenied": "permission denied" in matched,
+    }
+
+
+def datasource_null_error(
+    auth_status: dict[str, Any],
+    credential_permissions: dict[str, Any],
+    recent_auth_errors: dict[str, Any],
+) -> str:
+    status = auth_status.get("status")
+    markers = recent_auth_errors.get("markers") or []
+
+    if isinstance(status, str) and status.startswith("Expired") and "invalid_grant" in markers:
+        return (
+            "panda returned datasources=null; server proxy token is expired and refresh is rejected "
+            "(invalid_grant) - fresh `panda auth login` is required"
+        )
+
+    if credential_permissions.get("state") == "problem":
+        return (
+            "panda returned datasources=null; credential file permissions may block the server container "
+            "from reading the token"
+        )
+
+    return "panda returned datasources=null; auth or server datasource access is not ready"
+
+
 def collect_panda_datasources(timeout: int) -> dict[str, Any]:
     if shutil.which("panda") is None:
         return {"state": "missing", "names": [], "error": "panda not found"}
@@ -102,10 +221,16 @@ def collect_panda_datasources(timeout: int) -> dict[str, Any]:
 
     datasources = payload.get("datasources") if isinstance(payload, dict) else payload
     if datasources is None:
+        auth_status = collect_panda_auth_status(timeout)
+        credential_permissions = collect_panda_credential_permissions()
+        recent_auth_errors = collect_recent_panda_server_auth_errors(timeout)
         return {
             "state": "unavailable",
             "names": [],
-            "error": "panda returned datasources=null; auth or server datasource access is not ready",
+            "error": datasource_null_error(auth_status, credential_permissions, recent_auth_errors),
+            "authStatus": auth_status,
+            "credentialPermissions": credential_permissions,
+            "recentServerAuthErrors": recent_auth_errors,
         }
     if not isinstance(datasources, list):
         return {

@@ -10,6 +10,7 @@ CARRY_FORWARD_STATUS=1
 DEDUPE_APPLY=0
 STRICT_CADENCE=0
 RUN_DOMAIN_PREFLIGHTS=1
+DOCUMENT_DOMAIN_FAILURES=0
 STRICT_CI_API_KEY=0
 REQUIRE_DEVNET_GRAFANA=0
 ENSURE_DAILY_MEMORY_NOTE=1
@@ -46,6 +47,9 @@ Options:
   --check-domains       Run side-effect-free PR/CI/spec/devnet domain preflights (default)
   --skip-domain-preflights
                         Skip domain preflights before snapshot insertion
+  --document-domain-failures
+                        Insert the snapshot with BLOCKER statuses when domain preflights fail
+                        instead of aborting before notes/autonomy-gaps.md is updated
   --strict-ci-api-key   Require a real OPENAI_API_KEY in the CI-fix quality-gate preflight
   --require-devnet-grafana
                         Require Grafana token/tooling in the devnet-debugging preflight
@@ -101,6 +105,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --skip-domain-preflights)
       RUN_DOMAIN_PREFLIGHTS=0
+      shift
+      ;;
+    --document-domain-failures)
+      DOCUMENT_DOMAIN_FAILURES=1
       shift
       ;;
     --strict-ci-api-key)
@@ -230,15 +238,29 @@ if [[ "$RUN_DOMAIN_PREFLIGHTS" -eq 1 ]]; then
   if [[ -s "$DOMAIN_PREFLIGHT_JSON" ]]; then
     "${DOMAIN_SUMMARY_RENDER_CMD[@]}" --preflight-json "$DOMAIN_PREFLIGHT_JSON" || true
   fi
+  set +e
+  "${DOMAIN_STATUS_RENDER_CMD[@]}" --preflight-json "$DOMAIN_PREFLIGHT_JSON" --json > "$DOMAIN_STATUS_JSON"
+  domain_status_rc=$?
+  set -e
+
   if [[ "$domain_preflight_rc" -ne 0 ]]; then
     if [[ -s "$DOMAIN_PREFLIGHT_STDERR" ]]; then
       cat "$DOMAIN_PREFLIGHT_STDERR" >&2
     fi
-    echo "❌ Autonomy domain preflights failed (exit $domain_preflight_rc). Aborting preflight." >&2
-    exit "$domain_preflight_rc"
+    if [[ "$DOCUMENT_DOMAIN_FAILURES" -eq 1 && -s "$DOMAIN_STATUS_JSON" ]]; then
+      echo "⚠️ Autonomy domain preflights failed (exit $domain_preflight_rc); documenting BLOCKER statuses in today's snapshot."
+      PREPEND_CMD+=(--status-prefill-json "$DOMAIN_STATUS_JSON")
+    else
+      echo "❌ Autonomy domain preflights failed (exit $domain_preflight_rc). Aborting preflight." >&2
+      echo "   Re-run with --document-domain-failures to record the blocker in notes/autonomy-gaps.md." >&2
+      exit "$domain_preflight_rc"
+    fi
+  elif [[ "$domain_status_rc" -ne 0 ]]; then
+    echo "❌ Could not render autonomy domain statuses (exit $domain_status_rc). Aborting preflight." >&2
+    exit "$domain_status_rc"
+  else
+    PREPEND_CMD+=(--status-prefill-json "$DOMAIN_STATUS_JSON")
   fi
-  "${DOMAIN_STATUS_RENDER_CMD[@]}" --preflight-json "$DOMAIN_PREFLIGHT_JSON" --json > "$DOMAIN_STATUS_JSON"
-  PREPEND_CMD+=(--status-prefill-json "$DOMAIN_STATUS_JSON")
 else
   echo "[3/6] Skipping autonomy domain preflights (--skip-domain-preflights)"
 fi

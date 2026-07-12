@@ -1,10 +1,28 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-07-11 (86th pass)
+> Updated: 2026-07-12 (87th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-07-12 (self-improvement-audit-daily, 03:27 UTC)
+
+### PR review
+- **Status:** follow-up guard and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** BLOCKER: domain preflight check(s) failed or were missing: devnetRoutingReadiness. Details: devnetRoutingReadiness: panda returned datasources=null; server proxy token is expired and refresh is rejected (invalid_grant) - fresh `panda auth login` is required. Proposed fix: inspect the failing preflight JSON/stderr before continuing autonomous work in this domain.
+
+### Audit workflow
+- **Status:** panda datasource-null diagnostics and failed-preflight documentation gap found and fixed this cycle: the devnet routing preflight detected `datasources=null`, but only reported a vague auth/server-access failure, and the audit preflight aborted before inserting a snapshot for the blocker. Gap fixed this cycle: `check-devnet-routing-readiness.py` now attaches `panda auth status`, credential-file mode checks, and recent panda-server auth markers when datasources are null; `render-autonomy-domain-statuses.py` carries the concrete failing-check reason into snapshot status text; `run-autonomy-audit-preflight.sh --document-domain-failures` can insert a BLOCKER snapshot instead of aborting. Live diagnosis: panda credential permissions were restored to `0640`, but the server refresh token is expired and rejected with `invalid_grant`, so fresh `panda auth login` is required before remote devnet-debugging autonomy is fully ready.
+
+---
 ## Daily Audit Snapshot — 2026-07-11 (self-improvement-audit-daily, 03:27 UTC)
 
 ### PR review
