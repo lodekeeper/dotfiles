@@ -1,10 +1,28 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-07-12 (87th pass)
+> Updated: 2026-07-13 (88th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-07-13 (self-improvement-audit-daily, 03:27 UTC)
+
+### PR review
+- **Status:** follow-up guard and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** devnet blocker recovery summary gap found and fixed this cycle: yesterday's panda `datasources=null` blocker is now clear, but the close-out renderer would have emitted a very long before/after required-status diff instead of a compact recovery signal. Gap fixed this cycle: `render-autonomy-audit-response.py` now classifies blocker-to-healthy transitions as `resolved previous BLOCKER`, while still preserving full current details for newly introduced or changed blockers.
+
+---
 ## Daily Audit Snapshot — 2026-07-12 (self-improvement-audit-daily, 03:27 UTC)
 
 ### PR review
@@ -1645,6 +1663,14 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Autonomy audit close-out now summarizes blocker recovery (2026-07-13)
+Updated `scripts/notes/render-autonomy-audit-response.py`.
+- detects required-section transitions from `BLOCKER:` to a healthy/current status,
+- renders those transitions as `resolved previous BLOCKER` instead of dumping the full previous and current status text,
+- keeps newly introduced blockers and blocker-detail changes explicit by including the current blocker text.
+
+**Rationale:** daily autonomy audits should notify clearly when an external blocker recovers without producing noisy, hard-to-scan cron output. Today's panda datasource recovery is exactly that case.
 
 ### ✅ CI auto-fix detector now has a local-only preflight (2026-07-09)
 Updated `scripts/ci/auto_fix_flaky.py`, `scripts/notes/check-autonomy-domain-preflights.py`, `scripts/notes/render-autonomy-domain-statuses.py`, and `scripts/ci/CRON_PROMPT.md`.

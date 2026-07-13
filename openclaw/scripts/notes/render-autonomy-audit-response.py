@@ -42,6 +42,23 @@ def _format_list(values: list[str], empty: str = "none") -> str:
     return ", ".join(values) if values else empty
 
 
+def _is_blocker(status: str) -> bool:
+    return status.strip().startswith("BLOCKER:")
+
+
+def _format_status_delta(section: str, previous: str, current: str) -> str:
+    if _is_blocker(previous) and not _is_blocker(current):
+        return f"{section} resolved previous BLOCKER"
+
+    if not _is_blocker(previous) and _is_blocker(current):
+        return f"{section} now BLOCKER ({current})"
+
+    if _is_blocker(previous) and _is_blocker(current):
+        return f"{section} BLOCKER detail changed ({current})"
+
+    return f"{section} ({previous} -> {current})"
+
+
 def _render_summary(payload: dict) -> str:
     current = payload.get("currentDate", "current")
     previous = payload.get("previousDate", "previous")
@@ -60,7 +77,7 @@ def _render_summary(payload: dict) -> str:
             delta = status_deltas.get(section, {})
             prev = (delta.get("previous") or "(missing)").strip()
             curr = (delta.get("current") or "(missing)").strip()
-            status_parts.append(f"{section} ({prev} -> {curr})")
+            status_parts.append(_format_status_delta(section, prev, curr))
         parts.append(f"required status changes: {'; '.join(status_parts)}")
     else:
         parts.append("required status changes: none")
