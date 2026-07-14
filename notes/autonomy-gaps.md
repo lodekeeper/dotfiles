@@ -2460,3 +2460,15 @@ All previously listed priority items in this section are complete as of **2026-0
 4. If a reminder fires while this section has no live items, the correct outcome is routine silence / `NO_REPLY`.
 
 Helper: `python3 scripts/notes/check-next-audit-priorities.py --json` returns whether this section contains live items or only the default empty-state guidance. For shell/cron guards, use `python3 scripts/notes/check-next-audit-priorities.py --quiet --fail-if-live` (`exit 0` = no live items, `exit 3` = live items present).
+
+### 🔴 [2026-07-14] Spec-implementation BLOCKER: stale test vectors (42 days, max-age 14)
+
+**Source:** 2026-07-14 daily audit snapshot (`testVectorReadiness` preflight failed with `--require-fresh`).
+
+**Root cause:** `~/consensus-specs` is on branch `proposal/fcr-monotonic-confirmed` (101 commits ahead of `origin/master`). The proposal touches only spec Python, not `tests/`. Upstream `origin/master` has new test-vector commits since the branch point (`ad18f93d4`, `83d3d918a`, etc.) that are NOT merged into the proposal branch → `git log HEAD -- tests` shows last change 42 days ago.
+
+**Fix options (pick one, needs Nico approval):**
+- **A (preferred):** `git -C ~/consensus-specs merge origin/master` — brings in upstream test commits; may conflict with proposal spec changes; resolve and push to fork.
+- **B (no-conflict):** `git clone https://github.com/ethereum/consensus-specs.git ~/consensus-specs-main` and set `SPEC_REPO=~/consensus-specs-main` for preflight checks (keeps proposal branch untouched).
+
+**Status:** ⏳ AWAITING NICO — won't merge proposal branch autonomously. Spec implementation autonomy is gated until resolved. All other domains healthy.
