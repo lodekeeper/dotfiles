@@ -24,7 +24,12 @@ EXPECTED_CHECKS = {
         "githubActorBoundary",
         "gitIdentityBoundary",
     ],
-    "specImplementation": ["prePrComplianceGate", "githubActorBoundary", "gitIdentityBoundary"],
+    "specImplementation": [
+        "prePrComplianceGate",
+        "testVectorReadiness",
+        "githubActorBoundary",
+        "gitIdentityBoundary",
+    ],
     "devnetDebugging": ["devnetTriage", "devnetRoutingReadiness"],
 }
 
@@ -79,6 +84,13 @@ def _failure_detail(check: dict[str, Any] | None) -> str | None:
         if isinstance(error, str) and error.strip():
             return error.strip()
 
+        message = stdout.get("message")
+        status = stdout.get("status")
+        if isinstance(message, str) and message.strip():
+            if isinstance(status, str) and status.strip():
+                return f"{message.strip()} (status={status.strip()})"
+            return message.strip()
+
         panda = stdout.get("panda")
         if isinstance(panda, dict):
             error = panda.get("error")
@@ -102,7 +114,14 @@ def _failure_summary(domain_checks: dict[str, dict[str, Any]], failed_names: lis
     if not details:
         return ""
 
-    return f" Details: {'; '.join(details)}."
+    return f"Details: {'; '.join(details)}."
+
+
+def _proposed_fix(domain: str, failed_names: list[str]) -> str:
+    if domain == "specImplementation" and "testVectorReadiness" in failed_names:
+        return "refresh or point `SPEC_REPO` at a current `consensus-specs` checkout before starting autonomous spec implementation."
+
+    return "inspect the failing preflight JSON/stderr before continuing autonomous work in this domain."
 
 
 def _warning_text(checks: list[dict[str, Any]]) -> list[str]:
@@ -179,7 +198,7 @@ def render_statuses(payload: dict[str, Any]) -> dict[str, str]:
                 for part in [
                     f"BLOCKER: domain preflight check(s) failed or were missing: {', '.join(failed)}.",
                     failure_summary,
-                    "Proposed fix: inspect the failing preflight JSON/stderr before continuing autonomous work in this domain.",
+                    f"Proposed fix: {_proposed_fix(domain, failed)}",
                 ]
                 if part
             )
@@ -202,7 +221,7 @@ def render_statuses(payload: dict[str, Any]) -> dict[str, str]:
         elif domain == "specImplementation":
             actor = _actor(domain_checks.get("githubActorBoundary"))
             statuses[section] = (
-                "pre-PR compliance gate, GitHub actor-boundary, and git identity preflights verified from current preflight output "
+                "pre-PR compliance gate, consensus-spec test-vector freshness, GitHub actor-boundary, and git identity preflights verified from current preflight output "
                 f"as `{actor}`; no new spec-implementation blocker discovered this cycle."
             )
         elif domain == "devnetDebugging":

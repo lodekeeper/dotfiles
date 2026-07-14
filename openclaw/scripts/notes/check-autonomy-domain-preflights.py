@@ -187,6 +187,13 @@ def build_checks(args: argparse.Namespace, workspace: Path) -> list[tuple[str, s
         ),
         (
             "specImplementation",
+            "testVectorReadiness",
+            ["bash", "scripts/spec/check-test-vector-readiness.sh", "--json", "--require-fresh"],
+            base_env,
+            [],
+        ),
+        (
+            "specImplementation",
             "githubActorBoundary",
             [
                 python,

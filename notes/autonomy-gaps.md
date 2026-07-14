@@ -1,10 +1,28 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-07-13 (88th pass)
+> Updated: 2026-07-14 (89th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-07-14 (self-improvement-audit-daily, 03:27 UTC)
+
+### PR review
+- **Status:** follow-up guard and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** BLOCKER: domain preflight check(s) failed or were missing: testVectorReadiness. Details: testVectorReadiness: test vectors are older than max-age-days (status=stale). Proposed fix: refresh or point `SPEC_REPO` at a current `consensus-specs` checkout before starting autonomous spec implementation.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** spec-implementation vector-freshness coverage gap found and fixed this cycle: the domain preflight proved the pre-PR compliance helper, GitHub actor, and git identity were healthy, but it did not prove the local `consensus-specs` test-vector corpus was fresh enough before implementation work. Gap fixed this cycle: `check-autonomy-domain-preflights.py` now runs `scripts/spec/check-test-vector-readiness.sh --json --require-fresh` as `specImplementation/testVectorReadiness`, and `render-autonomy-domain-statuses.py` includes the failure message in the generated blocker status. Live blocker: the current `~/consensus-specs` checkout reports stale test vectors, so spec implementation autonomy should refresh or repoint `SPEC_REPO` first.
+
+---
 ## Daily Audit Snapshot — 2026-07-13 (self-improvement-audit-daily, 03:27 UTC)
 
 ### PR review
@@ -1663,6 +1681,14 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Spec implementation domain preflight now checks test-vector freshness (2026-07-14)
+Updated `scripts/notes/check-autonomy-domain-preflights.py` and `scripts/notes/render-autonomy-domain-statuses.py` so the spec-implementation domain now verifies consensus-spec test-vector freshness before reporting autonomy as healthy.
+- runs `scripts/spec/check-test-vector-readiness.sh --json --require-fresh` as `specImplementation/testVectorReadiness`,
+- treats stale/missing vectors as a domain blocker,
+- carries the checker's structured `message`/`status` into generated blocker details.
+
+**Rationale:** autonomous spec implementations can pass local helper and identity preflights while still relying on stale upstream vectors. This turns that drift into an explicit pre-work blocker with a concrete refresh/repoint fix.
 
 ### ✅ Autonomy audit close-out now summarizes blocker recovery (2026-07-13)
 Updated `scripts/notes/render-autonomy-audit-response.py`.
