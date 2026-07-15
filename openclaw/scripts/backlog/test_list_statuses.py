@@ -42,4 +42,6 @@ assert [t.heading for t in tasks if not module.is_done(t)] == [
     "### 🟡 First task",
     "### 🔴 Another task",
 ]
+assert module.has_corruption_guard("> ⛔ **DO NOT ACT ON THIS FILE — CORRUPTED / UNDER RECOVERY**\n\n### task")
+assert not module.has_corruption_guard(sample)
 print("OK: list_statuses parser handles ## sections + ### tasks without stalling")

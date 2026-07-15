@@ -1,10 +1,28 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-07-14 (89th pass)
+> Updated: 2026-07-15 (90th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-07-15 (self-improvement-audit-daily, 03:28 UTC)
+
+### PR review
+- **Status:** follow-up guard and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** stale spec-vector blocker resolved this cycle without mutating the active `~/consensus-specs` proposal branch. Gap fixed this cycle: added `scripts/spec/ensure-fresh-test-vectors.sh` to create/update a dedicated upstream consensus-specs cache, fixed `check-test-vector-readiness.sh` to accept Git worktrees, switched the spec-implementation domain preflight to validate that cache in `--check-only` mode, and fixed `render-autonomy-domain-statuses.py` to respect targeted `selectedDomains` so single-domain verification no longer reports unselected domains as missing. Created/refreshed `~/.cache/lodekeeper/consensus-specs-fresh` at upstream `master` (`6408b990c`, tests age 5 days); full autonomy-domain preflight now passes.
+
+---
 ## Daily Audit Snapshot — 2026-07-14 (self-improvement-audit-daily, 03:27 UTC)
 
 ### PR review
@@ -1584,6 +1602,18 @@ Use `dev-workflow` skill for multi-agent development. Codex/Claude CLI for imple
 
 ### Gaps
 
+#### ~~🔴 Spec vector freshness was tied to an active proposal checkout~~ ✅ FIXED (2026-07-15)
+~~The autonomy-domain spec preflight used `~/consensus-specs` directly, so a dirty or long-lived proposal branch could make all autonomous spec implementation look blocked even when a clean upstream test-vector source could be maintained separately. The first attempt to use a worktree cache also exposed that `check-test-vector-readiness.sh` only accepted `.git` directories and rejected valid Git worktrees with `.git` files.~~
+
+**Fix applied:** added `scripts/spec/ensure-fresh-test-vectors.sh` and wired it into the spec-implementation domain preflight:
+- creates or updates a dedicated upstream cache at `~/.cache/lodekeeper/consensus-specs-fresh` without touching the active `~/consensus-specs` branch,
+- supports `--check-only --json` for side-effect-free daily readiness checks,
+- uses the existing test-vector readiness checker after refresh,
+- updated `check-test-vector-readiness.sh` to validate Git worktrees via `git rev-parse --git-dir`,
+- updated the daily status renderer so failures point at the cache refresh command and healthy status names the fresh cache.
+
+Verified with shell/Python syntax checks, cache refresh (`6408b990c`, tests age 5 days), targeted spec-domain JSON preflight, full autonomy-domain JSON preflight, and status rendering.
+
 #### ~~🟡 Spec vector readiness preflight lacked machine-readable output~~ ✅ FIXED (2026-06-16)
 ~~`scripts/spec/check-test-vector-readiness.sh` verified the local `~/consensus-specs/tests/` tree, but only emitted prose and could select generated cache/report files as its sample path. Autonomous spec-work wrappers needed brittle text parsing to distinguish ready/stale/missing-vector states, and the sample path could make a cache-only or report-only tree look healthier than it was.~~
 
@@ -2452,7 +2482,7 @@ Updated `scripts/debug/build-incident-bundle.sh` and `skills/local-mainnet-debug
 
 ## Next Audit Priorities (next daily cycles)
 
-All previously listed priority items in this section are complete as of **2026-04-18**. To avoid stale reminder churn:
+All previously listed priority items in this section are complete as of **2026-07-15**. To avoid stale reminder churn:
 
 1. Only add a new item here when the **latest daily audit snapshot** introduces a still-open blocker or concrete follow-up.
 2. If the latest snapshot is fully green, leave this section empty of filler work and use `BACKLOG.md` for unrelated concrete tasks.
@@ -2460,15 +2490,3 @@ All previously listed priority items in this section are complete as of **2026-0
 4. If a reminder fires while this section has no live items, the correct outcome is routine silence / `NO_REPLY`.
 
 Helper: `python3 scripts/notes/check-next-audit-priorities.py --json` returns whether this section contains live items or only the default empty-state guidance. For shell/cron guards, use `python3 scripts/notes/check-next-audit-priorities.py --quiet --fail-if-live` (`exit 0` = no live items, `exit 3` = live items present).
-
-### 🔴 [2026-07-14] Spec-implementation BLOCKER: stale test vectors (42 days, max-age 14)
-
-**Source:** 2026-07-14 daily audit snapshot (`testVectorReadiness` preflight failed with `--require-fresh`).
-
-**Root cause:** `~/consensus-specs` is on branch `proposal/fcr-monotonic-confirmed` (101 commits ahead of `origin/master`). The proposal touches only spec Python, not `tests/`. Upstream `origin/master` has new test-vector commits since the branch point (`ad18f93d4`, `83d3d918a`, etc.) that are NOT merged into the proposal branch → `git log HEAD -- tests` shows last change 42 days ago.
-
-**Fix options (pick one, needs Nico approval):**
-- **A (preferred):** `git -C ~/consensus-specs merge origin/master` — brings in upstream test commits; may conflict with proposal spec changes; resolve and push to fork.
-- **B (no-conflict):** `git clone https://github.com/ethereum/consensus-specs.git ~/consensus-specs-main` and set `SPEC_REPO=~/consensus-specs-main` for preflight checks (keeps proposal branch untouched).
-
-**Status:** ⏳ AWAITING NICO — won't merge proposal branch autonomously. Spec implementation autonomy is gated until resolved. All other domains healthy.

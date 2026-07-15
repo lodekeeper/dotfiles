@@ -111,7 +111,7 @@ print(json.dumps(payload, sort_keys=True))
 PY
 }
 
-if [[ ! -d "$SPEC_REPO/.git" ]]; then
+if ! git -C "$SPEC_REPO" rev-parse --git-dir >/dev/null 2>&1; then
   if [[ "$JSON_OUTPUT" == "true" ]]; then
     emit_json false "missing_repo" "consensus-specs repo not found"
     exit 1

@@ -10,6 +10,7 @@ from typing import Any, Dict, List, Tuple
 
 OWNER_SELF = "lodekeeper"
 GH_ACCESS_GUARD = "/home/openclaw/.openclaw/workspace/scripts/github/check-github-access.sh"
+BACKLOG_CORRUPTION_GUARD = "DO NOT ACT ON THIS FILE"
 
 
 def bail_if_github_suspended(silent_signal: str = "HEARTBEAT_OK") -> None:
@@ -130,6 +131,10 @@ def extract_handled_ids_from_backlog(backlog_text: str) -> set[int]:
 
     flush_section()
     return handled
+
+
+def backlog_has_corruption_guard(backlog_text: str) -> bool:
+    return BACKLOG_CORRUPTION_GUARD in "\n".join(backlog_text.splitlines()[:12])
 
 
 def normalize_state(state: Dict[str, Any]) -> Dict[str, Any]:
@@ -305,6 +310,11 @@ def main() -> int:
     ap.add_argument("--state", default="/home/openclaw/gh-notif-state.json")
     ap.add_argument("--checklist", default="/home/openclaw/gh-notif-checklist.json")
     ap.add_argument("--backlog", default="/home/openclaw/.openclaw/workspace/BACKLOG.md")
+    ap.add_argument(
+        "--allow-corrupted-backlog",
+        action="store_true",
+        help="Allow using handled IDs from a backlog file marked corrupted/under recovery",
+    )
     ap.add_argument("--remind-hours", type=float, default=12.0)
     args = ap.parse_args()
 
@@ -318,7 +328,15 @@ def main() -> int:
     checklist = normalize_checklist(load_json(checklist_path, {}))
 
     backlog_text = backlog_path.read_text() if backlog_path.exists() else ""
-    handled_ids = extract_handled_ids_from_backlog(backlog_text)
+    if backlog_has_corruption_guard(backlog_text) and not args.allow_corrupted_backlog:
+        print(
+            f"{backlog_path} is marked corrupted/under recovery; "
+            "ignoring backlog-derived handled IDs for this sweep.",
+            file=sys.stderr,
+        )
+        handled_ids = set()
+    else:
+        handled_ids = extract_handled_ids_from_backlog(backlog_text)
 
     # Auto-mark from backlog done entries
     now = utc_now_iso()

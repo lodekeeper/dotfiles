@@ -4,12 +4,14 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import sys
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Iterable
 
 DEFAULT_BACKLOG = Path("/home/openclaw/.openclaw/workspace/BACKLOG.md")
 DONE_PREFIXES = ("✅", "🟢")
+CORRUPTION_GUARD = "DO NOT ACT ON THIS FILE"
 
 
 @dataclass
@@ -63,6 +65,10 @@ def parse_backlog(text: str) -> list[TaskBlock]:
     return tasks
 
 
+def has_corruption_guard(text: str) -> bool:
+    return CORRUPTION_GUARD in "\n".join(text.splitlines()[:12])
+
+
 def is_done(task: TaskBlock) -> bool:
     icon = task.heading.replace("###", "", 1).strip().split(" ", 1)[0]
     return icon.startswith(DONE_PREFIXES)
@@ -88,9 +94,22 @@ def main() -> int:
     ap.add_argument("--file", type=Path, default=DEFAULT_BACKLOG)
     ap.add_argument("--active-only", action="store_true", help="Exclude done/green task headings")
     ap.add_argument("--json", action="store_true", help="Emit JSON instead of text")
+    ap.add_argument(
+        "--allow-corrupted-backlog",
+        action="store_true",
+        help="Allow parsing a backlog file that carries the corruption/recovery guard",
+    )
     args = ap.parse_args()
 
     text = args.file.read_text()
+    if has_corruption_guard(text) and not args.allow_corrupted_backlog:
+        print(
+            f"{args.file} is marked corrupted/under recovery; refusing to list task statuses. "
+            "Use --allow-corrupted-backlog only for recovery/audit work.",
+            file=sys.stderr,
+        )
+        return 2
+
     tasks = parse_backlog(text)
     if args.active_only:
         tasks = [task for task in tasks if not is_done(task)]

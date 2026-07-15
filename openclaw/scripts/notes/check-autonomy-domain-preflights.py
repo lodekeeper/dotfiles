@@ -188,7 +188,7 @@ def build_checks(args: argparse.Namespace, workspace: Path) -> list[tuple[str, s
         (
             "specImplementation",
             "testVectorReadiness",
-            ["bash", "scripts/spec/check-test-vector-readiness.sh", "--json", "--require-fresh"],
+            ["bash", "scripts/spec/ensure-fresh-test-vectors.sh", "--check-only", "--json"],
             base_env,
             [],
         ),

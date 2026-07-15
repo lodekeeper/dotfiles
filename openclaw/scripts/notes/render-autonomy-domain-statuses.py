@@ -55,6 +55,19 @@ def _checks_by_domain(payload: dict[str, Any]) -> dict[str, dict[str, dict[str, 
     return checks
 
 
+def _selected_domains(payload: dict[str, Any]) -> list[str]:
+    raw_selected = payload.get("selectedDomains")
+    if not isinstance(raw_selected, list):
+        return list(SECTION_BY_DOMAIN)
+
+    selected = [
+        domain
+        for domain in raw_selected
+        if isinstance(domain, str) and domain in SECTION_BY_DOMAIN
+    ]
+    return selected or list(SECTION_BY_DOMAIN)
+
+
 def _check_ok(check: dict[str, Any] | None) -> bool:
     if check is None:
         return False
@@ -119,7 +132,7 @@ def _failure_summary(domain_checks: dict[str, dict[str, Any]], failed_names: lis
 
 def _proposed_fix(domain: str, failed_names: list[str]) -> str:
     if domain == "specImplementation" and "testVectorReadiness" in failed_names:
-        return "refresh or point `SPEC_REPO` at a current `consensus-specs` checkout before starting autonomous spec implementation."
+        return "run `scripts/spec/ensure-fresh-test-vectors.sh` to refresh the dedicated consensus-specs cache, or point `SPEC_REPO` at a current checkout before starting autonomous spec implementation."
 
     return "inspect the failing preflight JSON/stderr before continuing autonomous work in this domain."
 
@@ -182,9 +195,11 @@ def _devnet_details(domain_checks: dict[str, dict[str, Any]]) -> tuple[str | Non
 
 def render_statuses(payload: dict[str, Any]) -> dict[str, str]:
     checks_by_domain = _checks_by_domain(payload)
+    selected_domains = _selected_domains(payload)
     statuses: dict[str, str] = {}
 
-    for domain, section in SECTION_BY_DOMAIN.items():
+    for domain in selected_domains:
+        section = SECTION_BY_DOMAIN[domain]
         expected_names = EXPECTED_CHECKS[domain]
         domain_checks = checks_by_domain.get(domain, {})
         failed = _failed_check_names(domain_checks, expected_names)
@@ -221,7 +236,7 @@ def render_statuses(payload: dict[str, Any]) -> dict[str, str]:
         elif domain == "specImplementation":
             actor = _actor(domain_checks.get("githubActorBoundary"))
             statuses[section] = (
-                "pre-PR compliance gate, consensus-spec test-vector freshness, GitHub actor-boundary, and git identity preflights verified from current preflight output "
+                "pre-PR compliance gate, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output "
                 f"as `{actor}`; no new spec-implementation blocker discovered this cycle."
             )
         elif domain == "devnetDebugging":
@@ -238,9 +253,9 @@ def render_statuses(payload: dict[str, Any]) -> dict[str, str]:
             )
 
     missing_sections = [
-        section
-        for section in SECTION_BY_DOMAIN.values()
-        if section not in statuses
+        SECTION_BY_DOMAIN[domain]
+        for domain in selected_domains
+        if SECTION_BY_DOMAIN[domain] not in statuses
     ]
     if missing_sections:
         raise ValueError(f"missing rendered status for section(s): {', '.join(missing_sections)}")
