@@ -14,7 +14,20 @@ Release timeline (github.com/AztecProtocol/aztec-packages/releases):
 - **Governance signaling** (separate post, github forum t/8606, Jun 30): staked sequencer ops signal support by setting `GOVERNANCE_PROPOSER_PAYLOAD_ADDRESS=0x1bBde48410bF7Ad05208cD77dE2bFb0e8F8803D8` (v5 payload contract). Only matters if the vote has NOT yet executed. v5 Rollup contract: 0x91ff8bbd8ebb07893010d50a48a1609e5ebd8e34.
 - **OPEN / can't confirm from web:** whether v5 is already canonical on L1 as of Jul 16. Best determined from our node's live state (still v4 & healthy? erroring? in standby?). Deploy action is the same either way (standby if early, catch-up if late).
 
-## ✅ CONFIRMED OUR SETUP + LIVE STATE (2026-07-16 ~09:52 UTC, from the running node)
+## ✅✅ MIGRATION DONE + VERIFIED (2026-07-16 13:12 UTC — Nico executed; verified against live node 13:20)
+- **Image `aztecprotocol/aztec:5.0.1`** (RPC `nodeVersion: 5.0.1`), entrypoint now `start --node --sequencer --network mainnet` → **`--archiver` correctly dropped**. RestartCount=0.
+- **Guide checklist: all satisfied.** migrate-ha-db correctly skipped (local signer, `nodeId: local`). Env audited programmatically vs removed/renamed lists → **CLEAN**. DB auto-wipe fired as expected: `foundation:version-manager Rollup address has changed, resetting data directory`.
+- **Out of standby**, on v5 rollup `0x91ff8bbd8ebb07893010d50a48a1609e5ebd8e34`, l1ChainId 1, rollupVersion 4248422647.
+- **Synced**: tips proposed 1552 = checkpointed 1552, proven 1536. Archiver following L1 live; validator re-executing every proposal; 24 peers / 55 discv5.
+- **Zero real errors** — the 2 "ERROR" grep hits were `L1RpcError` *inside WARNs* about L1 RPC not serving historical `debug_traceTransaction`/`trace_transaction`. Benign.
+- **RPC**: `aztec_*` works; legacy `node_*` **still works too** (guide said temporary) → migrate any dashboards before it's removed.
+- **All 5 attesters VALIDATING on-chain** (`getAttesterView` status=1, no exit). Stake carried to v5.
+  - `inCommittee:false` is EXPECTED, not a fault: active set **3463**, committee ~48/slot → ~1.4%/validator/epoch. Sentinel tracking only 48 (one committee) since it started at slot 19503.
+- **✅ RESOLVED — two attesters were slashed, but it's harmless.** On-chain `getActivationThreshold()` = **200,000** exactly → 200k IS the baseline everyone activates at, so the three at exactly 200,000 are pristine and `0x030a9f4d…`=198,000 / `0x6b077c71…`=196,000 definitively took 2k / 4k in penalties (1× and 2× a 2k penalty). **No risk:** `getEjectionThreshold()` = **100,000**, so they carry ~96–98k of headroom (~48 more penalties) and remain status=1 VALIDATING. Not actionable.
+  - Dating not established: could be v4-era (stake lives in the GSE and carried across the rollup swap) or today. Leaning v4-era — the guide's ~1-week post-execution slashing grace would have covered today's standby window, and 3/5 are untouched (a long v5 outage would likely have hit all five).
+- **⚠️ Blob sourcing is single-point** (my earlier "resync will stall" prediction did NOT materialize — zero blob failures, all checkpoints downloaded). v5 logs `consensusSuperNodes=0 archiveSources=0 blobSinks=1; 1 consensus client(s) ignored because they are not running in supernode or semi-supernode mode` → `consensus:5052` is ignored entirely as a blob source; we rely solely on 1 blob sink, no fallback. Fix: run paired beacon in supernode/semi-supernode mode, or add an archive source.
+
+## CONFIRMED OUR SETUP + PRE-MIGRATION STATE (2026-07-16 ~09:52 UTC, from the running node)
 - **Container:** `aztec-sequencer`, image `aztecprotocol/aztec:4.3.1`, restart=always, started 09:35:33Z.
 - **Deployment:** docker-compose `sequencer` project at **`/home/ethereum/aztec/sequencer/docker-compose.yml`** — **ethereum-owned; openclaw CANNOT read/edit → Nico executes.** (openclaw can `docker inspect`/`exec` only.)
 - **Command:** `start --node --archiver --sequencer --network mainnet` → **drop `--archiver`** for v5. No `--pxe` present.
