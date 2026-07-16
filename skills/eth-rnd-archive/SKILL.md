@@ -40,10 +40,12 @@ Configured in `config.json` (this skill directory). Only these channels are moni
 - `data-availability-sampling` — DAS / PeerDAS
 - `apis` — Beacon/Engine API discussions
 - `ai-workflows` — AI tooling / workflow discussions relevant to protocol engineering
+- `ssz` — SSZ spec/library discussions
 
 ### Infrastructure
 - `payload-builders` — MEV/PBS/builder discussions
 - `networking` — general networking
+- `interop-🌃` — cross-client interop/devnet coordination (Glamsterdam devnet triage lives here)
 - `client-development` — client team discussions
 
 ## Thread Support

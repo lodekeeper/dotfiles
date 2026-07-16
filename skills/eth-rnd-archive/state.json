@@ -1,5 +1,6 @@
 {
-  "lastCommit": "1515772819aaee7c425724cfc88d39f5fecbeba8",
-  "lastCheck": "2026-07-16T00:16:27.334887+00:00",
-  "lastDigest": "2026-07-13T07:00:00Z"
+  "lastCommit": "07bf9824ab3872ff39ea1ab2ec0b5aebabf16382",
+  "lastCheck": "2026-07-16T11:16:23.599463+00:00",
+  "lastDigest": "2026-07-16T09:45:00Z",
+  "lastDigestNote": "posted manually \u2014 daily-digest cron errored (isolated agent setup timeout, systemic)"
 }

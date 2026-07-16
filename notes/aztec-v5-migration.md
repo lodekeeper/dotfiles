@@ -1,10 +1,28 @@
 # Aztec Sequencer v5 Node Migration — Prep Notes
 
 **Source:** https://forum.aztec.network/t/v5-node-migration-guide/8596
-**Read/verified:** 2026-07-09 (two independent fetches, cross-checked verbatim)
-**Migration:** v4.3.1 → **v5.0.0-rc.1**
+**Read/verified:** 2026-07-09; **re-checked 2026-07-16**
+**Migration:** v4.3.1 → **v5.0.1** (was rc.1 — see UPDATE below)
 **Difficulty:** HIGH — major protocol upgrade, network-wide simultaneous L1 upgrade.
-**Deadline:** none stated (RC; further breaking changes possible before stable v5). No date/testnet given.
+
+## ⚠️ UPDATE 2026-07-16 (rc.1 is obsolete — stable is out)
+Release timeline (github.com/AztecProtocol/aztec-packages/releases):
+- v5.0.0-rc.1 — Jun 15  → v5.0.0-rc.2 — Jun 29  → **v5.0.0 stable — Jul 13**  → **v5.0.1 — Jul 15 (latest)**
+- **Deploy target = `aztecprotocol/aztec:5.0.1`** (skip rc entirely). v5.0.1 = v5.0.0 + prover-node clean-shutdown fix + `set-funding-account` validator CLI. NO consensus changes, NO new migration steps vs v5.0.0, non-mandatory over 5.0.0 but strictly newer → just use it.
+- Core migration mechanics (below) are UNCHANGED rc.1 → stable. Notes still valid.
+- **Slashing grace period:** ~1 week from the moment the v5 payload executes on L1 before non-compliant nodes are slashed; on-chain `SLASH_GRACE_PERIOD_L2_SLOTS` default 128 slots. If the L1 flip already happened, the clock is ticking — don't dawdle.
+- **Governance signaling** (separate post, github forum t/8606, Jun 30): staked sequencer ops signal support by setting `GOVERNANCE_PROPOSER_PAYLOAD_ADDRESS=0x1bBde48410bF7Ad05208cD77dE2bFb0e8F8803D8` (v5 payload contract). Only matters if the vote has NOT yet executed. v5 Rollup contract: 0x91ff8bbd8ebb07893010d50a48a1609e5ebd8e34.
+- **OPEN / can't confirm from web:** whether v5 is already canonical on L1 as of Jul 16. Best determined from our node's live state (still v4 & healthy? erroring? in standby?). Deploy action is the same either way (standby if early, catch-up if late).
+
+## ✅ CONFIRMED OUR SETUP + LIVE STATE (2026-07-16 ~09:52 UTC, from the running node)
+- **Container:** `aztec-sequencer`, image `aztecprotocol/aztec:4.3.1`, restart=always, started 09:35:33Z.
+- **Deployment:** docker-compose `sequencer` project at **`/home/ethereum/aztec/sequencer/docker-compose.yml`** — **ethereum-owned; openclaw CANNOT read/edit → Nico executes.** (openclaw can `docker inspect`/`exec` only.)
+- **Command:** `start --node --archiver --sequencer --network mainnet` → **drop `--archiver`** for v5. No `--pxe` present.
+- **Signer:** **LOCAL keystore** (bind `keys → /var/lib/keystore`, 8 KB). NOT HA/Postgres. → **`migrate-ha-db` does NOT apply.** No Aztec Postgres container exists.
+- **Env:** `USE_NETWORK_CONFIG=true` + network defaults; `AZTEC_PORT=8082`, `AZTEC_ADMIN_PORT=8880`, `P2P_PORT=40400`, `DATA_DIRECTORY=/var/lib/data`, `ETHEREUM_HOSTS=https://rpc-mainnet-1.nflaig.dev,http://135.181.2.45:8545`, `L1_CONSENSUS_HOST_URLS=http://consensus:5052`. **NONE of the removed/renamed v5 env vars are set** → env cleanup is a **no-op** for us. `GOVERNANCE_PROPOSER_PAYLOAD_ADDRESS` not set (moot — vote already executed).
+- **Data:** `/home/ethereum/aztec/sequencer/data` = **1.5 GB** (archiver, world_state, p2p, admin, sentinel, slasher, cache). Auto-wipes on v5 schema bump → resync.
+- **🔴 LIVE STATE: node is STUCK IN STANDBY.** On the 09:35 restart it found the canonical L1 rollup is now the **v5 rollup `0x91ff8bbd8ebb07893010d50a48a1609e5ebd8e34`** (matches governance-post v5 Rollup addr) and logged `incompatible ... Entering standby mode. Will poll every 60s`. Mismatch on genesis archive root / VK tree root / protocol contracts hash (v4 image expects v4 roots, chain has v5 roots). **v4 image can never exit standby now — only the v5 image matches.** → We are LATE and offline for duties, not "early and waiting."
+- **⚠️ Related pre-existing issue:** archiver blob fetch failing — `consensus:5052` returns 503 "Custody group count of 17 is not sufficient to serve blob sidecars, must custody at least 64 data columns". Post-upgrade the archiver resync refetches blobs from L1; if this beacon node still can't serve them the resync may stall. Fix: point `L1_CONSENSUS_HOST_URLS` at a blob-serving (≥64-column / full-custody) beacon endpoint.
 
 ## Protocol version gate (important behavior)
 - v4 and v5 nodes **cannot** operate in the same network.
