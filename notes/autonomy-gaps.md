@@ -1,10 +1,28 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-07-15 (90th pass)
+> Updated: 2026-07-17 (91st pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-07-17 (self-improvement-audit-daily, 03:21 UTC)
+
+### PR review
+- **Status:** follow-up guard and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** cadence gap detected and documented this cycle: the latest prior snapshot was 2026-07-15, so the daily audit missed 2026-07-16. Proposed fix was to make snapshot insertion keep the file-level `Updated` header/pass count in sync automatically, so missed or recovered runs do not leave stale audit metadata behind. Gap fixed this cycle: `scripts/notes/prepend-autonomy-audit-snapshot.py` now refreshes the top-level `Updated` line when it inserts a snapshot; this file was corrected to 2026-07-17 / 91st pass. Remaining external fix: investigate scheduler/run history separately if the 2026-07-16 skip repeats.
+
+---
 ## Daily Audit Snapshot — 2026-07-15 (self-improvement-audit-daily, 03:28 UTC)
 
 ### PR review

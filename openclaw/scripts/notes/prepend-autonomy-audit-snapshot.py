@@ -20,6 +20,7 @@ import sys
 SNAPSHOT_HEADING = re.compile(r"^## Daily Audit Snapshot — (\d{4}-\d{2}-\d{2})\b.*$", re.MULTILINE)
 SECTION_HEADING = re.compile(r"^###\s+(.+?)\s*$", re.MULTILINE)
 STATUS_LINE = re.compile(r"^\s*-\s+\*\*Status:\*\*\s*(.+?)\s*$", re.MULTILINE)
+UPDATED_LINE = re.compile(r"^> Updated: .+$", re.MULTILINE)
 
 REQUIRED_SECTIONS = [
     "PR review",
@@ -81,6 +82,23 @@ def build_snapshot_block(date_str: str, time_label: str, status_prefill: dict[st
 
     lines.extend(["---", ""])
     return "\n".join(lines)
+
+
+def ordinal(value: int) -> str:
+    if 10 <= value % 100 <= 20:
+        suffix = "th"
+    else:
+        suffix = {1: "st", 2: "nd", 3: "rd"}.get(value % 10, "th")
+    return f"{value}{suffix}"
+
+
+def update_header(text: str, *, date_str: str, pass_count: int) -> str:
+    replacement = f"> Updated: {date_str} ({ordinal(pass_count)} pass)"
+    updated, count = UPDATED_LINE.subn(replacement, text, count=1)
+    if count == 0:
+        print("⚠️ Could not find top-level Updated header; inserted snapshot without header refresh", file=sys.stderr)
+        return text
+    return updated
 
 
 def sanitize_carry_forward_status(section_name: str, value: str) -> str:
@@ -219,7 +237,9 @@ def main() -> int:
 
     insert_at = first_sep_idx + len(separator)
     snapshot = build_snapshot_block(date_str=date_str, time_label=time_label, status_prefill=status_prefill)
+    pass_count = len(list(SNAPSHOT_HEADING.finditer(text))) + 1
     updated = text[:insert_at] + snapshot + text[insert_at:]
+    updated = update_header(updated, date_str=date_str, pass_count=pass_count)
 
     path.write_text(updated, encoding="utf-8")
     print(f"✅ Inserted snapshot scaffold for {date_str} ({time_label}) into {path}")
