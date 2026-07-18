@@ -1,10 +1,28 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-07-17 (91st pass)
+> Updated: 2026-07-18 (92nd pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-07-18 (self-improvement-audit-daily, 03:16 UTC)
+
+### PR review
+- **Status:** follow-up guard and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** full-lifecycle audit wrapper gap found and fixed this cycle: the daily cron still required separate preflight and close-out commands plus a manually supplied memory-outcome string, so a rerun could leave the audit half-closed even after the snapshot was inserted. Gap fixed this cycle: added `scripts/notes/run-daily-autonomy-audit.sh` to run preflight, fill the daily memory outcome, close the audit, and print the cron-ready response from one command while preserving strict cadence, domain-preflight, and credential options.
+
+---
 ## Daily Audit Snapshot — 2026-07-17 (self-improvement-audit-daily, 03:21 UTC)
 
 ### PR review
@@ -1729,6 +1747,15 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Daily autonomy audit one-command wrapper added (2026-07-18)
+Added `scripts/notes/run-daily-autonomy-audit.sh`.
+- runs `run-autonomy-audit-preflight.sh` with fresh domain preflights and `--document-domain-failures`,
+- fills the seeded daily-memory outcome through `close-autonomy-audit.sh --update-memory-outcome`,
+- preserves strict cadence, domain-preflight, CI-key, Grafana, and live-priority options,
+- prints the final cron-ready response (`NO_REPLY` or concise summary) as the command output.
+
+**Rationale:** daily self-improvement audits should have one repeatable command that completes snapshot creation, journaling, close-out guards, and response rendering instead of relying on the operator to remember the two-step sequence.
 
 ### ✅ Spec implementation domain preflight now checks test-vector freshness (2026-07-14)
 Updated `scripts/notes/check-autonomy-domain-preflights.py` and `scripts/notes/render-autonomy-domain-statuses.py` so the spec-implementation domain now verifies consensus-spec test-vector freshness before reporting autonomy as healthy.
