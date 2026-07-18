@@ -109,7 +109,23 @@ detached 18 days behind on 2026-06-19 and faked a discrepancy).
   - `MIN_BUILDER_WITHDRAWABILITY_DELAY` mainnet `8192` → spec `64` (#5426); minimal `2` ✅ matches
 - No live-devnet break (spec pins lag today's master); forward-alignment work. Captured in BACKLOG for next main-session sweep (cron blocked from #347); PR only on Nico's go.
 
+### 2026-07-17 — phase0 p2p QUIC-primary mandate (#5330) [Lodestar: packages/beacon-node/src/network/libp2p/index.ts, network/options.ts]
+- Re-verified vs `origin/master`. **#5330** (Cayman, merged 2026-07-06) makes QUIC (UDP)
+  **MUST-support** (was MAY) and the *primary* transport; TCP downgraded to a SHOULD fallback;
+  mplex MUST→MAY (TCP-fallback only, QUIC muxes natively); ENR entry order lists `quic` before `tcp`;
+  "clients SHOULD prioritise peer's QUIC addresses" when reachable over both.
+- ✅ **Lodestar already fully in sync.** Verified against `origin/unstable`:
+  - `defaultNetworkOptions.quic: true` + `tcp: true` (options.ts:77-78); default listen addrs ship
+    both `/udp/9001/quic-v1` and `/tcp/9000` for v4+v6 (options.ts:59-62).
+  - Dial path prefers QUIC: `getDiscv5Multiaddrs` uses `quicMultiaddr ?? tcpMultiaddr` (index.ts:29-32,
+    comment "Prefer QUIC over TCP when available") → matches the new SHOULD-prioritise-QUIC clause.
+  - CLI refuses to disable both transports (`Cannot disable both TCP and QUIC`, network.ts:93-94);
+    quicPort defaults to port+1 / 9001.
+- No PR needed. Spec change is normative-text only (capability + priority already implemented years ago).
+  ENR field ordering is cosmetic in the spec; Lodestar sets both keys, order-independent.
+
 ---
 *Started: 2026-02-15*
 *Last updated: 2026-07-03 — Gloas builder-constants re-verify: 3 stale constants (prefix 0x03→0xB0, deposit-req 256→64, withdrawability-delay 8192→64) all from spec PRs merged same day; documented, flagged to Nico, no autonomous PR (his active area)*
+*Last updated: 2026-07-17 — phase0 p2p QUIC-primary re-verify (#5330): Lodestar already in sync (quic default-on, dial-prefers-QUIC, both transports mandatory-by-default), no PR. Note: recent consensus-specs master churn is ~90% Gloas/Heze (ePBS, inclusion lists, builder constants) = Nico's active area, no autonomous PRs there.*
 *🎉 ALL FORKS COMPLETE (surface read 2026-02-18); now in spot-re-verify mode*
