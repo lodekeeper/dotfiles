@@ -1,0 +1,1105 @@
+{
+  "pr": 9673,
+  "created": "2026-07-20T15:33:55Z",
+  "updated": "2026-07-20T15:33:56Z",
+  "findings": [
+    {
+      "id": "cb9acb",
+      "file": "packages/beacon-node/test/unit/api/rest/base.test.ts",
+      "line": 32,
+      "severity": "minor",
+      "reviewer": "nflaig",
+      "body": "please remove this slop tests",
+      "status": "open",
+      "addressed_commit": null,
+      "note": null,
+      "source": {
+        "kind": "github-review-comment",
+        "id": "3604861541",
+        "repo": "ChainSafe/lodestar",
+        "pr": 9673,
+        "url": "https://github.com/ChainSafe/lodestar/pull/9673#discussion_r3604861541"
+      },
+      "created": "2026-07-20T15:33:56Z",
+      "updated": "2026-07-20T15:33:56Z",
+      "needs_reverify": true,
+      "reverify": {
+        "events": [
+          {
+            "at": "2026-07-20T15:33:56Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 9673,
+              "id": "3604900108",
+              "url": "https://github.com/ChainSafe/lodestar/pull/9673#discussion_r3604900108",
+              "author": "lodekeeper",
+              "in_reply_to_id": 3604861541
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          }
+        ],
+        "last_event_at": "2026-07-20T15:33:56Z"
+      }
+    },
+    {
+      "id": "8d9d55",
+      "file": "packages/beacon-node/src/api/rest/base.ts",
+      "line": 69,
+      "severity": "question",
+      "reviewer": "nflaig",
+      "body": "no reason to overexplain this.... please trim, later nobody will care about the `qs` situation, just explain why the limit is 64, pretty sure this is even part of the beacon-api spec",
+      "status": "open",
+      "addressed_commit": null,
+      "note": null,
+      "source": {
+        "kind": "github-review-comment",
+        "id": "3604866505",
+        "repo": "ChainSafe/lodestar",
+        "pr": 9673,
+        "url": "https://github.com/ChainSafe/lodestar/pull/9673#discussion_r3604866505"
+      },
+      "created": "2026-07-20T15:33:56Z",
+      "updated": "2026-07-20T15:33:56Z",
+      "needs_reverify": true,
+      "reverify": {
+        "events": [
+          {
+            "at": "2026-07-20T15:33:56Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 9673,
+              "id": "3604900238",
+              "url": "https://github.com/ChainSafe/lodestar/pull/9673#discussion_r3604900238",
+              "author": "lodekeeper",
+              "in_reply_to_id": 3604866505
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-07-20T15:33:56Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 9673,
+              "id": "3605117327",
+              "url": "https://github.com/ChainSafe/lodestar/pull/9673#discussion_r3605117327",
+              "author": "spiral-ladder",
+              "in_reply_to_id": null
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-07-20T15:33:56Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 9673,
+              "id": "3605125653",
+              "url": "https://github.com/ChainSafe/lodestar/pull/9673#discussion_r3605125653",
+              "author": "spiral-ladder",
+              "in_reply_to_id": 3605117327
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-07-20T15:33:56Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 9673,
+              "id": "3605133371",
+              "url": "https://github.com/ChainSafe/lodestar/pull/9673#discussion_r3605133371",
+              "author": "matthewkeil",
+              "in_reply_to_id": 3605117327
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-07-20T15:33:56Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 9673,
+              "id": "3605136081",
+              "url": "https://github.com/ChainSafe/lodestar/pull/9673#discussion_r3605136081",
+              "author": "matthewkeil",
+              "in_reply_to_id": 3605117327
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-07-20T15:33:56Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 9673,
+              "id": "3605144091",
+              "url": "https://github.com/ChainSafe/lodestar/pull/9673#discussion_r3605144091",
+              "author": "nflaig",
+              "in_reply_to_id": 3605117327
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-07-20T15:33:56Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 9673,
+              "id": "3605155296",
+              "url": "https://github.com/ChainSafe/lodestar/pull/9673#discussion_r3605155296",
+              "author": "lodekeeper",
+              "in_reply_to_id": 3605117327
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-07-20T15:33:56Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 9673,
+              "id": "3605201604",
+              "url": "https://github.com/ChainSafe/lodestar/pull/9673#discussion_r3605201604",
+              "author": "nflaig",
+              "in_reply_to_id": 3605117327
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-07-20T15:33:56Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 9673,
+              "id": "3605234712",
+              "url": "https://github.com/ChainSafe/lodestar/pull/9673#discussion_r3605234712",
+              "author": "lodekeeper",
+              "in_reply_to_id": 3605117327
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          }
+        ],
+        "last_event_at": "2026-07-20T15:33:56Z"
+      }
+    },
+    {
+      "id": "54e71d",
+      "file": "packages/api/test/utils/utils.ts",
+      "line": 13,
+      "severity": "question",
+      "reviewer": "nflaig",
+      "body": "stop adding this dumb comments everywhere, we got why you did the change here",
+      "status": "open",
+      "addressed_commit": null,
+      "note": null,
+      "source": {
+        "kind": "github-review-comment",
+        "id": "3604868459",
+        "repo": "ChainSafe/lodestar",
+        "pr": 9673,
+        "url": "https://github.com/ChainSafe/lodestar/pull/9673#discussion_r3604868459"
+      },
+      "created": "2026-07-20T15:33:56Z",
+      "updated": "2026-07-20T15:33:56Z",
+      "needs_reverify": true,
+      "reverify": {
+        "events": [
+          {
+            "at": "2026-07-20T15:33:56Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 9673,
+              "id": "3604900368",
+              "url": "https://github.com/ChainSafe/lodestar/pull/9673#discussion_r3604900368",
+              "author": "lodekeeper",
+              "in_reply_to_id": 3604868459
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          }
+        ],
+        "last_event_at": "2026-07-20T15:33:56Z"
+      }
+    },
+    {
+      "id": "8c2d05",
+      "file": "packages/beacon-node/src/api/rest/base.ts",
+      "line": 93,
+      "severity": "major",
+      "reviewer": "chatgpt-codex-connector[bot]",
+      "body": "**<sub><sub>![P2 Badge](https://img.shields.io/badge/P2-yellow?style=flat)</sub></sub>  Raise the query array limit for data column indices**\n\nThis global cap is still too low for the Fulu debug data-column endpoint: `getDebugDataColumnSidecars` accepts an `indices?: number[]` query array and filters by those indices, while Fulu `DataColumnSidecars` is bounded by `NUMBER_OF_COLUMNS`, which is 128 in the preset (`packages/api/src/beacon/routes/debug.ts:208`, `packages/types/src/fulu/sszTypes.ts:6",
+      "status": "open",
+      "addressed_commit": null,
+      "note": null,
+      "source": {
+        "kind": "github-review-comment",
+        "id": "3604877656",
+        "repo": "ChainSafe/lodestar",
+        "pr": 9673,
+        "url": "https://github.com/ChainSafe/lodestar/pull/9673#discussion_r3604877656"
+      },
+      "created": "2026-07-20T15:33:56Z",
+      "updated": "2026-07-20T15:33:56Z",
+      "needs_reverify": true,
+      "reverify": {
+        "events": [
+          {
+            "at": "2026-07-20T15:33:56Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 9673,
+              "id": "3604995282",
+              "url": "https://github.com/ChainSafe/lodestar/pull/9673#discussion_r3604995282",
+              "author": "lodekeeper",
+              "in_reply_to_id": 3604877656
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          }
+        ],
+        "last_event_at": "2026-07-20T15:33:56Z"
+      }
+    },
+    {
+      "id": "8f6529",
+      "file": "packages/beacon-node/test/unit/api/rest/base.test.ts",
+      "line": 32,
+      "severity": "minor",
+      "reviewer": "lodekeeper",
+      "body": "Removed the test file.",
+      "status": "open",
+      "addressed_commit": null,
+      "note": null,
+      "source": {
+        "kind": "github-review-comment",
+        "id": "3604900108",
+        "repo": "ChainSafe/lodestar",
+        "pr": 9673,
+        "url": "https://github.com/ChainSafe/lodestar/pull/9673#discussion_r3604900108"
+      },
+      "created": "2026-07-20T15:33:56Z",
+      "updated": "2026-07-20T15:33:56Z",
+      "matched_findings": [
+        "cb9acb"
+      ]
+    },
+    {
+      "id": "0288f5",
+      "file": "packages/beacon-node/src/api/rest/base.ts",
+      "line": 69,
+      "severity": "minor",
+      "reviewer": "lodekeeper",
+      "body": "Trimmed \u2014 the doc now just states 64 = largest beacon-API `maxItems` (the `id` lists on `validators` / `validator_balances`), and dropped the qs/CVE/#9399 backstory. Also removed the redundant inline comment at the `arrayLimit` option.",
+      "status": "open",
+      "addressed_commit": null,
+      "note": null,
+      "source": {
+        "kind": "github-review-comment",
+        "id": "3604900238",
+        "repo": "ChainSafe/lodestar",
+        "pr": 9673,
+        "url": "https://github.com/ChainSafe/lodestar/pull/9673#discussion_r3604900238"
+      },
+      "created": "2026-07-20T15:33:56Z",
+      "updated": "2026-07-20T15:33:56Z",
+      "matched_findings": [
+        "8d9d55"
+      ],
+      "needs_reverify": true,
+      "reverify": {
+        "events": [
+          {
+            "at": "2026-07-20T15:33:56Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 9673,
+              "id": "3605117327",
+              "url": "https://github.com/ChainSafe/lodestar/pull/9673#discussion_r3605117327",
+              "author": "spiral-ladder",
+              "in_reply_to_id": null
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-07-20T15:33:56Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 9673,
+              "id": "3605125653",
+              "url": "https://github.com/ChainSafe/lodestar/pull/9673#discussion_r3605125653",
+              "author": "spiral-ladder",
+              "in_reply_to_id": 3605117327
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-07-20T15:33:56Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 9673,
+              "id": "3605133371",
+              "url": "https://github.com/ChainSafe/lodestar/pull/9673#discussion_r3605133371",
+              "author": "matthewkeil",
+              "in_reply_to_id": 3605117327
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-07-20T15:33:56Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 9673,
+              "id": "3605136081",
+              "url": "https://github.com/ChainSafe/lodestar/pull/9673#discussion_r3605136081",
+              "author": "matthewkeil",
+              "in_reply_to_id": 3605117327
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-07-20T15:33:56Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 9673,
+              "id": "3605144091",
+              "url": "https://github.com/ChainSafe/lodestar/pull/9673#discussion_r3605144091",
+              "author": "nflaig",
+              "in_reply_to_id": 3605117327
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-07-20T15:33:56Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 9673,
+              "id": "3605155296",
+              "url": "https://github.com/ChainSafe/lodestar/pull/9673#discussion_r3605155296",
+              "author": "lodekeeper",
+              "in_reply_to_id": 3605117327
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-07-20T15:33:56Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 9673,
+              "id": "3605201604",
+              "url": "https://github.com/ChainSafe/lodestar/pull/9673#discussion_r3605201604",
+              "author": "nflaig",
+              "in_reply_to_id": 3605117327
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-07-20T15:33:56Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 9673,
+              "id": "3605234712",
+              "url": "https://github.com/ChainSafe/lodestar/pull/9673#discussion_r3605234712",
+              "author": "lodekeeper",
+              "in_reply_to_id": 3605117327
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          }
+        ],
+        "last_event_at": "2026-07-20T15:33:56Z"
+      }
+    },
+    {
+      "id": "022f75",
+      "file": "packages/api/test/utils/utils.ts",
+      "line": 13,
+      "severity": "minor",
+      "reviewer": "lodekeeper",
+      "body": "Removed; kept only the `arrayLimit: 64` parity change.",
+      "status": "open",
+      "addressed_commit": null,
+      "note": null,
+      "source": {
+        "kind": "github-review-comment",
+        "id": "3604900368",
+        "repo": "ChainSafe/lodestar",
+        "pr": 9673,
+        "url": "https://github.com/ChainSafe/lodestar/pull/9673#discussion_r3604900368"
+      },
+      "created": "2026-07-20T15:33:56Z",
+      "updated": "2026-07-20T15:33:56Z",
+      "matched_findings": [
+        "54e71d"
+      ]
+    },
+    {
+      "id": "b43e13",
+      "file": "packages/beacon-node/src/api/rest/base.ts",
+      "line": 93,
+      "severity": "major",
+      "reviewer": "lodekeeper",
+      "body": "Good catch \u2014 raised the cap to `NUMBER_OF_COLUMNS` (128) in c1fa18ec1b so a full-custody `getDebugDataColumnSidecars` request (columns 0..127) parses as an array. Kept it a single global limit rather than route-specific: the route schemas set no per-request `maxItems`, so the qs `arrayLimit` is the only cap, and it isn't a DoS boundary (`parseArrays: false` disables index-based sparse arrays; URL/header size bounds total input).",
+      "status": "open",
+      "addressed_commit": null,
+      "note": null,
+      "source": {
+        "kind": "github-review-comment",
+        "id": "3604995282",
+        "repo": "ChainSafe/lodestar",
+        "pr": 9673,
+        "url": "https://github.com/ChainSafe/lodestar/pull/9673#discussion_r3604995282"
+      },
+      "created": "2026-07-20T15:33:56Z",
+      "updated": "2026-07-20T15:33:56Z",
+      "matched_findings": [
+        "8c2d05"
+      ]
+    },
+    {
+      "id": "4674f8",
+      "file": "packages/beacon-node/src/api/rest/base.ts",
+      "line": 64,
+      "severity": "major",
+      "reviewer": "spiral-ladder",
+      "body": "nit: not sure if this overexplanation is necessary too, don't need to know `qs` implementation details + this lacks context for newer readers who dont know about the breaking change\n\n```suggestion\n/**\n * Cap for array query params, set to the largest array any beacon-API query can carry:\n * a full data-column custody set (`getDebugDataColumnSidecars` `indices`).\n */\nconst QUERY_STRING_ARRAY_LIMIT = NUMBER_OF_COLUMNS;\n```",
+      "status": "open",
+      "addressed_commit": null,
+      "note": null,
+      "source": {
+        "kind": "github-review-comment",
+        "id": "3605117327",
+        "repo": "ChainSafe/lodestar",
+        "pr": 9673,
+        "url": "https://github.com/ChainSafe/lodestar/pull/9673#discussion_r3605117327"
+      },
+      "created": "2026-07-20T15:33:56Z",
+      "updated": "2026-07-20T15:33:56Z",
+      "matched_findings": [
+        "8d9d55",
+        "0288f5"
+      ],
+      "needs_reverify": true,
+      "reverify": {
+        "events": [
+          {
+            "at": "2026-07-20T15:33:56Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 9673,
+              "id": "3605125653",
+              "url": "https://github.com/ChainSafe/lodestar/pull/9673#discussion_r3605125653",
+              "author": "spiral-ladder",
+              "in_reply_to_id": 3605117327
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-07-20T15:33:56Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 9673,
+              "id": "3605133371",
+              "url": "https://github.com/ChainSafe/lodestar/pull/9673#discussion_r3605133371",
+              "author": "matthewkeil",
+              "in_reply_to_id": 3605117327
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-07-20T15:33:56Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 9673,
+              "id": "3605136081",
+              "url": "https://github.com/ChainSafe/lodestar/pull/9673#discussion_r3605136081",
+              "author": "matthewkeil",
+              "in_reply_to_id": 3605117327
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-07-20T15:33:56Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 9673,
+              "id": "3605144091",
+              "url": "https://github.com/ChainSafe/lodestar/pull/9673#discussion_r3605144091",
+              "author": "nflaig",
+              "in_reply_to_id": 3605117327
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-07-20T15:33:56Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 9673,
+              "id": "3605155296",
+              "url": "https://github.com/ChainSafe/lodestar/pull/9673#discussion_r3605155296",
+              "author": "lodekeeper",
+              "in_reply_to_id": 3605117327
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-07-20T15:33:56Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 9673,
+              "id": "3605201604",
+              "url": "https://github.com/ChainSafe/lodestar/pull/9673#discussion_r3605201604",
+              "author": "nflaig",
+              "in_reply_to_id": 3605117327
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-07-20T15:33:56Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 9673,
+              "id": "3605234712",
+              "url": "https://github.com/ChainSafe/lodestar/pull/9673#discussion_r3605234712",
+              "author": "lodekeeper",
+              "in_reply_to_id": 3605117327
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          }
+        ],
+        "last_event_at": "2026-07-20T15:33:56Z"
+      }
+    },
+    {
+      "id": "f46eb3",
+      "file": "packages/beacon-node/src/api/rest/base.ts",
+      "line": 64,
+      "severity": "minor",
+      "reviewer": "spiral-ladder",
+      "body": "but dont let this block a release, we can trim it after if ppl agree.",
+      "status": "open",
+      "addressed_commit": null,
+      "note": null,
+      "source": {
+        "kind": "github-review-comment",
+        "id": "3605125653",
+        "repo": "ChainSafe/lodestar",
+        "pr": 9673,
+        "url": "https://github.com/ChainSafe/lodestar/pull/9673#discussion_r3605125653"
+      },
+      "created": "2026-07-20T15:33:56Z",
+      "updated": "2026-07-20T15:33:56Z",
+      "matched_findings": [
+        "8d9d55",
+        "0288f5",
+        "4674f8"
+      ],
+      "needs_reverify": true,
+      "reverify": {
+        "events": [
+          {
+            "at": "2026-07-20T15:33:56Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 9673,
+              "id": "3605133371",
+              "url": "https://github.com/ChainSafe/lodestar/pull/9673#discussion_r3605133371",
+              "author": "matthewkeil",
+              "in_reply_to_id": 3605117327
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-07-20T15:33:56Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 9673,
+              "id": "3605136081",
+              "url": "https://github.com/ChainSafe/lodestar/pull/9673#discussion_r3605136081",
+              "author": "matthewkeil",
+              "in_reply_to_id": 3605117327
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-07-20T15:33:56Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 9673,
+              "id": "3605144091",
+              "url": "https://github.com/ChainSafe/lodestar/pull/9673#discussion_r3605144091",
+              "author": "nflaig",
+              "in_reply_to_id": 3605117327
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-07-20T15:33:56Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 9673,
+              "id": "3605155296",
+              "url": "https://github.com/ChainSafe/lodestar/pull/9673#discussion_r3605155296",
+              "author": "lodekeeper",
+              "in_reply_to_id": 3605117327
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-07-20T15:33:56Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 9673,
+              "id": "3605201604",
+              "url": "https://github.com/ChainSafe/lodestar/pull/9673#discussion_r3605201604",
+              "author": "nflaig",
+              "in_reply_to_id": 3605117327
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-07-20T15:33:56Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 9673,
+              "id": "3605234712",
+              "url": "https://github.com/ChainSafe/lodestar/pull/9673#discussion_r3605234712",
+              "author": "lodekeeper",
+              "in_reply_to_id": 3605117327
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          }
+        ],
+        "last_event_at": "2026-07-20T15:33:56Z"
+      }
+    },
+    {
+      "id": "54924d",
+      "file": "packages/beacon-node/src/api/rest/base.ts",
+      "line": 64,
+      "severity": "minor",
+      "reviewer": "matthewkeil",
+      "body": "I actually kinda think that might be worth leaving because its specific to that dep so if we remove the dep we can remove the value.",
+      "status": "open",
+      "addressed_commit": null,
+      "note": null,
+      "source": {
+        "kind": "github-review-comment",
+        "id": "3605133371",
+        "repo": "ChainSafe/lodestar",
+        "pr": 9673,
+        "url": "https://github.com/ChainSafe/lodestar/pull/9673#discussion_r3605133371"
+      },
+      "created": "2026-07-20T15:33:56Z",
+      "updated": "2026-07-20T15:33:56Z",
+      "matched_findings": [
+        "8d9d55",
+        "0288f5",
+        "4674f8",
+        "f46eb3"
+      ],
+      "needs_reverify": true,
+      "reverify": {
+        "events": [
+          {
+            "at": "2026-07-20T15:33:56Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 9673,
+              "id": "3605136081",
+              "url": "https://github.com/ChainSafe/lodestar/pull/9673#discussion_r3605136081",
+              "author": "matthewkeil",
+              "in_reply_to_id": 3605117327
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-07-20T15:33:56Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 9673,
+              "id": "3605144091",
+              "url": "https://github.com/ChainSafe/lodestar/pull/9673#discussion_r3605144091",
+              "author": "nflaig",
+              "in_reply_to_id": 3605117327
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-07-20T15:33:56Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 9673,
+              "id": "3605155296",
+              "url": "https://github.com/ChainSafe/lodestar/pull/9673#discussion_r3605155296",
+              "author": "lodekeeper",
+              "in_reply_to_id": 3605117327
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-07-20T15:33:56Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 9673,
+              "id": "3605201604",
+              "url": "https://github.com/ChainSafe/lodestar/pull/9673#discussion_r3605201604",
+              "author": "nflaig",
+              "in_reply_to_id": 3605117327
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-07-20T15:33:56Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 9673,
+              "id": "3605234712",
+              "url": "https://github.com/ChainSafe/lodestar/pull/9673#discussion_r3605234712",
+              "author": "lodekeeper",
+              "in_reply_to_id": 3605117327
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          }
+        ],
+        "last_event_at": "2026-07-20T15:33:56Z"
+      }
+    },
+    {
+      "id": "743c6d",
+      "file": "packages/beacon-node/src/api/rest/base.ts",
+      "line": 64,
+      "severity": "minor",
+      "reviewer": "matthewkeil",
+      "body": "open to removing though if you feel strongly about it or others do",
+      "status": "open",
+      "addressed_commit": null,
+      "note": null,
+      "source": {
+        "kind": "github-review-comment",
+        "id": "3605136081",
+        "repo": "ChainSafe/lodestar",
+        "pr": 9673,
+        "url": "https://github.com/ChainSafe/lodestar/pull/9673#discussion_r3605136081"
+      },
+      "created": "2026-07-20T15:33:56Z",
+      "updated": "2026-07-20T15:33:56Z",
+      "matched_findings": [
+        "8d9d55",
+        "0288f5",
+        "4674f8",
+        "f46eb3",
+        "54924d"
+      ],
+      "needs_reverify": true,
+      "reverify": {
+        "events": [
+          {
+            "at": "2026-07-20T15:33:56Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 9673,
+              "id": "3605144091",
+              "url": "https://github.com/ChainSafe/lodestar/pull/9673#discussion_r3605144091",
+              "author": "nflaig",
+              "in_reply_to_id": 3605117327
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-07-20T15:33:56Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 9673,
+              "id": "3605155296",
+              "url": "https://github.com/ChainSafe/lodestar/pull/9673#discussion_r3605155296",
+              "author": "lodekeeper",
+              "in_reply_to_id": 3605117327
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-07-20T15:33:56Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 9673,
+              "id": "3605201604",
+              "url": "https://github.com/ChainSafe/lodestar/pull/9673#discussion_r3605201604",
+              "author": "nflaig",
+              "in_reply_to_id": 3605117327
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-07-20T15:33:56Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 9673,
+              "id": "3605234712",
+              "url": "https://github.com/ChainSafe/lodestar/pull/9673#discussion_r3605234712",
+              "author": "lodekeeper",
+              "in_reply_to_id": 3605117327
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          }
+        ],
+        "last_event_at": "2026-07-20T15:33:56Z"
+      }
+    },
+    {
+      "id": "ff78a2",
+      "file": "packages/beacon-node/src/api/rest/base.ts",
+      "line": 64,
+      "severity": "critical",
+      "reviewer": "nflaig",
+      "body": "agree, not sure it's worth re-triggering the CI for this though, the `qs` note might be useful if someone tries to query or larger values again, it's definitely strange behavior from `qs` to do this... I am wondering if this library should just be removed...it can't be that hard to parse query param and their release discipline is bad, doing a breaking change like this limit in a security patch isn't great, they likely broke a lot of applications with this",
+      "status": "open",
+      "addressed_commit": null,
+      "note": null,
+      "source": {
+        "kind": "github-review-comment",
+        "id": "3605144091",
+        "repo": "ChainSafe/lodestar",
+        "pr": 9673,
+        "url": "https://github.com/ChainSafe/lodestar/pull/9673#discussion_r3605144091"
+      },
+      "created": "2026-07-20T15:33:56Z",
+      "updated": "2026-07-20T15:33:56Z",
+      "matched_findings": [
+        "8d9d55",
+        "0288f5",
+        "4674f8",
+        "f46eb3",
+        "54924d",
+        "743c6d"
+      ],
+      "needs_reverify": true,
+      "reverify": {
+        "events": [
+          {
+            "at": "2026-07-20T15:33:56Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 9673,
+              "id": "3605155296",
+              "url": "https://github.com/ChainSafe/lodestar/pull/9673#discussion_r3605155296",
+              "author": "lodekeeper",
+              "in_reply_to_id": 3605117327
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-07-20T15:33:56Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 9673,
+              "id": "3605201604",
+              "url": "https://github.com/ChainSafe/lodestar/pull/9673#discussion_r3605201604",
+              "author": "nflaig",
+              "in_reply_to_id": 3605117327
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-07-20T15:33:56Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 9673,
+              "id": "3605234712",
+              "url": "https://github.com/ChainSafe/lodestar/pull/9673#discussion_r3605234712",
+              "author": "lodekeeper",
+              "in_reply_to_id": 3605117327
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          }
+        ],
+        "last_event_at": "2026-07-20T15:33:56Z"
+      }
+    },
+    {
+      "id": "230a45",
+      "file": "packages/beacon-node/src/api/rest/base.ts",
+      "line": 64,
+      "severity": "minor",
+      "reviewer": "lodekeeper",
+      "body": "Leaving the `qs` note in and not re-triggering CI on the approved PR. matthewkeil's reasoning is what tips it for me \u2014 the note is tied to the `qs` dep (and the version floor now pinned in `package.json`), so it's the breadcrumb that says this cap can go if we ever drop `qs`. If consensus later shifts to trimming, happy to fold it into a trivial follow-up.",
+      "status": "open",
+      "addressed_commit": null,
+      "note": null,
+      "source": {
+        "kind": "github-review-comment",
+        "id": "3605155296",
+        "repo": "ChainSafe/lodestar",
+        "pr": 9673,
+        "url": "https://github.com/ChainSafe/lodestar/pull/9673#discussion_r3605155296"
+      },
+      "created": "2026-07-20T15:33:56Z",
+      "updated": "2026-07-20T15:33:56Z",
+      "matched_findings": [
+        "8d9d55",
+        "0288f5",
+        "4674f8",
+        "f46eb3",
+        "54924d",
+        "743c6d",
+        "ff78a2"
+      ],
+      "needs_reverify": true,
+      "reverify": {
+        "events": [
+          {
+            "at": "2026-07-20T15:33:56Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 9673,
+              "id": "3605201604",
+              "url": "https://github.com/ChainSafe/lodestar/pull/9673#discussion_r3605201604",
+              "author": "nflaig",
+              "in_reply_to_id": 3605117327
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-07-20T15:33:56Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 9673,
+              "id": "3605234712",
+              "url": "https://github.com/ChainSafe/lodestar/pull/9673#discussion_r3605234712",
+              "author": "lodekeeper",
+              "in_reply_to_id": 3605117327
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          }
+        ],
+        "last_event_at": "2026-07-20T15:33:56Z"
+      }
+    },
+    {
+      "id": "1e8b93",
+      "file": "packages/beacon-node/src/api/rest/base.ts",
+      "line": 64,
+      "severity": "minor",
+      "reviewer": "nflaig",
+      "body": "@lodekeeper next time, please make sure to update the pr title if you do code changes that affect it, the title says 64 which is no longer true since we change to `NUMBER_OF_COLUMNS`",
+      "status": "open",
+      "addressed_commit": null,
+      "note": null,
+      "source": {
+        "kind": "github-review-comment",
+        "id": "3605201604",
+        "repo": "ChainSafe/lodestar",
+        "pr": 9673,
+        "url": "https://github.com/ChainSafe/lodestar/pull/9673#discussion_r3605201604"
+      },
+      "created": "2026-07-20T15:33:56Z",
+      "updated": "2026-07-20T15:33:56Z",
+      "matched_findings": [
+        "8d9d55",
+        "0288f5",
+        "4674f8",
+        "f46eb3",
+        "54924d",
+        "743c6d",
+        "ff78a2",
+        "230a45"
+      ],
+      "needs_reverify": true,
+      "reverify": {
+        "events": [
+          {
+            "at": "2026-07-20T15:33:56Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 9673,
+              "id": "3605234712",
+              "url": "https://github.com/ChainSafe/lodestar/pull/9673#discussion_r3605234712",
+              "author": "lodekeeper",
+              "in_reply_to_id": 3605117327
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          }
+        ],
+        "last_event_at": "2026-07-20T15:33:56Z"
+      }
+    },
+    {
+      "id": "e7a51f",
+      "file": "packages/beacon-node/src/api/rest/base.ts",
+      "line": 64,
+      "severity": "minor",
+      "reviewer": "lodekeeper",
+      "body": "Done \u2014 updated the title to `fix: raise query string arrayLimit to NUMBER_OF_COLUMNS`. The body already referenced `NUMBER_OF_COLUMNS`, so only the title was stale. Will keep the title in sync when a change moves the value going forward.",
+      "status": "open",
+      "addressed_commit": null,
+      "note": null,
+      "source": {
+        "kind": "github-review-comment",
+        "id": "3605234712",
+        "repo": "ChainSafe/lodestar",
+        "pr": 9673,
+        "url": "https://github.com/ChainSafe/lodestar/pull/9673#discussion_r3605234712"
+      },
+      "created": "2026-07-20T15:33:56Z",
+      "updated": "2026-07-20T15:33:56Z",
+      "matched_findings": [
+        "8d9d55",
+        "0288f5",
+        "4674f8",
+        "f46eb3",
+        "54924d",
+        "743c6d",
+        "ff78a2",
+        "230a45",
+        "1e8b93"
+      ]
+    }
+  ],
+  "sync": {
+    "github": {
+      "ChainSafe/lodestar": {
+        "last_comment_id": "3605234712",
+        "last_synced": "2026-07-20T15:33:56Z",
+        "last_imported": 16,
+        "last_reverify_updates": 48
+      }
+    }
+  }
+}

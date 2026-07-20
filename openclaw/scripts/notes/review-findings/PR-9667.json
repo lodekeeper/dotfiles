@@ -1,0 +1,33 @@
+{
+  "pr": 9667,
+  "created": "2026-07-20T14:27:13Z",
+  "updated": "2026-07-20T14:27:13Z",
+  "findings": [
+    {
+      "id": "2afce9",
+      "file": "packages/beacon-node/src/sync/range/batch.ts",
+      "line": 704,
+      "severity": "major",
+      "reviewer": "lodekeeper",
+      "body": "retainForReprocessing() keeps retained blocks/envelopes after startProcessing() clears successfulDownloads but discards the current attempt, so later peer-attributable failures can carry peers: [] and avoid scoring the original sender.",
+      "status": "open",
+      "addressed_commit": null,
+      "note": null,
+      "created": "2026-07-20T14:27:13Z",
+      "updated": "2026-07-20T14:27:13Z"
+    },
+    {
+      "id": "30dc4f",
+      "file": "packages/beacon-node/src/sync/range/batch.ts",
+      "line": 430,
+      "severity": "major",
+      "reviewer": "lodekeeper",
+      "body": "Peer-attributable EXECUTION_ENGINE_INVALID/PAYLOAD_ERROR_EXECUTION_ENGINE_INVALID attempts are stored in executionErrorAttempts but excluded from getFailedPeers(), so the same bad peer can be selected immediately again instead of being excluded from retry.",
+      "status": "open",
+      "addressed_commit": null,
+      "note": null,
+      "created": "2026-07-20T14:27:13Z",
+      "updated": "2026-07-20T14:27:13Z"
+    }
+  ]
+}
