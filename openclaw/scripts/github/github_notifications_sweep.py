@@ -369,7 +369,15 @@ def main() -> int:
         # Backfill new watermark for existing state entries
         pr_state.setdefault("last_review_body_id", 0)
 
-        review_comments, issue_comments, review_bodies = fetch_thread_comments(repo, pr, kind)
+        try:
+            review_comments, issue_comments, review_bodies = fetch_thread_comments(repo, pr, kind)
+        except subprocess.CalledProcessError as e:
+            stderr_last_line = (e.stderr or "").strip().splitlines()[-1:] or [""]
+            print(
+                f"WARN: skipping {repo}#{pr} ({kind}) this sweep — comment fetch failed: {stderr_last_line[0]}",
+                file=sys.stderr,
+            )
+            continue
 
         # Update watermark candidates
         max_review = pr_state.get("last_review_comment_id", 0)
