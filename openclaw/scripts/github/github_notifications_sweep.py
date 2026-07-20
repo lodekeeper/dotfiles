@@ -137,6 +137,31 @@ def backlog_has_corruption_guard(backlog_text: str) -> bool:
     return BACKLOG_CORRUPTION_GUARD in "\n".join(backlog_text.splitlines()[:12])
 
 
+TOPIC_TAG_RE = re.compile(r"\[topic:(\d+)\]")
+PR_ISSUE_URL_RE = re.compile(r"https://github\.com/([^/\s]+/[^/\s]+)/(?:pull|issues)/(\d+)")
+
+
+def extract_topic_routes_from_backlog(backlog_text: str) -> Dict[str, str]:
+    """Map 'owner/repo#number' -> topic id, from BACKLOG.md '### ... [topic:ID]' sections.
+
+    A section is delimited by a top-level '### ' heading line; the topic id (if any)
+    comes from a '[topic:ID]' tag on that heading, and applies to every GitHub PR/issue
+    URL found anywhere in the section body (typically a '**PR/Issue:**' line).
+    """
+    routes: Dict[str, str] = {}
+    current_topic: str | None = None
+    for line in backlog_text.splitlines():
+        if line.startswith("### "):
+            m = TOPIC_TAG_RE.search(line)
+            current_topic = m.group(1) if m else None
+            continue
+        if current_topic is None:
+            continue
+        for repo, number in PR_ISSUE_URL_RE.findall(line):
+            routes[f"{repo}#{number}"] = current_topic
+    return routes
+
+
 def normalize_state(state: Dict[str, Any]) -> Dict[str, Any]:
     state.setdefault("version", 2)
     state.setdefault("prs", {})
@@ -331,12 +356,14 @@ def main() -> int:
     if backlog_has_corruption_guard(backlog_text) and not args.allow_corrupted_backlog:
         print(
             f"{backlog_path} is marked corrupted/under recovery; "
-            "ignoring backlog-derived handled IDs for this sweep.",
+            "ignoring backlog-derived handled IDs and topic routes for this sweep.",
             file=sys.stderr,
         )
         handled_ids = set()
+        topic_routes: Dict[str, str] = {}
     else:
         handled_ids = extract_handled_ids_from_backlog(backlog_text)
+        topic_routes = extract_topic_routes_from_backlog(backlog_text)
 
     # Auto-mark from backlog done entries
     now = utc_now_iso()
@@ -383,6 +410,7 @@ def main() -> int:
         max_review = pr_state.get("last_review_comment_id", 0)
         max_issue = pr_state.get("last_issue_comment_id", 0)
         max_review_body = pr_state.get("last_review_body_id", 0)
+        topic_id = topic_routes.get(pr_key)
 
         for c in review_comments:
             cid = int(c["id"])
@@ -405,6 +433,7 @@ def main() -> int:
                     "firstSeenAt": now,
                     "lastSeenAt": now,
                     "reportedCount": 0,
+                    "topicId": topic_id,
                 }
                 checklist["items"][str(cid)] = item
                 actionable_new.append(item)
@@ -432,6 +461,7 @@ def main() -> int:
                     "firstSeenAt": now,
                     "lastSeenAt": now,
                     "reportedCount": 0,
+                    "topicId": topic_id,
                 }
                 checklist["items"][str(cid)] = item
                 actionable_new.append(item)
@@ -459,6 +489,7 @@ def main() -> int:
                     "firstSeenAt": now,
                     "lastSeenAt": now,
                     "reportedCount": 0,
+                    "topicId": topic_id,
                 }
                 checklist["items"][str(cid)] = item
                 actionable_new.append(item)
@@ -475,6 +506,9 @@ def main() -> int:
     for item in checklist["items"].values():
         if item.get("status") != "open":
             continue
+        routed_topic = topic_routes.get(f"{item.get('repo')}#{item.get('pr')}")
+        if routed_topic:
+            item["topicId"] = routed_topic
         last_reported = item.get("lastReportedAt")
         if not last_reported:
             continue
@@ -501,15 +535,19 @@ def main() -> int:
         return 0
 
     # concise summary output for cron delivery
+    def route_suffix(item: Dict[str, Any]) -> str:
+        topic_id = item.get("topicId")
+        return f" [topic:{topic_id}]" if topic_id else " [UNROUTED]"
+
     print("GitHub notifications check complete.\n")
     if actionable_new:
         print(f"New actionable PR comments: {len(actionable_new)}")
         for item in actionable_new[:12]:
-            print(f"- {item['repo']}#{item['pr']} [{item['kind']}] by {item['author']} — {item['url']}")
+            print(f"- {item['repo']}#{item['pr']} [{item['kind']}] by {item['author']} — {item['url']}{route_suffix(item)}")
     if actionable_reminders:
         print("\nOpen comment reminders (still unhandled):")
         for item in actionable_reminders[:8]:
-            print(f"- {item['repo']}#{item['pr']} [{item['kind']}] by {item['author']} — {item['url']}")
+            print(f"- {item['repo']}#{item['pr']} [{item['kind']}] by {item['author']} — {item['url']}{route_suffix(item)}")
 
     return 0
 
