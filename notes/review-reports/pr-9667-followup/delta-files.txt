@@ -1,0 +1,3 @@
+packages/beacon-node/src/sync/range/batch.ts
+packages/beacon-node/src/sync/range/utils/hashBlocks.ts
+packages/beacon-node/test/unit/sync/range/batch.test.ts

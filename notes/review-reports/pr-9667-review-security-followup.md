@@ -15,7 +15,7 @@ Security focus: adversarial peer retry behavior, retained-byte provenance, DoS, 
 
 ## Findings
 
-No security vulnerabilities identified.
+No security issues found in the follow-up delta.
 
 ## Focus Questions
 

@@ -1,7 +1,7 @@
 {
   "pr": 9667,
   "created": "2026-07-20T14:27:13Z",
-  "updated": "2026-07-20T14:27:13Z",
+  "updated": "2026-07-21T04:01:36Z",
   "findings": [
     {
       "id": "2afce9",
@@ -10,11 +10,30 @@
       "severity": "major",
       "reviewer": "lodekeeper",
       "body": "retainForReprocessing() keeps retained blocks/envelopes after startProcessing() clears successfulDownloads but discards the current attempt, so later peer-attributable failures can carry peers: [] and avoid scoring the original sender.",
-      "status": "open",
-      "addressed_commit": null,
-      "note": null,
+      "status": "addressed",
+      "addressed_commit": "9e88b02665",
+      "note": "retainForReprocessing now carries Attempt; verified at 01fe150bed and approved in review 4741092726",
       "created": "2026-07-20T14:27:13Z",
-      "updated": "2026-07-20T14:27:13Z"
+      "updated": "2026-07-21T04:01:35Z",
+      "needs_reverify": true,
+      "reverify": {
+        "events": [
+          {
+            "at": "2026-07-21T03:50:30Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 9667,
+              "id": "3615011910",
+              "url": "https://github.com/ChainSafe/lodestar/pull/9667#discussion_r3615011910",
+              "author": "lodekeeper",
+              "in_reply_to_id": null
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          }
+        ],
+        "last_event_at": "2026-07-21T03:50:30Z"
+      }
     },
     {
       "id": "30dc4f",
@@ -23,11 +42,272 @@
       "severity": "major",
       "reviewer": "lodekeeper",
       "body": "Peer-attributable EXECUTION_ENGINE_INVALID/PAYLOAD_ERROR_EXECUTION_ENGINE_INVALID attempts are stored in executionErrorAttempts but excluded from getFailedPeers(), so the same bad peer can be selected immediately again instead of being excluded from retry.",
-      "status": "open",
-      "addressed_commit": null,
-      "note": null,
+      "status": "addressed",
+      "addressed_commit": "9e88b02665",
+      "note": "getFailedPeers now includes peer-attributable executionErrorAttempts; verified at 01fe150bed and approved in review 4741092726",
       "created": "2026-07-20T14:27:13Z",
-      "updated": "2026-07-20T14:27:13Z"
+      "updated": "2026-07-21T04:01:35Z",
+      "needs_reverify": true,
+      "reverify": {
+        "events": [
+          {
+            "at": "2026-07-21T03:50:30Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 9667,
+              "id": "3615011881",
+              "url": "https://github.com/ChainSafe/lodestar/pull/9667#discussion_r3615011881",
+              "author": "lodekeeper",
+              "in_reply_to_id": null
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          }
+        ],
+        "last_event_at": "2026-07-21T03:50:30Z"
+      }
+    },
+    {
+      "id": "f6338d",
+      "file": "packages/beacon-node/src/sync/range/utils/hashBlocks.ts",
+      "line": 29,
+      "severity": "minor",
+      "reviewer": "twoeths",
+      "body": "hashing blocks + envlopes are cheap enough thanks to `cachePermanentRootStruct` option\nthe downside is we don't include signatures, haven't seen an issue of same block with different signatures for range sync on any networks yet",
+      "status": "addressed",
+      "addressed_commit": "ad32f53a52",
+      "note": "hashBlocks includes block/envelope signatures in attempt id",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "3594306888",
+        "repo": "ChainSafe/lodestar",
+        "pr": 9667,
+        "url": "https://github.com/ChainSafe/lodestar/pull/9667#discussion_r3594306888"
+      },
+      "created": "2026-07-21T03:50:30Z",
+      "updated": "2026-07-21T04:01:36Z",
+      "needs_reverify": true,
+      "reverify": {
+        "events": [
+          {
+            "at": "2026-07-21T03:50:30Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 9667,
+              "id": "3600172356",
+              "url": "https://github.com/ChainSafe/lodestar/pull/9667#discussion_r3600172356",
+              "author": "lodekeeper",
+              "in_reply_to_id": 3594306888
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          }
+        ],
+        "last_event_at": "2026-07-21T03:50:30Z"
+      }
+    },
+    {
+      "id": "cee663",
+      "file": "packages/beacon-node/src/sync/range/utils/batches.ts",
+      "line": 167,
+      "severity": "nit",
+      "reviewer": "chatgpt-codex-connector[bot]",
+      "body": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Handle first-batch parent faults as unrecoverable here**\n\nWhen this is the first queued batch in a sync chain and its first block fails with `PARENT_UNKNOWN`/`PARENT_PAYLOAD_UNKNOWN`, `prevBatch` is `undefined` but this still returns `PreviousBatch`. `processBatch()` then calls `retainForReprocessing()` and invalidates no earlier batch, so the same bad downloaded batch is retried without re-downloading or inc",
+      "status": "addressed",
+      "addressed_commit": "9b7b1dc468",
+      "note": "First-batch parent fault no longer stalls; no-prev-batch path classifies as ThisBatch",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "3600093261",
+        "repo": "ChainSafe/lodestar",
+        "pr": 9667,
+        "url": "https://github.com/ChainSafe/lodestar/pull/9667#discussion_r3600093261"
+      },
+      "created": "2026-07-21T03:50:30Z",
+      "updated": "2026-07-21T04:01:36Z",
+      "needs_reverify": true,
+      "reverify": {
+        "events": [
+          {
+            "at": "2026-07-21T03:50:30Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 9667,
+              "id": "3600171137",
+              "url": "https://github.com/ChainSafe/lodestar/pull/9667#discussion_r3600171137",
+              "author": "lodekeeper",
+              "in_reply_to_id": 3600093261
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          }
+        ],
+        "last_event_at": "2026-07-21T03:50:30Z"
+      }
+    },
+    {
+      "id": "991888",
+      "file": "packages/beacon-node/src/sync/range/chain.ts",
+      "line": 775,
+      "severity": "major",
+      "reviewer": "chatgpt-codex-connector[bot]",
+      "body": "**<sub><sub>![P2 Badge](https://img.shields.io/badge/P2-yellow?style=flat)</sub></sub>  Keep execution-engine failures out of peer scoring**\n\nIncluding `executionErrorAttempts` here can downscore peers after transient local EL failures: `Batch.processingError()` records `EXECUTION_ENGINE_ERROR` separately via `onExecutionEngineError()`, and teardown intentionally maps `MAX_EXECUTION_ENGINE_ERROR_ATTEMPTS` to no peer report, but a later successful retry with a different hash will now report the e",
+      "status": "addressed",
+      "addressed_commit": "9b7b1dc468",
+      "note": "Local EL errors remain blameless; only peerAttributable attempts are reported/scored",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "3600093263",
+        "repo": "ChainSafe/lodestar",
+        "pr": 9667,
+        "url": "https://github.com/ChainSafe/lodestar/pull/9667#discussion_r3600093263"
+      },
+      "created": "2026-07-21T03:50:30Z",
+      "updated": "2026-07-21T04:01:35Z",
+      "needs_reverify": true,
+      "reverify": {
+        "events": [
+          {
+            "at": "2026-07-21T03:50:30Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 9667,
+              "id": "3600171697",
+              "url": "https://github.com/ChainSafe/lodestar/pull/9667#discussion_r3600171697",
+              "author": "lodekeeper",
+              "in_reply_to_id": 3600093263
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          }
+        ],
+        "last_event_at": "2026-07-21T03:50:30Z"
+      }
+    },
+    {
+      "id": "2aee1d",
+      "file": "packages/beacon-node/src/sync/range/utils/batches.ts",
+      "line": 167,
+      "severity": "major",
+      "reviewer": "lodekeeper",
+      "body": "Confirmed \u2014 this is real, and I think it's blocking. Traced end to end:\n\n`classifyProcessingFault` returns `PreviousBatch` whenever `firstBlockSlot === batch.startSlot`, without ever checking `prevBatch`. For the first batch of a sync chain `prevBatch` is `undefined`, and then:\n\n1. `batch.retainForReprocessing()` \u2192 `Processing` \u2192 `AwaitingProcessing`, blocks retained, **no attempt recorded** \u2014 by design, its docstring says so explicitly.\n2. `invalidatePreviousBatches()` requires `pendingBatch.st",
+      "status": "addressed",
+      "addressed_commit": "9b7b1dc468",
+      "note": "First-batch parent fault no longer stalls; no-prev-batch path classifies as ThisBatch",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "3600171137",
+        "repo": "ChainSafe/lodestar",
+        "pr": 9667,
+        "url": "https://github.com/ChainSafe/lodestar/pull/9667#discussion_r3600171137"
+      },
+      "created": "2026-07-21T03:50:30Z",
+      "updated": "2026-07-21T04:01:36Z",
+      "matched_findings": [
+        "cee663"
+      ]
+    },
+    {
+      "id": "615d3f",
+      "file": "packages/beacon-node/src/sync/range/chain.ts",
+      "line": 775,
+      "severity": "major",
+      "reviewer": "lodekeeper",
+      "body": "Confirmed, though I'd rank it below the P1. The strongest evidence is that the PR is internally inconsistent on this point: `shouldReportPeerOnBatchError` maps `MAX_EXECUTION_ENGINE_ERROR_ATTEMPTS \u2192 null` (*\"If peer should not be downscored, returns null\"*) directly alongside `MAX_PROCESSING_ATTEMPTS \u2192 LowToleranceError`. So the teardown path already asserts EL errors are not the peer's fault, while `advanceChain` now scores exactly those attempts one screen up.\n\n`onExecutionEngineError` only fi",
+      "status": "addressed",
+      "addressed_commit": "9b7b1dc468",
+      "note": "Local EL errors remain blameless; only peerAttributable attempts are reported/scored",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "3600171697",
+        "repo": "ChainSafe/lodestar",
+        "pr": 9667,
+        "url": "https://github.com/ChainSafe/lodestar/pull/9667#discussion_r3600171697"
+      },
+      "created": "2026-07-21T03:50:30Z",
+      "updated": "2026-07-21T04:01:36Z",
+      "matched_findings": [
+        "991888"
+      ]
+    },
+    {
+      "id": "0f298a",
+      "file": "packages/beacon-node/src/sync/range/utils/hashBlocks.ts",
+      "line": 29,
+      "severity": "minor",
+      "reviewer": "lodekeeper",
+      "body": "The cheapness argument holds \u2014 `blockRootHex` is already cached, so this is strictly cheaper than the old `SignedBeaconBlock.hashTreeRoot` path.\n\nOn signatures, I'd frame the risk differently than \"same block with different signatures\". BLS signing is deterministic, so an honest peer serving the same block message always produces the same signature \u2014 you're right that this doesn't arise naturally, and no network would have shown it.\n\nThe case that does bite is adversarial: a peer serves the **co",
+      "status": "addressed",
+      "addressed_commit": "ad32f53a52",
+      "note": "hashBlocks includes block/envelope signatures in attempt id",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "3600172356",
+        "repo": "ChainSafe/lodestar",
+        "pr": 9667,
+        "url": "https://github.com/ChainSafe/lodestar/pull/9667#discussion_r3600172356"
+      },
+      "created": "2026-07-21T03:50:30Z",
+      "updated": "2026-07-21T04:01:36Z",
+      "matched_findings": [
+        "f6338d"
+      ]
+    },
+    {
+      "id": "c20310",
+      "file": "packages/beacon-node/src/sync/range/batch.ts",
+      "line": 430,
+      "severity": "major",
+      "reviewer": "lodekeeper",
+      "body": "\ud83d\udd34 Peer-attributable EL `INVALID` attempts need to be excluded from immediate retry too. `routeProcessingFailure()` now marks `EXECUTION_ENGINE_INVALID` / `PAYLOAD_ERROR_EXECUTION_ENGINE_INVALID` attempts with `peerAttributable: true`, but they are stored in `executionErrorAttempts`; this method only returns failed downloads and `failedProcessingAttempts`. Since `peerBalancer` uses this set to skip peers for the next attempt, the same peer that just served definitively invalid execution data can ",
+      "status": "addressed",
+      "addressed_commit": "9e88b02665",
+      "note": "Inline retry-exclusion finding addressed; verified at 01fe150bed and approved in review 4741092726",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "3615011881",
+        "repo": "ChainSafe/lodestar",
+        "pr": 9667,
+        "url": "https://github.com/ChainSafe/lodestar/pull/9667#discussion_r3615011881"
+      },
+      "created": "2026-07-21T03:50:30Z",
+      "updated": "2026-07-21T04:01:35Z",
+      "matched_findings": [
+        "30dc4f"
+      ]
+    },
+    {
+      "id": "33ca75",
+      "file": "packages/beacon-node/src/sync/range/batch.ts",
+      "line": 707,
+      "severity": "minor",
+      "reviewer": "lodekeeper",
+      "body": "\ud83d\udd34 `retainForReprocessing()` should preserve the current attempt's peer provenance. `startProcessing()` has already cleared `successfulDownloads`, and this transition keeps the retained blocks/envelopes while dropping `this.state.attempt`. On the later reprocess, `startProcessing()` builds a fresh attempt from an empty successful-peer map, so if the retained data then fails a peer-attributable check such as block/envelope signature validation, the failure can carry `peers: []` and avoid scoring t",
+      "status": "addressed",
+      "addressed_commit": "9e88b02665",
+      "note": "Inline retained-provenance finding addressed; verified at 01fe150bed and approved in review 4741092726",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "3615011910",
+        "repo": "ChainSafe/lodestar",
+        "pr": 9667,
+        "url": "https://github.com/ChainSafe/lodestar/pull/9667#discussion_r3615011910"
+      },
+      "created": "2026-07-21T03:50:30Z",
+      "updated": "2026-07-21T04:01:35Z",
+      "matched_findings": [
+        "2afce9"
+      ]
     }
-  ]
+  ],
+  "sync": {
+    "github": {
+      "ChainSafe/lodestar": {
+        "last_comment_id": "3615011910",
+        "last_synced": "2026-07-21T03:54:59Z",
+        "last_imported": 0,
+        "last_reverify_updates": 0
+      }
+    }
+  }
 }
