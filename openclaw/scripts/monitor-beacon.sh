@@ -46,7 +46,9 @@ else
 fi
 
 # 3. Check for crash/OOM signals
-CRASH=$(echo "$LOGS" | grep -iE '\bfatal\b|SIGTERM|SIGKILL|\bOOM\b|heap out|JavaScript heap|Allocation failed|v8::' | head -3)
+# Exclude REST request-log lines: request IDs are random short strings (req-oom, req-fatal, etc.)
+# that can coincidentally word-match a crash keyword without any real crash/OOM occurring.
+CRASH=$(echo "$LOGS" | grep -iE '\bfatal\b|SIGTERM|SIGKILL|\bOOM\b|heap out|JavaScript heap|Allocation failed|v8::' | grep -v 'Req req-' | head -3)
 if [ -n "$CRASH" ]; then
   ALERTS+="🔴 **Crash/OOM signal detected:**\n"
   ALERTS+='```\n'
