@@ -39,6 +39,8 @@ require_executable "scripts/github/check-github-access.sh"
 
 require_pattern "scripts/github/github_notifications_sweep.py" "bail_if_github_suspended"
 require_pattern "scripts/github/github_notifications_sweep.py" "HEARTBEAT_OK"
+require_pattern "scripts/github/github_notifications_sweep.py" "run_gh_paginated_items"
+require_pattern "scripts/github/github_notifications_sweep.py" "--paginate"
 require_pattern "scripts/github/monitor_open_pr_ci.py" "bail_if_github_suspended"
 require_pattern "scripts/github/monitor_open_pr_ci.py" "NO_REPLY"
 require_pattern "scripts/ci/auto_fix_flaky.py" "bail_if_github_suspended"

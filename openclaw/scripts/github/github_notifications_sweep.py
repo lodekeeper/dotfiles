@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import argparse
+import base64
 import datetime as dt
 import json
 import re
@@ -46,6 +47,45 @@ def run_gh_json(args: List[str], retries: int = 4) -> Any:
         try:
             out = subprocess.check_output(cmd, text=True, stderr=subprocess.PIPE)
             return json.loads(out)
+        except subprocess.CalledProcessError as e:
+            last_err = e
+            stderr = (e.stderr or "").lower()
+            stdout = (e.output or "").lower()
+            is_transient = (
+                "bad credentials" in stderr
+                or "401" in stderr
+                or "502" in stderr
+                or "503" in stderr
+                or "504" in stderr
+                or "502" in stdout
+                or "unicorn" in stdout
+            )
+            if is_transient and attempt < retries - 1:
+                time.sleep(2 ** attempt)
+                continue
+            raise
+    raise last_err
+
+
+def run_gh_paginated_items(endpoint: str, retries: int = 4) -> List[Dict[str, Any]]:
+    """Fetch every item from a paginated GitHub collection endpoint."""
+    import time
+
+    cmd = ["gh", "api", "--paginate", endpoint, "--jq", ".[] | @base64"]
+    last_err = None
+    for attempt in range(retries):
+        try:
+            out = subprocess.check_output(cmd, text=True, stderr=subprocess.PIPE)
+            items: List[Dict[str, Any]] = []
+            for line in out.splitlines():
+                line = line.strip()
+                if not line:
+                    continue
+                decoded = base64.b64decode(line).decode("utf-8")
+                item = json.loads(decoded)
+                if isinstance(item, dict):
+                    items.append(item)
+            return items
         except subprocess.CalledProcessError as e:
             last_err = e
             stderr = (e.stderr or "").lower()
@@ -274,7 +314,7 @@ def normalize_checklist(checklist: Dict[str, Any]) -> Dict[str, Any]:
 
 
 def fetch_notifications() -> List[Dict[str, Any]]:
-    data = run_gh_json(["notifications?participating=true"])
+    data = run_gh_paginated_items("notifications?participating=true&per_page=100")
     out = []
     for n in data:
         try:
@@ -309,10 +349,10 @@ def fetch_thread_comments(
     review: List[Dict[str, Any]] = []
     review_bodies: List[Dict[str, Any]] = []
     if kind == "pr":
-        review = run_gh_json([f"repos/{repo}/pulls/{number}/comments?per_page=100"])
+        review = run_gh_paginated_items(f"repos/{repo}/pulls/{number}/comments?per_page=100")
         # Review bodies: only count reviews that have a non-empty body (pure approvals
         # without a comment have body == "" and are not actionable as comments).
-        raw_reviews = run_gh_json([f"repos/{repo}/pulls/{number}/reviews?per_page=100"])
+        raw_reviews = run_gh_paginated_items(f"repos/{repo}/pulls/{number}/reviews?per_page=100")
         for r in raw_reviews:
             body = (r.get("body") or "").strip()
             if not body:
@@ -326,7 +366,7 @@ def fetch_thread_comments(
                     "body": body,
                 }
             )
-    issue = run_gh_json([f"repos/{repo}/issues/{number}/comments?per_page=100"])
+    issue = run_gh_paginated_items(f"repos/{repo}/issues/{number}/comments?per_page=100")
     return review, issue, review_bodies
 
 
