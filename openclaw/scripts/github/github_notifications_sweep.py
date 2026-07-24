@@ -570,6 +570,15 @@ def main() -> int:
     save_json(state_path, state)
     save_json(checklist_path, checklist)
 
+    # Always-on diagnostic: makes "checklist open-item count" a free byproduct of
+    # every run instead of a separate manual/live-audit step. A large raw GitHub
+    # unread-notification count is NOT a dedup signal this script maintains (it
+    # never clears thread read-state) — see reference_gh_notif_checklist_mechanics
+    # memory, confirmed independently 6 times. This line lets that be checked at a
+    # glance instead of re-derived.
+    open_count = sum(1 for it in checklist["items"].values() if it.get("status") == "open")
+    print(f"[diag] checklist open items: {open_count}", file=sys.stderr)
+
     if not actionable_new and not actionable_reminders:
         print("HEARTBEAT_OK")
         return 0
