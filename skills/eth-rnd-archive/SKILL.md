@@ -90,6 +90,19 @@ bash skills/eth-rnd-archive/check-updates.sh
 bash skills/eth-rnd-archive/check-updates.sh 2026-02-25
 ```
 
+**⚠️ `messages` is the TOTAL count in the file (append-only daily archive), not a delta.**
+On a busy day, a tracked file can already hold many already-logged messages by the time
+you check again — `cat`-ing the whole file re-reads old content as if it were new. In
+`"mode": "diff"` output, each `tracked_changes` entry also carries `new_messages` (actual
+delta since `from`) and `new_since_index` (0-based start index of new entries). Only read
+the tail slice, e.g.:
+```bash
+python3 -c "import json; d=json.load(open('FILE')); print(json.dumps(d[START_INDEX:], indent=2))"
+```
+using `new_since_index` as `START_INDEX`. Cross-check against today's notes file before
+re-investigating anything that looks new — if a message timestamp predates your last logged
+entry, it's stale content, not fresh signal.
+
 ## Workflow
 
 ### Hourly Check (via cron)

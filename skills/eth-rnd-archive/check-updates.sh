@@ -71,7 +71,12 @@ else
             if [[ "$file" == *.json ]] && [ -f "$REPO_PATH/$file" ]; then
                 if [ "$FIRST" = true ]; then FIRST=false; else echo ","; fi
                 MSG_COUNT=$(python3 -c "import json; print(len(json.load(open('$REPO_PATH/$file'))))" 2>/dev/null || echo "0")
-                echo -n "    {\"channel\": \"$CHANNEL\", \"file\": \"$file\", \"messages\": $MSG_COUNT}"
+                # messages = total in file (append-only archive); new_messages = actual delta vs
+                # last-checked commit (file may pre-date LAST_COMMIT, so 0 previous is a valid case).
+                # Only entries from index new_since_index onward are new — slice, don't re-read the whole file.
+                PREV_COUNT=$(git show "$LAST_COMMIT:$file" 2>/dev/null | python3 -c "import json,sys; print(len(json.load(sys.stdin)))" 2>/dev/null || echo "0")
+                NEW_COUNT=$((MSG_COUNT - PREV_COUNT))
+                echo -n "    {\"channel\": \"$CHANNEL\", \"file\": \"$file\", \"messages\": $MSG_COUNT, \"new_messages\": $NEW_COUNT, \"new_since_index\": $PREV_COUNT}"
             fi
         fi
     done <<< "$CHANGED_FILES"
