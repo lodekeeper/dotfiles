@@ -11,7 +11,16 @@ STRICT_CI_API_KEY=0
 REQUIRE_DEVNET_GRAFANA=0
 SKIP_DOMAIN_PREFLIGHTS=0
 SKIP_CADENCE_CHECK=0
+RESPONSE_ONLY=0
 VERBOSE=0
+TEMP_FILES=()
+
+cleanup_temp_files() {
+  if [[ "${#TEMP_FILES[@]}" -gt 0 ]]; then
+    rm -f "${TEMP_FILES[@]}"
+  fi
+}
+trap cleanup_temp_files EXIT
 
 usage() {
   cat <<'EOF'
@@ -35,9 +44,67 @@ Options:
                         Require Grafana token/tooling in the devnet preflight
   --allow-live-priorities-no-reply
                         Allow NO_REPLY even when "Next Audit Priorities" has live items
+  --response-only       Print only the final cron response to stdout; route logs to stderr
   -v, --verbose         Print close-out guard logs to stderr
   -h, --help            Show this help
 EOF
+}
+
+run_preflight_response_only() {
+  local stdout_file stderr_file rc
+
+  stdout_file="$(mktemp)"
+  stderr_file="$(mktemp)"
+  TEMP_FILES+=("$stdout_file" "$stderr_file")
+
+  set +e
+  "${PREFLIGHT_CMD[@]}" >"$stdout_file" 2>"$stderr_file"
+  rc=$?
+  set -e
+
+  [[ -s "$stdout_file" ]] && cat "$stdout_file" >&2
+  [[ -s "$stderr_file" ]] && cat "$stderr_file" >&2
+  return "$rc"
+}
+
+run_close_response_only() {
+  local stdout_file stderr_file rc
+
+  stdout_file="$(mktemp)"
+  stderr_file="$(mktemp)"
+  TEMP_FILES+=("$stdout_file" "$stderr_file")
+
+  set +e
+  "${CLOSE_CMD[@]}" >"$stdout_file" 2>"$stderr_file"
+  rc=$?
+  set -e
+
+  if [[ "$rc" -ne 0 ]]; then
+    [[ -s "$stdout_file" ]] && cat "$stdout_file" >&2
+    [[ -s "$stderr_file" ]] && cat "$stderr_file" >&2
+    return "$rc"
+  fi
+
+  [[ -s "$stderr_file" ]] && cat "$stderr_file" >&2
+
+  python3 - "$stdout_file" <<'PY'
+from pathlib import Path
+import sys
+
+lines = Path(sys.argv[1]).read_text(encoding="utf-8").splitlines()
+nonempty_indexes = [idx for idx, line in enumerate(lines) if line.strip()]
+
+if not nonempty_indexes:
+    print("close-out produced no cron response", file=sys.stderr)
+    raise SystemExit(2)
+
+response_index = nonempty_indexes[-1]
+logs = "\n".join(lines[:response_index]).rstrip()
+if logs:
+    print(logs, file=sys.stderr)
+
+print(lines[response_index])
+PY
 }
 
 while [[ $# -gt 0 ]]; do
@@ -76,6 +143,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --allow-live-priorities-no-reply)
       ALLOW_LIVE_PRIORITIES_NO_REPLY=1
+      shift
+      ;;
+    --response-only)
+      RESPONSE_ONLY=1
       shift
       ;;
     -v|--verbose)
@@ -118,7 +189,11 @@ if [[ "$REQUIRE_DEVNET_GRAFANA" -eq 1 ]]; then
   PREFLIGHT_CMD+=(--require-devnet-grafana)
 fi
 
-"${PREFLIGHT_CMD[@]}"
+if [[ "$RESPONSE_ONLY" -eq 1 ]]; then
+  run_preflight_response_only
+else
+  "${PREFLIGHT_CMD[@]}"
+fi
 
 CLOSE_CMD=(
   bash "$WORKSPACE/scripts/notes/close-autonomy-audit.sh"
@@ -141,4 +216,8 @@ if [[ "$VERBOSE" -eq 1 ]]; then
   CLOSE_CMD+=(--verbose)
 fi
 
-"${CLOSE_CMD[@]}"
+if [[ "$RESPONSE_ONLY" -eq 1 ]]; then
+  run_close_response_only
+else
+  "${CLOSE_CMD[@]}"
+fi

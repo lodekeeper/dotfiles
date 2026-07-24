@@ -1,10 +1,28 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-07-23 (97th pass)
+> Updated: 2026-07-24 (98th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-07-24 (self-improvement-audit-daily, 03:23 UTC)
+
+### PR review
+- **Status:** follow-up guard and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** cron-response output hygiene gap found and fixed this cycle: the one-command audit wrapper still sent lifecycle logs to stdout before the final `NO_REPLY` or summary, so direct command-based schedulers could not treat stdout as the exact deliverable. Gap fixed this cycle: added `--response-only` to `scripts/notes/run-daily-autonomy-audit.sh`, routing preflight/close-out logs to stderr while printing only the final cron response on stdout; default human-readable behavior stays unchanged. Proposed use: scheduled jobs that execute the wrapper directly should pass `--response-only` when delivery expects exact `NO_REPLY`/summary output.
+
+---
 ## Daily Audit Snapshot — 2026-07-23 (self-improvement-audit-daily, 03:21 UTC)
 
 ### PR review
@@ -1825,6 +1843,14 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Daily autonomy audit wrapper supports response-only stdout (2026-07-24)
+Updated `scripts/notes/run-daily-autonomy-audit.sh`.
+- added `--response-only` for command-based cron surfaces that need stdout to contain only `NO_REPLY` or the concise summary,
+- sends preflight and close-out lifecycle logs to stderr in response-only mode,
+- preserves the existing default output for manual runs.
+
+**Rationale:** autonomous schedulers that relay raw command stdout should not have to parse guard logs before finding the actual audit response.
 
 ### ✅ Daily autonomy audit one-command wrapper added (2026-07-18)
 Added `scripts/notes/run-daily-autonomy-audit.sh`.
