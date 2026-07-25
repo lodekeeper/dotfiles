@@ -124,8 +124,39 @@ detached 18 days behind on 2026-06-19 and faked a discrepancy).
 - No PR needed. Spec change is normative-text only (capability + priority already implemented years ago).
   ENR field ordering is cosmetic in the spec; Lodestar sets both keys, order-independent.
 
+### 2026-07-24 — Electra/Capella withdrawal-sweep refactor re-verify (get_balance_after_withdrawals) [Lodestar: packages/state-transition/src/block/processWithdrawals.ts]
+- Trigger: master churn survey found the withdrawal sweep refactored into helpers
+  `get_pending_partial_withdrawals` + `get_validators_sweep_withdrawals`, both delegating balance
+  math to a new Capella helper `get_balance_after_withdrawals(state, i, withdrawals)` =
+  `state.balances[i] - sum(w.amount for w in withdrawals if w.validator_index == i)`, and
+  `get_expected_withdrawals` now returning an `ExpectedWithdrawals` container with explicit
+  `processed_partial_withdrawals_count` / `processed_validators_sweep_count`.
+- **Behavior-preserving vs stable v1.6.1.** Confirmed by diffing the function against
+  `git show v1.6.1:specs/electra/beacon-chain.md`: v1.6.1 already subtracted the inline
+  `total_withdrawn = sum(w.amount ... if w.validator_index == idx)` in **both** the partial-phase
+  loop AND the validator-sweep loop. The refactor just extracts that inline sum into
+  `get_balance_after_withdrawals` and splits the monolith into two helpers. Limits identical on
+  mainnet (partial cap `min(MAX_PENDING_PARTIALS=8, MAX_WITHDRAWALS-1=15)=8`; sweep cap
+  `MAX_WITHDRAWALS_PER_PAYLOAD=16`). No consensus change → no spec-drift PR.
+- ✅ **Lodestar already in sync** (verified vs `origin/unstable`, read via `git show` — ~/lodestar was
+  on a feature branch). `getExpectedWithdrawals` uses a shared `validatorBalanceAfterWithdrawals`
+  Map (comment cites `get_balance_after_withdrawals` @ v1.7.0-alpha.0), split into
+  `getPendingPartialWithdrawals` + `getValidatorsSweepWithdrawals`. **Substantive correctness check:**
+  both phases `.get(idx)` from the map, seed from `state.balances.get(idx)` on first touch, and
+  `.set()` the reduced balance after each append (partial: `balance-withdrawableBalance`; sweep full:
+  `0`, sweep partial: `balance-partialAmount`). The map is passed in from `getExpectedWithdrawals`, so
+  it's **shared across phases** — a validator withdrawn in the partial phase carries its reduced
+  balance into the sweep phase, exactly matching `prior_withdrawals + withdrawals` in the spec. This is
+  the subtle property preventing double-counting one validator's balance in a single block; Lodestar's
+  Map is O(1)/lookup vs the spec's O(n) re-sum, correct and faster. No PR needed.
+- Note: full-withdrawal path `.set(idx, 0)` is a nice micro-opt (skips re-derivation; enables the
+  `balance === 0` early-skip at sweep L43). Gloas adds parallel builder tracks
+  (`getBuilderWithdrawals` / `getBuildersSweepWithdrawals` + `builderBalanceAfterWithdrawals` map) —
+  same shape, Nico's active area, not re-audited here.
+
 ---
 *Started: 2026-02-15*
 *Last updated: 2026-07-03 — Gloas builder-constants re-verify: 3 stale constants (prefix 0x03→0xB0, deposit-req 256→64, withdrawability-delay 8192→64) all from spec PRs merged same day; documented, flagged to Nico, no autonomous PR (his active area)*
 *Last updated: 2026-07-17 — phase0 p2p QUIC-primary re-verify (#5330): Lodestar already in sync (quic default-on, dial-prefers-QUIC, both transports mandatory-by-default), no PR. Note: recent consensus-specs master churn is ~90% Gloas/Heze (ePBS, inclusion lists, builder constants) = Nico's active area, no autonomous PRs there.*
+*Last updated: 2026-07-24 — Electra/Capella withdrawal-sweep refactor (get_balance_after_withdrawals + 2-helper split, ExpectedWithdrawals container) re-verify: behavior-preserving vs stable v1.6.1 (both phases already subtracted inline total_withdrawn); Lodestar already in sync via shared validatorBalanceAfterWithdrawals Map threaded through partial+sweep phases. No PR. Recent non-Gloas master activity otherwise = cosmetic pyspec renames (boolean→Boolean, byte→Byte, uint*→Uint*, remove bit) + FCR test-vector generation (#5449) = no settled-fork drift.*
 *🎉 ALL FORKS COMPLETE (surface read 2026-02-18); now in spot-re-verify mode*
