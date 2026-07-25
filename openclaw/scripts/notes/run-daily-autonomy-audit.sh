@@ -11,6 +11,7 @@ STRICT_CI_API_KEY=0
 REQUIRE_DEVNET_GRAFANA=0
 SKIP_DOMAIN_PREFLIGHTS=0
 SKIP_CADENCE_CHECK=0
+AUTO_REFRESH_SPEC_VECTORS=1
 RESPONSE_ONLY=0
 VERBOSE=0
 TEMP_FILES=()
@@ -39,6 +40,9 @@ Options:
   --skip-cadence-check  Skip cadence guard during close-out
   --skip-domain-preflights
                         Skip PR/CI/spec/devnet preflights before snapshot insertion
+  --skip-spec-vector-refresh
+                        Do not refresh the dedicated consensus-specs test-vector cache
+                        before domain preflights
   --strict-ci-api-key   Require a real OPENAI_API_KEY in the CI-fix preflight
   --require-devnet-grafana
                         Require Grafana token/tooling in the devnet preflight
@@ -48,6 +52,36 @@ Options:
   -v, --verbose         Print close-out guard logs to stderr
   -h, --help            Show this help
 EOF
+}
+
+run_spec_vector_refresh() {
+  local rc
+  local refresh_cmd=(
+    bash "$WORKSPACE/scripts/spec/ensure-fresh-test-vectors.sh"
+    --json
+  )
+
+  if [[ "$SKIP_DOMAIN_PREFLIGHTS" -eq 1 || "$AUTO_REFRESH_SPEC_VECTORS" -ne 1 ]]; then
+    return 0
+  fi
+
+  if [[ "$RESPONSE_ONLY" -eq 1 ]]; then
+    echo "[spec] Refreshing dedicated consensus-specs test-vector cache before domain preflights" >&2
+    set +e
+    "${refresh_cmd[@]}" >&2
+    rc=$?
+    set -e
+  else
+    echo "[spec] Refreshing dedicated consensus-specs test-vector cache before domain preflights"
+    set +e
+    "${refresh_cmd[@]}"
+    rc=$?
+    set -e
+  fi
+
+  if [[ "$rc" -ne 0 ]]; then
+    echo "⚠️ Spec test-vector cache refresh failed (exit $rc); continuing so domain preflights can document the blocker." >&2
+  fi
 }
 
 run_preflight_response_only() {
@@ -133,6 +167,10 @@ while [[ $# -gt 0 ]]; do
       SKIP_DOMAIN_PREFLIGHTS=1
       shift
       ;;
+    --skip-spec-vector-refresh)
+      AUTO_REFRESH_SPEC_VECTORS=0
+      shift
+      ;;
     --strict-ci-api-key)
       STRICT_CI_API_KEY=1
       shift
@@ -188,6 +226,8 @@ fi
 if [[ "$REQUIRE_DEVNET_GRAFANA" -eq 1 ]]; then
   PREFLIGHT_CMD+=(--require-devnet-grafana)
 fi
+
+run_spec_vector_refresh
 
 if [[ "$RESPONSE_ONLY" -eq 1 ]]; then
   run_preflight_response_only
