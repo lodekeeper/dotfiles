@@ -179,14 +179,19 @@ def backlog_has_corruption_guard(backlog_text: str) -> bool:
 
 TOPIC_TAG_RE = re.compile(r"\[topic:(\d+)\]")
 PR_ISSUE_URL_RE = re.compile(r"https://github\.com/([^/\s]+/[^/\s]+)/(?:pull|issues)/(\d+)")
+# Matches the plain-text 'owner/repo PR #N' / 'owner/repo Issue #N' / 'owner/repo#N'
+# convention used in BACKLOG.md '### ' headings themselves (no URL present there).
+HEADING_REPO_REF_RE = re.compile(r"([A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+)(?:\s+(?:PR|Issue))?\s*#(\d+)")
 
 
 def extract_topic_routes_from_backlog(backlog_text: str) -> Dict[str, str]:
     """Map 'owner/repo#number' -> topic id, from BACKLOG.md '### ... [topic:ID]' sections.
 
     A section is delimited by a top-level '### ' heading line; the topic id (if any)
-    comes from a '[topic:ID]' tag on that heading, and applies to every GitHub PR/issue
-    URL found anywhere in the section body (typically a '**PR/Issue:**' line).
+    comes from a '[topic:ID]' tag on that heading. Routes are collected both from the
+    heading line itself (the common 'owner/repo PR #N [topic:ID]' convention, which
+    never contains a full URL) and from any GitHub PR/issue URL found in the section
+    body (typically a '**PR/Issue:**' line).
     """
     routes: Dict[str, str] = {}
     current_topic: str | None = None
@@ -194,6 +199,9 @@ def extract_topic_routes_from_backlog(backlog_text: str) -> Dict[str, str]:
         if line.startswith("### "):
             m = TOPIC_TAG_RE.search(line)
             current_topic = m.group(1) if m else None
+            if current_topic:
+                for repo, number in HEADING_REPO_REF_RE.findall(line):
+                    routes[f"{repo}#{number}"] = current_topic
             continue
         if current_topic is None:
             continue
@@ -567,6 +575,18 @@ def main() -> int:
     state["updatedAt"] = now
     checklist["updatedAt"] = now
 
+    # Snapshot open items (id -> reportedCount) so the next run can tell whether
+    # the open set is genuinely unchanged, instead of an agent re-deriving that by
+    # hand via checklist + BACKLOG cross-reference every cycle — see
+    # reference_gh_notif_checklist_mechanics memory: an identical 8-item open set
+    # got manually re-verified 3 cron cycles running (2026-07-25 10:32/10:47/11:06
+    # UTC) before this was added.
+    open_items_snapshot = {
+        sid: it.get("reportedCount", 0) for sid, it in checklist["items"].items() if it.get("status") == "open"
+    }
+    open_items_unchanged = open_items_snapshot == state.get("lastOpenItemsSnapshot", {})
+    state["lastOpenItemsSnapshot"] = open_items_snapshot
+
     save_json(state_path, state)
     save_json(checklist_path, checklist)
 
@@ -576,8 +596,9 @@ def main() -> int:
     # never clears thread read-state) — see reference_gh_notif_checklist_mechanics
     # memory, confirmed independently 6 times. This line lets that be checked at a
     # glance instead of re-derived.
-    open_count = sum(1 for it in checklist["items"].values() if it.get("status") == "open")
-    print(f"[diag] checklist open items: {open_count}", file=sys.stderr)
+    open_count = len(open_items_snapshot)
+    unchanged_note = " (unchanged since last run)" if open_items_unchanged and open_count > 0 else ""
+    print(f"[diag] checklist open items: {open_count}{unchanged_note}", file=sys.stderr)
 
     if not actionable_new and not actionable_reminders:
         print("HEARTBEAT_OK")
