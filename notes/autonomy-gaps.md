@@ -1,10 +1,28 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-07-26 (100th pass)
+> Updated: 2026-07-27 (101st pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-07-27 (self-improvement-audit-daily, 03:25 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** broad destructive-command guard gap found and partially fixed this cycle: recent cron failures proved documentation-only "do not run `rm` / `trash` / broad git state commands" rules are not load-bearing, and the daily autonomy preflights did not verify any reusable guard before autonomous shell-driven PR review, CI fix, spec implementation, or devnet debugging work. Fix applied this cycle: added `scripts/safety/block-risky-command.py`, a side-effect-free helper that blocks `rm`, `trash`, `gio trash`, `git stash`, `git clean`, `git reset --hard`, and `git checkout -- <path>` unless explicitly overridden; wired its `--self-test --json` into all four domain preflights and rendered it in daily statuses. Proposed next fix: ask Nico in a live session before wiring this helper into OpenClaw/Codex PreToolUse config; until then it is a validated guard helper, not an active platform hook.
+
+---
 ## Daily Audit Snapshot — 2026-07-26 (self-improvement-audit-daily, 03:25 UTC)
 
 ### PR review

@@ -92,6 +92,12 @@ def build_checks(args: argparse.Namespace, workspace: Path) -> list[tuple[str, s
         str(workspace),
         "--json",
     ]
+    risky_command_guard = [
+        python,
+        "scripts/safety/block-risky-command.py",
+        "--self-test",
+        "--json",
+    ]
 
     ci_env = base_env.copy()
     ci_warnings: list[str] = []
@@ -126,6 +132,13 @@ def build_checks(args: argparse.Namespace, workspace: Path) -> list[tuple[str, s
         ),
         (
             "prReview",
+            "destructiveCommandGuard",
+            risky_command_guard,
+            base_env,
+            [],
+        ),
+        (
+            "prReview",
             "githubActorBoundary",
             [
                 python,
@@ -141,6 +154,13 @@ def build_checks(args: argparse.Namespace, workspace: Path) -> list[tuple[str, s
             "ciFix",
             "detectorEntrypoint",
             [python, "scripts/ci/auto_fix_flaky.py", "--check-only", "--json"],
+            base_env,
+            [],
+        ),
+        (
+            "ciFix",
+            "destructiveCommandGuard",
+            risky_command_guard,
             base_env,
             [],
         ),
@@ -187,6 +207,13 @@ def build_checks(args: argparse.Namespace, workspace: Path) -> list[tuple[str, s
         ),
         (
             "specImplementation",
+            "destructiveCommandGuard",
+            risky_command_guard,
+            base_env,
+            [],
+        ),
+        (
+            "specImplementation",
             "testVectorReadiness",
             ["bash", "scripts/spec/ensure-fresh-test-vectors.sh", "--check-only", "--json"],
             base_env,
@@ -218,6 +245,13 @@ def build_checks(args: argparse.Namespace, workspace: Path) -> list[tuple[str, s
             devnet_command,
             base_env,
             devnet_warnings,
+        ),
+        (
+            "devnetDebugging",
+            "destructiveCommandGuard",
+            risky_command_guard,
+            base_env,
+            [],
         ),
         (
             "devnetDebugging",

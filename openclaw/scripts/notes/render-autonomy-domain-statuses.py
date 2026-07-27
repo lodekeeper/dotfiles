@@ -16,9 +16,10 @@ SECTION_BY_DOMAIN = {
 }
 
 EXPECTED_CHECKS = {
-    "prReview": ["followupGuards", "githubActorBoundary"],
+    "prReview": ["followupGuards", "destructiveCommandGuard", "githubActorBoundary"],
     "ciFix": [
         "detectorEntrypoint",
+        "destructiveCommandGuard",
         "fixQualityGate",
         "runLogFetch",
         "githubActorBoundary",
@@ -26,11 +27,12 @@ EXPECTED_CHECKS = {
     ],
     "specImplementation": [
         "prePrComplianceGate",
+        "destructiveCommandGuard",
         "testVectorReadiness",
         "githubActorBoundary",
         "gitIdentityBoundary",
     ],
-    "devnetDebugging": ["devnetTriage", "devnetRoutingReadiness"],
+    "devnetDebugging": ["devnetTriage", "destructiveCommandGuard", "devnetRoutingReadiness"],
 }
 
 
@@ -131,6 +133,9 @@ def _failure_summary(domain_checks: dict[str, dict[str, Any]], failed_names: lis
 
 
 def _proposed_fix(domain: str, failed_names: list[str]) -> str:
+    if "destructiveCommandGuard" in failed_names:
+        return "fix `scripts/safety/block-risky-command.py --self-test --json` before continuing autonomous shell-driven work."
+
     if domain == "specImplementation" and "testVectorReadiness" in failed_names:
         return "run `scripts/spec/ensure-fresh-test-vectors.sh` to refresh the dedicated consensus-specs cache, or point `SPEC_REPO` at a current checkout before starting autonomous spec implementation."
 
@@ -222,12 +227,12 @@ def render_statuses(payload: dict[str, Any]) -> dict[str, str]:
         if domain == "prReview":
             actor = _actor(domain_checks.get("githubActorBoundary"))
             statuses[section] = (
-                f"follow-up guard and GitHub actor-boundary preflights verified from current preflight output "
+                f"follow-up guard, risky-command guard helper, and GitHub actor-boundary preflights verified from current preflight output "
                 f"as `{actor}`; no new PR-review blocker discovered this cycle."
             )
         elif domain == "ciFix":
             status = (
-                "detector entrypoint, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; "
+                "detector entrypoint, risky-command guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; "
                 "no new CI-fix blocker discovered this cycle."
             )
             if warnings:
@@ -236,7 +241,7 @@ def render_statuses(payload: dict[str, Any]) -> dict[str, str]:
         elif domain == "specImplementation":
             actor = _actor(domain_checks.get("githubActorBoundary"))
             statuses[section] = (
-                "pre-PR compliance gate, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output "
+                "pre-PR compliance gate, risky-command guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output "
                 f"as `{actor}`; no new spec-implementation blocker discovered this cycle."
             )
         elif domain == "devnetDebugging":
@@ -248,7 +253,7 @@ def render_statuses(payload: dict[str, Any]) -> dict[str, str]:
                 details.append(f"panda datasource discovery is ready ({_code_list(panda_names)})")
             suffix = f" {'; '.join(details)}." if details else ""
             statuses[section] = (
-                "devnet-triage JSON preflight and local/remote routing readiness verified from current preflight output; "
+                "devnet-triage JSON preflight, risky-command guard helper, and local/remote routing readiness verified from current preflight output; "
                 f"no new devnet-debugging blocker discovered this cycle.{suffix}"
             )
 
