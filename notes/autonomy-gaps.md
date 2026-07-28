@@ -1,10 +1,28 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-07-27 (101st pass)
+> Updated: 2026-07-28 (102nd pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-07-28 (self-improvement-audit-daily, 03:25 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** raw cleanup-command surface gap found and fixed this cycle: yesterday's risky-command helper blocks direct shell commands, but the autonomy audit wrappers still contained internal `rm -f` cleanup traps, so the primary daily workflow preserved the same broad cleanup pattern it is supposed to guard against. Fix applied this cycle: added `scripts/safety/unlink-owned-temp-files.py`, which only unlinks registered paths under the process temp directory and refuses directories/non-temp paths; switched `run-daily-autonomy-audit.sh`, `run-autonomy-audit-preflight.sh`, and `close-autonomy-audit.sh` to use it for temporary log/JSON cleanup. Proposed recurrence fix: if another wrapper needs cleanup, reuse the helper instead of adding raw `rm`/`trash`; consider adding a source-scan preflight if risky shell cleanup patterns reappear outside the safety helper.
+
+---
 ## Daily Audit Snapshot — 2026-07-27 (self-improvement-audit-daily, 03:25 UTC)
 
 ### PR review

@@ -12,6 +12,14 @@ SKIP_MEMORY_OUTCOME_CHECK=0
 MEMORY_OUTCOME=""
 CADENCE_GAP_DETECTED=0
 CADENCE_GAP_SUMMARY=""
+TEMP_FILES=()
+
+cleanup_temp_files() {
+  if [[ "${#TEMP_FILES[@]}" -gt 0 ]]; then
+    python3 "$WORKSPACE/scripts/safety/unlink-owned-temp-files.py" "${TEMP_FILES[@]}" || true
+  fi
+}
+trap cleanup_temp_files EXIT
 
 usage() {
   cat <<'EOF'
@@ -154,10 +162,7 @@ FINALIZE_CMD=(
 )
 
 finalize_log="$(mktemp)"
-cleanup() {
-  rm -f "$finalize_log"
-}
-trap cleanup EXIT
+TEMP_FILES+=("$finalize_log")
 
 set +e
 "${FINALIZE_CMD[@]}" >"$finalize_log" 2>&1
@@ -186,7 +191,7 @@ if [[ "$SKIP_CADENCE_CHECK" -ne 1 ]]; then
   )
 
   cadence_log="$(mktemp)"
-  trap 'rm -f "$finalize_log" "$cadence_log"' EXIT
+  TEMP_FILES+=("$cadence_log")
 
   set +e
   "${CADENCE_CMD[@]}" >"$cadence_log" 2>&1

@@ -19,7 +19,7 @@ TEMP_FILES=()
 
 cleanup_temp_files() {
   if [[ "${#TEMP_FILES[@]}" -gt 0 ]]; then
-    rm -f "${TEMP_FILES[@]}"
+    python3 "$WORKSPACE/scripts/safety/unlink-owned-temp-files.py" "${TEMP_FILES[@]}" || true
   fi
 }
 trap cleanup_temp_files EXIT
