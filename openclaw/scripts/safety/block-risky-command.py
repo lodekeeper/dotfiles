@@ -12,8 +12,10 @@ import argparse
 import json
 import os
 import re
+import shlex
 import sys
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any
 
 
@@ -118,6 +120,125 @@ def find_matches(command: str) -> list[dict[str, str]]:
     return matches
 
 
+def load_touched_paths(paths: list[str]) -> set[str]:
+    touched: set[str] = set()
+    for raw_path in paths:
+        if raw_path:
+            touched.add(os.path.abspath(os.path.expanduser(raw_path)))
+    return touched
+
+
+def load_touched_paths_file(path: str | None) -> set[str]:
+    if not path:
+        return set()
+
+    touched: set[str] = set()
+    try:
+        lines = Path(path).read_text(encoding="utf8").splitlines()
+    except FileNotFoundError:
+        return touched
+
+    for line in lines:
+        line = line.strip()
+        if not line:
+            continue
+        try:
+            item = json.loads(line)
+        except json.JSONDecodeError:
+            touched.add(os.path.abspath(os.path.expanduser(line)))
+            continue
+        if not isinstance(item, dict):
+            continue
+        action = item.get("action")
+        raw_path = item.get("path")
+        if action in {"read", "created", "wrote", "touched"} and isinstance(raw_path, str):
+            touched.add(os.path.abspath(os.path.expanduser(raw_path)))
+    return touched
+
+
+def command_parts(command: str) -> list[list[str]]:
+    parts: list[list[str]] = []
+    for raw_part in re.split(r"[;&|()\n]+", command):
+        raw_part = raw_part.strip()
+        if not raw_part:
+            continue
+        try:
+            part = shlex.split(raw_part)
+        except ValueError:
+            continue
+        if part:
+            parts.append(part)
+    return parts
+
+
+def destructive_targets(command: str) -> list[dict[str, str]]:
+    targets: list[dict[str, str]] = []
+    for part in command_parts(command):
+        if part[0] == "sudo":
+            part = part[1:]
+        if not part:
+            continue
+
+        command_name = part[0]
+        args = part[1:]
+        if command_name == "gio" and args[:1] == ["trash"]:
+            command_name = "gio trash"
+            args = args[1:]
+
+        if command_name not in {"rm", "trash", "trash-put", "gio trash"}:
+            continue
+
+        end_of_options = False
+        for arg in args:
+            if not end_of_options and arg == "--":
+                end_of_options = True
+                continue
+            if not end_of_options and arg.startswith("-"):
+                continue
+            targets.append(
+                {
+                    "command": command_name,
+                    "path": arg,
+                    "absolutePath": os.path.abspath(os.path.expanduser(arg)),
+                }
+            )
+    return targets
+
+
+def evaluate_warn_only(command: str, *, touched_paths: set[str]) -> dict[str, Any]:
+    matches = find_matches(command)
+    targets = destructive_targets(command)
+    unverified_targets = [
+        target for target in targets if target["absolutePath"] not in touched_paths
+    ]
+    broad_matches = [
+        match
+        for match in matches
+        if match["name"] not in {"rm", "trash", "gio-trash"}
+    ]
+    should_warn = bool(unverified_targets or broad_matches)
+
+    message = "command accepted"
+    if unverified_targets:
+        target_list = ", ".join(target["path"] for target in unverified_targets)
+        message = (
+            "warn-only risky command check: destructive target(s) were not marked "
+            f"read/created in this session: {target_list}"
+        )
+    elif broad_matches:
+        names = ", ".join(match["name"] for match in broad_matches)
+        message = f"warn-only risky command check: broad state command pattern(s): {names}"
+
+    return {
+        "ok": True,
+        "shouldWarn": should_warn,
+        "matches": matches,
+        "targets": targets,
+        "unverifiedTargets": unverified_targets,
+        "message": message,
+    }
+
+
 def evaluate(command: str) -> dict[str, Any]:
     matches = find_matches(command)
     allowed = os.environ.get(ALLOW_ENV) == "1"
@@ -146,6 +267,8 @@ def run_self_test() -> tuple[bool, list[dict[str, Any]]]:
         ("sed -n '1,20p' BACKLOG.md", True),
         ("bash scripts/notes/run-daily-autonomy-audit.sh --response-only", True),
         ("rm -f /tmp/example", False),
+        ('rm -f /tmp/example; echo "SKIPPED-DO-NOT-RUN"', False),
+        ('rm -f /tmp/example && echo "noop"', False),
         ("trash-put /tmp/example", False),
         ("gio trash /tmp/example", False),
         ("git stash && pnpm test", False),
@@ -173,6 +296,37 @@ def run_self_test() -> tuple[bool, list[dict[str, Any]]]:
     return ok, results
 
 
+def run_warn_self_test() -> tuple[bool, list[dict[str, Any]]]:
+    touched = {"/tmp/read-before"}
+    cases = [
+        ("sed -n '1,20p' BACKLOG.md", False),
+        ("rm -f /tmp/read-before", False),
+        ("rm -f /tmp/unread-after-task", True),
+        ('rm -f /tmp/unread-after-task; echo "SKIPPED-DO-NOT-RUN"', True),
+        ("trash-put /tmp/unread-after-task", True),
+        ("gio trash /tmp/unread-after-task", True),
+        ("git stash && pnpm test", True),
+    ]
+
+    results: list[dict[str, Any]] = []
+    ok = True
+    for command, expected_warn in cases:
+        result = evaluate_warn_only(command, touched_paths=touched)
+        actual_warn = result["shouldWarn"]
+        passed = actual_warn is expected_warn
+        ok = ok and passed
+        results.append(
+            {
+                "command": command,
+                "expectedWarn": expected_warn,
+                "actualWarn": actual_warn,
+                "passed": passed,
+                "unverifiedTargets": result["unverifiedTargets"],
+            }
+        )
+    return ok, results
+
+
 def print_payload(payload: dict[str, Any], *, as_json: bool) -> None:
     if as_json:
         print(json.dumps(payload, indent=2, sort_keys=True))
@@ -187,10 +341,25 @@ def main() -> int:
     parser.add_argument("--command", help="Command string to evaluate")
     parser.add_argument("--json", action="store_true", help="Emit machine-readable output")
     parser.add_argument("--self-test", action="store_true", help="Run built-in side-effect-free checks")
+    parser.add_argument(
+        "--warn-only",
+        action="store_true",
+        help="Warn about risky commands but always exit successfully",
+    )
+    parser.add_argument(
+        "--touched-path",
+        action="append",
+        default=[],
+        help="Path read or created in this session; repeatable for warn-only checks",
+    )
+    parser.add_argument(
+        "--touched-paths-file",
+        help="Line- or JSONL-formatted paths read or created in this session for warn-only checks",
+    )
     args = parser.parse_args()
 
     if args.self_test:
-        ok, cases = run_self_test()
+        ok, cases = run_warn_self_test() if args.warn_only else run_self_test()
         payload = {
             "ok": ok,
             "message": "risky-command guard self-test passed" if ok else "risky-command guard self-test failed",
@@ -203,6 +372,13 @@ def main() -> int:
     if not command:
         print("no command provided via --command or stdin", file=sys.stderr)
         return 1
+
+    if args.warn_only:
+        touched_paths = load_touched_paths(args.touched_path)
+        touched_paths.update(load_touched_paths_file(args.touched_paths_file))
+        payload = evaluate_warn_only(command, touched_paths=touched_paths)
+        print_payload(payload, as_json=args.json)
+        return 0
 
     payload = evaluate(command)
     print_payload(payload, as_json=args.json)

@@ -22,6 +22,9 @@
 ### Audit workflow
 - **Status:** raw cleanup-command surface gap found and fixed this cycle: yesterday's risky-command helper blocks direct shell commands, but the autonomy audit wrappers still contained internal `rm -f` cleanup traps, so the primary daily workflow preserved the same broad cleanup pattern it is supposed to guard against. Fix applied this cycle: added `scripts/safety/unlink-owned-temp-files.py`, which only unlinks registered paths under the process temp directory and refuses directories/non-temp paths; switched `run-daily-autonomy-audit.sh`, `run-autonomy-audit-preflight.sh`, and `close-autonomy-audit.sh` to use it for temporary log/JSON cleanup. Proposed recurrence fix: if another wrapper needs cleanup, reuse the helper instead of adding raw `rm`/`trash`; consider adding a source-scan preflight if risky shell cleanup patterns reappear outside the safety helper.
 
+### Heartbeat follow-up
+- **Status:** pre-authorized warn-only risky-command path implemented but not wired as an active hook. `scripts/safety/block-risky-command.py --warn-only` now exits successfully while returning `shouldWarn=true` for destructive delete targets not passed as read/created/touched in the current session, and for broad state commands like `git stash`. This covers the recurring "noop"/"SKIPPED" cleanup-command shape without changing the separate blocking mode or requiring config changes. Active PreToolUse wiring remains a separate Nico-approved step.
+
 ---
 ## Daily Audit Snapshot — 2026-07-27 (self-improvement-audit-daily, 03:25 UTC)
 
