@@ -1,0 +1,197 @@
+{
+  "pr": 9382,
+  "created": "2026-07-28T12:44:52Z",
+  "updated": "2026-07-28T12:44:52Z",
+  "findings": [
+    {
+      "id": "3f599d",
+      "file": "packages/beacon-node/src/execution/engine/http.ts",
+      "line": 192,
+      "severity": "critical",
+      "reviewer": "github-advanced-security[bot]",
+      "body": "## CodeQL / Polynomial regular expression used on uncontrolled data\n\nThis [regular expression](1) that depends on [library input](2) may run slow on strings with many repetitions of '/'.\n\n[Show more details](https://github.com/ChainSafe/lodestar/security/code-scanning/47)",
+      "status": "open",
+      "addressed_commit": null,
+      "note": null,
+      "source": {
+        "kind": "github-review-comment",
+        "id": "3265733834",
+        "repo": "ChainSafe/lodestar",
+        "pr": 9382,
+        "url": "https://github.com/ChainSafe/lodestar/pull/9382#discussion_r3265733834"
+      },
+      "created": "2026-07-28T12:44:52Z",
+      "updated": "2026-07-28T12:44:52Z"
+    },
+    {
+      "id": "5ad7a5",
+      "file": "packages/beacon-node/src/execution/engine/sszRestClient.ts",
+      "line": 70,
+      "severity": "critical",
+      "reviewer": "github-advanced-security[bot]",
+      "body": "## CodeQL / Polynomial regular expression used on uncontrolled data\n\nThis [regular expression](1) that depends on [library input](2) may run slow on strings with many repetitions of '/'.\n\n[Show more details](https://github.com/ChainSafe/lodestar/security/code-scanning/48)",
+      "status": "open",
+      "addressed_commit": null,
+      "note": null,
+      "source": {
+        "kind": "github-review-comment",
+        "id": "3265733855",
+        "repo": "ChainSafe/lodestar",
+        "pr": 9382,
+        "url": "https://github.com/ChainSafe/lodestar/pull/9382#discussion_r3265733855"
+      },
+      "created": "2026-07-28T12:44:52Z",
+      "updated": "2026-07-28T12:44:52Z"
+    },
+    {
+      "id": "7d2b54",
+      "file": "packages/beacon-node/src/execution/engine/sszRestEncoding.ts",
+      "line": 287,
+      "severity": "critical",
+      "reviewer": "gemini-code-assist[bot]",
+      "body": "![critical](https://www.gstatic.com/codereviewagent/critical.svg)\n\nThe SSZ encoding for the `getBlobs` request is incorrect. According to EIP-8161, the request body for `engine_getBlobsV1` is a `List[Hash32, 128]`. Since `Hash32` is a fixed-size type, the SSZ encoding of the list is simply the concatenation of the hashes without any leading offsets. The current implementation prepends a 4-byte offset, which is only required if the list is a field within a `Container`.\n\n```typescript\nexport funct",
+      "status": "open",
+      "addressed_commit": null,
+      "note": null,
+      "source": {
+        "kind": "github-review-comment",
+        "id": "3265734588",
+        "repo": "ChainSafe/lodestar",
+        "pr": 9382,
+        "url": "https://github.com/ChainSafe/lodestar/pull/9382#discussion_r3265734588"
+      },
+      "created": "2026-07-28T12:44:52Z",
+      "updated": "2026-07-28T12:44:52Z"
+    },
+    {
+      "id": "489b7d",
+      "file": "packages/beacon-node/src/execution/engine/sszRestEncoding.ts",
+      "line": 519,
+      "severity": "critical",
+      "reviewer": "gemini-code-assist[bot]",
+      "body": "![critical](https://www.gstatic.com/codereviewagent/critical.svg)\n\nThe `getBlobs` response decoding incorrectly expects a `list_offset`. As `BlobAndProof` is a fixed-size type, the `List[BlobAndProof]` is encoded as a simple concatenation of items. The current logic will fail to decode the response correctly. Additionally, the item size should ideally be derived from the fork or constants to handle future changes in the `BlobAndProof` structure (e.g., in Fulu/Osaka).\n\n```typescript\nexport functi",
+      "status": "open",
+      "addressed_commit": null,
+      "note": null,
+      "source": {
+        "kind": "github-review-comment",
+        "id": "3265734600",
+        "repo": "ChainSafe/lodestar",
+        "pr": 9382,
+        "url": "https://github.com/ChainSafe/lodestar/pull/9382#discussion_r3265734600"
+      },
+      "created": "2026-07-28T12:44:52Z",
+      "updated": "2026-07-28T12:44:52Z"
+    },
+    {
+      "id": "e59aaa",
+      "file": "packages/beacon-node/src/execution/engine/http.ts",
+      "line": 201,
+      "severity": "major",
+      "reviewer": "gemini-code-assist[bot]",
+      "body": "![medium](https://www.gstatic.com/codereviewagent/medium-priority.svg)\n\nThe `SszRestClient` is initialized using only the first URL from `opts.urls`. While the fallback to JSON-RPC (which handles multiple URLs) ensures correctness, this implementation will cause a timeout or connection error on every Engine API call if the primary execution node is offline before falling back. Consider making `SszRestClient` aware of all configured URLs or implementing a mechanism to share the currently active/h",
+      "status": "open",
+      "addressed_commit": null,
+      "note": null,
+      "source": {
+        "kind": "github-review-comment",
+        "id": "3265734609",
+        "repo": "ChainSafe/lodestar",
+        "pr": 9382,
+        "url": "https://github.com/ChainSafe/lodestar/pull/9382#discussion_r3265734609"
+      },
+      "created": "2026-07-28T12:44:52Z",
+      "updated": "2026-07-28T12:44:52Z"
+    },
+    {
+      "id": "53ccab",
+      "file": "packages/beacon-node/src/execution/engine/http.ts",
+      "line": 252,
+      "severity": "minor",
+      "reviewer": "gemini-code-assist[bot]",
+      "body": "![medium](https://www.gstatic.com/codereviewagent/medium-priority.svg)\n\nThe logic for determining the Engine API version based on the fork is repeated in `notifyNewPayload`, `notifyForkchoiceUpdate` (line 421), and `getPayload` (line 555). This duplication increases the risk of inconsistency when new forks are added. It is recommended to refactor this into a private helper method, e.g., `getEngineApiVersion(fork: ForkName): number`.",
+      "status": "open",
+      "addressed_commit": null,
+      "note": null,
+      "source": {
+        "kind": "github-review-comment",
+        "id": "3265734615",
+        "repo": "ChainSafe/lodestar",
+        "pr": 9382,
+        "url": "https://github.com/ChainSafe/lodestar/pull/9382#discussion_r3265734615"
+      },
+      "created": "2026-07-28T12:44:52Z",
+      "updated": "2026-07-28T12:44:52Z"
+    },
+    {
+      "id": "205a9f",
+      "file": "packages/beacon-node/src/execution/engine/sszRestClient.ts",
+      "line": 150,
+      "severity": "minor",
+      "reviewer": "gemini-code-assist[bot]",
+      "body": "![medium](https://www.gstatic.com/codereviewagent/medium-priority.svg)\n\nThis manual hex-to-bytes conversion is redundant. The `@lodestar/utils` package already provides a robust `fromHex` function which is more efficient and handles edge cases like the '0x' prefix correctly. It is recommended to use the existing utility to reduce code duplication and improve maintainability.",
+      "status": "open",
+      "addressed_commit": null,
+      "note": null,
+      "source": {
+        "kind": "github-review-comment",
+        "id": "3265734617",
+        "repo": "ChainSafe/lodestar",
+        "pr": 9382,
+        "url": "https://github.com/ChainSafe/lodestar/pull/9382#discussion_r3265734617"
+      },
+      "created": "2026-07-28T12:44:52Z",
+      "updated": "2026-07-28T12:44:52Z"
+    },
+    {
+      "id": "955901",
+      "file": "packages/beacon-node/src/execution/engine/sszRestEncoding.ts",
+      "line": 58,
+      "severity": "nit",
+      "reviewer": "chatgpt-codex-connector[bot]",
+      "body": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Encode PayloadStatus with spec field shapes**\n\nThis container uses `latestValidHash` as `List[Bytes32, 1]`, but the SSZ-REST Engine schema defines `PayloadStatusV1.latest_valid_hash` as fixed `Bytes32` (zero-hash sentinel for absence), and `ForkchoiceUpdatedResponseV1.payload_id` similarly as fixed `Bytes8`. Using nullable-list wrappers here changes the wire layout, so a compliant EL response will fail deseri",
+      "status": "open",
+      "addressed_commit": null,
+      "note": null,
+      "source": {
+        "kind": "github-review-comment",
+        "id": "3286193225",
+        "repo": "ChainSafe/lodestar",
+        "pr": 9382,
+        "url": "https://github.com/ChainSafe/lodestar/pull/9382#discussion_r3286193225"
+      },
+      "created": "2026-07-28T12:44:52Z",
+      "updated": "2026-07-28T12:44:52Z"
+    },
+    {
+      "id": "fe536f",
+      "file": "packages/beacon-node/src/execution/engine/sszRestEncoding.ts",
+      "line": 474,
+      "severity": "nit",
+      "reviewer": "chatgpt-codex-connector[bot]",
+      "body": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Handle INVALID_BLOCK_HASH status byte**\n\n`statusByteToEnum` maps only values 0-3 and throws on any other byte, but `PayloadStatusV1` also includes `INVALID_BLOCK_HASH` (value 4). When an EL returns that valid status for `newPayload`, the SSZ path will throw instead of returning a structured `ExecutePayloadResponse`, turning a protocol-level response into an unexpected exception path during block verification.",
+      "status": "open",
+      "addressed_commit": null,
+      "note": null,
+      "source": {
+        "kind": "github-review-comment",
+        "id": "3286193229",
+        "repo": "ChainSafe/lodestar",
+        "pr": 9382,
+        "url": "https://github.com/ChainSafe/lodestar/pull/9382#discussion_r3286193229"
+      },
+      "created": "2026-07-28T12:44:52Z",
+      "updated": "2026-07-28T12:44:52Z"
+    }
+  ],
+  "sync": {
+    "github": {
+      "ChainSafe/lodestar": {
+        "last_comment_id": "3286193229",
+        "last_synced": "2026-07-28T12:44:52Z",
+        "last_imported": 9,
+        "last_reverify_updates": 0
+      }
+    }
+  }
+}

@@ -1,0 +1,8 @@
+packages/beacon-node/src/chain/produceBlock/produceBlockBody.ts
+packages/beacon-node/src/execution/engine/http.ts
+packages/beacon-node/src/execution/engine/mock.ts
+packages/beacon-node/src/execution/engine/sszRestClient.ts
+packages/beacon-node/src/execution/engine/sszRestEncoding.ts
+packages/beacon-node/src/execution/engine/types.ts
+packages/beacon-node/test/unit/executionEngine/httpSszRest.test.ts
+packages/cli/src/options/beaconNodeOptions/execution.ts
