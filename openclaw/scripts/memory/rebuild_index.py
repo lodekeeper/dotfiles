@@ -29,7 +29,10 @@ STATE_PATH = WORKSPACE / "bank" / "state.json"
 
 DATE_RE = re.compile(r"(\d{4}-\d{2}-\d{2})")
 TAG_RE = re.compile(r"(PR\s*#\d+|EIP-\d+|@[A-Za-z0-9_-]+)", re.IGNORECASE)
-BACKLOG_CORRUPTION_GUARD = "DO NOT ACT ON THIS FILE"
+BACKLOG_CORRUPTION_GUARD_MARKERS = (
+    "DO NOT ACT ON THIS FILE",
+    "DO NOT ACT ON ENTRIES BELOW",
+)
 
 
 def should_skip_markdown(path: Path) -> bool:
@@ -38,7 +41,7 @@ def should_skip_markdown(path: Path) -> bool:
             head = "\n".join(path.read_text(encoding="utf-8", errors="ignore").splitlines()[:12])
         except Exception:
             return False
-        if BACKLOG_CORRUPTION_GUARD in head:
+        if any(marker in head for marker in BACKLOG_CORRUPTION_GUARD_MARKERS):
             return True
 
     # If structured state exists, skip generated bank views to avoid duplicate indexing.

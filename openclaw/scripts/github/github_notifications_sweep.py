@@ -11,7 +11,10 @@ from typing import Any, Dict, List, Tuple
 
 OWNER_SELF = "lodekeeper"
 GH_ACCESS_GUARD = "/home/openclaw/.openclaw/workspace/scripts/github/check-github-access.sh"
-BACKLOG_CORRUPTION_GUARD = "DO NOT ACT ON THIS FILE"
+BACKLOG_CORRUPTION_GUARD_MARKERS = (
+    "DO NOT ACT ON THIS FILE",
+    "DO NOT ACT ON ENTRIES BELOW",
+)
 
 
 def bail_if_github_suspended(silent_signal: str = "HEARTBEAT_OK") -> None:
@@ -174,7 +177,8 @@ def extract_handled_ids_from_backlog(backlog_text: str) -> set[int]:
 
 
 def backlog_has_corruption_guard(backlog_text: str) -> bool:
-    return BACKLOG_CORRUPTION_GUARD in "\n".join(backlog_text.splitlines()[:12])
+    head = "\n".join(backlog_text.splitlines()[:12])
+    return any(marker in head for marker in BACKLOG_CORRUPTION_GUARD_MARKERS)
 
 
 TOPIC_TAG_RE = re.compile(r"\[topic:(\d+)\]")

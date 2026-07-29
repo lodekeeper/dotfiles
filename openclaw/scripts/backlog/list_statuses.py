@@ -11,7 +11,10 @@ from typing import Iterable
 
 DEFAULT_BACKLOG = Path("/home/openclaw/.openclaw/workspace/BACKLOG.md")
 DONE_PREFIXES = ("✅", "🟢")
-CORRUPTION_GUARD = "DO NOT ACT ON THIS FILE"
+CORRUPTION_GUARD_MARKERS = (
+    "DO NOT ACT ON THIS FILE",
+    "DO NOT ACT ON ENTRIES BELOW",
+)
 
 
 @dataclass
@@ -66,7 +69,8 @@ def parse_backlog(text: str) -> list[TaskBlock]:
 
 
 def has_corruption_guard(text: str) -> bool:
-    return CORRUPTION_GUARD in "\n".join(text.splitlines()[:12])
+    head = "\n".join(text.splitlines()[:12])
+    return any(marker in head for marker in CORRUPTION_GUARD_MARKERS)
 
 
 def is_done(task: TaskBlock) -> bool:
