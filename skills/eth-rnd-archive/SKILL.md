@@ -103,6 +103,21 @@ using `new_since_index` as `START_INDEX`. Cross-check against today's notes file
 re-investigating anything that looks new — if a message timestamp predates your last logged
 entry, it's stale content, not fresh signal.
 
+## Writing Log Entries Safely
+
+The hourly cron appends log text via `printf ... >> $NOTES_FILE` inside a double-quoted
+bash argument. Two footguns in that context, both silent (no error, just corrupted output):
+- **Backticks** (`` ` ``) inside a double-quoted string trigger command substitution —
+  e.g. writing `` `should_build_on_full` `` as inline code makes bash try to *run*
+  `should_build_on_full` as a command, and the whole token vanishes from the output.
+  Either avoid backticks in log text, or build the string in Python (`python3 <<'PYEOF'`
+  with a **quoted** heredoc delimiter) instead of a bash double-quoted argument.
+- **`'\''`** is the escape for a literal `'` inside a *single*-quoted bash string — it is
+  wrong and produces literal garbage (`'\''`) if the surrounding quotes are double quotes,
+  where `'` is already literal and needs no escaping.
+If a log entry ends up corrupted, fix it with a targeted `python3` string replace (exact
+match on the broken substring) rather than re-deleting/re-writing the whole file.
+
 ## Workflow
 
 ### Hourly Check (via cron)
