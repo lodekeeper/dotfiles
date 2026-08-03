@@ -1,0 +1,50 @@
+# Gloas ePBS bid.gasLimit consensus-split repro (PR #9750)
+# malicious self-build proposer emits bid.gasLimit = 2^53+1 from slot 16.
+# fix (#9750, UintBn64) accepts it -> attests -> poison block canonical + finalizes.
+# vanilla (current unstable, UintNum64) rounds -> different block root -> rejects -> permanently split.
+participants:
+  # MALICIOUS proposer: gloas-fixmal + POC env -> poison bid from slot 16
+  - el_type: geth
+    el_image: ethpandaops/geth:mariusvanderwijden-bal-devnet-4
+    cl_type: lodestar
+    cl_image: lodestar:gloas-fixmal
+    use_separate_vc: true
+    vc_type: lodestar
+    vc_image: lodestar:gloas-fixmal
+    cl_extra_env_vars: {POC_BID_GASLIMIT: "9007199254740993", POC_BID_SLOT: "16"}
+    validator_count: 64
+    supernode: true
+    count: 1
+  # FIX node (#9750): accepts 2^53+1 (UintBn64), attests -> makes poison canonical, tracks it
+  - el_type: geth
+    el_image: ethpandaops/geth:mariusvanderwijden-bal-devnet-4
+    cl_type: lodestar
+    cl_image: lodestar:gloas-fixmal
+    use_separate_vc: true
+    vc_type: lodestar
+    vc_image: lodestar:gloas-fixmal
+    validator_count: 64
+    supernode: true
+    count: 1
+  # VANILLA victim (current unstable, the bug): UintNum64 -> rounds -> splits. Pure observer.
+  - el_type: geth
+    el_image: ethpandaops/geth:mariusvanderwijden-bal-devnet-4
+    cl_type: lodestar
+    cl_image: lodestar:gloas-vanilla
+    validator_count: 0
+    supernode: true
+    count: 1
+network_params:
+  gloas_fork_epoch: 0
+  preset: minimal
+  withdrawal_type: "0x01"
+  validator_balance: 40000
+additional_services:
+  - dora
+wait_for_finalization: false
+global_log_level: info
+port_publisher:
+  additional_services:
+    enabled: true
+dora_params:
+  image: ethpandaops/dora:master
