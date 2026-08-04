@@ -98,6 +98,12 @@ def build_checks(args: argparse.Namespace, workspace: Path) -> list[tuple[str, s
         "--self-test",
         "--json",
     ]
+    idle_tool_call_guard = [
+        python,
+        "scripts/safety/block-idle-tool-call.py",
+        "--self-test",
+        "--json",
+    ]
 
     ci_env = base_env.copy()
     ci_warnings: list[str] = []
@@ -139,6 +145,13 @@ def build_checks(args: argparse.Namespace, workspace: Path) -> list[tuple[str, s
         ),
         (
             "prReview",
+            "idleToolCallGuard",
+            idle_tool_call_guard,
+            base_env,
+            [],
+        ),
+        (
+            "prReview",
             "githubActorBoundary",
             [
                 python,
@@ -161,6 +174,13 @@ def build_checks(args: argparse.Namespace, workspace: Path) -> list[tuple[str, s
             "ciFix",
             "destructiveCommandGuard",
             risky_command_guard,
+            base_env,
+            [],
+        ),
+        (
+            "ciFix",
+            "idleToolCallGuard",
+            idle_tool_call_guard,
             base_env,
             [],
         ),
@@ -214,6 +234,13 @@ def build_checks(args: argparse.Namespace, workspace: Path) -> list[tuple[str, s
         ),
         (
             "specImplementation",
+            "idleToolCallGuard",
+            idle_tool_call_guard,
+            base_env,
+            [],
+        ),
+        (
+            "specImplementation",
             "testVectorReadiness",
             ["bash", "scripts/spec/ensure-fresh-test-vectors.sh", "--check-only", "--json"],
             base_env,
@@ -250,6 +277,13 @@ def build_checks(args: argparse.Namespace, workspace: Path) -> list[tuple[str, s
             "devnetDebugging",
             "destructiveCommandGuard",
             risky_command_guard,
+            base_env,
+            [],
+        ),
+        (
+            "devnetDebugging",
+            "idleToolCallGuard",
+            idle_tool_call_guard,
             base_env,
             [],
         ),

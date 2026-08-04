@@ -1,10 +1,28 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-08-03 (108th pass)
+> Updated: 2026-08-04 (109th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-08-04 (self-improvement-audit-daily, 03:20 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** idle/end-of-task tool-call guard gap found and partially fixed this cycle: the existing risky-command helper covered shell cleanup/state commands, but did not cover non-shell filler calls seen in recent cron turns (`ScheduleWakeup(stop:true)` in non-loop cron context, malformed `Monitor({})`, empty `ReportFindings([])`, and bare no-op shell placeholders like `true`). Fix applied this cycle: added side-effect-free `scripts/safety/block-idle-tool-call.py --self-test --json` and wired its self-test into all four autonomy domain preflights plus rendered status lines. Active PreToolUse wiring remains a separate Nico-approved config step.
+
+---
 ## Daily Audit Snapshot — 2026-08-03 (self-improvement-audit-daily, 03:18 UTC)
 
 ### PR review
@@ -2005,6 +2023,16 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Idle/end-of-task tool-call guard helper added (2026-08-04)
+Added `scripts/safety/block-idle-tool-call.py` and wired its `--self-test --json` into `scripts/notes/check-autonomy-domain-preflights.py` for PR review, CI fix, spec implementation, and devnet debugging.
+- catches bare no-op shell placeholders such as `true` / `echo done`,
+- catches placeholder/no-op tool labels,
+- catches stop-only `ScheduleWakeup` calls in cron/background-wait context without a target wakeup,
+- catches malformed `Monitor` calls and empty `ReportFindings([])` outside code-review context,
+- updates generated domain status text through `scripts/notes/render-autonomy-domain-statuses.py`.
+
+**Rationale:** the risky-command guard covered destructive shell cleanup, but recent cron incidents also showed an idle/end-of-task reflex that emits irrelevant non-shell tool calls. This makes that second surface testable without changing OpenClaw config; active hook wiring still needs Nico approval.
 
 ### ✅ Daily autonomy audit wrapper supports response-only stdout (2026-07-24)
 Updated `scripts/notes/run-daily-autonomy-audit.sh`.
