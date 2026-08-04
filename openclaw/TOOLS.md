@@ -37,7 +37,6 @@ Skills are shared. Your setup is yours. Keeping them apart means you can update 
 - **Username:** lodekeeper
 - **Fork:** https://github.com/lodekeeper/lodestar
 - **Hard account boundary:** All GitHub write actions I perform must use the `lodekeeper` account only. Do **not** use Codex Apps / GitHub connector writes while it is linked to `nflaig`; on 2026-06-20 the connector exposed `nflaig` with write/maintain permissions and accidentally opened ChainSafe/lodestar PR #9536 as Nico. Use local `gh` after `gh auth status` confirms `lodekeeper`, unless Nico explicitly authorizes a different acting account for that specific action.
-- **Merge boundary:** Local merge / squash-merge checks are fine when they help verify a PR. Upstream merges are already permission-gated by GitHub; never imply upstream state changed unless the command actually succeeded, and leave maintainer merge decisions to maintainers unless Nico or a maintainer explicitly asks me to perform that specific upstream merge.
 - **Workflow:** 
   1. Create branch from `unstable`
   2. Make changes, commit
