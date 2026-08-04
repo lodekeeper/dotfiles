@@ -75,7 +75,9 @@ def has_corruption_guard(text: str) -> bool:
 
 def is_done(task: TaskBlock) -> bool:
     icon = task.heading.replace("###", "", 1).strip().split(" ", 1)[0]
-    return icon.startswith(DONE_PREFIXES)
+    if icon.startswith(DONE_PREFIXES):
+        return True
+    return task.status is not None and task.status.casefold().startswith("done")
 
 
 def render_text(tasks: Iterable[TaskBlock]) -> str:
@@ -103,10 +105,23 @@ def main() -> int:
         action="store_true",
         help="Allow parsing a backlog file that carries the corruption/recovery guard",
     )
+    ap.add_argument(
+        "--require-corruption-guard",
+        action="store_true",
+        help="Fail if the backlog file is missing the corruption/recovery guard",
+    )
     args = ap.parse_args()
 
     text = args.file.read_text()
-    if has_corruption_guard(text) and not args.allow_corrupted_backlog:
+    guarded = has_corruption_guard(text)
+    if args.require_corruption_guard and not guarded:
+        print(
+            f"{args.file} is missing the corruption/recovery guard.",
+            file=sys.stderr,
+        )
+        return 3
+
+    if guarded and not args.allow_corrupted_backlog:
         print(
             f"{args.file} is marked corrupted/under recovery; refusing to list task statuses. "
             "Use --allow-corrupted-backlog only for recovery/audit work.",

@@ -2,7 +2,9 @@
 from __future__ import annotations
 
 import importlib.util
+import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 SCRIPT = Path(__file__).with_name("list_statuses.py")
@@ -24,6 +26,9 @@ sample = """# BACKLOG.md - Task Backlog
 ### ✅ Done task
 - **Status:** Done
 
+### 🟡 Yellow done task
+- **Status:** Done — completed from a yellow-priority entry
+
 ## 📌 Other section [topic:51]
 
 ### 🔴 Another task
@@ -31,13 +36,14 @@ sample = """# BACKLOG.md - Task Backlog
 """
 
 tasks = module.parse_backlog(sample)
-assert len(tasks) == 3, f"expected 3 tasks, got {len(tasks)}"
+assert len(tasks) == 4, f"expected 4 tasks, got {len(tasks)}"
 assert tasks[0].section == "## 📌 General (no topic)"
 assert tasks[0].heading == "### 🟡 First task"
 assert tasks[0].status == "In progress"
 assert tasks[1].heading == "### ✅ Done task"
-assert tasks[2].section == "## 📌 Other section [topic:51]"
-assert tasks[2].status == "Blocked"
+assert module.is_done(tasks[2])
+assert tasks[3].section == "## 📌 Other section [topic:51]"
+assert tasks[3].status == "Blocked"
 assert [t.heading for t in tasks if not module.is_done(t)] == [
     "### 🟡 First task",
     "### 🔴 Another task",
@@ -45,4 +51,45 @@ assert [t.heading for t in tasks if not module.is_done(t)] == [
 assert module.has_corruption_guard("> ⛔ **DO NOT ACT ON THIS FILE — CORRUPTED / UNDER RECOVERY**\n\n### task")
 assert module.has_corruption_guard("> **⚠️ DO NOT ACT ON ENTRIES BELOW WITHOUT VERIFYING FIRST.**\n\n### task")
 assert not module.has_corruption_guard(sample)
+
+with tempfile.TemporaryDirectory() as tmp:
+    unguarded = Path(tmp) / "unguarded.md"
+    guarded = Path(tmp) / "guarded.md"
+    unguarded.write_text(sample)
+    guarded.write_text("> **⚠️ DO NOT ACT ON ENTRIES BELOW WITHOUT VERIFYING FIRST.**\n\n" + sample)
+
+    missing_guard = subprocess.run(
+        [sys.executable, str(SCRIPT), "--file", str(unguarded), "--require-corruption-guard"],
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    assert missing_guard.returncode == 3, missing_guard
+    assert "missing the corruption/recovery guard" in missing_guard.stderr
+
+    guarded_refusal = subprocess.run(
+        [sys.executable, str(SCRIPT), "--file", str(guarded), "--require-corruption-guard"],
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    assert guarded_refusal.returncode == 2, guarded_refusal
+    assert "marked corrupted/under recovery" in guarded_refusal.stderr
+
+    allowed_guarded = subprocess.run(
+        [
+            sys.executable,
+            str(SCRIPT),
+            "--file",
+            str(guarded),
+            "--require-corruption-guard",
+            "--allow-corrupted-backlog",
+            "--active-only",
+        ],
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    assert allowed_guarded.returncode == 0, allowed_guarded
+    assert "### 🟡 First task" in allowed_guarded.stdout
 print("OK: list_statuses parser handles ## sections + ### tasks without stalling")
