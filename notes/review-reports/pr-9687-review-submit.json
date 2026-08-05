@@ -1,0 +1,13 @@
+{
+  "commit_id": "b7881bdfc3a13c493762c02dff75969ec693ce4d",
+  "event": "COMMENT",
+  "body": "Reviewed the current head. I found one issue in the sync spec runner's fork handling.",
+  "comments": [
+    {
+      "path": "packages/beacon-node/test/spec/presets/light_client/sync.ts",
+      "line": 207,
+      "side": "RIGHT",
+      "body": "The runner still deserializes `bootstrap.ssz_snappy` with the suite/path fork before `testFunction` can inspect `meta.bootstrap_fork_digest`. The sync test format makes `bootstrap_fork_digest` the fork context for the bootstrap SSZ type, and then the bootstrap can be upgraded to `store_fork_version`. With this shape, a Gloas sync vector whose trusted bootstrap is pre-Gloas can fail during fixture loading, or make the vector depend on Lodestar's directory fork instead of the metadata.\n\nCan we handle bootstrap like updates here: load it as raw bytes, resolve `bootstrapFork` from `meta.bootstrap_fork_digest`, deserialize with `sszTypesFor(bootstrapFork).LightClientBootstrap`, then upgrade to `storeFork` if needed?"
+    }
+  ]
+}

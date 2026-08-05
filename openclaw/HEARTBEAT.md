@@ -25,6 +25,8 @@ Before sending anything to Nico DM from a heartbeat flow, all of these must be c
 ## ⚠️ STEP 1: BACKLOG — DO THIS FIRST, BEFORE ANYTHING ELSE
 1. Read `BACKLOG.md` right now
 2. Look for any task that is NOT marked ✅ and is NOT a passive "monitor/watch" item
+   - Preferred mechanical scan: `python3 scripts/backlog/list_statuses.py --file BACKLOG.md --require-corruption-guard --allow-corrupted-backlog --actionable-only --json`
+   - If the helper returns entries, inspect them before acting because `BACKLOG.md` is under recovery. If the helper is unavailable, do the same check manually.
 3. **If an actionable task exists:**
    - **If task is tagged `[topic:ID]` or `[discord:CHANNEL_ID]`** → do NOT work on it here. Instead:
      1. Check the task status in BACKLOG.md — is it blocked/awaiting input, or ready for more work?
