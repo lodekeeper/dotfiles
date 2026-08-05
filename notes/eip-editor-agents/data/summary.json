@@ -1,0 +1,764 @@
+{
+  "repo": "ethereum/EIPs",
+  "sample_prs": 1000,
+  "oldest_pr": 10981,
+  "newest_pr": 12093,
+  "all_nonempty_comments": 5414,
+  "editor_nonempty_comments": 1147,
+  "editors": [
+    "arachnid",
+    "axic",
+    "cdetrio",
+    "g11tech",
+    "gcolvin",
+    "jochem-brouwer",
+    "lightclient",
+    "MicahZoltu",
+    "nicksavers",
+    "Pandapip1",
+    "SamWilsn",
+    "Souptacular",
+    "vbuterin",
+    "wanderer",
+    "xinbenlv"
+  ],
+  "category_counts": {
+    "rfc2119_keywords": 275,
+    "front_matter": 144,
+    "final_tense": 124,
+    "process_status": 121,
+    "template_structure": 108,
+    "style_language": 64,
+    "requires_dependency": 52,
+    "test_cases": 49,
+    "external_links": 44,
+    "motivation_rationale": 31,
+    "reference_implementation": 24,
+    "erc_split_scope": 19,
+    "security_considerations": 14,
+    "discussions_to": 12,
+    "implementation_agnostic": 3
+  },
+  "examples": {
+    "discussions_to": [
+      {
+        "pr": "11800",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/11800#pullrequestreview-4489978226",
+        "excerpt": "Some minor comments (I left some ideas about the content on Ethereum Magicians)"
+      },
+      {
+        "pr": "11776",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/11776#discussion_r3502551806",
+        "excerpt": "Please change the discussions-to to the correct URL (it now 404s)"
+      },
+      {
+        "pr": "11607",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/11607#discussion_r3278379119",
+        "excerpt": "This could lead to some edge case problems and complexity with FOCIL but will reply this on magicians"
+      },
+      {
+        "pr": "11589",
+        "author": "SamWilsn",
+        "url": "https://github.com/ethereum/EIPs/pull/11589#issuecomment-4845761231",
+        "excerpt": "Friendly reminder to keep technical discussion on the Ethereum Magicians thread. We use pull requests only for editorial reviews."
+      },
+      {
+        "pr": "11467",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/11467#pullrequestreview-4443952272",
+        "excerpt": "Hiya, some editorial comments! From a review point of view: this introduces a new feature which adds context making transactions non-parallelizable (the block storage can change between transactions) which is a problem since https://eips.ethereum.org/EIPS/eip-7928 introduces parallelizable transactions in the protocol. Adding BLOAD/BSTORE to the Block Access List (BAL) would put strain on networking. However, since storage writes/loads are part of the BAL, such block-level scoped warm/cold stora"
+      },
+      {
+        "pr": "11456",
+        "author": "SamWilsn",
+        "url": "https://github.com/ethereum/EIPs/pull/11456#issuecomment-4202102198",
+        "excerpt": "Locking conversation here, since y'all have gone way off a discussion of the formatting of the proposal itself. Please redirect conversation relating to the _content_ of the proposal to its discussion thread (if one gets created)."
+      },
+      {
+        "pr": "11353",
+        "author": "g11tech",
+        "url": "https://github.com/ethereum/EIPs/pull/11353#pullrequestreview-3870273142",
+        "excerpt": "please update the file name (use `git mv `) and the title to reflect the allotedeip number, and create/add corresponding discussions-to url"
+      },
+      {
+        "pr": "11327",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/11327#pullrequestreview-3818125914",
+        "excerpt": "I have some editorial comments. I might also have some thoughts but I'll leave those on magicians (gotta give them a bit more \"thought\" 😄 )"
+      }
+    ],
+    "external_links": [
+      {
+        "pr": "12006",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/12006#discussion_r3650564103",
+        "excerpt": "I think what is meant here by the gossip is eth/71? https://eips.ethereum.org/EIPS/eip-8159 Can link to this, and also require it as EIP, as the availability of these BALs are rather mandatory here. If it is not specifically meant to use eth/71 (can also use other means of communication) then this is not directly clear. Note that nodes currently (most likely) prune their BALs, this is not wanted anymore for this EIP, as the BAL availability is mandatory (it is not part of block body). If this is"
+      },
+      {
+        "pr": "12006",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/12006#discussion_r3681617307",
+        "excerpt": "```suggestion **No on-chain observability of the conversion.** This is the second cost. An overlay computes the new root in consensus, so its correctness is observed on-chain as it proceeds. Offline conversion happens off-chain, so consensus does not see it before the swap. This EIP recovers that visibility off consensus, through the [shadow-commitment period](#shadow-commitment). Attesters publish signed per-block PBT roots while consensus still runs on the MPT, so divergence is visible and att"
+      },
+      {
+        "pr": "11922",
+        "author": "gcolvin",
+        "url": "https://github.com/ethereum/EIPs/pull/11922#issuecomment-5036831404",
+        "excerpt": "The only substantive change I've made is the relative link to the Yellow Paper. I've left off defining abbreviations for now. I think most (e.g EVM, JVM, RISC-V), are familiar to most readers. I would prefer to propose remaining changes, especially the many links, in a new PR. There are too many changes to easily get right in this PR, as the beginning of my tool chain is a long way from here. Much cleaner for me to merge this if possible and make the requested changes to the new version. I think"
+      },
+      {
+        "pr": "11922",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/11922#discussion_r3580839680",
+        "excerpt": "```suggestion As a demonstration, [`extract_cfg.py`](../assets/eip-8337/extract_cfg.py), provided with the reference implementation, recovers the complete control-flow graph of validated code in a single linear pass. It trusts validity and performs no checks of its own. ``` (once you add the file to assets)"
+      },
+      {
+        "pr": "11922",
+        "author": "SamWilsn",
+        "url": "https://github.com/ethereum/EIPs/pull/11922#discussion_r3623836918",
+        "excerpt": "You should link to specific version of the Yellow Paper here."
+      },
+      {
+        "pr": "11922",
+        "author": "SamWilsn",
+        "url": "https://github.com/ethereum/EIPs/pull/11922#discussion_r3623846311",
+        "excerpt": "You could, if you like, link to where these checks are implemented in EELS. Totally optional though."
+      },
+      {
+        "pr": "11922",
+        "author": "SamWilsn",
+        "url": "https://github.com/ethereum/EIPs/pull/11922#discussion_r3623850454",
+        "excerpt": "You could add a hyperlink to the rationale section here."
+      },
+      {
+        "pr": "11922",
+        "author": "SamWilsn",
+        "url": "https://github.com/ethereum/EIPs/pull/11922#discussion_r3623860503",
+        "excerpt": "You should link to where `CALLDEST` is defined. It'll help the reader navigate between proposals."
+      }
+    ],
+    "rfc2119_keywords": [
+      {
+        "pr": "12061",
+        "author": "lightclient",
+        "url": "https://github.com/ethereum/EIPs/pull/12061#issuecomment-5182696537",
+        "excerpt": "We should specify this behavior in the execution-apis IMO"
+      },
+      {
+        "pr": "12063",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/12063#discussion_r3710058592",
+        "excerpt": "Could you rename this file to eip-8359.md? This should fix the CI and merge this PR 😄 👍"
+      },
+      {
+        "pr": "12062",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/12062#discussion_r3694238298",
+        "excerpt": "```suggestion # Intrinsic and execution gas must fit the EIP-7825 transaction cap. ```"
+      },
+      {
+        "pr": "12062",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/12062#discussion_r3694459873",
+        "excerpt": "```suggestion Each frame incurs a fixed CALL execution-context overhead (100) plus `G_log` (375) for the receipt sub-entry it produces, giving `FRAME_TX_PER_FRAME_COST = 475`. The execution-context component covers context setup, mode dispatch, and the two-dimensional gas accounting at the frame boundary, analogous to the fixed overhead of a CALL. The `G_log` component covers the `[status, execution_gas_used, state_gas_used, logs]` receipt sub-entry that each frame adds to the transaction receip"
+      },
+      {
+        "pr": "12062",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/12062#discussion_r3694463691",
+        "excerpt": "> A deploy frame that needs tens of millions of state gas for a code deposit just declares it. Awesome 🤩 These statement also make me feel like we should create a separate (EIP-1559) gas market for state gas 🤔"
+      },
+      {
+        "pr": "12062",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/12062#discussion_r3694481428",
+        "excerpt": "```suggestion Notes: Nonce assumes < 65536 prior sends. Fees assume < 1099 gwei. Validation frame target is 1 byte because target is `tx.sender`. Validation gas assumes <= 65,536 gas. Validation frame value is zero. Execution frame target is encoded directly as the destination address. Execution frame value assumes a compact 5-byte encoding. The execution frame data is empty for a plain ETH transfer. The signature is a secp256k1 entry with empty `msg` using a 65-byte ECDSA signature. Blob fields"
+      },
+      {
+        "pr": "12062",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/12062#discussion_r3694483516",
+        "excerpt": "```suggestion | Execution frame: state gas | 3 | ``` If this has to cover the account creation cost it should be 3 bytes as described in the Notes below"
+      },
+      {
+        "pr": "12062",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/12062#discussion_r3694494962",
+        "excerpt": "This 97,920 should also be referenced to EIP-8037's `New slot` constant."
+      }
+    ],
+    "final_tense": [
+      {
+        "pr": "12053",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/12053#issuecomment-5141280522",
+        "excerpt": "Thanks @misilva73 :smile: :+1: I will let a native-English speaking person check the words on the spell list to see if these can indeed be added. The numbers (150k, 300M, etc.) is something what the spell checker should not flag, so I think we should move that upstream."
+      },
+      {
+        "pr": "12038",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/12038#pullrequestreview-4818905033",
+        "excerpt": "LGTM, lets get this merged! 😄 👍 For the record, I am approving of these normative changes (removing the refs to EIP-8032, EIP-2926, EIP-8011) because these EIPs are DFId as of [Glamsterdam](https://github.com/misilva73/EIPs/blob/8fceedac5b83df9b6612bdbffc6b447da1ea02ce/EIPS/eip-7773.md), these interactions or references are then to be defined in those EIPs *with* (or to) the EIPs in Glamsterdam. I will also approve the circular dependencies in these EIPs, I do not like it (as discussed), but wil"
+      },
+      {
+        "pr": "12033",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/12033#issuecomment-5133235630",
+        "excerpt": "https://github.com/ethereum/EIPs/pull/12045 will unblock CI, then will approve this, thanks @poojaranjan :smile: :+1: EDIT: I accidentally converted this PR to draft twice, this was not intended"
+      },
+      {
+        "pr": "12027",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/12027#issuecomment-5140696516",
+        "excerpt": "@eth-bot rerun EDIT: re-triggering CI because the merge of #12006 will solve a problem (or maybe the problem) at CI. Seems like this does not work, will close and open this PR."
+      },
+      {
+        "pr": "12009",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/12009#issuecomment-5092606274",
+        "excerpt": "Cool, will merge! @eth-bot rerun"
+      },
+      {
+        "pr": "12009",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/12009#discussion_r3642899360",
+        "excerpt": "Note: this is the original text from line 43, except with some changes. This is the reverse diff, so all additions are the removals what I have done: ```suggestion A chain may satisfy this requirement by either of the following means that results in the account above: deploying the factory with an ordinary transaction (for example, its keyless creation transaction) where the chain's gas parameters permit it, or including the account in the genesis state with a nonce equal to `1`. Regardless of t"
+      },
+      {
+        "pr": "12006",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/12006#discussion_r3650450706",
+        "excerpt": "Nit: I don't like this name. Something like `PBT_ACTIVATION_FORK` might be better, or `ACTIVATION_TIMESTAMP`. If we define the fork in this EIP, this means that this EIP requires the hardfork meta EIP, and the hardfork meta EIP will require this EIP, this creates a circular dependency which we want to avoid."
+      },
+      {
+        "pr": "12006",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/12006#discussion_r3650463454",
+        "excerpt": "Where is this published? BTW, maybe a cool trick, we could recommend to use the block header `extraData` field (32 bytes max) to publish this. For instance we could reserve the first 16 bytes for client version (Geth vX.X.X) and the final 16 bytes are the first bytes of the PBT hash (this would not be verified at consensus obviously and would be a recommendation for clients to use). This directly publishes the (partial) PBT hash to block."
+      }
+    ],
+    "front_matter": [
+      {
+        "pr": "12062",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/12062#discussion_r3694448441",
+        "excerpt": "This introduces a way to see if previous frames have created state/storage (by destroying it in this frame and then checking if frame index state gas has decreased). Is this intended? We thus leak storage journals here, which were not accessible before, but now a very limited set is. (No opinion on this, but this is an interesting new \"feature\")"
+      },
+      {
+        "pr": "12062",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/12062#discussion_r3694459873",
+        "excerpt": "```suggestion Each frame incurs a fixed CALL execution-context overhead (100) plus `G_log` (375) for the receipt sub-entry it produces, giving `FRAME_TX_PER_FRAME_COST = 475`. The execution-context component covers context setup, mode dispatch, and the two-dimensional gas accounting at the frame boundary, analogous to the fixed overhead of a CALL. The `G_log` component covers the `[status, execution_gas_used, state_gas_used, logs]` receipt sub-entry that each frame adds to the transaction receip"
+      },
+      {
+        "pr": "12062",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/12062#discussion_r3694468725",
+        "excerpt": "> Frames belong to mutually distrusting parties This statement makes me question if we want to expose the state gas consumed per frame, because we can thus infer the state journal and we can verify if something was created or not in a specific frame (by destroying that state and checking if the state gas of such frame changed). It is of course a specific case, but inspecting journal is new and gives thus more information than what a contract would like to share (via ABI)"
+      },
+      {
+        "pr": "12062",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/12062#discussion_r3694481428",
+        "excerpt": "```suggestion Notes: Nonce assumes < 65536 prior sends. Fees assume < 1099 gwei. Validation frame target is 1 byte because target is `tx.sender`. Validation gas assumes <= 65,536 gas. Validation frame value is zero. Execution frame target is encoded directly as the destination address. Execution frame value assumes a compact 5-byte encoding. The execution frame data is empty for a plain ETH transfer. The signature is a secp256k1 entry with empty `msg` using a 65-byte ECDSA signature. Blob fields"
+      },
+      {
+        "pr": "12062",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/12062#pullrequestreview-4833150543",
+        "excerpt": "Saw this PR and gave it a read, some comments. Allowing state gas introspection to other (earlier) frames means we can (in some specific cases) verify if such frame created a slot. This thus adds a subset of journal introspection to the EVM. We could fix this by pinning the state gas used of previous frames to the value at the start of the currently executing frame. Any refills can thus not be measured by the EVM, while they are accounted for in the end. The other thing is that not allowing stat"
+      },
+      {
+        "pr": "12038",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/12038#pullrequestreview-4818905033",
+        "excerpt": "LGTM, lets get this merged! 😄 👍 For the record, I am approving of these normative changes (removing the refs to EIP-8032, EIP-2926, EIP-8011) because these EIPs are DFId as of [Glamsterdam](https://github.com/misilva73/EIPs/blob/8fceedac5b83df9b6612bdbffc6b447da1ea02ce/EIPS/eip-7773.md), these interactions or references are then to be defined in those EIPs *with* (or to) the EIPs in Glamsterdam. I will also approve the circular dependencies in these EIPs, I do not like it (as discussed), but wil"
+      },
+      {
+        "pr": "12006",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/12006#discussion_r3650436288",
+        "excerpt": "```suggestion title: Offline State Migration to the PBT ``` EIP-1 style: title in Title Case"
+      },
+      {
+        "pr": "12006",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/12006#discussion_r3650450706",
+        "excerpt": "Nit: I don't like this name. Something like `PBT_ACTIVATION_FORK` might be better, or `ACTIVATION_TIMESTAMP`. If we define the fork in this EIP, this means that this EIP requires the hardfork meta EIP, and the hardfork meta EIP will require this EIP, this creates a circular dependency which we want to avoid."
+      }
+    ],
+    "requires_dependency": [
+      {
+        "pr": "12062",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/12062#discussion_r3694481428",
+        "excerpt": "```suggestion Notes: Nonce assumes < 65536 prior sends. Fees assume < 1099 gwei. Validation frame target is 1 byte because target is `tx.sender`. Validation gas assumes <= 65,536 gas. Validation frame value is zero. Execution frame target is encoded directly as the destination address. Execution frame value assumes a compact 5-byte encoding. The execution frame data is empty for a plain ETH transfer. The signature is a secp256k1 entry with empty `msg` using a 65-byte ECDSA signature. Blob fields"
+      },
+      {
+        "pr": "12038",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/12038#pullrequestreview-4818905033",
+        "excerpt": "LGTM, lets get this merged! 😄 👍 For the record, I am approving of these normative changes (removing the refs to EIP-8032, EIP-2926, EIP-8011) because these EIPs are DFId as of [Glamsterdam](https://github.com/misilva73/EIPs/blob/8fceedac5b83df9b6612bdbffc6b447da1ea02ce/EIPS/eip-7773.md), these interactions or references are then to be defined in those EIPs *with* (or to) the EIPs in Glamsterdam. I will also approve the circular dependencies in these EIPs, I do not like it (as discussed), but wil"
+      },
+      {
+        "pr": "12006",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/12006#discussion_r3650450706",
+        "excerpt": "Nit: I don't like this name. Something like `PBT_ACTIVATION_FORK` might be better, or `ACTIVATION_TIMESTAMP`. If we define the fork in this EIP, this means that this EIP requires the hardfork meta EIP, and the hardfork meta EIP will require this EIP, this creates a circular dependency which we want to avoid."
+      },
+      {
+        "pr": "12006",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/12006#discussion_r3650568844",
+        "excerpt": "```suggestion - **Execution semantics.** `SWAP_FORK` changes the state commitment **only**. Gas costs, opcode behavior, and transaction validity are unchanged across the swap itself; the commitment swap alone alters no observable execution result. PBT state access nonetheless performs differently from the MPT (e.g. chunk-granular code access, stem warm/cold behavior), so state-access gas costs are repriced in a **separate gas-repricing EIP**. That repricing is out of scope here and must not be b"
+      },
+      {
+        "pr": "12006",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/12006#discussion_r3681617307",
+        "excerpt": "```suggestion **No on-chain observability of the conversion.** This is the second cost. An overlay computes the new root in consensus, so its correctness is observed on-chain as it proceeds. Offline conversion happens off-chain, so consensus does not see it before the swap. This EIP recovers that visibility off consensus, through the [shadow-commitment period](#shadow-commitment). Attesters publish signed per-block PBT roots while consensus still runs on the MPT, so divergence is visible and att"
+      },
+      {
+        "pr": "12006",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/12006#discussion_r3681621980",
+        "excerpt": "```suggestion That much is settled here. The wire specifics are not. Wire format, aggregation scheme, publication timing, and any EL-to-CL plumbing are left to the planned companion EIP described above, so this EIP fixes only what the migration's safety argument depends on. There is one narrow case where hard enforcement may still be warranted, the final blocks before `PBT_ACTIVATION_FORK`, and it is discussed under [Unvalidated-flip input](#unvalidated-flip-input). ``` (same comment as https://"
+      },
+      {
+        "pr": "12006",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/12006#discussion_r3681687440",
+        "excerpt": "```suggestion Publication is voluntary, not a validity rule. So how much of the validating set reports depends on the [telemetry sidecar](#shadow-commitment) shipping enabled by default, not on enforcement. Readiness assessment has to treat coverage as a measured quantity, and read a low-coverage period as weak evidence rather than as evidence of agreement. Pre-swap divergence itself stays harmless and self-detectable, since consensus still runs on the MPT. ``` Removal of SHOULD by re-wording (a"
+      },
+      {
+        "pr": "11936",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/11936#discussion_r3650430853",
+        "excerpt": "```suggestion Under [EIP-7732's](./eip-7732.md) enshrined Proposer-Builder Separation (ePBS), a builder bid commits to the payload's `block_hash` and therefore to its `state_root`. This EIP makes the commitment partial: the bid fixes all payload contents except the `state_root` and the `block_hash` that depends on it. The full payload, including its state root, is still revealed in the `ExecutionPayloadEnvelope` and validated as today. Builders and provers gain the whole window between bid and r"
+      }
+    ],
+    "motivation_rationale": [
+      {
+        "pr": "12006",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/12006#discussion_r3650441332",
+        "excerpt": "```suggestion This EIP specifies an **offline** migration of Ethereum's state from the hexary Merkle Patricia Trie (MPT) to the Partitioned Binary Tree (PBT) defined in [EIP-8297](./eip-8297.md). ``` Nit: would suggest removing this historical reference, it is fine to refer this later in Rationale but in Abstract this does not feel like the right place 😄 👍"
+      },
+      {
+        "pr": "11922",
+        "author": "SamWilsn",
+        "url": "https://github.com/ethereum/EIPs/pull/11922#discussion_r3623850454",
+        "excerpt": "You could add a hyperlink to the rationale section here."
+      },
+      {
+        "pr": "11908",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/11908#issuecomment-4931927003",
+        "excerpt": "I have updated the post @Helkomine. The section described that we have two gas dimensions, regular and state gas. In the current `master` version of the EIP we have for block accounting: `tx_regular_gas = tx_gas_used_after_refund - tx_state_gas` ``` tx_gas_used_before_refund = tx.gas - tx_output.gas_left - tx_output.state_gas_reservoir tx_gas_refund = min(tx_gas_used_before_refund // 5, tx_output.refund_counter) tx_gas_used_after_refund = tx_gas_used_before_refund - tx_gas_refund ``` (Note that "
+      },
+      {
+        "pr": "11889",
+        "author": "SamWilsn",
+        "url": "https://github.com/ethereum/EIPs/pull/11889#discussion_r3538052810",
+        "excerpt": "This section belongs in Rationale, because it's explaining choices you made within the specification."
+      },
+      {
+        "pr": "11861",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/11861#discussion_r3650407966",
+        "excerpt": "Nit: CONTRIBUTING.md asks for title case in headings — several are sentence case (\"Hash chain construction (off-chain)\", \"Chain exhaustion\", \"Block processing\", \"Epoch processing\", \"Fork transition\", \"Sunset of the legacy path\", and the Rationale / Security Considerations subheadings)."
+      },
+      {
+        "pr": "11821",
+        "author": "SamWilsn",
+        "url": "https://github.com/ethereum/EIPs/pull/11821#discussion_r3500446472",
+        "excerpt": "These paragraphs are (mostly) explaining why you've chosen the specific value of `96/96`, not why the value needs to change. This content belongs in Rationale, as it is a decision internal to the document. The Motivation section should explain, for example, why having a pure-calldata block with a density greater than an ether-transfer-full block is bad."
+      },
+      {
+        "pr": "11772",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/11772#discussion_r3502272501",
+        "excerpt": "This section should be a top-level header (`##`) and should be between Rationale and Test Cases. (so after Rationale, not before it)"
+      },
+      {
+        "pr": "11610",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/11610#discussion_r3278086190",
+        "excerpt": "Free option problem should be defined, as this is necessary to understand the motivation sector here."
+      }
+    ],
+    "security_considerations": [
+      {
+        "pr": "12006",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/12006#discussion_r3650436291",
+        "excerpt": "```suggestion ## Test Cases <!-- TODO --> ## Security Considerations ``` Not having a test section in a Draft EIP is fine per EIP-1, but it is handy to keep this placeholder so we are reminded that these test cases should be written at some point."
+      },
+      {
+        "pr": "12006",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/12006#discussion_r3681617307",
+        "excerpt": "```suggestion **No on-chain observability of the conversion.** This is the second cost. An overlay computes the new root in consensus, so its correctness is observed on-chain as it proceeds. Offline conversion happens off-chain, so consensus does not see it before the swap. This EIP recovers that visibility off consensus, through the [shadow-commitment period](#shadow-commitment). Attesters publish signed per-block PBT roots while consensus still runs on the MPT, so divergence is visible and att"
+      },
+      {
+        "pr": "11869",
+        "author": "SamWilsn",
+        "url": "https://github.com/ethereum/EIPs/pull/11869#discussion_r3623754330",
+        "excerpt": "Avoid creating requirements (with UPPERCASE keywords) outside of the specification section. They're too easy for implementers to miss. Instead, put the requirements in Specification, but discuss their security implications here."
+      },
+      {
+        "pr": "11861",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/11861#discussion_r3556113915",
+        "excerpt": "RFC 2119 keywords are only allowed in the Specification section (see CONTRIBUTING.md). This `SHOULD` is in Security Considerations, please lowercase to `should` (or move the requirement into Specification). The reason why this is discouraged/not allowed is because this could \"hide\" specifications in other sections than the Specifications section."
+      },
+      {
+        "pr": "11861",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/11861#discussion_r3650407966",
+        "excerpt": "Nit: CONTRIBUTING.md asks for title case in headings — several are sentence case (\"Hash chain construction (off-chain)\", \"Chain exhaustion\", \"Block processing\", \"Epoch processing\", \"Fork transition\", \"Sunset of the legacy path\", and the Rationale / Security Considerations subheadings)."
+      },
+      {
+        "pr": "11825",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/11825#pullrequestreview-4604831885",
+        "excerpt": "Hiya! Before we can move this to Review, there are some things to address: The RFCs should be linked, please adds the URLs: `[RFC 2119](https://www.rfc-editor.org/rfc/rfc2119) and [RFC 8174](https://www.rfc-editor.org/rfc/rfc8174)` RFC 2119 keywords should not be used outside the Specification section, see https://github.com/ethereum/EIPs/blob/master/CONTRIBUTING.md. The Test Cases and Security Considerations section have these keywords capitalized. Convert them to the lowercase variant, then we"
+      },
+      {
+        "pr": "11800",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/11800#discussion_r3501714472",
+        "excerpt": "```suggestion ## Test Cases <!-- TODO --> ## Security Considerations ``` Test Cases are mandatory for Core EIPs."
+      },
+      {
+        "pr": "11790",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/11790#discussion_r3501894172",
+        "excerpt": "```suggestion ## Test Cases <!-- TODO --> ## Security Considerations ``` Placeholder for mandatory testing section."
+      }
+    ],
+    "test_cases": [
+      {
+        "pr": "12006",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/12006#discussion_r3650436291",
+        "excerpt": "```suggestion ## Test Cases <!-- TODO --> ## Security Considerations ``` Not having a test section in a Draft EIP is fine per EIP-1, but it is handy to keep this placeholder so we are reminded that these test cases should be written at some point."
+      },
+      {
+        "pr": "12006",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/12006#discussion_r3650551670",
+        "excerpt": "> Two trees are consensus-live for the whole conversion, which exposes gas-discrepancy attack surface between the MPT and the PBT. I'm not convinced by this point, we can test this (yes, it is complex)."
+      },
+      {
+        "pr": "12006",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/12006#discussion_r3681617307",
+        "excerpt": "```suggestion **No on-chain observability of the conversion.** This is the second cost. An overlay computes the new root in consensus, so its correctness is observed on-chain as it proceeds. Offline conversion happens off-chain, so consensus does not see it before the swap. This EIP recovers that visibility off consensus, through the [shadow-commitment period](#shadow-commitment). Attesters publish signed per-block PBT roots while consensus still runs on the MPT, so divergence is visible and att"
+      },
+      {
+        "pr": "11936",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/11936#discussion_r3643067420",
+        "excerpt": "```suggestion ## Backwards Compatibility ## Test Cases <!-- TODO --> ``` (test cases section mandatory when moving to review -> non-blocker now)"
+      },
+      {
+        "pr": "11922",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/11922#discussion_r3580805231",
+        "excerpt": "```suggestion *Note: Significant assistance from AI is acknowledged, primarily for the reference implementation and its tests.* ``` We cannot have specific brands in here to avoid being seen to sponsor specific brands (neutrality)"
+      },
+      {
+        "pr": "11877",
+        "author": "SamWilsn",
+        "url": "https://github.com/ethereum/EIPs/pull/11877#discussion_r3538206288",
+        "excerpt": "Ideally test cases should be sets of inputs and expected outputs, but I think this is okay for now."
+      },
+      {
+        "pr": "11871",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/11871#discussion_r3556214775",
+        "excerpt": "The Specification uses `get_block_root_at_slot`, `compute_start_slot_at_epoch`, `GENESIS_EPOCH`, `GENESIS_SLOT`, `get_block_root`, `get_checkpoint_block`, `get_attestation_participation_flag_indices`, `weigh_justification_and_finalization`, and `SLOTS_PER_EPOCH` without defining them or stating where they are defined. Please link to https://github.com/ethereum/consensus-specs using an URL which satisfies `^https://github.com/ethereum/consensus-specs/(blob|commit)/[0-9a-f]{40}/.*$` (per EIP-1) or"
+      },
+      {
+        "pr": "11871",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/11871#discussion_r3556214776",
+        "excerpt": "CONTRIBUTING.md asks to avoid sections containing only bulleted lists: please add a short introductory sentence before the list (e.g. \"Testing for this EIP should cover the following:\")."
+      }
+    ],
+    "reference_implementation": [
+      {
+        "pr": "12062",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/12062#discussion_r3694459873",
+        "excerpt": "```suggestion Each frame incurs a fixed CALL execution-context overhead (100) plus `G_log` (375) for the receipt sub-entry it produces, giving `FRAME_TX_PER_FRAME_COST = 475`. The execution-context component covers context setup, mode dispatch, and the two-dimensional gas accounting at the frame boundary, analogous to the fixed overhead of a CALL. The `G_log` component covers the `[status, execution_gas_used, state_gas_used, logs]` receipt sub-entry that each frame adds to the transaction receip"
+      },
+      {
+        "pr": "11922",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/11922#discussion_r3580805231",
+        "excerpt": "```suggestion *Note: Significant assistance from AI is acknowledged, primarily for the reference implementation and its tests.* ``` We cannot have specific brands in here to avoid being seen to sponsor specific brands (neutrality)"
+      },
+      {
+        "pr": "11922",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/11922#discussion_r3580839680",
+        "excerpt": "```suggestion As a demonstration, [`extract_cfg.py`](../assets/eip-8337/extract_cfg.py), provided with the reference implementation, recovers the complete control-flow graph of validated code in a single linear pass. It trusts validity and performs no checks of its own. ``` (once you add the file to assets)"
+      },
+      {
+        "pr": "11889",
+        "author": "SamWilsn",
+        "url": "https://github.com/ethereum/EIPs/pull/11889#discussion_r3538131154",
+        "excerpt": "```suggestion As a demonstration, [`extract_cfg.py`](../assets/eip-7979/...), provided with the reference implementation, recovers the complete control-flow graph of validated code — basic blocks, branches, calls, and returns — in a single linear pass, trusting validity and performing no checks of its own. ``` You should link to it."
+      },
+      {
+        "pr": "11883",
+        "author": "SamWilsn",
+        "url": "https://github.com/ethereum/EIPs/pull/11883#discussion_r3538245129",
+        "excerpt": "```suggestion ##### What about differences between client implementations? ```"
+      },
+      {
+        "pr": "11855",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/11855#issuecomment-4872225430",
+        "excerpt": "Ah great points, that actually makes sense @poojaranjan :smile: > since Meta EIP Review generally corresponds to the Devnet stage. I am slightly uncomfortable with this though, and also including the \"rule\" when the EIP moves to Review status, DFI list should be removed. In the \"Devnet stage\", which I think we are now almost closing (one, maybe two more devnets?), would then remove this DFI list and this would also remove this \"sentiment\" from the canonical fork Meta: > `Declined for Inclusion` "
+      },
+      {
+        "pr": "11777",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/11777#discussion_r3502013854",
+        "excerpt": "EIP-1 expects a Specification \"detailed enough to allow competing, interoperable implementations.\" Right now the section is descriptive and defers all authoritative definitions to leanSpec. Deferring the large shared spec is acceptable (see EIP-3675), but please add the aggregator-role specifics inline: the opt-in mechanism, the super-aggregator threshold (with a defined constant), and any role-specific consensus/fork-choice rule. Use MUST/SHOULD where the behavior is normative (and then add the"
+      },
+      {
+        "pr": "11760",
+        "author": "SamWilsn",
+        "url": "https://github.com/ethereum/EIPs/pull/11760#discussion_r3461293320",
+        "excerpt": "> the `geas` implementations maintained in the `ethereum/sys-asm` repository, which share one code skeleton This is definitely an external link. I'd remove it if you can, or apply following the EIP-5757 process to get it allowed."
+      }
+    ],
+    "implementation_agnostic": [
+      {
+        "pr": "11783",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/11783#issuecomment-4662957721",
+        "excerpt": "BTW, this factory also ensures that we can now deploy system contracts via the CREATE2 factory and not via the chain agnostic deployments (keyless)"
+      },
+      {
+        "pr": "11610",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/11610#discussion_r3278094067",
+        "excerpt": "If you use this method, you have to add the transactions and thus actually define the deployment technique here. I don't think \"synthetic-sender technique\" is the correct term here, something like \"chain-agnostic deterministic deployer\" or something like that (should also include it uses a throwaway address) might be a better term, not sure here."
+      },
+      {
+        "pr": "11066",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/11066#discussion_r2730630424",
+        "excerpt": "This could imply that if we have a 7702-delegated account A which points to B, it means that if there is enough gas to warm A but not enough gas for B, it is implementation specific whether or not B is in BAL (?). At least this is how this sentence could be interpreted, and this is not correct."
+      }
+    ],
+    "template_structure": [
+      {
+        "pr": "12062",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/12062#discussion_r3694263858",
+        "excerpt": "> A later frame may therefore reduce an earlier frame's `state_gas_used`. Why? I do not see this explained in the referenced section. For instance, it says: > State-gas draws from `state_gas_left` only. `state_gas_left` is frame-scoped. EVM call frames at any depth within the frame draw from it directly. It is not forwarded, split, or divided per callframe like execution gas."
+      },
+      {
+        "pr": "12006",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/12006#discussion_r3650436280",
+        "excerpt": "Link is broken, this fixes it: ```suggestion Copyright and related rights waived via [CC0](../LICENSE.md). ```"
+      },
+      {
+        "pr": "12006",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/12006#discussion_r3650436287",
+        "excerpt": "```suggestion - If PBT access is **more expensive** than the MPT, the repricing is a **price increase** and must activate at a fork **before** `SWAP_FORK`. Running the PBT under the MPT-calibrated (lower) prices would leave the now-costlier operations underpriced, which is a denial-of-service surface. ``` If this is a specification the move it to the specification section :smile:"
+      },
+      {
+        "pr": "12006",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/12006#discussion_r3650436291",
+        "excerpt": "```suggestion ## Test Cases <!-- TODO --> ## Security Considerations ``` Not having a test section in a Draft EIP is fine per EIP-1, but it is handy to keep this placeholder so we are reminded that these test cases should be written at some point."
+      },
+      {
+        "pr": "12006",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/12006#discussion_r3650436292",
+        "excerpt": "Nit: this link (and the same one at line 213) reads \"[Unvalidated-flip input]\" but points to `#security-considerations` (the section top) — please point it at the actual subsection anchor, `#unvalidated-flip-input`."
+      },
+      {
+        "pr": "12006",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/12006#discussion_r3650441332",
+        "excerpt": "```suggestion This EIP specifies an **offline** migration of Ethereum's state from the hexary Merkle Patricia Trie (MPT) to the Partitioned Binary Tree (PBT) defined in [EIP-8297](./eip-8297.md). ``` Nit: would suggest removing this historical reference, it is fine to refer this later in Rationale but in Abstract this does not feel like the right place 😄 👍"
+      },
+      {
+        "pr": "12006",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/12006#discussion_r3650568844",
+        "excerpt": "```suggestion - **Execution semantics.** `SWAP_FORK` changes the state commitment **only**. Gas costs, opcode behavior, and transaction validity are unchanged across the swap itself; the commitment swap alone alters no observable execution result. PBT state access nonetheless performs differently from the MPT (e.g. chunk-granular code access, stem warm/cold behavior), so state-access gas costs are repriced in a **separate gas-repricing EIP**. That repricing is out of scope here and must not be b"
+      },
+      {
+        "pr": "12006",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/12006#discussion_r3681617307",
+        "excerpt": "```suggestion **No on-chain observability of the conversion.** This is the second cost. An overlay computes the new root in consensus, so its correctness is observed on-chain as it proceeds. Offline conversion happens off-chain, so consensus does not see it before the swap. This EIP recovers that visibility off consensus, through the [shadow-commitment period](#shadow-commitment). Attesters publish signed per-block PBT roots while consensus still runs on the MPT, so divergence is visible and att"
+      }
+    ],
+    "style_language": [
+      {
+        "pr": "12006",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/12006#discussion_r3650436288",
+        "excerpt": "```suggestion title: Offline State Migration to the PBT ``` EIP-1 style: title in Title Case"
+      },
+      {
+        "pr": "12006",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/12006#discussion_r3650436294",
+        "excerpt": "Nit: several forward references point at documents a reader cannot find: \"a companion specification\" (here), the \"separate gas-repricing EIP\" (line 220), and \"tracked separately\" (line 226). Fine while in Draft, but consider naming them once they exist, or wording them explicitly as future/planned EIPs so it is clear nothing is being omitted."
+      },
+      {
+        "pr": "12006",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/12006#discussion_r3681687440",
+        "excerpt": "```suggestion Publication is voluntary, not a validity rule. So how much of the validating set reports depends on the [telemetry sidecar](#shadow-commitment) shipping enabled by default, not on enforcement. Readiness assessment has to treat coverage as a measured quantity, and read a low-coverage period as weak evidence rather than as evidence of agreement. Pre-swap divergence itself stays harmless and self-detectable, since consensus still runs on the MPT. ``` Removal of SHOULD by re-wording (a"
+      },
+      {
+        "pr": "11936",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/11936#discussion_r3643067419",
+        "excerpt": "\"ePBS\" is introduced here only as a parenthetical and never expanded (it also appears in the preamble `description`). Per CONTRIBUTING.md, abbreviations should follow their expanded form on first use — suggest \"[EIP-7732](./eip-7732.md) (enshrined Proposer-Builder Separation, ePBS)\"."
+      },
+      {
+        "pr": "11922",
+        "author": "gcolvin",
+        "url": "https://github.com/ethereum/EIPs/pull/11922#issuecomment-5036831404",
+        "excerpt": "The only substantive change I've made is the relative link to the Yellow Paper. I've left off defining abbreviations for now. I think most (e.g EVM, JVM, RISC-V), are familiar to most readers. I would prefer to propose remaining changes, especially the many links, in a new PR. There are too many changes to easily get right in this PR, as the beginning of my tool chain is a long way from here. Much cleaner for me to merge this if possible and make the requested changes to the new version. I think"
+      },
+      {
+        "pr": "11922",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/11922#pullrequestreview-4696408709",
+        "excerpt": "Two suggestions: - Please define abbreviations before use - Suggestion to define the opcode before the bytecode semantics (`CREATE (0xF0)`)"
+      },
+      {
+        "pr": "11890",
+        "author": "SamWilsn",
+        "url": "https://github.com/ethereum/EIPs/pull/11890#issuecomment-4908029907",
+        "excerpt": "https://github.com/user-attachments/assets/a712c37b-5de8-4587-8a7b-4a1a88840edc > A Final EIP exists in a state of finality and should only be updated to correct errata and add non-normative clarifications. We would prefer if we didn't have typos/grammar/wrong words in the documents we publish, so we do merge these kind of fixes for final EIPs."
+      },
+      {
+        "pr": "11875",
+        "author": "SamWilsn",
+        "url": "https://github.com/ethereum/EIPs/pull/11875#discussion_r3538179081",
+        "excerpt": "Don't bold the keywords, just UPPERCASE them."
+      }
+    ],
+    "erc_split_scope": [
+      {
+        "pr": "12004",
+        "author": "lightclient",
+        "url": "https://github.com/ethereum/EIPs/pull/12004#issuecomment-5063243665",
+        "excerpt": "We actually had P256 as a possible signature type in the default code, but we removed it because we realized it actually creates a weird class of account. It isn't a smart account so it can't make a 1271-sig, can't use `permit`, can't handle callbacks for erc-721, etc. It also can't deploy code for itself! Yes, we could potentially address some of these issues, but at the end of the day P256 is not a top-level account the protocol supports. Just a cryptographic operation we provide optimized sup"
+      },
+      {
+        "pr": "11916",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/11916#discussion_r3617094259",
+        "excerpt": "I am not entirely sure if we should do this. The main problem I see is if an EIP/ERC introduces new vocabulary. Do we expect authors to add these words to the \"known words\" list? This directly adds that word as \"known word\" for *all EIPs/ERCs* which is not correct because it only applies to specific EIPs. It will also mean that the known words for ERCs/EIPs diverge as adding a word to known words in EIPs will not add to ERCs. Not sure if this is a big problem though."
+      },
+      {
+        "pr": "11916",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/11916#pullrequestreview-4738409650",
+        "excerpt": "I am not sure if we should add `markdown-spell`. I am fine adding the other rules, we can discuss `markdown-spell`, if this PR would be the other rules I would have approved here 😄 👍 (this review also applies to https://github.com/ethereum/ERCs/pull/1873)"
+      },
+      {
+        "pr": "11820",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/11820#discussion_r3502505607",
+        "excerpt": "```suggestion This standard defines a keystore format for **stateful hash-based signing keys**, specifically eXtended Merkle Signature Scheme (XMSS) as used by the Lean Ethereum consensus layer (hereafter `leanxmss`). It extends [ERC-2335](./eip-2335.md) so that the encrypted secret may be an XMSS seed and adds the machinery a *consumable* key requires: an explicit scheme-parameter block, a non-authoritative capacity snapshot, normative rules for where the authoritative signing state lives, a co"
+      },
+      {
+        "pr": "11787",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/11787#issuecomment-4663639174",
+        "excerpt": "Hiya, I believe this is an ERC and not an EIP, could you open this in https://github.com/ethereum/ERCs ? (and close this PR) :smile: :+1:"
+      },
+      {
+        "pr": "11760",
+        "author": "SamWilsn",
+        "url": "https://github.com/ethereum/EIPs/pull/11760#discussion_r3500276545",
+        "excerpt": "> (the Nick's-method scheme) If there's somewhere we can link to that defines this in detail (preferably in another EIP/ERC), we should."
+      },
+      {
+        "pr": "11515",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/11515#discussion_r3290162503",
+        "excerpt": "```suggestion This creates two problems. First, the authority model becomes inconsistent: smart contracts that rely on ecrecover for signature verification — including [ERC-20](./eip-20.md) permit functions, [ERC-2612](./eip-2612.md) gasless approvals, and meta-transaction relayers — continue to accept ECDSA signatures from accounts whose ECDSA keys the protocol no longer recognizes as authoritative. An attacker in possession of a compromised ECDSA private key can exploit this gap even after the"
+      },
+      {
+        "pr": "11505",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/11505#discussion_r3710030753",
+        "excerpt": "```suggestion * [EIP-8182](./eip-8182.md): Private ETH and [ERC-20](./eip-20.md) Transfers ``` This fixes the CI I think 😄 👍"
+      }
+    ],
+    "process_status": [
+      {
+        "pr": "12063",
+        "author": "SamWilsn",
+        "url": "https://github.com/ethereum/EIPs/pull/12063#pullrequestreview-4833315953",
+        "excerpt": "Weird. Sorry, the bot seems to be misbehaving on this one. This review has nothing to do with the contents."
+      },
+      {
+        "pr": "12033",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/12033#issuecomment-5133235630",
+        "excerpt": "https://github.com/ethereum/EIPs/pull/12045 will unblock CI, then will approve this, thanks @poojaranjan :smile: :+1: EDIT: I accidentally converted this PR to draft twice, this was not intended"
+      },
+      {
+        "pr": "12006",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/12006#discussion_r3650436291",
+        "excerpt": "```suggestion ## Test Cases <!-- TODO --> ## Security Considerations ``` Not having a test section in a Draft EIP is fine per EIP-1, but it is handy to keep this placeholder so we are reminded that these test cases should be written at some point."
+      },
+      {
+        "pr": "12006",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/12006#discussion_r3650436294",
+        "excerpt": "Nit: several forward references point at documents a reader cannot find: \"a companion specification\" (here), the \"separate gas-repricing EIP\" (line 220), and \"tracked separately\" (line 226). Fine while in Draft, but consider naming them once they exist, or wording them explicitly as future/planned EIPs so it is clear nothing is being omitted."
+      },
+      {
+        "pr": "12006",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/12006#pullrequestreview-4779526997",
+        "excerpt": "Hi @misilva73, exciting EIP 😄 👍 I left editorial and also review comments, the review comments do not have to be addressed but I think it has some points which you might want to address before we merge this. In general, this EIP is anchored to the assumption that the next trie is PBT. If possible, I think it would be better to rewrite this EIP in the general sense (how this offline method works regardless of what trie we migrate to). I do see that there are some specific PBT definitions in here,"
+      },
+      {
+        "pr": "12006",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/12006#pullrequestreview-4822180562",
+        "excerpt": "Thanks for addressing the review @misilva73, LGTM!! 🎉 👍 😄"
+      },
+      {
+        "pr": "11969",
+        "author": "lightclient",
+        "url": "https://github.com/ethereum/EIPs/pull/11969#issuecomment-5096830006",
+        "excerpt": "Okay it took me some time to understand this correctly. Originally I was thinking to treat the overall `tx_gas_limit` as some on-demand computed value from the tx. But I realized reviewing this that the way I was originally thinking of it was wrong, since the intrinsics are not fixed costs that are now always paid. With 7623, you may pay a completely unrelated cost. So we needed to compute this max gas value to know what the overall tx limit really should be to make sure it covers worst case dat"
+      },
+      {
+        "pr": "11936",
+        "author": "jochem-brouwer",
+        "url": "https://github.com/ethereum/EIPs/pull/11936#discussion_r3643067420",
+        "excerpt": "```suggestion ## Backwards Compatibility ## Test Cases <!-- TODO --> ``` (test cases section mandatory when moving to review -> non-blocker now)"
+      }
+    ]
+  }
+}

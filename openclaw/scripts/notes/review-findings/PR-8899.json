@@ -1,0 +1,297 @@
+{
+  "pr": 8899,
+  "created": "2026-08-04T20:38:49Z",
+  "updated": "2026-08-04T20:38:50Z",
+  "findings": [
+    {
+      "id": "b6b64d",
+      "file": "packages/beacon-node/src/db/flatFileStore/existenceCache.ts",
+      "line": 167,
+      "severity": "minor",
+      "reviewer": "gemini-code-assist[bot]",
+      "body": "![medium](https://www.gstatic.com/codereviewagent/medium-priority.svg)\n\nThe current implementation to rebuild the column bitmap in the cache involves converting the `Uint8Array` bitmap from the file header into an array of indices, and then `setColumnsPresent` converts this array back into a `bigint` bitmap. This can be optimized by directly converting the `Uint8Array` bitmap to a `bigint`.\n\n```typescript\n                // Directly convert the 16-byte bitmap to a bigint to avoid intermediate ar",
+      "status": "open",
+      "addressed_commit": null,
+      "note": null,
+      "source": {
+        "kind": "github-review-comment",
+        "id": "2801360885",
+        "repo": "ChainSafe/lodestar",
+        "pr": 8899,
+        "url": "https://github.com/ChainSafe/lodestar/pull/8899#discussion_r2801360885"
+      },
+      "created": "2026-08-04T20:38:50Z",
+      "updated": "2026-08-04T20:38:50Z"
+    },
+    {
+      "id": "8c8b10",
+      "file": "packages/beacon-node/src/chain/chain.ts",
+      "line": 809,
+      "severity": "nit",
+      "reviewer": "chatgpt-codex-connector[bot]",
+      "body": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Add LevelDB fallback when flat file lookup misses**\n\nWhen `flatFileStore` is enabled, this path returns early and never falls back to `blobSidecars`/`blobSidecarsArchive` (and the same pattern is used for data columns), so upgraded nodes with pre-existing sidecars in LevelDB but no flat-file copies will suddenly serve `null` for historical data. Because `flatFileStorage` is now default-on, this creates an upg",
+      "status": "open",
+      "addressed_commit": null,
+      "note": null,
+      "source": {
+        "kind": "github-review-comment",
+        "id": "2801370204",
+        "repo": "ChainSafe/lodestar",
+        "pr": 8899,
+        "url": "https://github.com/ChainSafe/lodestar/pull/8899#discussion_r2801370204"
+      },
+      "created": "2026-08-04T20:38:50Z",
+      "updated": "2026-08-04T20:38:50Z"
+    },
+    {
+      "id": "1c93aa",
+      "file": "packages/beacon-node/src/db/flatFileStore/existenceCache.ts",
+      "line": 30,
+      "severity": "nit",
+      "reviewer": "chatgpt-codex-connector[bot]",
+      "body": "**<sub><sub>![P2 Badge](https://img.shields.io/badge/P2-yellow?style=flat)</sub></sub>  Resolve slot lookups to canonical root, not arbitrary root**\n\n`getAnyRootForSlot()` returns the first root in an in-memory set/map, which is insertion-order dependent and not canonical-aware. Finalized by-slot handlers use this helper via `getBinaryBySlot()` / `getColumnsBinaryBySlot()`, so if a slot temporarily contains both canonical and orphan files (e.g., after reorgs or restart before cleanup), the node ",
+      "status": "open",
+      "addressed_commit": null,
+      "note": null,
+      "source": {
+        "kind": "github-review-comment",
+        "id": "2801370208",
+        "repo": "ChainSafe/lodestar",
+        "pr": 8899,
+        "url": "https://github.com/ChainSafe/lodestar/pull/8899#discussion_r2801370208"
+      },
+      "created": "2026-08-04T20:38:50Z",
+      "updated": "2026-08-04T20:38:50Z"
+    },
+    {
+      "id": "1fbeb3",
+      "file": "packages/beacon-node/src/db/flatFileStore/dcolFormat.ts",
+      "line": 191,
+      "severity": "minor",
+      "reviewer": "twoeths",
+      "body": "use `offsetTableSize()`?",
+      "status": "open",
+      "addressed_commit": null,
+      "note": null,
+      "source": {
+        "kind": "github-review-comment",
+        "id": "2863027168",
+        "repo": "ChainSafe/lodestar",
+        "pr": 8899,
+        "url": "https://github.com/ChainSafe/lodestar/pull/8899#discussion_r2863027168"
+      },
+      "created": "2026-08-04T20:38:50Z",
+      "updated": "2026-08-04T20:38:50Z"
+    },
+    {
+      "id": "c3346f",
+      "file": "packages/beacon-node/src/db/flatFileStore/dcolFormat.ts",
+      "line": 156,
+      "severity": "minor",
+      "reviewer": "twoeths",
+      "body": "use `offsetTableSize()`?",
+      "status": "open",
+      "addressed_commit": null,
+      "note": null,
+      "source": {
+        "kind": "github-review-comment",
+        "id": "2863028211",
+        "repo": "ChainSafe/lodestar",
+        "pr": 8899,
+        "url": "https://github.com/ChainSafe/lodestar/pull/8899#discussion_r2863028211"
+      },
+      "created": "2026-08-04T20:38:50Z",
+      "updated": "2026-08-04T20:38:50Z"
+    },
+    {
+      "id": "a28117",
+      "file": "packages/beacon-node/src/db/flatFileStore/dcolFormat.ts",
+      "line": 137,
+      "severity": "minor",
+      "reviewer": "twoeths",
+      "body": "use `offsetTableSize()`?",
+      "status": "open",
+      "addressed_commit": null,
+      "note": null,
+      "source": {
+        "kind": "github-review-comment",
+        "id": "2863028730",
+        "repo": "ChainSafe/lodestar",
+        "pr": 8899,
+        "url": "https://github.com/ChainSafe/lodestar/pull/8899#discussion_r2863028730"
+      },
+      "created": "2026-08-04T20:38:50Z",
+      "updated": "2026-08-04T20:38:50Z"
+    },
+    {
+      "id": "176ed8",
+      "file": "packages/beacon-node/src/db/flatFileStore/dcolFormat.ts",
+      "line": 120,
+      "severity": "minor",
+      "reviewer": "twoeths",
+      "body": "we always read slot as 4 bytes in `sszBYtes.ts`, maybe make it consistent everywhere?\n```typescript\n/**\n * Read only the first 4 bytes of Slot, max value is 4,294,967,295 will be reached 1634 years after genesis\n *\n * If the high bytes are not zero, return null\n */\nfunction getSlotFromOffset(data: Uint8Array, offset: number): Slot | null {\n  return checkSlotHighBytes(data, offset) ? getSlotFromOffsetTrusted(data, offset) : null;\n}\n```",
+      "status": "open",
+      "addressed_commit": null,
+      "note": null,
+      "source": {
+        "kind": "github-review-comment",
+        "id": "2863040827",
+        "repo": "ChainSafe/lodestar",
+        "pr": 8899,
+        "url": "https://github.com/ChainSafe/lodestar/pull/8899#discussion_r2863040827"
+      },
+      "created": "2026-08-04T20:38:50Z",
+      "updated": "2026-08-04T20:38:50Z"
+    },
+    {
+      "id": "a86dcd",
+      "file": "packages/beacon-node/src/db/flatFileStore/dcolFormat.ts",
+      "line": 149,
+      "severity": "minor",
+      "reviewer": "twoeths",
+      "body": "is this use for testing only? if yes drop a comment",
+      "status": "open",
+      "addressed_commit": null,
+      "note": null,
+      "source": {
+        "kind": "github-review-comment",
+        "id": "2863044956",
+        "repo": "ChainSafe/lodestar",
+        "pr": 8899,
+        "url": "https://github.com/ChainSafe/lodestar/pull/8899#discussion_r2863044956"
+      },
+      "created": "2026-08-04T20:38:50Z",
+      "updated": "2026-08-04T20:38:50Z"
+    },
+    {
+      "id": "0ff69f",
+      "file": "packages/beacon-node/src/db/flatFileStore/dcolFormat.ts",
+      "line": 209,
+      "severity": "minor",
+      "reviewer": "twoeths",
+      "body": "`index` start from 0 but `popcount` expect it's upper bound exclusive",
+      "status": "open",
+      "addressed_commit": null,
+      "note": null,
+      "source": {
+        "kind": "github-review-comment",
+        "id": "2863181635",
+        "repo": "ChainSafe/lodestar",
+        "pr": 8899,
+        "url": "https://github.com/ChainSafe/lodestar/pull/8899#discussion_r2863181635"
+      },
+      "created": "2026-08-04T20:38:50Z",
+      "updated": "2026-08-04T20:38:50Z"
+    },
+    {
+      "id": "a89468",
+      "file": "docs/design-flat-file-storage.md",
+      "line": 1,
+      "severity": "minor",
+      "reviewer": "wemeetagain",
+      "body": "delete this file. If anything, some of the description can go into a module-level comment near the code.",
+      "status": "open",
+      "addressed_commit": null,
+      "note": null,
+      "source": {
+        "kind": "github-review-comment",
+        "id": "3715502860",
+        "repo": "ChainSafe/lodestar",
+        "pr": 8899,
+        "url": "https://github.com/ChainSafe/lodestar/pull/8899#discussion_r3715502860"
+      },
+      "created": "2026-08-04T20:38:50Z",
+      "updated": "2026-08-04T20:38:50Z"
+    },
+    {
+      "id": "68b90b",
+      "file": "packages/beacon-node/src/chain/blocks/writeBlockInputToDb.ts",
+      "line": 60,
+      "severity": "minor",
+      "reviewer": "wemeetagain",
+      "body": "maybe putBlobSidecars should pass blobSidecars directly, and serialize inside.",
+      "status": "open",
+      "addressed_commit": null,
+      "note": null,
+      "source": {
+        "kind": "github-review-comment",
+        "id": "3715522784",
+        "repo": "ChainSafe/lodestar",
+        "pr": 8899,
+        "url": "https://github.com/ChainSafe/lodestar/pull/8899#discussion_r3715522784"
+      },
+      "created": "2026-08-04T20:38:50Z",
+      "updated": "2026-08-04T20:38:50Z"
+    },
+    {
+      "id": "da37fd",
+      "file": "packages/beacon-node/src/chain/blocks/writeBlockInputToDb.ts",
+      "line": 101,
+      "severity": "minor",
+      "reviewer": "wemeetagain",
+      "body": "there should be a batch put, like the prior implementation",
+      "status": "open",
+      "addressed_commit": null,
+      "note": null,
+      "source": {
+        "kind": "github-review-comment",
+        "id": "3715553403",
+        "repo": "ChainSafe/lodestar",
+        "pr": 8899,
+        "url": "https://github.com/ChainSafe/lodestar/pull/8899#discussion_r3715553403"
+      },
+      "created": "2026-08-04T20:38:50Z",
+      "updated": "2026-08-04T20:38:50Z"
+    },
+    {
+      "id": "52661e",
+      "file": "packages/beacon-node/src/db/flatFileStore/atomicWrite.ts",
+      "line": 1,
+      "severity": "minor",
+      "reviewer": "wemeetagain",
+      "body": "just import from `\"node:fs/promises\"`",
+      "status": "open",
+      "addressed_commit": null,
+      "note": null,
+      "source": {
+        "kind": "github-review-comment",
+        "id": "3715568702",
+        "repo": "ChainSafe/lodestar",
+        "pr": 8899,
+        "url": "https://github.com/ChainSafe/lodestar/pull/8899#discussion_r3715568702"
+      },
+      "created": "2026-08-04T20:38:50Z",
+      "updated": "2026-08-04T20:38:50Z"
+    },
+    {
+      "id": "137992",
+      "file": "packages/beacon-node/src/db/flatFileStore/metrics.ts",
+      "line": 1,
+      "severity": "minor",
+      "reviewer": "wemeetagain",
+      "body": "we need all of these new metrics exposed in a dashboard",
+      "status": "open",
+      "addressed_commit": null,
+      "note": null,
+      "source": {
+        "kind": "github-review-comment",
+        "id": "3715616079",
+        "repo": "ChainSafe/lodestar",
+        "pr": 8899,
+        "url": "https://github.com/ChainSafe/lodestar/pull/8899#discussion_r3715616079"
+      },
+      "created": "2026-08-04T20:38:50Z",
+      "updated": "2026-08-04T20:38:50Z"
+    }
+  ],
+  "sync": {
+    "github": {
+      "ChainSafe/lodestar": {
+        "last_comment_id": "3715946086",
+        "last_synced": "2026-08-04T20:38:50Z",
+        "last_imported": 14,
+        "last_reverify_updates": 0
+      }
+    }
+  }
+}

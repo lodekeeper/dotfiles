@@ -23,11 +23,20 @@ sample = """# BACKLOG.md - Task Backlog
 - **Status:** In progress
 - note
 
+### 🟡 Missing status task
+- note
+
 ### ✅ Done task
 - **Status:** Done
 
 ### 🟡 Yellow done task
 - **Status:** Done — completed from a yellow-priority entry
+
+### 🟢 Low-priority active task
+- **Status:** In progress
+
+### 🟡 Passive task
+- **Status:** Passive watch — awaiting a fresh signal
 
 ## 📌 Other section [topic:51]
 
@@ -36,17 +45,30 @@ sample = """# BACKLOG.md - Task Backlog
 """
 
 tasks = module.parse_backlog(sample)
-assert len(tasks) == 4, f"expected 4 tasks, got {len(tasks)}"
+assert len(tasks) == 7, f"expected 7 tasks, got {len(tasks)}"
 assert tasks[0].section == "## 📌 General (no topic)"
 assert tasks[0].heading == "### 🟡 First task"
 assert tasks[0].status == "In progress"
-assert tasks[1].heading == "### ✅ Done task"
-assert module.is_done(tasks[2])
-assert tasks[3].section == "## 📌 Other section [topic:51]"
-assert tasks[3].status == "Blocked"
+assert tasks[1].heading == "### 🟡 Missing status task"
+assert tasks[1].status is None
+assert tasks[2].heading == "### ✅ Done task"
+assert module.is_done(tasks[3])
+assert not module.is_done(tasks[4])
+assert module.is_actionable(tasks[4])
+assert not module.is_actionable(tasks[5])
+assert tasks[6].section == "## 📌 Other section [topic:51]"
+assert tasks[6].status == "Blocked"
 assert [t.heading for t in tasks if not module.is_done(t)] == [
     "### 🟡 First task",
+    "### 🟡 Missing status task",
+    "### 🟢 Low-priority active task",
+    "### 🟡 Passive task",
     "### 🔴 Another task",
+]
+assert [t.heading for t in tasks if module.is_actionable(t)] == [
+    "### 🟡 First task",
+    "### 🟡 Missing status task",
+    "### 🟢 Low-priority active task",
 ]
 assert module.has_corruption_guard("> ⛔ **DO NOT ACT ON THIS FILE — CORRUPTED / UNDER RECOVERY**\n\n### task")
 assert module.has_corruption_guard("> **⚠️ DO NOT ACT ON ENTRIES BELOW WITHOUT VERIFYING FIRST.**\n\n### task")
@@ -92,4 +114,25 @@ with tempfile.TemporaryDirectory() as tmp:
     )
     assert allowed_guarded.returncode == 0, allowed_guarded
     assert "### 🟡 First task" in allowed_guarded.stdout
+
+    actionable_guarded = subprocess.run(
+        [
+            sys.executable,
+            str(SCRIPT),
+            "--file",
+            str(guarded),
+            "--require-corruption-guard",
+            "--allow-corrupted-backlog",
+            "--actionable-only",
+        ],
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    assert actionable_guarded.returncode == 0, actionable_guarded
+    assert "### 🟡 First task" in actionable_guarded.stdout
+    assert "### 🟡 Missing status task" in actionable_guarded.stdout
+    assert "### 🟢 Low-priority active task" in actionable_guarded.stdout
+    assert "### 🟡 Passive task" not in actionable_guarded.stdout
+    assert "### 🔴 Another task" not in actionable_guarded.stdout
 print("OK: list_statuses parser handles ## sections + ### tasks without stalling")

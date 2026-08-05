@@ -10,7 +10,13 @@ from pathlib import Path
 from typing import Iterable
 
 DEFAULT_BACKLOG = Path("/home/openclaw/.openclaw/workspace/BACKLOG.md")
-DONE_PREFIXES = ("✅", "🟢")
+DONE_PREFIXES = ("✅",)
+NON_ACTIONABLE_STATUS_PREFIXES = (
+    "blocked",
+    "passive",
+    "parked",
+    "superseded",
+)
 CORRUPTION_GUARD_MARKERS = (
     "DO NOT ACT ON THIS FILE",
     "DO NOT ACT ON ENTRIES BELOW",
@@ -80,6 +86,18 @@ def is_done(task: TaskBlock) -> bool:
     return task.status is not None and task.status.casefold().startswith("done")
 
 
+def is_actionable(task: TaskBlock) -> bool:
+    if is_done(task):
+        return False
+    if task.status is None:
+        return True
+
+    status = task.status.casefold()
+    if status.startswith(NON_ACTIONABLE_STATUS_PREFIXES):
+        return False
+    return not status.startswith("awaiting")
+
+
 def render_text(tasks: Iterable[TaskBlock]) -> str:
     out: list[str] = []
     current_section: str | None = None
@@ -98,7 +116,12 @@ def render_text(tasks: Iterable[TaskBlock]) -> str:
 def main() -> int:
     ap = argparse.ArgumentParser(description="Safely list task headings and status lines from BACKLOG.md")
     ap.add_argument("--file", type=Path, default=DEFAULT_BACKLOG)
-    ap.add_argument("--active-only", action="store_true", help="Exclude done/green task headings")
+    ap.add_argument("--active-only", action="store_true", help="Exclude done task headings and done status lines")
+    ap.add_argument(
+        "--actionable-only",
+        action="store_true",
+        help="Exclude done task headings/statuses plus passive-watch, blocked, parked, and awaiting statuses",
+    )
     ap.add_argument("--json", action="store_true", help="Emit JSON instead of text")
     ap.add_argument(
         "--allow-corrupted-backlog",
@@ -130,7 +153,9 @@ def main() -> int:
         return 2
 
     tasks = parse_backlog(text)
-    if args.active_only:
+    if args.actionable_only:
+        tasks = [task for task in tasks if is_actionable(task)]
+    elif args.active_only:
         tasks = [task for task in tasks if not is_done(task)]
 
     if args.json:
