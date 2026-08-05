@@ -10,16 +10,16 @@ The [optimistic sync spec](https://github.com/ethereum/consensus-specs/blob/v1.6
 
 > An optimistic validator MUST NOT participate in sync committees (i.e., sign across the `DOMAIN_SYNC_COMMITTEE`, `DOMAIN_SYNC_COMMITTEE_SELECTION_PROOF` or `DOMAIN_CONTRIBUTION_AND_PROOF` domains).
 
-Attestations (`produceAttestationData`) are already gated on optimistic execution status in the beacon-node API. Sync committee participation is asymmetric: the base **sync committee message** is built in the validator client from the head root (`ChainHeaderTracker` / `getBlockRoot`) and submitted directly, and contribution signing can happen later in the same slot after a new optimistic head arrives. Those VC-side signing paths need to honor the beacon node's optimistic status before signing.
+Attestations (`produceAttestationData`) are already gated on optimistic execution status in the beacon-node API. Sync committee participation is asymmetric: the base **sync committee message** is built in the validator client from the head root (`ChainHeaderTracker` / `getBlockRoot`) and submitted directly, so the validator client must honor the beacon node's optimistic status before signing that root.
 
 ## Description
 
 - Expose the node's optimistic status via `SyncingStatusTracker.isNodeOptimistic()`, derived from the last successful `/eth/v1/node/syncing` poll the tracker already performs every slot. Returns `undefined` when the status is unknown, so callers don't over-suppress.
 - In `SyncCommitteeService.runSyncCommitteeTasks`, skip sync committee duties before fetching duties when the node is already optimistic, so `DOMAIN_SYNC_COMMITTEE_SELECTION_PROOF` is not signed while optimistic.
 - After waiting for the block, recheck the actual head/root and skip `DOMAIN_SYNC_COMMITTEE` signing if that head is optimistic.
-- Before producing sync committee contributions, recheck the head again and skip `DOMAIN_CONTRIBUTION_AND_PROOF` signing if an optimistic head arrived during the contribution wait.
+- Keep sync committee contribution aggregation/signing scoped to the same already-validated `beaconBlockRoot`; the beacon-node `produceSyncCommitteeContribution` endpoint remains responsible for rejecting optimistic block roots before the VC signs `DOMAIN_CONTRIBUTION_AND_PROOF`.
 - Replace the now-resolved `TODO/PENDING` comment in `validator/index.ts` with a pointer to the new VC-side gate.
 
 ## Steps to test
 
-Added unit coverage in `packages/validator/test/unit/services/syncCommittee.test.ts` asserting that optimistic status suppresses selection-proof signing, sync committee message signing, and contribution-and-proof signing. Existing non-optimistic sync committee behaviour is unchanged.
+Added unit coverage in `packages/validator/test/unit/services/syncCommittee.test.ts` asserting that optimistic status suppresses selection-proof signing and sync committee message signing, while contribution aggregation still uses the previously validated block root. Existing non-optimistic sync committee behaviour is unchanged.
