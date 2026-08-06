@@ -1,10 +1,28 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-08-05 (110th pass)
+> Updated: 2026-08-06 (111th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-08-06 (self-improvement-audit-daily, 03:24 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** idle-tool guard coverage gap found and fixed this cycle: the 2026-08-04 guard covered shell no-ops, stop-only wakeup calls, malformed monitor calls, and empty review reports, but did not catch content-free tool-discovery calls like `tool_search` with `query: "placeholder"`. Fix applied this cycle: extended `scripts/safety/block-idle-tool-call.py` to flag placeholder tool-search queries and added positive/negative self-test coverage. Active PreToolUse wiring remains the separate Nico-approved config step.
+
+---
 ## Daily Audit Snapshot — 2026-08-05 (self-improvement-audit-daily, 03:23 UTC)
 
 ### PR review
@@ -2038,6 +2056,15 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Placeholder tool-search guard coverage added (2026-08-06)
+Updated `scripts/safety/block-idle-tool-call.py`.
+- flags `tool_search` calls whose query is a placeholder/no-op label such as `placeholder` or `test`,
+- accepts normal targeted tool-discovery queries,
+- handles both wrapped hook payloads and direct JSON payloads with a top-level `query`,
+- extends the built-in self-test with positive and negative `tool_search` cases.
+
+**Rationale:** the 2026-08-04 idle-tool guard covered the main non-shell filler tools, but a later cron incident showed the same reflex can appear as content-free tool discovery. This keeps the side-effect-free guard current while active PreToolUse wiring remains a separate Nico-approved config step.
 
 ### ✅ Idle/end-of-task tool-call guard helper added (2026-08-04)
 Added `scripts/safety/block-idle-tool-call.py` and wired its `--self-test --json` into `scripts/notes/check-autonomy-domain-preflights.py` for PR review, CI fix, spec implementation, and devnet debugging.

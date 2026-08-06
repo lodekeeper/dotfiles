@@ -5,7 +5,8 @@ This is intentionally side-effect free so it can be used from future tool hooks,
 or from autonomy preflights now. It catches the small class of calls that are
 neither domain work nor useful polling: bare no-op shell commands, cron
 wakeup-cancel calls without a pending wakeup, empty review finding reports
-outside a review, and malformed monitor calls.
+outside a review, malformed monitor calls, and placeholder tool-discovery
+queries.
 """
 
 from __future__ import annotations
@@ -92,7 +93,7 @@ def _load_payload(raw: str) -> tuple[str | None, dict[str, Any] | None]:
         None,
     )
 
-    if tool_input is None and any(key in data for key in ("cmd", "command", "stop", "findings")):
+    if tool_input is None and any(key in data for key in ("cmd", "command", "stop", "findings", "query")):
         tool_input = data
 
     return tool_name, tool_input
@@ -193,6 +194,16 @@ def find_risks(tool_name: str, tool_input: dict[str, Any], *, context: str) -> l
                 }
             )
 
+    if key in {"toolsearch", "toolsearchtool"}:
+        query = tool_input.get("query")
+        if isinstance(query, str) and query.strip().lower() in PLACEHOLDER_LABELS:
+            risks.append(
+                {
+                    "name": "placeholder-tool-search-query",
+                    "reason": "placeholder tool-discovery queries are an idle/padding tool-call pattern",
+                }
+            )
+
     return risks
 
 
@@ -226,6 +237,8 @@ def run_self_test() -> tuple[bool, list[dict[str, Any]]]:
         ("Monitor", {}, "cron", False),
         ("ReportFindings", {"findings": []}, "cron", False),
         ("ReportFindings", {"findings": []}, "code-review", True),
+        ("tool_search.tool_search_tool", {"query": "placeholder", "limit": 1}, "cron", False),
+        ("tool_search.tool_search_tool", {"query": "skill_workshop", "limit": 1}, "cron", True),
     ]
 
     results: list[dict[str, Any]] = []
