@@ -1,10 +1,30 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-08-06 (111th pass)
+> Updated: 2026-08-08 (112th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-08-08 (self-improvement-audit-daily, 09:35 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** this cron itself missed 2026-08-07 entirely and failed again this morning (`consecutiveErrors: 5`) — root cause: `self-improvement-audit-daily` (`d7f95873`) runs on `payload.model: openai/gpt-5.5` with no cross-provider fallback, and that provider is backed by the same Codex subscription as several other crons. Confirmed via `cron.runs`: 4 failed attempts on 2026-08-07 (03:25–03:32 UTC) and 1 on 2026-08-08 (03:16 UTC), all `Codex subscription usage limit`. Worse: `cron-health-watchdog` (`55c58b83`, `codex/gpt-5.3-codex-spark`, no fallback) — the job whose entire purpose is to catch exactly this — was itself down for the same window, continuous `error` status from 2026-08-06 17:01 UTC through 2026-08-08 03:09 UTC (~34h, all `FallbackSummaryError: All models failed`, same quota). So the one detector that should have caught this was silently blind the whole time, and even when it does detect something its payload has no explicit delivery instructions (same `delivery.mode: none` + no send-tool-call gap already diagnosed for the BACKLOG.md guard-stripper cron and `github-notifications`). Also still erroring as of this snapshot: `nightly-memory-consolidation` (`4aaaf7f7`, `openai/gpt-5.5`, no fallback, `consecutiveErrors: 7` — ~7 consecutive nights of the `bank/state.json`/embeddings pipeline not running) and `check-openclaw-release` (`117efc3f`, `codex/gpt-5.3-codex-spark`, no fallback, `consecutiveErrors: 7`). Crons that already pair a Codex-backed primary with a `claude-cli/*` fallback (`daily-journal`, `daily-summary`, `Devnet health monitor`) stayed healthy through the same window — that's the pattern to copy.
+- **Fix applied this cycle:** manually backfilled this 2026-08-08 snapshot via `run-autonomy-audit-preflight.sh --no-ensure-daily-memory-note --no-seed-audit-memory-entry` + `close-autonomy-audit.sh --skip-memory-outcome-check` (avoided all `memory/*.md` writes, per this cron's own hard constraint) — all four domain preflights came back green. Manually ran `check_openclaw_release.sh` directly to confirm the gap didn't actually cost a missed release: `HEARTBEAT_OK`, nothing missed. Did not touch any cron payload/model/fallback config — treated as a Nico-approved-config-change item, same precedent as the `92fa6d55` guard-stripper fix. Escalated via Telegram DM with the full picture and a proposed fix.
+- **Proposed follow-up:** Nico to decide whether to add `claude-cli/*` fallbacks to `self-improvement-audit-daily`, `cron-health-watchdog`, `nightly-memory-consolidation`, and `check-openclaw-release` (same shape `daily-journal`/`daily-summary`/`Devnet health monitor` already use), and whether `cron-health-watchdog`'s payload should get explicit "post detected failures to topic #347" delivery instructions so a caught failure is never silently swallowed again.
+
+---
 ## Daily Audit Snapshot — 2026-08-06 (self-improvement-audit-daily, 03:24 UTC)
 
 ### PR review
@@ -2863,7 +2883,9 @@ Updated `scripts/debug/build-incident-bundle.sh` and `skills/local-mainnet-debug
 
 ## Next Audit Priorities (next daily cycles)
 
-All previously listed priority items in this section are complete as of **2026-07-15**. To avoid stale reminder churn:
+1. **Add `claude-cli/*` fallback to 4 Codex-only crons + fix `cron-health-watchdog` delivery** — `self-improvement-audit-daily`, `cron-health-watchdog`, `nightly-memory-consolidation`, and `check-openclaw-release` all run a Codex-subscription-backed model (`openai/gpt-5.5` or `codex/gpt-5.3-codex-spark`) with no cross-provider fallback, and went silently unhealthy during a shared quota-exhaustion window, 2026-08-06 17:01 UTC → 2026-08-08 ~04:00 UTC (full detail: 2026-08-08 Audit workflow entry above). Awaiting Nico's sign-off on the config change (DMed 2026-08-08 ~09:4x UTC) — this is a cron-config edit, not something to patch unilaterally. Once applied: confirm via `cron.list` that `consecutiveErrors` resets to 0 on each of the four jobs, and re-run `python3 scripts/notes/check-autonomy-audit-cadence.py --require-current --fail-on-gap` on the next daily cycle to confirm the snapshot-cadence gap doesn't recur.
+
+To avoid stale reminder churn on top of the live item above:
 
 1. Only add a new item here when the **latest daily audit snapshot** introduces a still-open blocker or concrete follow-up.
 2. If the latest snapshot is fully green, leave this section empty of filler work and use `BACKLOG.md` for unrelated concrete tasks.
