@@ -210,15 +210,40 @@ echo "[1/6] Running consistency guard on $TARGET_FILE"
 "${CHECK_CMD[@]}"
 
 echo "[2/6] Running cadence guard (advisory, latest-pair + current-date freshness)"
+CADENCE_LOG="$(mktemp)"
+TEMP_FILES+=("$CADENCE_LOG")
 set +e
-"${CADENCE_CMD[@]}"
+"${CADENCE_CMD[@]}" >"$CADENCE_LOG" 2>&1
 cadence_rc=$?
 set -e
+cat "$CADENCE_LOG"
 if [[ "$cadence_rc" -eq 2 ]]; then
   if [[ "$STRICT_CADENCE" -eq 1 ]]; then
     echo "❌ Cadence guard reported missing-day gaps and --strict-cadence is enabled. Resolve cadence drift before continuing." >&2
     exit 2
   fi
+  CADENCE_GAP_SUMMARY="$(
+    python3 - "$CADENCE_LOG" <<'PY'
+from pathlib import Path
+import sys
+
+lines = [
+    line.strip()
+    for line in Path(sys.argv[1]).read_text(encoding="utf-8").splitlines()
+    if line.strip()
+]
+interesting = [
+    line
+    for line in lines
+    if line.startswith("- ") and ("missing" in line.lower() or "latest snapshot freshness" in line.lower())
+]
+print(" | ".join(interesting[:3]) or "missing-day gaps detected by cadence guard")
+PY
+  )"
+  PREPEND_CMD+=(
+    --audit-workflow-status
+    "cadence guard reported missing-day gap(s) during preflight: ${CADENCE_GAP_SUMMARY}. Proposed fix: inspect recent cron runs and document the root cause/fallback or delivery follow-up before returning \`NO_REPLY\`."
+  )
   echo "⚠️ Cadence guard reported missing-day gaps. Continue with today's snapshot, and document root cause/fix in the audit workflow section."
 elif [[ "$cadence_rc" -ne 0 ]]; then
   echo "❌ Cadence guard failed (exit $cadence_rc). Aborting preflight." >&2

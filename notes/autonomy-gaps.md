@@ -1,10 +1,29 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-08-08 (112th pass)
+> Updated: 2026-08-09 (113th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-08-09 (self-improvement-audit-daily, 03:16 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** cadence guard still reports the historical missed-day gap for 2026-08-07, caused by the Codex subscription quota outage documented in the 2026-08-08 snapshot. No cron model/fallback/delivery config changed here because that remains a Nico-approved config step. Fix applied this cycle: `scripts/notes/run-autonomy-audit-preflight.sh` now passes advisory cadence gaps into `scripts/notes/prepend-autonomy-audit-snapshot.py --audit-workflow-status`, and the prepender can persist an `Audit workflow` section automatically, so future missed-run warnings are not stdout-only.
+- **Proposed follow-up:** keep the existing backlog item open until Nico decides whether to add cross-provider fallbacks to the affected crons and explicit topic #347 delivery instructions to `cron-health-watchdog`.
+
+---
 ## Daily Audit Snapshot — 2026-08-08 (self-improvement-audit-daily, 09:35 UTC)
 
 ### PR review
@@ -2884,6 +2903,10 @@ Updated `scripts/debug/build-incident-bundle.sh` and `skills/local-mainnet-debug
 ## Next Audit Priorities (next daily cycles)
 
 1. **Add `claude-cli/*` fallback to 4 Codex-only crons + fix `cron-health-watchdog` delivery** — `self-improvement-audit-daily`, `cron-health-watchdog`, `nightly-memory-consolidation`, and `check-openclaw-release` all run a Codex-subscription-backed model (`openai/gpt-5.5` or `codex/gpt-5.3-codex-spark`) with no cross-provider fallback, and went silently unhealthy during a shared quota-exhaustion window, 2026-08-06 17:01 UTC → 2026-08-08 ~04:00 UTC (full detail: 2026-08-08 Audit workflow entry above). Awaiting Nico's sign-off on the config change (DMed 2026-08-08 ~09:4x UTC) — this is a cron-config edit, not something to patch unilaterally. Once applied: confirm via `cron.list` that `consecutiveErrors` resets to 0 on each of the four jobs, and re-run `python3 scripts/notes/check-autonomy-audit-cadence.py --require-current --fail-on-gap` on the next daily cycle to confirm the snapshot-cadence gap doesn't recur.
+   - **2026-08-09 03:1x UTC re-check:** live `cron.list` shows 2 of 4 self-healed on their own retry (Codex quota cleared, no config change applied yet): `cron-health-watchdog` (`consecutiveErrors: 0`, ok since 08-08 ~09:45 UTC) and `check-openclaw-release` (`consecutiveErrors: 0`, last 2 runs ok, most recent 08-08 21:58:46 UTC — recovered sometime after the 09:47 UTC check, not yet logged until now). The other two are still sitting at their pre-existing error counts and haven't had a scheduled retry since the 08-08 audit: `self-improvement-audit-daily` (`consecutiveErrors: 5`, next attempt 2026-08-09 03:16:29 UTC) and `nightly-memory-consolidation` (`consecutiveErrors: 7`, next attempt 2026-08-09 03:30:00 UTC) — both due within the next ~20 minutes of this check. This is consistent with the quota-exhaustion theory (self-heals on retry once quota resets) but does **not** address the underlying gap — no fallback config exists yet, so a future quota exhaustion window would silently break these same four crons again. No reply seen yet from Nico in the DM thread (inconclusive check, not re-escalating). Not re-DMing — no new decision-relevant fact, same ask as 08-08.
+   - **2026-08-09 05:3x UTC re-check (second same-cycle nudge), new finding — `nightly-memory-consolidation` failures are NOT all quota-related:** `self-improvement-audit-daily` also self-healed (`consecutiveErrors: 0`, ran ok 03:16:29 UTC — 3 of 4 now recovered). `nightly-memory-consolidation` alone remains at `consecutiveErrors: 8` (up from 7) after its 03:30:00 UTC retry, but the failure signature changed from the prior two nights: `errorReason: timeout` (900857ms, matching this job's `timeoutSeconds: 900`), not `rate_limit`. Read the actual script log (`memory/memory-cycle-2026-08-09.log`) rather than trusting the cron-layer verdict: the underlying `nightly_memory_cycle.sh` run **completed successfully end-to-end at 03:58:57Z** — confirmed independently via fresh output artifacts, not just the log's own claim: `bank/state.json` (3.46MB, mtime 03:30), entity pages under `bank/entities/*/`(mtime 03:30), `.memory/index.sqlite` (mtime 03:30), and the QMD `daily-notes`/`memory-bank` collections (`qmd status` → "Updated: 2h ago", consistent with a run finishing ~03:58 checked at 05:3x). The cron harness's 900s timeout fires and marks the job `error` while the detached script keeps running past that window and finishes anyway.
+     Pulled the last 10 `cron.runs` entries (08-04 through 08-09): only 2 of 10 (08-07, 08-08) were genuine `rate_limit`/quota failures. The other 8 were `timeout` — either ~15min (hitting the 900s ceiling on the primary nightly run) or ~1min (same-day retries failing faster) — and spot-checking the 08-05/08-06 script logs shows those **also** completed successfully ("Nightly memory cycle complete" logged, ~27-29min embedding step each night) despite being marked `error`. Root cause of the timeout class: chronic no-GPU/CUDA on this box (`nvcc` not found — present in every log back to at least 08-03, not a new regression) forces QMD's Step 4 embedding update onto a CPU-only fallback that alone takes 27-29 minutes, pushing total pipeline runtime well past the 900s/15min cron timeout regardless of which model backs Step 1.
+     **Correction to the existing diagnosis:** the "4 crons silently broke from Codex quota exhaustion" framing only fully explains 2 of this cron's ~8 recent failure entries; the rest are a separate, unrelated, chronic timeout misconfiguration that's been mislabeling successful runs as errors for at least a week. A `claude-cli/*` fallback alone would **not** fix the timeout class — `timeoutSeconds` needs raising (e.g. to ~2700s/45min) to match real CPU-bound embedding runtime. Both fixes are cron-config edits needing Nico's sign-off (same precedent as the guard-stripper fix) — not applied unilaterally. Posted findings to topic #347; not re-DMing (refines an already-DMed item, doesn't introduce new urgency beyond what's already pending).
 
 To avoid stale reminder churn on top of the live item above:
 

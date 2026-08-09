@@ -62,7 +62,12 @@ def normalize_time_label(raw_time_label: str) -> str:
     return label.strip()
 
 
-def build_snapshot_block(date_str: str, time_label: str, status_prefill: dict[str, str] | None = None) -> str:
+def build_snapshot_block(
+    date_str: str,
+    time_label: str,
+    status_prefill: dict[str, str] | None = None,
+    audit_workflow_status: str | None = None,
+) -> str:
     status_prefill = status_prefill or {}
 
     lines = [
@@ -76,6 +81,15 @@ def build_snapshot_block(date_str: str, time_label: str, status_prefill: dict[st
             [
                 f"### {section_name}",
                 f"- **Status:** {status_value}",
+                "",
+            ]
+        )
+
+    if audit_workflow_status:
+        lines.extend(
+            [
+                "### Audit workflow",
+                f"- **Status:** {audit_workflow_status.strip()}",
                 "",
             ]
         )
@@ -190,6 +204,10 @@ def main() -> int:
         "--status-prefill-json",
         help="JSON file containing required section status lines; overrides carry-forward prefill",
     )
+    parser.add_argument(
+        "--audit-workflow-status",
+        help="Optional status line for an Audit workflow section in the inserted snapshot",
+    )
     args = parser.parse_args()
 
     now = datetime.now(timezone.utc)
@@ -236,7 +254,12 @@ def main() -> int:
         return 2
 
     insert_at = first_sep_idx + len(separator)
-    snapshot = build_snapshot_block(date_str=date_str, time_label=time_label, status_prefill=status_prefill)
+    snapshot = build_snapshot_block(
+        date_str=date_str,
+        time_label=time_label,
+        status_prefill=status_prefill,
+        audit_workflow_status=args.audit_workflow_status,
+    )
     pass_count = len(list(SNAPSHOT_HEADING.finditer(text))) + 1
     updated = text[:insert_at] + snapshot + text[insert_at:]
     updated = update_header(updated, date_str=date_str, pass_count=pass_count)
