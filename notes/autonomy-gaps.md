@@ -1,10 +1,28 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-08-09 (113th pass)
+> Updated: 2026-08-10 (114th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-08-10 (self-improvement-audit-daily, 03:16 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** cron-watchdog diagnosis gap found and fixed this cycle: the live `nightly-memory-consolidation` item can show as a plain timeout even when the local memory pipeline completed successfully after the cron harness timed out. Fix applied this cycle: `scripts/cron/check_cron_health.py` now annotates failing `nightly-memory-consolidation` timeout alerts with local `memory-cycle-YYYY-MM-DD.log` completion evidence, fresh core artifact mtimes, CPU-fallback detection, observed QMD embedding duration, and the remaining proposed config fix (`timeoutSeconds` around 2700s). Verified with `python3 -m py_compile scripts/cron/check_cron_health.py`, a fake timeout job pointed at the 2026-08-09 log, and the current no-job watchdog path (`NO_REPLY`). No cron config changed.
+
+---
 ## Daily Audit Snapshot — 2026-08-09 (self-improvement-audit-daily, 03:16 UTC)
 
 ### PR review
@@ -2907,6 +2925,7 @@ Updated `scripts/debug/build-incident-bundle.sh` and `skills/local-mainnet-debug
    - **2026-08-09 05:3x UTC re-check (second same-cycle nudge), new finding — `nightly-memory-consolidation` failures are NOT all quota-related:** `self-improvement-audit-daily` also self-healed (`consecutiveErrors: 0`, ran ok 03:16:29 UTC — 3 of 4 now recovered). `nightly-memory-consolidation` alone remains at `consecutiveErrors: 8` (up from 7) after its 03:30:00 UTC retry, but the failure signature changed from the prior two nights: `errorReason: timeout` (900857ms, matching this job's `timeoutSeconds: 900`), not `rate_limit`. Read the actual script log (`memory/memory-cycle-2026-08-09.log`) rather than trusting the cron-layer verdict: the underlying `nightly_memory_cycle.sh` run **completed successfully end-to-end at 03:58:57Z** — confirmed independently via fresh output artifacts, not just the log's own claim: `bank/state.json` (3.46MB, mtime 03:30), entity pages under `bank/entities/*/`(mtime 03:30), `.memory/index.sqlite` (mtime 03:30), and the QMD `daily-notes`/`memory-bank` collections (`qmd status` → "Updated: 2h ago", consistent with a run finishing ~03:58 checked at 05:3x). The cron harness's 900s timeout fires and marks the job `error` while the detached script keeps running past that window and finishes anyway.
      Pulled the last 10 `cron.runs` entries (08-04 through 08-09): only 2 of 10 (08-07, 08-08) were genuine `rate_limit`/quota failures. The other 8 were `timeout` — either ~15min (hitting the 900s ceiling on the primary nightly run) or ~1min (same-day retries failing faster) — and spot-checking the 08-05/08-06 script logs shows those **also** completed successfully ("Nightly memory cycle complete" logged, ~27-29min embedding step each night) despite being marked `error`. Root cause of the timeout class: chronic no-GPU/CUDA on this box (`nvcc` not found — present in every log back to at least 08-03, not a new regression) forces QMD's Step 4 embedding update onto a CPU-only fallback that alone takes 27-29 minutes, pushing total pipeline runtime well past the 900s/15min cron timeout regardless of which model backs Step 1.
      **Correction to the existing diagnosis:** the "4 crons silently broke from Codex quota exhaustion" framing only fully explains 2 of this cron's ~8 recent failure entries; the rest are a separate, unrelated, chronic timeout misconfiguration that's been mislabeling successful runs as errors for at least a week. A `claude-cli/*` fallback alone would **not** fix the timeout class — `timeoutSeconds` needs raising (e.g. to ~2700s/45min) to match real CPU-bound embedding runtime. Both fixes are cron-config edits needing Nico's sign-off (same precedent as the guard-stripper fix) — not applied unilaterally. Posted findings to topic #347; not re-DMing (refines an already-DMed item, doesn't introduce new urgency beyond what's already pending).
+   - **2026-08-10 03:16 UTC daily audit improvement:** implemented a non-config watchdog-side mitigation while waiting for Nico's config sign-off. `scripts/cron/check_cron_health.py` now annotates future failing `nightly-memory-consolidation` timeout alerts with local completion/artifact evidence and the CPU-bound QMD embedding duration, so the watchdog can distinguish "cron harness timed out but pipeline completed" from a real incomplete memory-cycle run. Verified against the real 2026-08-09 log. Remaining config ask is unchanged: add cross-provider fallbacks where appropriate, raise nightly-memory timeout to about 2700s, and give `cron-health-watchdog` explicit topic #347 delivery.
 
 To avoid stale reminder churn on top of the live item above:
 

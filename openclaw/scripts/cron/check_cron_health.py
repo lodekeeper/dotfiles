@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import json
 import os
+import re
 import subprocess
 import time
 from datetime import datetime, timezone
@@ -11,6 +12,9 @@ STATE_PATH = Path(os.environ.get('CRON_HEALTH_STATE_PATH', '/home/openclaw/cron-
 WORKSPACE_PATH = Path(os.environ.get('WORKSPACE_PATH', '/home/openclaw/.openclaw/workspace'))
 AUTONOMY_CADENCE_JOB_ID = 'virtual:autonomy-audit-cadence'
 AUTONOMY_CADENCE_NAME = 'autonomy-audit-cadence'
+NIGHTLY_MEMORY_JOB_NAME = 'nightly-memory-consolidation'
+NIGHTLY_MEMORY_COMPLETE_RE = re.compile(r'^\[(?P<ts>\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})Z\] Nightly memory cycle complete$', re.MULTILINE)
+QMD_EMBED_DURATION_RE = re.compile(r'Done! Embedded .+ in (?P<minutes>\d+)m (?P<seconds>\d+)s')
 
 
 def load_json(path: Path, default):
@@ -72,6 +76,110 @@ def compact_details(output):
         )
     ]
     return ' | '.join(interesting[:6]) or (lines[-1] if lines else 'no output')
+
+
+def ms_to_utc_date(ms):
+    if not ms:
+        return datetime.now(timezone.utc).strftime('%Y-%m-%d')
+    return datetime.fromtimestamp(ms / 1000, tz=timezone.utc).strftime('%Y-%m-%d')
+
+
+def parse_utc_log_timestamp(ts):
+    return int(datetime.strptime(ts, '%Y-%m-%dT%H:%M:%S').replace(tzinfo=timezone.utc).timestamp() * 1000)
+
+
+def newest_mtime_ms(paths):
+    newest = None
+    for path in paths:
+        try:
+            mtime_ms = int(path.stat().st_mtime * 1000)
+        except OSError:
+            continue
+        newest = mtime_ms if newest is None else max(newest, mtime_ms)
+    return newest
+
+
+def describe_nightly_memory_timeout(job):
+    """Annotate chronic nightly-memory timeout failures with local pipeline evidence."""
+    if job.get('name') != NIGHTLY_MEMORY_JOB_NAME:
+        return None
+
+    st = job.get('state', {})
+    last_status = str(st.get('lastStatus') or st.get('lastRunStatus') or '').lower()
+    last_duration_ms = st.get('lastDurationMs')
+    timeout_seconds = (
+        job.get('timeoutSeconds')
+        or job.get('payload', {}).get('timeoutSeconds')
+    )
+    looks_like_timeout = 'timeout' in last_status
+    if not looks_like_timeout and timeout_seconds and last_duration_ms:
+        looks_like_timeout = int(last_duration_ms) >= int(timeout_seconds) * 1000
+    if not looks_like_timeout:
+        return None
+
+    last_run_ms = st.get('lastRunAtMs') or st.get('runningAtMs') or int(time.time() * 1000)
+    run_date = ms_to_utc_date(last_run_ms)
+    log_path = WORKSPACE_PATH / 'memory' / f'memory-cycle-{run_date}.log'
+    if not log_path.exists():
+        return f'nightly memory local check: log missing for {run_date} ({log_path}); timeout root cause still unknown'
+
+    try:
+        log_text = log_path.read_text(encoding='utf-8', errors='replace')
+    except OSError as exc:
+        return f'nightly memory local check: could not read {log_path}: {exc}'
+
+    complete_matches = list(NIGHTLY_MEMORY_COMPLETE_RE.finditer(log_text))
+    completion_ms = None
+    completion_label = None
+    if complete_matches:
+        completion_label = complete_matches[-1].group('ts') + 'Z'
+        completion_ms = parse_utc_log_timestamp(complete_matches[-1].group('ts'))
+
+    artifact_paths = [
+        WORKSPACE_PATH / 'bank' / 'state.json',
+        WORKSPACE_PATH / '.memory' / 'index.sqlite',
+    ]
+    entity_root = WORKSPACE_PATH / 'bank' / 'entities'
+    if entity_root.exists():
+        for child in entity_root.glob('*/*'):
+            artifact_paths.append(child)
+    newest_artifact_ms = newest_mtime_ms(artifact_paths)
+
+    fresh_cutoff_ms = int(last_run_ms) - (5 * 60 * 1000)
+    completed_after_run = completion_ms is not None and completion_ms >= fresh_cutoff_ms
+    artifacts_fresh = newest_artifact_ms is not None and newest_artifact_ms >= fresh_cutoff_ms
+    cpu_fallback = any(
+        marker in log_text
+        for marker in (
+            'no GPU acceleration, running on CPU',
+            'Falling back to CPU',
+            'CUDA Toolkit not found',
+            'Could not find nvcc',
+        )
+    )
+    duration_match = list(QMD_EMBED_DURATION_RE.finditer(log_text))
+    embed_duration = None
+    if duration_match:
+        last_duration = duration_match[-1]
+        embed_duration = f"{last_duration.group('minutes')}m{last_duration.group('seconds')}s"
+
+    if completed_after_run and artifacts_fresh:
+        parts = [f'nightly memory local check: pipeline completed at {completion_label} and core artifacts are fresh']
+        if cpu_fallback:
+            parts.append('QMD used CPU fallback')
+        if embed_duration:
+            parts.append(f'embedding step took {embed_duration}')
+        if timeout_seconds:
+            parts.append(f'cron timeoutSeconds={timeout_seconds} is likely too low; proposed config fix remains raising it to ~2700s')
+        return '; '.join(parts)
+
+    if completion_ms is None:
+        return f'nightly memory local check: no completion marker in {log_path}; timeout may reflect a real incomplete run'
+
+    if not artifacts_fresh:
+        return f'nightly memory local check: completion marker exists at {completion_label}, but core artifacts were not fresh relative to last run'
+
+    return f'nightly memory local check: latest completion at {completion_label} predates the cron timeout window'
 
 
 def check_autonomy_audit_cadence(now):
@@ -190,6 +298,9 @@ def main():
             'lastRunAtMs': job.get('state', {}).get('lastRunAtMs'),
             'nextRunAtMs': job.get('state', {}).get('nextRunAtMs'),
         }
+        details = describe_nightly_memory_timeout(job)
+        if details:
+            info['details'] = details
         current[job_id] = info
 
         prev = active_failures.get(job_id)
