@@ -7,6 +7,7 @@ DATE=""
 TIME_LABEL=""
 STRICT_CADENCE=0
 ALLOW_LIVE_PRIORITIES_NO_REPLY=0
+STRICT_LIVE_PRIORITIES=0
 STRICT_CI_API_KEY=0
 REQUIRE_DEVNET_GRAFANA=0
 SKIP_DOMAIN_PREFLIGHTS=0
@@ -48,6 +49,12 @@ Options:
                         Require Grafana token/tooling in the devnet preflight
   --allow-live-priorities-no-reply
                         Allow NO_REPLY even when "Next Audit Priorities" has live items
+                        (response-only cron runs enable this automatically unless
+                        --strict-live-priorities is set)
+  --strict-live-priorities
+                        In response-only mode, keep failing close-out when live
+                        "Next Audit Priorities" items exist and no snapshot delta
+                        was detected
   --response-only       Print only the final cron response to stdout; route logs to stderr
   -v, --verbose         Print close-out guard logs to stderr
   -h, --help            Show this help
@@ -183,6 +190,10 @@ while [[ $# -gt 0 ]]; do
       ALLOW_LIVE_PRIORITIES_NO_REPLY=1
       shift
       ;;
+    --strict-live-priorities)
+      STRICT_LIVE_PRIORITIES=1
+      shift
+      ;;
     --response-only)
       RESPONSE_ONLY=1
       shift
@@ -248,6 +259,9 @@ if [[ "$STRICT_CADENCE" -eq 1 ]]; then
 fi
 if [[ "$SKIP_CADENCE_CHECK" -eq 1 ]]; then
   CLOSE_CMD+=(--skip-cadence-check)
+fi
+if [[ "$RESPONSE_ONLY" -eq 1 && "$STRICT_LIVE_PRIORITIES" -ne 1 ]]; then
+  ALLOW_LIVE_PRIORITIES_NO_REPLY=1
 fi
 if [[ "$ALLOW_LIVE_PRIORITIES_NO_REPLY" -eq 1 ]]; then
   CLOSE_CMD+=(--allow-live-priorities-no-reply)

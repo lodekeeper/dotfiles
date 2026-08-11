@@ -1,10 +1,28 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-08-10 (114th pass)
+> Updated: 2026-08-11 (115th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-08-11 (self-improvement-audit-daily, 03:16 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** response-only close-out noise gap found and fixed this cycle: the daily wrapper could exit nonzero after a green/no-delta audit solely because `Next Audit Priorities` still contained an unchanged live item that is waiting on Nico's cron-config sign-off. That contradicts this cron's own "no meaningful change => NO_REPLY" rule and risks stale reminder churn. Fix applied this cycle: `scripts/notes/run-daily-autonomy-audit.sh --response-only` now automatically passes the existing `--allow-live-priorities-no-reply` close-out guard override, while non-response-only/manual runs remain strict and a new `--strict-live-priorities` flag preserves the old failure mode for debugging. Verified with `bash -n scripts/notes/run-daily-autonomy-audit.sh` and a duplicate-snapshot response-only rerun that now returns `NO_REPLY` cleanly.
+
+---
 ## Daily Audit Snapshot — 2026-08-10 (self-improvement-audit-daily, 03:16 UTC)
 
 ### PR review
