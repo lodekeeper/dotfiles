@@ -1,10 +1,28 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-08-15 (119th pass)
+> Updated: 2026-08-16 (120th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-08-16 (self-improvement-audit-daily, 03:21 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** live-priority helper noise gap found and fixed this cycle: `scripts/notes/check-next-audit-priorities.py --json` correctly detected the existing live cron-config item, but also reported the static "To avoid stale reminder churn..." preamble as a live item whenever the guidance followed a real item. Fix applied this cycle: the helper now treats that preamble as empty-state guidance, so reminder/guard output stays focused on actionable priority lines while still returning `hasLiveItems: true` for the actual pending config item. Verified with `python3 -m py_compile scripts/notes/check-next-audit-priorities.py` and `python3 scripts/notes/check-next-audit-priorities.py --file notes/autonomy-gaps.md --json`.
+
+---
 ## Daily Audit Snapshot — 2026-08-15 (self-improvement-audit-daily, 03:22 UTC)
 
 ### PR review
@@ -2191,6 +2209,14 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Next-audit priority helper ignores guidance preamble noise (2026-08-16)
+Updated `scripts/notes/check-next-audit-priorities.py`.
+- treats `To avoid stale reminder churn on top of the live item above:` as empty-state guidance,
+- keeps `hasLiveItems: true` when the section contains a real actionable item,
+- prevents reminder/guard JSON from mixing static policy text into the actionable item list.
+
+**Rationale:** live-priority reminders should surface real blockers and follow-ups, not the explanatory guidance that tells future audits how to avoid stale reminder churn.
 
 ### ✅ Placeholder tool-search guard coverage added (2026-08-06)
 Updated `scripts/safety/block-idle-tool-call.py`.

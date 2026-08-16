@@ -30,6 +30,7 @@ EMPTY_STATE_POLICY_ITEMS = {
     "When repopulating the list, prefer one specific automation gap that is **not already marked `✅ done` elsewhere in this file**.",
     "If a reminder fires while this section has no live items, the correct outcome is routine silence / `NO_REPLY`.",
 }
+EMPTY_STATE_PREAMBLE = "To avoid stale reminder churn on top of the live item above:"
 
 
 def extract_section(text: str, title: str) -> str | None:
@@ -52,6 +53,9 @@ def is_empty_state_line(line: str) -> bool:
         return True
 
     if stripped.startswith("Helper:"):
+        return True
+
+    if stripped == EMPTY_STATE_PREAMBLE:
         return True
 
     numbered_match = NUMBERED_ITEM_RE.match(stripped)
