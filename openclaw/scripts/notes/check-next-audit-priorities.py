@@ -67,13 +67,19 @@ def is_empty_state_line(line: str) -> bool:
     return False
 
 
-def find_live_items(section_text: str) -> list[str]:
+def find_live_items(section_text: str) -> tuple[list[str], list[str]]:
     live_items: list[str] = []
+    detail_lines: list[str] = []
     for raw_line in section_text.splitlines():
         if is_empty_state_line(raw_line):
             continue
+
+        if raw_line.startswith((" ", "\t")) and live_items:
+            detail_lines.append(raw_line.rstrip())
+            continue
+
         live_items.append(raw_line.rstrip())
-    return live_items
+    return live_items, detail_lines
 
 
 def main() -> int:
@@ -99,11 +105,12 @@ def main() -> int:
         print(f"❌ Section not found: {SECTION_TITLE}", file=sys.stderr)
         return 2
 
-    live_items = find_live_items(section)
+    live_items, detail_lines = find_live_items(section)
     payload = {
         "sectionTitle": SECTION_TITLE,
         "hasLiveItems": bool(live_items),
         "items": live_items,
+        "detailLines": detail_lines,
         "emptyStateOnly": not bool(live_items),
     }
 

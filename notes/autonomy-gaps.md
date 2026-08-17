@@ -1,10 +1,28 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-08-16 (120th pass)
+> Updated: 2026-08-17 (121st pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-08-17 (self-improvement-audit-daily, 03:21 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** next-priority helper detail-noise gap found and fixed this cycle: `scripts/notes/check-next-audit-priorities.py --json` previously returned every indented historical re-check under the single live cron-config item as a separate actionable `items` entry, making reminder/guard consumers noisy. Fix applied this cycle: the helper now reports only top-level actionable lines in `items` and moves indented continuation text into `detailLines`, preserving `hasLiveItems` while keeping reminder output compact. Verified with `python3 -m py_compile scripts/notes/check-next-audit-priorities.py` and `python3 scripts/notes/check-next-audit-priorities.py --file notes/autonomy-gaps.md --json`.
+
+---
 ## Daily Audit Snapshot — 2026-08-16 (self-improvement-audit-daily, 03:21 UTC)
 
 ### PR review
