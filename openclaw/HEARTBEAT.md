@@ -4,8 +4,8 @@
 Use this routing for **all heartbeat / routine-status flows**.
 
 ### Destinations
-- **Routine updates** (heartbeat/backlog/status, non-urgent) → send to Lodestar WG **topic #347** via `sessions_send`:
-  - `agent:main:telegram:group:-1003764039429:topic:347`
+- **Routine updates** (heartbeat/backlog/status, non-urgent) → send to Lodestar WG **topic #347** via `message`:
+  - `action=send`, `channel=telegram`, `target=-1003764039429`, `threadId=347`
 - **Urgent/blocker/critical deliverable** → send to Nico DM via `sessions_send`:
   - `agent:main:telegram:direct:5774760693`
 
@@ -13,7 +13,7 @@ Use this routing for **all heartbeat / routine-status flows**.
 - Never post routine heartbeat output in Nico DM.
 - Never mirror the same update to both DM and topic #347.
 - In DM heartbeat contexts, final local output must be exactly `NO_REPLY`.
-- Do **not** use `message action=send` from DM heartbeat flows; use `sessions_send` routing only.
+- Do **not** use `sessions_send` for thread-level Telegram topic targets; use `message` for topic #347.
 
 ### DM send gate (mandatory)
 Before sending anything to Nico DM from a heartbeat flow, all of these must be checked:
