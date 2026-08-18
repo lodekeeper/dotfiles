@@ -11,10 +11,7 @@ from typing import Any, Dict, List, Tuple
 
 OWNER_SELF = "lodekeeper"
 GH_ACCESS_GUARD = "/home/openclaw/.openclaw/workspace/scripts/github/check-github-access.sh"
-BACKLOG_CORRUPTION_GUARD_MARKERS = (
-    "DO NOT ACT ON THIS FILE",
-    "DO NOT ACT ON ENTRIES BELOW",
-)
+BACKLOG_EXPECTED_HEADER = "# BACKLOG"
 
 
 def bail_if_github_suspended(silent_signal: str = "HEARTBEAT_OK") -> None:
@@ -177,8 +174,16 @@ def extract_handled_ids_from_backlog(backlog_text: str) -> set[int]:
 
 
 def backlog_has_corruption_guard(backlog_text: str) -> bool:
-    head = "\n".join(backlog_text.splitlines()[:12])
-    return any(marker in head for marker in BACKLOG_CORRUPTION_GUARD_MARKERS)
+    """Detect structurally broken BACKLOG.md (e.g. the 92fa6d55 0-byte truncation).
+
+    Deliberately structural, not a phrase match: a standing cautionary banner
+    ("DO NOT ACT ON ENTRIES BELOW...") is meant to persist in this file
+    permanently after a recovery, and must not itself keep tripping this guard.
+    """
+    stripped = backlog_text.strip()
+    if not stripped:
+        return True
+    return not stripped.startswith(BACKLOG_EXPECTED_HEADER)
 
 
 TOPIC_TAG_RE = re.compile(r"\[topic:(\d+)\]")
