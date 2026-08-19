@@ -10,11 +10,22 @@ from pathlib import Path
 JOBS_PATH = Path(os.environ.get('CRON_JOBS_PATH', '/home/openclaw/.openclaw/cron/jobs.json'))
 STATE_PATH = Path(os.environ.get('CRON_HEALTH_STATE_PATH', '/home/openclaw/cron-health-state.json'))
 WORKSPACE_PATH = Path(os.environ.get('WORKSPACE_PATH', '/home/openclaw/.openclaw/workspace'))
+OPENCLAW_BIN = Path(os.environ.get(
+    'OPENCLAW_BIN',
+    '/home/openclaw/.nvm/versions/node/v22.22.0/bin/openclaw',
+))
 AUTONOMY_CADENCE_JOB_ID = 'virtual:autonomy-audit-cadence'
 AUTONOMY_CADENCE_NAME = 'autonomy-audit-cadence'
 NIGHTLY_MEMORY_JOB_NAME = 'nightly-memory-consolidation'
+NIGHTLY_MEMORY_QMD_JOB_ID = 'virtual:nightly-memory-qmd-index-health'
+NIGHTLY_MEMORY_QMD_NAME = 'nightly-memory-qmd-index-health'
 NIGHTLY_MEMORY_COMPLETE_RE = re.compile(r'^\[(?P<ts>\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})Z\] Nightly memory cycle complete$', re.MULTILINE)
 QMD_EMBED_DURATION_RE = re.compile(r'Done! Embedded .+ in (?P<minutes>\d+)m (?P<seconds>\d+)s')
+QMD_ANOMALY_PATTERNS = (
+    re.compile(r'Error embedding ".+": SqliteError: UNIQUE constraint failed on vectors_vec primary key'),
+    re.compile(r'RangeError: Invalid count value: -?\d+'),
+    re.compile(r'Error: handelize: path ".+" has no valid filename content'),
+)
 
 
 def load_json(path: Path, default):
@@ -29,6 +40,38 @@ def load_json(path: Path, default):
 def save_json(path: Path, obj):
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(obj, indent=2, sort_keys=True) + '\n')
+
+
+def load_cron_jobs():
+    jobs_root = load_json(JOBS_PATH, None)
+    if isinstance(jobs_root, dict) and isinstance(jobs_root.get('jobs'), list):
+        return jobs_root.get('jobs', [])
+
+    if not OPENCLAW_BIN.exists():
+        return []
+
+    try:
+        result = subprocess.run(
+            [str(OPENCLAW_BIN), 'cron', 'list', '--json'],
+            text=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            timeout=30,
+            check=False,
+        )
+    except subprocess.TimeoutExpired:
+        return []
+
+    if result.returncode != 0:
+        return []
+
+    try:
+        live_root = json.loads(result.stdout)
+    except json.JSONDecodeError:
+        return []
+
+    jobs = live_root.get('jobs', [])
+    return jobs if isinstance(jobs, list) else []
 
 
 def fmt_ms(ms):
@@ -182,6 +225,66 @@ def describe_nightly_memory_timeout(job):
     return f'nightly memory local check: latest completion at {completion_label} predates the cron timeout window'
 
 
+def check_nightly_memory_qmd_health(job, now):
+    """Return a virtual failure when the latest memory-cycle log contains QMD index errors."""
+    if job.get('name') != NIGHTLY_MEMORY_JOB_NAME:
+        return None
+
+    st = job.get('state', {})
+    last_run_ms = st.get('lastRunAtMs') or int(time.time() * 1000)
+    run_date = ms_to_utc_date(last_run_ms)
+    log_path = WORKSPACE_PATH / 'memory' / f'memory-cycle-{run_date}.log'
+    if not log_path.exists():
+        return None
+
+    try:
+        log_text = log_path.read_text(encoding='utf-8', errors='replace')
+    except OSError:
+        return None
+
+    complete_matches = list(NIGHTLY_MEMORY_COMPLETE_RE.finditer(log_text))
+    if not complete_matches:
+        return None
+
+    completion_ms = parse_utc_log_timestamp(complete_matches[-1].group('ts'))
+    if completion_ms < int(last_run_ms) - (5 * 60 * 1000):
+        return None
+
+    matches = []
+    for pattern in QMD_ANOMALY_PATTERNS:
+        matches.extend(pattern.findall(log_text))
+    if not matches:
+        return None
+
+    unique_matches = []
+    seen = set()
+    for match in matches:
+        if match in seen:
+            continue
+        seen.add(match)
+        unique_matches.append(match)
+
+    detail = '; '.join(unique_matches[:4])
+    if len(unique_matches) > 4:
+        detail += f'; ... {len(unique_matches) - 4} more'
+
+    return {
+        'name': NIGHTLY_MEMORY_QMD_NAME,
+        'id': NIGHTLY_MEMORY_QMD_JOB_ID,
+        'signature': f'{NIGHTLY_MEMORY_QMD_JOB_ID}:{run_date}:{len(matches)}:{completion_ms}',
+        'lastStatus': 'qmd-index-anomaly',
+        'lastDeliveryStatus': 'n/a',
+        'consecutiveErrors': 1,
+        'lastRunAtMs': last_run_ms,
+        'nextRunAtMs': job.get('state', {}).get('nextRunAtMs'),
+        'details': (
+            f'{log_path} completed but contains {len(matches)} QMD index anomaly marker(s); '
+            f'{detail}. This is likely caused by the 900s timeout allowing an overlapping retry '
+            'while the first memory cycle is still updating QMD.'
+        ),
+    }
+
+
 def check_autonomy_audit_cadence(now):
     """Return a virtual failing-job entry when the daily audit snapshot is stale.
 
@@ -272,8 +375,7 @@ def check_autonomy_audit_cadence(now):
 def main():
     now = int(time.time() * 1000)
 
-    jobs_root = load_json(JOBS_PATH, {})
-    jobs = jobs_root.get('jobs', [])
+    jobs = load_cron_jobs()
 
     state = load_json(STATE_PATH, {'activeFailures': {}, 'updatedAtMs': now})
     active_failures = state.get('activeFailures', {})
@@ -306,6 +408,16 @@ def main():
         prev = active_failures.get(job_id)
         if prev is None or prev.get('signature') != sig:
             new_alerts.append(info)
+
+    for job in jobs:
+        qmd_failure = check_nightly_memory_qmd_health(job, now)
+        if qmd_failure is None:
+            continue
+        current[NIGHTLY_MEMORY_QMD_JOB_ID] = qmd_failure
+        prev = active_failures.get(NIGHTLY_MEMORY_QMD_JOB_ID)
+        if prev is None or prev.get('signature') != qmd_failure.get('signature'):
+            new_alerts.append(qmd_failure)
+        break
 
     cadence_failure = check_autonomy_audit_cadence(now)
     if cadence_failure is not None:

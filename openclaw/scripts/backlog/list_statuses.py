@@ -83,7 +83,10 @@ def is_done(task: TaskBlock) -> bool:
     icon = task.heading.replace("###", "", 1).strip().split(" ", 1)[0]
     if icon.startswith(DONE_PREFIXES):
         return True
-    return task.status is not None and task.status.casefold().startswith("done")
+    if task.status is None:
+        return False
+    status = task.status.strip()
+    return status.startswith(DONE_PREFIXES) or status.casefold().startswith("done")
 
 
 def is_actionable(task: TaskBlock) -> bool:
