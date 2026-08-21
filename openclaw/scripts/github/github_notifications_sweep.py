@@ -142,6 +142,11 @@ def extract_handled_ids_from_text(text: str) -> set[int]:
         handled.add(int(m))
     for m in re.findall(r"\b(?:checklist item|comment(?: id)?|review(?: body)? id)\s*`?(\d{6,})`?", text, re.IGNORECASE):
         handled.add(int(m))
+    # Own shorthand for a review-comment id in backlog prose, e.g. "nflaig `r3823704385`"
+    # or "Replied in-thread: `r3824124538`" — backtick-wrapped to avoid matching stray
+    # prose like "in r2 of the loop".
+    for m in re.findall(r"`r(\d{6,})`", text):
+        handled.add(int(m))
     return handled
 
 
