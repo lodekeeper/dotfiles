@@ -20,7 +20,7 @@ ENT_DIR = WORKSPACE / "bank" / "entities"
 
 PR_SUBJECT_RE = re.compile(r"^pr:(\d+)$")
 EIP_SUBJECT_RE = re.compile(r"^eip:(\d+)$")
-MENTION_RE = re.compile(r"@([A-Za-z0-9_-]+)")
+MENTION_RE = re.compile(r"@([A-Za-z0-9][A-Za-z0-9_-]*)")
 
 
 def load_entries() -> list[dict[str, Any]]:
