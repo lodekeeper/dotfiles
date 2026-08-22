@@ -20,7 +20,21 @@ ENT_DIR = WORKSPACE / "bank" / "entities"
 
 PR_SUBJECT_RE = re.compile(r"^pr:(\d+)$")
 EIP_SUBJECT_RE = re.compile(r"^eip:(\d+)$")
-MENTION_RE = re.compile(r"@([A-Za-z0-9][A-Za-z0-9_-]*)")
+PERSON_MENTION_RE = re.compile(r"(?<![A-Za-z0-9._-])@([A-Za-z][A-Za-z0-9_-]*)")
+PERSON_MENTION_DENYLIST = {
+    "chainsafe",
+    "fastmail",
+    "libp2p",
+    "mention",
+    "mentions",
+    "protonmail",
+    "sigstore",
+    "typescript",
+    "typescript-eslint",
+    "users",
+}
+VERSION_MENTION_RE = re.compile(r"v\d+$")
+DURATION_MENTION_RE = re.compile(r"\d+s$")
 
 
 def load_entries() -> list[dict[str, Any]]:
@@ -162,12 +176,54 @@ def render_pr_page(pr_num: str, entries: list[dict[str, Any]]) -> str:
     return "\n".join(lines) + "\n"
 
 
+def is_noise_person_mention(name: str) -> bool:
+    """Return true for machine/prose tokens that are not person mentions."""
+    if name in PERSON_MENTION_DENYLIST:
+        return True
+    if name.isdigit():
+        return True
+    if VERSION_MENTION_RE.fullmatch(name):
+        return True
+    if DURATION_MENTION_RE.fullmatch(name):
+        return True
+    return False
+
+
+def person_mentions(text: str) -> list[str]:
+    names: list[str] = []
+    for match in PERSON_MENTION_RE.finditer(text):
+        name = match.group(1).lower()
+        next_char = text[match.end() : match.end() + 1]
+        if next_char in {"/", "."}:
+            continue
+        if is_noise_person_mention(name):
+            continue
+        names.append(name)
+    return names
+
+
 def write(path: Path, content: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(content, encoding="utf-8")
 
 
-def generate(entries: list[dict[str, Any]]) -> None:
+def prune_stale_person_noise(active_people: set[str]) -> list[Path]:
+    people_dir = ENT_DIR / "people"
+    if not people_dir.exists():
+        return []
+
+    removed: list[Path] = []
+    for path in people_dir.glob("*.md"):
+        name = path.stem.lower()
+        if name in active_people or not is_noise_person_mention(name):
+            continue
+        path.unlink()
+        removed.append(path)
+
+    return removed
+
+
+def generate(entries: list[dict[str, Any]], *, prune_stale_person_noise_flag: bool = False) -> None:
     people: dict[str, list[dict[str, Any]]] = defaultdict(list)
     projects: dict[str, list[dict[str, Any]]] = defaultdict(list)
     prs: dict[str, list[dict[str, Any]]] = defaultdict(list)
@@ -180,8 +236,7 @@ def generate(entries: list[dict[str, Any]]) -> None:
         if "nico" in text.lower() or subject.startswith("person:nico"):
             people["nico"].append(e)
 
-        for m in MENTION_RE.finditer(text):
-            name = m.group(1).lower()
+        for name in person_mentions(text):
             if name != "nico":  # avoid double-counting
                 people[name].append(e)
 
@@ -206,10 +261,26 @@ def generate(entries: list[dict[str, Any]]) -> None:
     for pr, group in prs.items():
         write(ENT_DIR / "prs" / f"pr-{pr}.md", render_pr_page(pr, group))
 
+    removed = []
+    if prune_stale_person_noise_flag:
+        removed = prune_stale_person_noise(set(people))
+
     print(
-        f"Generated entity pages: people={len(people)}, projects={len(projects)}, prs={len(prs)}"
+        "Generated entity pages: "
+        f"people={len(people)}, projects={len(projects)}, prs={len(prs)}, "
+        f"pruned_stale_person_noise={len(removed)}"
     )
 
 
 if __name__ == "__main__":
-    generate(load_entries())
+    import argparse
+
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--prune-stale-person-noise",
+        action="store_true",
+        help="Remove stale generated people pages for known machine/prose mention noise",
+    )
+    args = parser.parse_args()
+
+    generate(load_entries(), prune_stale_person_noise_flag=args.prune_stale_person_noise)

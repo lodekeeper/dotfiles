@@ -19,7 +19,7 @@ LOG_FILE="$LOG_DIR/memory-cycle-$(date -u +%F).log"
   python3 scripts/memory/consolidate_from_daily.py --limit 7 --mode auto --apply
 
   echo "Step 2: regenerate entity pages from state"
-  python3 scripts/memory/generate_entity_pages.py
+  python3 scripts/memory/generate_entity_pages.py --prune-stale-person-noise
 
   echo "Step 3: rebuild local SQLite FTS index"
   python3 scripts/memory/rebuild_index.py

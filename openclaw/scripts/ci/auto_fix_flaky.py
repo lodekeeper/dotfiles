@@ -250,11 +250,51 @@ def extract_test_file(logs: str) -> str | None:
     return None
 
 
+def get_open_fix_prs() -> list[dict[str, Any]]:
+    """Open lodekeeper PRs with their changed files.
+
+    Used as a dedupe guard: the same underlying failure can surface under multiple CI run IDs
+    (retries, nightly vs PR runs), so run-ID dedup alone can spawn duplicate fix PRs. Checking for
+    an already-open fix PR touching the same test file catches that regardless of tracker timing.
+    """
+    try:
+        return (
+            gh_json(
+                [
+                    "pr", "list", "--repo", REPO, "--author", "lodekeeper",
+                    "--state", "open", "--json", "number,files", "--limit", "100",
+                ]
+            )
+            or []
+        )
+    except Exception:
+        return []
+
+
+def open_fix_pr_for(test_file: str | None, open_prs: list[dict[str, Any]]) -> int | None:
+    """Number of an open lodekeeper PR already touching this failing test file, if any (else None).
+
+    Matched by basename so different run IDs for the same failure resolve to the same open PR.
+    """
+    if not test_file:
+        return None
+    key = os.path.basename(test_file.split(":")[0].strip())
+    if not key:
+        return None
+    for pr in open_prs:
+        for f in pr.get("files", []) or []:
+            if os.path.basename(f.get("path") or "") == key:
+                num = pr.get("number")
+                return int(num) if num is not None else None
+    return None
+
+
 def scan(apply: bool = False) -> list[dict[str, Any]]:
     """Scan for new failures and classify them."""
     tracker = load_tracker()
     investigated = get_investigated_ids(tracker)
     failed_runs = get_failed_runs()
+    open_fix_prs = get_open_fix_prs()
 
     new_failures: list[dict[str, Any]] = []
 
@@ -276,6 +316,15 @@ def scan(apply: bool = False) -> list[dict[str, Any]]:
             classification, description = classify_failure(job_name, logs)
             test_file = extract_test_file(logs) if logs else None
 
+            fixable = is_fixable(classification)
+            # Dedupe guard: if an open lodekeeper PR already fixes this test file, don't flag it as
+            # actionable again (avoids spawning a duplicate fix PR when the same failure recurs under
+            # a new run ID before the first fix has merged).
+            already_fixing_pr = open_fix_pr_for(test_file, open_fix_prs) if fixable else None
+            if already_fixing_pr is not None:
+                fixable = False
+                description = f"[already being fixed in #{already_fixing_pr}] {description}"
+
             finding = {
                 "runId": run_id,
                 "workflow": run.get("name", ""),
@@ -283,8 +332,9 @@ def scan(apply: bool = False) -> list[dict[str, Any]]:
                 "created": run.get("createdAt", ""),
                 "classification": classification,
                 "description": description,
-                "fixable": is_fixable(classification),
+                "fixable": fixable,
                 "test_file": test_file,
+                "already_fixing_pr": already_fixing_pr,
                 "log_snippet": logs[-500:] if logs else None,
             }
             new_failures.append(finding)
@@ -298,8 +348,9 @@ def scan(apply: bool = False) -> list[dict[str, Any]]:
                     "cause": description,
                     "status": "auto-detected",
                     "classification": classification,
-                    "fixable": is_fixable(classification),
+                    "fixable": fixable,
                     "test_file": test_file,
+                    "already_fixing_pr": already_fixing_pr,
                     "detected_at": datetime.now(timezone.utc).isoformat(),
                 }
                 tracker["investigated"].append(tracker_entry)

@@ -1,10 +1,28 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-08-21 (125th pass)
+> Updated: 2026-08-22 (126th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-08-22 (self-improvement-audit-daily, 03:21 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** memory entity mention-noise gap found and fixed this cycle: yesterday's QMD crash fix left a broader generated-entity noise class (`@protonmail`, npm scopes, version tags, numeric ids, and prose `@mention` examples) that would keep polluting `bank/entities/people/` and QMD memory-bank indexing even though it no longer crashed. Fix applied: `scripts/memory/generate_entity_pages.py` now extracts person mentions with email/package/version/prose noise filters and supports `--prune-stale-person-noise`; `scripts/memory/nightly_memory_cycle.sh` now runs that targeted prune during normal entity regeneration. Verified with `python3 -m py_compile`, `bash -n`, and an isolated mention-filter self-check. Original cron-config ask remains unchanged and still gated on Nico sign-off.
+
+---
 ## Daily Audit Snapshot — 2026-08-21 (self-improvement-audit-daily, 03:22 UTC)
 
 ### PR review
@@ -2287,6 +2305,14 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Memory entity mention-noise filter + nightly prune added (2026-08-22)
+Updated `scripts/memory/generate_entity_pages.py` and `scripts/memory/nightly_memory_cycle.sh`.
+- avoids person pages from email domains, npm/package scopes, version tags, numeric/duration ids, and prose placeholders like `@mention`,
+- adds a targeted `--prune-stale-person-noise` mode for stale generated people pages matching the same noise rules,
+- wires the nightly memory cycle to run that prune during entity regeneration.
+
+**Rationale:** the 2026-08-21 QMD crash fix stopped bare-hyphen entity filenames from breaking memory-bank indexing, but left a broader generated-entity noise class that polluted person pages and QMD results. This keeps future generated memory context focused on real people without changing cron config.
 
 ### ✅ Next-audit priority helper ignores guidance preamble noise (2026-08-16)
 Updated `scripts/notes/check-next-audit-priorities.py`.
