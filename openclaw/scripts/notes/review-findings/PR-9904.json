@@ -1,0 +1,141 @@
+{
+  "pr": 9904,
+  "created": "2026-08-24T10:35:29Z",
+  "updated": "2026-08-24T10:35:29Z",
+  "findings": [
+    {
+      "id": "f201e8",
+      "file": "packages/beacon-node/src/chain/seenCache/seenPayloadEnvelopeInput.ts",
+      "line": 296,
+      "severity": "nit",
+      "reviewer": "chatgpt-codex-connector[bot]",
+      "body": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Preserve active payload inputs when enforcing the cap**\n\nWhen range sync fills the 96-entry cap and another block is inserted, insertion-order eviction can remove an older-inserted canonical input even if it is recent and still awaiting its envelope or columns. The gossip envelope and payload-column handlers only call `seenPayloadEnvelopeInputCache.get()`, so after this eviction they ignore valid data with `P",
+      "status": "open",
+      "addressed_commit": null,
+      "note": null,
+      "source": {
+        "kind": "github-review-comment",
+        "id": "3841895710",
+        "repo": "ChainSafe/lodestar",
+        "pr": 9904,
+        "url": "https://github.com/ChainSafe/lodestar/pull/9904#discussion_r3841895710"
+      },
+      "created": "2026-08-24T10:35:29Z",
+      "updated": "2026-08-24T10:35:29Z",
+      "needs_reverify": true,
+      "reverify": {
+        "events": [
+          {
+            "at": "2026-08-24T10:35:29Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 9904,
+              "id": "3841958634",
+              "url": "https://github.com/ChainSafe/lodestar/pull/9904#discussion_r3841958634",
+              "author": "twoeths",
+              "in_reply_to_id": 3841895710
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          }
+        ],
+        "last_event_at": "2026-08-24T10:35:29Z"
+      }
+    },
+    {
+      "id": "248fd1",
+      "file": "packages/beacon-node/src/chain/seenCache/seenPayloadEnvelopeInput.ts",
+      "line": 240,
+      "severity": "nit",
+      "reviewer": "chatgpt-codex-connector[bot]",
+      "body": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Recheck the cache after the asynchronous DB read**\n\nOn the DB path, `reloadFromDb()` yields while awaiting `db.block.get()`. A concurrent gossip, API, by-root, or range call can then add the same root and attach an envelope or columns, but this unconditional `set()` overwrites that live object with an empty reconstructed shell. Callers retaining the first object and callers reading the cache then operate on d",
+      "status": "open",
+      "addressed_commit": null,
+      "note": null,
+      "source": {
+        "kind": "github-review-comment",
+        "id": "3841895722",
+        "repo": "ChainSafe/lodestar",
+        "pr": 9904,
+        "url": "https://github.com/ChainSafe/lodestar/pull/9904#discussion_r3841895722"
+      },
+      "created": "2026-08-24T10:35:29Z",
+      "updated": "2026-08-24T10:35:29Z",
+      "needs_reverify": true,
+      "reverify": {
+        "events": [
+          {
+            "at": "2026-08-24T10:35:29Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 9904,
+              "id": "3842487344",
+              "url": "https://github.com/ChainSafe/lodestar/pull/9904#discussion_r3842487344",
+              "author": "twoeths",
+              "in_reply_to_id": 3841895722
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          }
+        ],
+        "last_event_at": "2026-08-24T10:35:29Z"
+      }
+    },
+    {
+      "id": "43b5ce",
+      "file": "packages/beacon-node/src/chain/seenCache/seenPayloadEnvelopeInput.ts",
+      "line": 296,
+      "severity": "minor",
+      "reviewer": "twoeths",
+      "body": "this should not happen, the seen cache contains 96 items while gossip only accept messages in the last recent 32 slots, given `DEFAULT_EARLIEST_PERMISSIBLE_SLOT_DISTANCE = 32`\r\n\r\neven if gossip fails due to this, this is by design, because it will fallback to UnknownBlockInput` which calls `getOrReload()`",
+      "status": "open",
+      "addressed_commit": null,
+      "note": null,
+      "source": {
+        "kind": "github-review-comment",
+        "id": "3841958634",
+        "repo": "ChainSafe/lodestar",
+        "pr": 9904,
+        "url": "https://github.com/ChainSafe/lodestar/pull/9904#discussion_r3841958634"
+      },
+      "created": "2026-08-24T10:35:29Z",
+      "updated": "2026-08-24T10:35:29Z",
+      "matched_findings": [
+        "f201e8"
+      ]
+    },
+    {
+      "id": "0de326",
+      "file": "packages/beacon-node/src/chain/seenCache/seenPayloadEnvelopeInput.ts",
+      "line": 240,
+      "severity": "minor",
+      "reviewer": "twoeths",
+      "body": "should not happen too, when the block comes again at either source it will be ignored due to forkchoice check",
+      "status": "open",
+      "addressed_commit": null,
+      "note": null,
+      "source": {
+        "kind": "github-review-comment",
+        "id": "3842487344",
+        "repo": "ChainSafe/lodestar",
+        "pr": 9904,
+        "url": "https://github.com/ChainSafe/lodestar/pull/9904#discussion_r3842487344"
+      },
+      "created": "2026-08-24T10:35:29Z",
+      "updated": "2026-08-24T10:35:29Z",
+      "matched_findings": [
+        "248fd1"
+      ]
+    }
+  ],
+  "sync": {
+    "github": {
+      "ChainSafe/lodestar": {
+        "last_comment_id": "3842487344",
+        "last_synced": "2026-08-24T10:35:29Z",
+        "last_imported": 4,
+        "last_reverify_updates": 2
+      }
+    }
+  }
+}
