@@ -1,10 +1,28 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-08-23 (127th pass)
+> Updated: 2026-08-25 (128th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-08-25 (self-improvement-audit-daily, 03:16 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** cadence gap root cause found and watchdog instrumentation improved this cycle: `self-improvement-audit-daily` missed the 2026-08-24 snapshot because four consecutive run attempts from 03:21:23 to 03:38:45 UTC failed before the agent runner started (`cron: isolated agent setup timed out before runner start`), so this was cron setup failure rather than audit/preflight logic. Fix applied: `scripts/cron/check_cron_health.py` now augments the virtual `autonomy-audit-cadence` alert with recent self-improvement run-history evidence, so future stale-snapshot alerts name the failed run window and setup-timeout reason instead of only reporting a missing date. Verified with `python3 -m py_compile`, a pure run-history formatter self-check, and `CRON_HEALTH_STATE_PATH=/dev/null python3 scripts/cron/check_cron_health.py` showing the augmented cadence alert. Config-side fallback/delivery changes remain gated on Nico sign-off.
+
+---
 ## Daily Audit Snapshot — 2026-08-23 (self-improvement-audit-daily, 03:21 UTC)
 
 ### PR review

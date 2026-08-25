@@ -16,6 +16,8 @@ OPENCLAW_BIN = Path(os.environ.get(
 ))
 AUTONOMY_CADENCE_JOB_ID = 'virtual:autonomy-audit-cadence'
 AUTONOMY_CADENCE_NAME = 'autonomy-audit-cadence'
+SELF_IMPROVEMENT_AUDIT_JOB_ID = 'd7f95873-f30c-4f41-b944-3345542c5261'
+SELF_IMPROVEMENT_AUDIT_NAME = 'self-improvement-audit-daily'
 NIGHTLY_MEMORY_JOB_NAME = 'nightly-memory-consolidation'
 NIGHTLY_MEMORY_QMD_JOB_ID = 'virtual:nightly-memory-qmd-index-health'
 NIGHTLY_MEMORY_QMD_NAME = 'nightly-memory-qmd-index-health'
@@ -119,6 +121,94 @@ def compact_details(output):
         )
     ]
     return ' | '.join(interesting[:6]) or (lines[-1] if lines else 'no output')
+
+
+def load_cron_run_history(job_id, limit=8):
+    if not OPENCLAW_BIN.exists():
+        return []
+
+    try:
+        result = subprocess.run(
+            [
+                str(OPENCLAW_BIN),
+                'cron',
+                'runs',
+                '--id',
+                job_id,
+                '--limit',
+                str(limit),
+                '--timeout',
+                '10000',
+            ],
+            text=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            timeout=15,
+            check=False,
+        )
+    except subprocess.TimeoutExpired:
+        return []
+
+    if result.returncode != 0:
+        return []
+
+    try:
+        payload = json.loads(result.stdout)
+    except json.JSONDecodeError:
+        return []
+
+    entries = payload.get('entries', [])
+    return entries if isinstance(entries, list) else []
+
+
+def run_history_reason(entry):
+    error = entry.get('error')
+    if isinstance(error, str) and error:
+        return error
+
+    diagnostics = entry.get('diagnostics')
+    if isinstance(diagnostics, dict):
+        summary = diagnostics.get('summary')
+        if isinstance(summary, str) and summary:
+            return summary
+
+    reason = entry.get('errorReason') or entry.get('cause') or entry.get('status')
+    return str(reason) if reason else 'unknown failure'
+
+
+def summarize_recent_run_failures(entries):
+    index = 0
+    while index < len(entries):
+        status = str(entries[index].get('status') or '').lower()
+        if status not in {'ok', 'success'}:
+            break
+        index += 1
+
+    failures = []
+    for entry in entries[index:]:
+        status = str(entry.get('status') or '').lower()
+        if status in {'ok', 'success'}:
+            break
+        failures.append(entry)
+
+    if not failures:
+        return None
+
+    oldest = failures[-1]
+    newest = failures[0]
+    reason = run_history_reason(newest)
+    first_run = fmt_ms(oldest.get('runAtMs') or oldest.get('ts'))
+    latest_run = fmt_ms(newest.get('runAtMs') or newest.get('ts'))
+    label = 'consecutive failure(s)' if index == 0 else 'consecutive prior failure(s)'
+    return (
+        f'{SELF_IMPROVEMENT_AUDIT_NAME} recent run history: '
+        f'{len(failures)} {label} from {first_run} to {latest_run} '
+        f'({reason})'
+    )
+
+
+def describe_recent_self_improvement_failures():
+    return summarize_recent_run_failures(load_cron_run_history(SELF_IMPROVEMENT_AUDIT_JOB_ID))
 
 
 def ms_to_utc_date(ms):
@@ -359,6 +449,10 @@ def check_autonomy_audit_cadence(now):
         return None
 
     output = result.stdout or ''
+    details = compact_details(output)
+    run_history = describe_recent_self_improvement_failures()
+    if run_history:
+        details = f'{details}; {run_history}'
     return {
         'name': AUTONOMY_CADENCE_NAME,
         'id': AUTONOMY_CADENCE_JOB_ID,
@@ -368,7 +462,7 @@ def check_autonomy_audit_cadence(now):
         'consecutiveErrors': 1,
         'lastRunAtMs': now,
         'nextRunAtMs': None,
-        'details': compact_details(output),
+        'details': details,
     }
 
 
