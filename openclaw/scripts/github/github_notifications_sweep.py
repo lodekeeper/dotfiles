@@ -13,6 +13,17 @@ OWNER_SELF = "lodekeeper"
 GH_ACCESS_GUARD = "/home/openclaw/.openclaw/workspace/scripts/github/check-github-access.sh"
 BACKLOG_EXPECTED_HEADER = "# BACKLOG"
 
+# GitHub reactions API path fragment per checklist item kind. A ":eyes: ack"
+# (requested by Marko L, 2026-08-25) is posted the moment the sweep first
+# surfaces a comment, mirroring the Discord "picked it up" reaction so humans
+# can see it was received. PR review *bodies* (kind "review_body") are pull
+# request reviews, which have NO reactions endpoint in the GitHub API, so they
+# are intentionally absent here and silently skipped.
+REACTABLE_KIND_PATHS = {
+    "review": "pulls/comments",  # inline PR review comment
+    "issue": "issues/comments",  # issue / PR conversation comment
+}
+
 
 def bail_if_github_suspended(silent_signal: str = "HEARTBEAT_OK") -> None:
     """Pre-flight guard: short-circuit cleanly when GitHub access is gone.
@@ -104,6 +115,40 @@ def run_gh_paginated_items(endpoint: str, retries: int = 4) -> List[Dict[str, An
                 continue
             raise
     raise last_err
+
+
+def react_ack_eyes(repo: str, kind: str, comment_id: int, retries: int = 3) -> bool:
+    """Best-effort :eyes: reaction on a freshly picked-up GitHub comment.
+
+    Mirrors the Discord "picked it up" ack (requested by Marko L, 2026-08-25):
+    react with :eyes: the first time the sweep surfaces a new actionable comment
+    so humans can tell the keeper received it. Idempotent on GitHub's side — a
+    repeat POST returns the existing reaction (200) rather than duplicating.
+    Returns True when the reaction was created/confirmed, False otherwise
+    (unreactable kind, or the call failed after retries). Never raises: an ack
+    failure must not abort the sweep.
+    """
+    import time
+
+    path = REACTABLE_KIND_PATHS.get(kind)
+    if not path:
+        return False
+    endpoint = f"repos/{repo}/{path}/{comment_id}/reactions"
+    cmd = ["gh", "api", "-X", "POST", endpoint, "-f", "content=eyes"]
+    for attempt in range(retries):
+        try:
+            subprocess.check_output(cmd, text=True, stderr=subprocess.PIPE)
+            return True
+        except subprocess.CalledProcessError as e:
+            stderr = (e.stderr or "").lower()
+            is_transient = any(s in stderr for s in ("502", "503", "504", "timeout", "bad credentials", "401"))
+            if is_transient and attempt < retries - 1:
+                time.sleep(2 ** attempt)
+                continue
+            return False
+        except Exception:
+            return False
+    return False
 
 
 def load_json(path: Path, default: Any) -> Any:
@@ -403,7 +448,13 @@ def main() -> int:
         help="Allow using handled IDs from a backlog file marked corrupted/under recovery",
     )
     ap.add_argument("--remind-hours", type=float, default=12.0)
+    ap.add_argument(
+        "--no-ack-reaction",
+        action="store_true",
+        help="Disable the :eyes: ack reaction on newly picked-up GitHub comments",
+    )
     args = ap.parse_args()
+    ack_enabled = not args.no_ack_reaction
 
     bail_if_github_suspended("HEARTBEAT_OK")
 
@@ -439,6 +490,7 @@ def main() -> int:
 
     actionable_new = []
     actionable_reminders = []
+    ack_count = 0
 
     for n in notifications:
         try:
@@ -499,6 +551,9 @@ def main() -> int:
                 }
                 checklist["items"][str(cid)] = item
                 actionable_new.append(item)
+                if ack_enabled and react_ack_eyes(repo, "review", cid):
+                    item["ackedAt"] = now
+                    ack_count += 1
             elif item is not None:
                 item["lastSeenAt"] = now
 
@@ -527,6 +582,9 @@ def main() -> int:
                 }
                 checklist["items"][str(cid)] = item
                 actionable_new.append(item)
+                if ack_enabled and react_ack_eyes(repo, "issue", cid):
+                    item["ackedAt"] = now
+                    ack_count += 1
             elif item is not None:
                 item["lastSeenAt"] = now
 
@@ -612,7 +670,8 @@ def main() -> int:
     # glance instead of re-derived.
     open_count = len(open_items_snapshot)
     unchanged_note = " (unchanged since last run)" if open_items_unchanged and open_count > 0 else ""
-    print(f"[diag] checklist open items: {open_count}{unchanged_note}", file=sys.stderr)
+    ack_note = f"; :eyes: acked {ack_count} new" if ack_count else ""
+    print(f"[diag] checklist open items: {open_count}{unchanged_note}{ack_note}", file=sys.stderr)
 
     if not actionable_new and not actionable_reminders:
         print("HEARTBEAT_OK")
