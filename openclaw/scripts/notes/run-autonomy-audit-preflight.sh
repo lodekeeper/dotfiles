@@ -30,7 +30,7 @@ Usage: run-autonomy-audit-preflight.sh [options]
 
 Runs daily autonomy-audit preflight checks:
 1) Consistency guard on notes/autonomy-gaps.md
-2) Cadence guard (advisory, latest-pair) to surface fresh missing-day snapshot gaps
+2) Cadence guard (advisory, freshness-only) to surface current missing-day snapshot gaps
 3) Snapshot scaffold insertion for today's audit
 
 Options:
@@ -158,7 +158,7 @@ TARGET_TIME_LABEL="${TIME_LABEL:-$(date -u '+%H:%M UTC')}"
 
 DEDUPE_CMD=(python3 "$WORKSPACE/scripts/notes/dedupe-autonomy-audit-snapshots.py" --file "$TARGET_FILE")
 CHECK_CMD=(python3 "$WORKSPACE/scripts/notes/check-autonomy-gaps-consistency.py" --file "$TARGET_FILE")
-CADENCE_CMD=(python3 "$WORKSPACE/scripts/notes/check-autonomy-audit-cadence.py" --file "$TARGET_FILE" --latest-only --require-current --fail-on-gap)
+CADENCE_CMD=(python3 "$WORKSPACE/scripts/notes/check-autonomy-audit-cadence.py" --file "$TARGET_FILE" --freshness-only --require-current --fail-on-gap)
 DOMAIN_PREFLIGHT_CMD=(python3 "$WORKSPACE/scripts/notes/check-autonomy-domain-preflights.py")
 DOMAIN_SUMMARY_RENDER_CMD=(python3 "$WORKSPACE/scripts/notes/summarize-autonomy-domain-preflights.py")
 DOMAIN_STATUS_RENDER_CMD=(python3 "$WORKSPACE/scripts/notes/render-autonomy-domain-statuses.py")
@@ -209,7 +209,7 @@ fi
 echo "[1/6] Running consistency guard on $TARGET_FILE"
 "${CHECK_CMD[@]}"
 
-echo "[2/6] Running cadence guard (advisory, latest-pair + current-date freshness)"
+echo "[2/6] Running cadence guard (advisory, current-date freshness)"
 CADENCE_LOG="$(mktemp)"
 TEMP_FILES+=("$CADENCE_LOG")
 set +e

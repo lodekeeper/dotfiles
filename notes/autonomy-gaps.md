@@ -1,10 +1,28 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-08-25 (128th pass)
+> Updated: 2026-08-26 (129th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-08-26 (self-improvement-audit-daily, 03:16 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** preflight cadence carryover gap found and fixed this cycle: the pre-insertion cadence guard was checking the latest existing snapshot pair, so after the already-documented 2026-08-24 miss it re-reported `2026-08-23 → 2026-08-25` on 2026-08-26 even though current freshness was healthy. Proposed fix was to separate pre-insertion freshness checks from post-insertion latest-pair cadence checks. Fix applied: added `--freshness-only` to `scripts/notes/check-autonomy-audit-cadence.py` and wired `scripts/notes/run-autonomy-audit-preflight.sh` to use it before inserting a new snapshot; close-out still keeps the post-insertion latest-pair/current freshness guard. Verified with syntax/compile checks and a temp-file simulation of the pre-2026-08-26 snapshot state.
+
+---
 ## Daily Audit Snapshot — 2026-08-25 (self-improvement-audit-daily, 03:16 UTC)
 
 ### PR review

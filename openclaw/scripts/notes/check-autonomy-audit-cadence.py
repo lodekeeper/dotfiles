@@ -85,6 +85,15 @@ def main() -> int:
         help="Only check the latest snapshot pair (ignore historical gaps)",
     )
     parser.add_argument(
+        "--freshness-only",
+        action="store_true",
+        help=(
+            "Only check freshness from the latest snapshot date to the reference date. "
+            "This is useful before inserting a new snapshot, where already-documented "
+            "latest-pair gaps should not be re-reported."
+        ),
+    )
+    parser.add_argument(
         "--require-current",
         action="store_true",
         help=(
@@ -108,6 +117,10 @@ def main() -> int:
         print("❌ --expected-every-days must be >= 1", file=sys.stderr)
         return 1
 
+    if args.freshness_only and not args.require_current:
+        print("❌ --freshness-only requires --require-current", file=sys.stderr)
+        return 1
+
     path = Path(args.file)
     if not path.exists():
         print(f"❌ File not found: {path}", file=sys.stderr)
@@ -120,8 +133,8 @@ def main() -> int:
         print(f"❌ No snapshot headings found in {path}", file=sys.stderr)
         return 1
 
-    check_dates = dates
-    if args.latest_only and len(dates) >= 2:
+    check_dates = [] if args.freshness_only else dates
+    if not args.freshness_only and args.latest_only and len(dates) >= 2:
         check_dates = dates[-2:]
 
     gaps = find_gaps(check_dates, expected_every_days=args.expected_every_days)
@@ -142,7 +155,9 @@ def main() -> int:
     print(f"Cadence check: {path}")
     print(f"- Snapshots parsed: {len(dates)}")
     print(f"- Range (all): {dates[0].isoformat()} → {dates[-1].isoformat()}")
-    if args.latest_only and len(dates) >= 2:
+    if args.freshness_only:
+        print(f"- Scope: latest snapshot freshness only ({dates[-1].isoformat()} → reference date)")
+    elif args.latest_only and len(dates) >= 2:
         print(f"- Scope: latest pair only ({check_dates[0].isoformat()} → {check_dates[-1].isoformat()})")
     if args.require_current:
         ref_display = args.reference_date or datetime.now(timezone.utc).date().isoformat()
