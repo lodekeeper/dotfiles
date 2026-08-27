@@ -1,10 +1,28 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-08-26 (129th pass)
+> Updated: 2026-08-27 (130th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-08-27 (self-improvement-audit-daily, 03:17 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** duplicate preflight work gap found and fixed this cycle: the daily domain preflight runner executed identical side-effect-free guard commands separately for PR review, CI fix, spec implementation, and devnet debugging, increasing latency and transient-failure surface without adding coverage. Fix applied: `scripts/notes/check-autonomy-domain-preflights.py` now caches repeated command results within a run while preserving per-domain logical check records, and `scripts/notes/summarize-autonomy-domain-preflights.py` reports cache reuse in the compact summary. Verified with `python3 -m py_compile` and a live domain preflight showing 21 logical checks, 12 unique commands, and 9 reused results.
+
+---
 ## Daily Audit Snapshot — 2026-08-26 (self-improvement-audit-daily, 03:16 UTC)
 
 ### PR review

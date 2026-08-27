@@ -39,8 +39,20 @@ def main() -> int:
         if raw_check.get("ok") is not True and isinstance(stderr, str) and stderr:
             print(f"  stderr: {stderr}")
 
+    stats = payload.get("cacheStats")
+    stats_suffix = ""
+    if isinstance(stats, dict):
+        total = stats.get("totalChecks")
+        reused = stats.get("cacheHits")
+        if isinstance(total, int) and isinstance(reused, int):
+            stats_suffix = f" ({total} checks, {reused} reused)"
+
     ok = payload.get("ok") is True
-    print("Autonomy domain preflights OK" if ok else "Autonomy domain preflights failed")
+    print(
+        f"Autonomy domain preflights OK{stats_suffix}"
+        if ok
+        else f"Autonomy domain preflights failed{stats_suffix}"
+    )
     return 0 if ok else 2
 
 

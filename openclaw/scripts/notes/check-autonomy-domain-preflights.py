@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import copy
 import json
 import os
 import subprocess
@@ -80,6 +81,48 @@ def run_check(
             "stderr": f"timed out after {timeout_s}s",
             "warnings": warnings or [],
         }
+
+
+def command_cache_key(command: list[str], env: dict[str, str], timeout_s: int) -> tuple[Any, ...]:
+    return (
+        tuple(command),
+        tuple(sorted(env.items())),
+        timeout_s,
+    )
+
+
+def cached_check_result(
+    *,
+    cache: dict[tuple[Any, ...], dict[str, Any]],
+    workspace: Path,
+    domain: str,
+    name: str,
+    command: list[str],
+    env: dict[str, str],
+    timeout_s: int,
+    warnings: list[str] | None = None,
+) -> dict[str, Any]:
+    key = command_cache_key(command, env, timeout_s)
+    if key in cache:
+        result = copy.deepcopy(cache[key])
+        result["domain"] = domain
+        result["name"] = name
+        result["warnings"] = warnings or []
+        result["cacheHit"] = True
+        return result
+
+    result = run_check(
+        workspace=workspace,
+        domain=domain,
+        name=name,
+        command=command,
+        env=env,
+        timeout_s=timeout_s,
+        warnings=warnings,
+    )
+    result["cacheHit"] = False
+    cache[key] = copy.deepcopy(result)
+    return result
 
 
 def build_checks(args: argparse.Namespace, workspace: Path) -> list[tuple[str, str, list[str], dict[str, str], list[str]]]:
@@ -352,8 +395,10 @@ def main() -> int:
             if check_def[0] in selected_domains
         ]
 
+    cache: dict[tuple[Any, ...], dict[str, Any]] = {}
     checks = [
-        run_check(
+        cached_check_result(
+            cache=cache,
             workspace=workspace,
             domain=domain,
             name=name,
@@ -371,6 +416,11 @@ def main() -> int:
         "requireDevnetGrafana": args.require_devnet_grafana,
         "expectedGitHubActor": args.expected_github_actor,
         "selectedDomains": args.domain or VALID_DOMAINS,
+        "cacheStats": {
+            "totalChecks": len(checks),
+            "uniqueCommands": len(cache),
+            "cacheHits": sum(1 for check in checks if check.get("cacheHit") is True),
+        },
         "checks": checks,
     }
 
