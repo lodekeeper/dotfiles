@@ -11,6 +11,19 @@ LOG_DIR="memory"
 mkdir -p "$LOG_DIR"
 LOG_FILE="$LOG_DIR/memory-cycle-$(date -u +%F).log"
 
+# Serialize overlapping invocations: a cron-harness-timeout retry can otherwise
+# start while a still-running prior run is mid-QMD-embed, and both race for the
+# same embedding session (confirmed data loss 2026-08-22 + 2026-08-30, see
+# notes/autonomy-gaps.md). Block until any in-progress cycle finishes instead
+# of racing it; lock auto-releases when this script's fd 200 closes on exit.
+LOCK_FILE="/tmp/lodekeeper-nightly-memory-cycle.lock"
+exec 200>"$LOCK_FILE"
+if ! flock -n 200; then
+  echo "[$(date -u +%FT%TZ)] Another nightly memory cycle is already running — waiting for it to finish" >> "$LOG_FILE"
+  flock 200
+  echo "[$(date -u +%FT%TZ)] Lock acquired after wait — prior cycle finished, proceeding" >> "$LOG_FILE"
+fi
+
 {
   echo "[$(date -u +%FT%TZ)] Starting nightly memory cycle"
 
