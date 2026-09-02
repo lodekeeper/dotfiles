@@ -39,7 +39,21 @@ def bail_if_github_suspended(silent_signal: str = "HEARTBEAT_OK") -> None:
         print(silent_signal)
         sys.exit(0)
 CHECKLIST_RESERVED_KEYS = {"version", "items", "updatedAt"}
-HANDLED_STATUS_RE = re.compile(r"^\s*-\s+\*\*Status:\*\*\s*(?:Addressed|Done|Closed|Handled)\b", re.IGNORECASE)
+HANDLED_STATUS_RE = re.compile(r"^\s*-\s+\*\*Status:\*\*\s*(?:✅\s*)?(?:Addressed|Done|Closed|Handled)\b", re.IGNORECASE)
+HANDLED_HEADING_RE = re.compile(
+    r"^###\s+(?:✅\b|.*(?:\s+—\s+|\s+-\s+)(?:DONE|REPLIED|ANSWERED|CLOSED|HANDLED)\b)",
+    re.IGNORECASE,
+)
+LINE_HANDLED_MARKER_RE = re.compile(
+    r"^\s*-\s+\*\*(?:"
+    r"DONE\b.*|"
+    r"Update\b.*(?:REPLIED|ANSWERED|DONE)|"
+    r"Decision\b.*(?:NO reply|nothing to reply)|"
+    r"Immediate fix applied\b.*|"
+    r"Fix applied\b.*"
+    r")",
+    re.IGNORECASE,
+)
 EXPLICIT_HANDLED_TEXT_RE = re.compile(
     r"\b(?:already handled|already answered|nothing new to answer|nothing new to answer or clear|marked checklist item|no remaining .* notification threads|thread is already fully handled|currently clean)\b",
     re.IGNORECASE,
@@ -175,7 +189,7 @@ def parse_thread_key_from_subject_url(subject_url: str) -> Tuple[str, int, str]:
     return m.group(1), int(m.group(3)), kind
 
 
-def extract_handled_ids_from_text(text: str) -> set[int]:
+def extract_handled_ids_from_text(text: str, *, include_review_shorthand: bool = True) -> set[int]:
     handled = set()
     for m in re.findall(r"issuecomment-(\d+)", text):
         handled.add(int(m))
@@ -190,8 +204,29 @@ def extract_handled_ids_from_text(text: str) -> set[int]:
     # Own shorthand for a review-comment id in backlog prose, e.g. "nflaig `r3823704385`"
     # or "Replied in-thread: `r3824124538`" — backtick-wrapped to avoid matching stray
     # prose like "in r2 of the loop".
-    for m in re.findall(r"`r(\d{6,})`", text):
-        handled.add(int(m))
+    if include_review_shorthand:
+        for m in re.findall(r"`r(\d{6,})`", text):
+            handled.add(int(m))
+    return handled
+
+
+def extract_line_handled_ids(line: str) -> set[int]:
+    """Extract only IDs explicitly resolved by a single handled-marker line.
+
+    A whole backlog section can mention both incoming review IDs and later reply
+    IDs. For line-level DONE/fix markers, avoid the loose `` `r123...` ``
+    shorthand because it is often the ID of our reply, not the original checklist
+    item. Bare numeric IDs are accepted only when the line clearly talks about
+    marking checklist status.
+    """
+    handled = extract_handled_ids_from_text(line, include_review_shorthand=False)
+    if re.search(r"\b(?:checklist|status)\b", line, re.IGNORECASE) and re.search(
+        r"\b(?:done|handled|closed|hand-set|marked|set)\b",
+        line,
+        re.IGNORECASE,
+    ):
+        for m in re.findall(r"`(\d{6,})`", line):
+            handled.add(int(m))
     return handled
 
 
@@ -206,13 +241,13 @@ def extract_handled_ids_from_backlog(backlog_text: str) -> set[int]:
             handled.update(extract_handled_ids_from_text("\n".join(section_lines)))
 
     for line in backlog_text.splitlines():
-        if EXPLICIT_HANDLED_TEXT_RE.search(line):
-            handled.update(extract_handled_ids_from_text(line))
+        if EXPLICIT_HANDLED_TEXT_RE.search(line) or LINE_HANDLED_MARKER_RE.match(line):
+            handled.update(extract_line_handled_ids(line))
 
         if line.startswith("### "):
             flush_section()
             section_lines = [line]
-            section_handled = line.startswith("### ✅")
+            section_handled = bool(HANDLED_HEADING_RE.match(line))
             continue
 
         section_lines.append(line)

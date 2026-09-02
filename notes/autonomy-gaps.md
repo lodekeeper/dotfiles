@@ -1,10 +1,28 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-09-01 (135th pass)
+> Updated: 2026-09-02 (136th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-09-02 (self-improvement-audit-daily, 03:18 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** PR-review notification follow-up gap fixed this cycle: `github_notifications_sweep.py` can now extract handled checklist IDs from current BACKLOG conventions without treating mixed still-open sections as fully handled. Fix applied: added terminal-section vs line-level handled-marker parsing, tightened terminal heading detection to real spaced dash markers, avoided loose reply shorthand for single-line handled markers, and added `scripts/github/test_github_notifications_sweep.py`. Verified the new extractor returns the four previously stuck checklist IDs while excluding the still-open #9835 reply shorthand IDs.
+
+---
 ## Daily Audit Snapshot — 2026-09-01 (self-improvement-audit-daily, 03:18 UTC)
 
 ### PR review
