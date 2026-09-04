@@ -144,7 +144,11 @@ def _failure_summary(domain_checks: dict[str, dict[str, Any]], failed_names: lis
     return f"Details: {'; '.join(details)}."
 
 
-def _proposed_fix(domain: str, failed_names: list[str]) -> str:
+def _proposed_fix(
+    domain: str,
+    failed_names: list[str],
+    domain_checks: dict[str, dict[str, Any]],
+) -> str:
     if "destructiveCommandGuard" in failed_names:
         return "fix `scripts/safety/block-risky-command.py --self-test --json` before continuing autonomous shell-driven work."
 
@@ -153,6 +157,19 @@ def _proposed_fix(domain: str, failed_names: list[str]) -> str:
 
     if domain == "specImplementation" and "testVectorReadiness" in failed_names:
         return "run `scripts/spec/ensure-fresh-test-vectors.sh` to refresh the dedicated consensus-specs cache, or point `SPEC_REPO` at a current checkout before starting autonomous spec implementation."
+
+    if domain == "devnetDebugging" and "devnetRoutingReadiness" in failed_names:
+        details = " ".join(
+            detail
+            for name in failed_names
+            if (detail := _failure_detail(domain_checks.get(name)))
+        ).lower()
+        if "oidc discovery" in details or "auth metadata endpoint" in details or "503" in details:
+            return "wait for the panda/authentik proxy discovery endpoint to recover, then rerun `panda datasources --json`; avoid reauth churn while the refresh token is present and credential permissions are healthy."
+        if "invalid_grant" in details:
+            return "run `panda auth login` to refresh the rejected server proxy credentials, then rerun the devnet-routing preflight."
+        if "credential file permissions" in details:
+            return "repair the panda credential file group-read permissions for the `panda-server` container, then rerun the devnet-routing preflight."
 
     return "inspect the failing preflight JSON/stderr before continuing autonomous work in this domain."
 
@@ -233,7 +250,7 @@ def render_statuses(payload: dict[str, Any]) -> dict[str, str]:
                 for part in [
                     f"BLOCKER: domain preflight check(s) failed or were missing: {', '.join(failed)}.",
                     failure_summary,
-                    f"Proposed fix: {_proposed_fix(domain, failed)}",
+                    f"Proposed fix: {_proposed_fix(domain, failed, domain_checks)}",
                 ]
                 if part
             )

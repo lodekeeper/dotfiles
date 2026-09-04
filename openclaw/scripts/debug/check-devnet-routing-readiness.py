@@ -161,6 +161,8 @@ def collect_recent_panda_server_auth_errors(timeout: int) -> dict[str, Any]:
     markers = [
         "invalid_grant",
         "Background datasource refresh failed",
+        "Failed to refresh access token",
+        "discovery endpoint returned status 503",
         "permission denied",
         "proxy authentication required",
     ]
@@ -169,6 +171,7 @@ def collect_recent_panda_server_auth_errors(timeout: int) -> dict[str, Any]:
         "state": "ready",
         "markers": matched,
         "invalidGrant": "invalid_grant" in matched,
+        "oidcDiscoveryUnavailable": "discovery endpoint returned status 503" in matched,
         "permissionDenied": "permission denied" in matched,
     }
 
@@ -185,6 +188,13 @@ def datasource_null_error(
         return (
             "panda returned datasources=null; server proxy token is expired and refresh is rejected "
             "(invalid_grant) - fresh `panda auth login` is required"
+        )
+
+    if recent_auth_errors.get("oidcDiscoveryUnavailable"):
+        return (
+            "panda returned datasources=null; server token refresh cannot reach OIDC discovery "
+            "(503 from auth metadata endpoint) - wait for the auth proxy to recover, then retry "
+            "datasource discovery; credential file permissions are not the blocker"
         )
 
     if credential_permissions.get("state") == "problem":

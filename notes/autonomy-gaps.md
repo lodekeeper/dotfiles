@@ -1,10 +1,28 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-09-02 (136th pass)
+> Updated: 2026-09-04 (137th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-09-04 (self-improvement-audit-daily, 03:19 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** BLOCKER: domain preflight check(s) failed or were missing: devnetRoutingReadiness. Details: devnetRoutingReadiness: panda returned datasources=null; server token refresh cannot reach OIDC discovery (503 from auth metadata endpoint) - wait for the auth proxy to recover, then retry datasource discovery; credential file permissions are not the blocker. Proposed fix: wait for the panda/authentik proxy discovery endpoint to recover, then rerun `panda datasources --json`; avoid reauth churn while the refresh token is present and credential permissions are healthy.
+
+### Audit workflow
+- **Status:** cadence miss and devnet-auth diagnostics gap found this cycle. `self-improvement-audit-daily` missed the 2026-09-03 snapshot because its 2026-09-03T03:18:03Z run was interrupted by a gateway restart after 14s, before the snapshot was inserted; the next scheduled run recovered and inserted today's snapshot. Separately, the devnet routing preflight detected panda `datasources=null` but still rendered the current OIDC discovery outage as a generic auth/server-access blocker. Fix applied this cycle: `scripts/debug/check-devnet-routing-readiness.py` now detects 503s from the auth metadata discovery endpoint in panda-server logs, and `scripts/notes/render-autonomy-domain-statuses.py` turns that into a concrete wait/retry proposed fix instead of reauth churn. Verified with `python3 -m py_compile`, a live devnet routing preflight showing `oidcDiscoveryUnavailable: true`, and a targeted renderer run showing the specific proposed fix.
+
+---
 ## Daily Audit Snapshot — 2026-09-02 (self-improvement-audit-daily, 03:18 UTC)
 
 ### PR review
