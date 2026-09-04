@@ -21,6 +21,7 @@ SELF_IMPROVEMENT_AUDIT_NAME = 'self-improvement-audit-daily'
 NIGHTLY_MEMORY_JOB_NAME = 'nightly-memory-consolidation'
 NIGHTLY_MEMORY_QMD_JOB_ID = 'virtual:nightly-memory-qmd-index-health'
 NIGHTLY_MEMORY_QMD_NAME = 'nightly-memory-qmd-index-health'
+NEXT_AUDIT_PRIORITIES_JOB_NAME = 'next-audit-priorities-reminder'
 NIGHTLY_MEMORY_COMPLETE_RE = re.compile(r'^\[(?P<ts>\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})Z\] Nightly memory cycle complete$', re.MULTILINE)
 QMD_EMBED_DURATION_RE = re.compile(r'Done! Embedded .+ in (?P<minutes>\d+)m (?P<seconds>\d+)s')
 QMD_ANOMALY_PATTERNS = (
@@ -315,6 +316,42 @@ def describe_nightly_memory_timeout(job):
     return f'nightly memory local check: latest completion at {completion_label} predates the cron timeout window'
 
 
+def describe_mtime_evidence_timeout(job, target_paths, label):
+    """Generalized version of describe_nightly_memory_timeout for jobs with no dedicated
+    per-run log: treats a target artifact's mtime landing inside the run window as evidence
+    the harness-reported timeout masked a run that actually finished (same harness behavior
+    documented for nightly-memory-consolidation: the detached process outlives the harness's
+    own timeoutSeconds and keeps running to real completion)."""
+    st = job.get('state', {})
+    last_status = str(st.get('lastStatus') or st.get('lastRunStatus') or '').lower()
+    last_duration_ms = st.get('lastDurationMs')
+    timeout_seconds = (
+        job.get('timeoutSeconds')
+        or job.get('payload', {}).get('timeoutSeconds')
+    )
+    looks_like_timeout = 'timeout' in last_status
+    if not looks_like_timeout and timeout_seconds and last_duration_ms:
+        looks_like_timeout = int(last_duration_ms) >= int(timeout_seconds) * 1000
+    if not looks_like_timeout:
+        return None
+
+    last_run_ms = st.get('lastRunAtMs') or st.get('runningAtMs') or int(time.time() * 1000)
+    newest_ms = newest_mtime_ms(target_paths)
+    if newest_ms is None:
+        return f'{label} local check: no target artifact found; timeout root cause still unknown'
+
+    # Grace window past timeoutSeconds accounts for the detached process finishing after the
+    # harness gives up but before a human or the next scheduled run notices.
+    window_end_ms = last_run_ms + ((int(timeout_seconds) if timeout_seconds else 900) * 1000) + (30 * 60 * 1000)
+    newest_label = datetime.fromtimestamp(newest_ms / 1000, tz=timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
+    if last_run_ms <= newest_ms <= window_end_ms:
+        return (
+            f'{label} local check: target artifact modified at {newest_label}, inside the run window; '
+            'harness timeout likely masked a completed run'
+        )
+    return f'{label} local check: target artifact mtime ({newest_label}) falls outside the run window; timeout may reflect a real incomplete run'
+
+
 def check_nightly_memory_qmd_health(job, now):
     """Return a virtual failure when the latest memory-cycle log contains QMD index errors."""
     if job.get('name') != NIGHTLY_MEMORY_JOB_NAME:
@@ -495,6 +532,12 @@ def main():
             'nextRunAtMs': job.get('state', {}).get('nextRunAtMs'),
         }
         details = describe_nightly_memory_timeout(job)
+        if details is None and job.get('name') == NEXT_AUDIT_PRIORITIES_JOB_NAME:
+            details = describe_mtime_evidence_timeout(
+                job,
+                [WORKSPACE_PATH / 'notes' / 'autonomy-gaps.md'],
+                NEXT_AUDIT_PRIORITIES_JOB_NAME,
+            )
         if details:
             info['details'] = details
         current[job_id] = info
