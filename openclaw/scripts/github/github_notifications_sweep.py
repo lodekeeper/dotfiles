@@ -45,7 +45,7 @@ HANDLED_HEADING_RE = re.compile(
     re.IGNORECASE,
 )
 LINE_HANDLED_MARKER_RE = re.compile(
-    r"^\s*-\s+\*\*(?:"
+    r"^\s*-\s+\*\*\s*(?:✅\s*)?(?:"
     r"DONE\b.*|"
     r"Update\b.*(?:REPLIED|ANSWERED|DONE)|"
     r"Decision\b.*(?:NO reply|nothing to reply)|"
