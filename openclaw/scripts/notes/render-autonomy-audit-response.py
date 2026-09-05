@@ -68,6 +68,7 @@ def _render_summary(payload: dict) -> str:
     changed_non_required = payload.get("changedNonRequiredSections") or []
     added = payload.get("addedSectionHeadings") or []
     removed = payload.get("removedSectionHeadings") or []
+    removed_non_required = set(payload.get("removedNonRequiredSectionHeadings") or [])
 
     parts: list[str] = []
 
@@ -88,8 +89,9 @@ def _render_summary(payload: dict) -> str:
     heading_changes: list[str] = []
     if added:
         heading_changes.append(f"+{_format_list(added)}")
-    if removed:
-        heading_changes.append(f"-{_format_list(removed)}")
+    removed_required_or_unknown = [heading for heading in removed if heading not in removed_non_required]
+    if removed_required_or_unknown:
+        heading_changes.append(f"-{_format_list(removed_required_or_unknown)}")
 
     if heading_changes:
         parts.append(f"section heading changes: {'; '.join(heading_changes)}")
