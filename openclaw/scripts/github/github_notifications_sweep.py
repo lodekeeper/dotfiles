@@ -41,7 +41,7 @@ def bail_if_github_suspended(silent_signal: str = "HEARTBEAT_OK") -> None:
 CHECKLIST_RESERVED_KEYS = {"version", "items", "updatedAt"}
 HANDLED_STATUS_RE = re.compile(r"^\s*-\s+\*\*Status:\*\*\s*(?:✅\s*)?(?:Addressed|Done|Closed|Handled)\b", re.IGNORECASE)
 HANDLED_HEADING_RE = re.compile(
-    r"^###\s+(?:✅\b|.*(?:\s+—\s+|\s+-\s+)(?:DONE|REPLIED|ANSWERED|CLOSED|HANDLED)\b)",
+    r"^###\s+(?:✅|.*(?:\s+—\s+|\s+-\s+)(?:DONE|REPLIED|ANSWERED|CLOSED|HANDLED)\b)",
     re.IGNORECASE,
 )
 LINE_HANDLED_MARKER_RE = re.compile(

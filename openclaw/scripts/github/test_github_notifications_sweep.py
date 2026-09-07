@@ -38,3 +38,24 @@ assert 3791641676 not in handled
 assert 3791641702 not in handled
 
 print("OK: github notification backlog handled-id extraction is precise")
+
+# Regression: HANDLED_HEADING_RE's `✅\b` alternative never matched, because ✅ is
+# non-word and always followed by whitespace in practice (no \w/\W transition for
+# \b to fire there) — so the "### ✅ ..." convention used throughout BACKLOG.md
+# (the majority convention, distinct from the 🟡/🟢 + inline "DONE" style above)
+# silently never closed its checklist items. Caught 2026-09-06 when PR #10019's
+# fully-resolved section left 5 checklist items stuck open.
+checkmark_sample = """# BACKLOG
+
+### ✅ Dockerfile.dev missing `packages/builder` COPY line — PR opened (#10019) [topic:50]
+- **Source:** direct-mentioned lodekeeper (https://github.com/ChainSafe/lodestar/pull/10017#discussion_r3943785954).
+- **✅ DONE 2026-09-06 — opened PR #10019.** Replied in-thread on r3943785954 -> `r3943809232` linking the PR.
+
+### 🟡 Unrelated still-open item
+- **Source:** discussion_r1111111111, not resolved yet.
+"""
+checkmark_handled = module.extract_handled_ids_from_backlog(checkmark_sample)
+assert 3943785954 in checkmark_handled
+assert 1111111111 not in checkmark_handled
+
+print("OK: '### ✅ ...' heading convention correctly closes its section's ids")
