@@ -22,12 +22,15 @@ NIGHTLY_MEMORY_JOB_NAME = 'nightly-memory-consolidation'
 NIGHTLY_MEMORY_QMD_JOB_ID = 'virtual:nightly-memory-qmd-index-health'
 NIGHTLY_MEMORY_QMD_NAME = 'nightly-memory-qmd-index-health'
 NEXT_AUDIT_PRIORITIES_JOB_NAME = 'next-audit-priorities-reminder'
+QMD_COMPLETENESS_SCRIPT = WORKSPACE_PATH / 'scripts' / 'memory' / 'check_qmd_embedding_completeness.py'
 NIGHTLY_MEMORY_COMPLETE_RE = re.compile(r'^\[(?P<ts>\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})Z\] Nightly memory cycle complete$', re.MULTILINE)
 QMD_EMBED_DURATION_RE = re.compile(r'Done! Embedded .+ in (?P<minutes>\d+)m (?P<seconds>\d+)s')
 QMD_ANOMALY_PATTERNS = (
     re.compile(r'Error embedding ".+": SqliteError: UNIQUE constraint failed on vectors_vec primary key'),
     re.compile(r'RangeError: Invalid count value: -?\d+'),
     re.compile(r'Error: handelize: path ".+" has no valid filename content'),
+    re.compile(r'SessionReleasedError'),
+    re.compile(r'QMD_EMBEDDING_INCOMPLETE:.*'),
 )
 
 
@@ -352,6 +355,76 @@ def describe_mtime_evidence_timeout(job, target_paths, label):
     return f'{label} local check: target artifact mtime ({newest_label}) falls outside the run window; timeout may reflect a real incomplete run'
 
 
+def check_qmd_embedding_completeness():
+    if not QMD_COMPLETENESS_SCRIPT.exists():
+        return None
+
+    try:
+        result = subprocess.run(
+            ['python3', str(QMD_COMPLETENESS_SCRIPT), '--json', '--limit', '5'],
+            text=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            timeout=30,
+            check=False,
+        )
+    except subprocess.TimeoutExpired as exc:
+        output = (exc.stdout or '') if isinstance(exc.stdout, str) else ''
+        return (
+            f'timeout:{compact_details(output)}',
+            'QMD embedding completeness check timed out; inspect the local QMD index before trusting semantic memory search',
+        )
+
+    output = result.stdout or ''
+    if result.returncode == 0:
+        return None
+
+    if result.returncode != 3:
+        return (
+            f'error-{result.returncode}:{compact_details(output)}',
+            f'QMD embedding completeness check failed (exit {result.returncode}): {compact_details(output)}',
+        )
+
+    try:
+        payload = json.loads(output)
+    except json.JSONDecodeError:
+        return (
+            f'incomplete-unparsed:{compact_details(output)}',
+            f'QMD embedding completeness check reported incomplete coverage: {compact_details(output)}',
+        )
+
+    issues = payload.get('issues') if isinstance(payload, dict) else []
+    if not isinstance(issues, list):
+        issues = []
+    incomplete_count = int(payload.get('incompleteHashes') or len(issues)) if isinstance(payload, dict) else len(issues)
+
+    issue_parts = []
+    sig_parts = []
+    for issue in issues[:3]:
+        if not isinstance(issue, dict):
+            continue
+        path = issue.get('samplePath') or issue.get('hash') or 'unknown'
+        hash_prefix = str(issue.get('hash') or '')[:8]
+        tail = issue.get('tailChars')
+        chunks = issue.get('embeddedChunks')
+        reasons = ','.join(issue.get('reasonCodes') or [])
+        issue_parts.append(f'{path} [{hash_prefix}] chunks={chunks} tail_chars={tail} reasons={reasons}')
+        sig_parts.append(f'{hash_prefix}:{chunks}:{tail}:{reasons}')
+
+    detail = '; '.join(issue_parts) if issue_parts else compact_details(output)
+    if isinstance(payload, dict) and payload.get('truncatedIssues'):
+        detail += f"; ... {payload.get('truncatedIssues')} more"
+
+    return (
+        f'incomplete:{incomplete_count}:{"|".join(sig_parts)}',
+        (
+            f'QMD embedding completeness check found {incomplete_count} active content hash(es) with partial coverage; '
+            f'{detail}. Incremental `qmd embed` may not repair these because it only checks for seq=0; '
+            'use a verified qmd repair path or forced rebuild before relying on vector/semantic memory search for the affected tails.'
+        ),
+    )
+
+
 def check_nightly_memory_qmd_health(job, now):
     """Return a virtual failure when the latest memory-cycle log contains QMD index errors."""
     if job.get('name') != NIGHTLY_MEMORY_JOB_NAME:
@@ -376,6 +449,21 @@ def check_nightly_memory_qmd_health(job, now):
     completion_ms = parse_utc_log_timestamp(complete_matches[-1].group('ts'))
     if completion_ms < int(last_run_ms) - (5 * 60 * 1000):
         return None
+
+    completeness_failure = check_qmd_embedding_completeness()
+    if completeness_failure is not None:
+        signature_detail, details = completeness_failure
+        return {
+            'name': NIGHTLY_MEMORY_QMD_NAME,
+            'id': NIGHTLY_MEMORY_QMD_JOB_ID,
+            'signature': f'{NIGHTLY_MEMORY_QMD_JOB_ID}:{run_date}:completeness:{completion_ms}:{signature_detail}',
+            'lastStatus': 'qmd-index-incomplete',
+            'lastDeliveryStatus': 'n/a',
+            'consecutiveErrors': 1,
+            'lastRunAtMs': last_run_ms,
+            'nextRunAtMs': job.get('state', {}).get('nextRunAtMs'),
+            'details': f'{log_path} completed, but {details}',
+        }
 
     matches = []
     for pattern in QMD_ANOMALY_PATTERNS:

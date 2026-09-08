@@ -41,6 +41,9 @@ fi
   qmd update 2>&1 || true
   qmd embed 2>&1 || true
 
+  echo "Step 4b: verify QMD embedding completeness"
+  python3 scripts/memory/check_qmd_embedding_completeness.py 2>&1 || true
+
   echo "Step 5: prune old cycle logs (keep last 14 days)"
   find "$LOG_DIR" -name "memory-cycle-*.log" -mtime +14 -delete 2>/dev/null || true
 
