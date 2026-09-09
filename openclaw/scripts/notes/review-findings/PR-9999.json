@@ -1,0 +1,97 @@
+{
+  "pr": 9999,
+  "created": "2026-09-09T10:23:04Z",
+  "updated": "2026-09-09T10:23:04Z",
+  "findings": [
+    {
+      "id": "be9602",
+      "file": "packages/validator/src/slashingProtection/attestation/index.ts",
+      "line": 169,
+      "severity": "nit",
+      "reviewer": "chatgpt-codex-connector[bot]",
+      "body": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Keep failed imports from leaving span records**\n\nWhen an earlier attestation in this loop succeeds but a later one is rejected, `insertAttestation` has already persisted the earlier min/max spans even though none of the corresponding attestation rows are stored. Those orphaned spans can then reject valid duties. For example, after a failed import of `(12,13)` followed by conflicting `(9,14)`, the leftover min",
+      "status": "open",
+      "addressed_commit": null,
+      "note": null,
+      "source": {
+        "kind": "github-review-comment",
+        "id": "3928644396",
+        "repo": "ChainSafe/lodestar",
+        "pr": 9999,
+        "url": "https://github.com/ChainSafe/lodestar/pull/9999#discussion_r3928644396"
+      },
+      "created": "2026-09-09T10:23:04Z",
+      "updated": "2026-09-09T10:23:04Z"
+    },
+    {
+      "id": "8c8291",
+      "file": "packages/validator/src/slashingProtection/attestation/index.ts",
+      "line": 85,
+      "severity": "nit",
+      "reviewer": "chatgpt-codex-connector[bot]",
+      "body": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Base the cutoff on the maximum recorded source epoch**\n\nThe highest-target attestation is not guaranteed to have the highest source epoch because interchange imports can contain slashable pairs that min-max checking itself misses outside the lookback window. For example, importing `(10000,10001)` then `(0,20000)` succeeds, after which this uses source 0 and allows `(5000,20001)` even though it surrounds the f",
+      "status": "open",
+      "addressed_commit": null,
+      "note": null,
+      "source": {
+        "kind": "github-review-comment",
+        "id": "3928644411",
+        "repo": "ChainSafe/lodestar",
+        "pr": 9999,
+        "url": "https://github.com/ChainSafe/lodestar/pull/9999#discussion_r3928644411"
+      },
+      "created": "2026-09-09T10:23:04Z",
+      "updated": "2026-09-09T10:23:04Z"
+    },
+    {
+      "id": "92014d",
+      "file": "packages/validator/test/unit/slashingProtection/attestation.test.ts",
+      "line": 21,
+      "severity": "minor",
+      "reviewer": "nflaig",
+      "body": "@lodekeeper can you run these tests against latest unstable branch and tell me which ones are failing",
+      "status": "open",
+      "addressed_commit": null,
+      "note": null,
+      "source": {
+        "kind": "github-review-comment",
+        "id": "3967018651",
+        "repo": "ChainSafe/lodestar",
+        "pr": 9999,
+        "url": "https://github.com/ChainSafe/lodestar/pull/9999#discussion_r3967018651"
+      },
+      "created": "2026-09-09T10:23:04Z",
+      "updated": "2026-09-09T10:23:04Z"
+    },
+    {
+      "id": "cb2f22",
+      "file": "packages/validator/src/slashingProtection/attestation/attestationByTargetRepository.ts",
+      "line": 48,
+      "severity": "minor",
+      "reviewer": "nflaig",
+      "body": "this covers the whole db range? I don't think this is a perf issue but slashing db can be quite large for really old validators\n\nah but it also should return on first fin, and does reverse search, so I think this is fine, @lodekeeper double check please",
+      "status": "open",
+      "addressed_commit": null,
+      "note": null,
+      "source": {
+        "kind": "github-review-comment",
+        "id": "3967045303",
+        "repo": "ChainSafe/lodestar",
+        "pr": 9999,
+        "url": "https://github.com/ChainSafe/lodestar/pull/9999#discussion_r3967045303"
+      },
+      "created": "2026-09-09T10:23:04Z",
+      "updated": "2026-09-09T10:23:04Z"
+    }
+  ],
+  "sync": {
+    "github": {
+      "ChainSafe/lodestar": {
+        "last_comment_id": "3967140968",
+        "last_synced": "2026-09-09T10:23:04Z",
+        "last_imported": 4,
+        "last_reverify_updates": 0
+      }
+    }
+  }
+}
