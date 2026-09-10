@@ -251,7 +251,7 @@ def extract_handled_ids_from_backlog(backlog_text: str) -> set[int]:
             continue
 
         section_lines.append(line)
-        if HANDLED_STATUS_RE.match(line):
+        if HANDLED_STATUS_RE.match(line) or LINE_HANDLED_MARKER_RE.match(line):
             section_handled = True
 
     flush_section()
