@@ -22,6 +22,7 @@ NIGHTLY_MEMORY_JOB_NAME = 'nightly-memory-consolidation'
 NIGHTLY_MEMORY_QMD_JOB_ID = 'virtual:nightly-memory-qmd-index-health'
 NIGHTLY_MEMORY_QMD_NAME = 'nightly-memory-qmd-index-health'
 NEXT_AUDIT_PRIORITIES_JOB_NAME = 'next-audit-priorities-reminder'
+ISOLATED_SETUP_TIMEOUT_REASON = 'cron: isolated agent setup timed out before runner start'
 QMD_COMPLETENESS_SCRIPT = WORKSPACE_PATH / 'scripts' / 'memory' / 'check_qmd_embedding_completeness.py'
 NIGHTLY_MEMORY_COMPLETE_RE = re.compile(r'^\[(?P<ts>\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})Z\] Nightly memory cycle complete$', re.MULTILINE)
 QMD_EMBED_DURATION_RE = re.compile(r'Done! Embedded .+ in (?P<minutes>\d+)m (?P<seconds>\d+)s')
@@ -355,6 +356,40 @@ def describe_mtime_evidence_timeout(job, target_paths, label):
     return f'{label} local check: target artifact mtime ({newest_label}) falls outside the run window; timeout may reflect a real incomplete run'
 
 
+def describe_isolated_setup_timeout_streak(job):
+    """Fleet-wide (name-agnostic) detector for the 'isolated agent setup timed out before
+    runner start' signature. This failure is fast (~60s) and unrelated to the job's own
+    timeoutSeconds, so describe_mtime_evidence_timeout's duration-vs-timeoutSeconds heuristic
+    never fires for it and it silently gets no details. It always means zero work was done -
+    the session never started - so no mtime-evidence check applies; just report the streak."""
+    st = job.get('state', {})
+    last_diag = st.get('lastDiagnosticSummary') or (st.get('lastDiagnostics') or {}).get('summary') or ''
+    if ISOLATED_SETUP_TIMEOUT_REASON not in str(last_diag):
+        return None
+
+    entries = load_cron_run_history(job.get('id'), limit=12)
+    streak = []
+    for entry in entries:
+        if run_history_reason(entry) != ISOLATED_SETUP_TIMEOUT_REASON:
+            break
+        streak.append(entry)
+
+    if not streak:
+        return (
+            'isolated-setup-timeout local check: current failure reason matches '
+            f'"{ISOLATED_SETUP_TIMEOUT_REASON}" but run history was unavailable to confirm streak length'
+        )
+
+    oldest = streak[-1]
+    newest = streak[0]
+    first_run = fmt_ms(oldest.get('runAtMs') or oldest.get('ts'))
+    latest_run = fmt_ms(newest.get('runAtMs') or newest.get('ts'))
+    return (
+        f'isolated-setup-timeout local check: {len(streak)} consecutive failure(s) from {first_run} '
+        f'to {latest_run}, each failing before the runner started (zero work done; no mtime evidence applies)'
+    )
+
+
 def check_qmd_embedding_completeness():
     if not QMD_COMPLETENESS_SCRIPT.exists():
         return None
@@ -626,6 +661,8 @@ def main():
                 [WORKSPACE_PATH / 'notes' / 'autonomy-gaps.md'],
                 NEXT_AUDIT_PRIORITIES_JOB_NAME,
             )
+        if details is None:
+            details = describe_isolated_setup_timeout_streak(job)
         if details:
             info['details'] = details
         current[job_id] = info
