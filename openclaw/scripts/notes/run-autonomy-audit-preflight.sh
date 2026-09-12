@@ -159,6 +159,7 @@ TARGET_TIME_LABEL="${TIME_LABEL:-$(date -u '+%H:%M UTC')}"
 DEDUPE_CMD=(python3 "$WORKSPACE/scripts/notes/dedupe-autonomy-audit-snapshots.py" --file "$TARGET_FILE")
 CHECK_CMD=(python3 "$WORKSPACE/scripts/notes/check-autonomy-gaps-consistency.py" --file "$TARGET_FILE")
 CADENCE_CMD=(python3 "$WORKSPACE/scripts/notes/check-autonomy-audit-cadence.py" --file "$TARGET_FILE" --freshness-only --require-current --fail-on-gap)
+CADENCE_STATUS_RENDER_CMD=(python3 "$WORKSPACE/scripts/notes/render-autonomy-cadence-status.py")
 DOMAIN_PREFLIGHT_CMD=(python3 "$WORKSPACE/scripts/notes/check-autonomy-domain-preflights.py")
 DOMAIN_SUMMARY_RENDER_CMD=(python3 "$WORKSPACE/scripts/notes/summarize-autonomy-domain-preflights.py")
 DOMAIN_STATUS_RENDER_CMD=(python3 "$WORKSPACE/scripts/notes/render-autonomy-domain-statuses.py")
@@ -240,9 +241,16 @@ interesting = [
 print(" | ".join(interesting[:3]) or "missing-day gaps detected by cadence guard")
 PY
   )"
+  set +e
+  CADENCE_STATUS="$("${CADENCE_STATUS_RENDER_CMD[@]}" --cadence-log "$CADENCE_LOG" 2>/dev/null)"
+  cadence_status_rc=$?
+  set -e
+  if [[ "$cadence_status_rc" -ne 0 || -z "$CADENCE_STATUS" ]]; then
+    CADENCE_STATUS="cadence guard reported missing-day gap(s) during preflight: ${CADENCE_GAP_SUMMARY}. Proposed fix: inspect recent cron runs and document the root cause/fallback or delivery follow-up before returning \`NO_REPLY\`."
+  fi
   PREPEND_CMD+=(
     --audit-workflow-status
-    "cadence guard reported missing-day gap(s) during preflight: ${CADENCE_GAP_SUMMARY}. Proposed fix: inspect recent cron runs and document the root cause/fallback or delivery follow-up before returning \`NO_REPLY\`."
+    "$CADENCE_STATUS"
   )
   echo "⚠️ Cadence guard reported missing-day gaps. Continue with today's snapshot, and document root cause/fix in the audit workflow section."
 elif [[ "$cadence_rc" -ne 0 ]]; then
