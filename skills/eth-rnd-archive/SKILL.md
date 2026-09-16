@@ -137,7 +137,8 @@ match on the broken substring) rather than re-deleting/re-writing the whole file
    - **Action items** for Lodestar
    - **Interesting discussions** worth following up
    - **Notable participants** (who's driving which topics)
-3. Send digest to Nico via Telegram
+3. Send digest to Nico via Telegram topic #59
+4. After the send succeeds, update `state.json` `lastDigest` to the current UTC timestamp and append a short "Daily Digest" note with the Telegram message id when available. A successful digest send without this stamp makes the heartbeat staleness check unreliable.
 
 ### What to Flag as Critical (immediate alert)
 - Spec changes affecting Lodestar implementation
@@ -178,4 +179,3 @@ Edit `config.json` in this skill directory. Current shape:
 ## Self-Maintenance
 
 If any commands, file paths, URLs, or configurations in this skill are outdated or no longer work, update this SKILL.md with the correct information after completing your current task. Skills should stay accurate and self-healing — fix what you find broken.
-
