@@ -1,10 +1,28 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-09-17 (149th pass)
+> Updated: 2026-09-20 (150th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-09-20 (self-improvement-audit-daily, 03:17 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** cadence guard reported missing-day gap(s) during preflight: - 2026-09-17 → 2026-09-20 (latest snapshot freshness): missing 2 day(s) [2026-09-18, 2026-09-19]. Run-history evidence: `self-improvement-audit-daily` had 5 consecutive failure(s) from 2026-09-18 03:19:38 UTC to 2026-09-19 03:17:55 UTC; latest reason: `FailoverError: You've reached your Codex subscription usage limit. Next reset in 6 hours, Sep 19 at 8:18 AM UTC. Wait until the reset time, use another Codex account if available, or switch to another configured model/provider.`. Fix applied this cycle: `scripts/notes/render-autonomy-cadence-status.py` now classifies Codex usage-limit/rate-limit cadence failures separately and routes them to the parked different-provider fallback sign-off path instead of generic setup-timeout wording. Proposed fix: keep the cadence watchdog active and use the already-parked cron-config sign-off path for a different-provider fallback; do not edit cron/provider config from this unattended audit.
+
+---
 ## Daily Audit Snapshot — 2026-09-17 (self-improvement-audit-daily, 03:20 UTC)
 
 ### PR review

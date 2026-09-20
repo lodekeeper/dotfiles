@@ -139,6 +139,38 @@ def summarize_failure_streak(entries: list[dict[str, Any]], job_name: str) -> st
     )
 
 
+def proposed_fix(entries: list[dict[str, Any]]) -> str:
+    failures = latest_failure_streak(entries)
+    if not failures:
+        return (
+            "inspect recent cron runs and document the root cause/fallback or delivery "
+            "follow-up before returning `NO_REPLY`."
+        )
+
+    reasons = {run_reason(entry).lower() for entry in failures}
+    if all("isolated agent setup timed out before runner start" in reason for reason in reasons):
+        return (
+            "keep the cadence watchdog active until a current daily snapshot lands; if "
+            "setup-timeout failures recur, fix isolated runner startup reliability or add "
+            "a fallback/alert path through the existing cron-config sign-off workflow."
+        )
+
+    if any(
+        "usage limit" in reason or "subscription usage limit" in reason or "rate_limit" in reason
+        for reason in reasons
+    ):
+        return (
+            "keep the cadence watchdog active and use the already-parked cron-config "
+            "sign-off path for a different-provider fallback; do not edit cron/provider "
+            "config from this unattended audit."
+        )
+
+    return (
+        "keep the cadence watchdog active until a current daily snapshot lands; inspect "
+        "the failing run history before choosing a local fix or cron-config sign-off path."
+    )
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Render autonomy-audit cadence-gap status text")
     parser.add_argument("--cadence-log", required=True, help="Path to cadence guard output")
@@ -174,9 +206,7 @@ def main() -> int:
             [
                 f"cadence guard reported missing-day gap(s) during preflight: {cadence_summary}.",
                 run_summary,
-                "Proposed fix: keep the cadence watchdog active until a current daily snapshot lands; "
-                "if setup-timeout failures recur, fix isolated runner startup reliability or add a "
-                "fallback/alert path through the existing cron-config sign-off workflow.",
+                f"Proposed fix: {proposed_fix(entries)}",
             ]
         )
     )
