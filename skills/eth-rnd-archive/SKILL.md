@@ -70,6 +70,15 @@ Thread messages have `"parent": "<thread name>"` set. The check script scans the
 }
 ```
 
+### Resolving Discord message links
+
+Messages carry no IDs, but a link `discord.com/channels/<guild>/<channel>/<msgid>` encodes its send time: `ms = (msgid >> 22) + 1420070400000` (Unix epoch ms). Convert it, then match that exact millisecond against `created_at` in `*/YYYY-MM-DD.json` and `*/_threads/*/YYYY-MM-DD.json` for that day; a hit is the referenced message. User mentions (`<@id>`) can't be resolved this way (only usernames are stored): grep the ID across the archive and read how others refer to it.
+
+```python
+import datetime
+datetime.datetime.fromtimestamp(((msgid >> 22) + 1420070400000) / 1000, datetime.timezone.utc)
+```
+
 ## How to Check for Updates
 
 ### Script: `check-updates.sh`
