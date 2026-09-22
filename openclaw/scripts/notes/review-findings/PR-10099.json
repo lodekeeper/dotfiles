@@ -1,0 +1,159 @@
+{
+  "pr": 10099,
+  "created": "2026-09-22T03:07:19Z",
+  "updated": "2026-09-22T03:07:20Z",
+  "findings": [
+    {
+      "id": "9d6480",
+      "file": "packages/state-transition/src/testUtils/testFileCache.ts",
+      "line": 102,
+      "severity": "minor",
+      "reviewer": "spiral-ladder",
+      "body": "this is no longer needed now that this is no longer in src",
+      "status": "open",
+      "addressed_commit": null,
+      "note": null,
+      "source": {
+        "kind": "github-review-comment",
+        "id": "4025149474",
+        "repo": "ChainSafe/lodestar",
+        "pr": 10099,
+        "url": "https://github.com/ChainSafe/lodestar/pull/10099#discussion_r4025149474"
+      },
+      "created": "2026-09-22T03:07:20Z",
+      "updated": "2026-09-22T03:07:20Z"
+    },
+    {
+      "id": "320a2a",
+      "file": "packages/state-transition/src/testUtils/index.ts",
+      "line": 5,
+      "severity": "nit",
+      "reviewer": "chatgpt-codex-connector[bot]",
+      "body": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Update the remaining consumer before removing cache exports**\n\n`packages/beacon-node/test/perf/chain/verifyImportBlocks.test.ts:8` still imports `getNetworkCachedBlock` and `getNetworkCachedState` from this entry point. Removing the export makes the beacon-node type check report both members as missing and prevents the range-sync benchmark from loading. Move or update that consumer, or retain an accessible te",
+      "status": "open",
+      "addressed_commit": null,
+      "note": null,
+      "source": {
+        "kind": "github-review-comment",
+        "id": "4025163583",
+        "repo": "ChainSafe/lodestar",
+        "pr": 10099,
+        "url": "https://github.com/ChainSafe/lodestar/pull/10099#discussion_r4025163583"
+      },
+      "created": "2026-09-22T03:07:20Z",
+      "updated": "2026-09-22T03:07:20Z"
+    },
+    {
+      "id": "13ffcc",
+      "file": "packages/test-utils/src/testFileCache.ts",
+      "line": 123,
+      "severity": "minor",
+      "reviewer": "nflaig",
+      "body": "this code is 100% unused?",
+      "status": "open",
+      "addressed_commit": null,
+      "note": null,
+      "source": {
+        "kind": "github-review-comment",
+        "id": "4035624001",
+        "repo": "ChainSafe/lodestar",
+        "pr": 10099,
+        "url": "https://github.com/ChainSafe/lodestar/pull/10099#discussion_r4035624001"
+      },
+      "created": "2026-09-22T03:07:20Z",
+      "updated": "2026-09-22T03:07:20Z",
+      "needs_reverify": true,
+      "reverify": {
+        "events": [
+          {
+            "at": "2026-09-22T03:07:20Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10099,
+              "id": "4061100040",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10099#discussion_r4061100040",
+              "author": "nflaig",
+              "in_reply_to_id": null
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          }
+        ],
+        "last_event_at": "2026-09-22T03:07:20Z"
+      }
+    },
+    {
+      "id": "3758d4",
+      "file": "packages/test-utils/src/testFileCache.ts",
+      "line": 116,
+      "severity": "minor",
+      "reviewer": "nazarhussain",
+      "body": "`getInfuraBeaconUrl` this is duplicate now in `packages/test-utils/src/testFileCache.ts` and `packages/state-transition/src/testUtils/infura.ts`",
+      "status": "open",
+      "addressed_commit": null,
+      "note": null,
+      "source": {
+        "kind": "github-review-comment",
+        "id": "4036220642",
+        "repo": "ChainSafe/lodestar",
+        "pr": 10099,
+        "url": "https://github.com/ChainSafe/lodestar/pull/10099#discussion_r4036220642"
+      },
+      "created": "2026-09-22T03:07:20Z",
+      "updated": "2026-09-22T03:07:20Z"
+    },
+    {
+      "id": "85e610",
+      "file": "packages/beacon-node/test/utils/networkCachedStateAndBlock.ts",
+      "line": 9,
+      "severity": "minor",
+      "reviewer": "nazarhussain",
+      "body": "This function is also duplicate. Currently they differ in the way `createCachedBeaconStateTest` is called internally, but the both can drift easily in future. Would be nice if we can also remove that duplicate.",
+      "status": "open",
+      "addressed_commit": null,
+      "note": null,
+      "source": {
+        "kind": "github-review-comment",
+        "id": "4036249502",
+        "repo": "ChainSafe/lodestar",
+        "pr": 10099,
+        "url": "https://github.com/ChainSafe/lodestar/pull/10099#discussion_r4036249502"
+      },
+      "created": "2026-09-22T03:07:20Z",
+      "updated": "2026-09-22T03:07:20Z"
+    },
+    {
+      "id": "a1e39c",
+      "file": "packages/test-utils/src/testFileCache.ts",
+      "line": 123,
+      "severity": "question",
+      "reviewer": "nflaig",
+      "body": "why is this still here?",
+      "status": "open",
+      "addressed_commit": null,
+      "note": null,
+      "source": {
+        "kind": "github-review-comment",
+        "id": "4061100040",
+        "repo": "ChainSafe/lodestar",
+        "pr": 10099,
+        "url": "https://github.com/ChainSafe/lodestar/pull/10099#discussion_r4061100040"
+      },
+      "created": "2026-09-22T03:07:20Z",
+      "updated": "2026-09-22T03:07:20Z",
+      "matched_findings": [
+        "13ffcc"
+      ]
+    }
+  ],
+  "sync": {
+    "github": {
+      "ChainSafe/lodestar": {
+        "last_comment_id": "4068122852",
+        "last_synced": "2026-09-22T03:07:20Z",
+        "last_imported": 6,
+        "last_reverify_updates": 1
+      }
+    }
+  }
+}
