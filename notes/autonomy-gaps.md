@@ -1,10 +1,25 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-09-22 (152nd pass)
+> Updated: 2026-09-23 (153rd pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-09-23 (self-improvement-audit-daily, 03:23 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+---
 ## Daily Audit Snapshot — 2026-09-22 (self-improvement-audit-daily, 03:17 UTC)
 
 ### PR review
@@ -3576,6 +3591,9 @@ Updated `scripts/debug/build-incident-bundle.sh` and `skills/local-mainnet-debug
    - **2026-09-22 09:3x UTC re-check (`next-audit-priorities-reminder`) — no new gateway SIGABRT in the last 24h, but the failover storm continues and the hidden-delivery/config gap now shows up as a fresh `daily-journal` outage:** live `cron list --json` confirms the original config gap is unchanged for the 4 tracked jobs (no `fallbacks` on `self-improvement-audit-daily`, `cron-health-watchdog`, `nightly-memory-consolidation`, or `check-openclaw-release`; `delivery.mode: none` on all four incl. `cron-health-watchdog`; `nightly-memory-consolidation` still `timeoutSeconds: 900`) — **45 days pending** Nico's sign-off (asked 2026-08-08). Fleet scan: 2 red jobs. `nightly-memory-consolidation` is now `consecutiveErrors=15`, still the known 900s timeout shape; the 03:31Z cron timed out at 03:46Z, but `memory/memory-cycle-2026-09-22.log` completed at 04:02:19Z. `daily-journal` is newly red (`consecutiveErrors=4`): primary `codex/gpt-5.3-codex-spark` still fails with the ChatGPT-account unsupported-model 400, and fallback `claude-cli/claude-opus-4-8` is weekly-rate-limited until 2026-09-23 16:00 UTC. `scripts/cron/check_cron_health.py` returned `NO_REPLY` despite the red job state, so the watchdog/delivery story remains insufficient for unattended visibility.
      **Gateway crash/failover check:** since 2026-09-21 09:30 UTC there were **0** `IsGraphAsync` FATALs and **0** `status=6/ABRT` gateway exits, so the "sub-agent heartbeat burst correlates with crashes" hypothesis gets a clean 24h no-crash sample, not a refutation. The noisy precursor remains active: the same window logged **1,147** `embedded run failover decision` lines and **4,745** compact-404 lines, with failover traffic every hour and rising overnight/early morning. This keeps the main-agent-only heartbeat config lever as the smallest plausible crash-risk reduction, but it is still a config edit and was not applied.
      **QMD/memory-pipeline state:** today's nightly memory cycle completed, but QMD embedding health is still red with 7 incomplete hashes. The failure set shifted from 09-21's 7: `daily-notes/2026-09-21` and `workspace-core/backlog.md` recovered, while `memory-bank/lessons.md` and `workspace-core/state.md` joined the incomplete set; `facts.md`, `preferences.md`, `daily-notes/2026-09-17`, `eth-rnd-archive-notes/2026-09-18`, and `entities/prs/pr-10096.md` remain incomplete. No manual re-embed and no `memory/*.md` edits from this cron; the concrete blocker still needs the scoped config/sign-off path (raise nightly timeout, add real cross-provider fallback/delivery, and consider main-agent-only heartbeats). Files touched: this file and `BACKLOG.md`. Scratch left in `/tmp` (mine, untouched): `.cron-list-audit-0922.json`, `.gw-journal-audit-0922.txt`.
+   - **2026-09-23 09:3x UTC re-check (`next-audit-priorities-reminder`) — no new `IsGraphAsync` crash, but the hidden cron-failure blast radius widened to 7 red jobs and today's memory run did not start:** live `cron list --json` confirms the original config gap is unchanged for the 4 tracked jobs (no `fallbacks` on `self-improvement-audit-daily`, `cron-health-watchdog`, `nightly-memory-consolidation`, or `check-openclaw-release`; `delivery.mode: none` on all four incl. `cron-health-watchdog`; `nightly-memory-consolidation` still `timeoutSeconds: 900`) — **46 days pending** Nico's sign-off (asked 2026-08-08). Fleet scan: 7 red/running-error jobs, all delivery-hidden: `cron-health-watchdog` (5, currently running next attempt), `aztec-sequencer-health` (4), `Devnet health monitor` (5), `Sync dotfiles repo` (4), `workspace-periodic-cleanup` (2), `daily-journal` (5), and `nightly-memory-consolidation` (16). Most current summaries are `cron: isolated agent setup timed out before runner start`; `workspace-periodic-cleanup` instead hit `Gateway is draining for restart; new tasks are not accepted` during a clean gateway restart window at 08:53:50Z→08:54:00Z.
+     **Watchdog and memory state:** `scripts/cron/check_cron_health.py` still returned `NO_REPLY` despite the 7 red jobs, so the delivery/watchdog gap is now worse than yesterday's 2-job blind spot. `memory/memory-cycle-2026-09-23.log` does not exist: unlike 09-22's timeout-after-completion shape, today's nightly memory agent timed out during isolated setup before it invoked the pipeline at all. QMD embedding completeness remains red with 7 incomplete hashes (`daily-notes/2026-09-17`, `eth-rnd-archive-notes/2026-09-18`, `entities/prs/pr-10096`, `facts.md`, `lessons.md`, `preferences.md`, and a tail gap in `workspace-core/state.md`).
+     **Gateway crash/failover check:** since 2026-09-22 09:31 UTC there were **0** `IsGraphAsync` FATALs and **0** `status=6/ABRT` gateway exits. The noisy precursor continues: **1,760** embedded failover decisions and **9,256** compact-404 lines in the same window. The 08:53 restart was a clean systemd stop/start, not the SIGABRT crash shape. No config changes applied; the smallest actionable path is still Nico sign-off for scoped cron config (real cross-provider fallbacks, watchdog delivery, nightly timeout) and possibly the main-agent-only heartbeat lever. Files touched: this file and `BACKLOG.md`. No `memory/*.md` files edited. Scratch left in `/tmp` (mine, untouched): `.cron-list-audit-0923.json`, `.gw-journal-audit-0923.txt`.
 
 To avoid stale reminder churn on top of the live item above:
 
