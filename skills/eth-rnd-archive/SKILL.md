@@ -112,6 +112,17 @@ using `new_since_index` as `START_INDEX`. Cross-check against today's notes file
 re-investigating anything that looks new — if a message timestamp predates your last logged
 entry, it's stale content, not fresh signal.
 
+### ACD call outcomes (EIPsInsight recap)
+
+The archive holds chatter around ACDE/ACDC/ACDT calls, rarely their outcomes. When a thread
+links `https://eipsinsight.com/calls/<acde|acdc|acdt>/<n>`, plain
+`curl -sSL --max-time 40 -A "Mozilla/5.0" <url>` returns the full server-rendered page (HTTP 200,
+~1.5 MB): an mm:ss transcript plus a "Call summary / Decisions / Action Items" block. Strip
+script/style/tags in python (`html.unescape`) and slice by keyword. The page says its summary may be
+AI-inferred and transcript speaker labels can be garbled (a whole client roll call attributed to the
+facilitator), so cross-check any decision you report against the transcript text. Verified on
+ACDE #246 (2026-09-24), which resolved the retention-window and 200M gas-limit outcomes.
+
 ## Writing Log Entries Safely
 
 The hourly cron appends log text via `printf ... >> $NOTES_FILE` inside a double-quoted
