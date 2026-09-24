@@ -41,6 +41,21 @@ fi
   qmd update 2>&1 || true
   qmd embed 2>&1 || true
 
+  # `qmd embed` hard-caps each run at 30 min (withLLMSession maxDuration in qmd 1.0.7 dist/qmd.js);
+  # every chunk still queued at the cap fails with SessionReleasedError, and the nightly workload
+  # (~1.7k chunks, mostly the regenerated bank/facts.md + BACKLOG_ARCHIVE.md) exceeds one session.
+  # Docs left with NO vectors are re-queued, so give them fresh sessions (bounded). Docs whose seq 0
+  # was embedded before the cap stay partial until their content changes - a re-run cannot fix those.
+  for pass in 2 3; do
+    status_out="$(qmd status 2>&1 || true)"
+    # `qmd status` prints "Pending:  N need embedding" only when N > 0 (dist/qmd.js showStatus)
+    if ! grep -Eq "Pending:[[:space:]]+[0-9]+ need embedding" <<<"$status_out"; then
+      break
+    fi
+    echo "Step 4 (embed pass $pass): docs still without vectors after a capped run - fresh embed session"
+    qmd embed 2>&1 || true
+  done
+
   echo "Step 4b: verify QMD embedding completeness"
   python3 scripts/memory/check_qmd_embedding_completeness.py 2>&1 || true
 
