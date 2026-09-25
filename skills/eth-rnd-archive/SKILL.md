@@ -72,7 +72,7 @@ Thread messages have `"parent": "<thread name>"` set. The check script scans the
 
 ### Resolving Discord message links
 
-Messages carry no IDs, but a link `discord.com/channels/<guild>/<channel>/<msgid>` encodes its send time: `ms = (msgid >> 22) + 1420070400000` (Unix epoch ms). Convert it, then match that exact millisecond against `created_at` in `*/YYYY-MM-DD.json` and `*/_threads/*/YYYY-MM-DD.json` for that day; a hit is the referenced message. User mentions (`<@id>`) can't be resolved this way (only usernames are stored): grep the ID across the archive and read how others refer to it.
+Messages carry no IDs, but a link `discord.com/channels/<guild>/<channel>/<msgid>` encodes its send time: `ms = (msgid >> 22) + 1420070400000` (Unix epoch ms). Convert it, then match that exact millisecond against `created_at` in `*/YYYY-MM-DD.json` and `*/_threads/*/YYYY-MM-DD.json` for that day; a hit is the referenced message. A channel/thread mention (`<#id>`) works the same way: a thread opened from a message shares that message's ID, so the hit is the thread's starter stub (content = the thread title); verified 2026-09-24, `<#1552704440946139209>` matched execution-dev "BAL retention window" to the millisecond. User mentions (`<@id>`) can't be resolved this way (only usernames are stored): grep the ID across the archive and read how others refer to it. One more source: when a thread is opened on a message that starts with a mention, the thread title (stub content and the `_threads/<title>/` directory name) shows it rendered as `@display (username)`; seen once, 2026-09-24: `<@774033563732541451>` became `@ignacio (jsign)`.
 
 ```python
 import datetime
@@ -122,6 +122,17 @@ script/style/tags in python (`html.unescape`) and slice by keyword. The page say
 AI-inferred and transcript speaker labels can be garbled (a whole client roll call attributed to the
 facilitator), so cross-check any decision you report against the transcript text. Verified on
 ACDE #246 (2026-09-24), which resolved the retention-window and 200M gas-limit outcomes.
+
+Forkcast (`https://forkcast.org/calls/<acde|acdc|acdt>/<n>`, often linked in the call's archive
+thread within hours) is a client-rendered React shell: a plain fetch returns only navigation. Its
+`/llms.txt` documents JSON endpoints instead: `/api/calls.json` lists calls, and the artifacts sit at
+`https://forkcast.org/artifacts/<series>/<YYYY-MM-DD>_<n>/{key_decisions,tldr,notes}.json` (200 for
+`acde/2026-09-24_246`; the `path` field in `calls.json`, e.g. `acde/246`, 404s for recent calls, so
+build the dated path from the call's `date` + `number`). `key_decisions.json` has structured `eips` +
+`stage_change`, `tldr.json` adds `action_items` and `targets` (dates), `notes.json` has
+`sections[{heading, summary, timestamp, body}]`; `transcript.vtt` sits alongside when published. Same
+caveat as EIPsInsight: edited/AI-compiled summaries, attribution can be off. Check weekdays with
+python before writing a day-of-week label (a "Mon Sep 29" that was really a Tuesday was once logged).
 
 ## Writing Log Entries Safely
 
