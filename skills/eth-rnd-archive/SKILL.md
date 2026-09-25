@@ -149,6 +149,13 @@ bash argument. Two footguns in that context, both silent (no error, just corrupt
 If a log entry ends up corrupted, fix it with a targeted `python3` string replace (exact
 match on the broken substring) rather than re-deleting/re-writing the whole file.
 
+## Searching the Notes
+
+`grep` on this box is ugrep. A context-window pattern with bounded repeats, e.g.
+`grep -o -E '.{0,120}NEEDLE.{0,120}' memory/eth-rnd-archive-notes/*.md`, aborts with
+`exceeds complexity limits` on these UTF-8 notes and prints no matches (verified 2026-09-25). Use python
+(`re.finditer` or `str.find` plus a slice) for context windows; a plain `grep -n -i -E 'a|b|c'` works fine.
+
 ## Workflow
 
 ### Hourly Check (via cron)

@@ -298,8 +298,11 @@ def describe_nightly_memory_timeout(job):
     duration_match = list(QMD_EMBED_DURATION_RE.finditer(log_text))
     embed_duration = None
     if duration_match:
-        last_duration = duration_match[-1]
-        embed_duration = f"{last_duration.group('minutes')}m{last_duration.group('seconds')}s"
+        # nightly_memory_cycle.sh may run follow-up `qmd embed` passes (each capped at 30 min), so sum them
+        total_seconds = sum(int(m.group('minutes')) * 60 + int(m.group('seconds')) for m in duration_match)
+        embed_duration = f'{total_seconds // 60}m{total_seconds % 60}s'
+        if len(duration_match) > 1:
+            embed_duration += f' across {len(duration_match)} passes'
 
     if completed_after_run and artifacts_fresh:
         parts = [f'nightly memory local check: pipeline completed at {completion_label} and core artifacts are fresh']
