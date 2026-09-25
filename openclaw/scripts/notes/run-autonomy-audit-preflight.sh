@@ -15,6 +15,7 @@ STRICT_CI_API_KEY=0
 REQUIRE_DEVNET_GRAFANA=0
 ENSURE_DAILY_MEMORY_NOTE=1
 SEED_AUDIT_MEMORY_ENTRY=1
+AUDIT_WORKFLOW_STATUS=""
 TEMP_FILES=()
 
 cleanup_temp_files() {
@@ -23,6 +24,15 @@ cleanup_temp_files() {
   fi
 }
 trap cleanup_temp_files EXIT
+
+append_audit_workflow_status() {
+  local status="$1"
+  if [[ -z "$AUDIT_WORKFLOW_STATUS" ]]; then
+    AUDIT_WORKFLOW_STATUS="$status"
+  else
+    AUDIT_WORKFLOW_STATUS="${AUDIT_WORKFLOW_STATUS} ${status}"
+  fi
+}
 
 usage() {
   cat <<'EOF'
@@ -163,6 +173,7 @@ CADENCE_STATUS_RENDER_CMD=(python3 "$WORKSPACE/scripts/notes/render-autonomy-cad
 DOMAIN_PREFLIGHT_CMD=(python3 "$WORKSPACE/scripts/notes/check-autonomy-domain-preflights.py")
 DOMAIN_SUMMARY_RENDER_CMD=(python3 "$WORKSPACE/scripts/notes/summarize-autonomy-domain-preflights.py")
 DOMAIN_STATUS_RENDER_CMD=(python3 "$WORKSPACE/scripts/notes/render-autonomy-domain-statuses.py")
+DOMAIN_HEALTH_DRIFT_CMD=(python3 "$WORKSPACE/scripts/notes/check-autonomy-preflight-health-drift.py")
 PREPEND_CMD=(python3 "$WORKSPACE/scripts/notes/prepend-autonomy-audit-snapshot.py" --file "$TARGET_FILE")
 
 if [[ -n "$DATE" ]]; then
@@ -194,7 +205,7 @@ if [[ "$REQUIRE_DEVNET_GRAFANA" -eq 1 ]]; then
   DOMAIN_PREFLIGHT_CMD+=(--require-devnet-grafana)
 fi
 
-echo "[0/6] Running duplicate-snapshot guard"
+echo "[0/7] Running duplicate-snapshot guard"
 set +e
 "${DEDUPE_CMD[@]}"
 dedupe_rc=$?
@@ -207,10 +218,10 @@ elif [[ "$dedupe_rc" -ne 0 ]]; then
   exit "$dedupe_rc"
 fi
 
-echo "[1/6] Running consistency guard on $TARGET_FILE"
+echo "[1/7] Running consistency guard on $TARGET_FILE"
 "${CHECK_CMD[@]}"
 
-echo "[2/6] Running cadence guard (advisory, current-date freshness)"
+echo "[2/7] Running cadence guard (advisory, current-date freshness)"
 CADENCE_LOG="$(mktemp)"
 TEMP_FILES+=("$CADENCE_LOG")
 set +e
@@ -248,10 +259,7 @@ PY
   if [[ "$cadence_status_rc" -ne 0 || -z "$CADENCE_STATUS" ]]; then
     CADENCE_STATUS="cadence guard reported missing-day gap(s) during preflight: ${CADENCE_GAP_SUMMARY}. Proposed fix: inspect recent cron runs and document the root cause/fallback or delivery follow-up before returning \`NO_REPLY\`."
   fi
-  PREPEND_CMD+=(
-    --audit-workflow-status
-    "$CADENCE_STATUS"
-  )
+  append_audit_workflow_status "$CADENCE_STATUS"
   echo "⚠️ Cadence guard reported missing-day gaps. Continue with today's snapshot, and document root cause/fix in the audit workflow section."
 elif [[ "$cadence_rc" -ne 0 ]]; then
   echo "❌ Cadence guard failed (exit $cadence_rc). Aborting preflight." >&2
@@ -259,7 +267,7 @@ elif [[ "$cadence_rc" -ne 0 ]]; then
 fi
 
 if [[ "$RUN_DOMAIN_PREFLIGHTS" -eq 1 ]]; then
-  echo "[3/6] Running autonomy domain preflights"
+  echo "[3/7] Running autonomy domain preflights"
   DOMAIN_PREFLIGHT_JSON="$(mktemp)"
   DOMAIN_STATUS_JSON="$(mktemp)"
   DOMAIN_PREFLIGHT_STDERR="$(mktemp)"
@@ -294,12 +302,40 @@ if [[ "$RUN_DOMAIN_PREFLIGHTS" -eq 1 ]]; then
   else
     PREPEND_CMD+=(--status-prefill-json "$DOMAIN_STATUS_JSON")
   fi
+
+  echo "[4/7] Checking structured domain preflight health drift"
+  DOMAIN_HEALTH_DRIFT_STDOUT="$(mktemp)"
+  DOMAIN_HEALTH_DRIFT_STDERR="$(mktemp)"
+  TEMP_FILES+=("$DOMAIN_HEALTH_DRIFT_STDOUT" "$DOMAIN_HEALTH_DRIFT_STDERR")
+  set +e
+  "${DOMAIN_HEALTH_DRIFT_CMD[@]}" \
+    --preflight-json "$DOMAIN_PREFLIGHT_JSON" \
+    --state-file "$WORKSPACE/state/autonomy-domain-preflight-health.json" \
+    --update \
+    --quiet-no-change \
+    >"$DOMAIN_HEALTH_DRIFT_STDOUT" 2>"$DOMAIN_HEALTH_DRIFT_STDERR"
+  domain_health_drift_rc=$?
+  set -e
+
+  if [[ -s "$DOMAIN_HEALTH_DRIFT_STDOUT" ]]; then
+    cat "$DOMAIN_HEALTH_DRIFT_STDOUT"
+  fi
+
+  if [[ "$domain_health_drift_rc" -eq 4 ]]; then
+    append_audit_workflow_status "$(tr '\n' ' ' < "$DOMAIN_HEALTH_DRIFT_STDOUT" | sed 's/[[:space:]]*$//')"
+  elif [[ "$domain_health_drift_rc" -ne 0 ]]; then
+    if [[ -s "$DOMAIN_HEALTH_DRIFT_STDERR" ]]; then
+      cat "$DOMAIN_HEALTH_DRIFT_STDERR" >&2
+    fi
+    health_error="$(tr '\n' ' ' < "$DOMAIN_HEALTH_DRIFT_STDERR" | sed 's/[[:space:]]*$//')"
+    append_audit_workflow_status "BLOCKER: structured domain-preflight health drift check failed. Details: ${health_error:-unknown error}. Proposed fix: repair \`scripts/notes/check-autonomy-preflight-health-drift.py\` before relying on no-change audit suppression."
+  fi
 else
-  echo "[3/6] Skipping autonomy domain preflights (--skip-domain-preflights)"
+  echo "[3/7] Skipping autonomy domain preflights (--skip-domain-preflights)"
 fi
 
 if [[ "$ENSURE_DAILY_MEMORY_NOTE" -eq 1 ]]; then
-  echo "[4/6] Ensuring daily memory note + audit stub"
+  echo "[5/7] Ensuring daily memory note + audit stub"
   DAILY_MEMORY_FILE="$WORKSPACE/memory/$TARGET_DATE.md"
   mkdir -p "$(dirname "$DAILY_MEMORY_FILE")"
   if [[ ! -f "$DAILY_MEMORY_FILE" ]]; then
@@ -323,10 +359,14 @@ if [[ "$ENSURE_DAILY_MEMORY_NOTE" -eq 1 ]]; then
     fi
   fi
 else
-  echo "[4/6] Skipping daily memory note creation (--no-ensure-daily-memory-note)"
+  echo "[5/7] Skipping daily memory note creation (--no-ensure-daily-memory-note)"
 fi
 
-echo "[5/6] Inserting daily snapshot scaffold"
+if [[ -n "$AUDIT_WORKFLOW_STATUS" ]]; then
+  PREPEND_CMD+=(--audit-workflow-status "$AUDIT_WORKFLOW_STATUS")
+fi
+
+echo "[6/7] Inserting daily snapshot scaffold"
 "${PREPEND_CMD[@]}"
 
 echo "✅ Preflight complete. Review/update the new snapshot status blocks, then run scripts/notes/close-autonomy-audit.sh --date $TARGET_DATE"
