@@ -11,12 +11,19 @@ LOGS=$(docker logs "$CONTAINER" --since "$SINCE" 2>&1 | sed 's/\x1b\[[0-9;]*m//g
 ALERTS=""
 
 # 1. Check for errors (exclude known noisy getBlockV2 warnings)
-ERRORS=$(echo "$LOGS" | grep -E '\berror\b|\bwarn\b' | grep -v 'getBlockV2 failed reason=Block not found' | grep -v 'getBlockV2 failed reason=No block' | grep -v 'getBlockHeader failed reason=Block not found' | grep -v 'Route GET:/ not found' | tail -10)
-if [ -n "$ERRORS" ]; then
-  COUNT=$(echo "$ERRORS" | wc -l)
-  ALERTS+="⚠️ **$COUNT error/warn lines** (excluding known getBlockV2 noise):\n"
+ALL_ERRORS=$(echo "$LOGS" | grep -E '\berror\b|\bwarn\b' | grep -v 'getBlockV2 failed reason=Block not found' | grep -v 'getBlockV2 failed reason=No block' | grep -v 'getBlockHeader failed reason=Block not found' | grep -v 'Route GET:/ not found')
+if [ -n "$ALL_ERRORS" ]; then
+  COUNT=$(echo "$ALL_ERRORS" | wc -l)
+  # The REST API is public (Traefik), so internet scanners produce bursts of "Route <METHOD>:/<path> not found".
+  # Count them but keep them out of the sample, so a burst can't push real warn/error lines out of view.
+  # Real API-route 404s (/eth/*, /lodestar/*) are NOT scanner noise and stay in the sample.
+  SCAN_RE='\[rest\]\s+warn: Route [A-Z]+:/(?!eth/|lodestar/).* not found'
+  SCANNER=$(echo "$ALL_ERRORS" | grep -cP "$SCAN_RE")
+  SCANNER=${SCANNER:-0}
+  SAMPLE=$(echo "$ALL_ERRORS" | grep -vP "$SCAN_RE" | tail -5)
+  ALERTS+="⚠️ **$COUNT error/warn lines in last $SINCE** ($SCANNER public-REST scanner 404s, $((COUNT - SCANNER)) other) — newest non-scanner lines:\n"
   ALERTS+='```\n'
-  ALERTS+="$(echo "$ERRORS" | head -5)\n"
+  ALERTS+="${SAMPLE:-(none)}\n"
   ALERTS+='```\n\n'
 fi
 

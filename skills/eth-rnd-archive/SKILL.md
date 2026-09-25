@@ -79,6 +79,13 @@ import datetime
 datetime.datetime.fromtimestamp(((msgid >> 22) + 1420070400000) / 1000, datetime.timezone.utc)
 ```
 
+### Reading linked posts and comments
+
+Verified 2026-09-25 (all read-only):
+- **ethresear.ch topic links** (`/t/<slug>/<id>`): `curl -sSL --max-time 40 -A "Mozilla/5.0" https://ethresear.ch/t/<id>.json` returns Discourse JSON (HTTP 200, ~38 KB for topic 26086) with `title`, `created_at`, `tags` and `post_stream.posts[].cooked` (HTML: strip tags, then `html.unescape`). The poster can differ from the byline authors. Print a bounded slice and log how much of the post you actually read.
+- **GitHub `#issuecomment-<id>` links**: `gh api repos/<owner>/<repo>/issues/comments/<id> --jq '{user: .user.login, created_at, body}'` gives the commenter and text; the PR itself is `gh api repos/<owner>/<repo>/pulls/<n>`. A Discord user ID thanked next to such a link is probably that commenter (inference, mark it as such).
+- **X/Twitter status links** (`x.com/<user>/status/<id>`, often link-only posts in ai-workflows): `curl -sSL --max-time 20 -A "Mozilla/5.0" https://api.fxtwitter.com/<user>/status/<id>` returns JSON with `code` 200, `tweet.text`, `tweet.created_at`, `tweet.author` and `tweet.media.photos[].url`. Fetch the photo with plain curl (`pbs.twimg.com/media/<id>.jpg?name=large`, ~330 KB, 2002x2048) and open it with the Read tool to see the image. The tweet's own time also decodes offline: `ms = (id >> 22) + 1288834974657`. Public tweets only; the third-party service sees the status ID. Verified on a trent_vanepps status.
+
 ## How to Check for Updates
 
 ### Script: `check-updates.sh`
