@@ -44,6 +44,8 @@ fi
   # `qmd embed` hard-caps each run at 30 min (withLLMSession maxDuration in qmd 1.0.7 dist/qmd.js);
   # every chunk still queued at the cap fails with SessionReleasedError, and the nightly workload
   # (~1.7k chunks, mostly the regenerated bank/facts.md + BACKLOG_ARCHIVE.md) exceeds one session.
+  # bank/facts.md is now kept out of the memory-bank collection (`**/!(facts).md` in
+  # ~/.config/qmd/index.yml); its facts stay searchable via query_index.py, backed by state.json.
   # Docs left with NO vectors are re-queued, so give them fresh sessions (bounded). Docs whose seq 0
   # was embedded before the cap stay partial until their content changes - a re-run cannot fix those.
   for pass in 2 3; do
