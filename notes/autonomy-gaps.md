@@ -1,10 +1,28 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-09-26 (156th pass)
+> Updated: 2026-09-27 (157th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-09-27 (self-improvement-audit-daily, 03:21 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** PR-review readiness coverage gap found and fixed this cycle: `run-followup-guards.sh --check-only` verified finding trackers, discussion fetch, metadata drift, GitHub access, and report-dir readiness, but not the mandatory `check-review-scope.sh` guard that captures the changed-file list before reviewer spawns. Fix applied this cycle: `run-followup-guards.sh` now verifies `check-review-scope.sh` is executable, syntactically valid, and has a working help path; `check-autonomy-preflight-health-drift.py` now includes helper readiness booleans (`present`, `executable`, `helpOk`, `syntaxOk`, `checkOnlyJsonOk`, `ready`, etc.) in its structured signature so these preflight additions/drifts are no longer flattened away. Verified with `bash -n`, `run-followup-guards.sh --check-only --json`, PR-review domain preflight, `py_compile`, and refreshed `state/autonomy-domain-preflight-health.json`.
+
+---
 ## Daily Audit Snapshot — 2026-09-26 (self-improvement-audit-daily, 03:20 UTC)
 
 ### PR review

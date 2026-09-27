@@ -136,6 +136,7 @@ TRACK_FINDINGS="$WORKSPACE_ROOT/scripts/review/track-findings.py"
 DISCUSSION_FETCHER="$WORKSPACE_ROOT/scripts/review/fetch-pr-discussion.py"
 METADATA_CHECKER="$WORKSPACE_ROOT/scripts/github/check-pr-metadata-drift.py"
 GH_ACCESS_GUARD="$WORKSPACE_ROOT/scripts/github/check-github-access.sh"
+REVIEW_SCOPE_GUARD="$WORKSPACE_ROOT/scripts/review/check-review-scope.sh"
 
 if [[ "$JSON" -eq 1 && "$CHECK_ONLY" -ne 1 ]]; then
   echo "ERROR: --json is only supported with --check-only" >&2
@@ -187,6 +188,9 @@ if [[ "$CHECK_ONLY" -eq 1 ]]; then
   metadata_checker_help_ok=0
   metadata_checker_check_only_json_ok=0
   github_guard_executable=0
+  review_scope_guard_executable=0
+  review_scope_guard_syntax_ok=0
+  review_scope_guard_help_ok=0
   report_dir_ready=0
 
   if command -v python3 >/dev/null 2>&1; then
@@ -286,6 +290,29 @@ if [[ "$CHECK_ONLY" -eq 1 ]]; then
     failures=$((failures + 1))
   fi
 
+  if [[ -x "$REVIEW_SCOPE_GUARD" ]]; then
+    review_scope_guard_executable=1
+  else
+    [[ "$JSON" -eq 1 ]] || echo "ERROR: review scope guard is missing or not executable: $REVIEW_SCOPE_GUARD" >&2
+    failures=$((failures + 1))
+  fi
+
+  if [[ "$review_scope_guard_executable" -eq 1 ]]; then
+    if bash -n "$REVIEW_SCOPE_GUARD" >/dev/null 2>&1; then
+      review_scope_guard_syntax_ok=1
+    else
+      [[ "$JSON" -eq 1 ]] || echo "ERROR: check-review-scope.sh syntax check failed" >&2
+      failures=$((failures + 1))
+    fi
+
+    if "$REVIEW_SCOPE_GUARD" --help >/dev/null 2>&1; then
+      review_scope_guard_help_ok=1
+    else
+      [[ "$JSON" -eq 1 ]] || echo "ERROR: check-review-scope.sh help path failed" >&2
+      failures=$((failures + 1))
+    fi
+  fi
+
   report_dir="$WORKSPACE_ROOT/notes/review-reports"
   if { [[ -d "$report_dir" && -w "$report_dir" ]] || [[ ! -e "$report_dir" && -d "$(dirname -- "$report_dir")" && -w "$(dirname -- "$report_dir")" ]]; }; then
     report_dir_ready=1
@@ -317,6 +344,10 @@ if [[ "$CHECK_ONLY" -eq 1 ]]; then
         "$metadata_checker_check_only_json_ok" \
         "$GH_ACCESS_GUARD" \
         "$github_guard_executable" \
+        "$REVIEW_SCOPE_GUARD" \
+        "$review_scope_guard_executable" \
+        "$review_scope_guard_syntax_ok" \
+        "$review_scope_guard_help_ok" \
         "$report_dir" \
         "$report_dir_ready" <<'PY'
 import json
@@ -353,10 +384,16 @@ payload = {
             "path": sys.argv[19],
             "executable": bool(int(sys.argv[20])),
         },
+        "checkReviewScope": {
+            "path": sys.argv[21],
+            "executable": bool(int(sys.argv[22])),
+            "syntaxOk": bool(int(sys.argv[23])),
+            "helpOk": bool(int(sys.argv[24])),
+        },
     },
     "reportDirectory": {
-        "path": sys.argv[21],
-        "ready": bool(int(sys.argv[22])),
+        "path": sys.argv[25],
+        "ready": bool(int(sys.argv[26])),
     },
 }
 print(json.dumps(payload, sort_keys=True))
@@ -382,6 +419,7 @@ PY
   echo "Finding tracker: $TRACK_FINDINGS"
   echo "Metadata checker: $METADATA_CHECKER"
   echo "GitHub guard: $GH_ACCESS_GUARD"
+  echo "Review scope guard: $REVIEW_SCOPE_GUARD"
   echo "Report directory: $report_dir"
   exit 0
 fi
