@@ -26,16 +26,17 @@
 
 ### Merged to default branch
 - **Nethermind — furthest along.** Full REST+SSZ surface merged: #11887 (merged 2026-06-14),
-  then kept in sync: #11998, #12193 (fork→`Eth-Execution-Version` header), #13023 (merged 2026-08-30),
-  #13050 (MaxBlobsRequest in GetBlobs). LukaszRozmej is a primary implementer-reviewer of the spec.
+  then kept in sync: #11998, #12193 (fork→`Eth-Execution-Version` header), #13023 (align w/#793, merged 2026-08-30),
+  #13111 (blob SSZ parity test, merged 2026-09-11). #13050 (blob-limit fix, Sep 21) was closed UNMERGED.
+  LukaszRozmej is a primary implementer-reviewer of the spec.
 - **Reth — partial, merged.** SSZ payload-bodies endpoints #26394 (merged 2026-09-05);
   REST-SSZ wire types landed in alloy (alloy-rs/alloy#4038). Earlier experimental
   `/new-payload-with-witness` #24617 was closed. Building up incrementally.
 
 ### Implemented on open / draft branches
-- **Erigon — draft, interop-proven.** #21729 (open DRAFT, upd 2026-08-05) "switch Engine API SSZ to #793";
-  tracking issue #21600; #23045 adds Amsterdam blob/custody. **Prysm interop-tested against #21729** (syjn99, Jun 2026).
-  One of the first three implementations (per yperbasis).
+- **Erigon — draft, interop-proven (but not on trunk).** #21729 (open DRAFT, upd 2026-08-05) "switch Engine API SSZ to #793";
+  tracking issue #21600. Trunk (`main`) still carries the *older* pre-#793 SSZ-REST (#21203, merged 2026-05-15).
+  **Prysm interop-tested against #21729** (syjn99, Jun 2026). One of the first three implementations (per yperbasis).
 - **ethrex (lambdaclass) — open, active.** #6770 "engine REST/SSZ API" (upd 2026-09-22); #6741 witness endpoint.
   One of the first three implementations.
 - **Geth — draft, stalled.** #35171 (open DRAFT), created 2026-06-14 by the spec author, **not touched since 2026-06-29.**
@@ -56,4 +57,4 @@
   its `main` has only an *older* pre-#793 SSZ-REST (#21203, merged May 15); the switch to current #793 (#21729)
   is an open DRAFT untouched since Aug 5, and the Jun Erigon↔Prysm interop was against that draft, not trunk.
   So Erigon is NOT a ready trunk-level target for the current spec yet — #21729 must land + be refreshed first.
-- CL peers also in flight: Prysm (#16901/#17046), Lighthouse (#9652), Nimbus-eth2 (#8895/#9048), Lodestar (#10155).
+- CL peers also in flight: Prysm (#16901, prototype), Lighthouse (#9652, draft), Nimbus-eth2 (#9048; #8895 closed/superseded), Lodestar (#10155). Teku/Grandine/Caplin not surveyed.
