@@ -720,11 +720,16 @@ def main() -> int:
     print("GitHub notifications check complete.\n")
     if actionable_new:
         print(f"New actionable PR comments: {len(actionable_new)}")
-        for item in actionable_new[:12]:
+        # No slice cap: the printed list is the routing source for the cron
+        # agent, so silently dropping items past a fixed count would leave
+        # them stamped reportedCount>=1 (already "reported") but never
+        # routed/nudged. See BACKLOG 2026-09-28 for the incident that
+        # surfaced this (20 items, only 12 printed).
+        for item in actionable_new:
             print(f"- {item['repo']}#{item['pr']} [{item['kind']}] by {item['author']} — {item['url']}{route_suffix(item)}")
     if actionable_reminders:
         print("\nOpen comment reminders (still unhandled):")
-        for item in actionable_reminders[:8]:
+        for item in actionable_reminders:
             print(f"- {item['repo']}#{item['pr']} [{item['kind']}] by {item['author']} — {item['url']}{route_suffix(item)}")
 
     return 0
