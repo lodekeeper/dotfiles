@@ -205,7 +205,7 @@ if [[ "$REQUIRE_DEVNET_GRAFANA" -eq 1 ]]; then
   DOMAIN_PREFLIGHT_CMD+=(--require-devnet-grafana)
 fi
 
-echo "[0/7] Running duplicate-snapshot guard"
+echo "[0/8] Running duplicate-snapshot guard"
 set +e
 "${DEDUPE_CMD[@]}"
 dedupe_rc=$?
@@ -218,10 +218,10 @@ elif [[ "$dedupe_rc" -ne 0 ]]; then
   exit "$dedupe_rc"
 fi
 
-echo "[1/7] Running consistency guard on $TARGET_FILE"
+echo "[1/8] Running consistency guard on $TARGET_FILE"
 "${CHECK_CMD[@]}"
 
-echo "[2/7] Running cadence guard (advisory, current-date freshness)"
+echo "[2/8] Running cadence guard (advisory, current-date freshness)"
 CADENCE_LOG="$(mktemp)"
 TEMP_FILES+=("$CADENCE_LOG")
 set +e
@@ -267,7 +267,7 @@ elif [[ "$cadence_rc" -ne 0 ]]; then
 fi
 
 if [[ "$RUN_DOMAIN_PREFLIGHTS" -eq 1 ]]; then
-  echo "[3/7] Running autonomy domain preflights"
+  echo "[3/8] Running autonomy domain preflights"
   DOMAIN_PREFLIGHT_JSON="$(mktemp)"
   DOMAIN_STATUS_JSON="$(mktemp)"
   DOMAIN_PREFLIGHT_STDERR="$(mktemp)"
@@ -303,7 +303,7 @@ if [[ "$RUN_DOMAIN_PREFLIGHTS" -eq 1 ]]; then
     PREPEND_CMD+=(--status-prefill-json "$DOMAIN_STATUS_JSON")
   fi
 
-  echo "[4/7] Checking structured domain preflight health drift"
+  echo "[4/8] Checking structured domain preflight health drift"
   DOMAIN_HEALTH_DRIFT_STDOUT="$(mktemp)"
   DOMAIN_HEALTH_DRIFT_STDERR="$(mktemp)"
   TEMP_FILES+=("$DOMAIN_HEALTH_DRIFT_STDOUT" "$DOMAIN_HEALTH_DRIFT_STDERR")
@@ -331,11 +331,39 @@ if [[ "$RUN_DOMAIN_PREFLIGHTS" -eq 1 ]]; then
     append_audit_workflow_status "BLOCKER: structured domain-preflight health drift check failed. Details: ${health_error:-unknown error}. Proposed fix: repair \`scripts/notes/check-autonomy-preflight-health-drift.py\` before relying on no-change audit suppression."
   fi
 else
-  echo "[3/7] Skipping autonomy domain preflights (--skip-domain-preflights)"
+  echo "[3/8] Skipping autonomy domain preflights (--skip-domain-preflights)"
+  echo "[4/8] Skipping structured domain preflight health drift (--skip-domain-preflights)"
 fi
 
+echo "[5/8] Checking audit close-out helper readiness"
+NEXT_PRIORITIES_JSON="$(mktemp)"
+TEMP_FILES+=("$NEXT_PRIORITIES_JSON")
+python3 -m py_compile "$WORKSPACE/scripts/notes/check-next-audit-priorities.py"
+python3 "$WORKSPACE/scripts/notes/check-next-audit-priorities.py" \
+  --file "$TARGET_FILE" \
+  --json \
+  >"$NEXT_PRIORITIES_JSON"
+python3 - "$NEXT_PRIORITIES_JSON" <<'PY'
+from pathlib import Path
+import json
+import sys
+
+payload = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+required = {"sectionTitle", "hasLiveItems", "items", "emptyStateOnly"}
+missing = sorted(required - set(payload))
+if missing:
+    print(
+        f"❌ check-next-audit-priorities.py JSON missing key(s): {', '.join(missing)}",
+        file=sys.stderr,
+    )
+    raise SystemExit(2)
+if not isinstance(payload.get("hasLiveItems"), bool) or not isinstance(payload.get("items"), list):
+    print("❌ check-next-audit-priorities.py JSON has unexpected field types", file=sys.stderr)
+    raise SystemExit(2)
+PY
+
 if [[ "$ENSURE_DAILY_MEMORY_NOTE" -eq 1 ]]; then
-  echo "[5/7] Ensuring daily memory note + audit stub"
+  echo "[6/8] Ensuring daily memory note + audit stub"
   DAILY_MEMORY_FILE="$WORKSPACE/memory/$TARGET_DATE.md"
   mkdir -p "$(dirname "$DAILY_MEMORY_FILE")"
   if [[ ! -f "$DAILY_MEMORY_FILE" ]]; then
@@ -359,14 +387,14 @@ if [[ "$ENSURE_DAILY_MEMORY_NOTE" -eq 1 ]]; then
     fi
   fi
 else
-  echo "[5/7] Skipping daily memory note creation (--no-ensure-daily-memory-note)"
+  echo "[6/8] Skipping daily memory note creation (--no-ensure-daily-memory-note)"
 fi
 
 if [[ -n "$AUDIT_WORKFLOW_STATUS" ]]; then
   PREPEND_CMD+=(--audit-workflow-status "$AUDIT_WORKFLOW_STATUS")
 fi
 
-echo "[6/7] Inserting daily snapshot scaffold"
+echo "[7/8] Inserting daily snapshot scaffold"
 "${PREPEND_CMD[@]}"
 
 echo "✅ Preflight complete. Review/update the new snapshot status blocks, then run scripts/notes/close-autonomy-audit.sh --date $TARGET_DATE"
