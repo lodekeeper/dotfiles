@@ -34,8 +34,9 @@ Options:
   --date <YYYY-MM-DD>   Snapshot date (default: current UTC date)
   --update-memory-outcome <text>
                         Replace the "_fill in after close-out_." placeholder in
-                        memory/<date>.md with <text> before the outcome guard runs.
-                        Eliminates the separate manual edit step.
+                        memory/<date>.md with <text> after close-out guards pass.
+                        Eliminates the separate manual edit step without marking
+                        failed close-outs as completed.
   --strict-cadence      Treat cadence gaps as hard failures (default: advisory warning)
   --skip-cadence-check  Skip cadence guard during close-out
   --allow-live-priorities-no-reply
@@ -100,13 +101,19 @@ else
 fi
 
 TARGET_DATE="${DATE:-$(date -u +%F)}"
+DAILY_MEMORY_FILE="$WORKSPACE/memory/$TARGET_DATE.md"
+MEMORY_OUTCOME_PENDING=0
 
-if [[ -n "$MEMORY_OUTCOME" ]]; then
-  DAILY_MEMORY_FILE="$WORKSPACE/memory/$TARGET_DATE.md"
+update_daily_memory_outcome() {
+  if [[ -z "$MEMORY_OUTCOME" ]]; then
+    return 0
+  fi
+
   if [[ ! -f "$DAILY_MEMORY_FILE" ]]; then
     echo "❌ close-autonomy-audit: --update-memory-outcome set but daily memory note is missing: $DAILY_MEMORY_FILE" >&2
     exit 2
   fi
+
   PLACEHOLDER="- Outcome: _fill in after close-out_."
   if grep -Fq -- "$PLACEHOLDER" "$DAILY_MEMORY_FILE"; then
     TMP_MEMORY="$(mktemp --tmpdir="$(dirname "$DAILY_MEMORY_FILE")")"
@@ -136,10 +143,17 @@ PY
   else
     echo "ℹ️  --update-memory-outcome: placeholder not found in $DAILY_MEMORY_FILE; skipping update."
   fi
+}
+
+if [[ -n "$MEMORY_OUTCOME" ]]; then
+  if [[ ! -f "$DAILY_MEMORY_FILE" ]]; then
+    echo "❌ close-autonomy-audit: --update-memory-outcome set but daily memory note is missing: $DAILY_MEMORY_FILE" >&2
+    exit 2
+  fi
+  MEMORY_OUTCOME_PENDING=1
 fi
 
 if [[ "$SKIP_MEMORY_OUTCOME_CHECK" -ne 1 ]]; then
-  DAILY_MEMORY_FILE="$WORKSPACE/memory/$TARGET_DATE.md"
   if [[ ! -f "$DAILY_MEMORY_FILE" ]]; then
     echo "❌ close-autonomy-audit: missing daily memory note $DAILY_MEMORY_FILE" >&2
     echo "   Run preflight first (or create the note), then update the audit outcome before close-out." >&2
@@ -147,7 +161,7 @@ if [[ "$SKIP_MEMORY_OUTCOME_CHECK" -ne 1 ]]; then
     exit 2
   fi
 
-  if grep -Fq -- "- Outcome: _fill in after close-out_." "$DAILY_MEMORY_FILE"; then
+  if [[ "$MEMORY_OUTCOME_PENDING" -ne 1 ]] && grep -Fq -- "- Outcome: _fill in after close-out_." "$DAILY_MEMORY_FILE"; then
     echo "❌ close-autonomy-audit: daily audit outcome is still a placeholder in $DAILY_MEMORY_FILE" >&2
     echo "   Update the preflight audit note outcome before closing out (or use --update-memory-outcome <text>)." >&2
     exit 3
@@ -241,6 +255,7 @@ fi
 
 if [[ "$finalize_rc" -eq 3 ]]; then
   if [[ "$CADENCE_GAP_DETECTED" -eq 1 ]]; then
+    update_daily_memory_outcome
     echo "Autonomy audit cadence gap detected for $TARGET_DATE: $CADENCE_GAP_SUMMARY. Document/resolve the missing snapshot before returning NO_REPLY."
     exit 0
   fi
@@ -268,10 +283,12 @@ if [[ "$finalize_rc" -eq 3 ]]; then
     fi
   fi
 
+  update_daily_memory_outcome
   echo "NO_REPLY"
   exit 0
 fi
 
+update_daily_memory_outcome
 python3 "$WORKSPACE/scripts/notes/render-autonomy-audit-response.py" \
   --file "$TARGET_FILE" \
   --date "$TARGET_DATE"
