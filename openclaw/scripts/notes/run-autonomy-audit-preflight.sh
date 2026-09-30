@@ -16,6 +16,8 @@ REQUIRE_DEVNET_GRAFANA=0
 ENSURE_DAILY_MEMORY_NOTE=1
 SEED_AUDIT_MEMORY_ENTRY=1
 AUDIT_WORKFLOW_STATUS=""
+DOMAIN_HEALTH_DRIFT_STATE_UPDATE_PENDING=0
+DOMAIN_HEALTH_DRIFT_STATE_FILE="${AUTONOMY_DOMAIN_HEALTH_STATE_FILE:-$WORKSPACE/state/autonomy-domain-preflight-health.json}"
 TEMP_FILES=()
 
 cleanup_temp_files() {
@@ -310,8 +312,7 @@ if [[ "$RUN_DOMAIN_PREFLIGHTS" -eq 1 ]]; then
   set +e
   "${DOMAIN_HEALTH_DRIFT_CMD[@]}" \
     --preflight-json "$DOMAIN_PREFLIGHT_JSON" \
-    --state-file "$WORKSPACE/state/autonomy-domain-preflight-health.json" \
-    --update \
+    --state-file "$DOMAIN_HEALTH_DRIFT_STATE_FILE" \
     --quiet-no-change \
     >"$DOMAIN_HEALTH_DRIFT_STDOUT" 2>"$DOMAIN_HEALTH_DRIFT_STDERR"
   domain_health_drift_rc=$?
@@ -322,7 +323,10 @@ if [[ "$RUN_DOMAIN_PREFLIGHTS" -eq 1 ]]; then
   fi
 
   if [[ "$domain_health_drift_rc" -eq 4 ]]; then
+    DOMAIN_HEALTH_DRIFT_STATE_UPDATE_PENDING=1
     append_audit_workflow_status "$(tr '\n' ' ' < "$DOMAIN_HEALTH_DRIFT_STDOUT" | sed 's/[[:space:]]*$//')"
+  elif [[ "$domain_health_drift_rc" -eq 0 ]]; then
+    DOMAIN_HEALTH_DRIFT_STATE_UPDATE_PENDING=1
   elif [[ "$domain_health_drift_rc" -ne 0 ]]; then
     if [[ -s "$DOMAIN_HEALTH_DRIFT_STDERR" ]]; then
       cat "$DOMAIN_HEALTH_DRIFT_STDERR" >&2
@@ -396,6 +400,30 @@ fi
 
 echo "[7/8] Inserting daily snapshot scaffold"
 "${PREPEND_CMD[@]}"
+
+if [[ "$DOMAIN_HEALTH_DRIFT_STATE_UPDATE_PENDING" -eq 1 ]]; then
+  echo "[post] Updating structured domain preflight health state"
+  DOMAIN_HEALTH_DRIFT_UPDATE_STDOUT="$(mktemp)"
+  DOMAIN_HEALTH_DRIFT_UPDATE_STDERR="$(mktemp)"
+  TEMP_FILES+=("$DOMAIN_HEALTH_DRIFT_UPDATE_STDOUT" "$DOMAIN_HEALTH_DRIFT_UPDATE_STDERR")
+  set +e
+  "${DOMAIN_HEALTH_DRIFT_CMD[@]}" \
+    --preflight-json "$DOMAIN_PREFLIGHT_JSON" \
+    --state-file "$DOMAIN_HEALTH_DRIFT_STATE_FILE" \
+    --update \
+    --quiet-no-change \
+    >"$DOMAIN_HEALTH_DRIFT_UPDATE_STDOUT" 2>"$DOMAIN_HEALTH_DRIFT_UPDATE_STDERR"
+  domain_health_drift_update_rc=$?
+  set -e
+
+  if [[ "$domain_health_drift_update_rc" -ne 0 && "$domain_health_drift_update_rc" -ne 4 ]]; then
+    if [[ -s "$DOMAIN_HEALTH_DRIFT_UPDATE_STDERR" ]]; then
+      cat "$DOMAIN_HEALTH_DRIFT_UPDATE_STDERR" >&2
+    fi
+    echo "❌ Could not update structured domain preflight health state (exit $domain_health_drift_update_rc)." >&2
+    exit "$domain_health_drift_update_rc"
+  fi
+fi
 
 echo "✅ Preflight complete. Review/update the new snapshot status blocks, then run scripts/notes/close-autonomy-audit.sh --date $TARGET_DATE"
 echo "   (legacy two-step still works: finalize-autonomy-audit.py --fail-on-no-change + render-autonomy-audit-response.py)"
