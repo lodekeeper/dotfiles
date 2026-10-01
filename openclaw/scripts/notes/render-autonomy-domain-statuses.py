@@ -259,7 +259,7 @@ def render_statuses(payload: dict[str, Any]) -> dict[str, str]:
         if domain == "prReview":
             actor = _actor(domain_checks.get("githubActorBoundary"))
             statuses[section] = (
-                f"follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output "
+                f"follow-up guard, reviewer artifact helpers, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output "
                 f"as `{actor}`; no new PR-review blocker discovered this cycle."
             )
         elif domain == "ciFix":

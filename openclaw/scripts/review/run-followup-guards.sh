@@ -137,6 +137,8 @@ DISCUSSION_FETCHER="$WORKSPACE_ROOT/scripts/review/fetch-pr-discussion.py"
 METADATA_CHECKER="$WORKSPACE_ROOT/scripts/github/check-pr-metadata-drift.py"
 GH_ACCESS_GUARD="$WORKSPACE_ROOT/scripts/github/check-github-access.sh"
 REVIEW_SCOPE_GUARD="$WORKSPACE_ROOT/scripts/review/check-review-scope.sh"
+REVIEW_ARTIFACT_CHECKER="$WORKSPACE_ROOT/scripts/review/check-review-artifacts.sh"
+REVIEW_ARTIFACT_WRITER="$WORKSPACE_ROOT/scripts/review/write-review-artifact.sh"
 
 if [[ "$JSON" -eq 1 && "$CHECK_ONLY" -ne 1 ]]; then
   echo "ERROR: --json is only supported with --check-only" >&2
@@ -191,6 +193,12 @@ if [[ "$CHECK_ONLY" -eq 1 ]]; then
   review_scope_guard_executable=0
   review_scope_guard_syntax_ok=0
   review_scope_guard_help_ok=0
+  review_artifact_checker_executable=0
+  review_artifact_checker_syntax_ok=0
+  review_artifact_checker_help_ok=0
+  review_artifact_writer_executable=0
+  review_artifact_writer_syntax_ok=0
+  review_artifact_writer_help_ok=0
   report_dir_ready=0
 
   if command -v python3 >/dev/null 2>&1; then
@@ -313,6 +321,52 @@ if [[ "$CHECK_ONLY" -eq 1 ]]; then
     fi
   fi
 
+  if [[ -x "$REVIEW_ARTIFACT_CHECKER" ]]; then
+    review_artifact_checker_executable=1
+  else
+    [[ "$JSON" -eq 1 ]] || echo "ERROR: review artifact checker is missing or not executable: $REVIEW_ARTIFACT_CHECKER" >&2
+    failures=$((failures + 1))
+  fi
+
+  if [[ "$review_artifact_checker_executable" -eq 1 ]]; then
+    if bash -n "$REVIEW_ARTIFACT_CHECKER" >/dev/null 2>&1; then
+      review_artifact_checker_syntax_ok=1
+    else
+      [[ "$JSON" -eq 1 ]] || echo "ERROR: check-review-artifacts.sh syntax check failed" >&2
+      failures=$((failures + 1))
+    fi
+
+    if "$REVIEW_ARTIFACT_CHECKER" --help >/dev/null 2>&1; then
+      review_artifact_checker_help_ok=1
+    else
+      [[ "$JSON" -eq 1 ]] || echo "ERROR: check-review-artifacts.sh help path failed" >&2
+      failures=$((failures + 1))
+    fi
+  fi
+
+  if [[ -x "$REVIEW_ARTIFACT_WRITER" ]]; then
+    review_artifact_writer_executable=1
+  else
+    [[ "$JSON" -eq 1 ]] || echo "ERROR: review artifact writer is missing or not executable: $REVIEW_ARTIFACT_WRITER" >&2
+    failures=$((failures + 1))
+  fi
+
+  if [[ "$review_artifact_writer_executable" -eq 1 ]]; then
+    if bash -n "$REVIEW_ARTIFACT_WRITER" >/dev/null 2>&1; then
+      review_artifact_writer_syntax_ok=1
+    else
+      [[ "$JSON" -eq 1 ]] || echo "ERROR: write-review-artifact.sh syntax check failed" >&2
+      failures=$((failures + 1))
+    fi
+
+    if "$REVIEW_ARTIFACT_WRITER" --help >/dev/null 2>&1; then
+      review_artifact_writer_help_ok=1
+    else
+      [[ "$JSON" -eq 1 ]] || echo "ERROR: write-review-artifact.sh help path failed" >&2
+      failures=$((failures + 1))
+    fi
+  fi
+
   report_dir="$WORKSPACE_ROOT/notes/review-reports"
   if { [[ -d "$report_dir" && -w "$report_dir" ]] || [[ ! -e "$report_dir" && -d "$(dirname -- "$report_dir")" && -w "$(dirname -- "$report_dir")" ]]; }; then
     report_dir_ready=1
@@ -348,6 +402,14 @@ if [[ "$CHECK_ONLY" -eq 1 ]]; then
         "$review_scope_guard_executable" \
         "$review_scope_guard_syntax_ok" \
         "$review_scope_guard_help_ok" \
+        "$REVIEW_ARTIFACT_CHECKER" \
+        "$review_artifact_checker_executable" \
+        "$review_artifact_checker_syntax_ok" \
+        "$review_artifact_checker_help_ok" \
+        "$REVIEW_ARTIFACT_WRITER" \
+        "$review_artifact_writer_executable" \
+        "$review_artifact_writer_syntax_ok" \
+        "$review_artifact_writer_help_ok" \
         "$report_dir" \
         "$report_dir_ready" <<'PY'
 import json
@@ -390,10 +452,22 @@ payload = {
             "syntaxOk": bool(int(sys.argv[23])),
             "helpOk": bool(int(sys.argv[24])),
         },
+        "checkReviewArtifacts": {
+            "path": sys.argv[25],
+            "executable": bool(int(sys.argv[26])),
+            "syntaxOk": bool(int(sys.argv[27])),
+            "helpOk": bool(int(sys.argv[28])),
+        },
+        "writeReviewArtifact": {
+            "path": sys.argv[29],
+            "executable": bool(int(sys.argv[30])),
+            "syntaxOk": bool(int(sys.argv[31])),
+            "helpOk": bool(int(sys.argv[32])),
+        },
     },
     "reportDirectory": {
-        "path": sys.argv[25],
-        "ready": bool(int(sys.argv[26])),
+        "path": sys.argv[33],
+        "ready": bool(int(sys.argv[34])),
     },
 }
 print(json.dumps(payload, sort_keys=True))
@@ -420,6 +494,8 @@ PY
   echo "Metadata checker: $METADATA_CHECKER"
   echo "GitHub guard: $GH_ACCESS_GUARD"
   echo "Review scope guard: $REVIEW_SCOPE_GUARD"
+  echo "Review artifact checker: $REVIEW_ARTIFACT_CHECKER"
+  echo "Review artifact writer: $REVIEW_ARTIFACT_WRITER"
   echo "Report directory: $report_dir"
   exit 0
 fi

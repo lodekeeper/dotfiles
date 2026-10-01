@@ -1,10 +1,28 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-09-30 (160th pass)
+> Updated: 2026-10-01 (161st pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-10-01 (self-improvement-audit-daily, 03:26 UTC)
+
+### PR review
+- **Status:** follow-up guard, reviewer artifact helpers, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** PR-review artifact-readiness coverage gap found and fixed this cycle: the PR review autonomy preflight verified discussion/finding/metadata helpers and review-scope capture, but did not prove the reviewer artifact checker/writer that preserve sub-agent outputs before a final review is posted. Fix applied this cycle: `scripts/review/run-followup-guards.sh --check-only --json` now verifies `check-review-artifacts.sh` and `write-review-artifact.sh` are executable, syntactically valid, and have working help paths; rendered PR-review status now names reviewer artifact helpers. Proposed recurrence fix: keep artifact-helper readiness inside the PR-review follow-up guard so future review-workflow changes drift the structured health signature instead of silently weakening autonomous review readiness.
+
+---
 ## Daily Audit Snapshot — 2026-09-30 (self-improvement-audit-daily, 03:24 UTC)
 
 ### PR review
