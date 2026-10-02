@@ -163,12 +163,20 @@ def build_checks(args: argparse.Namespace, workspace: Path) -> list[tuple[str, s
         "--check-only",
         "--json",
     ]
+    incident_bundle_command = [
+        "bash",
+        "scripts/debug/build-incident-bundle.sh",
+        "--node",
+        "autonomy-preflight",
+        "--check-only",
+    ]
     devnet_warnings: list[str] = []
     if args.require_devnet_grafana:
         devnet_command.append("--require-grafana")
+        incident_bundle_command.append("--require-grafana")
     elif not base_env.get("GRAFANA_TOKEN"):
         devnet_warnings.append(
-            "GRAFANA_TOKEN was absent; verified local devnet triage tooling only"
+            "GRAFANA_TOKEN was absent; verified local devnet debugging tooling only"
         )
 
     return [
@@ -313,6 +321,13 @@ def build_checks(args: argparse.Namespace, workspace: Path) -> list[tuple[str, s
             "devnetDebugging",
             "devnetTriage",
             devnet_command,
+            base_env,
+            devnet_warnings,
+        ),
+        (
+            "devnetDebugging",
+            "incidentBundle",
+            incident_bundle_command,
             base_env,
             devnet_warnings,
         ),

@@ -1,10 +1,28 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-10-01 (161st pass)
+> Updated: 2026-10-02 (162nd pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-10-02 (self-improvement-audit-daily, 03:27 UTC)
+
+### PR review
+- **Status:** follow-up guard, reviewer artifact helpers, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, incident-bundle helper preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** Devnet-debugging handoff-artifact coverage gap found and fixed this cycle: the daily domain preflight proved triage/routing readiness but did not prove `scripts/debug/build-incident-bundle.sh`, the helper that turns a devnet investigation into a shareable incident artifact. Fix applied this cycle: `scripts/notes/check-autonomy-domain-preflights.py` now runs `build-incident-bundle.sh --node autonomy-preflight --check-only` as `devnetDebugging/incidentBundle` (propagating `--require-grafana` when strict telemetry is requested), and `scripts/notes/render-autonomy-domain-statuses.py` now requires and names that check. Structured health drift recorded the new `devnetDebugging/incidentBundle` check. Verified with Python compilation, direct incident-bundle check-only, devnet-only domain preflight JSON, and the full daily autonomy audit.
+
+---
 ## Daily Audit Snapshot — 2026-10-01 (self-improvement-audit-daily, 03:26 UTC)
 
 ### PR review

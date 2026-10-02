@@ -41,6 +41,7 @@ EXPECTED_CHECKS = {
     ],
     "devnetDebugging": [
         "devnetTriage",
+        "incidentBundle",
         "destructiveCommandGuard",
         "idleToolCallGuard",
         "devnetRoutingReadiness",
@@ -171,6 +172,9 @@ def _proposed_fix(
         if "credential file permissions" in details:
             return "repair the panda credential file group-read permissions for the `panda-server` container, then rerun the devnet-routing preflight."
 
+    if domain == "devnetDebugging" and "incidentBundle" in failed_names:
+        return "fix `scripts/debug/build-incident-bundle.sh --node autonomy-preflight --check-only` before relying on autonomous devnet incident handoff artifacts."
+
     return "inspect the failing preflight JSON/stderr before continuing autonomous work in this domain."
 
 
@@ -285,7 +289,7 @@ def render_statuses(payload: dict[str, Any]) -> dict[str, str]:
                 details.append(f"panda datasource discovery is ready ({_code_list(panda_names)})")
             suffix = f" {'; '.join(details)}." if details else ""
             statuses[section] = (
-                "devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; "
+                "devnet-triage JSON preflight, incident-bundle helper preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; "
                 f"no new devnet-debugging blocker discovered this cycle.{suffix}"
             )
 
