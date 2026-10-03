@@ -5,6 +5,7 @@ usage() {
   cat <<'EOF'
 Usage:
   extract-spec-section.sh <query> [--spec-root <path>] [--max-primary <n>] [--max-related <n>] [--output <path>]
+  extract-spec-section.sh --check-only [--json] [--spec-root <path>]
 
 Examples:
   extract-spec-section.sh execution_payload_envelope
@@ -15,6 +16,7 @@ Notes:
   - Searches consensus-specs markdown under <spec-root> (default: ~/consensus-specs/specs)
   - Extracts matching pseudocode blocks (primary matches)
   - Follows `from ... import ...` symbols from those blocks and appends related type/function definitions
+  - --check-only verifies extractor prerequisites without generating an artifact
 EOF
 }
 
@@ -22,6 +24,8 @@ SPEC_ROOT="${CONSENSUS_SPECS_DIR:-$HOME/consensus-specs}/specs"
 MAX_PRIMARY=20
 MAX_RELATED=20
 OUTPUT=""
+CHECK_ONLY=0
+JSON_OUTPUT=0
 
 if [[ $# -eq 0 ]]; then
   usage
@@ -31,6 +35,14 @@ fi
 QUERY=""
 while [[ $# -gt 0 ]]; do
   case "$1" in
+    --check-only)
+      CHECK_ONLY=1
+      shift
+      ;;
+    --json)
+      JSON_OUTPUT=1
+      shift
+      ;;
     --spec-root)
       SPEC_ROOT="${2:-}"
       shift 2
@@ -62,6 +74,57 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
+SEARCH_BACKEND="grep"
+if command -v rg >/dev/null 2>&1; then
+  SEARCH_BACKEND="rg"
+fi
+
+if [[ "$CHECK_ONLY" -eq 1 ]]; then
+  SPEC_ROOT_PRESENT=0
+  MARKDOWN_COUNT=0
+  if [[ -d "$SPEC_ROOT" ]]; then
+    SPEC_ROOT_PRESENT=1
+    MARKDOWN_COUNT="$(find "$SPEC_ROOT" -type f -name '*.md' | wc -l | tr -d '[:space:]')"
+  fi
+
+  if [[ "$JSON_OUTPUT" -eq 1 ]]; then
+    python3 - "$SPEC_ROOT" "$SPEC_ROOT_PRESENT" "$MARKDOWN_COUNT" "$SEARCH_BACKEND" <<'PY'
+import json
+import sys
+
+spec_root_present = sys.argv[2] == "1"
+markdown_count = int(sys.argv[3])
+payload = {
+    "ok": spec_root_present and markdown_count > 0,
+    "specRoot": sys.argv[1],
+    "specRootPresent": spec_root_present,
+    "markdownCount": markdown_count,
+    "searchBackend": sys.argv[4],
+}
+print(json.dumps(payload, sort_keys=True))
+PY
+  else
+    if [[ "$SPEC_ROOT_PRESENT" -eq 1 && "$MARKDOWN_COUNT" -gt 0 ]]; then
+      echo "Spec section extractor preflight OK"
+      echo "Spec root: $SPEC_ROOT"
+      echo "Markdown files: $MARKDOWN_COUNT"
+      echo "Search backend: $SEARCH_BACKEND"
+    else
+      echo "ERROR: spec root missing or empty: $SPEC_ROOT" >&2
+    fi
+  fi
+
+  if [[ "$SPEC_ROOT_PRESENT" -eq 1 && "$MARKDOWN_COUNT" -gt 0 ]]; then
+    exit 0
+  fi
+  exit 2
+fi
+
+if [[ "$JSON_OUTPUT" -eq 1 ]]; then
+  echo "error: --json is only supported with --check-only" >&2
+  exit 1
+fi
+
 if [[ -z "$QUERY" ]]; then
   echo "error: missing query" >&2
   usage
@@ -71,11 +134,6 @@ fi
 if [[ ! -d "$SPEC_ROOT" ]]; then
   echo "error: spec root not found: $SPEC_ROOT" >&2
   exit 1
-fi
-
-SEARCH_BACKEND="grep"
-if command -v rg >/dev/null 2>&1; then
-  SEARCH_BACKEND="rg"
 fi
 
 extract_symbol_from_line() {

@@ -36,6 +36,7 @@ EXPECTED_CHECKS = {
         "destructiveCommandGuard",
         "idleToolCallGuard",
         "testVectorReadiness",
+        "specSectionExtractor",
         "githubActorBoundary",
         "gitIdentityBoundary",
     ],
@@ -159,6 +160,9 @@ def _proposed_fix(
     if domain == "specImplementation" and "testVectorReadiness" in failed_names:
         return "run `scripts/spec/ensure-fresh-test-vectors.sh` to refresh the dedicated consensus-specs cache, or point `SPEC_REPO` at a current checkout before starting autonomous spec implementation."
 
+    if domain == "specImplementation" and "specSectionExtractor" in failed_names:
+        return "fix `scripts/spec/extract-spec-section.sh --check-only --json` or provide a populated consensus-specs checkout before relying on autonomous spec-context extraction."
+
     if domain == "devnetDebugging" and "devnetRoutingReadiness" in failed_names:
         details = " ".join(
             detail
@@ -277,7 +281,7 @@ def render_statuses(payload: dict[str, Any]) -> dict[str, str]:
         elif domain == "specImplementation":
             actor = _actor(domain_checks.get("githubActorBoundary"))
             statuses[section] = (
-                "pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output "
+                "pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, spec-section extractor, GitHub actor-boundary, and git identity preflights verified from current preflight output "
                 f"as `{actor}`; no new spec-implementation blocker discovered this cycle."
             )
         elif domain == "devnetDebugging":

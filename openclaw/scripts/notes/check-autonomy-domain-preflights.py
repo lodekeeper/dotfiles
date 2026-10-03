@@ -299,6 +299,13 @@ def build_checks(args: argparse.Namespace, workspace: Path) -> list[tuple[str, s
         ),
         (
             "specImplementation",
+            "specSectionExtractor",
+            ["bash", "scripts/spec/extract-spec-section.sh", "--check-only", "--json"],
+            base_env,
+            [],
+        ),
+        (
+            "specImplementation",
             "githubActorBoundary",
             [
                 python,
