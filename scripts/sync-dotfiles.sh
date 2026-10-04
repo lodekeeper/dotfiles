@@ -60,7 +60,18 @@ for skill_dir in "$WORKSPACE/skills"/*/; do
     --exclude 'state' \
     --exclude '*.db' \
     --exclude '*.pyc' \
+    --exclude '*.bak*' \
     "$skill_dir/" "$DOTFILES_DIR/skills/$skill_name/"
+done
+
+# Managed skills we own outside the workspace (explicit list; the rest of
+# ~/.openclaw/skills are third-party symlinks and must not be synced)
+for managed_skill in codex; do
+  src="$HOME/.openclaw/skills/$managed_skill"
+  [ -d "$src" ] || continue
+  mkdir -p "$DOTFILES_DIR/skills/$managed_skill"
+  rsync -a --exclude '__pycache__' --exclude '*.pyc' --exclude '*.bak*' \
+    "$src/" "$DOTFILES_DIR/skills/$managed_skill/"
 done
 
 # Notes/specs
@@ -92,6 +103,7 @@ if [ -d "$WORKSPACE/scripts" ]; then
   rsync -a \
     --exclude '__pycache__' \
     --exclude '*.pyc' \
+    --exclude '*.bak*' \
     "$WORKSPACE/scripts/" "$DOTFILES_DIR/openclaw/scripts/"
 fi
 
