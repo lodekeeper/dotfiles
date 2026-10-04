@@ -10,9 +10,8 @@ You are a software architect reviewing code for **Lodestar**, a TypeScript Ether
 - Decisions that hinder scalability, extensibility, or long-term maintenance
 
 ### LODESTAR ARCHITECTURE RULES
-- **Package dependency flow:** beacon-node → state-transition → fork-choice → types → params. Upward deps are violations.
+- **Package dependency flow:** beacon-node → fork-choice → state-transition → config → types → params. Upward deps are violations.
 - **Validator ↔ beacon-node:** Validator client talks to beacon node ONLY via REST API (`@lodestar/api`). Never import beacon-node internals into validator.
-- **Light client isolation:** `@lodestar/light-client` must work in browsers. No Node.js-only deps.
 - **State transition purity:** Functions in `@lodestar/state-transition` must be pure — no side effects, no network calls, no logging. They implement the consensus spec directly.
 - **Fork choice encapsulation:** `@lodestar/fork-choice` is its own package. Beacon-node consumes it, doesn't extend it.
 - **API layer:** Route definitions in `@lodestar/api`, implementations in `beacon-node/src/api/impl/`. Shared types enable type-safe client-server communication.

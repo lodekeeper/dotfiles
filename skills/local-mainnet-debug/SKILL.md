@@ -10,7 +10,10 @@ Run a local Lodestar beacon node against mainnet peers using checkpoint sync and
 ## Quick Start
 
 ```bash
-cd ~/lodestar  # or worktree directory
+# ~/lodestar is usually on an unrelated branch; worktrees can't run Lodestar (no node_modules/lib).
+# Verify branch + SHA + a built lib first (don't blindly checkout):
+git -C ~/lodestar rev-parse --abbrev-ref HEAD && git -C ~/lodestar log --oneline -1
+ls ~/lodestar/packages/cli/lib/index.js && cd ~/lodestar
 
 # Basic run — connects to mainnet peers, no EL needed
 ./lodestar beacon \
@@ -39,7 +42,7 @@ timeout 120 ./lodestar beacon \
 
 | Parameter | Purpose | Notes |
 |-----------|---------|-------|
-| `--network mainnet` | Connect to real mainnet peers | Use `holesky` for testnet |
+| `--network mainnet` | Connect to real mainnet peers | Use `hoodi` (or `sepolia`) for testnet — `holesky` is no longer accepted |
 | `--execution.engineMock` | Skip EL requirement | Node won't validate execution payloads |
 | `--rest false` | Disable REST API | Reduces noise, avoids port conflicts |
 | `--metrics` | Enable Prometheus metrics | Scrape at `http://localhost:8008/metrics` |
@@ -66,7 +69,12 @@ For sync-depth or OOM repros, validate the checkpoint is far enough behind head 
   --min-epochs 1000
 ```
 
-Exit `2` means the checkpoint is too shallow or ahead of head; find an older `/eth/v2/debug/beacon/states/<slot>` state and use `--checkpointState` instead of starting the repro.
+Exit `2` means the checkpoint is too shallow or ahead of head; get an older state SSZ for `--checkpointState` before starting the repro. Public checkpoint endpoints only serve recent finalized state (HTTP 500 for old slots), so an old `/eth/v2/debug/beacon/states/<slot>` needs a real archive node. Probe a source cheaply before planning around it:
+
+```bash
+curl -s -o /dev/null -w "%{http_code}\n" --max-time 20 -r 0-1023 \
+  -H "Accept: application/octet-stream" "$URL/eth/v2/debug/beacon/states/<slot>"   # 200 = available, 500 = not stored
+```
 
 ## Metrics Scraping
 
@@ -91,9 +99,11 @@ curl -s http://localhost:8008/metrics | grep -E \
 Before starting a longer incident bundle or devnet triage run, validate that the helper scripts, output path, and telemetry prerequisites are usable. Use `--require-grafana` when a partial bundle without Grafana logs/metrics would not answer the question.
 
 ```bash
+eval "$(grep '^export GRAFANA' ~/.bashrc)"   # GRAFANA_TOKEN (plain `source ~/.bashrc` early-returns)
+# --node/--peer = ChainSafe Grafana `instance` names (substring match), e.g. beta-mainnet-super
 ~/.openclaw/workspace/scripts/debug/build-incident-bundle.sh \
-  --node lodestar-b2 \
-  --peer lighthouse-b2 \
+  --node beta-mainnet-super \
+  --peer unstable-mainnet-super \
   --window 1h \
   --require-grafana \
   --check-only
@@ -105,19 +115,25 @@ Exit non-zero means fix the missing token/tooling/output path before collecting 
 
 ### 1. Instrument libp2p Internals (Monkeypatching)
 
-For deep protocol debugging, add temporary instrumentation to `node_modules`:
+For deep protocol debugging, add temporary instrumentation to the libp2p deps. They aren't in the root `node_modules` — they hang off `packages/beacon-node/node_modules/` (pnpm symlinks into `node_modules/.pnpm/`):
 
 ```bash
-# Find the file to patch
-find node_modules -path '*libp2p*identify*' -name '*.js' | head -20
+ls packages/beacon-node/node_modules/@libp2p/   # find the file to patch
 
-# Key files for identify debugging:
-# - node_modules/@libp2p/identify/dist/src/identify.js
-# - node_modules/@chainsafe/libp2p-yamux/dist/src/stream.js (yamux streams)
-# - node_modules/@libp2p/mplex/dist/src/mplex.js (mplex streams)
+# Key files for identify debugging (Lodestar uses only mplex — no yamux):
+# - packages/beacon-node/node_modules/@libp2p/identify/dist/src/identify.js
+# - packages/beacon-node/node_modules/@libp2p/mplex/dist/src/mplex.js (mplex streams)
 ```
 
-**Important:** Always remove monkeypatches before committing or running validation. Use `git checkout node_modules/` or `pnpm install` to restore.
+**Important:** pnpm hard-links these files to the shared store (`~/.local/share/pnpm/store/v11`; `identify.js` has ~31 links), so editing in place changes every checkout that shares it. Save the original and break the hardlink before editing; restore from the saved copy before committing or running validation. `git checkout` can't restore (node_modules is untracked), and never run `pnpm install`.
+
+```bash
+f=packages/beacon-node/node_modules/@libp2p/identify/dist/src/identify.js
+cp "$f" "$f.orig" && cp "$f" "$f.new" && mv "$f.new" "$f"   # backup + private copy
+stat -c %h "$f"     # must print 1 before you edit
+# ...patch "$f", run...
+mv "$f.orig" "$f"   # restore
+```
 
 ### 2. A/B Testing with Code Changes
 
@@ -159,10 +175,10 @@ grep -E "peer:(connect|disconnect|identify)" /tmp/run.log
 For protocol stream issues (identify, ping, metadata):
 
 ```bash
-# Add console.log to stream handlers in node_modules
+# Add console.log to stream handlers in node_modules (break the hardlink first — see §1)
 # Key locations:
 # - @libp2p/identify: identify.js → _identify() method
-# - Stream open/close: yamux or mplex stream.js
+# - Stream open/close: @libp2p/mplex stream.js
 # - Protocol negotiation: @libp2p/multistream-select
 
 # Trace stream lifecycle:
@@ -178,11 +194,7 @@ For protocol stream issues (identify, ping, metadata):
 
 **Symptoms:** High ratio of "Unknown" in `lodestar_peers_by_client` metric.
 
-**Root cause found (2026-02-25):** `@libp2p/prometheus-metrics` `trackProtocolStream()` attaches a `message` event listener that races with identify's `pb.read()` for the first data frame. The metrics listener can consume the identify response before the identify handler reads it.
-
-**Fix:** Skip `trackProtocolStream` for `/ipfs/id/1.0.0` protocol. See PR #8958.
-
-**Upstream fix:** `libp2p/js-libp2p#3378` — byteStream should check its own readBuffer before returning null.
+Past root cause (2026-02 metrics-listener race, fixed upstream by js-libp2p#3378): `references/history.md`.
 
 **Diagnostic approach:**
 1. Check `lodestar_peers_by_client` for Unknown ratio
@@ -223,7 +235,7 @@ rm -rf ~/.local/share/lodestar/mainnet
 ## Tips
 
 - **Short runs are fine.** 60-120 seconds is enough to connect to 15-30 peers and observe identify behavior.
-- **engineMock means no execution validation.** The node will sync headers but won't validate blocks. This is fine for networking/peer debugging.
+- **engineMock mocks only the EL.** Execution payloads aren't verified (with an unknown parent payload they import optimistically), but every block still runs the full consensus state transition. This is fine for networking/peer debugging.
 - **Custom port avoids conflicts** with any production nodes on the same machine.
 - **Always use `--forceCheckpointSync`** to ensure a clean start. Stale DB state can mask issues.
 - **Metrics lag behind logs.** After stopping the node, the last metrics scrape reflects final state. Periodic sampling during the run gives time-series data.

@@ -289,7 +289,7 @@ Skills are shared. Your setup is yours. Keeping them apart means you can update 
 
 ### PR Metadata Hygiene (MANDATORY)
 - If PR scope changes after review feedback (or any follow-up commits), re-check that **PR title + description still match the actual diff**.
-- If they drift, update both immediately (`gh pr edit <pr> --title "..." --body-file ...`).
+- If they drift, update both immediately: `gh api -X PATCH repos/<owner>/<repo>/pulls/<pr> -f title="..." -F body=@<file>`, then verify with `gh pr view <pr> --json title,body` (`gh pr edit` can silently no-op on the Projects-classic GraphQL error).
 - Do this before requesting re-review/merge.
 - Example lesson: PR #8986 title/body said pin to `ethspecify 0.3.7` while code was updated to `0.3.9`.
 
@@ -367,14 +367,15 @@ git branch -d <branch-name>  # optional: delete local branch
 - See skill SKILL.md for reviewer selection matrix and workflow
 
 ### Legacy Reviewers (still available)
-- **codex-reviewer:** GPT-5.3-Codex — general code review
-- **gemini-reviewer:** Gemini 2.5 Pro — second perspective
-- **gpt-advisor:** GPT-5.3-Codex, **thinking: "xhigh"** — architecture & deep reasoning
-  - ⚠️ `thinking` is NOT a valid agent config key — MUST pass `thinking: "xhigh"` at spawn time via `sessions_spawn`
+- **codex-reviewer:** GPT-6.1 Sol — general code review
+- **gemini-reviewer:** Gemini 3.5 Flash — second perspective
+- **gpt-advisor:** GPT-6.1 Sol — architecture & deep reasoning
+  - Global `thinkingDefault` is `max` and spawns inherit it — don't pass `thinking: "xhigh"` (that's now a downgrade)
 
 ## Coding Agents (Implementation)
-- **Codex CLI:** `codex exec --full-auto "..."` — best for focused implementation tasks
-- **Claude CLI:** `claude "..."` — best for tasks needing broader reasoning
+- **Codex CLI:** `codex exec --dangerously-bypass-approvals-and-sandbox "..."` — best for focused implementation tasks (config default `gpt-6-astra` @ `xhigh`; `--full-auto` no longer exists)
+- **Claude CLI:** `claude -p --permission-mode bypassPermissions "..."` — best for tasks needing broader reasoning
+- **Hard tasks:** astra max — `codex exec -m gpt-6-astra -c model_reasoning_effort=max …`; or fable — `claude -p --model fable --effort max …` (both subscription-billed; see the `codex` skill)
 - **lodeloop:** `~/lodeloop/lodeloop.sh` — autonomous loop for multi-story features
   - Repo: https://github.com/lodekeeper/lodeloop
   - Default to Codex (`-a codex`)
@@ -403,7 +404,7 @@ git branch -d <branch-name>  # optional: delete local branch
 Add whatever helps you do your job. This is your cheat sheet.
 
 ## CI Auto-Fix Pipeline
-- **Cron ID:** `573d18ec` (hourly, Codex GPT-5.3)
+- **Cron ID:** `573d18ec` (hourly, `openai/gpt-6.1-sol`)
 - **Detector:** `scripts/ci/auto_fix_flaky.py` — scans unstable CI for flaky sim/e2e failures
 - **Prompt:** `scripts/ci/CRON_PROMPT.md` — instructions for the cron agent
 - **Tracker:** `memory/unstable-ci-tracker.json` — avoids re-investigating known failures
@@ -438,10 +439,7 @@ Add whatever helps you do your job. This is your cheat sheet.
 
 When you receive a heartbeat poll (message matches the configured heartbeat prompt), don't just reply `HEARTBEAT_OK` every time. Use heartbeats productively!
 
-Default heartbeat prompt:
-`Read HEARTBEAT.md if it exists (workspace context). Follow it strictly. Do not infer or repeat old tasks from prior chats. If nothing needs attention, reply HEARTBEAT_OK.`
-
-You are free to edit `HEARTBEAT.md` with a short checklist or reminders. Keep it small to limit token burn.
+**Since OpenClaw 2026.9.8 the heartbeat checklist lives in the heartbeat monitor scratch, not `HEARTBEAT.md`** — the runtime never reads the file (migrated 2026-10-04; original archived under `~/.openclaw/backups/heartbeat-migration/`). View/edit: `openclaw cron scratch 8384fe5c-4ded-4971-9e1e-c62575e95868 [--file <path>]`. Keep it small to limit token burn. Busy ticks are skipped, not retried (fixed 9.8 policy), so since 2026-10-04 the built-in heartbeat is off (`agents.defaults.heartbeat.every: 0m`). The checklist runs as the `heartbeat-checklist` automation (951a4097-c4de-4437-84d1-110beb4e2c5d, isolated, every 10m), which loads the scratch each run. Anything else that must run reliably belongs in its own automation job.
 
 ### Heartbeat vs Cron: When to Use Each
 
@@ -458,7 +456,7 @@ You are free to edit `HEARTBEAT.md` with a short checklist or reminders. Keep it
 - One-shot reminders ("remind me in 20 minutes")
 - Output should deliver directly to a channel without main session involvement
 
-**Tip:** Batch similar periodic checks into `HEARTBEAT.md` instead of creating multiple cron jobs. Use cron for precise schedules and standalone tasks.
+**Tip:** Batch similar periodic checks into the heartbeat scratch instead of creating multiple cron jobs. Use cron for precise schedules and standalone tasks.
 
 **Things to check (rotate through these, 2-4 times per day):**
 - **Emails** - Any urgent unread messages?
@@ -516,9 +514,9 @@ This is a starting point. Add your own conventions, style, and rules as you figu
 Before posting PR reviews or important responses:
 1. Draft the review/response
 2. Send to a sub-agent for feedback:
-   - `codex-reviewer` (GPT-5.2) — code quality, edge cases
-   - `gemini-reviewer` (Gemini Flash) — quick sanity check
-   - `gpt-advisor` (GPT-5.2) — second opinion on complex issues
+   - `codex-reviewer` (GPT-6.1 Sol) — code quality, edge cases
+   - `gemini-reviewer` (Gemini 3.5 Flash) — quick sanity check
+   - `gpt-advisor` (GPT-6.1 Sol) — second opinion on complex issues
 3. Incorporate feedback
 4. Post the final version
 

@@ -41,7 +41,7 @@ Focus on what matters to **node operators**, not internal refactors.
 
 ### 3. Write Header Text
 
-The header text goes at the top of the GitHub release body, before the `# Changelog` section.
+The header text replaces the generated `# Changelog` heading at the top of the GitHub release body and ends with the `[Full Changelog]` compare link.
 Follow the structure in `references/style-guide.md`.
 
 ### 4. Write Discord Announcement

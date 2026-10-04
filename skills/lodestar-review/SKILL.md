@@ -11,13 +11,15 @@ Multi-persona review system for ChainSafe/lodestar PRs. Each reviewer has a narr
 
 | Agent ID (use as `agentId`!) | Role | Model | Focus |
 |---|---|---|---|
-| `review-bugs` | Bug Hunter | GPT-5.3-Codex | Functional errors, logic flaws, off-by-one. Only ACTUAL broken behavior. |
-| `review-defender` | Defender | GPT-5.3-Codex | Malicious code, backdoors, supply chain threats. |
-| `review-linter` | Style Enforcer | Gemini 2.5 Pro | Style consistency vs Lodestar conventions. |
-| `review-security` | Security Engineer | GPT-5.3-Codex | DoS vectors, peer manipulation, validation bypasses, crypto misuse. |
-| `review-wisdom` | Wise Senior | Claude Opus 4.6 | Clean code principles, maintainability, readability. |
-| `reviewer-architect` | Architect | GPT-5.3-Codex (thinking: xhigh) | Package boundaries, consensus spec alignment, module coupling. |
-| `review-devils-advocate` | Devil's Advocate | Claude Opus 4.6 (thinking: high) | Challenges premise, simpler alternatives, spec interpretation, necessity. |
+| `review-bugs` | Bug Hunter | GPT-6.1 Sol | Functional errors, logic flaws, off-by-one. Only ACTUAL broken behavior. |
+| `review-defender` | Defender | GPT-6.1 Sol | Malicious code, backdoors, supply chain threats. |
+| `review-linter` | Style Enforcer | Claude Sonnet 5.5 | Style consistency vs Lodestar conventions. |
+| `review-security` | Security Engineer | GPT-6.1 Sol | DoS vectors, peer manipulation, validation bypasses, crypto misuse. |
+| `review-wisdom` | Wise Senior | Claude Opus 5.5 | Clean code principles, maintainability, readability. |
+| `reviewer-architect` | Architect | GPT-6.1 Sol | Package boundaries, consensus spec alignment, module coupling. |
+| `review-devils-advocate` | Devil's Advocate | Claude Opus 5.5 | Challenges premise, simpler alternatives, spec interpretation, necessity. |
+
+Models as configured in `openclaw.json` (2026-10-04; fallback `openai/gpt-6.1-sol` / `gpt-6-sol`). All reviewers inherit the global `max` thinking.
 
 > ⚠️ **Always pass the Agent ID as `agentId` in `sessions_spawn`.** Omitting it routes to your default model
 > instead of the reviewer's configured model. This is a mandatory field, not optional.
@@ -50,7 +52,7 @@ gh pr diff <PR_NUMBER> --repo ChainSafe/lodestar
 **For local changes (pre-PR, dev workflow Phase 4):**
 ```bash
 cd ~/lodestar-<feature>
-git diff unstable...HEAD    # diff against base branch
+git fetch origin unstable && git diff origin/unstable...HEAD    # local unstable lags origin
 # or for staged changes:
 git diff --cached
 ```
@@ -132,14 +134,15 @@ After finishing the review:
 > | 30–80KB (~800–2000 lines) | 300 |
 > | > 80KB (~2000+ lines) | 420 |
 >
-> The default 300s is too short for large diffs. PR #8962 (105KB) timed out 2 reviewers at 300s;
+> These are optional caps — `subagents.runTimeoutSeconds` is unset, so a spawn without `runTimeoutSeconds` has no timeout.
+> Don't go lower for large diffs: PR #8962 (105KB) timed out 2 reviewers at 300s;
 > retries succeeded at 420s (bugs: 6m7s, security: 4m12s).
 
-**Note:** For `reviewer-architect`, always pass `thinking: "xhigh"` in the spawn call for deep architectural reasoning.
+**Note:** Don't pass `thinking` in reviewer spawns — the inherited `max` is already the top level, so an explicit `"xhigh"`/`"high"` is a downgrade.
 
 ### 4. Wait for results
 
-All spawned reviewers will announce their findings back to the main session. Wait for ALL to complete before synthesizing.
+All spawned reviewers will announce their findings back to the main session. Wait for ALL to complete before synthesizing — with `subagents action:"wait" runIds:[…] timeoutSeconds:60` (repeat while any are pending) and/or the artifacts in §4.1. Don't rely on announces alone: in the Claude-CLI harness `sessions_yield` fails and announces can be lost.
 
 ### 4.1 Transport-failure fallback (mandatory)
 
@@ -221,6 +224,14 @@ def find_line(patch, search_text):
 
 **Step 5b: Post as a single GitHub review with inline comments**
 
+**Duplicate guard first:** a subagent-completion event doesn't prove you still own the review. Read the PR's `BACKLOG.md` item for owner/status (already posted? points dropped?) and check for an existing lodekeeper review:
+
+```bash
+gh api --paginate repos/ChainSafe/lodestar/pulls/<PR>/reviews --jq '.[]|select(.user.login=="lodekeeper")|{id,commit_id}'
+```
+
+If one already covers the current head SHA, don't post another.
+
 Use the review API to batch all comments into ONE review submission. Use JSON input (not `-f` flags) so `line` is a proper integer:
 
 ```bash
@@ -277,12 +288,13 @@ When constructing the task for each reviewer, append this Lodestar context block
 ```
 ## Lodestar Codebase Context
 
-Lodestar is a TypeScript Ethereum consensus client (beacon node + validator client + light client).
+Lodestar is a TypeScript Ethereum consensus client (beacon node + validator client; the light client and prover live in a separate repo).
 
 ### Package Structure
 - `beacon-node/` — core beacon chain logic, networking, sync, API server
 - `validator/` — validator client (separate process, talks to beacon via API)
-- `light-client/` — light client (runs in browsers too)
+- `builder/` — ePBS builder client (execution payload bids/envelopes)
+- `cli/` — `@chainsafe/lodestar` command-line entrypoint
 - `state-transition/` — pure state transition functions (spec implementation)
 - `fork-choice/` — proto-array fork choice
 - `types/` — SSZ type definitions for all forks
@@ -291,10 +303,12 @@ Lodestar is a TypeScript Ethereum consensus client (beacon node + validator clie
 - `api/` — REST API client/server (shared between beacon-node and validator)
 - `reqresp/` — libp2p request/response protocol
 - `db/` — LevelDB abstraction
+- `era/` — era file handling
+- `logger/` — shared Node.js logger
 - `utils/` — shared utilities
 
 ### Fork Progression
-phase0 → altair → bellatrix → capella → deneb → electra → fulu → gloas
+phase0 → altair → bellatrix → capella → deneb → electra → fulu → gloas → heze
 
 Fork-aware code uses guards: `isForkPostElectra(fork)`, `isForkPostFulu(fork)`, etc.
 
@@ -315,8 +329,8 @@ Fork-aware code uses guards: `isForkPostElectra(fork)`, `isForkPostFulu(fork)`, 
 - **Config vs params:** `@lodestar/params` = compile-time constants, `@lodestar/config` = runtime chain config
 
 ### Architecture Rules
-- Beacon node, validator client, and light client are separate packages with clear boundaries
-- Cross-package deps flow downward: beacon-node → state-transition → types → params
+- Beacon node and validator client are separate packages with clear boundaries
+- Cross-package deps flow downward: beacon-node → fork-choice → state-transition → config → types → params
 - Validator talks to beacon node only via REST API (never import beacon-node internals)
 - State transition functions must be pure (no side effects, no network calls)
 - Fork choice is its own package — beacon-node consumes it, doesn't extend it
@@ -369,7 +383,7 @@ Use `scripts/review/track-findings.py` to track which findings get addressed in 
 
    Exit behavior:
    - Exit `0`: guards passed (or stale findings detected but non-fatal).
-   - Exit `2`: metadata drift detected; wrapper prints the exact `gh pr edit` reminder command.
+   - Exit `2`: metadata drift detected; update title/body via REST — `gh pr edit` silently no-ops on the Projects-classic GraphQL error: `gh api -X PATCH repos/ChainSafe/lodestar/pulls/<PR> -F body=@<file> -f title='…'`, then verify with `gh pr view <PR> --json title,body` (the wrapper prints the same reminder).
    - Exit `3`: stale findings detected when `--fail-on-stale` is set.
 
    Default artifacts:
@@ -392,7 +406,7 @@ Use `scripts/review/track-findings.py` to track which findings get addressed in 
      > ~/.openclaw/workspace/notes/review-reports/pr-<PR>-stale-findings.md
    ```
    Keep artifact paths in your review notes / tracker entry for traceability.
-4. When the author pushes a new commit, check coverage:
+3. When the author pushes a new commit, check coverage:
    ```bash
    # Get changed files from the new commit
    gh pr diff <PR> --repo ChainSafe/lodestar --name-only > /tmp/changed-files.txt
@@ -400,15 +414,15 @@ Use `scripts/review/track-findings.py` to track which findings get addressed in 
      --changed-files $(cat /tmp/changed-files.txt | tr '\n' ' ')
    ```
    Output: which findings are on changed files (→ verify!) vs. still-untouched files (→ still open).
-5. Mark resolved findings:
+4. Mark resolved findings:
    ```bash
    python3 ~/.openclaw/workspace/scripts/review/track-findings.py resolve <PR> <id> --commit <sha>
    ```
-6. Generate a markdown summary for a GitHub follow-up comment:
+5. Generate a markdown summary for a GitHub follow-up comment:
    ```bash
    python3 ~/.openclaw/workspace/scripts/review/track-findings.py dump <PR>
    ```
-7. Escalate stale unresolved findings (default: open critical/major older than 7 days by `updated` timestamp):
+6. Escalate stale unresolved findings (default: open critical/major older than 7 days by `updated` timestamp):
    ```bash
    python3 ~/.openclaw/workspace/scripts/review/track-findings.py stale <PR>
    # Use --fail-on-match in automation wrappers to raise non-zero exit when stale items exist
@@ -418,8 +432,8 @@ Also available: `import --markdown <file>` (parse free-form reviewer output), `i
 
 ## Tips
 
-- For consensus-spec-related changes, cross-reference `~/consensus-specs` for correctness
-- For API changes, cross-reference `~/beacon-APIs` (ethereum/beacon-APIs)
+- For consensus-spec-related changes, cross-reference `~/consensus-specs` for correctness — its working tree is usually on a feature branch, so read refs: `git -C ~/consensus-specs fetch -q origin master && git -C ~/consensus-specs show origin/master:<path>` (or the tag pinned in Lodestar's `spec-tests-version.json`)
+- For API changes, cross-reference `~/beacon-APIs` (ethereum/beacon-APIs) the same way, via `origin/master`
 - The security reviewer is especially valuable for networking/p2p/reqresp changes — consensus clients are adversarial environments
 - The architect reviewer catches cross-package boundary violations that other reviewers miss
 - When reviewing ePBS/Gloas code, pay extra attention to ProtoBlock variant handling (twoeths's top concern)

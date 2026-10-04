@@ -12,7 +12,7 @@ STATE_PATH = Path(os.environ.get('CRON_HEALTH_STATE_PATH', '/home/openclaw/cron-
 WORKSPACE_PATH = Path(os.environ.get('WORKSPACE_PATH', '/home/openclaw/.openclaw/workspace'))
 OPENCLAW_BIN = Path(os.environ.get(
     'OPENCLAW_BIN',
-    '/home/openclaw/.nvm/versions/node/v22.22.0/bin/openclaw',
+    '/home/openclaw/.nvm/versions/node/v24.21.0/bin/openclaw',
 ))
 AUTONOMY_CADENCE_JOB_ID = 'virtual:autonomy-audit-cadence'
 AUTONOMY_CADENCE_NAME = 'autonomy-audit-cadence'
@@ -54,8 +54,10 @@ def load_cron_jobs():
     if isinstance(jobs_root, dict) and isinstance(jobs_root.get('jobs'), list):
         return jobs_root.get('jobs', [])
 
+    # Fail loudly: an empty job list reads as "everything recovered" and wipes
+    # activeFailures in the state file (2026-10-04, dead v22 CLI after the 9.8 upgrade).
     if not OPENCLAW_BIN.exists():
-        return []
+        raise SystemExit(f'cron-health: cannot load cron jobs: {OPENCLAW_BIN} not found')
 
     try:
         result = subprocess.run(
@@ -67,18 +69,21 @@ def load_cron_jobs():
             check=False,
         )
     except subprocess.TimeoutExpired:
-        return []
+        raise SystemExit(f'cron-health: cannot load cron jobs: `{OPENCLAW_BIN} cron list` timed out')
 
     if result.returncode != 0:
-        return []
+        tail = ' | '.join(result.stdout.strip().splitlines()[-3:])
+        raise SystemExit(f'cron-health: cannot load cron jobs: `{OPENCLAW_BIN} cron list` exited {result.returncode}: {tail}')
 
     try:
         live_root = json.loads(result.stdout)
     except json.JSONDecodeError:
-        return []
+        raise SystemExit(f'cron-health: cannot load cron jobs: `{OPENCLAW_BIN} cron list` returned non-JSON output')
 
-    jobs = live_root.get('jobs', [])
-    return jobs if isinstance(jobs, list) else []
+    jobs = live_root.get('jobs')
+    if not isinstance(jobs, list) or not jobs:
+        raise SystemExit('cron-health: cannot load cron jobs: `cron list` returned no jobs')
+    return jobs
 
 
 def fmt_ms(ms):

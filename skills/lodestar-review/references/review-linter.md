@@ -12,7 +12,7 @@ Compare the PR changes against Lodestar's established conventions:
 - **No `any`:** Explicit types everywhere, no TypeScript `any`
 - **No default exports:** Named exports only
 - **Private fields:** No underscore prefix (`private dirty`, not `private _dirty`)
-- **Comments:** `//` for implementation, `/** */` JSDoc for public APIs
+- **Comments:** Default is zero comments in new code (repo `AGENTS.md`) — flag comments that restate the code or narrate the change (that belongs in the commit message); `//` for implementation, `/** */` JSDoc for public APIs
 - **Error handling:** `LodestarError` with typed error codes, not generic `new Error()`
 - **Logging:** Structured fields: `this.logger.debug("msg", {slot, root})` — never string concatenation
 - **Metrics:** Prometheus naming conventions, unit suffixes on metric names (not variable names)

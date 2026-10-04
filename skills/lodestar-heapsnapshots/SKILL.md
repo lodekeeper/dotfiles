@@ -11,6 +11,7 @@ Use this for live memory leak debugging on running Lodestar nodes.
 - You can SSH to the host running Lodestar.
 - Lodestar REST API is reachable locally on that host (often `127.0.0.1:<api-port>`).
 - You know where snapshots can be written (`/tmp` is safest).
+- The `lodestar` REST namespace is enabled. It is not a default (defaults: `beacon,config,debug,events,node,validator,lightclient`, `packages/beacon-node/src/api/rest/index.ts`); without it `write_heapdump` returns 404 even though the health check below passes. Use `--rest.namespace all`, or list the defaults plus `lodestar`: the flag replaces the default list, so `--rest.namespace lodestar` alone drops the beacon/node/validator APIs.
 
 Quick port discovery (if unknown):
 ```bash
@@ -21,6 +22,8 @@ grep -n "rest.port\|rest.address" /home/devops/beacon/rcconfig.yml
 Quick API sanity check:
 ```bash
 curl -sS -m 5 http://127.0.0.1:9596/eth/v1/node/health -w "\nHTTP:%{http_code}\n"
+# lodestar namespace check: 404 = namespace not enabled
+curl -sS -m 5 -o /dev/null http://127.0.0.1:9596/eth/v1/lodestar/regen_queue_items -w "HTTP:%{http_code}\n"
 ```
 
 ## 2) Capture snapshots
@@ -55,9 +58,11 @@ Take at least 2 snapshots separated by meaningful runtime (e.g. 10–60 min).
 Use the bundled helper script:
 
 ```bash
-node --max-old-space-size=24576 scripts/analyze-heap.mjs \
+node --max-old-space-size=24576 ~/.openclaw/workspace/skills/lodestar-heapsnapshots/scripts/analyze-heap.mjs \
   <older.heapsnapshot> <newer.heapsnapshot>
 ```
+
+(`scripts/analyze-heap.mjs` is a byte-identical copy of `memory-profiling/scripts/analyze-heap.mjs`; change both together.)
 
 If snapshots are too large for Node parser, use Python fallback to aggregate by `(type,name)` and diff counts/self-size.
 
@@ -80,7 +85,7 @@ After patching:
 Do **not** conclude immediately after restart.
 
 Use this sequence:
-1. Confirm restart took effect (`process_start_time_seconds` changed).
+1. Confirm restart took effect: `process_start_time_seconds{job="beacon"}` changed. Unfiltered, it also returns the `validator` series and a `node_exporter` series that holds host boot time.
 2. Wait **1–2h warm-up** for peer convergence (e.g. around normal peer counts).
 3. Only then evaluate old-space slope vs pre-fix baseline.
 

@@ -91,7 +91,7 @@ Reviewers expect spec citations for consensus-critical logic. Not just "per spec
 
 ### Code Writing
 - **Fork choice `getHead()` caching:** After calling `validateLatestHash` or any proto-array mutation, must call `recomputeForkChoiceHead()` to refresh the cached head. Missed this in EIP-8025 work.
-- **`push()` vs `pushWait()` semantics:** `push()` resolves when the job *finishes* (not when enqueued). Using `await pushWait()` in range sync means "wait for DB write to complete" — much stronger throttling than intended.
+- **`JobItemQueue.push()` semantics:** `push()` resolves when the job *finishes* (not when enqueued) — `await push()` means "wait for the job (e.g. a DB write) to complete", much stronger throttling than intended. For capacity backpressure use `await waitForSpace()`.
 - **Fire-and-forget needs `.catch()`:** `void someAsyncFunction()` without `.catch()` creates unhandled rejection. Use `void someAsyncFunction().catch(logError)`.
 - **Always run `pnpm lint` before pushing.** Biome formatting issues waste CI round-trips.
 
@@ -100,4 +100,4 @@ Reviewers expect spec citations for consensus-critical logic. Not just "per spec
 - **Reply in-thread** — use `gh api -X POST repos/{owner}/{repo}/pulls/{pr_number}/comments -f body="..." -F in_reply_to={comment_id}`, not `gh pr comment`.
 - **Read ALL comments before dismissing notifications** — new comments on already-read threads don't create new unread notifications.
 - **Don't force push after review starts** — use incremental commits so reviewers can track changes.
-- **Use merge, not rebase** for upstream changes — `git merge unstable`, not rebase + force-push.
+- **Use merge, not rebase** for upstream changes — `git fetch origin unstable && git merge origin/unstable` (local `unstable` lags origin), not rebase + force-push.

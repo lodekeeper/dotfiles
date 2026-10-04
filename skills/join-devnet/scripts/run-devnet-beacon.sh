@@ -1,20 +1,22 @@
 #!/usr/bin/env bash
-# run-devnet-beacon.sh — Start a Lodestar beacon node on any ePBS devnet with engineMock
+# run-devnet-beacon.sh — Start a Lodestar beacon node on an ethpandaops devnet with engineMock
 #
-# Usage:
-#   ./scripts/run-devnet-beacon.sh [OPTIONS]
+# Usage (run from the root of a BUILT Lodestar checkout, e.g. ~/lodestar):
+#   bash ~/.openclaw/workspace/skills/join-devnet/scripts/run-devnet-beacon.sh --devnet <name> [OPTIONS]
 #
 # Examples:
-#   ./scripts/run-devnet-beacon.sh                                    # epbs-devnet-0, default ports
-#   ./scripts/run-devnet-beacon.sh --supernode                        # with all custody columns
-#   ./scripts/run-devnet-beacon.sh --devnet epbs-devnet-1 --port 9300 # different devnet + port
-#   ./scripts/run-devnet-beacon.sh --dry-run                          # print command only
+#   run-devnet-beacon.sh --devnet glamsterdam-devnet-8                         # default ports
+#   run-devnet-beacon.sh --devnet glamsterdam-devnet-8 --supernode             # with all custody columns
+#   run-devnet-beacon.sh --devnet glamsterdam-devnet-8 --port 9300 --rest-port 9800
+#   run-devnet-beacon.sh --devnet glamsterdam-devnet-8 --dry-run               # print command only
 #
-# Artifacts are auto-downloaded if missing. For a new devnet, just change --devnet.
+# --devnet is required: pick a live one with `panda devnets`.
+# Artifacts/data/logs default to ~/devnet-runs/<devnet>/ (outside the repo, so they never land in a commit).
+# Artifacts are auto-downloaded if missing.
 
 set -euo pipefail
 
-DEVNET="epbs-devnet-0"
+DEVNET=""
 ARTIFACTS=""
 DATA_DIR=""
 LOG_DIR=""
@@ -44,9 +46,14 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-ARTIFACTS="${ARTIFACTS:-devnet-artifacts/$DEVNET}"
-DATA_DIR="${DATA_DIR:-runs/$DEVNET/beacon-data}"
-LOG_DIR="${LOG_DIR:-runs/$DEVNET}"
+if [[ -z "$DEVNET" ]]; then
+  echo "ERROR: --devnet <name> is required (pick a live one: panda devnets)" >&2
+  exit 1
+fi
+
+ARTIFACTS="${ARTIFACTS:-$HOME/devnet-runs/$DEVNET/artifacts}"
+DATA_DIR="${DATA_DIR:-$HOME/devnet-runs/$DEVNET/beacon-data}"
+LOG_DIR="${LOG_DIR:-$HOME/devnet-runs/$DEVNET}"
 
 # Auto-download artifacts if missing
 if [[ ! -f "$ARTIFACTS/config.yaml" ]] || [[ ! -f "$ARTIFACTS/genesis.ssz" ]]; then
@@ -79,7 +86,6 @@ CMD=(
   --logFile "$LOG_DIR/beacon.log"
   --logFileLevel debug
   --execution.engineMock
-  --eth1=false
   --network.connectToDiscv5Bootnodes
   --disablePeerScoring
   --persistNetworkIdentity
@@ -104,10 +110,23 @@ if [[ "$DRY_RUN" == true ]]; then
   exit 0
 fi
 
+if [[ ! -f packages/cli/bin/lodestar.js || ! -d packages/cli/lib ]]; then
+  echo "ERROR: run from the root of a built Lodestar checkout (no packages/cli/lib in $PWD)" >&2
+  exit 1
+fi
+
 echo "Starting... (PID file: $LOG_DIR/beacon.pid)"
-nohup "${CMD[@]}" > "$LOG_DIR/run.out" 2>&1 &
+# setsid + disown: fully detached, so a long sync survives session teardown (nohup does not)
+setsid "${CMD[@]}" < /dev/null > "$LOG_DIR/run.out" 2>&1 &
 PID=$!
+disown
 echo "$PID" > "$LOG_DIR/beacon.pid"
+sleep 3
+if ! kill -0 "$PID" 2>/dev/null; then
+  echo "ERROR: beacon exited right after start — tail of $LOG_DIR/run.out:" >&2
+  tail -20 "$LOG_DIR/run.out" >&2
+  exit 1
+fi
 echo "Started with PID $PID"
 echo ""
 echo "Monitor:"

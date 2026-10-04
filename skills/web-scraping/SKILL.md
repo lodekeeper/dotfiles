@@ -9,6 +9,8 @@ Universal web scraping for AI agents. Scrape any website — static, JS-rendered
 
 **Try `web_fetch` first.** Only use this skill when the built-in tool fails or returns incomplete content.
 
+On this Gateway the `browser` plugin and `cua-computer` are disabled and Firecrawl is not installed (checked 2026-10-04), so this skill is the escalation path after `web_fetch`. Revisit Tiers 2 and 4 if `browser` gets enabled.
+
 ---
 
 ## Prerequisites
@@ -21,7 +23,7 @@ source ~/camoufox-env/bin/activate
 python3 -c "import curl_cffi; print('curl_cffi:', curl_cffi.__version__)"
 python3 -c "import scrapling; print('scrapling OK')"
 python3 -c "import trafilatura; print('trafilatura:', trafilatura.__version__)"
-python3 -c "import camoufox; print('camoufox:', camoufox.__version__)"
+python3 -c "from importlib.metadata import version; print('camoufox:', version('camoufox'))"
 ```
 
 **Venv location:** `~/camoufox-env` (Python 3.12)
@@ -126,21 +128,20 @@ Sites confirmed working (from benchmarks):
 ## Tier 2: DynamicFetcher (JS Rendering)
 
 **Best for:** SPAs (React, Vue, Angular), JS-rendered content, sites needing interaction.
-**Speed:** 0.9-2.8s per page. Uses rebrowser-playwright (headless Chromium).
+**Speed:** 0.9-2.8s per page. Uses plain Playwright (headless Chromium, no stealth patches in Scrapling 0.4).
 **Success rate:** ~85% of websites.
 
 ```python
 #!/usr/bin/env python3
-"""Tier 2: DynamicFetcher — JS rendering via stealth Chromium."""
+"""Tier 2: DynamicFetcher — JS rendering via headless Chromium (plain Playwright)."""
 import sys
 from scrapling import DynamicFetcher
 import trafilatura
 
 url = sys.argv[1] if len(sys.argv) > 1 else "https://forkcast.org"
 
-# DynamicFetcher uses rebrowser-playwright under the hood
-fetcher = DynamicFetcher()
-response = fetcher.fetch(
+# Classmethod call; instantiating DynamicFetcher() is deprecated and has no effect
+response = DynamicFetcher.fetch(
     url,
     headless=True,
     network_idle=True,  # Wait for network to settle
@@ -168,13 +169,14 @@ else:
 ### ⚠️ DynamicFetcher caveats
 
 - **Sync-only by default** — cannot be called from inside an `asyncio` event loop. Use `async_fetch()` for async contexts or run in a subprocess.
-- Uses Scrapling v0.4 API: `.fetch()` not `.get()`. Constructor arg `auto_match` is deprecated → use `DynamicFetcher.configure(auto_match=False)`.
+- Scrapling 0.4 API: browser fetchers (`DynamicFetcher`, `StealthyFetcher`) use the classmethod `.fetch(url, ...)`; the HTTP `Fetcher` uses `.get()`/`.post()`. Don't instantiate fetchers. `auto_match` is gone: `configure(auto_match=...)` raises `ValueError`, and its successor `adaptive` already defaults to off.
 
 ### When to escalate
 
 - Still getting CF challenge (Turnstile) → Tier 3
 - Site uses aggressive anti-bot (DataDome, Kasada, PerimeterX) → Tier 3
 - Need fingerprint rotation → Tier 3
+- Optional stealth-Chromium step before Camoufox: `StealthyFetcher.fetch(url, headless=True)` (patchright; also takes `solve_cloudflare=True`). Not benchmarked here and not part of `auto_scrape.py`.
 
 ---
 
@@ -218,7 +220,7 @@ else:
 ### Camoufox features
 
 - **`humanize=True`** — Simulates human-like mouse movements and interactions
-- **`geoip=True`** — Rotates OS fingerprint based on GeoIP (requires MaxMind DB, installed)
+- **`geoip=True`** — Looks up the public exit IP and sets geolocation, locale/timezone and the WebRTC IP to match (MaxMind DB installed). It does not change the OS fingerprint.
 - **Engine-level spoofing** — Canvas, WebGL, fonts, navigator properties modified in Firefox C++ source
 - **Async API available:** `from camoufox.async_api import AsyncCamoufox`
 
@@ -232,7 +234,9 @@ else:
 
 ## Tier 4: Authenticated Sessions
 
-**Best for:** Login-required sites (Discord channels, private dashboards, gated content).
+**Best for:** Login-required sites (private dashboards, gated content).
+
+**Discord: never scrape.** Read it with the OpenClaw `message` tool (`action: read`/`search`). If a channel is not readable (read allowlist), stop and don't work around it. For Eth R&D history, use the `eth-rnd-archive` skill.
 
 ```python
 #!/usr/bin/env python3
@@ -289,10 +293,10 @@ Before hitting a page with a browser, check for cheaper data sources:
 
 ```python
 """Check for structured data sources before scraping."""
-import trafilatura
+from trafilatura.sitemaps import sitemap_search  # `import trafilatura` alone doesn't load .sitemaps
 
 # 1. Sitemaps / RSS feeds
-sitemap_urls = trafilatura.sitemaps.sitemap_search("https://example.com")
+sitemap_urls = sitemap_search("https://example.com")
 
 # 2. SPA hydration blobs (Next.js, Nuxt, etc.)
 # Many SPAs embed full page data in script tags — no browser needed
@@ -370,21 +374,7 @@ text = trafilatura.extract(downloaded)
 | Multilingual content | Interactive widgets |
 | Metadata extraction | Login-gated content |
 
-### Fallback: readability-lxml
-
-When trafilatura returns None or poor results (short pages, unusual layouts):
-
-```python
-from readability import Document
-import trafilatura
-
-# Use readability to clean HTML first, then trafilatura on cleaned output
-doc = Document(html)
-cleaned_html = doc.summary()
-title = doc.title()
-
-text = trafilatura.extract(cleaned_html) or cleaned_html
-```
+When precision mode returns too little (short pages, listings, forums), retry with `favor_recall=True`; `scripts/auto_scrape.py` does this automatically.
 
 ### Structured Data Extraction
 
@@ -393,205 +383,23 @@ For tables, lists, specific elements — use CSS selectors via Scrapling's parse
 ```python
 from scrapling import Fetcher
 
-fetcher = Fetcher()
-response = fetcher.fetch(url)
+response = Fetcher.get(url)  # HTTP Fetcher uses .get(); browser fetchers use .fetch()
 
-# CSS selectors (Parsel-compatible, fast)
-titles = response.css("h2.title::text")
-links = response.css("a.repo-link::attr(href)")
+# CSS selectors (Parsel-compatible, fast); .getall()/.get() return strings
+titles = response.css("h2.title::text").getall()
+links = response.css("a.repo-link::attr(href)").getall()
 rows = response.css("table.data tr")
 
 for row in rows:
-    cols = row.css("td::text")
+    cols = row.css("td::text").getall()
     print([c.strip() for c in cols])
 ```
 
 ---
 
-## Complete Auto-Tiering Script
+## Auto-Tiering Script
 
-Save as a reusable scraping utility:
-
-```python
-#!/usr/bin/env python3
-"""
-auto_scrape.py — Tiered web scraper with automatic escalation.
-
-Usage:
-    python3 auto_scrape.py <url> [--tier 1|2|3] [--raw] [--json]
-    
-Environment:
-    source ~/camoufox-env/bin/activate
-"""
-import sys
-import json
-import time
-import argparse
-import trafilatura
-from curl_cffi import requests as cffi_requests
-
-
-def is_cf_blocked(html: str) -> bool:
-    """Check if response is a Cloudflare challenge page."""
-    indicators = [
-        "Checking your browser",
-        "cf-browser-verification",
-        "challenges.cloudflare.com",
-        "Just a moment...",
-        "_cf_chl_opt",
-    ]
-    return any(ind in html for ind in indicators)
-
-
-def is_empty_spa(html: str) -> bool:
-    """Check if response is an empty SPA shell."""
-    if len(html) < 5000:
-        return True
-    # Common SPA indicators with no rendered content
-    spa_shells = ['<div id="root"></div>', '<div id="app"></div>', '<div id="__next"></div>']
-    return any(shell in html for shell in spa_shells) and len(html) < 15000
-
-
-def validate_content(html: str, url: str) -> bool:
-    """Validate that we got real content, not a challenge or empty shell."""
-    if not html or len(html) < 200:
-        return False
-    if is_cf_blocked(html):
-        return False
-    return True
-
-
-def tier1_curl(url: str, timeout: int = 15) -> str | None:
-    """Tier 1: curl_cffi with Chrome TLS impersonation."""
-    try:
-        resp = cffi_requests.get(
-            url,
-            impersonate="chrome131",
-            timeout=timeout,
-            headers={
-                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-                "Accept-Language": "en-US,en;q=0.9",
-                "Accept-Encoding": "gzip, deflate, br",
-            },
-        )
-        if resp.status_code == 200 and validate_content(resp.text, url):
-            if not is_empty_spa(resp.text):
-                return resp.text
-    except Exception as e:
-        print(f"Tier 1 failed: {e}", file=sys.stderr)
-    return None
-
-
-def tier2_dynamic(url: str, timeout: int = 30000) -> str | None:
-    """Tier 2: DynamicFetcher (rebrowser-playwright)."""
-    try:
-        from scrapling import DynamicFetcher
-        fetcher = DynamicFetcher()
-        response = fetcher.fetch(url, headless=True, network_idle=True, timeout=timeout)
-        html = response.html_content
-        if html and validate_content(html, url):
-            return html
-    except Exception as e:
-        print(f"Tier 2 failed: {e}", file=sys.stderr)
-    return None
-
-
-def tier3_camoufox(url: str, timeout: int = 30000) -> str | None:
-    """Tier 3: Camoufox stealth Firefox."""
-    try:
-        from camoufox.sync_api import Camoufox
-        with Camoufox(headless=True, humanize=True, geoip=True) as browser:
-            page = browser.new_page()
-            page.goto(url, timeout=timeout, wait_until="networkidle")
-            time.sleep(2)  # Extra wait for CF challenge resolution
-            html = page.content()
-            if html and validate_content(html, url):
-                return html
-    except Exception as e:
-        print(f"Tier 3 failed: {e}", file=sys.stderr)
-    return None
-
-
-def extract_content(html: str, url: str) -> str:
-    """Extract readable text from HTML using trafilatura."""
-    # Try precision mode first (best for articles)
-    text = trafilatura.extract(
-        html, url=url,
-        include_links=True, include_tables=True,
-        favor_precision=True,
-    )
-    if text and len(text) > 50:
-        return text
-    # Fallback: recall mode (catches more — tables, listings, forums)
-    text = trafilatura.extract(
-        html, url=url,
-        include_links=True, include_tables=True,
-        favor_recall=True,
-    )
-    if text and len(text) > 50:
-        return text
-    # Fallback: try readability + trafilatura
-    try:
-        from readability import Document
-        doc = Document(html)
-        cleaned = doc.summary()
-        text = trafilatura.extract(cleaned)
-        if text:
-            return text
-    except ImportError:
-        pass
-    # Last resort: return truncated HTML
-    return html[:50000]
-
-
-def scrape(url: str, max_tier: int = 3, raw: bool = False) -> dict:
-    """Scrape URL with automatic tier escalation."""
-    tiers = [
-        (1, "curl_cffi", tier1_curl),
-        (2, "DynamicFetcher", tier2_dynamic),
-        (3, "Camoufox", tier3_camoufox),
-    ]
-    
-    for tier_num, tier_name, tier_fn in tiers:
-        if tier_num > max_tier:
-            break
-        t0 = time.time()
-        html = tier_fn(url)
-        elapsed = time.time() - t0
-        if html:
-            content = html if raw else extract_content(html, url)
-            return {
-                "url": url,
-                "tier": tier_num,
-                "method": tier_name,
-                "time_s": round(elapsed, 2),
-                "html_bytes": len(html),
-                "content": content,
-                "success": True,
-            }
-        print(f"Tier {tier_num} ({tier_name}) failed in {elapsed:.1f}s, escalating...", file=sys.stderr)
-    
-    return {"url": url, "success": False, "error": "All tiers exhausted"}
-
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Auto-tiering web scraper")
-    parser.add_argument("url", help="URL to scrape")
-    parser.add_argument("--tier", type=int, default=3, help="Max tier to try (1-3)")
-    parser.add_argument("--raw", action="store_true", help="Return raw HTML instead of extracted text")
-    parser.add_argument("--json", action="store_true", dest="as_json", help="Output as JSON")
-    args = parser.parse_args()
-    
-    result = scrape(args.url, max_tier=args.tier, raw=args.raw)
-    
-    if args.as_json:
-        print(json.dumps(result, indent=2))
-    elif result["success"]:
-        print(result["content"])
-    else:
-        print(f"FAILED: {result.get('error', 'unknown')}", file=sys.stderr)
-        sys.exit(1)
-```
+Use `{baseDir}/scripts/auto_scrape.py` rather than re-implementing it: `python3 auto_scrape.py <url> [--tier 1|2|3] [--raw] [--json]`. It escalates Tier 1 → 3 with CF-challenge and SPA-shell detection (a `__NEXT_DATA__`/`__NUXT__` hydration blob counts as content), extracts with trafilatura (precision, then recall), and truncates `--json` content at 10k chars. `scrape(url, max_tier, raw)` and `tier2_dynamic(url)` are importable (see below).
 
 ---
 
@@ -668,88 +476,13 @@ with sync_playwright() as pw:
 
 ### Domain Profile Learning
 
-For repeated scraping of the same domains, remember which tier works:
-
-```python
-"""Simple domain profile store — remember what works."""
-import json, os
-from urllib.parse import urlparse
-
-PROFILE_PATH = os.path.expanduser("~/camoufox-env/domain-profiles.json")
-
-def load_profiles() -> dict:
-    if os.path.isfile(PROFILE_PATH):
-        with open(PROFILE_PATH) as f:
-            return json.load(f)
-    return {}
-
-def save_profile(url: str, tier: int, success: bool):
-    domain = urlparse(url).netloc
-    profiles = load_profiles()
-    profiles.setdefault(domain, {"successes": {}, "failures": {}})
-    key = "successes" if success else "failures"
-    profiles[domain][key][str(tier)] = profiles[domain][key].get(str(tier), 0) + 1
-    with open(PROFILE_PATH, "w") as f:
-        json.dump(profiles, f, indent=2)
-
-def best_tier(url: str) -> int:
-    """Return the cheapest tier that has succeeded for this domain."""
-    domain = urlparse(url).netloc
-    profiles = load_profiles()
-    if domain in profiles:
-        for tier in [1, 2, 3]:
-            if profiles[domain]["successes"].get(str(tier), 0) > 0:
-                return tier
-    return 1  # default: try cheapest first
-```
+Optional per-domain "which tier worked" store (not in use): `references/domain-profiles.md`.
 
 ---
 
 ## Anti-Bot Bypass Reference
 
-### Cloudflare Detection Layers (2026)
-
-1. **TLS/JA4 fingerprinting** — curl_cffi handles this
-2. **JS detections** — Lightweight invisible JS checks → DynamicFetcher handles
-3. **JS challenge (IUAM)** — "Checking your browser" interstitial → Camoufox handles
-4. **Behavioral analysis** — Mouse/scroll patterns → Camoufox `humanize=True`
-5. **ML bot scoring** — Per-customer models → hard to bypass generically
-6. **AI Labyrinth** — Fake honeypot pages with invisible links → don't follow unknown links
-
-### Content Validation (Critical)
-
-**Never trust HTTP 200 alone.** Always validate:
-
-```python
-def validate_scrape(html: str, expected_indicators: list[str] = None) -> bool:
-    """Validate scraped content is real, not a challenge page or honeypot."""
-    # 1. Not a CF challenge
-    if is_cf_blocked(html):
-        return False
-    # 2. Has reasonable content
-    if len(html) < 1000:
-        return False
-    # 3. Site-specific validation (if provided)
-    if expected_indicators:
-        return any(ind in html for ind in expected_indicators)
-    return True
-```
-
-### AI Labyrinth Defense
-
-Cloudflare generates fake pages as honeypots. Defense:
-- **Only follow links you explicitly expect** — don't blindly crawl
-- **Validate content makes semantic sense** for the expected page
-- **Check for `nofollow` on discovered links** before following
-
-### Known Hard Blocks (No Free Bypass)
-
-| Site | Protection | Workaround |
-|------|-----------|------------|
-| beaconcha.in | CF Enterprise + Turnstile | Use their REST API |
-| discord.com | Login wall + SPA | Use Discord bot API |
-| twitter.com/x.com | Aggressive anti-bot | Use Twitter/X API |
-| linkedin.com | JS challenge + login | Use LinkedIn API |
+**Never trust HTTP 200 alone** — validate against CF challenge markers and minimum size (`auto_scrape.py` does), and only follow links you explicitly expect (Cloudflare AI Labyrinth serves honeypot pages). Hard-blocked sites (beaconcha.in, x.com, linkedin.com): use their APIs. CF detection layers, the validation helper and the hard-block table: `references/anti-bot-and-performance.md`.
 
 ---
 
@@ -774,9 +507,9 @@ source ~/camoufox-env/bin/activate
 python3 -m camoufox fetch  # Re-download browser binary
 ```
 
-### rebrowser-playwright: frame context errors
+### rebrowser-playwright (Network Interception snippet only): frame context errors
 
-`[rebrowser-patches]` warnings are non-fatal — stealth patch noise. Content is still fetched correctly.
+`[rebrowser-patches]` warnings are non-fatal — stealth patch noise. Content is still fetched correctly. Scrapling's fetchers don't use rebrowser.
 
 ### curl_cffi: SSL errors
 
@@ -788,19 +521,14 @@ resp = cffi_requests.get(url, impersonate="chrome136")
 
 ### Scrapling API changes (v0.4)
 
-- Use `.fetch()` not `.get()`
-- Constructor `auto_match=False` is deprecated → `DynamicFetcher.configure(auto_match=False)`
+- `DynamicFetcher`/`StealthyFetcher`: classmethod `.fetch(url, ...)`. `Fetcher` (HTTP): `.get()`/`.post()` — `Fetcher.fetch` doesn't exist.
+- Don't instantiate (`DynamicFetcher()` only logs a deprecation warning). `auto_match` was removed: `configure(auto_match=...)` raises `ValueError`; `adaptive` (default off) replaced it.
 
 ---
 
 ## Performance Reference
 
-| Method | Cold Start | Per-Page | Memory | Parallelism |
-|--------|-----------|----------|--------|-------------|
-| curl_cffi | ~0s | 0.1-1.6s | ~10MB | ✅ Easy (async) |
-| DynamicFetcher | ~0.5s | 0.9-2.8s | ~200MB | ⚠️ Browser pool |
-| Camoufox | ~2s | 5-10s | ~300MB | ⚠️ Memory-heavy |
-| rebrowser-playwright | ~0.3s | 3.6-4.8s | ~200MB | ⚠️ Memory-heavy |
+Per-tier cold start / per-page latency / memory table: `references/anti-bot-and-performance.md`.
 
 ---
 

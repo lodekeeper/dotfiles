@@ -16,23 +16,25 @@ Not this skill: local Kurtosis → `kurtosis-devnet`; join with a local node →
 
 ## Flow
 
-1. **Preflight panda.** `skills/devnet-debug/scripts/ensure-panda-auth.sh` — heals the cred-file perms so the containerized `panda-server` can read them, and reports auth state. **Token refresh is handled by `panda-server` itself; do NOT run `scripts/panda/panda-reauth`** (the browser/GitHub-cookie device flow is disabled per nflaig 2026-06-19). If `datasources=null` persists, a human runs `panda auth login` once. Then panda's own readiness check: `scripts/debug/check-devnet-routing-readiness.py <network>` (exit 2 = datasources not ready; `panda datasources --json` returning `{"datasources": null}` means *not ready*, not "network absent").
+1. **Preflight panda.** `skills/devnet-debug/scripts/ensure-panda-auth.sh` — reports auth state. **Token refresh is handled by `panda-server` itself; do NOT run `scripts/panda/panda-reauth`** (the browser/GitHub-cookie device flow is disabled per nflaig 2026-06-19). If `datasources=null` persists, a human runs `panda auth login` once. Then:
+   - **Datasources ready:** `scripts/debug/check-devnet-routing-readiness.py` with **no argument** → `DEVNET_ROUTING_READY … panda_datasources=N` (exit 2 = datasources not ready; `panda datasources --json` returning `{"datasources": null}` means *not ready*, not "network absent"). Don't pass a hosted `<network>` — it's matched against the (generic) datasource names, so a live devnet reports `DEVNET_NOT_FOUND` (exit 3).
+   - **Network live:** `panda devnets` lists the active devnets — pick `<network>` there (devnet numbers rotate). Scripted: `panda devnets -o json | jq -e --arg n <network> '.networks[] | select(.id == $n and .status == "active")'` (exit 0 = live).
 2. **Run the panda procedure.** `panda search runbooks "debug devnet"` → follow it. Use the `query` skill / `panda search examples` for query patterns; discover names live.
 3. **Apply the Lodestar lens** (below).
 4. **Drop to ChainSafe infra** (below) only when you need Lodestar internals panda doesn't ship.
 
 ## Triage — symptom → first look
 
-Quick public snapshot (no auth/panda): `skills/devnet-debug/scripts/net-health.sh <network>` → finality, active forks, node→client topology. Then:
+Quick public snapshot (no auth/panda): `skills/devnet-debug/scripts/net-health.sh <network>` → `finality_verdict` (distance to the newest finalized epoch), active forks, node→client topology. Then:
 
 | Symptom | First look |
 |---------|-----------|
-| Not finalizing / low participation | `dora.get_network_overview` (or `/api/v1/epoch/latest`: `finalized`, participation) → per-client error signatures in `otel-logs` |
+| Not finalizing / low participation | net-health `finality_verdict` / `dora.get_network_overview` (raw: `/api/v1/epoch/<latest-1>` — never `epoch/latest`, it's the in-progress epoch: partial participation, always `finalized=false`) → per-client error signatures in `otel-logs` |
 | A client stuck / on its own fork | Dora `/forks` (who diverged) → that client's **own** `otel-logs` → its live beacon API via the `bn-` gateway |
 | ePBS / Gloas (glamsterdam) | payload-envelope / PTC / builder errors in the stuck client's logs (e.g. `payload envelope … not found in forkchoice`); confirm `GLOAS_FORK_EPOCH` (`cl/config.yaml`) is actually active |
 | PeerDAS data columns missing | data-column-sidecar tables (discover via `panda schema` / `search`) + custody/sampling errors in CL logs |
 | Peers dropping / low count | Lodestar `lodestar_peers_by_client_count` (`:5054` / Prometheus); peer/disconnect lines in `otel-logs`; pin the offending client |
-| Lodestar block production failing | SSH `:5052` `/eth/v1/debug/fork_choice`; ChainSafe Loki debug logs; `scripts/debug/devnet-triage.sh <node>` |
+| Lodestar block production failing | SSH `:5052` `/eth/v1/debug/fork_choice` (or panda `forky` frames); ChainSafe Loki debug logs; `scripts/debug/devnet-triage.sh devnet-ax41-<N>` (ChainSafe nodes only) |
 | Did the network pass its tests? | Assertoor `/api/v1/test_runs` (failed runs) |
 
 Always read the **failing client's own** logs — don't infer its bug from Lodestar's side. Once root-caused, hand the mechanism + the exact log lines to that client's team (don't just say "looks like X").
@@ -41,9 +43,9 @@ Always read the **failing client's own** logs — don't infer its bug from Lodes
 
 Every hosted devnet has a landing page `https://<network>.ethpandaops.io/` linking all services + machine-readable config — scope a network from there.
 
-- **`config.<network>.ethpandaops.io`:** `/api/v1/nodes/inventory` (authoritative node→client map — client, image tag, ENR, peer_id, `bn-` beacon URI per node), `/api/v1/nodes/validator-ranges` (validator index → node), `/cl/config.yaml` (fork schedule, e.g. `GLOAS_FORK_EPOCH`; far-future `18446744073709551615` = not scheduled), `/cl/genesis.ssz`, `/el/genesis.json`. Client versions also in repo `ethpandaops/<network>s` (`…/images.yaml`).
+- **`config.<network>.ethpandaops.io`:** `/api/v1/nodes/inventory` (node→client map — client, image tag, ENR, peer_id, `bn-` beacon URI per node; a first hint only: it can omit running nodes, so DNS/SSH-probe for a ground-truth list), `/api/v1/nodes/validator-ranges` (validator index → node), `/cl/config.yaml` (fork schedule, e.g. `GLOAS_FORK_EPOCH`; far-future `18446744073709551615` = not scheduled), `/cl/genesis.ssz`, `/el/genesis.json`. Client versions also in repo `ethpandaops/<network>s` (`…/images.yaml`).
 - **Services:** `rpc.` (EL RPC), `beacon.` (public CL REST), `dora.`, `forkmon.`, `syncoor.` (sync tests), `assertoor.` (network test runner — `/api/v1/test_runs` & `/api/v1/tests` JSON for pass/fail), `checkpoint-sync.`, `faucet.`.
-- **Dora — prefer the panda module:** `from ethpandaops import dora` → `dora.get_network_overview(net)` (epoch/slot/finality/participation/validator counts), `get_epoch`/`get_slot`/`get_validator(s)`, `link_*`. Quick raw curl (no auth): `/api/v1/epoch/latest` (finality + participation), `/api/v1/slot/<n>`, `/api/v1/slots`, `/api/v1/validators`, `/api/v1/validator/<idx>` (JSON); `/forks` is the HTML fork view (one row per fork = a split).
+- **Dora — prefer the panda module:** `from ethpandaops import dora` → `dora.get_network_overview(net)` (epoch/slot/finality/participation/validator counts), `get_epoch`/`get_slot`/`get_validator(s)`, `link_*`. Quick raw curl (no auth): `/api/v1/epoch/<n>` (finality + participation of a *completed* epoch — `latest` is still in progress), `/api/v1/slot/<n>`, `/api/v1/slots`, `/api/v1/validators`, `/api/v1/validator/<idx>` (JSON); `/forks` is the HTML fork view (one row per fork = a split).
 
 Full endpoint catalog + examples: `references/network-metadata.md`.
 
@@ -51,7 +53,7 @@ Full endpoint catalog + examples: `references/network-metadata.md`.
 
 panda's whole point is the **sandbox Python runtime**, not raw SQL dumps. A `panda clickhouse query` returning thousands of rows floods context ("context rot") — the exact thing panda was built to avoid (see the ethpandaops panda post). So:
 
-- **Aggregate in the sandbox, return summaries.** `panda execute --code '...'` with the `ethpandaops` lib (`clickhouse`/`prometheus`/`loki`/`dora`/`specs`) → return `df.describe()`, group-by counts, or top-N — not raw rows.
+- **Aggregate in the sandbox, return summaries.** `panda execute --code '...'` with the `ethpandaops` lib (`clickhouse`/`prometheus`/`dora`/`ethnode`/`forky`/`specs`; `panda docs` lists the modules — `loki` is deprecated, logs live in the ClickHouse otel tables) → return `df.describe()`, group-by counts, or top-N — not raw rows.
 - **Logs:** group by error signature, return the top distinct patterns + counts, then drill into a couple of examples. Don't dump hundreds of lines.
 - **Raw `panda clickhouse query` only for tiny results** (a count, a handful of rows).
 - **Sessions** for multi-step: `panda execute --session <id>` keeps the sandbox warm; cache an expensive pull to `/workspace/*.parquet` and reuse it next call.
@@ -67,14 +69,14 @@ When Lodestar **is** implicated, cross-check head/finality/peers, then go to the
 
 Worked example (Prysm "every node a fork" on glam-devnet-5 → `Execution payload envelope … not found in forkchoice`) and the exact otel-logs query pattern: `references/panda-recipes.md`.
 
-## Secondary POV — ChainSafe infra (panda has none of this)
+## Secondary POV — ChainSafe infra
 
-Use when you need Lodestar internals panda doesn't carry: live fork-choice dump, debug-level logs, heap/CPU profiles, exact peer-by-client counts.
+panda now covers part of this for **any** client: `ethnode.beacon_get(network, instance, path)` (a node's live beacon API) and `forky` (per-node fork-choice frames) — try those first (`panda docs ethnode|forky`; devnet node coverage unverified). Use ChainSafe infra for Lodestar internals panda doesn't carry: debug-level logs, heap/CPU profiles, exact peer-by-client counts, `/eth/v1/lodestar/*` routes.
 
 - **SSH (Lodestar nodes only):** `ssh devops@lodestar-<el>-<n>.srv.<network>.ethpandaops.io` (key `~/.ssh/id_ed25519` = the lodekeeper.keys entry). Beacon REST `localhost:5052`, metrics `localhost:5054/metrics`. Other-client nodes reject the key — read theirs via panda otel-logs (logs) or the `bn-` gateway below (live beacon API). Peer-by-client: `lodestar_peers_by_client_count{client="Prysm"}`.
-- **Any-client beacon API (`bn-` gateway):** reaches **every** client's beacon API (Prysm/LH/Teku/Nimbus/Grandine/Lodestar), unlike the SSH key. `AUTH=$(awk -F': ' '/^<network>:/{print $NF}' ~/.config/ethpandaops/bn-basic-auth)` then `curl "https://$AUTH@bn-<cl>-<el>-<n>.srv.<network>.ethpandaops.io/<beacon-path>"` — HTTP basic auth (user `eth`). Use for live head/finality/peers/version/syncing of a stuck *non-Lodestar* node, and Lodestar debug routes (`/eth/v1/lodestar/...`) on ours. Password is per-devnet and **not in this repo** — stored `0600` at `~/.config/ethpandaops/bn-basic-auth`; get fresh per-devnet creds from Nico / the devnet config. (Bare `<node>.<network>` without `bn-` 404s.)
+- **Any-client beacon API (`bn-` gateway):** reaches **every** client's beacon API (Prysm/LH/Teku/Nimbus/Grandine/Lodestar), unlike the SSH key. `AUTH=$(awk -F': ' '/^<network>:/{print $NF}' ~/.config/ethpandaops/bn-basic-auth)` then `curl "https://$AUTH@bn-<cl>-<el>-<n>.srv.<network>.ethpandaops.io/<beacon-path>"` — HTTP basic auth (user `eth`). Use for live head/finality/peers/version/syncing of a stuck *non-Lodestar* node, and Lodestar debug routes (`/eth/v1/lodestar/...`) on ours. Password is per-devnet and **not in this repo** — stored `0600` at `~/.config/ethpandaops/bn-basic-auth`; get fresh per-devnet creds from Nico / the devnet config. The file only has a `glamsterdam-devnet-5` entry so far — if `AUTH` comes back empty (→ HTTP 401), ask Nico for that devnet's creds or use panda `ethnode`. (Bare `<node>.<network>` without `bn-` 404s.)
 - **ChainSafe Grafana Loki:** ChainSafe's own Lodestar devnet nodes ship **debug-level** logs to Loki (datasource 4) under `group="beacon_devnet"`, `network="dev"`, instances `devnet-ax41-0..3`. Faster than panda for Lodestar peer/disconnect/sync digs, no OIDC. Token: `eval "$(grep '^export GRAFANA' ~/.bashrc)"`. See `grafana-loki` skill.
-- **One-shot per-node snapshot:** before a longer run, preflight telemetry with `scripts/debug/devnet-triage.sh <node> --check-only --require-grafana` when Loki/Prometheus are needed. Autonomous wrappers should use `--check-only --json` for machine-readable readiness. Then `scripts/debug/devnet-triage.sh <node>` pulls that node's recent error logs (Loki) + key metrics (Prometheus) into a markdown report (needs `GRAFANA_TOKEN`).
+- **One-shot per-node snapshot:** before a longer run, preflight telemetry with `scripts/debug/devnet-triage.sh <node> --check-only --require-grafana` when Loki/Prometheus are needed. Autonomous wrappers should use `--check-only --json` for machine-readable readiness. Then `scripts/debug/devnet-triage.sh <node>` pulls that node's recent error logs (Loki) + key metrics (Prometheus) into a markdown report (needs `GRAFANA_TOKEN`). `<node>` = a ChainSafe Grafana `instance` (substring match; the only devnet ones are `devnet-ax41-0..3` — ethpandaops names like `lodestar-geth-1` yield an empty report).
 
 Full commands + "which POV when": `references/chainsafe-infra.md`.
 
@@ -84,10 +86,4 @@ If any commands, file paths, URLs, or configurations in this skill are outdated 
 
 ## Iteration Log
 
-Track what works and what doesn't after each use:
-
-| Date | Network / issue | What worked | What to improve |
-|------|-----------------|-------------|-----------------|
-| 2026-06-16 | glamsterdam-devnet-5 — Prysm "every node a fork" | Cross-client `otel-logs` surfaced Prysm's own `Execution payload envelope … not found in forkchoice` lines — named the mechanism, not just "looks like Prysm". `config/api/v1/nodes/inventory` + the `bn-` gateway gave topology/versions/live beacon API without SSH. | First pass dumped raw log rows into context (costly) → switched to `panda execute` aggregation. Confirm live table/datasource names via `panda schema` / `search examples` before querying — don't trust the literals here. |
-| 2026-09-06 | glamsterdam-devnet-8 — "lodestar missing blocks" | Dora `/api/v1/slots?limit=N` → `proposer_name` gives the node directly (no validator-range join). Grouping miss rate by **EL** vs **CL** instantly isolated the axis: geth/nethermind 0%, besu 100% — proved "not Lodestar" in one table. Best "is it us?" cut on an interop devnet: split proposer_name into `<cl>-<el>-<n>` and tally both axes. | Per-EL otel-logs get muddled by CL lines on the shared `host.name` (`log.file.name` came back empty). Isolate an EL by pairing it with a Rust/Go CL — any Java line on `lighthouse-besu-*` is besu, not the CL. |
-| 2026-09-28 | glamsterdam-devnet-8 — full log+metrics sanity sweep (nflaig) | Parallel 16-node SSH sweep of `/data/lodestar/beacon-*.log` (DEBUG). Log level word is ANSI-wrapped → grep `error\x1b[39m:` / `warn\x1b[39m:`; extract error/warn lines once to a tmp then normalize `0x[0-9a-f]+`→`0xH` + digits→`N` for true top-signature counts. 7d perf via panda prometheus **`devnets`** DS: `prometheus.query(inst, promql)` returns the result **UNWRAPPED** (`r["result"]`, NOT `r["data"]["result"]`); `get_labels`/`get_label_values` take `instance_name` as the 1st positional arg. Devnet series labeled `network="glamsterdam-devnet-8"`, `instance="<net>-<node>"`, plus `consensus_client`/`execution_client`. Key perf metrics: `lodestar_gossip_block_elapsed_time_till_become_head_bucket`, `lodestar_stfn_epoch_transition_seconds`, `nodejs_eventloop_lag_p99_seconds` (main thread), `nodejs_heap_size_used_bytes` (main heap — `process_resident_memory_bytes` mixes CL/VC/EL series unfiltered, don't trust it). | Break perf trends down **per-day** before claiming a regression: a single last2d-vs-first2d compare made a bimodal become-head p99 (~2s↔~11s) look like a monotonic 5× regression; `histogram_quantile(...rate(bucket[1d] offset Nd))` per day revealed the truth. |
+Past runs (what worked / what to improve) live in `references/history.md` — append a row there after each use.

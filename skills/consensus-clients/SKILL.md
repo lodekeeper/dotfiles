@@ -9,30 +9,23 @@ You have detailed maps of all 6 Ethereum consensus clients. Use this to find imp
 
 ## Local-First Access (MANDATORY)
 
-**All 6 client repos are cloned at `~/ethereum-repos/`.** Always use `grep`, `find`, and `cat` for code navigation — never use WebFetch for GitHub-hosted content.
-
-To update repos: `cd ~/ethereum-repos && for d in lodestar lighthouse prysm teku nimbus-eth2 grandine; do git -C $d pull -q; done`
-
-Navigate codebases directly:
+**All 6 client repos are shallow-cloned at `~/ethereum-repos/`, but never trust their working trees:** they can be months stale and on the wrong branch (lighthouse/nimbus-eth2 on `stable`, lodestar on a feature branch with local work). Never checkout/pull/merge/reset them. Fetch each dev branch into its remote-tracking ref, then read with `git grep` / `git show` / `git ls-tree` at `origin/<b>`. Never use WebFetch for GitHub-hosted content.
 
 ```bash
-# Find how each client implements a spec function
-grep -rn "process_attestation\|processAttestation\|ProcessAttestation" \
-  ~/ethereum-repos/lodestar/packages/ \
-  ~/ethereum-repos/lighthouse/consensus/ \
-  ~/ethereum-repos/prysm/beacon-chain/core/ \
-  ~/ethereum-repos/teku/ethereum/spec/ \
-  ~/ethereum-repos/nimbus-eth2/beacon_chain/spec/ \
-  ~/ethereum-repos/grandine/transition_functions/ \
-  --include="*.ts" --include="*.rs" --include="*.go" --include="*.java" --include="*.nim"
+# 1. Fetch dev-branch tips (updates only refs/remotes/origin/<b>); quote the printed ref date in answers
+for d in lodestar:unstable lighthouse:unstable prysm:develop teku:master nimbus-eth2:unstable grandine:develop; do r=${d%%:*}; b=${d##*:}; git -C ~/ethereum-repos/$r fetch -q --depth=1 origin +refs/heads/$b:refs/remotes/origin/$b; echo "$r origin/$b $(git -C ~/ethereum-repos/$r log -1 --format=%cs origin/$b)"; done
 
-# Compare fork choice implementations
-find ~/ethereum-repos/*/  -path "*/fork*choice*" -name "*.ts" -o -name "*.rs" -o -name "*.go" | head -20
+# 2. Find how each client implements a spec function or type (hits are prefixed origin/<b>:<path>)
+for d in lodestar:unstable lighthouse:unstable prysm:develop teku:master nimbus-eth2:unstable grandine:develop; do r=${d%%:*}; b=${d##*:}; echo "== $r"; git -C ~/ethereum-repos/$r grep -n -I -E "process_attestation|processAttestation|ProcessAttestation" origin/$b -- '*.ts' '*.rs' '*.go' '*.java' '*.nim' | head -10; done
 
-# Search for a specific type across all clients
-grep -rn "ExecutionPayloadEnvelope" ~/ethereum-repos/{lodestar,lighthouse,prysm,teku,nimbus-eth2,grandine}/ \
-  --include="*.ts" --include="*.rs" --include="*.go" --include="*.java" --include="*.nim" | head -30
+# Compare fork choice implementations (file listing)
+for d in lodestar:unstable lighthouse:unstable prysm:develop teku:master nimbus-eth2:unstable grandine:develop; do r=${d%%:*}; b=${d##*:}; echo "== $r"; git -C ~/ethereum-repos/$r ls-tree -r --name-only origin/$b | grep -i -E "fork[-_]?choice" | head -5; done
+
+# Read one file
+git -C ~/ethereum-repos/teku show origin/master:<path>
 ```
+
+`~/lodestar` is the Lodestar dev checkout and is often on an unrelated branch: `git -C ~/lodestar fetch -q origin unstable`, then read `origin/unstable` the same way.
 
 **Why local-first:**
 - Cross-client grep finds implementations in seconds
@@ -40,18 +33,20 @@ grep -rn "ExecutionPayloadEnvelope" ~/ethereum-repos/{lodestar,lighthouse,prysm,
 - Can search across all clients simultaneously
 - Works offline, no rate limits
 
-**Fallback:** If a repo isn't cloned locally (unusual), use the web-scraping skill (`skills/web-scraping/SKILL.md`) with the raw GitHub URLs below. All 6 clients + secondary repos should be at `~/ethereum-repos/`.
+**Fallback:** If the fetch fails or a repo isn't cloned (the secondary repos below are not), use the raw GitHub URLs below, via the web-scraping skill (`skills/web-scraping/SKILL.md`) if a plain fetch is blocked.
 
 ## Client Overview
 
 | Client | Language | Repo | Build | Branch strategy |
 |---|---|---|---|---|
 | Lodestar | TypeScript | `ChainSafe/lodestar` | pnpm monorepo | `unstable` (dev), tags for releases |
-| Lighthouse | Rust | `sigp/lighthouse` | Cargo workspace | `unstable` (dev), `stable` (releases) |
-| Prysm | Go | `prysmaticlabs/prysm` | Bazel + Go modules | `develop` (dev), `master` (stable) |
-| Teku | Java | `Consensys/teku` | Gradle | `master` (dev), tags for releases |
-| Nimbus | Nim | `status-im/nimbus-eth2` | Nimble + Make | `unstable` (dev), `stable` (releases) |
+| Lighthouse | Rust | `sigp/lighthouse` | Cargo workspace | `unstable` (dev), `stable` (releases, GitHub default) |
+| Prysm | Go | `OffchainLabs/prysm` | Bazel + Go modules | `develop` (dev + default), releases via tags (`master` frozen since 2025-02) |
+| Teku | Java | `Consensys-Incorporated/teku` | Gradle | `master` (dev), tags for releases |
+| Nimbus | Nim | `status-im/nimbus-eth2` | Nimble + Make | `unstable` (dev), `stable` (releases, GitHub default) |
 | Grandine | Rust | `grandinetech/grandine` | Cargo workspace | `develop` (dev), tags for releases |
+
+Prysm moved from `prysmaticlabs/prysm`, Teku from `Consensys/teku` (Web3Signer from `Consensys/Web3Signer`). The old slugs still work for `gh pr list`, `gh release list` and raw URLs, but `gh search prs|issues --repo <old slug>` fails ("cannot be searched"), so always use the new slugs.
 
 ---
 
@@ -59,29 +54,9 @@ grep -rn "ExecutionPayloadEnvelope" ~/ethereum-repos/{lodestar,lighthouse,prysm,
 
 **Repo:** `ChainSafe/lodestar`
 
-**Package structure** (`packages/`):
+**Package structure** (17 packages in `packages/`, incl. `builder` = Gloas ePBS builder client): see `references/client-layouts.md#lodestar`.
 
-| Package | Purpose |
-|---|---|
-| `beacon-node` | Beacon chain client — block processing, sync, networking, API server |
-| `validator` | Validator client — duties, signing, slashing protection |
-| `state-transition` | Beacon state transition — epoch/block processing, per-fork logic |
-| `fork-choice` | LMD-GHOST + Casper FFG fork choice |
-| `types` | SSZ type definitions for all forks |
-| `params` | Consensus parameters and constants |
-| `config` | Network configuration (mainnet, testnet presets) |
-| `api` | REST client for beacon API |
-| `light-client` | Light client sync protocol |
-| `db` | Database layer (LevelDB) |
-| `reqresp` | libp2p req/resp protocol handlers |
-| `cli` | Command-line interface |
-| `logger` | Logging infrastructure |
-| `utils` | Shared utilities |
-| `prover` | Light client JSON-RPC proxy |
-| `era` | ERA file handling (historical data) |
-| `flare` | Debugging/testing tool |
-| `spec-test-util` | Spec test runner utilities |
-| `test-utils` | Shared test helpers |
+`light-client` and `prover` moved out of the monorepo (#9346; the light-client spec functions now live in `state-transition/src/lightClient/`); `flare` was removed (#9358).
 
 **Key code paths:**
 - State transition: `packages/state-transition/src/`
@@ -113,29 +88,7 @@ https://raw.githubusercontent.com/ChainSafe/lodestar/unstable/packages/{package}
 
 **Repo:** `sigp/lighthouse`
 
-**Directory structure:**
-
-| Directory | Purpose |
-|---|---|
-| `beacon_node/` | Beacon node — contains sub-crates for each component |
-| `beacon_node/beacon_chain/` | Core chain logic — block processing, head tracking |
-| `beacon_node/store/` | Database (hot + cold storage, LevelDB) |
-| `beacon_node/network/` | libp2p networking, sync |
-| `beacon_node/http_api/` | REST API server |
-| `beacon_node/execution_layer/` | Engine API client (EL communication) |
-| `beacon_node/eth1/` | Deposit contract interface |
-| `consensus/` | Spec implementation crates |
-| `consensus/types/` | SSZ types and containers |
-| `consensus/state_processing/` | State transition logic |
-| `consensus/fork_choice/` | Fork choice (proto-array) |
-| `consensus/cached_tree_hash/` | Optimized tree hashing |
-| `validator_client/` | Validator client |
-| `crypto/` | BLS, KZG, and other crypto |
-| `slasher/` | Slashing detection |
-| `lcli/` | CLI development tools |
-| `boot_node/` | Discovery bootstrap node |
-| `common/` | Shared libraries (logging, filesystem, etc.) |
-| `testing/` | Test utilities, simulator |
+**Directory structure:** see `references/client-layouts.md#lighthouse`.
 
 **Key code paths:**
 - State transition: `consensus/state_processing/src/`
@@ -166,33 +119,9 @@ https://raw.githubusercontent.com/sigp/lighthouse/unstable/{path}.rs
 
 ## Prysm (Go)
 
-**Repo:** `prysmaticlabs/prysm`
+**Repo:** `OffchainLabs/prysm` (formerly `prysmaticlabs/prysm`)
 
-**Directory structure:**
-
-| Directory | Purpose |
-|---|---|
-| `beacon-chain/` | Beacon node implementation |
-| `beacon-chain/core/` | Core spec logic (blocks, epoch, validators) |
-| `beacon-chain/state/` | Beacon state management |
-| `beacon-chain/blockchain/` | Chain processing, head tracking |
-| `beacon-chain/sync/` | Sync protocols (initial, regular) |
-| `beacon-chain/p2p/` | libp2p networking |
-| `beacon-chain/rpc/` | gRPC + REST API |
-| `beacon-chain/execution/` | Engine API client |
-| `beacon-chain/forkchoice/` | Fork choice implementation |
-| `beacon-chain/db/` | Database (BoltDB) |
-| `validator/` | Validator client |
-| `consensus-types/` | Shared consensus data types |
-| `proto/` | Protobuf definitions |
-| `encoding/` | SSZ encoding, bytesutil |
-| `config/` | Network config, feature flags |
-| `crypto/` | BLS, hash utilities |
-| `network/` | High-level network utilities |
-| `monitoring/` | Metrics, tracing |
-| `contracts/deposit/` | Deposit contract bindings |
-| `cmd/` | CLI entry points (beacon-chain, validator, etc.) |
-| `tools/` | Development tools |
+**Directory structure:** see `references/client-layouts.md#prysm`.
 
 **Key code paths:**
 - Block processing: `beacon-chain/core/blocks/`
@@ -206,7 +135,7 @@ https://raw.githubusercontent.com/sigp/lighthouse/unstable/{path}.rs
 
 **How to fetch code:**
 ```
-https://raw.githubusercontent.com/prysmaticlabs/prysm/develop/{path}.go
+https://raw.githubusercontent.com/OffchainLabs/prysm/develop/{path}.go
 ```
 
 **Key secondary repos:**
@@ -221,52 +150,31 @@ Prysm is largely self-contained — most dependencies are vendored or in the mai
 
 ## Teku (Java)
 
-**Repo:** `Consensys/teku`
+**Repo:** `Consensys-Incorporated/teku` (formerly `Consensys/teku`)
 
-**Directory structure:**
-
-| Directory | Purpose |
-|---|---|
-| `beacon/` | Core beacon chain logic |
-| `beacon/validator/` | Validator duties management |
-| `ethereum/` | Ethereum protocol modules |
-| `ethereum/spec/` | Spec types, logic, and milestones |
-| `ethereum/statetransition/` | State transition implementation |
-| `ethereum/executionlayer/` | Engine API client |
-| `networking/` | libp2p and discovery |
-| `networking/eth2/` | Eth2 gossip/reqresp protocols |
-| `storage/` | Database layer (RocksDB) |
-| `validator/` | Validator client modules |
-| `services/` | Service layer modules |
-| `infrastructure/` | Logging, metrics, async, IO |
-| `data/` | Data serialization, API types |
-| `eth-tests/` | Ethereum spec test integration |
-| `eth-reference-tests/` | Reference test runners |
-| `fork-choice-tests/` | Fork choice test vectors |
-| `acceptance-tests/` | End-to-end integration tests |
-| `teku/` | Main application entry point |
+**Directory structure:** see `references/client-layouts.md#teku`.
 
 **Key code paths:**
 - Spec logic: `ethereum/spec/src/main/java/tech/pegasys/teku/spec/`
   - Per-fork logic: `ethereum/spec/src/main/java/tech/pegasys/teku/spec/logic/versions/`
   - Types: `ethereum/spec/src/main/java/tech/pegasys/teku/spec/datastructures/`
 - State transition: `ethereum/statetransition/src/main/java/`
-- Fork choice: `ethereum/spec/src/main/java/tech/pegasys/teku/spec/logic/common/forkchoice/`
+- Fork choice: `ethereum/statetransition/src/main/java/tech/pegasys/teku/statetransition/forkchoice/` (spec helpers: `ethereum/spec/.../spec/logic/common/util/ForkChoiceUtil.java` + per-fork `ForkChoiceUtil{Fork}`; types: `ethereum/spec/.../spec/datastructures/forkchoice/`)
 - Networking: `networking/eth2/src/main/java/`
 - REST API: `beacon/validator/src/main/java/` and `data/`
 
-**Code style:** Google Java conventions, enforced by Spotless. Requires Java 21+.
+**Code style:** Google Java conventions, enforced by Spotless. Requires Java 25 (`targetJavaVersion` in `build.gradle`).
 
 **How to fetch code:**
 ```
-https://raw.githubusercontent.com/Consensys/teku/master/{path}.java
+https://raw.githubusercontent.com/Consensys-Incorporated/teku/master/{path}.java
 ```
 
 **Key secondary repos:**
 
 | Repo | What | How to fetch |
 |---|---|---|
-| `Consensys/Web3Signer` | Remote signing service — used with Teku for enterprise key management | `https://raw.githubusercontent.com/Consensys/Web3Signer/master/{path}.java` |
+| `Consensys-Incorporated/web3signer` | Remote signing service — used with Teku for enterprise key management | `https://raw.githubusercontent.com/Consensys-Incorporated/web3signer/master/{path}.java` |
 
 ---
 
@@ -274,27 +182,7 @@ https://raw.githubusercontent.com/Consensys/teku/master/{path}.java
 
 **Repo:** `status-im/nimbus-eth2`
 
-**Directory structure:**
-
-| Directory | Purpose |
-|---|---|
-| `beacon_chain/` | Core implementation (all-in-one) |
-| `beacon_chain/spec/` | Spec types, datatypes, state transition |
-| `beacon_chain/consensus_object_pools/` | Attestation, block, sync committee pools |
-| `beacon_chain/gossip_processing/` | Gossip validation |
-| `beacon_chain/networking/` | libp2p networking |
-| `beacon_chain/sync/` | Sync manager, request manager |
-| `beacon_chain/validators/` | Validator client, keystores |
-| `beacon_chain/el/` | Execution layer communication |
-| `beacon_chain/rpc/` | REST API server |
-| `beacon_chain/fork_choice/` | Fork choice implementation |
-| `ncli/` | CLI tools for data structure inspection |
-| `research/` | Research and experimental code |
-| `tests/` | Test suite, simulation framework |
-| `wasm/` | WebAssembly bindings |
-| `grafana/` | Monitoring dashboards |
-| `scripts/` | Build and CI scripts |
-| `vendor/` | Vendored dependencies |
+**Directory structure:** see `references/client-layouts.md#nimbus`.
 
 **Key code paths:**
 - State transition: `beacon_chain/spec/`
@@ -326,36 +214,7 @@ https://raw.githubusercontent.com/status-im/nimbus-eth2/unstable/{path}.nim
 
 **Repo:** `grandinetech/grandine`
 
-**Crate structure** (~90 crates in Cargo workspace):
-
-| Crate | Purpose |
-|---|---|
-| `transition_functions` | State transition (per-slot, per-block, per-epoch) |
-| `fork_choice_control` | Fork choice orchestration |
-| `fork_choice_store` | Fork choice data store |
-| `attestation_verifier` | Attestation validation |
-| `validator` | Validator client |
-| `slasher` | Slashing detection |
-| `slashing_protection` | Slashing protection DB |
-| `doppelganger_protection` | Doppelganger detection |
-| `p2p` | libp2p networking |
-| `eth2_libp2p` | Eth2-specific libp2p (git submodule) |
-| `http_api` | REST API server |
-| `builder_api` | Builder API (MEV) client |
-| `eth1_api` | Execution layer communication |
-| `ssz` | SSZ serialization |
-| `types` | Consensus types |
-| `helper_functions` | Spec helper functions |
-| `database` | Persistence layer |
-| `state_cache` | State caching |
-| `deposit_tree` | Deposit contract tree |
-| `bls` | BLS cryptography |
-| `kzg_utils` | KZG commitment utilities |
-| `hashing` | Hash utilities |
-| `runtime` | Async runtime |
-| `metrics` | Prometheus metrics |
-| `logging` | Structured logging |
-| `factory` | Object construction |
+**Crate structure** (70 crates in Cargo workspace): see `references/client-layouts.md#grandine`.
 
 **Key code paths:**
 - State transition: `transition_functions/src/`
@@ -388,14 +247,14 @@ Use this table to find where each client implements a given spec concept.
 | **State transition** | `state-transition/src/` | `consensus/state_processing/src/` | `beacon-chain/core/transition/` | `ethereum/statetransition/` | `beacon_chain/spec/state_transition.nim` | `transition_functions/src/` |
 | **Block processing** | `state-transition/src/block/` | `consensus/state_processing/src/per_block_processing/` | `beacon-chain/core/blocks/` | `ethereum/spec/.../logic/versions/` | `beacon_chain/spec/beaconstate.nim` | `transition_functions/src/` |
 | **Epoch processing** | `state-transition/src/epoch/` | `consensus/state_processing/src/per_epoch_processing/` | `beacon-chain/core/epoch/` | `ethereum/spec/.../logic/versions/` | `beacon_chain/spec/` | `transition_functions/src/` |
-| **Fork choice** | `fork-choice/src/` | `consensus/fork_choice/src/` | `beacon-chain/forkchoice/` | `ethereum/spec/.../forkchoice/` | `beacon_chain/fork_choice/` | `fork_choice_control/src/` |
+| **Fork choice** | `fork-choice/src/` | `consensus/fork_choice/src/` | `beacon-chain/forkchoice/` | `ethereum/statetransition/.../forkchoice/` | `beacon_chain/fork_choice/` | `fork_choice_control/src/` |
 | **Types/SSZ** | `types/src/` | `consensus/types/src/` | `consensus-types/` + `proto/` | `ethereum/spec/.../datastructures/` | `beacon_chain/spec/datatypes/` | `types/src/` + `ssz/src/` |
 | **Networking** | `beacon-node/src/network/` | `beacon_node/network/src/` | `beacon-chain/p2p/` | `networking/eth2/` | `beacon_chain/networking/` | `p2p/src/` |
 | **Sync** | `beacon-node/src/sync/` | `beacon_node/network/src/sync/` | `beacon-chain/sync/` | `beacon/sync/` | `beacon_chain/sync/` | `p2p/src/` |
 | **REST API** | `beacon-node/src/api/` | `beacon_node/http_api/src/` | `beacon-chain/rpc/` | `data/` + `beacon/validator/` | `beacon_chain/rpc/` | `http_api/src/` |
 | **Validator** | `validator/src/` | `validator_client/src/` | `validator/` | `validator/` | `beacon_chain/validators/` | `validator/src/` |
 | **Engine API** | `beacon-node/src/execution/` | `beacon_node/execution_layer/src/` | `beacon-chain/execution/` | `ethereum/executionlayer/` | `beacon_chain/el/` | `eth1_api/src/` |
-| **Database** | `db/src/` | `beacon_node/store/src/` | `beacon-chain/db/` | `storage/` | `beacon_chain/db/` | `database/src/` |
+| **Database** | `db/src/` | `beacon_node/store/src/` | `beacon-chain/db/` | `storage/` | `beacon_chain/beacon_chain_db*.nim`, `db_utils.nim` | `database/src/` |
 
 ---
 
@@ -407,8 +266,8 @@ Use `gh` CLI to check recent activity across clients:
 ```bash
 gh pr list --repo ChainSafe/lodestar --limit 10
 gh pr list --repo sigp/lighthouse --limit 10
-gh pr list --repo prysmaticlabs/prysm --limit 10
-gh pr list --repo Consensys/teku --limit 10
+gh pr list --repo OffchainLabs/prysm --limit 10
+gh pr list --repo Consensys-Incorporated/teku --limit 10
 gh pr list --repo status-im/nimbus-eth2 --limit 10
 gh pr list --repo grandinetech/grandine --limit 10  # note: default branch is 'develop'
 ```
@@ -423,8 +282,8 @@ gh search prs "blob sidecar" --repo sigp/lighthouse
 ```bash
 gh release list --repo ChainSafe/lodestar --limit 5
 gh release list --repo sigp/lighthouse --limit 5
-gh release list --repo prysmaticlabs/prysm --limit 5
-gh release list --repo Consensys/teku --limit 5
+gh release list --repo OffchainLabs/prysm --limit 5
+gh release list --repo Consensys-Incorporated/teku --limit 5
 gh release list --repo status-im/nimbus-eth2 --limit 5
 gh release list --repo grandinetech/grandine --limit 5
 ```
@@ -436,12 +295,11 @@ gh search issues "keyword" --repo ChainSafe/lodestar
 ```
 
 **Compare how clients implemented a specific feature:**
-1. If repos are cloned locally, grep across all clients simultaneously:
+1. Fetch the dev branches and `git grep` all clients for the keyword (the two loops in Local-First Access); state each ref date
+2. Search PRs across all clients for the feature name or EIP number:
    ```bash
-   grep -rn "feature_keyword" ~/ethereum-repos/{lodestar,lighthouse,prysm,teku,nimbus-eth2,grandine}/ \
-     --include="*.ts" --include="*.rs" --include="*.go" --include="*.java" --include="*.nim" | head -30
+   for r in ChainSafe/lodestar sigp/lighthouse OffchainLabs/prysm Consensys-Incorporated/teku status-im/nimbus-eth2 grandinetech/grandine; do echo "== $r"; gh search prs "EIP-7732" --repo $r --limit 5; done
    ```
-2. Search PRs across all clients for the feature name or EIP number
 3. Read the PR descriptions and key changed files
 4. If not cloned, fetch the actual implementation files using raw GitHub URLs above
 
@@ -455,7 +313,7 @@ gh search issues "keyword" --repo ChainSafe/lodestar
 - **Prysm** — Go. Simple concurrency model (goroutines). Uses protobuf for internal types alongside SSZ. Large contributor base.
 - **Teku** — Java. Enterprise-grade (ConsenSys). JVM ecosystem, Gradle build. Follows Google Java style strictly.
 - **Nimbus** — Nim. Optimized for resource-constrained devices (RPi). Compiles to C. Smallest memory footprint.
-- **Grandine** — Rust. Newest client. ~90 fine-grained crates. Focus on performance benchmarks and modularity.
+- **Grandine** — Rust. Newest client. ~70 fine-grained crates. Focus on performance benchmarks and modularity.
 
 ### How fork-specific logic is organized
 - **Lodestar** — Fork logic mixed into state-transition with conditional branches and per-fork directories

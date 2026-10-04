@@ -21,7 +21,7 @@ I am responsible for the outcome — if the output is bad, that's on me, not the
 ```
 Phase 0: Research              (me — for interop/cross-client features)
 Phase 1: Spec & Architecture   (me + gpt-advisor)
-Phase 2: Worktree Setup        (helper script)
+Phase 2: Worktree Setup        (git worktree off origin/unstable)
 Phase 2.5: Progress Tracker    (notes/<feature>/TRACKER.md)
 Phase 3: Implementation        (Codex CLI in worktree, or me for simple phases)
 Phase 4: Quality Gate           (me + gemini-reviewer + codex-reviewer)
@@ -55,15 +55,20 @@ Phase 5: PR                    (me)
 
 1. Analyze the problem — read relevant code, specs, issues
 2. Draft initial approach with key decisions, edge cases, test plan
-3. Send to **gpt-advisor** (`thinking: xhigh`) for feedback
+3. Send to **gpt-advisor** (`openai/gpt-6.1-sol`; omit `thinking` — it inherits the global `max`) for feedback, with `runTimeoutSeconds: 3600`
 4. Multiple rounds (3-5 typically) until converged
 5. Output: `/tmp/spec-<feature>.md`
 
 **Advisor timeout fallback policy (required):**
-- Start each architecture consult with `thinking: xhigh`.
-- If the run times out or returns empty/near-empty analysis, do **one** retry max at `thinking: xhigh` with a tighter prompt.
-- If it still times out, immediately fallback to `thinking: high` (shorter prompt, practical focus) instead of looping on `xhigh`.
+- Start each architecture consult at the inherited `max` thinking.
+- If the run times out or returns empty/near-empty analysis, do **one** retry max at `max` with a tighter prompt.
+- If it still times out, immediately fallback to `thinking: "xhigh"`, then `"high"` (shorter prompt, practical focus) instead of looping on `max`.
 - Record each round's outcome (model/thinking/timeout/result) in `notes/<feature>/TRACKER.md` so follow-up sessions know what already failed.
+
+**Hard-task escalation (subscription-billed, verified 2026-10-04):**
+- Codex CLI, astra max: `codex exec -m gpt-6-astra -c model_reasoning_effort=max …` (see the `codex` skill for flags and detaching)
+- Claude CLI, fable: `claude -p --model fable --effort max "<prompt>"`
+- OpenClaw subagent: `sessions_spawn` with `model: "openai/gpt-6-astra"` or `"anthropic/claude-fable-5-1"` (thinking inherits `max`)
 
 **Spec template:**
 ```markdown
@@ -98,20 +103,13 @@ High-level design decisions.
 
 ## Phase 2: Worktree Setup
 
-Use the helper script to create a clean worktree:
+Branch from `origin/unstable` (local `unstable` lags origin):
 
 ```bash
-~/lodestar/scripts/create-worktree.sh <feature-name> [base-branch]
+git -C ~/lodestar fetch origin unstable && git -C ~/lodestar worktree add -b feat/<feature> ~/lodestar-<feature> origin/unstable
 ```
 
-This script:
-1. Creates branch `feat/<feature-name>` from `base-branch` (default: `unstable`)
-2. Creates worktree at `~/lodestar-<feature-name>`
-3. Runs `pnpm install`
-4. Runs `pnpm build`
-5. Worktree is ready for Codex
-
-**Track worktrees in TOOLS.md** under "Git Worktrees" section.
+Don't run `pnpm install` — the worktree has no `node_modules`; build and test in `~/lodestar` (Phase 4). List worktrees with `git -C ~/lodestar worktree list`.
 
 ## Phase 2.5: Progress Tracker
 
@@ -152,18 +150,13 @@ One-line success criteria.
 
 **Why:** Context gets compacted between sessions. The tracker is a single file that tells future-you exactly where you left off, what's done, and what's next. Update it after each commit.
 
-**Heartbeat integration:** For multi-session tasks, add a top-priority entry to `HEARTBEAT.md` that tells the agent to resume work on the feature every heartbeat. This turns heartbeats into continuous progress cycles — instead of just monitoring, the agent reads the tracker and picks up where it left off. Example:
+**Multi-session continuity:** track the feature as a 🔴 `BACKLOG.md` item tagged `[topic:ID]` that points to the tracker — the heartbeat checklist nudges every BACKLOG item not marked ✅ into its topic session. Don't create `HEARTBEAT.md` (not read since OpenClaw 2026.9.8) or add prose to the heartbeat scratch.
 
 ```markdown
-## 🔴 TOP PRIORITY: <Feature Name>
-**Work on <feature> continuously until <completion criteria>.**
-- Tracker: `notes/<feature>/TRACKER.md`
-- Phases: A(done) → B(in progress) → C → D → ...
-- Only interrupt for: urgent notifications, CI failures, or direct messages
-- After quick monitoring checks, immediately resume work
+### 🔴 <Feature Name> [topic:<ID>]
+- **Tracker:** `notes/<feature>/TRACKER.md`
+- **Status:** 🔄 Phase B in progress — next: <step>
 ```
-
-This is especially valuable for large features spanning days/weeks — without the heartbeat entry, progress stalls between sessions because the agent has no directive to continue.
 
 ## Phase 3: Implementation
 
@@ -183,6 +176,7 @@ cat > ~/lodestar-<feature>/.lodeloop/task.json << 'EOF'
   "feature": "<feature description>",
   "branch": "feat/<feature-name>",
   "workdir": "~/lodestar-<feature>",
+  "constraints": "Do not push, open PRs, or use any GitHub plugin/connector.",
   "agent": "codex",
   "verify": {
     "commands": [
@@ -209,9 +203,8 @@ cat > ~/lodestar-<feature>/.lodeloop/task.json << 'EOF'
 }
 EOF
 
-# 2. Launch (background, Codex is default)
-exec pty:true workdir:~/lodestar-<feature> background:true timeout:3600 \
-  command:"~/lodeloop/lodeloop.sh -a codex -n 15 .lodeloop/task.json"
+# 2. Launch detached — exec/run_in_background jobs die at session teardown
+setsid bash -c 'cd ~/lodestar-<feature> && source ~/.nvm/nvm.sh && nvm use 24 2>/dev/null && ~/lodeloop/lodeloop.sh -a codex -n 15 .lodeloop/task.json > /tmp/lodeloop-<feature>.log 2>&1' </dev/null >/dev/null 2>&1 & disown
 
 # 3. Check status
 ~/lodeloop/lodeloop.sh --status ~/lodestar-<feature>/.lodeloop/task.json
@@ -234,17 +227,19 @@ cat ~/lodestar-<feature>/.lodeloop/result.json
 
 ### Option B: Direct CLI (for single focused tasks)
 
-Use direct Codex/Claude CLI for single-shot tasks that don't need a loop.
+Use direct Codex/Claude CLI for single-shot tasks that don't need a loop. Launch detached (`setsid … & disown`) — `exec`/`run_in_background` jobs die at session teardown. Every implementer prompt carries the GitHub boundary line; I push and open the PR myself (Phase 5).
 
 ```bash
-# Codex (preferred)
-exec pty:true workdir:~/lodestar-<feature> background:true timeout:3600 \
-  command:"source ~/.nvm/nvm.sh && nvm use 24 2>/dev/null && codex exec --full-auto 'Read ~/.openclaw/workspace/CODING_CONTEXT.md for project context. Then: <task>'"
+# Codex (preferred; config default gpt-6-astra @ xhigh — add `-c model_reasoning_effort=max` for hard tasks)
+setsid bash -c 'cd ~/lodestar-<feature> && source ~/.nvm/nvm.sh && nvm use 24 2>/dev/null && codex exec --dangerously-bypass-approvals-and-sandbox "Read ~/.openclaw/workspace/CODING_CONTEXT.md for project context. Do not push, open PRs, or use any GitHub plugin/connector. Then: <task>" > /tmp/codex-<feature>.log 2>&1' </dev/null >/dev/null 2>&1 & disown
 
-# Claude (for broader reasoning tasks)
-exec pty:true workdir:~/lodestar-<feature> background:true timeout:3600 \
-  command:"claude 'Read ~/.openclaw/workspace/CODING_CONTEXT.md for project context. Then: <task>'"
+# Claude (for broader reasoning tasks; add `--model fable --effort max` for hard tasks)
+setsid bash -c 'cd ~/lodestar-<feature> && claude -p --permission-mode bypassPermissions "Read ~/.openclaw/workspace/CODING_CONTEXT.md for project context. Do not push, open PRs, or use any GitHub plugin/connector. Then: <task>" > /tmp/claude-<feature>.log 2>&1' </dev/null >/dev/null 2>&1 & disown
 ```
+
+For long or quote-heavy tasks, write the brief to a file and pass `"$(cat /tmp/brief-<feature>.md)"` as the prompt. Check progress via ground truth (log tail, `git -C ~/lodestar-<feature> log --oneline -3`, `pgrep -af 'codex exec|claude -p'`), not a task notification.
+
+`codex exec --full-auto` no longer exists (codex-cli 0.160.0 exits 2 on it); lodeloop was switched to `--dangerously-bypass-approvals-and-sandbox` in lodekeeper/lodeloop@650ef78.
 
 **When to use direct CLI:**
 - Single focused task (one story)
@@ -254,48 +249,50 @@ exec pty:true workdir:~/lodestar-<feature> background:true timeout:3600 \
 
 ### Parallel execution
 
-Both modes support parallelism across separate worktrees:
+Both modes support parallelism across separate worktrees (each detached, own log):
 ```bash
 # lodeloop in worktree A
-exec pty:true workdir:~/lodestar-taskA background:true command:"~/lodeloop/lodeloop.sh ..."
+setsid bash -c 'cd ~/lodestar-taskA && ~/lodeloop/lodeloop.sh ... > /tmp/lodeloop-taskA.log 2>&1' </dev/null >/dev/null 2>&1 & disown
 # Direct codex in worktree B
-exec pty:true workdir:~/lodestar-taskB background:true command:"codex ..."
-# Monitor
-process action:list
+setsid bash -c 'cd ~/lodestar-taskB && codex exec ... > /tmp/codex-taskB.log 2>&1' </dev/null >/dev/null 2>&1 & disown
+# Monitor (detached jobs don't show in `process action:list`)
+pgrep -af 'lodeloop.sh|codex exec'; tail -n 20 /tmp/lodeloop-taskA.log /tmp/codex-taskB.log
 ```
 
 **After agent/loop finishes:**
 - Review `git diff` in the worktree
 - Check that all acceptance criteria from spec are met
-- Run build/lint/tests myself to verify
+- Run build/lint/tests myself to verify (in `~/lodestar` — see Phase 4)
 - Check `.lodeloop/progress.md` and `.lodeloop/result.json` for lodeloop runs
 
 ## Phase 4: Quality Gate
 
 1. **Self-review:** Read the diff carefully, check against spec
-2. **Local verification:**
+2. **Local verification** — the worktree has no `node_modules`, so build and test in `~/lodestar`. It is usually on an unrelated branch: record branch + SHA first, restore after.
    ```bash
-   cd ~/lodestar-<feature-name>
+   git -C ~/lodestar rev-parse --abbrev-ref HEAD; git -C ~/lodestar rev-parse HEAD   # record
+   git -C ~/lodestar status --porcelain | grep -v '^??'                               # must print nothing
+   cd ~/lodestar && git checkout --detach feat/<feature>                              # branch stays checked out in the worktree
    pnpm lint
    pnpm check-types
    pnpm build
    # Run targeted unit tests for changed packages
+   git checkout <recorded-branch>                                                     # restore
    ```
+   If pnpm tries to reinstall deps, use `pnpm --config.verify-deps-before-run=false …` or `npx tsc -p tsconfig.build.json` from the package dir. While a long build holds `~/lodestar`, mark the BACKLOG item "~/lodestar LOCKED".
 
    **Spec-vector gate (required for spec/protocol-facing changes before PR):**
    ```bash
-   # 1) Verify consensus-spec test vectors are present/fresh locally
-   bash ~/.openclaw/workspace/scripts/spec/check-test-vector-readiness.sh \
-     --max-age-days 21 \
-     --require-fresh
+   # 1) Local vectors must match the pin CI uses (version.txt is only the last-downloaded cache)
+   git -C ~/lodestar fetch -q origin unstable
+   git -C ~/lodestar show origin/unstable:spec-tests-version.json | grep -m1 specVersion
+   cat ~/lodestar/packages/beacon-node/spec-tests/version.txt
+   # Mismatch → re-download (`pnpm --config.verify-deps-before-run=false download-spec-tests` in packages/beacon-node)
+   # or don't trust local spec results
 
-   # 2) Run Lodestar spec tests when available
-   cd ~/lodestar-<feature-name>
-   if pnpm run | grep -q "test:spec"; then
-     pnpm test:spec
-   else
-     echo "No test:spec script in this checkout; run relevant consensus-spec tests manually and note it in PR body"
-   fi
+   # 2) In ~/lodestar with the feature checked out (step 2, before restoring), run only the touched spec files/cases — not the full test:spec
+   pnpm vitest run --project spec-minimal packages/beacon-node/test/spec/presets/<file>.test.ts -t "<case>"
+   # mainnet preset: --project spec-mainnet
    ```
 
    **Spec-compliance gate (required for spec/protocol-facing changes before PR):**
@@ -314,22 +311,22 @@ process action:list
    After generating the report, immediately log the artifact path + verdict in `notes/<feature>/TRACKER.md` under **Spec Compliance Artifacts**.
    If the compliance gate is skipped, record the reason in both the tracker and the PR description (e.g., non-spec refactor or missing stable spec target).
 3. **Multi-persona review:** Use the `lodestar-review` skill (`skills/lodestar-review/SKILL.md`):
-   - Get the local diff: `git diff unstable...HEAD` in the worktree
+   - Get the local diff in the worktree: `git fetch origin unstable && git diff origin/unstable...HEAD` (local `unstable` lags origin)
    - Read the skill for reviewer selection matrix and Lodestar-tailored persona prompts
    - Spawn appropriate reviewers (bugs, security, wisdom, architect, etc.) based on change type
-   - Wait for ALL reviewers to complete
+   - Collect every reviewer's result with `subagents action:"wait" runIds:[…] timeoutSeconds:60` (repeat while pending) and/or the review artifacts (`lodestar-review` §4.1) — `sessions_yield` fails in the Claude-CLI harness
    - **This is a local review** — no PR exists yet. Fix issues directly in the worktree.
    - Re-run reviewers if changes were significant
 4. **Fix issues:** Small fixes → do directly. Large issues → back to Codex
-5. **Only proceed to Phase 5 (PR) after the review cycle is clean**
+5. **Only proceed to Phase 5 (PR) after the review cycle is clean** — if a reviewer's result can't be collected, gate on your own lint/types/targeted tests and amend when its findings land
 
-**Legacy reviewers** (codex-reviewer, gemini-reviewer, gpt-advisor) are still available for general second opinions but the persona-based reviewers from `lodestar-review` are preferred for PR reviews.
+**Legacy reviewers** (codex-reviewer = GPT-6.1 Sol, gemini-reviewer = Gemini 3.5 Flash, gpt-advisor = GPT-6.1 Sol) are still available for general second opinions but the persona-based reviewers from `lodestar-review` are preferred for PR reviews.
 
 ## Phase 5: PR
 
 1. Commit with clear message, sign with GPG
 2. Push to fork
-3. Open PR with description referencing the spec
+3. Open PR with description referencing the spec — with local `gh` after `gh auth status` shows `lodekeeper` active; never via a GitHub plugin/connector (the Codex connector is linked to nflaig's account)
 4. For spec/protocol-facing changes, include a **Spec Compliance** block in the PR body:
    ```markdown
    ## Spec Compliance
@@ -356,67 +353,7 @@ For trivial changes (lint fixes, one-liners, typos), skip this workflow and just
 
 ## Iteration Log
 
-Track what works and what doesn't after each use:
-
-| Date | Feature | What worked | What to improve |
-|------|---------|-------------|-----------------|
-| 2026-02-15 | pre-validate.mjs | Spec rounds with advisor caught edge cases early; Codex produced working 662-line script | Codex hung on first attempt (long prompt); needed concise retry. Codex doesn't understand project-specific conventions (global vs per-package lint/build) — always verify. Gemini reviewer failed without file access — need to pass code inline. |
-| 2026-02-16 | EIP-8025 optional proofs | Deep research phase paid off — studying 54 Lighthouse files + Prysm + kurtosis configs before speccing prevented wrong assumptions. gpt-advisor confirmed interop-first approach in 2 rounds. Phase A (types) done cleanly. | Need Phase 0 (Research) for cross-client interop features. Simple foundation work (types/constants) faster done directly than via Codex. Break big features into sub-phases with verification between each. |
-| 2026-02-17 | EIP-8025 kurtosis revalidation (orchestrator test) | Claude CLI produced 406-line validation script from task file spec in ~75s. Parallel execution (Docker + Claude CLI) eliminated wait time. Stayed responsive to notifications throughout. CODING_CONTEXT.md reusable across tasks. | Task files must be in worktree (not /tmp). `--print` doesn't write files. Trust prompt on first run. Always include env-specific constants (slot time etc.) in task file. Review is the bottleneck — consider delegating that too. |
-| 2026-02-22 | EPBS devnet-0 interop | Tracker file + HEARTBEAT.md priority entry kept progress across sessions. gpt-advisor caught race hypothesis early. Structured acceptance counters (ISR/PU/lag/etc.) made pass/fail unambiguous. Multiple soak passes caught regressions. | Used `Dockerfile` + `--no-cache` for ALL 15+ rebuilds instead of `Dockerfile.dev` (wasted hours). Sent partial progress updates before all criteria were met. Didn't separate validator vs observer testing early enough — observer was clean while validator had bugs. |
-
-### Learnings from orchestrator test (2026-02-17)
-**Context:** First test of the orchestrator workflow. Task: redeploy EIP-8025 3-client kurtosis devnet and validate SSZ mismatch fix. Delegated validation script (406 lines) to Claude CLI, ran Docker build in parallel, deployed/monitored myself. Result: PASS.
-
-**What worked:**
-- Task file approach (precise spec → quality output, less review)
-- Parallel execution (Docker + Claude CLI simultaneously)
-- Staying responsive during builds/waits (handled heartbeats, notifications)
-- `CODING_CONTEXT.md` as reusable shared context
-- Claude CLI code quality was high (proper error handling, ANSI colors, arg parsing, kurtosis auto-discovery)
-
-**Numbered learnings:**
-11. **Task files must be in the worktree** — Claude CLI is sandboxed to `workdir`. Files in `/tmp` are inaccessible. Copy task files and `CODING_CONTEXT.md` into the worktree before spawning.
-12. **`--print` mode doesn't create files** — Claude CLI `--print` just outputs text, doesn't actually write files. Use interactive mode (no `--print`) for file creation tasks.
-13. **Trust prompt first time** — Claude CLI asks to trust the workspace directory on first run. Need to send Enter to accept before it starts working. Pre-approve by running a trivial command first.
-14. **Include environment-specific constants in task files** — Claude defaulted to mainnet values (12s slots) instead of devnet values (6s). Sub-agents don't know deployment-specific parameters unless explicitly told. Always specify slot times, epoch lengths, network configs in the task file.
-15. **Parallel work prevents tunnel vision** — by delegating implementation and running ops tasks myself, I stayed available for notifications and heartbeats throughout. This directly solved the "disappear for hours" problem identified earlier.
-16. **Review is the bottleneck** — Claude produced 406 lines in ~75s, but I still needed to review it all. For larger delegations, consider also delegating review to sub-agent reviewers (codex-reviewer, gemini-reviewer) to parallelize the quality gate.
-17. **Ops tasks (deploy, monitor) stay with me** — things requiring real-time judgment (interpreting logs, debugging devnet issues, checking proof flow timing) aren't good delegation targets. Keep those; delegate the deterministic coding work.
-
-### Learnings from EPBS devnet-0 (2026-02-21 → 2026-02-22)
-**Context:** Largest debugging effort so far. Multi-day, 15+ Docker rebuilds, 20+ Kurtosis relaunches, ~36 hours continuous work across sessions. Task: get Lodestar ePBS interop working with Lighthouse in a 50/50 Kurtosis devnet with zero errors.
-
-| Date | Feature | What worked | What to improve |
-|------|---------|-------------|-----------------|
-| 2026-02-22 | EPBS devnet-0 interop | Tracker file + HEARTBEAT.md priority entry kept progress across sessions. gpt-advisor caught race hypothesis early. Structured acceptance counters (ISR/PU/lag/etc.) made pass/fail unambiguous. Multiple soak passes caught regressions. | Used `Dockerfile` + `--no-cache` for ALL 15+ rebuilds instead of `Dockerfile.dev` (wasted hours). Sent partial progress updates before all criteria were met. Didn't separate validator vs observer testing early enough — observer was clean while validator had bugs. |
-| 2026-03-01 | lodeloop integration | Added lodeloop (~/lodeloop) as Phase 3 Option A for multi-story features. Keeps Codex as default. Direct CLI remains Option B for single tasks. GPT-5.2-pro review caught 14 issues, all fixed in v0.2.0. | Not yet tested on a real Lodestar task — first real test will validate story sizing, verification gate config, and circuit breaker thresholds. |
-
-**Numbered learnings:**
-18. **Use `Dockerfile.dev` for iterative builds** — production `Dockerfile` + `--no-cache` is for debugging build issues, not source changes. `Dockerfile.dev` caches dependency layers and rebuilds in seconds. I wasted hours on unnecessary full rebuilds. Already documented in kurtosis skill — follow your own docs.
-19. **Production path ≠ observer path** — the hardest bugs (state root mismatches in `produceBlockWrapper`) only appeared on the validator/producer node. Observer nodes showed zero errors. Always test both roles separately with targeted log checks.
-20. **Only report when ALL acceptance criteria are met** — Nico's rule. Don't send "ISR=0 but still some lag" updates. Iterate silently, report once when everything's green. Partial updates waste reviewer time and create noise.
-21. **Define acceptance counters upfront** — before any soak, list the exact log patterns/metrics that must be zero. Makes pass/fail unambiguous and prevents goalpost-moving.
-22. **Sub-agent review during debugging, not just before PR** — gpt-advisor identified the gossip race condition hypothesis from log patterns while I was still instrumenting. Get second opinions early in the debug cycle, not just at the end.
-23. **Stale object references after in-place mutations** — fork-choice status updates (PENDING→FULL) don't automatically propagate to all code paths holding references to the old object. After any state mutation, trace all consumers to verify they see the updated state. This was the root cause of the `BLOCK_ERROR_INVALID_STATE_ROOT` in block production.
-24. **Timeline reconstruction for race conditions** — when multiple async paths interact (gossip handler, sync, import, verification), reconstruct the exact event ordering from timestamps. Simple log grepping misses the crucial "which happened first" context.
-25. **Tracker + HEARTBEAT.md priority entry = multi-session continuity** — `notes/epbs-devnet-0/TRACKER.md` was the single source of truth across 10+ sessions. The `HEARTBEAT.md` top-priority entry ensured every heartbeat resumed work instead of just monitoring. Without both, progress would have stalled between sessions.
-26. **Multiple soak passes are necessary** — first clean soak may pass, then a second reveals edge cases. Run extended soaks (hours) and at different topologies (2-node, 4-node, different client ratios). Short soaks give false confidence.
-27. **Alt-port configs for Kurtosis** — Docker port collisions with other services are common on shared servers. Always use non-default port ranges to avoid bind failures.
-
-### Learnings from first run (2026-02-15)
-1. **Keep Codex prompts concise** — long specs can cause hangs. Summarize requirements, don't paste full spec tables.
-2. **Codex doesn't know project conventions** — it assumed per-package lint/build but Lodestar uses global `biome check` and `pnpm -r build`. Always review output against project norms.
-3. **Sub-agent reviewers need code inline** — gemini-reviewer can't access gists/files. Pass key code sections in the task prompt.
-4. **2 advisor rounds was sufficient** — round 1 caught major design issues (bash→Node, dependency graph), round 2 tightened details. Diminishing returns after 3.
-5. **Phase 4 self-review is critical** — caught 2 bugs Codex missed. Never skip.
-
-### Learnings from EIP-8025 (2026-02-16, in progress)
-6. **Add Phase 0: Research for interop features** — when matching other client implementations, invest heavily in reading their code before writing the spec. For EIP-8025, studying Lighthouse (54 files), Prysm, and kurtosis configs revealed critical wire format divergences from the consensus spec that would have been wrong assumptions otherwise.
-7. **Foundation commits can be done directly** — simple type definitions, constants, and boilerplate don't benefit from Codex. Save Codex for complex logic (networking, state management). I did Phase A (SSZ types + constants) manually in ~30 min vs the overhead of setting up a Codex session.
-8. **Break large features into sub-phases** — instead of one massive Codex handoff, split into A/B/C/... phases with build verification between each. Each phase should be a committable, testable unit. Prevents compounding errors.
-9. **Spec should document wire format divergences** — for interop features, explicitly note where devnet wire format differs from the formal spec. This prevents future confusion and helps when migrating to spec-compliant types later.
-10. **Research artifacts are valuable** — save deep-dive notes (e.g., `notes/eip8025/LIGHTHOUSE-DEEP-DIVE.md`, `LODESTAR-MAPPING.md`) alongside the spec. Future contributors (including future-me) need this context.
+Dated iteration log and per-feature learnings: `references/history.md` (append new entries there).
 
 ## Devnet / Interop Debugging Workflow
 
@@ -455,7 +392,7 @@ instrument → rebuild (Dockerfile.dev) → rerun kurtosis → analyze → fix �
 
 - **I am responsible** for the final result — no blaming sub-agents
 - **Spec quality = implementation quality** — invest time in Phase 1
-- **Document learnings** — update this skill after each use
+- **Document learnings** — append to `references/history.md` after each use; fold durable rules into the procedure above
 - **Fresh worktree per feature** — keep working states independent
 - **Ignore sim/e2e failures** unless Nico specifically asks to investigate
 

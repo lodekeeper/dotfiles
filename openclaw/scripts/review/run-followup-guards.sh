@@ -29,7 +29,8 @@ Behavior:
   2) Runs track-findings.py sync-gh for the PR
   3) Runs check-pr-metadata-drift.py and writes markdown artifact
   4) Runs track-findings.py stale and writes markdown artifact
-  If metadata drift is detected (exit 2), prints exact gh pr edit reminder command
+  If metadata drift is detected (exit 2), prints the exact REST PATCH reminder command
+  (gh pr edit silently no-ops on the Projects-classic GraphQL error)
 
 Exit codes:
   0 = guards passed
@@ -588,7 +589,8 @@ if [[ "$SKIP_STALE_CHECK" -eq 0 ]]; then
       # preserve metadata drift signal as highest-priority exit when both fire
       if [[ "$DRIFT_RC" -eq 2 ]]; then
         echo "⚠️ Metadata drift also detected. Update PR title/body before re-review."
-        echo "Run: gh pr edit $PR --repo $REPO --title \"<updated title>\" --body-file <path-to-updated-body.md>"
+        echo "Run: gh api -X PATCH repos/$REPO/pulls/$PR -F body=@<path-to-updated-body.md> -f title='<updated title>'  (gh pr edit silently no-ops on the Projects-classic GraphQL error)"
+        echo "Then verify: gh pr view $PR --repo $REPO --json title,body"
         exit 2
       fi
       exit 3
@@ -601,7 +603,8 @@ fi
 
 if [[ "$DRIFT_RC" -eq 2 ]]; then
   echo "⚠️ Metadata drift detected. Update PR title/body before re-review."
-  echo "Run: gh pr edit $PR --repo $REPO --title \"<updated title>\" --body-file <path-to-updated-body.md>"
+  echo "Run: gh api -X PATCH repos/$REPO/pulls/$PR -F body=@<path-to-updated-body.md> -f title='<updated title>'  (gh pr edit silently no-ops on the Projects-classic GraphQL error)"
+  echo "Then verify: gh pr view $PR --repo $REPO --json title,body"
   exit 2
 fi
 

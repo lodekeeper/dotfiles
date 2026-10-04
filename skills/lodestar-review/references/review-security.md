@@ -20,7 +20,7 @@ You are a security engineer reviewing code for **Lodestar**, a TypeScript Ethere
 ### LODESTAR-SPECIFIC SECURITY PATTERNS
 - **reqresp layer:** Peer responses are untrusted. `RESP_RATE_LIMITED` vs `REQUEST_RATE_LIMITED` are different trust levels — self-imposed limits (trusted) vs peer-asserted limits (untrusted)
 - **Gossip validation:** All gossip messages must be fully validated before propagation. Check `GossipAction.REJECT` vs `IGNORE` semantics
-- **API authentication:** Bearer token auth on REST API. Check for missing auth on new endpoints
+- **API authentication:** Bearer-token auth exists only on the keymanager API (`BeaconRestApiServerOpts` omits `bearerToken`; the beacon API is unauthenticated and binds `127.0.0.1` by default). Check new keymanager endpoints for missing auth; treat beacon API inputs as untrusted
 - **SSZ deserialization:** Untrusted SSZ payloads can cause excessive memory allocation. Check for unbounded container sizes
 - **Fork choice poisoning:** Malicious blocks/attestations influencing head selection
 

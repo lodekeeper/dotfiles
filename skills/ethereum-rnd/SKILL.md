@@ -9,28 +9,29 @@ You have access to 17 Ethereum R&D resources for answering questions about Ether
 
 ## Local-First Access (MANDATORY)
 
-**Always use local repos at `~/ethereum-repos/` first.** All GitHub-hosted resources below are cloned locally. Use `grep`, `find`, and `cat` — never use WebFetch for content available locally.
+**Always use local repos at `~/ethereum-repos/` first, read at a freshly fetched upstream ref.** Every GitHub repo below except `ethereum/research` is shallow-cloned there. The working trees can be months stale and some sit on feature branches with local work (e.g. EIPs), so never `cat`/`grep` the working tree (eth-rnd-archive excepted, see section 12) and never checkout/pull/reset it: fetch the dev branch into its remote-tracking ref, then read with `git show` / `git grep` / `git ls-tree`. Never use WebFetch for content available locally.
 
-To update repos: `bash scripts/clone-repos.sh ~/ethereum-repos` (does `git pull` on existing clones).
-
-Search and read content directly:
+| Repo | Dev branch `<b>` |
+|---|---|
+| consensus-specs, beacon-APIs, EIPs, pm, devp2p, annotated-spec | `master` |
+| execution-apis, builder-specs | `main` |
+| execution-specs | `forks/amsterdam` |
 
 ```bash
-# Search consensus specs for a function
-grep -r "process_attestation" ~/ethereum-repos/consensus-specs/specs/ --include="*.md"
+# 1. Fetch (updates only refs/remotes/origin/<b>), then note the ref date to quote in answers
+r=consensus-specs; b=master
+git -C ~/ethereum-repos/$r fetch -q --depth=1 origin +refs/heads/$b:refs/remotes/origin/$b
+git -C ~/ethereum-repos/$r log -1 --format='%cs %h' origin/$b
 
-# Read a specific spec file
-cat ~/ethereum-repos/consensus-specs/specs/electra/beacon-chain.md
-
-# Find all EIPs mentioning a topic
-grep -rl "blob" ~/ethereum-repos/EIPs/EIPS/ | head -20
-
-# Search beacon API endpoints
-grep -r "post_beacon_blocks" ~/ethereum-repos/beacon-APIs/apis/
-
-# Find where a function is defined across client repos
-grep -rn "processAttestation\|process_attestation" ~/ethereum-repos/lodestar/packages/ ~/ethereum-repos/lighthouse/consensus/ --include="*.ts" --include="*.rs"
+# 2. Read / list / search at that ref
+git -C ~/ethereum-repos/consensus-specs show origin/master:specs/gloas/beacon-chain.md
+git -C ~/ethereum-repos/consensus-specs ls-tree --name-only origin/master specs/
+git -C ~/ethereum-repos/consensus-specs grep -n "def process_attestation" origin/master -- specs/
+git -C ~/ethereum-repos/EIPs grep -l "blob" origin/master -- EIPS/ | head -20
+git -C ~/ethereum-repos/beacon-APIs grep -n "publishBlockV2" origin/master -- apis/
 ```
+
+If the fetch fails, fall back to the raw URLs in each section. Client code (Lodestar, Lighthouse, …): use the consensus-clients skill (same pattern, per-client dev branches). To *run* pyspec or its tests, use the working clone `~/consensus-specs` (check its branch first; `uv run python`, `make test k=<test> fork=<fork>`).
 
 **Why local-first:**
 - Instant access (no network latency)
@@ -53,7 +54,7 @@ grep -rn "processAttestation\|process_attestation" ~/ethereum-repos/lodestar/pac
 | How does peer discovery/networking work? | devp2p |
 | What does EIP-NNNN specify? | EIPs |
 | Why was X designed this way? | annotated-spec, eth2book |
-| What did ACD decide about X? | pm, forkcast |
+| What did ACD decide about X? | forkcast (pm notes only for old calls) |
 | What are researchers discussing about X? | ethresear.ch |
 | What's the governance status of EIP-NNNN? | ethereum-magicians |
 | What's happening with consensus redesign? | leanroadmap |
@@ -75,9 +76,12 @@ The canonical source for Ethereum's proof-of-stake protocol.
 - `capella` (epoch 194048) — withdrawals
 - `deneb` (epoch 269568) — blob transactions (EIP-4844)
 - `electra` (epoch 364032) — validator consolidation, max EB
-- `fulu` (epoch 411392) — data availability sampling
-- `gloas` (in development) — builder integration, inclusion lists
-- `heze` (in development) — next after gloas
+- `fulu` (epoch 411392) — PeerDAS (data availability sampling); current mainnet fork
+- `gloas` (in development; CL half of Glamsterdam, run on glamsterdam-devnet-N, specced in the v1.7.0 pre-releases) — ePBS (EIP-7732) with the Payload Timeliness Committee (PTC)
+- `heze` (in development; CL half of Hegotá) — FOCIL (EIP-7805)
+- `_features/` — candidate EIPs specced in isolation (e.g. `eip7716`, `eip8025`)
+
+Mainnet config sets `GLOAS_FORK_EPOCH` and `HEZE_FORK_EPOCH` to FAR_FUTURE.
 
 **Key files per fork:**
 - `beacon-chain.md` — state transition, data structures, epoch processing
@@ -92,9 +96,9 @@ The canonical source for Ethereum's proof-of-stake protocol.
 https://raw.githubusercontent.com/ethereum/consensus-specs/master/specs/{fork}/{file}.md
 ```
 
-Example — read the Electra beacon chain spec:
+Example — read the Electra beacon chain spec (after the fetch above):
 ```bash
-cat ~/ethereum-repos/consensus-specs/specs/electra/beacon-chain.md
+git -C ~/ethereum-repos/consensus-specs show origin/master:specs/electra/beacon-chain.md
 ```
 
 **Additional content:**
@@ -108,7 +112,7 @@ cat ~/ethereum-repos/consensus-specs/specs/electra/beacon-chain.md
 
 OpenAPI 3.0 specification for the beacon node and validator client REST APIs.
 
-**Format:** YAML OpenAPI spec. Main file: `beacon-node-oapi.yaml`
+**Format:** YAML OpenAPI spec. Main file: `beacon-node-oapi.yaml`. `validator-flow.md` is the validator client ↔ beacon node interaction reference.
 
 **Key directories:**
 - `apis/` — individual endpoint definitions
@@ -153,7 +157,7 @@ OpenRPC specification for JSON-RPC and Engine API.
 **How to fetch:**
 ```
 https://raw.githubusercontent.com/ethereum/execution-apis/main/src/engine/{fork}.md
-https://raw.githubusercontent.com/ethereum/execution-apis/main/src/eth/{method}.yaml
+https://raw.githubusercontent.com/ethereum/execution-apis/main/src/eth/{category}.yaml   # block, state, transaction, fee_market, ...
 ```
 
 **Rendered docs:**
@@ -169,7 +173,7 @@ Python implementation of the execution layer that serves as the formal specifica
 
 **Language:** Python 3.11+. Prioritizes readability over performance.
 
-**Structure:** Fork modules from Frontier (2015) through Prague/Osaka (2025+), each containing the full EL state transition logic.
+**Structure:** Fork modules from Frontier (2015) through Prague, Osaka, BPO1–5 and Amsterdam, each containing the full EL state transition logic.
 
 **Key paths:**
 - `src/ethereum/forks/{fork}/` — fork-specific implementation
@@ -219,8 +223,9 @@ Peer-to-peer networking specs for node discovery and communication.
 | `discv5/discv5.md` | Node Discovery v5 (current generation) |
 | `enr.md` | Ethereum Node Records (peer identity) |
 | `dnsdisc.md` | DNS-based node discovery |
-| `caps/eth.md` | Ethereum Wire Protocol (eth/68) |
-| `caps/snap.md` | Snapshot Sync Protocol (snap/1) |
+| `caps/eth.md` | Ethereum Wire Protocol (current eth/72, EIP-8070) |
+| `caps/snap.md` | Snapshot Sync Protocol (current snap/2, EIP-8189) |
+| `caps/wit.md` | State Witness Protocol (wit/0), runs alongside eth |
 | `caps/les.md` | Light Ethereum Subprotocol (les/4) |
 
 **How to fetch:**
@@ -295,77 +300,76 @@ https://raw.githubusercontent.com/ethereum/research/master/{topic}/{file}.py
 Central coordination hub for Ethereum protocol development.
 
 **Key directories:**
-- `AllCoreDevs-EL-Meetings/` — Execution Layer calls (ACDE)
-- `AllCoreDevs-CL-Meetings/` — Consensus Layer calls (ACDC)
+- `AllCoreDevs-EL-Meetings/` — Execution Layer calls (ACDE), files `Meeting {number}.md` (with a space)
+- `AllCoreDevs-CL-Meetings/` — Consensus Layer calls (ACDC), files `call_{number}.md`
 - `Breakout-Room-Meetings/` — specialized topic discussions
 - `Network-Upgrade-Archive/` — historical upgrade coordination
+- Root files `glamsterdam-pm.md` (testnet activation schedule) and `glamsterdam-mainnet-plan.md` (mainnet upgrade plan)
+
+**Coverage:** pm notes only cover ACDC ≤150 and ACDE ≤204. For later calls use forkcast artifacts (section 11) or EIPsInsight (see the eth-rnd-archive skill).
 
 **Schedule:** Alternating weeks — one week CL focus, next week EL focus.
 
 **How to fetch meeting notes:**
 ```
 https://raw.githubusercontent.com/ethereum/pm/master/AllCoreDevs-CL-Meetings/call_{number}.md
-https://raw.githubusercontent.com/ethereum/pm/master/AllCoreDevs-EL-Meetings/Meeting_{number}.md
+https://raw.githubusercontent.com/ethereum/pm/master/AllCoreDevs-EL-Meetings/Meeting%20{number}.md
 ```
 
 ---
 
 ## 11. forkcast.org — Protocol Call Tracker
 
-Comprehensive tracker for all Ethereum protocol development calls. JS-rendered SPA — requires Playwright MCP for full access, but URL patterns are predictable.
+Tracker for Ethereum protocol calls, EIP inclusion stages and upgrades. Route pages (`/calls/...`, `/eips`) return only a client-rendered shell; the data is served as JSON. Read `https://forkcast.org/llms.txt` first, it documents every endpoint.
 
-**Call series tracked:**
+**Call series tracked** (`series` map in `/api/calls.json`):
 - **ACDC** — All Core Devs Consensus (consensus layer)
 - **ACDE** — All Core Devs Execution (execution layer)
 - **ACDT** — All Core Devs Testing
-- **Breakouts** — FOCIL, EPBS, BAL, RPC, PQTS, PRICE, TLI, ZKEVM, ETM, AWD
+- **Breakouts** — focil, epbs, bal, rpc, pqts, price, tli, zkevm, etm, awd, pqi, fcr, aa, p2p, ssz, ethproofs
 
-**Per-call detail includes:**
-- Embedded YouTube recording with timestamps
-- Full timestamped transcript with speaker labels
-- AI-generated summary (highlights + action items)
-- Link to agenda (GitHub pm issue)
+**Per-call artifacts** (vary by call; recent ACDC/ACDE calls have the JSON ones): `tldr.json`, `key_decisions.json` (structured `eips`), `notes.json`, `eip_mentions.json`, `transcript.vtt`, `chat.txt`.
 
-**Also tracks network events:** Pectra/Fusaka devnet launches, testnet activations, mainnet upgrades, blob parameter changes (BPO1/BPO2).
+**Also tracks network events** (devnet/testnet/mainnet activations): `/feed.xml`, or `gh api repos/ethereum/forkcast/contents/src/data/events.ts`.
 
-**URL patterns:**
+**JSON endpoints (plain curl, no auth):**
 ```
-https://forkcast.org/calls                          — full call list + calendar
-https://forkcast.org/calls/acdc/{number}            — specific ACDC call
-https://forkcast.org/calls/acde/{number}            — specific ACDE call
-https://forkcast.org/calls/acdt/{number}            — specific ACDT call
-https://forkcast.org/calls/{breakout}/{number}      — specific breakout call (focil, epbs, bal, etc.)
+https://forkcast.org/api/calls.json                              — every call: type, date, number
+https://forkcast.org/artifacts/{series}/{date}_{number}/{file}   — one call, e.g. acdt/2026-09-28_098/tldr.json
+https://forkcast.org/search-light.json                           — TL;DRs + decisions across all calls (~1.3 MB)
+https://forkcast.org/api/eips/{id}.json                          — one EIP incl. per-upgrade inclusion-stage history
+https://forkcast.org/api/upgrades.json                           — upgrades; projectedActivation is an estimate
+https://forkcast.org/api/eip-stage-changes.json                  — latest inclusion-stage changes
 ```
+Build the artifact dir from the call record's `date` + `number` verbatim (`number` is zero-padded); its `path` field (e.g. `acdt/098`) 404s under `/artifacts/` but is the human-facing link: `https://forkcast.org/calls/{path}/`.
 
-**How to use:** Navigate with Playwright MCP to get transcripts and summaries. For the call list, the page loads without JS issues. Individual call pages need a brief wait for transcript data to load.
-
-**When to use:** When someone asks what was discussed or decided in a specific ACD call, or wants to find the most recent call for a topic. Prefer forkcast over raw pm meeting notes — it has richer content (transcripts, summaries, YouTube links).
+**When to use:** When someone asks what was discussed or decided in a specific ACD call, or wants to find the most recent call for a topic. Prefer forkcast over raw pm meeting notes: it has richer content (summaries, decisions, transcripts) and pm stops at ACDC 150 / ACDE 204. Summaries are edited/AI-compiled, so cross-check a reported decision against the transcript.
 
 ---
 
 ## 12. ethereum/eth-rnd-archive — Eth R&D Discord Archive
 
-Machine-readable archive of all discussions in the Eth R&D Discord server. Updated weekly.
+Machine-readable archive of all discussions in the Eth R&D Discord server, committed hourly ("Archive N messages from #channel").
 
-**Format:** JSON files per day per channel: `{channel}/YYYY-MM-DD.json`
+**Local clone:** `~/ethereum-repos/eth-rnd-archive` stays on `master` and is `git pull`ed hourly by the eth-rnd-archive skill's `check-updates.sh`, so read its working tree directly (the one exception to the fetch-then-read rule). For tracking, digests and resolving Discord links/mentions, use the eth-rnd-archive skill (`skills/eth-rnd-archive/SKILL.md`).
 
-Each message contains: author, category, content, timestamp, attachments.
+**Format:** JSON files per day per channel: `{channel}/YYYY-MM-DD.json`; threads under `{channel}/_threads/<thread title>/YYYY-MM-DD.json`
 
-**115+ channels including:**
-- `consensus-dev`, `execution-dev` — core client development
+Each message contains: `author`, `category`, `parent` (channel name for thread messages, empty for top-level), `content`, `created_at`, `attachments`.
+
+**~125 channels including:**
+- `consensus-dev`, `execution-dev`, `allcoredevs` — core client development
+- `interop-🌃` — cross-client devnet coordination (Glamsterdam devnet triage happens here)
+- `epbs`, `inclusion-lists`, `data-availability-sampling`, `apis` — current protocol work
 - `evm`, `pos-consensus` — specific protocol areas
 - `cryptography`, `formal-methods`, `post-quantum` — research
 - `networking`, `el-networking` — p2p layer
-- `pectra-upgrade`, `fusaka-upgrade` — upgrade coordination
-- `beacon-network`, `portal-network` — network protocols
-- `account-abstraction`, `light-clients` — features
+- `beacon-network`, `light-clients` — network protocols, features
+- Historical only: `pectra-upgrade` (last file 2025-05), `fusaka-upgrade` (2025-12), `portal-network` (2021), `account-abstraction` (2022)
 
 **How to search for a topic:**
-1. Identify the likely channel(s) from the list above
-2. Fetch recent daily JSON files from that channel:
-```
-https://raw.githubusercontent.com/ethereum/eth-rnd-archive/master/{channel}/YYYY-MM-DD.json
-```
+1. Identify the likely channel(s) from the list above (`ls ~/ethereum-repos/eth-rnd-archive/`)
+2. Find matching daily files: `grep -rl "<keyword>" ~/ethereum-repos/eth-rnd-archive/<channel>/ | sort | tail`
 3. Parse the JSON and search message content for relevant keywords
 
 **Tip:** Start with the most relevant channel. For broad protocol questions try `consensus-dev` or `execution-dev`. For specific features, use the dedicated channel.
@@ -472,7 +476,7 @@ https://docs.google.com/drawings/d/1GkcGfQv9kxgrYQMyu0BYGcZya0gIDG_wQ7GsFJEsdzY/
 
 Dark boxes denote headliners, grey boxes indicate offchain upgrades, black boxes represent north stars. Arrows signal hard technical dependencies or natural fork progressions.
 
-**Fork naming:** CL forks follow a star-based scheme with incrementing first letters: Altair, Bellatrix, Capella, Deneb, Electra, Fulu, Glamsterdam, Hegotá, I*, J* (I*/J* are placeholders, I* pronounced "I star").
+**Fork naming:** CL forks follow a star-based scheme with incrementing first letters: Altair, Bellatrix, Capella, Deneb, Electra, Fulu, Gloas, Heze, I*, J* (I*/J* are placeholders, I* pronounced "I star"). An upgrade name joins the EL city and the CL star: Glamsterdam = Amsterdam + Gloas, Hegotá = Bogotá + Heze. CL spec dirs use the star name (`specs/gloas`); the EL uses the city (`forks/amsterdam`, `src/engine/bogota.md`).
 
 **Time horizon:** ~7 forks through end of decade (~one fork every 6 months). Well beyond ACD's typical next-two-forks focus.
 
@@ -493,10 +497,10 @@ Dark boxes denote headliners, grey boxes indicate offchain upgrades, black boxes
 
 ## General Tips
 
-1. **ALWAYS use local repos** — `grep`/`cat` on `~/ethereum-repos/`. For non-GitHub sources (ethresear.ch, ethereum-magicians, forkcast, eth2book, leanroadmap, strawmap), use the web-scraping skill (`skills/web-scraping/SKILL.md`).
-2. **For OpenAPI specs** (beacon-APIs, builder-specs), read the YAML locally: `cat ~/ethereum-repos/beacon-APIs/apis/...`
+1. **ALWAYS use local repos** — fetch the dev branch, then `git show`/`git grep` at `origin/<b>` in `~/ethereum-repos/` (see Local-First Access). For non-GitHub sources (ethresear.ch, ethereum-magicians, forkcast, eth2book, leanroadmap, strawmap), use the web-scraping skill (`skills/web-scraping/SKILL.md`).
+2. **For OpenAPI specs** (beacon-APIs, builder-specs), read the YAML locally: `git -C ~/ethereum-repos/beacon-APIs show origin/master:apis/...`
 3. **For "why" questions**, check annotated-spec and eth2book before the raw specs
-4. **For recent protocol decisions**, check pm meeting notes locally, ethresear.ch via web-scraping skill
+4. **For recent protocol decisions**, use forkcast's JSON (pm notes stop at ACDC 150 / ACDE 204), ethresear.ch via web-scraping skill
 5. **For implementation details**, the consensus-specs Python code is executable and testable — it's not just documentation
 6. **Fork order matters** — each fork builds on the previous. Start with the latest relevant fork and reference earlier ones for context
-7. **Cross-file search is powerful** — `grep -r "term" ~/ethereum-repos/consensus-specs/specs/` finds all references instantly
+7. **Cross-file search is powerful** — `git -C ~/ethereum-repos/consensus-specs grep -n "term" origin/master -- specs/` finds all references instantly

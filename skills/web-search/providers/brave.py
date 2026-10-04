@@ -13,12 +13,14 @@ def _load_api_key() -> str:
     if api_key:
         return api_key
 
-    # Fallback: reuse configured key from OpenClaw built-in web search
+    # Fallback: reuse the key configured for OpenClaw's Brave web_search provider
     try:
         cfg_path = Path.home() / ".openclaw" / "openclaw.json"
         if cfg_path.exists():
             cfg = json.loads(cfg_path.read_text())
-            return (((cfg.get("tools") or {}).get("web") or {}).get("search") or {}).get("apiKey", "")
+            brave = ((cfg.get("plugins") or {}).get("entries") or {}).get("brave") or {}
+            key = ((brave.get("config") or {}).get("webSearch") or {}).get("apiKey", "")
+            return key if isinstance(key, str) else ""
     except Exception:
         pass
 
@@ -29,7 +31,7 @@ def search(query: str, params: dict) -> list[dict]:
     """Search via Brave Search API."""
     api_key = _load_api_key()
     if not api_key:
-        raise RuntimeError("BRAVE_API_KEY not set (env or tools.web.search.apiKey)")
+        raise RuntimeError("BRAVE_API_KEY not set (env or plugins.entries.brave.config.webSearch.apiKey)")
 
     max_results = min(params.get("max_results", 10), 20)
     base_url = "https://api.search.brave.com/res/v1/web/search"

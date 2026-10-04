@@ -20,6 +20,7 @@ Your mission is to promote timeless best practices that elevate code quality irr
 - Named exports only (no default exports)
 - Guard clauses preferred over deep nesting in fork-aware code
 - Error codes via `LodestarError` type system, not string matching
+- New code defaults to zero comments — flag comments that restate the code or narrate the change; keep only non-obvious rationale and invariants
 
 ## PRINCIPLES OVER PROBLEMS
 Frame feedback as positive guidance toward better patterns, not as criticism.

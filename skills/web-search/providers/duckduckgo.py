@@ -1,12 +1,12 @@
-"""DuckDuckGo search provider (unofficial, via duckduckgo-search library)."""
+"""DuckDuckGo search provider (unofficial, via the ddgs library — successor of duckduckgo-search)."""
 
 
 def search(query: str, params: dict) -> list[dict]:
-    """Search via duckduckgo-search Python library. Unofficial — may break."""
+    """Search via the ddgs Python library. Unofficial — may break."""
     try:
-        from duckduckgo_search import DDGS
+        from ddgs import DDGS
     except ImportError:
-        raise RuntimeError("duckduckgo-search not installed. Run: pip install duckduckgo-search")
+        raise RuntimeError("ddgs not installed. Run: python3 -m pip install --user --break-system-packages ddgs")
 
     max_results = min(params.get("max_results", 10), 20)
 

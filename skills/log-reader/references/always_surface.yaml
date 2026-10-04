@@ -71,6 +71,16 @@ always_surface:
       contains: "Ignoring beacon update to old head"
     label: "EL: stale FCU head (fork choice desync)"
 
+  # Geth logs nothing on JWT 401s; this 5-min heartbeat warn is its side of a JWT mismatch / dead CL
+  - id: geth-no-cl-updates
+    severity: high
+    match:
+      any:
+        - {field: msg, contains: "no beacon client seen"}
+        - {field: msg, contains: "never received consensus updates"}
+        - {field: msg, contains: "no consensus updates received"}
+    label: "EL: no consensus updates from CL (CL down or JWT mismatch)"
+
   - id: engine-api-error
     severity: critical
     match:

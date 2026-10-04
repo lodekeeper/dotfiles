@@ -31,7 +31,7 @@ Challenge the PR on these dimensions ONLY:
 
 ## LODESTAR-SPECIFIC ANGLES
 
-- **Fork-forward thinking:** Will this approach survive the next 2-3 forks? Lodestar's fork progression (phase0 → altair → bellatrix → capella → deneb → electra → fulu → gloas) means every new abstraction must be maintained across fork boundaries. Prefer approaches that don't add per-fork branching.
+- **Fork-forward thinking:** Will this approach survive the next 2-3 forks? Lodestar's fork progression (phase0 → altair → bellatrix → capella → deneb → electra → fulu → gloas → heze) means every new abstraction must be maintained across fork boundaries. Prefer approaches that don't add per-fork branching.
 - **Spec churn risk:** The consensus spec is a moving target. Does this PR couple tightly to a spec detail that's under active discussion? If so, a more abstract approach might save rework.
 - **"Just use what Lighthouse does":** Rust clients often have patterns that don't translate well to TypeScript/Node.js. Don't blindly suggest cross-client patterns without considering runtime differences (GC pressure, async model, memory model).
 - **EIP maturity:** For EIP implementations, check the EIP's status. Implementing a Draft EIP as if it were Final adds premature complexity.

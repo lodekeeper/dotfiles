@@ -10,7 +10,8 @@ These dashboards are the most important for release evaluation, listed in priori
 - **UID:** `lodestar_summary`
 - **URL:** `/d/lodestar_summary`
 - **Use for:** Quick overview of node health — sync status, peer count, finalization
-- **Key panels:** Slot chart, peer count, finalized epoch, head slot distance
+- **Key panels:** Slot chart, peer count, finalized epoch, Sync status, head drift (clock − head slot),
+  Reorgs, Import head late (> 4 sec) rate, Uptime since
 
 ### Lodestar - VM + host
 - **UID:** `lodestar_vm_host`
@@ -35,28 +36,25 @@ These dashboards are the most important for release evaluation, listed in priori
   - Inclusion distance
   - Correct head percentage
 
-### Lodestar - BeaconChain
-- **UID:** `lodestar_beacon_chain`
-- **URL:** `/d/lodestar_beacon_chain`
-- **Use for:** Block processing performance, epoch transitions
-- **Key panels:**
-  - Gossip block received to set as head (time)
-  - Process block time
-  - Epoch transition time
-  - Epoch transition utilization rate
-  - Process block per slot count
-  - Blocks set as head after 4s rate
-
 ### Lodestar - block processor
 - **UID:** `lodestar_block_processor`
 - **URL:** `/d/lodestar_block_processor`
-- **Use for:** Detailed block import pipeline — where time is spent
+- **Use for:** Block processing performance, epoch transitions, import pipeline — where time is spent
 - **Key panels:**
-  - Import block total time (heatmap + avg)
-  - State transition time
-  - Fork choice update time
-  - DB write time
-  - Queue depth
+  - Process block avg time, Epoch transition avg time
+  - Process block / Epoch transition utilization rate
+  - process block / slot, Epoch transitions / epoch, Epoch transition by reason
+  - Gossip Block row: block recv / process / state transition / import delays (heatmap + avg)
+  - Block processor queue (length, job time, dropped jobs %)
+
+### Lodestar - BeaconChain
+- **UID:** `lodestar_beacon_chain`
+- **URL:** `/d/lodestar_beacon_chain`
+- **Use for:** Finalized-checkpoint/archive tasks and chain caches (no block-processing panels anymore)
+- **Key panels:**
+  - Process Finalized Checkpoint: duration by tasks (archive blocks etc.)
+  - Seen Cache (Block Input, attestation data), Shuffling Cache, BufferPool
+  - Unfinalized Block Writes Queue (length, job time)
 
 ## Secondary Dashboards
 
@@ -66,7 +64,7 @@ These dashboards are the most important for release evaluation, listed in priori
 - **Use for:** Gossip queue health, peer connections
 - **Key panels:**
   - Gossip validation queue: job time, wait time, dropped jobs
-  - Gossip block received delay
+  - Gossip Block Received Delay (also time till processed / become head, from slot start)
   - Req/resp success/error rates
   - Connect/disconnect events
 
@@ -88,7 +86,7 @@ These dashboards are the most important for release evaluation, listed in priori
   - Custody group count
   - Missing custody columns
   - Reconstructed columns
-  - Column sampling latency
+  - Receiving delay (avg / heatmap)
 
 ### Lodestar - state cache + regen
 - **UID:** `lodestar_state_cache_regen`
@@ -135,7 +133,7 @@ To compare RC vs stable in Grafana dashboards, use filter variables:
 1. **Start with Summary** (`lodestar_summary`) — quick health check
 2. **VM + host** (`lodestar_vm_host`) — resource regression scan
 3. **Validator monitor** (`lodestar_validator_monitor`) — performance quality
-4. **BeaconChain** (`lodestar_beacon_chain`) — block processing
+4. **Block processor** (`lodestar_block_processor`) — block processing, epoch transitions
 5. **Networking** (`lodestar_networking`) — gossip/peer health
 6. **PeerDAS** (`lodestar_peerdas`) — if PeerDAS is active
-7. **Block processor** (`lodestar_block_processor`) — deep dive if issues found
+7. **BeaconChain** (`lodestar_beacon_chain`) — archive/caches deep dive if issues found

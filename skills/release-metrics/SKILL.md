@@ -23,6 +23,11 @@ release cycles (v1.34–v1.40).
 
 ## Quick Start
 
+0. **Check uptime first:** `time() - process_start_time_seconds{job="beacon",group=~"$RC_GROUP|$STABLE_GROUP"}`.
+   Beta is often redeployed without notice, and post-restart catch-up transients (sync status dips,
+   block→head mean spikes, event-loop p99/GC/CPU spikes) look exactly like regressions. If the RC
+   restarted inside the comparison window, query the pre-restart steady state with `offset`
+   (e.g. `rate(...[3h] offset 1h)`) or wait for a clean window.
 1. Read `references/prometheus-queries.md` — contains all PromQL queries organized by category
 2. Run queries against the Grafana Prometheus datasource comparing RC group vs stable group
 3. Evaluate each metric category against the acceptance criteria below
@@ -34,7 +39,7 @@ release cycles (v1.34–v1.40).
 
 | Metric | Criteria | Action if Failed |
 |--------|----------|-----------------|
-| Sync status | 0 slots behind head | NO-GO |
+| Sync status | `lodestar_sync_status` = 3 (Synced); head lag (clock − head slot) ≈ 0, spikes no worse than stable | NO-GO |
 | Finalization | Finalizing (distance ≤ 2 epochs) | NO-GO |
 | Reorgs | Zero or same as stable | INVESTIGATE if higher |
 | Peer count | 150–250, stable (not spiky) | INVESTIGATE if volatile |
@@ -58,7 +63,7 @@ release cycles (v1.34–v1.40).
 |--------|----------|-----------------|
 | Block gossip → set as head | ≤ stable avg (typically < 3s) | INVESTIGATE if > 4s |
 | Process block time (avg) | ≤ stable | INVESTIGATE if regression |
-| Blocks set as head after 4s | Rate ≤ stable | INVESTIGATE |
+| Blocks set as head after attestation cutoff (4s; 3s from Gloas) | Rate ≤ stable | INVESTIGATE |
 | Process block count per slot | ≈ 1 | INVESTIGATE if consistently > 1 |
 | Epoch transition time | ≤ stable | INVESTIGATE if regression |
 | Epoch transitions per epoch | ≈ 1 | INVESTIGATE if > 1 |
@@ -107,7 +112,7 @@ show ~20-40% higher RSS naturally. This is NOT a regression.
 |--------|----------|-----------------|
 | Custody column availability | Columns served matches custody groups | INVESTIGATE |
 | Missing custody columns | Rate ≤ stable (counters grow but rate matters) | INVESTIGATE |
-| Reconstructed columns | 0 in steady state | INVESTIGATE if non-zero |
+| Reconstructed columns | 0 on non-supernodes; supernodes ≤ stable (they reconstruct routinely) | INVESTIGATE if higher |
 | Data column gossip time | ≤ stable | INVESTIGATE |
 | Column sampling success rate | ≥ stable | INVESTIGATE |
 
@@ -123,6 +128,7 @@ Compare metrics across matching node types between RC and stable:
 | SAS (supernode+validator+EL) | 128 | Worst case: CPU, event loop, GC |
 | arm64 | 4-8 | Architecture: binary compatibility, perf parity |
 | mainnet | varies | Real-world: actual block sizes, peer diversity |
+| mainnet-fcr | 4 | Mainnet + fast confirmation rule: epoch-boundary event-loop lag, head votes |
 
 **Key insight:** Regressions in solo/semi that don't appear in super = likely not custody-related.
 Regressions only in super/SAS = investigate custody group scaling.

@@ -5,9 +5,9 @@
     "domains": ["general", "news", "qa", "encyclopedia"],
     "priority": 1,
     "api_key_env": "BRAVE_API_KEY",
-    "rate_limit": {"rpm": 60, "rpd": 2000},
+    "rate_limit": {"rpm": 60, "rpd": 30},
     "timeout_ms": 5000,
-    "cost_per_1k": 3.0
+    "cost_per_1k": 5.0
   },
   "duckduckgo": {
     "enabled": true,

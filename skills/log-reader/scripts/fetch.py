@@ -6,12 +6,13 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
 from typing import Any, Iterable
 from datetime import datetime, timezone
-from urllib.parse import urlencode
+from urllib.parse import urlencode, urlparse
 from urllib.request import Request, urlopen
 
 if __package__ in (None, ""):
@@ -256,10 +257,13 @@ def fetch_kurtosis(args: argparse.Namespace, cursor: dict[str, Any] | None) -> t
     return records, new_cursor, source_id
 
 
+DEFAULT_GRAFANA_URL = "https://grafana-lodestar.chainsafe.io"
+
+
 def choose_loki_service(labels: dict[str, str], fallback: str) -> str:
     """Pick a service name from Loki labels."""
 
-    for key in ("service", "svc", "container", "container_name", "app", "job"):
+    for key in ("service", "svc", "instance", "container", "container_name", "app", "job"):
         value = labels.get(key)
         if value:
             return value
@@ -280,6 +284,32 @@ def to_unix_ns(value: str) -> int:
     return int(dt.timestamp() * 1_000_000_000)
 
 
+def resolve_loki_url(args: argparse.Namespace) -> str:
+    """Return --url, falling back to the LOKI_URL environment variable."""
+
+    url = args.url or os.environ.get("LOKI_URL")
+    if not url:
+        raise ValueError("Loki URL is required: pass --url or set LOKI_URL")
+    return url
+
+
+def build_loki_headers(args: argparse.Namespace, url: str) -> dict[str, str]:
+    """Build request headers; GRAFANA_TOKEN is only sent to the GRAFANA_URL host."""
+
+    headers: dict[str, str] = {}
+    if args.org_id:
+        headers["X-Scope-OrgID"] = args.org_id
+    if args.auth_header:
+        key, value = args.auth_header.split("=", 1)
+        headers[key] = value
+        return headers
+    token = os.environ.get("GRAFANA_TOKEN")
+    grafana_host = urlparse(os.environ.get("GRAFANA_URL") or DEFAULT_GRAFANA_URL).hostname
+    if token and urlparse(url).hostname == grafana_host:
+        headers["Authorization"] = f"Bearer {token}"
+    return headers
+
+
 def loki_get(url: str, params: dict[str, str], headers: dict[str, str]) -> dict[str, Any]:
     """Execute a Loki query_range request."""
 
@@ -297,12 +327,8 @@ def fetch_loki(args: argparse.Namespace, cursor: dict[str, Any] | None) -> tuple
 
     default_service = args.service or "loki"
     source_id = build_source_id("loki", default_service, args.source_id)
-    headers: dict[str, str] = {}
-    if args.org_id:
-        headers["X-Scope-OrgID"] = args.org_id
-    if args.auth_header:
-        key, value = args.auth_header.split("=", 1)
-        headers[key] = value
+    url = resolve_loki_url(args)
+    headers = build_loki_headers(args, url)
     end_ns = to_unix_ns(args.end) if args.end else int(utc_now().timestamp() * 1_000_000_000)
     if args.start:
         start_ns = to_unix_ns(args.start)
@@ -319,12 +345,12 @@ def fetch_loki(args: argparse.Namespace, cursor: dict[str, Any] | None) -> tuple
         "start": str(start_ns),
         "end": str(end_ns),
     }
-    data = loki_get(args.url.rstrip("/") + "/loki/api/v1/query_range", params, headers)
+    data = loki_get(url.rstrip("/") + "/loki/api/v1/query_range", params, headers)
     records: list[dict[str, Any]] = []
     max_ns = start_ns
     for stream in data.get("data", {}).get("result", []):
         labels = stream.get("stream", {}) or {}
-        service = choose_loki_service(labels, default_service)
+        service = args.service or choose_loki_service(labels, default_service)
         for entry_ns, line in stream.get("values", []):
             entry_ns_int = int(entry_ns)
             max_ns = max(max_ns, entry_ns_int)
@@ -410,9 +436,15 @@ def build_parser() -> argparse.ArgumentParser:
     kurtosis_parser.add_argument("--invert-match", action="store_true", help="Invert the Kurtosis filter.")
 
     loki_parser = subparsers.add_parser("loki", help="Fetch from Loki query_range.")
-    loki_parser.add_argument("--url", required=True, help="Base Loki URL, e.g. http://localhost:3100.")
+    loki_parser.add_argument(
+        "--url",
+        help="Base Loki URL (default: $LOKI_URL), e.g. https://grafana-lodestar.chainsafe.io/api/datasources/proxy/4.",
+    )
     loki_parser.add_argument("--query", required=True, help="LogQL query.")
-    loki_parser.add_argument("--service", help="Default service name when labels are missing.")
+    loki_parser.add_argument(
+        "--service",
+        help="Service name for every stream (overrides Loki labels; default: service/svc/instance/container/... label).",
+    )
     loki_parser.add_argument("--source-id", help="Source id override.")
     loki_parser.add_argument("--since", help="Relative start duration, e.g. 30m.")
     loki_parser.add_argument("--start", help="Explicit ISO8601 start time.")
@@ -421,7 +453,10 @@ def build_parser() -> argparse.ArgumentParser:
     loki_parser.add_argument("--org-id", help="Optional Loki tenant id header.")
     loki_parser.add_argument(
         "--auth-header",
-        help="Optional custom header in KEY=VALUE format, for example Authorization=Bearer%20token.",
+        help=(
+            "Custom header in KEY=VALUE format, sent verbatim, e.g. 'Authorization=Bearer <token>'. "
+            "Default: Authorization: Bearer $GRAFANA_TOKEN when the URL host matches $GRAFANA_URL."
+        ),
     )
 
     return parser

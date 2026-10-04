@@ -32,10 +32,10 @@ pip install --user pyyaml requests  # one-time
 
 ## Quick Start
 
-All commands use the dispatcher script at `scripts/logskill.sh` (resolve relative to this skill's directory).
+All commands use the dispatcher script `$SKILL_DIR/scripts/logskill.sh`.
 
 ```bash
-SKILL_DIR="$(dirname "$(realpath SKILL.md)")"
+SKILL_DIR=$HOME/.openclaw/workspace/skills/log-reader
 
 # 1. Create a session
 $SKILL_DIR/scripts/logskill.sh init my-debug
@@ -44,7 +44,10 @@ $SKILL_DIR/scripts/logskill.sh init my-debug
 $SKILL_DIR/scripts/logskill.sh fetch --session my-debug file /path/to/node.log --service lodestar-1
 $SKILL_DIR/scripts/logskill.sh fetch --session my-debug docker lodestar-beacon --since 30m
 $SKILL_DIR/scripts/logskill.sh fetch --session my-debug kurtosis --enclave kt-devnet --services cl-1-lodestar-geth
-$SKILL_DIR/scripts/logskill.sh fetch --session my-debug loki --url http://loki:3100 --query '{app="lodestar"}' --since 2h
+# Loki (ChainSafe; labels instance/job/group/container, no `app`)
+eval "$(grep -E '^export (GRAFANA_TOKEN|GRAFANA_URL)=' ~/.bashrc)"  # not exported in non-interactive shells
+export LOKI_URL=https://grafana-lodestar.chainsafe.io/api/datasources/proxy/4
+$SKILL_DIR/scripts/logskill.sh fetch --session my-debug loki --query '{instance="beta-super",job="beacon"}' --since 1h
 
 # 3. Build index (normalize + template mine + score)
 $SKILL_DIR/scripts/logskill.sh build --session my-debug
@@ -61,7 +64,7 @@ $SKILL_DIR/scripts/logskill.sh drill --session my-debug --start 2026-03-21T14:00
 $SKILL_DIR/scripts/logskill.sh compare --session my-debug --anchor slot:49 --radius 2m
 
 # 7. Live soak monitor (post-fix verification)
-$SKILL_DIR/scripts/logskill.sh watch --session my-debug docker lodestar-beacon --poll 30
+$SKILL_DIR/scripts/logskill.sh watch --session my-debug --poll 30 docker lodestar-beacon
 ```
 
 ## Commands Reference
@@ -81,9 +84,11 @@ Fetch raw logs into the session. Sources:
 | `file` | `fetch file <path>` | `--service NAME` |
 | `docker` | `fetch docker <container>` | `--since DURATION`, `--until TIMESTAMP` |
 | `kurtosis` | `fetch kurtosis` | `--enclave NAME`, `--services NAME[,NAME]` or `all` |
-| `loki` | `fetch loki` | `--url URL`, `--query LOGQL`, `--since DURATION`, `--start/--end ISO` |
+| `loki` | `fetch loki` | `--query LOGQL`, `--url URL` (default `$LOKI_URL`), `--since DURATION`, `--start/--end ISO`, `--service NAME` |
 
 Incremental: re-running fetch appends new records (cursor-based dedup).
+
+Loki: streams are named `--service`, else by label (`service`/`svc`, then `instance`, `container`, `job`); pin one `job` per query. `--auth-header K=V` is sent verbatim; otherwise `Bearer $GRAFANA_TOKEN` goes to the `$GRAFANA_URL` host only.
 
 ### `build --session <id>`
 Runs normalize → template mining → always-surface scan → reducer generation → 3-tier scoring.
@@ -117,16 +122,16 @@ Deep-dive into specific log regions:
 ### `compare --session <id> --anchor slot:N|time:ISO [--radius DURATION] [--services SVC1,SVC2]`
 Cross-service comparison pack showing what each service was doing around an incident. Anchor can be `slot:N` or `time:ISO8601`.
 
-### `watch --session <id> <source> [source-args] [--poll SEC] [--cycles N]`
+### `watch --session <id> [--poll SEC] [--cycles N] [--status-every SEC] <source> [source-args]`
 Live soak monitor. Polls the source, normalizes, scans always-surface patterns, and prints alerts.
 
 Source subcommands match `fetch` syntax:
 - `watch docker <container> [--since DURATION]`
 - `watch file <path>`
 - `watch kurtosis --enclave NAME --services NAME`
-- `watch loki --url URL --query LOGQL [--since DURATION]`
+- `watch loki [--url URL] --query LOGQL [--since DURATION]`
 
-Options:
+Options (must precede `<source>`, else `unrecognized arguments`):
 - `--poll SEC` — polling interval (default: 5s)
 - `--status-every SEC` — status line interval (default: 30s)
 - `--cycles N` — max polling cycles before exit
@@ -191,13 +196,6 @@ Edit `references/always_surface.yaml` to add/remove patterns. Each pattern has:
 - `match` — field/pattern/contains/gt matching rules (supports `any` for OR logic)
 - `label` — human-readable label
 - `keep_fields` — fields to always include in output
-
-### Token Profiles
-Override with `--profile` on overview command:
-- `tiny` — ~3K tokens (minimal summary)
-- `small` — ~8K tokens (default, good for most investigations)
-- `medium` — ~20K tokens (detailed, includes more templates and timeline)
-- `large` — ~40K tokens (comprehensive, for complex multi-service incidents)
 
 ## Examples
 

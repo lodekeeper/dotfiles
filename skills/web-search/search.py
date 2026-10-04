@@ -7,10 +7,10 @@ deduplicates, optionally synthesizes with citations.
 Improvements applied from GPT-5.4 Pro review (2026-03-06):
 - Weighted top-2 routing (ambiguous queries hit best two verticals)
 - Brave as scarce fallback (limited free tier: ~1K calls/month)
-- Provider-native rate limit headers respected
+- Rate limiting: per-provider token bucket + daily cap; a 429/"rate" error blocks the provider for 60s
 - Second-stage quality reranker using provider signals (votes, citations, stars)
 - Cache: WAL mode, normalized queries, stale-while-revalidate, negative caching
-- LLM synthesis in deep mode
+- Extractive snippet summary in deep mode (no LLM call)
 """
 
 import argparse
@@ -509,7 +509,7 @@ def rrf_rank(provider_results: list[dict], domains: list[str]) -> list[dict]:
 
 
 # ─────────────────────────────────────────────
-# 7. LLM Synthesis (deep mode)
+# 7. Extractive Synthesis (deep mode)
 # ─────────────────────────────────────────────
 
 def synthesize(query: str, results: list[dict], max_results: int = 5) -> str | None:
@@ -638,7 +638,7 @@ def main():
     # Rank (RRF + quality signals)
     ranked = rrf_rank(provider_results, domains)[: args.max_results]
 
-    # LLM synthesis (deep mode only)
+    # Extractive synthesis (deep mode only)
     answer = None
     if args.depth == "deep" and not args.no_synthesis and ranked:
         answer = synthesize(args.query, ranked)

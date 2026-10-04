@@ -235,16 +235,19 @@ def build_parser() -> argparse.ArgumentParser:
     kurtosis_parser.add_argument("--invert-match", action="store_true", help="Invert the Kurtosis filter.")
 
     loki_parser = subparsers.add_parser("loki", help="Watch Loki with polling.")
-    loki_parser.add_argument("--url", required=True, help="Base Loki URL.")
+    loki_parser.add_argument("--url", help="Base Loki URL (default: $LOKI_URL).")
     loki_parser.add_argument("--query", required=True, help="LogQL query.")
-    loki_parser.add_argument("--service", help="Default service name.")
+    loki_parser.add_argument("--service", help="Service name for every stream (overrides Loki labels).")
     loki_parser.add_argument("--source-id", help="Source id override.")
     loki_parser.add_argument("--since", help="Initial lookback duration.")
     loki_parser.add_argument("--start", help="Explicit ISO8601 start time.")
     loki_parser.add_argument("--end", help="Explicit ISO8601 end time.")
     loki_parser.add_argument("--limit", type=int, default=1000, help="Maximum number of entries per poll.")
     loki_parser.add_argument("--org-id", help="Optional Loki tenant id header.")
-    loki_parser.add_argument("--auth-header", help="Optional custom header in KEY=VALUE format.")
+    loki_parser.add_argument(
+        "--auth-header",
+        help="Custom header in KEY=VALUE format (default: Bearer $GRAFANA_TOKEN for the $GRAFANA_URL host).",
+    )
 
     return parser
 

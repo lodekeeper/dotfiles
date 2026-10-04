@@ -29,7 +29,7 @@ def search(query: str, params: dict) -> list[dict]:
         results.append({
             "url": item.get("html_url", ""),
             "title": f"{repo.get('full_name', '')}/{item.get('name', '')}",
-            "snippet": f"Path: {item.get('path', '')} | Repo: {repo.get('full_name', '')} ({repo.get('description', '')[:100]})",
+            "snippet": f"Path: {item.get('path', '')} | Repo: {repo.get('full_name', '')} ({(repo.get('description') or '')[:100]})",
         })
 
     return results

@@ -41,7 +41,7 @@ from typing import Any
 # ---------------------------------------------------------------------------
 
 _DEFAULT_SPEC_ROOT = os.path.expanduser("~/consensus-specs/specs")
-_DEFAULT_MODEL = os.environ.get("OPENAI_SPEC_MODEL", "gpt-5.3-codex-spark")
+_DEFAULT_MODEL = os.environ.get("OPENAI_SPEC_MODEL", "gpt-6.1-sol")
 _MAX_SPEC_CHARS = 12_000
 _MAX_TS_CHARS = 12_000
 
@@ -323,8 +323,8 @@ def _openai_completion(
     resp = client.chat.completions.create(
         model=model,
         messages=messages,
-        temperature=0,
-        max_tokens=2000,
+        # gpt-6.x reasoning models reject max_tokens/temperature; reasoning tokens count against this budget
+        max_completion_tokens=16000,
         response_format={"type": "json_object"},
     )
     raw = resp.choices[0].message.content or "{}"

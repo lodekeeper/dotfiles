@@ -10,7 +10,7 @@ Environment:
 
 Tiers:
     1: curl_cffi (TLS impersonation, 0.2-1.6s, no JS)
-    2: DynamicFetcher (rebrowser-playwright, 0.9-2.8s, JS rendering)
+    2: DynamicFetcher (plain Playwright Chromium, 0.9-2.8s, JS rendering)
     3: Camoufox (stealth Firefox, 5-10s, max anti-bot bypass)
 """
 import sys
@@ -101,11 +101,10 @@ def tier1_curl(url: str, timeout: int = 15) -> str | None:
 
 
 def tier2_dynamic(url: str, timeout: int = 30000) -> str | None:
-    """Tier 2: DynamicFetcher (rebrowser-playwright)."""
+    """Tier 2: DynamicFetcher (plain Playwright Chromium)."""
     try:
         from scrapling import DynamicFetcher
-        fetcher = DynamicFetcher()
-        response = fetcher.fetch(url, headless=True, network_idle=True, timeout=timeout)
+        response = DynamicFetcher.fetch(url, headless=True, network_idle=True, timeout=timeout)
         html = response.html_content
         if html and validate_content(html, url):
             return html
@@ -152,16 +151,6 @@ def extract_content(html: str, url: str) -> str:
     )
     if text and len(text) > 50:
         return text
-    # Fallback: try readability + trafilatura
-    try:
-        from readability import Document
-        doc = Document(html)
-        cleaned = doc.summary()
-        text = trafilatura.extract(cleaned)
-        if text:
-            return text
-    except ImportError:
-        pass
     # Last resort: return truncated HTML
     return html[:50000]
 

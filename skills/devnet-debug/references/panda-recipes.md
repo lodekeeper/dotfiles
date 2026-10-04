@@ -9,7 +9,7 @@ All SQL runs via `panda clickhouse query <datasource> "<SQL>"`. Raw devnet data 
 ```sql
 SELECT DISTINCT ResourceAttributes['host.name'] AS host
 FROM external.otel_logs
-WHERE ResourceAttributes['network'] = 'glamsterdam-devnet-5'
+WHERE ResourceAttributes['network'] = '<network>'
   AND Timestamp >= now() - INTERVAL 2 HOUR
 ORDER BY host
 ```
@@ -18,7 +18,7 @@ Hosts follow `<cl>-<el>-<n>`: `lodestar-erigon-1`, `prysm-nethermind-2`, `grandi
 ```sql
 SELECT DISTINCT LogAttributes['log.file.name'] AS container
 FROM external.otel_logs
-WHERE ResourceAttributes['network']='glamsterdam-devnet-5'
+WHERE ResourceAttributes['network']='<network>'
   AND ResourceAttributes['host.name']='prysm-nethermind-2'
   AND Timestamp >= now() - INTERVAL 1 HOUR
 ```
@@ -44,7 +44,7 @@ df = clickhouse.query("clickhouse-raw", """
          substring(replaceRegexpAll(Body, '\x1b\\[[0-9;]*m', ''), 1, 80) AS sig,
          count() AS n
   FROM external.otel_logs
-  WHERE ResourceAttributes['network'] = 'glamsterdam-devnet-5'
+  WHERE ResourceAttributes['network'] = '<network>'
     AND ResourceAttributes['host.name'] LIKE 'prysm-%'
     AND Timestamp >= now() - INTERVAL 1 HOUR
     AND match(Body, '(?i)(err|fatal|warn)')
@@ -52,15 +52,18 @@ df = clickhouse.query("clickhouse-raw", """
 """)
 print(df.to_string())   # ranked error signatures, not thousands of raw lines
 ```
-Pass with `panda execute --code '<above>'` (mind shell quoting — for gnarly SQL keep the code in a heredoc, `--code "$(cat <<'PY' … PY)"`). Then drill into one signature with a small raw `LIMIT 5` query. Multi-step: cache a big pull with `df.to_parquet("/workspace/x.parquet")` in one `panda execute --session <id>` call and `pd.read_parquet(...)` it back in the next. The `ethpandaops` lib also exposes `prometheus`, `loki`, `dora`, and `specs` (`specs.get_constant("…")`), so cross-source correlation (metrics → logs → chain data) runs in one analysis.
+Pass with `panda execute --code '<above>'` (mind shell quoting — for gnarly SQL keep the code in a heredoc, `--code "$(cat <<'PY' … PY)"`). Then drill into one signature with a small raw `LIMIT 5` query. Multi-step: cache a big pull with `df.to_parquet("/workspace/x.parquet")` in one `panda execute --session <id>` call and `pd.read_parquet(...)` it back in the next. The `ethpandaops` lib also exposes `prometheus`, `dora`, `ethnode`, `forky`, and `specs` (`specs.get_constant("…")`; `loki` is deprecated — container logs moved to the ClickHouse otel tables), so cross-source correlation (metrics → logs → chain data) runs in one analysis.
 
-## Xatu block / chain data (clickhouse-raw, `default.*`)
+## Xatu block / chain data (clickhouse-raw — one database per devnet)
+
+Public networks live in the `default` database, so an unqualified `FROM <table>` returns mainnet/testnet rows. Devnets each have their own database named after the network: ``FROM `<network>`.<table>``, and always add `WHERE meta_network_name = '<network>'` (it leads the primary key). Confirm with `panda datasets xatu-raw`.
 
 - Latest head seen + event volume:
   ```sql
   SELECT max(slot) AS head, max(slot_start_date_time) AS latest, count() AS events
-  FROM beacon_api_eth_v1_events_block
-  WHERE slot_start_date_time > now() - INTERVAL 30 MINUTE
+  FROM `<network>`.beacon_api_eth_v1_events_block
+  WHERE meta_network_name = '<network>'
+    AND slot_start_date_time > now() - INTERVAL 30 MINUTE
   ```
 - Other useful raw tables: `beacon_api_eth_v1_events_head`, `*_events_blob_sidecar`, `*_events_data_column_sidecar` (PeerDAS), `*_events_chain_reorg`, `beacon_api_eth_v2_beacon_block`, attestation/`single_attestation` tables. Use `panda schema` / `panda search examples` to confirm exact names per deployment.
 - For finalized/aggregated analytics use the **xatu-cbt** dataset (`{network}.fct_*` tables, one DB per network). `_canonical` = finalized (no reorgs); `_head` = live (may reorg). Use `FINAL`. Check coverage first — CBT only has what the pipeline processed: `cbt.get_transformation_coverage(network, "{network}.<table>")`.

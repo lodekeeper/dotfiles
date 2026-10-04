@@ -1,6 +1,6 @@
 # USER.md - About Your Human
 
-*Learn about the person you're helping. Update this as you go.*
+*Learn about the person you're helping. Update this as you go. Hard cap: 4,000 chars (OpenClaw 2026.9+ truncates the middle beyond that).*
 
 - **Name:** Nico
 - **What to call them:** Nico
@@ -17,24 +17,16 @@
 
 ## Preferences
 
-- **Always summarize** what I'm doing/did — Nico wants to stay on top of my work
-- Keep them informed, no surprises
-- **NEVER send "all clear" / "nothing new" / "everything is fine" messages** — zero tolerance. If nothing is actionable, say NOTHING (NO_REPLY). Only message when there is a real alert, blocker, decision needed, or result to deliver.
-- **Do not repeat the same actionable reminder frequently** — no heartbeat ping spam (e.g., repeating the same pending PR every 10 minutes). Re-notify only on status change/new blocker/new decision needed.
-- **Routine status/backlog/heartbeat progress updates go to Lodestar WG topic `#347` (`Routine Status Updates`, https://t.me/c/3764039429/347)** — keep this DM for blockers, urgent decisions, and critical deliverables only.
-- **Hard DM suppression (strict):** for heartbeat/reminder/routine-status flows, DM output must be exactly `NO_REPLY`.
+- **Always summarize** what I'm doing/did — Nico wants to stay on top of my work. Keep them informed, no surprises.
+- **NEVER send "all clear" / "nothing new" / "everything is fine" messages** — zero tolerance. If nothing is actionable, say NOTHING (NO_REPLY). Only message for a real alert, blocker, decision needed, or result to deliver.
+- **Anti-spam:** don't repeat the same actionable reminder or heartbeat nudge (e.g., the same pending PR every 10 minutes). Re-notify only on status change, new blocker, new decision needed, or meaningful progress delta. Don't notify about non-blocking review waits.
+- **Routine status/backlog/heartbeat updates go to Lodestar WG topic `#347`** (`Routine Status Updates`, https://t.me/c/3764039429/347) via the `message` tool: `action=send, channel=telegram, target=-1003764039429, threadId=347` (`sessions_send` rejects thread targets, see `[[reference_cron_sessions_send_bridge]]`). DM is for blockers, urgent decisions, and critical deliverables only.
+- **Hard DM suppression (strict):** heartbeat/reminder/scheduled/system/routine-status flows → DM output exactly `NO_REPLY` unless there is a blocker, urgent decision, or critical deliverable. Never relay routine cron `HEARTBEAT_OK` or heartbeat acknowledgements; if the incoming reminder content is exactly `Cron: HEARTBEAT_OK`, respond `NO_REPLY`.
 - **No dual-posting:** never send the same routine status in both topic `#347` and DM.
-- **Default heartbeat behavior in DM:** `NO_REPLY` unless there is a blocker, urgent decision, or critical deliverable.
-- **Routing implementation detail (corrected 2026-08-07):** `sessions_send` now hard-rejects thread-level targets (`sessionKey: agent:main:telegram:group:-1003764039429:topic:347` → error "cannot target a thread session for inter-agent coordination. Use the parent channel session key instead."). Route routine updates to topic `#347` via the `message` tool instead: `action=send, channel=telegram, target=-1003764039429, threadId=347`. Confirmed delivered 2026-08-07 (messageId 13043). Matches `[[reference_cron_sessions_send_bridge]]`, which already documented this for cron/claude-cli contexts back on 2026-07-21 — this line was simply stale/wrong for the main session too.
-- **Scheduled/system reminders are also routine by default:** do not relay them in DM unless urgent/actionable for Nico; route routine ones to topic `#347` or keep DM silent (`NO_REPLY`).
-- **GitHub cron notification handling in DM (CRITICAL):** When cron delivers a GitHub notification alert to DM, you may silently ACT on it (reply on GitHub, clear notifications, update checklist) but DO NOT narrate what you did in DM. The "I handled comment X on PR Y" updates are routine — DM reply must be `NO_REPLY`. Only break silence if the comment reveals a blocker or urgent decision that Nico needs to make.
-- **NEVER DM Nico about his own comments (CRITICAL):** If the review comment author is nflaig/Nico, do NOT DM him about it — he already knows what he wrote. Just silently act on it (address the feedback on GitHub). This applies to ALL comment types: review comments, issue comments, review bodies. No exceptions.
-- **Silence topic completion pings for self-triggered work (CRITICAL):** If a topic session was nudged to act on Nico's own comment (author = nflaig), do NOT post a "Done / completion summary / branch sync complete" message back to the topic. The GitHub reply + PR state change are sufficient — Nico gets the GitHub notification. Posting a topic summary is a redundant ping. Act silently: push the fix, reply on GitHub, update BACKLOG, stop. This mirrors the DM rule above but applies to topic posts.
-- **Anti-spam:** do not post repetitive heartbeat nudges every few minutes; re-post only on status change/new blocker/new decision or meaningful progress delta.
-- **Do not notify about non-blocking review waits** — if a review is not blocking, stay silent until there is a blocker/status change/decision needed.
+- **GitHub cron notification handling in DM (CRITICAL):** you may silently ACT on it (reply on GitHub, clear notifications, update checklist) but DO NOT narrate what you did in DM — "I handled comment X on PR Y" is routine, DM reply must be `NO_REPLY`. Only break silence if the comment reveals a blocker or urgent decision Nico needs to make.
+- **NEVER DM Nico about his own comments (CRITICAL):** if the author is nflaig/Nico, he already knows what he wrote — silently act on it on GitHub. Applies to ALL comment types (review comments, issue comments, review bodies). No exceptions.
+- **Silence topic completion pings for self-triggered work (CRITICAL):** if a topic session was nudged to act on Nico's own comment, do NOT post a "Done / completion summary / branch sync complete" message to the topic — the GitHub reply + PR state change are sufficient. Push the fix, reply on GitHub, update BACKLOG, stop.
 - **Ask clarifying questions first** on non-trivial tasks before execution (scope, constraints, success criteria, urgency) — don't assume.
-- **2026-03-03 reinforcement:** Do NOT send routine cron `HEARTBEAT_OK` relays or heartbeat acknowledgements. If there is no actionable item for Nico, send nothing.
-- **Hard rule:** If the incoming reminder content is exactly `Cron: HEARTBEAT_OK`, respond with `NO_REPLY` (silent) — never send a user-facing message.
 - **No sudo** — stay sandboxed to my user/home directory. Ask Nico for system installs.
 
 ---

@@ -13,12 +13,14 @@ Query Ethereum consensus layer beacon nodes using the [Beacon API](https://ether
 
 ## Quick Reference
 
-**Spec repo:** `~/beacon-APIs` (ethereum/beacon-APIs)  
+**Spec repo:** `~/beacon-APIs` (ethereum/beacon-APIs) — usually checked out on a feature branch behind master; read spec files from master: `git -C ~/beacon-APIs fetch -q origin master && git -C ~/beacon-APIs show origin/master:<path>`.
 
 Set your base URL before running commands:
 ```bash
 BASE="http://localhost:5052"  # or any beacon node URL
 ```
+
+**Caution:** on this host `localhost:5052` is Nico's **production** mainnet node (`mainnet-consensus-1`) — inspect-only, light queries. It's sometimes swapped to Nimbus: check `docker ps --filter name=mainnet-consensus-1 --format '{{.Image}}'` before assuming Lodestar. Don't point loops or heavy calls at it (missed-slot scan, all-validator queries, `debug/fork_choice`, state/blob/column downloads).
 
 All endpoints use `curl -s $BASE/<path>` and return JSON.
 
@@ -79,6 +81,23 @@ curl -s "$BASE/eth/v1/beacon/blocks/head/root" | jq '.data.root'
 
 # Block rewards
 curl -s "$BASE/eth/v1/beacon/rewards/blocks/head" | jq '.data'
+```
+
+### Fulu / Gloas data
+```bash
+# Blobs of a block (optional ?versioned_hashes=0x..,0x..)
+curl -s "$BASE/eth/v1/beacon/blobs/head" | jq '.data | length'
+
+# Data column sidecars (debug namespace; optional ?indices=0,1)
+curl -s "$BASE/eth/v1/debug/beacon/data_column_sidecars/head" | jq '.data | length'
+
+# Gloas networks only: signed execution payload envelope of a block
+curl -s "$BASE/eth/v1/beacon/execution_payload_envelopes/head" | jq '.data.message | {builder_index, beacon_block_root, block_hash: .payload.block_hash}'
+
+# Gloas networks only: PTC duties (POST with validator indices; $EPOCH as under Validator duties)
+curl -s -X POST "$BASE/eth/v1/validator/duties/ptc/$EPOCH" \
+  -H "Content-Type: application/json" \
+  -d '["0", "1", "2"]' | jq '.data'
 ```
 
 ### Slot/epoch helpers
@@ -160,8 +179,11 @@ curl -s -X POST "$BASE/eth/v1/validator/liveness/$((EPOCH - 1))" \
 # All connected peers
 curl -s "$BASE/eth/v1/node/peers?state=connected" | jq '.data | length'
 
-# Peer details (agent, direction, state)
-curl -s "$BASE/eth/v1/node/peers?state=connected" | jq '.data[:5] | .[] | {peer_id: .peer_id[:20], agent: .agent, direction, state}'
+# Peer details (direction, state) — the standard Peer object has no agent field
+curl -s "$BASE/eth/v1/node/peers?state=connected" | jq '.data[:5] | .[] | {peer_id: .peer_id[:20], direction, state}'
+
+# Lodestar only (lodestar namespace, see below): agent per peer, camelCase fields
+curl -s "$BASE/eth/v1/lodestar/peers?state=connected" | jq '.data[:5] | .[] | {peer_id: .peerId[:20], agent: .agentVersion, direction}'
 
 # Count by direction
 curl -s "$BASE/eth/v1/node/peers?state=connected" | jq '[.data[].direction] | group_by(.) | map({direction: .[0], count: length})'
@@ -184,7 +206,10 @@ curl -s -X POST "$BASE/eth/v1/beacon/rewards/attestations/$EPOCH" \
 
 ### Sync committee rewards
 ```bash
-curl -s "$BASE/eth/v1/beacon/rewards/sync_committee/head" | jq '.data[:5]'
+# POST; body = validator indices/pubkeys, [] = every sync committee member
+curl -s -X POST "$BASE/eth/v1/beacon/rewards/sync_committee/head" \
+  -H "Content-Type: application/json" \
+  -d '[]' | jq '.data[:5]'
 ```
 
 ## Pool / Mempool
@@ -217,10 +242,13 @@ curl -s -N "$BASE/eth/v1/events?topics=head" | head -20
 # Multiple topics
 curl -s -N "$BASE/eth/v1/events?topics=head,block,attestation,finalized_checkpoint" | head -50
 
-# Available topics: head, block, attestation, voluntary_exit, bls_to_execution_change,
-# proposer_slashing, attester_slashing, finalized_checkpoint, chain_reorg,
-# contribution_and_proof, light_client_finality_update, light_client_optimistic_update,
-# payload_attributes, blob_sidecar
+# Topics (spec master): head, head_v2, block, block_gossip, attestation, single_attestation,
+# voluntary_exit, bls_to_execution_change, proposer_slashing, attester_slashing,
+# finalized_checkpoint, chain_reorg, contribution_and_proof, light_client_finality_update,
+# light_client_optimistic_update, payload_attributes, data_column_sidecar, fast_confirmation,
+# proposer_preferences, and Gloas: execution_payload, execution_payload_gossip,
+# execution_payload_available, execution_payload_bid, payload_attestation_message
+# (spec removed blob_sidecar; Lodestar unstable still serves it and has no head_v2 yet)
 ```
 
 **Note:** SSE streams are long-lived. Use `timeout` or `head` to limit output:
@@ -328,15 +356,23 @@ check_missed_slots() {
 
 ## Lodestar-Specific Endpoints
 
-Lodestar exposes additional non-standard endpoints:
+Non-standard routes under `/eth/v1/lodestar/*` need the `lodestar` REST namespace, which is **off by default** (`--rest.namespace lodestar` or `all`; else 404). There is no `/eth/v1/lodestar/version` — use `/eth/v1/node/version`.
 
 ```bash
-# Lodestar version details
-curl -s "$BASE/eth/v1/lodestar/version" | jq '.data'
+# Peers with agent version, grouped
+curl -s "$BASE/eth/v1/lodestar/peers" | jq '[.data[].agentVersion] | group_by(.) | map({agent: .[0], n: length})'
 
-# Validator participation for an epoch
-curl -s "$BASE/eth/v1/lodestar/validator/participation/$EPOCH" | jq '.data'
+# Range-sync chains debug state
+curl -s "$BASE/eth/v1/lodestar/sync_chains_debug_state" | jq '.data'
+
+# PeerDAS custody (earliestCustodiedSlot, custodyGroupCount, custodyColumns)
+curl -s "$BASE/eth/v1/lodestar/custody_info" | jq '.data'
+
+# Validator indices tracked by the validator monitor
+curl -s "$BASE/eth/v1/lodestar/monitored_validators" | jq '.data'
 ```
+
+Full route list: `git -C ~/lodestar show origin/unstable:packages/api/src/beacon/routes/lodestar.ts` (e.g. `persisted_checkpoint_state` returns a full BeaconState — heavy).
 
 ## Tips
 
@@ -346,5 +382,5 @@ curl -s "$BASE/eth/v1/lodestar/validator/participation/$EPOCH" | jq '.data'
 - **Rate limiting:** Public nodes may rate-limit. Space requests or use your own node.
 - **SSE events:** Long-lived connections. Always use `timeout` or pipe through `head`.
 - **Execution optimistic:** Response field `execution_optimistic: true` means the CL hasn't verified the EL payload yet. Data may change.
-- **Spec reference:** Full OpenAPI spec at `~/beacon-APIs/beacon-node-oapi.yaml`
-- **Validator flow:** `~/beacon-APIs/validator-flow.md` — how VC and BN interact
+- **Spec reference:** Full OpenAPI spec: `git -C ~/beacon-APIs show origin/master:beacon-node-oapi.yaml` (the working tree is on a feature branch)
+- **Validator flow:** `git -C ~/beacon-APIs show origin/master:validator-flow.md` — how VC and BN interact

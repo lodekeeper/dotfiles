@@ -1,14 +1,14 @@
 # ChainSafe / ethpandaops infra — secondary debugging POV
 
-Use when panda lacks Lodestar internals: live fork-choice dump, debug-level logs, heap/CPU profiles, exact peer-by-client counts. panda otel-logs covers most cross-client needs first.
+Use when panda lacks Lodestar internals: debug-level logs, heap/CPU profiles, exact peer-by-client counts, `/eth/v1/lodestar/*` routes. panda covers most cross-client needs first: otel-logs (logs), `ethnode` (a node's live beacon API), `forky` (per-node fork-choice frames).
 
 ## SSH to ethpandaops Lodestar nodes (Lodestar ONLY)
 
 ```bash
 ssh devops@lodestar-<el>-<n>.srv.<network>.ethpandaops.io      # key ~/.ssh/id_ed25519
-# e.g. lodestar-ethrex-1.srv.glamsterdam-devnet-5.ethpandaops.io  (resolves IPv6 / Hetzner)
+# e.g. lodestar-geth-1.srv.glamsterdam-devnet-8.ethpandaops.io  (resolves IPv6)
 ```
-- Access is provisioned from `https://github.com/lodekeeper.keys` (ethpandaops ansible pulls `<user>.keys`). So the lodekeeper GitHub SSH key *is* the devnet access — don't remove/rotate it there or you lose devnet SSH. (Same account whose cookies drive panda auth.)
+- Access is provisioned from `https://github.com/lodekeeper.keys` (ethpandaops ansible pulls `<user>.keys`). So the lodekeeper GitHub SSH key *is* the devnet access — don't remove/rotate it there or you lose devnet SSH.
 - **Key authorized on Lodestar nodes only** — Prysm/other-client boxes reject it (`Permission denied (publickey)`). Identify foreign clients from the Lodestar side, or read their logs via panda otel-logs.
 - No `hc-`/`-super` prefix on glam-5 (older `bal-devnet-2` used `hc-lodestar-geth-super-1`).
 
@@ -19,7 +19,7 @@ On the node:
 ```bash
 # over SSH (or curl through a tunnel)
 curl -s localhost:5052/eth/v1/node/syncing | jq
-curl -s localhost:5052/eth/v1/debug/fork_choice | jq '.fork_choice_nodes | length'   # fork-choice dump panda can't give
+curl -s localhost:5052/eth/v1/debug/fork_choice | jq '.fork_choice_nodes | length'   # live Lodestar fork-choice dump (any client: panda forky frames)
 curl -s localhost:5054/metrics | grep -E 'lodestar_peers_by_client_count|lodestar_sync'
 docker logs --tail 200 beacon 2>&1 | tail -50
 ```
@@ -45,7 +45,7 @@ Example LogQL (via the `grafana-loki` skill's query helper):
 
 - Cross-client / "why is client X broken" → **panda otel-logs** (sees all clients).
 - Network shape / finality / forks → **Dora /forks** + xatu.
-- Lodestar fork-choice dump / live REST state → **SSH :5052**.
+- Live beacon REST / fork-choice of any client → panda **`ethnode`** / **`forky`**; Lodestar debug routes or a live fork-choice dump → **SSH :5052**.
 - Lodestar debug-level log digs (peers, disconnects, sync) → **ChainSafe Loki** (fast, no OIDC) or SSH `docker logs`.
 - Lodestar peer-by-client counts → **SSH :5054 metrics**.
 - Lodestar memory leak → **lodestar-heapsnapshots**.

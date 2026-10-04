@@ -6,7 +6,7 @@
 - Open with a casual greeting: "Good day Lodestar operators!", "Hey Lodestar users!", "Happy [month]!"
 - State version and recommendation level immediately: "We've just released vX.Y.Z and **recommend** users update"
 - Recommendation levels: **mandatory** (breaking/security), **recommended** (features/perf), maintenance (minor)
-- Close with a link to full changelog and optionally a seasonal/fun sign-off
+- Optionally a seasonal/fun sign-off, then close the header with the `[Full Changelog](…/compare/vPREV...vX.Y.Z)` link
 
 ## GitHub Release Header Structure
 
@@ -24,8 +24,10 @@
 
 [Optional: Additional context paragraphs for complex changes like migrations]
 
-For the full changelog, please see: https://github.com/ChainSafe/lodestar/releases/vX.Y.Z
+[Full Changelog](https://github.com/ChainSafe/lodestar/compare/vPREV...vX.Y.Z)
 ```
+
+`publish-rc.yml` and `publish-stable.yml` both generate the body with `scripts/generate_changelog.mjs`. It starts with `# Changelog` and then `[Full Changelog](…/compare/<prev_tag>...<tag>)`. The header replaces the `# Changelog` heading, and the generated link stays as the last header line, directly above `### Features`. Releases v1.47.0 through v1.49.0 all do this; v1.48.0 words it `Click here for the [full changelog](…)`. `vPREV` is the previous stable tag. An RC body links `...vX.Y.Z-rc.N`, so don't copy that link into the stable header.
 
 ### Formatting Rules
 

@@ -6,16 +6,17 @@ Full documentation: https://github.com/ethpandaops/ethereum-package
 
 ```yaml
 participants:
-  - el_type: reth|geth|nethermind|besu|erigon
-    el_image: <docker-image>            # e.g., ghcr.io/paradigmxyz/reth:latest
+  - el_type: reth|geth|nethermind|besu|erigon|ethereumjs|nimbus-eth1|ethrex
+    el_image: <docker-image>            # omit for the package default; e.g., ghcr.io/paradigmxyz/reth:latest
     el_extra_params: []                  # extra CLI flags for EL
-    cl_type: lodestar|lighthouse|prysm|teku|nimbus
-    cl_image: <docker-image>            # e.g., lodestar:custom or chainsafe/lodestar:latest
+    cl_type: lodestar|lighthouse|prysm|teku|nimbus|grandine
+    cl_image: <docker-image>            # omit for the package default; e.g., lodestar:custom
     cl_extra_params: []                  # extra CLI flags for CL beacon
     vc_type: <same-as-cl_type>          # defaults to cl_type
     vc_image: <docker-image>            # custom VC image (if different from CL)
     vc_extra_params: []                 # extra CLI flags for VC
-    supernode: false                    # combine beacon+vc in single process
+    supernode: false                    # subscribe to all subnets / custody all columns (PeerDAS only)
+    use_separate_vc: true               # false = beacon+VC in one process (default false for teku/nimbus)
     count: 1                            # number of instances with this config
     validator_count: 64                 # validators assigned to this participant
 ```
@@ -24,13 +25,13 @@ participants:
 
 ```yaml
 network_params:
-  # Fork epochs (0 = from genesis, null = disabled)
-  electra_fork_epoch: 0
-  fulu_fork_epoch: 1
+  # Fork epochs (0 = from genesis; unscheduled = 18446744073709551615)
+  # altair..fulu default to 0; gloas/heze default to unscheduled
+  gloas_fork_epoch: 1
 
   # Timing
   seconds_per_slot: 12          # default 12, use 6 for faster devnets
-  slots_per_epoch: 32           # default 32
+  preset: mainnet               # or minimal (8 slots/epoch; uses *_MINIMAL default images). No slots_per_epoch key
 
   # Network
   network_id: "3151908"
@@ -49,11 +50,12 @@ additional_services:
   - assertoor         # automated testing
   - prometheus        # metrics collection
   - grafana           # metrics dashboards
-  - blob_spammer      # blob transaction generator
-  - el_forkmon        # fork monitor
-  - beacon_metrics_gazer
+  - spamoor           # transaction spammer (use instead of the removed blob_spammer)
+  - forkmon           # fork monitor
   - blockscout        # block explorer with contract verification
 ```
+
+Unknown names stop the run (`Invalid additional_services`); the allowed list is `ADDITIONAL_SERVICES_PARAMS` in ethereum-package `src/package_io/sanity_check.star`.
 
 ## Assertoor Parameters
 
@@ -82,7 +84,7 @@ port_publisher:
     public_port_start: 34000
 ```
 
-Ports increment by 5 per service instance.
+Each CL/EL node gets a block of 7 ports, each VC 3 (cl-1 from 33000 with beacon API on 33001, cl-2 from 33007).
 
 ## Global Settings
 
@@ -105,87 +107,16 @@ participants:
     validator_count: 128
 
 network_params:
-  electra_fork_epoch: 0
   seconds_per_slot: 6
 
 additional_services:
   - dora
-```
-
-## Example: EIP-8025 Mixed Client Devnet
-
-```yaml
-participants:
-  # Supernodes with validators
-  - el_type: reth
-    cl_type: lodestar
-    cl_image: lodestar:eip8025
-    cl_extra_params: [--targetPeers=8]
-    supernode: true
-    count: 1
-    validator_count: 96
-
-  - el_type: geth
-    cl_type: lighthouse
-    cl_image: ethpandaops/lighthouse:eth-act-optional-proofs
-    cl_extra_params: [--target-peers=8]
-    supernode: true
-    count: 1
-    validator_count: 96
-
-  - el_type: geth
-    cl_type: prysm
-    cl_image: ethpandaops/prysm-beacon-chain:developeruche-poc-optional-proofs
-    cl_extra_params: [--activate-zkvm, --zkvm-generation-proof-types=0,1]
-    vc_image: ethpandaops/prysm-validator:developeruche-poc-optional-proofs
-    supernode: true
-    count: 1
-    validator_count: 96
-
-  # Observer nodes (no validators)
-  - el_type: reth
-    cl_type: lodestar
-    cl_image: lodestar:eip8025
-    cl_extra_params: [--activateZkvm, --chain.minProofsRequired=1, --targetPeers=8]
-    count: 1
-    validator_count: 0
-
-network_params:
-  electra_fork_epoch: 0
-  fulu_fork_epoch: 1
-  seconds_per_slot: 6
-
-global_log_level: debug
-
-additional_services:
-  - dora
-  - assertoor
-
-assertoor_params:
-  run_stability_check: true
-  run_block_proposal_check: true
-
-port_publisher:
-  el:
-    enabled: true
-    public_port_start: 32000
-  cl:
-    enabled: true
-    public_port_start: 33000
 ```
 
 ## Client Docker Images
 
-### Official/Latest
-- **Lodestar:** `chainsafe/lodestar:latest`
-- **Lighthouse:** `sigp/lighthouse:latest`
-- **Prysm:** `gcr.io/prysmaticlabs/prysm/beacon-chain:latest`
-- **Teku:** `consensys/teku:latest`
-- **Nimbus:** `statusim/nimbus-eth2:multiarch-latest`
-- **Geth:** `ethereum/client-go:latest`
-- **Reth:** `ghcr.io/paradigmxyz/reth:latest`
-- **Nethermind:** `nethermind/nethermind:latest`
-- **Besu:** `hyperledger/besu:latest`
+### Defaults
+Omit `el_image` / `cl_image` / `vc_image` to get the package defaults — `DEFAULT_EL_IMAGES`, `DEFAULT_CL_IMAGES`, `DEFAULT_VC_IMAGES` (and `*_MINIMAL` for `preset: minimal`) in ethereum-package `src/package_io/input_parser.star`. That file is the source of truth; the README's per-client list can lag it (e.g. Prysm defaults to `offchainlabs/prysm-beacon-chain:stable`).
 
 ### ethpandaops Feature Branches
 ethpandaops publishes custom builds at: `ethpandaops/<client>:<branch-name>`

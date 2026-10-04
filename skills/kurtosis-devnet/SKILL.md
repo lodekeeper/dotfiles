@@ -47,8 +47,12 @@ Key sections:
 When testing local branches, build a Docker image first:
 
 ```bash
-# Lodestar (fast build)
-cd ~/lodestar && docker build -t lodestar:custom -f Dockerfile.dev .
+# Lodestar (fast build) — from a worktree of the target branch, NOT ~/lodestar (it sits on whatever
+# branch the last task left; the image build installs its own deps, so no node_modules needed)
+git -C ~/lodestar fetch origin <branch>
+git -C ~/lodestar worktree add --detach /tmp/lodestar-img origin/<branch>
+cd /tmp/lodestar-img && docker build -t lodestar:custom -f Dockerfile.dev --build-arg COMMIT=$(git rev-parse HEAD) .
+# afterwards: git -C ~/lodestar worktree remove /tmp/lodestar-img
 
 # Then reference in config
 # cl_image: lodestar:custom
@@ -58,12 +62,12 @@ Use `Dockerfile.dev` over `Dockerfile` for faster builds (skips production optim
 
 ## Service Naming Convention
 
-Kurtosis names services as: `{role}-{index}-{cl_type}-{el_type}`
+Kurtosis names services `cl-{i}-{cl}-{el}`, `el-{i}-{el}-{cl}`, `vc-{i}-{el}-{cl}` (vc adds a `-{vc_type}` suffix only when it differs from `cl_type`; no `vc-*` service when `use_separate_vc: false`). `{i}` is zero-padded with ≥10 participants (`cl-01-…`).
 
 Examples:
 - `cl-1-lodestar-reth` — first CL node (Lodestar with Reth EL)
 - `el-1-reth-lodestar` — corresponding EL node
-- `vc-1-lodestar-reth` — validator client
+- `vc-1-reth-lodestar` — validator client
 
 ## Accessing Services
 
@@ -77,13 +81,13 @@ curl http://127.0.0.1:<mapped-port>/eth/v1/node/syncing
 port_publisher:
   cl:
     enabled: true
-    public_port_start: 33000  # cl-1=33000, cl-2=33005, etc.
+    public_port_start: 33000  # cl-1=33000-33006 (beacon API 33001), cl-2 from 33007 (API 33008), etc.
   el:
     enabled: true
     public_port_start: 32000
 ```
 
-Port publisher assigns sequential ports (step of 5 per service).
+Port publisher gives each CL and EL node a block of 7 ports and each VC 3 (`MAX_PORTS_PER_*_NODE` in ethereum-package `src/shared_utils/shared_utils.star`). Within a CL block: +0 p2p, +1 beacon API, +2 metrics.
 
 ## Assertoor (Automated Testing)
 
@@ -101,7 +105,7 @@ Check results via assertoor API or Dora dashboard.
 
 ## Supernode Mode
 
-Set `supernode: true` on participants to run beacon+validator in a single process (faster startup, simpler topology). Each supernode handles its own validators without separate VC.
+`supernode: true` makes that CL subscribe to all subnet topics and custody every data column (PeerDAS only). It does **not** merge beacon + validator — that's `use_separate_vc: false` (the default only for Teku/Nimbus; other clients get a separate `vc-*` service).
 
 ## Mixed-Client Topologies
 
@@ -155,10 +159,10 @@ curl -s http://127.0.0.1:<port>/eth/v1/node/peers | jq '.data | length'
 ### Fork Transition Testing
 ```yaml
 network_params:
-  electra_fork_epoch: 0
-  fulu_fork_epoch: 1      # fork at epoch 1 (slot 32)
+  gloas_fork_epoch: 1      # Fulu → Gloas at epoch 1 (slot 32); altair..fulu default to 0
   seconds_per_slot: 6      # faster for testing
 ```
+Unscheduled forks use `18446744073709551615` (the default for `gloas_fork_epoch`/`heze_fork_epoch`). The default genesis generator (6.2.1) supports Gloas; if you pin `ethereum_genesis_generator_params.image`, use ≥ 6.0.1 — older images silently build a Fulu genesis.
 
 ### Nodes Without Validators (Observer Nodes)
 ```yaml
@@ -173,10 +177,10 @@ network_params:
 ```yaml
 cl_extra_params:
   - --targetPeers=8
-  - --activateZkvm
 vc_extra_params:
   - --suggestedFeeRecipient=0x...
 ```
+Lodestar's CLI is strict: an unknown flag stops the node from starting — check the flag exists on the image's branch first.
 
 ## Troubleshooting
 

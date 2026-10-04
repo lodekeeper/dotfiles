@@ -36,6 +36,9 @@ Query structured logs from the Lodestar infrastructure via Grafana's Loki dataso
 ## Query Patterns
 
 ```bash
+# Load creds (plain `source ~/.bashrc` returns early in non-interactive shells)
+eval "$(grep -E '^export (GRAFANA_TOKEN|GRAFANA_URL)=' ~/.bashrc)"
+
 # Basic log query
 curl -s -H "Authorization: Bearer $GRAFANA_TOKEN" \
   "$GRAFANA_URL/api/datasources/proxy/4/loki/api/v1/query_range" \
@@ -68,6 +71,7 @@ curl -s -H "Authorization: Bearer $GRAFANA_TOKEN" \
 | `checkpointz` | Checkpoint sync server | |
 | `cl_bootnode` | CL bootnode | |
 | `commit-boost` | MEV commit-boost | |
+| `mevboost` | MEV-boost sidecar | e.g. `sepolia-hzax41-0` |
 | `validator-ejector` | Validator ejector service | |
 | `validator-monitor` | Validator monitoring | |
 
@@ -76,17 +80,19 @@ curl -s -H "Authorization: Bearer $GRAFANA_TOKEN" \
 | Label | Values | Notes |
 |-------|--------|-------|
 | `instance` | `unstable-super`, `beta-sas`, etc. | Primary node identifier |
-| `group` | `unstable`, `beta`, `stable`, `feat1`–`feat4`, `chiado`, `gnosis`, etc. | Node group |
+| `group` | `unstable`, `beta`, `stable`, `feat1`–`feat4`, `chiado`, `gnosis`, `beacon_devnet`, etc. | Node group |
 | `job` | See above | Log source type |
-| `network` | `holesky`, `mainnet`, `gnosis`, `chiado` | Network |
+| `network` | `hoodi`, `mainnet`, `sepolia`, `gnosis`, `chiado`, `dev`, `holesky` | beta/stable/unstable testnet nodes are `hoodi`; `dev` = `beacon_devnet`; `holesky` is only `feat3-md16-ctvpsm` |
 | `container` | `beacon`, `execution`, etc. | Docker container |
 | `logstream` | `stdout`, `stderr` | Log stream |
 
 ### Instance Naming Convention
 
 - **Testnet:** `{group}-{type}` → `unstable-super`, `beta-sas`, `stable-semi`
-- **Mainnet:** `{group}-mainnet-{type}` → `unstable-mainnet-super`
-- **Node types:** `solo` (4-8 custody), `semi` (64), `super` (128), `sas` (128+validator+EL), `arm64`
+- **Mainnet:** `{group}-mainnet-{type}` → `unstable-mainnet-super`, `beta-mainnet-fcr`
+- **Hosted devnets:** `devnet-ax41-0` … `devnet-ax41-3` (`group="beacon_devnet"`, `network="dev"`)
+- **Node types:** `solo` (4-8 custody), `semi` (64), `super` (128), `sas` (128+validator+EL), `arm64`,
+  `mainnet-fcr` (4, fast confirmation rule enabled)
 
 ## LogQL Syntax Reference
 
@@ -95,7 +101,7 @@ curl -s -H "Authorization: Bearer $GRAFANA_TOKEN" \
 {instance="unstable-super"}                    # exact match
 {instance=~"unstable-.*"}                      # regex match
 {group="unstable",job="beacon"}                # multiple labels
-{instance!="unstable-solo"}                    # negative match
+{group="unstable",instance!="unstable-solo"}  # negative match (needs a positive matcher too)
 ```
 
 ### Line Filters
@@ -128,18 +134,20 @@ rate({instance="unstable-super"} |~ "BLOCK_ERROR" [1h])
 ### 1. Node Crash Investigation
 
 ```bash
-# Step 1: Check restart history via Prometheus
-# (See release-metrics skill for process_start_time_seconds)
+# Step 1: Check restart history via Prometheus (datasource 1, /api/datasources/proxy/1/api/v1/query)
+#   uptime (s):     time() - process_start_time_seconds{job="beacon",instance="<NODE>"}
+#   restart count:  changes(process_start_time_seconds{job="beacon",instance="<NODE>"}[7d])
+#   (job="beacon" matters: validator/node_exporter series share the instance label)
 
 # Step 2: Find fatal/exit messages
 {instance="<NODE>"} |~ "(?i)(fatal|exit|kill|SIGTERM|SIGKILL|OOM|heap out|JavaScript heap|Allocation failed)"
 
 # Step 3: Get last logs before a specific restart time
-{instance="<NODE>"} | direction=backward
-# Set end= to the restart timestamp, limit=50
+{instance="<NODE>"}
+# Set end= to the restart timestamp, limit=50, direction=backward (URL params, not a pipe stage)
 
-# Step 4: Check for warn/error level logs
-{instance="<NODE>",job="beacon"} |~ "warn |error "
+# Step 4: Check for warn/error level logs (level is ANSI-coloured)
+{instance="<NODE>",job="beacon"} |~ "\\[33mwarn|\\[31merror"
 
 # Step 5: Check EL errors if block processing issues
 {instance="<NODE>",job="execution"} |~ "(?i)(INVALID|rejected|error|failed)"
@@ -208,8 +216,8 @@ rate({instance="unstable-super"} |~ "BLOCK_ERROR" [1h])
 - **Label filtering first:** Always filter by `instance` and/or `group` before applying line filters
 - **EL instance names may differ:** Some EL instances use host-level names (e.g., `hetzner-gnosis-prod-bn-rescue-0`), not the same as CL instance names. Use `group` label to match.
 - **No EL logs?** Not all nodes have EL log collection configured. Check available instances first.
-- **ANSI codes:** Loki logs contain ANSI color codes (e.g., `[36m`, `[39m`). These are cosmetic; ignore them.
-- **Lodestar log levels in brackets:** `[info]`, `[debug]`, `[verbose]`, `[warn]`, `[error]` — filter with `|~ "warn |error "` (trailing space important to avoid false matches).
+- **ANSI codes:** Loki logs contain ANSI color codes (e.g., `[36m`, `[39m`). They are the only reliable level marker — see next tip.
+- **Lodestar log levels are ANSI-coloured, not bracketed:** lines look like `Oct-04 13:09:35.925[network]  ␛[33mwarn␛[39m: msg` — the brackets hold the module; the level follows, coloured, then `:` (`[31m` error, `[33m` warn, `[32m` info, `[36m` verbose, `[34m` debug). Filter warn/error with `|~ "\\[33mwarn|\\[31merror"`. Text filters like `"warn |error "` only hit message text (e.g. verbose `Req  error` lines) and miss real warnings.
 
 ## References
 

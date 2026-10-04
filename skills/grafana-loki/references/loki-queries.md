@@ -12,6 +12,9 @@ Replace `$INSTANCE`, `$GROUP`, `$JOB` with actual values.
 ## Query Template
 
 ```bash
+# Load creds (plain `source ~/.bashrc` returns early in non-interactive shells)
+eval "$(grep -E '^export (GRAFANA_TOKEN|GRAFANA_URL)=' ~/.bashrc)"
+
 curl -s -H "Authorization: Bearer $GRAFANA_TOKEN" \
   "$GRAFANA_URL/api/datasources/proxy/4/loki/api/v1/query_range" \
   --data-urlencode 'query=<LOGQL>' \
@@ -186,7 +189,7 @@ Use `direction=backward` and set `end=` to the crash/restart timestamp:
 
 ### Compare Errors Across Group
 ```logql
-{group="$GROUP",job="beacon"} |~ "error " | line_format "{{.instance}}: {{__line__}}"
+{group="$GROUP",job="beacon"} |~ "\\[31merror" | line_format "{{.instance}}: {{__line__}}"
 ```
 
 ### Find Which Nodes Have a Specific Error
@@ -215,10 +218,9 @@ curl -s -H "Authorization: Bearer $GRAFANA_TOKEN" \
 {instance="$INSTANCE",job="beacon"} |~ "\\[33mwarn|\\[31merror"
 ```
 
-### Without ANSI (pattern-based)
-```logql
-{instance="$INSTANCE",job="beacon"} |~ "warn\\]|error\\]" !~ "verbose|debug"
-```
+Use the ANSI filter — all Lodestar beacon streams in Loki are coloured. `[...]` holds the module,
+never the level, so `warn\]`-style filters never match; ` (warn|error): ` false-matches message
+text such as `IO error: ...`.
 
 ---
 
@@ -228,5 +230,5 @@ curl -s -H "Authorization: Bearer $GRAFANA_TOKEN" \
 - **Use `direction=backward`** for most investigation work — you usually want the latest events first.
 - **Label selectors first:** `{instance="X",job="beacon"}` narrows the search before expensive line matching.
 - **Escape special chars:** In LogQL, `|`, `{`, `}`, `"` need escaping in some contexts. In curl, use single quotes around the query.
-- **ANSI color codes:** Lodestar logs contain ANSI escape codes (`[33m` = yellow/warn, `[31m` = red/error, `[34m` = blue/debug, `[36m` = cyan/verbose, `[39m` = reset). Use these for level filtering if standard patterns don't work.
+- **ANSI color codes:** Lodestar logs contain ANSI escape codes (`[33m` = yellow/warn, `[31m` = red/error, `[32m` = green/info, `[34m` = blue/debug, `[36m` = cyan/verbose, `[39m` = reset). Use these for level filtering — plain-text level patterns don't match the level.
 - **Rate limiting:** Loki/Grafana may rate-limit heavy queries. If you get 429s, narrow the time range.
