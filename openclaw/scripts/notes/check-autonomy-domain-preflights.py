@@ -147,6 +147,11 @@ def build_checks(args: argparse.Namespace, workspace: Path) -> list[tuple[str, s
         "--self-test",
         "--json",
     ]
+    memory_context_search = [
+        python,
+        "scripts/memory/check_context_search_readiness.py",
+        "--json",
+    ]
 
     ci_env = base_env.copy()
     ci_warnings: list[str] = []
@@ -189,6 +194,13 @@ def build_checks(args: argparse.Namespace, workspace: Path) -> list[tuple[str, s
         ),
         (
             "prReview",
+            "memoryContextSearch",
+            memory_context_search,
+            base_env,
+            [],
+        ),
+        (
+            "prReview",
             "destructiveCommandGuard",
             risky_command_guard,
             base_env,
@@ -218,6 +230,13 @@ def build_checks(args: argparse.Namespace, workspace: Path) -> list[tuple[str, s
             "ciFix",
             "detectorEntrypoint",
             [python, "scripts/ci/auto_fix_flaky.py", "--check-only", "--json"],
+            base_env,
+            [],
+        ),
+        (
+            "ciFix",
+            "memoryContextSearch",
+            memory_context_search,
             base_env,
             [],
         ),
@@ -273,6 +292,13 @@ def build_checks(args: argparse.Namespace, workspace: Path) -> list[tuple[str, s
             "specImplementation",
             "prePrComplianceGate",
             ["bash", "scripts/spec/prepr-compliance-gate.sh", "--check-only", "--json"],
+            base_env,
+            [],
+        ),
+        (
+            "specImplementation",
+            "memoryContextSearch",
+            memory_context_search,
             base_env,
             [],
         ),
@@ -337,6 +363,13 @@ def build_checks(args: argparse.Namespace, workspace: Path) -> list[tuple[str, s
             incident_bundle_command,
             base_env,
             devnet_warnings,
+        ),
+        (
+            "devnetDebugging",
+            "memoryContextSearch",
+            memory_context_search,
+            base_env,
+            [],
         ),
         (
             "devnetDebugging",
