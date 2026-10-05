@@ -36,6 +36,14 @@ def _json_or_text(stdout: str) -> Any:
         return _truncate(stripped)
 
 
+def _check_warnings(payload: Any, warnings: list[str] | None) -> list[str]:
+    combined = list(warnings or [])
+    payload_warnings = payload.get("warnings") if isinstance(payload, dict) else None
+    if isinstance(payload_warnings, list):
+        combined.extend(warning for warning in payload_warnings if isinstance(warning, str))
+    return list(dict.fromkeys(combined))
+
+
 def run_check(
     *,
     workspace: Path,
@@ -68,7 +76,7 @@ def run_check(
             "command": command,
             "stdout": payload,
             "stderr": _truncate(proc.stderr.strip()),
-            "warnings": warnings or [],
+            "warnings": _check_warnings(payload, warnings),
         }
     except subprocess.TimeoutExpired as exc:
         return {
@@ -107,7 +115,7 @@ def cached_check_result(
         result = copy.deepcopy(cache[key])
         result["domain"] = domain
         result["name"] = name
-        result["warnings"] = warnings or []
+        result["warnings"] = _check_warnings(result.get("stdout"), warnings)
         result["cacheHit"] = True
         return result
 

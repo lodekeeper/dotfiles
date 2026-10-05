@@ -30,14 +30,18 @@ SIGNIFICANT_STDOUT_KEYS = {
     "query",
     "ready",
     "resultCount",
+    "returnCode",
     "searchOk",
+    "selectedBackend",
     "selfSyntaxOk",
     "staleHelpOk",
     "state",
     "status",
     "syncGhHelpOk",
     "syntaxOk",
+    "timedOut",
     "version",
+    "warnings",
 }
 
 

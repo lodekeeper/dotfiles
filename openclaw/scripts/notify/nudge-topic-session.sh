@@ -13,6 +13,7 @@ set -euo pipefail
 # Usage:
 #   nudge-topic-session.sh <sessionKey> "<message>"
 #   printf "<message>" | nudge-topic-session.sh <sessionKey>
+#   nudge-topic-session.sh <sessionKey> - <<'EOF'   (a lone "-" also reads stdin)
 #
 # Exit codes:
 #   0  - topic session woken, or visible notice posted in the topic
@@ -22,7 +23,7 @@ set -euo pipefail
 ROUTE="$(dirname "$(readlink -f "$0")")/route-topic-nudge.sh"
 
 if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
-  sed -n '3,20p' "$0" | sed 's/^# \{0,1\}//'
+  sed -n '3,21p' "$0" | sed 's/^# \{0,1\}//'
   exit 0
 fi
 
@@ -34,7 +35,7 @@ fi
 SESSION_KEY="$1"
 shift
 
-if [[ $# -gt 0 ]]; then
+if [[ $# -gt 0 && "$*" != "-" ]]; then
   MESSAGE="$*"
 else
   if [[ -t 0 ]]; then

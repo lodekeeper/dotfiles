@@ -7,6 +7,7 @@ import json
 from pathlib import Path
 import re
 import shutil
+import signal
 import subprocess
 import sys
 from typing import Any
@@ -83,13 +84,26 @@ def _check_qmd(*, workspace: Path, query: str, timeout_s: int) -> dict[str, Any]
         "searchOk": search_ok,
         "resultCount": result_count,
         "returnCode": result["returnCode"],
+        "timedOut": result["timedOut"],
     }
+    if result["stderr"].strip():
+        rendered["stderr"] = _truncate(result["stderr"].strip())
     if first_file:
         rendered["firstFile"] = first_file
-    if parse_error:
+    if result["returnCode"] != 0:
+        return_code = result["returnCode"]
+        if isinstance(return_code, int) and return_code < 0:
+            try:
+                termination = f"signal {signal.Signals(-return_code).name} ({return_code})"
+            except ValueError:
+                termination = f"signal {-return_code} ({return_code})"
+        else:
+            termination = f"returnCode={return_code}"
+        rendered["error"] = "qmd timed out" if result["timedOut"] else f"qmd failed: {termination}"
+    elif parse_error:
         rendered["error"] = f"could not parse qmd JSON: {parse_error}"
-    elif result["returnCode"] != 0:
-        rendered["error"] = _truncate(result["stderr"].strip() or result["stdout"].strip())
+    elif not result_count:
+        rendered["error"] = "qmd returned no search results"
     return rendered
 
 
@@ -115,6 +129,7 @@ def _check_fallback(*, workspace: Path, query: str, timeout_s: int) -> dict[str,
         "searchOk": search_ok,
         "resultCount": len(lines),
         "returnCode": result["returnCode"],
+        "timedOut": result["timedOut"],
     }
     if not search_ok:
         rendered["error"] = _truncate(result["stderr"].strip() or result["stdout"].strip())
@@ -136,10 +151,28 @@ def main() -> int:
     workspace = Path(args.workspace).expanduser().resolve()
     qmd = _check_qmd(workspace=workspace, query=args.query, timeout_s=args.timeout_seconds)
     fallback = _check_fallback(workspace=workspace, query=args.query, timeout_s=args.timeout_seconds)
-    ok = qmd.get("searchOk") is True and fallback.get("searchOk") is True
+    qmd_ok = qmd.get("searchOk") is True
+    fallback_ok = fallback.get("searchOk") is True
+    ok = qmd_ok or fallback_ok
+    status = "ready" if qmd_ok and fallback_ok else "degraded" if ok else "blocked"
+    warnings: list[str] = []
+    if status == "degraded":
+        if fallback_ok:
+            warnings.append(
+                "QMD is unavailable; memory-context search is degraded. "
+                'Use `python3 scripts/memory/query_index.py "<query>" --limit 5` '
+                "until QMD is repaired."
+            )
+        else:
+            warnings.append(
+                "SQLite memory fallback is unavailable; memory-context search is degraded. "
+                'Use `qmd search "<query>" -n 5` until the fallback is repaired.'
+            )
     payload = {
         "ok": ok,
-        "status": "ready" if ok else "blocked",
+        "status": status,
+        "selectedBackend": "qmd" if qmd_ok else "sqlite" if fallback_ok else None,
+        "warnings": warnings,
         "query": args.query,
         "qmd": qmd,
         "fallback": fallback,
@@ -149,9 +182,11 @@ def main() -> int:
         print(json.dumps(payload, indent=2, sort_keys=True))
     elif ok:
         print(
-            "MEMORY_CONTEXT_SEARCH_READY: "
+            f"MEMORY_CONTEXT_SEARCH_{status.upper()}: "
             f"qmd_results={qmd['resultCount']} fallback_results={fallback['resultCount']}"
         )
+        for warning in warnings:
+            print(f"Warning: {warning}", file=sys.stderr)
     else:
         print("MEMORY_CONTEXT_SEARCH_BLOCKED", file=sys.stderr)
         print(json.dumps(payload, indent=2, sort_keys=True), file=sys.stderr)

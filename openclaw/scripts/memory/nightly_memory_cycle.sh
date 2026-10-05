@@ -6,6 +6,10 @@ cd "$(dirname "$0")/../.."
 # Source nvm for qmd
 source ~/.nvm/nvm.sh
 nvm use 22 2>/dev/null
+# `nvm use 22` prepends v22.23.3 (no qmd), so PATH would fall through to the v24-built
+# qmd (ABI mismatch / Node 24 teardown SIGABRT). ~/.local/bin/qmd pins qmd to its
+# working Node 22.22.0 install; put it first.
+export PATH="$HOME/.local/bin:$PATH"
 
 LOG_DIR="memory"
 mkdir -p "$LOG_DIR"

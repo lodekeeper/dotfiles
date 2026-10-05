@@ -1,10 +1,28 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-10-04 (164th pass)
+> Updated: 2026-10-05 (165th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-10-05 (self-improvement-audit-daily, 03:23 UTC)
+
+### PR review
+- **Status:** follow-up guard, reviewer artifact helpers, memory-context search, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle. Warning: QMD is unavailable; memory-context search is degraded. Use `python3 scripts/memory/query_index.py "<query>" --limit 5` until QMD is repaired..
+
+### CI fix
+- **Status:** detector entrypoint, memory-context search, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: QMD is unavailable; memory-context search is degraded. Use `python3 scripts/memory/query_index.py "<query>" --limit 5` until QMD is repaired.; `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, memory-context search, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, spec-section extractor, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle. Warning: QMD is unavailable; memory-context search is degraded. Use `python3 scripts/memory/query_index.py "<query>" --limit 5` until QMD is repaired..
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, incident-bundle helper preflight, memory-context search, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`). Warning: QMD is unavailable; memory-context search is degraded. Use `python3 scripts/memory/query_index.py "<query>" --limit 5` until QMD is repaired..
+
+### Audit workflow
+- **Status:** QMD runtime failure and fallback-readiness mismatch found and mitigated this cycle: QMD searches abort with SIGABRT (-6) at a native RemoveEnvironmentCleanupHook assertion, while the SQLite FTS fallback retrieves real results. Implemented fallback-aware memory-context readiness (ready with both backends, explicitly degraded with either usable backend, blocked only with neither), preserved signal/timeout diagnostics, propagated warnings through cached checks and every domain status, and kept backend transitions in structured health signatures without address-bearing crash stderr. Verified: 6 regression tests passed, Python compilation passed, all 27 live domain checks passed, and sub-agent design/code review approved. All four memory checks explicitly select SQLite in degraded mode. Remaining gap/proposed fix: diagnose and repair QMD native cleanup/runtime compatibility; use scripts/memory/query_index.py for keyword context lookup until both backends pass. No runtime/package/config changes or external publication performed.
+
+---
 ## Daily Audit Snapshot — 2026-10-04 (self-improvement-audit-daily, 03:44 UTC)
 
 ### PR review
@@ -3785,7 +3803,9 @@ Updated `scripts/debug/build-incident-bundle.sh` and `skills/local-mainnet-debug
      **Gateway: cleanest 24h window since the 09-28/09-29 crash cluster.** `journalctl --user -u openclaw-gateway --since "2026-10-02 09:31 UTC"` grepped for both crash signatures (`IsGraphAsync|status=6|SIGABRT|FATAL`) and restart/SIGTERM lines (per yesterday's corrected methodology) — **zero** matches of either kind across the full 24h window (15,761 total log lines in that window, confirming the grep had data to match against). Crash-free streak since 2026-09-29 15:18:09Z is now ~90h13m — the longest stretch since the 09-28/09-29 three-crash cluster, though still short of the pre-cluster 187h32m record (09-21→09-28 22:42Z). Failover decisions 2,166 / compact-404 lines 8,238 (in line with the recent 1,540–1,964 / 6,539–8,437 range); stuck-session-recovery/`release_lane` 510 lines, 244 (48%) on `github-notifications` — same ambient ~49% share tracked since 09-27, still read as high-frequency noise rather than a reliable crash precursor given today's zero-crash result alongside unremarkable (not unusually low) volume.
      **Housekeeping:** archived the 09-27 bullet (5 lines, verbatim) to `notes/autonomy-gaps-archive.md`; live section keeps 09-28 onward. Files touched: this file, `notes/autonomy-gaps-archive.md`, `BACKLOG.md`. No `memory/*.md` edited (hard constraint honored). Scratch left in `/tmp` (mine, untouched): `.cron-list-audit-1003.json`, `.cron-list-audit-1003.err`, `.gw-journal-audit-1003.txt`, `.archive-append-1003.txt`. Posted routine status to topic #347.
 
-To avoid stale reminder churn on top of the live item above:
+2. **Repair QMD primary memory-search SIGABRT** — detected live by the 2026-10-05 daily audit: QMD exits -6 at native `RemoveEnvironmentCleanupHook`; SQLite FTS fallback retrieves real results. Fallback-aware readiness is implemented and verified (all 27 domain checks pass), but primary search remains degraded. Proposed next step: diagnose QMD/native SQLite runtime compatibility and verify both backends through `python3 scripts/memory/check_context_search_readiness.py --json`; until then use `python3 scripts/memory/query_index.py "<query>" --limit 5` for keyword context lookup. Runtime/package repair was not attempted in this local guard-improvement audit; see the matching BACKLOG entry.
+
+To avoid stale reminder churn on top of the live items above:
 
 1. Only add a new item here when the **latest daily audit snapshot** introduces a still-open blocker or concrete follow-up.
 2. If the latest snapshot is fully green, leave this section empty of filler work and use `BACKLOG.md` for unrelated concrete tasks.

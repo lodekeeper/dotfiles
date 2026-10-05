@@ -162,7 +162,7 @@ def _proposed_fix(
         return "fix `scripts/safety/block-idle-tool-call.py --self-test --json` before continuing autonomous cron or tool-driven work."
 
     if "memoryContextSearch" in failed_names:
-        return "fix `scripts/memory/check_context_search_readiness.py --json` so autonomous work can query durable memory through QMD and the local fallback before guessing."
+        return "restore at least one memory-search backend and rerun `scripts/memory/check_context_search_readiness.py --json` before querying past decisions autonomously."
 
     if domain == "specImplementation" and "testVectorReadiness" in failed_names:
         return "run `scripts/spec/ensure-fresh-test-vectors.sh` to refresh the dedicated consensus-specs cache, or point `SPEC_REPO` at a current checkout before starting autonomous spec implementation."
@@ -269,6 +269,8 @@ def render_statuses(payload: dict[str, Any]) -> dict[str, str]:
                 ]
                 if part
             )
+            if warnings:
+                statuses[section] += f" Warning: {'; '.join(_format_warning(warning) for warning in warnings)}."
             continue
 
         if domain == "prReview":
@@ -282,8 +284,6 @@ def render_statuses(payload: dict[str, Any]) -> dict[str, str]:
                 "detector entrypoint, memory-context search, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; "
                 "no new CI-fix blocker discovered this cycle."
             )
-            if warnings:
-                status += f" Warning: {'; '.join(_format_warning(warning) for warning in warnings)}."
             statuses[section] = status
         elif domain == "specImplementation":
             actor = _actor(domain_checks.get("githubActorBoundary"))
@@ -303,6 +303,12 @@ def render_statuses(payload: dict[str, Any]) -> dict[str, str]:
                 "devnet-triage JSON preflight, incident-bundle helper preflight, memory-context search, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; "
                 f"no new devnet-debugging blocker discovered this cycle.{suffix}"
             )
+
+        # Devnet Grafana availability is already described in its detail suffix.
+        if domain == "devnetDebugging":
+            warnings = [warning for warning in warnings if not warning.startswith("GRAFANA_TOKEN was absent;")]
+        if warnings:
+            statuses[section] += f" Warning: {'; '.join(_format_warning(warning) for warning in warnings)}."
 
     missing_sections = [
         SECTION_BY_DOMAIN[domain]
