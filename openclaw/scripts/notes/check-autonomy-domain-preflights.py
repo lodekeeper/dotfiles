@@ -297,6 +297,21 @@ def build_checks(args: argparse.Namespace, workspace: Path) -> list[tuple[str, s
             [],
         ),
         (
+            "ciFix",
+            "githubCiRerunCapability",
+            [
+                python,
+                "scripts/github/check-ci-rerun-capability.py",
+                "--repo",
+                "ChainSafe/lodestar",
+                "--expected",
+                args.expected_github_actor,
+                "--json",
+            ],
+            base_env,
+            [],
+        ),
+        (
             "specImplementation",
             "prePrComplianceGate",
             ["bash", "scripts/spec/prepr-compliance-gate.sh", "--check-only", "--json"],

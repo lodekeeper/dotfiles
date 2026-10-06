@@ -32,6 +32,7 @@ EXPECTED_CHECKS = {
         "runLogFetch",
         "githubActorBoundary",
         "gitIdentityBoundary",
+        "githubCiRerunCapability",
     ],
     "specImplementation": [
         "prePrComplianceGate",
@@ -164,6 +165,9 @@ def _proposed_fix(
     if "memoryContextSearch" in failed_names:
         return "restore at least one memory-search backend and rerun `scripts/memory/check_context_search_readiness.py --json` before querying past decisions autonomously."
 
+    if domain == "ciFix" and "githubCiRerunCapability" in failed_names:
+        return "verify the `lodekeeper` GitHub identity and repository permission response with `scripts/github/check-ci-rerun-capability.py --json`; do not attempt upstream reruns while capability is unknown."
+
     if domain == "specImplementation" and "testVectorReadiness" in failed_names:
         return "run `scripts/spec/ensure-fresh-test-vectors.sh` to refresh the dedicated consensus-specs cache, or point `SPEC_REPO` at a current checkout before starting autonomous spec implementation."
 
@@ -282,7 +286,7 @@ def render_statuses(payload: dict[str, Any]) -> dict[str, str]:
         elif domain == "ciFix":
             status = (
                 "detector entrypoint, memory-context search, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; "
-                "no new CI-fix blocker discovered this cycle."
+                "upstream CI-rerun permission diagnostic completed separately from local fix/PR tooling readiness."
             )
             statuses[section] = status
         elif domain == "specImplementation":

@@ -1,0 +1,25 @@
+{
+  "name": "devfleet-health-daily",
+  "description": "Daily ChainSafe Lodestar dev-fleet health check (Nico, Discord #lodestar-private 2026-10-06). SSH read-only probe of all dev hosts via scripts/devfleet/health-check.py (inventory private in ~/.config/devfleet/hosts.txt); posts to #lodestar-private only when a new or worsened issue appears (plus a weekly reminder).",
+  "enabled": true,
+  "schedule": {
+    "kind": "cron",
+    "expr": "13 7 * * *",
+    "tz": "UTC"
+  },
+  "sessionTarget": "isolated",
+  "wakeMode": "now",
+  "payload": {
+    "kind": "agentTurn",
+    "message": "DEV FLEET HEALTH CHECK (isolated automation, daily). This job monitors the ChainSafe Lodestar dev fleet, read-only. Nico asked for it in Discord #lodestar-private on 2026-10-06: \"check on all of these servers once a day, if there is any issue, report it here\". You are the cheap first pass. Hand anything new to a stronger model (Nico, DM 2026-10-06).\n\n1. Run `python3 ~/.openclaw/workspace/scripts/devfleet/health-check.py` via exec with an explicit timeout of 300s. It prints either a line starting with `NO_REPORT` or a ready-to-post Discord report with sections **New** / **Still open** / **Resolved**.\n2. If stdout starts with `NO_REPORT`, reply exactly NO_REPLY and stop.\n3. If the report has NO \"**New**\" section (only resolutions or the weekly reminder): post stdout VERBATIM with the message tool (action=send, channel=discord, target=\"channel:605818244036821012\"). Then run `python3 ~/.openclaw/workspace/scripts/devfleet/health-check.py --ack` and reply NO_REPLY.\n4. If the report HAS a \"**New**\" section, escalate. Call sessions_spawn with model \"anthropic/claude-opus-5-5\", label \"devfleet-triage\", context \"isolated\", cleanup \"delete\", and a task containing the full report text plus these instructions:\n   \"You are triaging new findings from the daily read-only ChainSafe dev-fleet health check. Verify each finding listed under **New** by hand, read-only, via `ssh -p 3022 devops@<ip>`. The IPs are in ~/.config/devfleet/hosts.txt; never print or post them. Run only inspection commands (df, smartctl, journalctl, systemctl status, docker ps/logs, curl to local REST). Never change anything on the hosts. For each finding, decide whether it is confirmed or a false positive. For a confirmed finding, write one short line with the likely cause and a suggested next step for ops. For a false positive, say why. Then post ONE Discord message with the message tool (action=send, channel=discord, target=\\\"channel:605818244036821012\\\"): the original report verbatim, followed by a short **Triage** section with one line per new finding. No @mentions. If a finding is a false positive of the check itself, say so in its Triage line so the script can be tuned. After the send succeeds, run `python3 ~/.openclaw/workspace/scripts/devfleet/health-check.py --ack`.\"\n   Once the spawn is accepted, reply NO_REPLY; the subagent posts and acks. If sessions_spawn fails, fall back to step 3 (post verbatim, ack, NO_REPLY).\n5. If the script itself errors (traceback, missing inventory, no output), post ONE line to the same channel: \"⚠️ dev fleet health check failed to run: <short error>\". Do not ack. Then reply NO_REPLY.\n\nRules: this job only observes and reports. Never change anything on the hosts (no restarts, cleanup, or config edits), even if a fix looks obvious. Never post IP addresses. No @mentions.",
+    "model": "openai/gpt-6-luna",
+    "fallbacks": [
+      "anthropic/claude-sonnet-5-5"
+    ],
+    "timeoutSeconds": 600,
+    "thinking": "low"
+  },
+  "delivery": {
+    "mode": "none"
+  }
+}
