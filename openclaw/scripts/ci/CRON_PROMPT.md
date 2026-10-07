@@ -2,6 +2,21 @@
 
 Run the flaky test detector and act on findings.
 
+## Credential-dependent execution (MANDATORY)
+
+The CI quality gate calls OpenAI using the existing Gateway-managed environment.
+Native Codex `exec_command` does **not** inherit that credential environment:
+`openaiApiKey: false` there is not proof that the Gateway lacks the key.
+
+- Run BOTH the quality-gate `--check-only` preflight and the final quality-gate
+  request through OpenClaw `gateway_exec` (`openclaw__gateway_exec` in Code Mode).
+- Set `workdir` to `/home/openclaw/.openclaw/workspace`, use absolute script/diff
+  paths, and omit `env` so the existing Gateway environment is inherited.
+- Never print, copy, export, or supply a replacement key. Do not use dummy keys
+  or bypass the gate. If Gateway execution is unavailable or its preflight
+  fails, record that exact blocker and stop before implementing a new fix.
+- Keep ordinary local discovery, git, build, lint, and tests in the native shell.
+
 ## Step 0a: GitHub guard coverage (MANDATORY — run before GitHub access)
 
 ```bash
@@ -85,10 +100,15 @@ For each finding where `fixable: true` or `already_fixing_pr` is set:
    For a confirmed OPEN duplicate or historical failure fixed upstream, update only the tracker/backlog and skip Steps 3–6 for that finding. For a false-positive `already_fixing_pr` match, record the different-cause evidence and restore actionability before proceeding.
 
 3. **Preflight the CI fix quality gate before writing a patch**:
+   Use OpenClaw `gateway_exec`, not native `exec_command`, with the workdir above
+   and this command (omit `env`):
    ```bash
-   cd ~/.openclaw/workspace && python3 scripts/ci/check_fix_quality.py --check-only
+   python3 /home/openclaw/.openclaw/workspace/scripts/ci/check_fix_quality.py --check-only
    ```
-   Exit 0 means the LLM quality gate is locally usable. Non-zero means stop before making a fix PR and report the missing prerequisite(s). Do not ship a flaky-test fix without the masking/root-cause quality gate unless Nico explicitly approves bypassing it.
+   Exit 0 proves credential/package presence only, not authentication or a live
+   model verdict. Non-zero means stop before writing a patch and report the
+   missing Gateway prerequisite(s). Do not ship a flaky-test fix without the
+   masking/root-cause quality gate unless Nico explicitly approves bypassing it.
 
 4. **Implement in an isolated worktree and verify**. Obtain design feedback before editing and independent review approval before committing, per `AGENTS.md`. Keep `~/lodestar` clean/on `unstable`:
    ```bash
@@ -101,13 +121,22 @@ For each finding where `fixable: true` or `already_fixing_pr` is set:
    pnpm lint  # MANDATORY before commit/push
    git add <explicit-changed-paths>
    git diff --cached > /tmp/ci-autofix-<runId>.diff
-   python3 ~/.openclaw/workspace/scripts/ci/check_fix_quality.py \
+   ```
+   Run the following command separately through OpenClaw `gateway_exec`, with
+   `workdir: /home/openclaw/.openclaw/workspace` and `env` omitted. The absolute
+   diff path must be readable on the Gateway host:
+   ```bash
+   python3 /home/openclaw/.openclaw/workspace/scripts/ci/check_fix_quality.py \
      --diff-file /tmp/ci-autofix-<runId>.diff \
      --test "<test-name>" \
      --classification "<classification>" \
      --error "<original error snippet>" \
      --fix-hint "<chosen fix approach>"
-   # Inspect the JSON. If should_flag=true, stop and report the quality-gate concern.
+   ```
+   Require exit 0 AND `should_flag: false`. A flagged verdict, API error, or
+   missing verdict blocks submission; do not treat a successful shell exit alone
+   as quality approval. Then return to the native worktree shell:
+   ```bash
    # Repeat Step 2; verify independent review approval before committing
    git -c user.name=lodekeeper -c user.email=lodekeeper@users.noreply.github.com \
      commit -S -m "test: fix flaky <test-name>"
