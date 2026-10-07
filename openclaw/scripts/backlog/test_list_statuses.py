@@ -135,4 +135,31 @@ with tempfile.TemporaryDirectory() as tmp:
     assert "### 🟢 Low-priority active task" in actionable_guarded.stdout
     assert "### 🟡 Passive task" not in actionable_guarded.stdout
     assert "### 🔴 Another task" not in actionable_guarded.stdout
+h2_sample = """## 🔴 Urgent h2 task (no topic)
+- **Source:** chat
+- **Status:** 🔄 In progress — still running
+
+## 🟢 Done h2 task (no topic)
+- **Status:** ✅ Done — finished
+
+## 📌 Plain section
+- 🟢 ✅ **Inline bullet item** — DONE
+
+### 🟡 Child task
+- **Status:** Awaiting review
+"""
+
+h2_tasks = module.parse_backlog(h2_sample)
+assert [t.heading for t in h2_tasks] == [
+    "## 🔴 Urgent h2 task (no topic)",
+    "## 🟢 Done h2 task (no topic)",
+    "### 🟡 Child task",
+], [t.heading for t in h2_tasks]
+assert h2_tasks[0].section == "## 🔴 Urgent h2 task (no topic)"
+assert h2_tasks[0].status == "🔄 In progress — still running"
+assert module.is_actionable(h2_tasks[0])
+assert module.is_done(h2_tasks[1])
+assert h2_tasks[2].section == "## 📌 Plain section"
+assert not module.is_actionable(h2_tasks[2])
+
 print("OK: list_statuses parser handles ## sections + ### tasks without stalling")

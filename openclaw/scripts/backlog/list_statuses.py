@@ -43,15 +43,14 @@ def parse_backlog(text: str) -> list[TaskBlock]:
 
     while idx < len(lines):
         line = lines[idx]
+        is_section = line.startswith("## ")
 
-        if line.startswith("## "):
+        if not is_section and not line.startswith("### "):
+            idx += 1
+            continue
+
+        if is_section:
             section = line
-            idx += 1
-            continue
-
-        if not line.startswith("### "):
-            idx += 1
-            continue
 
         heading = line
         start_line = idx + 1
@@ -69,6 +68,11 @@ def parse_backlog(text: str) -> list[TaskBlock]:
                 status = m.group(1).strip()
                 break
 
+        # A `## ` heading is a plain section unless it carries its own Status line
+        # (newer entries are written as `## 🔴 Task` with no `### ` child).
+        if is_section and status is None:
+            continue
+
         tasks.append(TaskBlock(section=section, heading=heading, status=status, body=body, start_line=start_line))
 
     return tasks
@@ -80,7 +84,7 @@ def has_corruption_guard(text: str) -> bool:
 
 
 def is_done(task: TaskBlock) -> bool:
-    icon = task.heading.replace("###", "", 1).strip().split(" ", 1)[0]
+    icon = task.heading.lstrip("#").strip().split(" ", 1)[0]
     if icon.startswith(DONE_PREFIXES):
         return True
     if task.status is None:
