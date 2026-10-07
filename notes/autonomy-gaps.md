@@ -1,10 +1,32 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-10-06 (166th pass)
+> Updated: 2026-10-07 (167th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-10-07 (self-improvement-audit-daily, 03:16 UTC)
+
+### PR review
+- **Status:** follow-up guard, reviewer artifact helpers, memory-context search, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** BLOCKER: the required CI fix-quality gate cannot run in this scheduled runtime: `OPENAI_API_KEY` is absent; the `openai` package is available. Today's `--strict-ci-api-key` preflight verifies the real prerequisite rather than substituting yesterday's dummy import-check value; this is the known blocker, not a new credential outage. Read-only diagnosis and existing-fix verification remain usable. Proposed fix: restore the approved credential delivery for the CI cron with Nico's configuration authorization, then verify `check_fix_quality.py --check-only` in that runtime and the real quality verdict before shipping a fix. No bypass or credentials/configuration change performed. `lodekeeper` still has no upstream rerun role; a maintainer owns upstream CI reruns.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, memory-context search, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, spec-section extractor, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, incident-bundle helper preflight, memory-context search, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** Implemented an evidence-led duplicate-fix check in the existing `scripts/ci/CRON_PROMPT.md`, which the enabled CI auto-fix job reads directly. The detector's open-PR guard only checks `lodekeeper` PRs by failing test basename; it missed another author's shared-helper fix. The runbook now checks all authors and affected test/helper/source paths, searches state-all root-cause metadata, inspects candidate diffs/live state, and repeats the check before submission. Path overlap alone is not treated as a duplicate. Confirmed open duplicates/historical failures fixed upstream skip patch/PR creation; failures containing a landed fix remain actionable. Existing-PR references on `fixable: false` findings are explicitly re-verified. Replaced generic timeout/error-swallow recipes with full-log root-cause diagnosis; aligned isolated worktrees, explicit staging, canonical signed identity, reviewer approval and routine topic #347 routing with existing workspace policy.
+- **Evidence:** [#10291](https://github.com/ChainSafe/lodestar/pull/10291) is CLOSED; [#10237](https://github.com/ChainSafe/lodestar/pull/10237), by `krisoshea-eth`, is MERGED and fixes the same `waitForHead` helper. Live upstream `unstable` source contains the current-event-slot fix; the failed head `01cc10ce70bc` contains the old first-event-slot comparison. The local `origin/unstable` ref was stale, so the merged-candidate procedure explicitly refreshes it before comparison. No tracker repair or duplicate PR work was performed in this audit.
+- **Verification:** 28 domain checks completed: 27 passed; the known missing-key quality-gate check failed as expected in strict mode. Tested the new read-only PR commands against 72 open PRs (below the 1000-result limit); root-cause search returned both the closed duplicate and the other author's merged fix. Independent review caught a separate per-PR file cap ([CLI query source](https://github.com/cli/cli/blob/trunk/api/query_builder.go)): live #9550 returned 100 of 141 paths. Added `changedFiles` coverage comparison and a paginated-files fallback; the live fallback retrieved all 141 paths and the exact-path check returned no match (expected exit 1). Candidate diff, failed head and live upstream source were inspected. `git diff --check` passed. Independent design and corrected final runbook/report reviews approved. Snapshot consistency, current-date cadence and duplicate-date guards passed.
+- **Remaining limits / proposed fixes:** CI quality-gate credential delivery requires the already-authorized owner/configuration path above; upstream CI reruns require a maintainer. Grafana is still unavailable in this runtime, but Panda discovery is ready across `clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`; use that route for cross-client data instead of auth churn. PR-review/spec helper preflights found no new blockers; they establish tooling prerequisites, not an end-to-end review, implementation, live telemetry query or model-call result. No gateway/cron configuration, auth, dependency, commit, push, or external publication changes.
+- **Health drift:** The structured CI quality-gate result changed because this audit deliberately enabled strict real-key checks. It does not establish that a previously working credential stopped working; yesterday's check was explicitly dummy-key/import-only.
+
+---
 ## Daily Audit Snapshot — 2026-10-06 (self-improvement-audit-daily, 03:21 UTC)
 
 ### PR review
@@ -2968,6 +2990,15 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ CI duplicate/shared-helper check and evidence-led fix guidance (2026-10-07)
+Updated `scripts/ci/CRON_PROMPT.md`, consumed directly by the active CI auto-fix cron.
+- Search all authors' open PRs by actual affected test/helper/source paths, plus state-all root-cause metadata; inspect candidates rather than equating path overlap with a duplicate.
+- Compare returned paths with `changedFiles`, paginate truncated PR file lists, and verify full coverage; repeat the existing-fix check before submission.
+- Re-verify detector `already_fixing_pr` references, skip confirmed duplicates/old failures fixed upstream, and keep post-fix recurrences actionable. Refresh upstream refs before merged-fix comparisons.
+- Use full logs/root-cause evidence instead of automatic timeout increases or error swallowing; preserve the quality gate and existing worktree/identity/review/routing requirements.
+
+**Evidence:** the #10291 duplicate missed krisoshea-eth's #10237 shared-helper fix; live #9550 proved the separate 100-of-141-path cap and the paginated fallback recovered all 141. The known missing CI API key remains blocked, not bypassed. No cron/configuration/auth changes or new script/skill publication.
 
 ### ✅ Memory entity mention-noise filter + nightly prune added (2026-08-22)
 Updated `scripts/memory/generate_entity_pages.py` and `scripts/memory/nightly_memory_cycle.sh`.
