@@ -13,7 +13,7 @@
 - Block/epoch: no Eth1 voting/reset or deposit count checks at Heze.
 - Deposit requests: no start-index initialization at Heze, preserve pending queue and builder semantics.
 - Validator/block production: remove legacy fields only at Heze, preserve pre-Heze bodies.
-- State view: Heze has no Eth1Data; optional accessor returns undefined without fabricated default.
+- State view: Heze has no Eth1Data; accessor throws before access, matching the Gloas execution-header convention without changing the interface.
 - Serialized block byte parsers: fork-specific Heze offsets since Eth1Data and deposits offsets disappear.
 - Genesis: Heze default state must remain schema-correct/RANDAO seeded; legacy proof/index genesis processors cannot act on removed fields.
 - Targeted upstream fork, sanity and pending-deposit fixtures generated from master `c489a9907` (includes #5655). Other EIP-8365-only behavior is excluded when validating this independent PR.

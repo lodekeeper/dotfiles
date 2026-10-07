@@ -1,0 +1,35 @@
+## Summary
+
+Implement [consensus-specs #5713](https://github.com/ethereum/consensus-specs/pull/5713), EIP-8365, for Heze.
+
+- Skip pending deposits that would create new validators with `0x00` BLS withdrawal credentials, before signature verification.
+- Preserve top-ups to existing validators, including invalid-signature top-ups, and all pre-Heze behavior.
+- Preserve deposit queue/churn accounting; the rule also applies to deposits queued before Heze.
+- Add 11 regressions covering credentials/signatures, same-pubkey ordering, churn, the fork boundary, and Gloas compatibility.
+
+The private pending-deposit helper explicitly includes Heze; shared validator/pubkey lookups use `CachedBeaconStateAllForks` instead of per-fork unions. No executable behavior is changed.
+
+Independent of [EIP-8015 (#10293)](https://github.com/ChainSafe/lodestar/pull/10293). Both branches merge cleanly and were also tested together locally.
+
+## Testing
+
+- Shared lookup-type cleanup: full lint/types, state-transition build and **21 focused deposit/consolidation unit tests passed**. The two PRs still merge cleanly in both directions.
+
+- Latest type-only integration follow-up: full `pnpm lint` and state-transition package `check-types` passed.
+- `pnpm lint`
+- `pnpm check-types`
+- `pnpm build`
+- Targeted pending-deposit, lookup and legacy deposit unit tests: **20 passed**.
+- Upstream minimal Heze pending-deposit fixtures generated from exact #5713 head `68702a5b201ef974817830fc358baf8fd6035c7b`: **6 passed** in Lodestar.
+- Combined EIP-8365 + EIP-8015 snapshot: **186 upstream cases and 11 deposit unit regressions passed**.
+
+Validation used isolated dependencies matching trunk's pins; the existing local dependency cache was stale. No dependency or lockfile changes.
+
+## Spec Compliance
+
+- Artifact: `notes/heze-5713-5655/spec-compliance-eip8365.md` (local self-review record).
+- Verdict: faithful.
+- Reference: exact #5713 head, `heze/beacon-chain.md`, `apply_pending_deposit`.
+- The new prefix guard is inside the unknown-validator branch; it does not alter the existing-validator branch or the caller's churn/queue handling.
+
+Implemented with GPT-6.1 Sol and self-reviewed against the spec and full diff, as requested.

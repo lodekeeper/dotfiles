@@ -1,0 +1,1 @@
+Yes, these lookups only use fork-common fields. Switched both `isValidatorKnown` and `isPubkeyKnown` to the existing `CachedBeaconStateAllForks` type instead of extending the per-fork unions. No new alias or casts, and no runtime changes. Lint, type checks and focused deposit/consolidation tests pass. Applied the same cleanup to #10293 so the two PRs still merge cleanly.

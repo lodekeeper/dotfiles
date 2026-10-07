@@ -1,0 +1,1 @@
+You're right, that matches the nearby `applyDeposit` pattern. Updated `applyPendingDeposit` to take `fork: ForkSeq` first and pass the fork already computed by `processPendingDeposits` through both call sites. The public signature stays unchanged. Focused deposit tests and the six upstream Heze cases pass, along with lint, types and build.

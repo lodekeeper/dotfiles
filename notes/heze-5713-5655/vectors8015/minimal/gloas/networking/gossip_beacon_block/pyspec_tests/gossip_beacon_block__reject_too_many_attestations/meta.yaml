@@ -1,0 +1,8 @@
+topic: beacon_block
+blocks:
+- {block: 
+    block_0x9f87a12d020fe5f111a8e388f428594715e83c39314fecf4b523dd7da27848b5}
+messages:
+- {current_time_ms: 6500, message: 
+    block_0x1699fd3f3b31bdfcc6e274fb674dd51e3c8a1070fd3fa5103636970d0aa73304, 
+    expected: reject, reason: too many attestations}

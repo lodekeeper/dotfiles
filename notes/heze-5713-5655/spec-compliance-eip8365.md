@@ -6,7 +6,7 @@ Reference: ethereum/consensus-specs#5713, exact head `68702a5b201ef974817830fc35
 
 Implementation: `/home/openclaw/lodestar-heze-eip8365/packages/state-transition/src/epoch/processPendingDeposits.ts`.
 
-- Fork sequence is computed once in processPendingDeposits and passed to the private applyPendingDeposit helper at both call sites.
+- The Heze guard uses the application fork computed from state.slot by processPendingDeposits. Following nflaig review 4204379754, the private applyPendingDeposit helper accepts fork: ForkSeq first, passed by both call sites; the public processPendingDeposits signature remains unchanged and compatible with sibling EIP-8015 type widening.
 - Prefix check is inside the unknown-validator branch, before signature verification: fork >= Heze and BLS withdrawal prefix returns without registry/balance/cache mutation.
 - Existing validator branch unchanged: supplied credentials and deposit signature do not inhibit top-ups.
 - No extra prefix whitelist; non-BLS prefixes retain original proof-of-possession behavior.
@@ -16,3 +16,9 @@ Implementation: `/home/openclaw/lodestar-heze-eip8365/packages/state-transition/
 - Implementer broader targeted regressions: twenty passed across pending deposits, lookup and processDeposit.
 - Build/type/lint gates recorded separately in validation logs. Initial unrelated failures from stale native1.1/Fastify5.12.1 dependencies were resolved using isolated packages matching current repository pin (native2.0/Fastify5.12.5), without changing code/dependencies/lockfiles or main checkout.
 - No independent review agent used; user explicitly requested parent self-review.
+
+## Explicit-fork follow-up validation (2026-10-07 08:23 UTC)
+- Signed commit `1bd4bef654f`: behavior-preserving private signature/caller refactor only.
+- 20 deposit unit cases and6 exact upstream Heze vectors passed; lint, full type checks and state-transition build passed.
+- Independent design/final advisor and bug review approved (review-fork-advisor.md, review-fork-bugs.md).
+- Review reply: https://github.com/ChainSafe/lodestar/pull/10292#discussion_r4204652469.

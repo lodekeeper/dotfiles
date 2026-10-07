@@ -1,0 +1,8 @@
+topic: beacon_block
+blocks:
+- {block: 
+    block_0x9f87a12d020fe5f111a8e388f428594715e83c39314fecf4b523dd7da27848b5}
+messages:
+- {current_time_ms: 6500, message: 
+    block_0xab59b0a8f5f02f51f5b465f1fd650220b64222289c7a8a1501cdaecb42626506, 
+    expected: reject, reason: too many voluntary exits}

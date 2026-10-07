@@ -1,0 +1,8 @@
+topic: beacon_block
+blocks:
+- {block: 
+    block_0xda6ee95f7984394ded4f5a66c0233a5cbb0d7bb429e1a00d00c24fd269f09199}
+messages:
+- {current_time_ms: 6500, message: 
+    block_0xc5a1ab8125aa7fe10dd9ce156b0d8cef69d362c0bda64d9e4de5631026742da1, 
+    expected: reject, reason: too many bls to execution changes}

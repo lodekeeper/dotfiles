@@ -1,0 +1,12 @@
+[
+  {
+    "ours": "02524c9b2fa0e96f98939461099abc0c63a076af",
+    "theirs": "7079b042fa59055a3d79014c33ec8ca8fd1073d3",
+    "tree": "8d95e36f95b3e2e78905a36fbea2f706f370a6bd"
+  },
+  {
+    "ours": "7079b042fa59055a3d79014c33ec8ca8fd1073d3",
+    "theirs": "02524c9b2fa0e96f98939461099abc0c63a076af",
+    "tree": "8d95e36f95b3e2e78905a36fbea2f706f370a6bd"
+  }
+]

@@ -1,0 +1,70 @@
+{
+  "url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/comments/4205136028",
+  "pull_request_review_id": 5440164588,
+  "id": 4205136028,
+  "node_id": "PRRC_kwDOCD5_Gc76pUic",
+  "diff_hunk": "@@ -67,7 +67,7 @@ export function isPubkeyKnown(state: CachedBeaconStateElectra | CachedBeaconStat\n  * Since we share pubkey2index, validatorIndex maybe not null but we don't have that validator in this state\n  */\n export function isValidatorKnown(\n-  state: CachedBeaconStateElectra | CachedBeaconStateGloas,\n+  state: CachedBeaconStateElectra | CachedBeaconStateGloas | CachedBeaconStateHeze,",
+  "path": "packages/state-transition/src/util/electra.ts",
+  "commit_id": "ad44c7ba71eded74ea182e9f2a4cf51ec53564ef",
+  "original_commit_id": "ad44c7ba71eded74ea182e9f2a4cf51ec53564ef",
+  "user": {
+    "login": "lodekeeper",
+    "id": 258435968,
+    "node_id": "U_kgDOD2drgA",
+    "avatar_url": "https://avatars.githubusercontent.com/u/258435968?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/lodekeeper",
+    "html_url": "https://github.com/lodekeeper",
+    "followers_url": "https://api.github.com/users/lodekeeper/followers",
+    "following_url": "https://api.github.com/users/lodekeeper/following{/other_user}",
+    "gists_url": "https://api.github.com/users/lodekeeper/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/lodekeeper/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/lodekeeper/subscriptions",
+    "organizations_url": "https://api.github.com/users/lodekeeper/orgs",
+    "repos_url": "https://api.github.com/users/lodekeeper/repos",
+    "events_url": "https://api.github.com/users/lodekeeper/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/lodekeeper/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "body": "Yes, these lookups only use fork-common fields. Switched both `isValidatorKnown` and `isPubkeyKnown` to the existing `CachedBeaconStateAllForks` type instead of extending the per-fork unions. No new alias or casts, and no runtime changes. Lint, type checks and focused deposit/consolidation tests pass. Applied the same cleanup to #10293 so the two PRs still merge cleanly.\n",
+  "created_at": "2026-10-07T09:15:02Z",
+  "updated_at": "2026-10-07T09:15:02Z",
+  "html_url": "https://github.com/ChainSafe/lodestar/pull/10292#discussion_r4205136028",
+  "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10292",
+  "_links": {
+    "self": {
+      "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/comments/4205136028"
+    },
+    "html": {
+      "href": "https://github.com/ChainSafe/lodestar/pull/10292#discussion_r4205136028"
+    },
+    "pull_request": {
+      "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10292"
+    }
+  },
+  "reactions": {
+    "url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/comments/4205136028/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "start_line": null,
+  "original_start_line": null,
+  "start_side": null,
+  "line": null,
+  "original_line": 70,
+  "side": "RIGHT",
+  "in_reply_to_id": 4204961114,
+  "author_association": "CONTRIBUTOR",
+  "original_position": 14,
+  "position": 1,
+  "subject_type": "line"
+}

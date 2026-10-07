@@ -1,0 +1,8 @@
+topic: beacon_block
+blocks:
+- {block: 
+    block_0xda6ee95f7984394ded4f5a66c0233a5cbb0d7bb429e1a00d00c24fd269f09199}
+messages:
+- {current_time_ms: 6500, message: 
+    block_0xe684c3dfa0dcc8ef71af1d8a56c63480b8fde99380f484015d5a3ea4be131450, 
+    expected: reject, reason: too many attester slashings}
