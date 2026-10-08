@@ -8,7 +8,7 @@ TIME_LABEL=""
 STRICT_CADENCE=0
 ALLOW_LIVE_PRIORITIES_NO_REPLY=0
 STRICT_LIVE_PRIORITIES=0
-STRICT_CI_API_KEY=0
+STRICT_CI_API_KEY=1
 REQUIRE_DEVNET_GRAFANA=0
 SKIP_DOMAIN_PREFLIGHTS=0
 SKIP_CADENCE_CHECK=0
@@ -33,6 +33,9 @@ Runs the full daily autonomy audit lifecycle:
 2) close-autonomy-audit.sh with the daily memory outcome filled
 3) print the cron-ready final response (summary or NO_REPLY)
 
+Run credential-dependent checks through OpenClaw gateway_exec with inherited
+environment. Native-shell key absence does not establish a Gateway outage.
+
 Options:
   --file <path>         Target markdown file (default: notes/autonomy-gaps.md)
   --date <YYYY-MM-DD>   Snapshot date (default: current UTC date)
@@ -44,7 +47,7 @@ Options:
   --skip-spec-vector-refresh
                         Do not refresh the dedicated consensus-specs test-vector cache
                         before domain preflights
-  --strict-ci-api-key   Require a real OPENAI_API_KEY in the CI-fix preflight
+  --strict-ci-api-key   Compatibility alias; existing CI credential presence is always required
   --require-devnet-grafana
                         Require Grafana token/tooling in the devnet preflight
   --allow-live-priorities-no-reply

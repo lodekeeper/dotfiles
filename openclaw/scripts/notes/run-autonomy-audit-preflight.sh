@@ -11,7 +11,7 @@ DEDUPE_APPLY=0
 STRICT_CADENCE=0
 RUN_DOMAIN_PREFLIGHTS=1
 DOCUMENT_DOMAIN_FAILURES=0
-STRICT_CI_API_KEY=0
+STRICT_CI_API_KEY=1
 REQUIRE_DEVNET_GRAFANA=0
 ENSURE_DAILY_MEMORY_NOTE=1
 SEED_AUDIT_MEMORY_ENTRY=1
@@ -45,6 +45,9 @@ Runs daily autonomy-audit preflight checks:
 2) Cadence guard (advisory, freshness-only) to surface current missing-day snapshot gaps
 3) Snapshot scaffold insertion for today's audit
 
+Run credential-dependent checks through OpenClaw gateway_exec with inherited
+environment. Native-shell key absence does not establish a Gateway outage.
+
 Options:
   --file <path>         Target markdown file (default: notes/autonomy-gaps.md)
   --date <YYYY-MM-DD>   Snapshot date (default: current UTC date)
@@ -62,7 +65,7 @@ Options:
   --document-domain-failures
                         Insert the snapshot with BLOCKER statuses when domain preflights fail
                         instead of aborting before notes/autonomy-gaps.md is updated
-  --strict-ci-api-key   Require a real OPENAI_API_KEY in the CI-fix quality-gate preflight
+  --strict-ci-api-key   Compatibility alias; existing CI credential presence is always required
   --require-devnet-grafana
                         Require Grafana token/tooling in the devnet-debugging preflight
   --ensure-daily-memory-note

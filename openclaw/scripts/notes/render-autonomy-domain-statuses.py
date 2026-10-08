@@ -168,6 +168,16 @@ def _proposed_fix(
     if domain == "ciFix" and "githubCiRerunCapability" in failed_names:
         return "verify the `lodekeeper` GitHub identity and repository permission response with `scripts/github/check-ci-rerun-capability.py --json`; do not attempt upstream reruns while capability is unknown."
 
+    if domain == "ciFix" and "fixQualityGate" in failed_names:
+        quality_check = domain_checks.get("fixQualityGate") or {}
+        stdout = quality_check.get("stdout")
+        prerequisites = stdout.get("checks") if isinstance(stdout, dict) else None
+        if isinstance(prerequisites, dict):
+            if prerequisites.get("openaiPackage") is False:
+                return "inspect the Python OpenAI package prerequisite in the Gateway execution environment, then rerun `scripts/ci/check_fix_quality.py --check-only` through `gateway_exec` with inherited environment; do not substitute a dummy key or bypass the gate."
+            if prerequisites.get("openaiApiKey") is False:
+                return "rerun `scripts/ci/check_fix_quality.py --check-only` through `gateway_exec` with inherited environment before declaring a credential outage; native-shell key absence is not proof of a Gateway failure. Do not copy, replace, or inject credentials."
+
     if domain == "specImplementation" and "testVectorReadiness" in failed_names:
         return "run `scripts/spec/ensure-fresh-test-vectors.sh` to refresh the dedicated consensus-specs cache, or point `SPEC_REPO` at a current checkout before starting autonomous spec implementation."
 
@@ -285,14 +295,14 @@ def render_statuses(payload: dict[str, Any]) -> dict[str, str]:
             )
         elif domain == "ciFix":
             status = (
-                "detector entrypoint, memory-context search, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; "
+                "detector entrypoint, memory-context search, risky-command guard helper, idle-tool guard helper, fix-quality gate prerequisites (existing credential presence/package discovery only, no live model request), run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; "
                 "upstream CI-rerun permission diagnostic completed separately from local fix/PR tooling readiness."
             )
             statuses[section] = status
         elif domain == "specImplementation":
             actor = _actor(domain_checks.get("githubActorBoundary"))
             statuses[section] = (
-                "pre-PR compliance gate, memory-context search, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, spec-section extractor, GitHub actor-boundary, and git identity preflights verified from current preflight output "
+                "pre-PR compliance gate, memory-context search, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-source cache (not generated fixture coverage), spec-section extractor, GitHub actor-boundary, and git identity preflights verified from current preflight output "
                 f"as `{actor}`; no new spec-implementation blocker discovered this cycle."
             )
         elif domain == "devnetDebugging":

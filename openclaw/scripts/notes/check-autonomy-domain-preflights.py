@@ -163,10 +163,11 @@ def build_checks(args: argparse.Namespace, workspace: Path) -> list[tuple[str, s
 
     ci_env = base_env.copy()
     ci_warnings: list[str] = []
-    if not args.strict_ci_api_key and not ci_env.get("OPENAI_API_KEY"):
-        ci_env["OPENAI_API_KEY"] = "autonomy-preflight-dummy-key"
+    if not ci_env.get("OPENAI_API_KEY"):
         ci_warnings.append(
-            "OPENAI_API_KEY was absent; used a dummy value to verify package/import readiness only"
+            "OPENAI_API_KEY is absent in this execution environment; rerun the quality-gate "
+            "preflight through gateway_exec with inherited environment. Native-shell absence "
+            "does not establish a Gateway credential outage; do not copy or replace credentials"
         )
 
     devnet_command = [
@@ -437,7 +438,8 @@ def main() -> int:
     parser.add_argument(
         "--strict-ci-api-key",
         action="store_true",
-        help="Require the real CI quality-gate OPENAI_API_KEY instead of using a dummy import preflight",
+        default=True,
+        help="Compatibility alias: existing CI credential presence is always required; dummy keys are never injected",
     )
     parser.add_argument(
         "--require-devnet-grafana",
@@ -490,7 +492,7 @@ def main() -> int:
     payload = {
         "ok": all(check["ok"] for check in checks),
         "workspace": str(workspace),
-        "strictCiApiKey": args.strict_ci_api_key,
+        "strictCiApiKey": True,
         "requireDevnetGrafana": args.require_devnet_grafana,
         "expectedGitHubActor": args.expected_github_actor,
         "selectedDomains": args.domain or VALID_DOMAINS,

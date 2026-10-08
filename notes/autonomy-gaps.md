@@ -1,10 +1,33 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-10-07 (167th pass)
+> Updated: 2026-10-08 (168th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-10-08 (self-improvement-audit-daily, 03:16 UTC)
+
+### PR review
+- **Status:** all five review prerequisite checks passed, including context search, follow-up/artifact guards and the verified `lodekeeper` actor boundary. No new review-tooling blocker. These are prerequisite/self-checks, not an end-to-end review or permission to publish one.
+- **Autonomy requirement / next action:** retain exact-head reviewer artifacts and obtain independent review before posting; use the provider-owning session for any authorized thread response. No additional review task was manufactured by this audit.
+
+### CI fix
+- **Status:** all nine prerequisite checks passed through Gateway execution, including the existing CI credential presence/package-discovery check. No live model request in this audit. Removed the audit's fabricated-key fallback rather than treating a native-shell environment difference as a credential outage.
+- **Concrete blocker / proposed fix:** live `lodekeeper` role is read-only upstream, so Actions reruns still require a maintainer; local fixes and fork PR preparation remain possible. Use the existing Gateway inherited-environment route for quality preflight and final verdict, keep normal git/tests in native worktrees, and request a maintainer rerun only when a real authorized fix needs one. Do not switch actors, copy keys, bypass the gate, or push an empty retrigger commit.
+
+### Spec implementation
+- **Status:** all eight implementation prerequisite checks passed. The dedicated source cache was refreshed to `e42b24931` (2026-10-07). The readiness helper's sample is `tests/core/pyspec/eth_consensus_specs/test/helpers/specs.py`: this proves current pyspec sources, not generated `.ssz_snappy` cases or exact-PR fixture coverage. Corrected the rendered status label to preserve that distinction.
+- **Concrete gap / proposed fix:** generated-fixture provenance/coverage is not established by the present cache gate. Before implementing a spec change, pin the exact upstream revision, inspect existing Lodestar patterns, and verify a generated-fixture manifest plus the narrow case-selection/results. Yesterday's Heze work demonstrated manual pinned generation when upstream nightly packaging failed; do not assume today's packaging failed or that the cache alone proves broad compatibility. A future fixture-provenance gate should validate revision, generator selection and actual generated artifacts rather than just source-tree freshness.
+
+### Devnet debugging
+- **Status:** all six debugging prerequisite checks passed; Panda discovery is ready for `clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`. `GRAFANA_TOKEN` is absent in this execution environment, so this audit does not claim a live Grafana/telemetry query. Discovery readiness is not a completed network diagnosis.
+- **Autonomy requirement / next action:** use Panda cross-client logs and authoritative participant inventory for incident attribution; distinguish advancing/short alternate heads from sustained stalls. The existing devnet monitor owns the MSF Erigon incident and posted it earlier today; no duplicate investigation or notification from this audit. No reauth, restart or configuration change.
+
+### Audit workflow
+- **Status:** Implemented removal of dummy-key injection in `scripts/notes/check-autonomy-domain-preflights.py`. Existing credential presence is now always required, even for legacy non-strict callers; `--strict-ci-api-key` remains a compatibility alias and JSON always records strict semantics. Both shell entrypoints default to that policy and document Gateway inherited-environment execution. Renderer failures separate absent packages from runtime-local key absence; success explicitly means prerequisites only, not credential validity or a model verdict. Also clarified test-source cache versus generated-fixture coverage.
+- **Verification:** 6 new CI-prerequisite regressions passed, plus 6 memory-context and 10 CI-rerun regressions (22 total). Shell syntax and whitespace checks passed. Independent design and final implementation review approved. Full live four-domain Gateway preflight completed 28/28 checks successfully (12 cached command reuses), with existing read-only-rerun/Grafana limitations preserved. Structured health changed from yesterday's native missing-key result to today's Gateway prerequisite success; that is an execution-route correction, not evidence of a new credential repair. No API model request, commit/push, skill publication, credential copying, gateway/scheduler configuration change or restart.
+
+---
 ## Daily Audit Snapshot — 2026-10-07 (self-improvement-audit-daily, 03:16 UTC)
 
 ### PR review
