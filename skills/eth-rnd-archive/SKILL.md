@@ -45,7 +45,7 @@ Configured in `config.json` (this skill directory). Only these channels are moni
 ### Infrastructure
 - `payload-builders` — MEV/PBS/builder discussions
 - `networking` — general networking
-- `interop-🌃` — cross-client interop/devnet coordination (Glamsterdam devnet triage lives here)
+- `interop-🌃` — cross-client interop/devnet coordination (Glamsterdam devnet triage lives here). Since 2026-10-03 the archive writes this channel to `interop-_/` instead; both dirs are tracked. If another tracked channel goes silent for days, `ls -d <name>*` for a renamed sibling dir.
 - `client-development` — client team discussions
 
 ## Thread Support
