@@ -10,19 +10,20 @@ usage() {
   cat <<'EOF'
 Usage: check-test-vector-readiness.sh [options]
 
-Validate that consensus-spec test vectors are available locally before running
-spec/protocol-facing Lodestar work.
+Validate local consensus-spec pyspec test sources before spec/protocol-facing
+Lodestar work. This does NOT verify generated fixtures or their provenance.
+The historical command name and JSON keys are retained for compatibility.
 
 Options:
   --spec-repo <path>       Path to consensus-specs repo (default: ~/consensus-specs)
   --max-age-days <days>    Freshness threshold for tests/ history (default: 14)
-  --require-fresh          Exit non-zero when tests/ history is older than threshold
+  --require-fresh          Fail when tests/ history is stale or its age is unknown
   --json                   Emit machine-readable status on stdout
   --help                   Show help
 
 Exit codes:
-  0  Ready (vectors present; freshness within threshold or warning-only)
-  2  Vectors present but stale and --require-fresh was set
+  0  Test sources present; history age within threshold or warning-only
+  2  Test sources present but history stale/unknown with --require-fresh
   1  Missing repo/tests data or invalid args
 EOF
 }
@@ -102,6 +103,9 @@ payload = {
     "headSha": sys.argv[9] or None,
     "headDate": sys.argv[10] or None,
     "testsAgeDays": int(tests_age_days) if tests_age_days else None,
+    "testsAgeBasis": "tests_git_history",
+    "evidenceKind": "test_sources",
+    "generatedFixturesVerified": False,
 }
 payload["stale"] = (
     payload["testsAgeDays"] is not None
@@ -131,35 +135,46 @@ if [[ ! -d "$TESTS_DIR" ]]; then
   exit 1
 fi
 
-sample_file="$(
-  find "$TESTS_DIR" \
+sample_file=""
+for source_dir in "$TESTS_DIR/core/pyspec/eth_consensus_specs/test" "$TESTS_DIR/core/pyspec/eth2spec/test"; do
+  [[ -d "$source_dir" ]] || continue
+  sample_file="$(find "$source_dir" \
     -type f \
     ! -path '*/__pycache__/*' \
     ! -path '*/test-reports/*' \
-    ! -name '*.pyc' \
-    -print -quit 2>/dev/null || true
-)"
+    -name 'test_*.py' \
+    -print -quit 2>/dev/null || true)"
+  [[ -n "$sample_file" ]] && break
+done
 if [[ -z "$sample_file" ]]; then
   if [[ "$JSON_OUTPUT" == "true" ]]; then
-    emit_json false "no_vectors" "no test-vector files found"
+    emit_json false "no_vectors" "no pyspec Python test sources found (legacy no_vectors status)"
     exit 1
   fi
-  echo "❌ no test-vector files found under $TESTS_DIR" >&2
+  echo "❌ no pyspec Python test sources found under $TESTS_DIR/core/pyspec" >&2
   echo "   Re-sync consensus-specs and ensure tests are checked out." >&2
   exit 1
 fi
 
-head_sha="$(git -C "$SPEC_REPO" rev-parse --short HEAD)"
-head_date="$(git -C "$SPEC_REPO" log -1 --format=%cs HEAD)"
+head_sha="$(git -C "$SPEC_REPO" rev-parse --short HEAD 2>/dev/null || true)"
+head_date="$(git -C "$SPEC_REPO" log -1 --format=%cs HEAD 2>/dev/null || true)"
 
 tests_ts="$(git -C "$SPEC_REPO" log -1 --format=%ct -- tests 2>/dev/null || true)"
 if [[ -z "$tests_ts" ]]; then
+  if [[ "$REQUIRE_FRESH" == "true" ]]; then
+    if [[ "$JSON_OUTPUT" == "true" ]]; then
+      emit_json false "unknown_age" "test sources present; tests/ Git-history age unknown, so strict freshness is unverified" "${sample_file#"$SPEC_REPO/"}" "$head_sha" "$head_date"
+    else
+      echo "❌ Test sources present but tests/ Git-history age is unknown; strict freshness is unverified." >&2
+    fi
+    exit 2
+  fi
   if [[ "$JSON_OUTPUT" == "true" ]]; then
-    emit_json true "ready_unknown_age" "test vectors present; tests/ age unknown" "${sample_file#"$SPEC_REPO/"}" "$head_sha" "$head_date"
+    emit_json true "ready_unknown_age" "test sources present; tests/ Git-history age unknown; generated fixtures unverified" "${sample_file#"$SPEC_REPO/"}" "$head_sha" "$head_date"
     exit 0
   fi
   echo "⚠️  Could not determine last update time for tests/; repo history may be shallow." >&2
-  echo "✅ Test vectors appear present (sample: ${sample_file#"$SPEC_REPO/"})"
+  echo "✅ Pyspec test sources present (sample: ${sample_file#"$SPEC_REPO/"}); generated fixtures unverified."
   echo "ℹ️  consensus-specs HEAD: $head_sha ($head_date)"
   exit 0
 fi
@@ -169,22 +184,22 @@ age_days=$(( (now_ts - tests_ts) / 86400 ))
 
 if [[ "$JSON_OUTPUT" == "true" ]]; then
   if (( age_days > MAX_AGE_DAYS )) && [[ "$REQUIRE_FRESH" == "true" ]]; then
-    emit_json false "stale" "test vectors are older than max-age-days" "${sample_file#"$SPEC_REPO/"}" "$head_sha" "$head_date" "$age_days"
+    emit_json false "stale" "tests/ Git-history age exceeds max-age-days; generated fixtures unverified" "${sample_file#"$SPEC_REPO/"}" "$head_sha" "$head_date" "$age_days"
     exit 2
   fi
 
   if (( age_days > MAX_AGE_DAYS )); then
-    emit_json true "stale_warning" "test vectors are older than max-age-days" "${sample_file#"$SPEC_REPO/"}" "$head_sha" "$head_date" "$age_days"
+    emit_json true "stale_warning" "test sources present but tests/ Git-history age exceeds max-age-days; generated fixtures unverified" "${sample_file#"$SPEC_REPO/"}" "$head_sha" "$head_date" "$age_days"
     exit 0
   fi
 
-  emit_json true "ready" "test vectors present and fresh enough" "${sample_file#"$SPEC_REPO/"}" "$head_sha" "$head_date" "$age_days"
+  emit_json true "ready" "pyspec test sources present with recent tests/ Git history; generated fixtures unverified" "${sample_file#"$SPEC_REPO/"}" "$head_sha" "$head_date" "$age_days"
   exit 0
 fi
 
-echo "✅ Test vectors present (sample: ${sample_file#"$SPEC_REPO/"})"
+echo "✅ Pyspec test sources present (sample: ${sample_file#"$SPEC_REPO/"}); generated fixtures unverified."
 echo "ℹ️  consensus-specs HEAD: $head_sha ($head_date)"
-echo "ℹ️  tests/ last-updated age: ${age_days} day(s)"
+echo "ℹ️  tests/ Git-history age proxy: ${age_days} day(s) (not fixture provenance or test-case freshness)"
 
 if (( age_days > MAX_AGE_DAYS )); then
   echo "⚠️  tests/ appears stale (> ${MAX_AGE_DAYS} days)." >&2

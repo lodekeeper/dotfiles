@@ -45,7 +45,7 @@ Options:
   --skip-domain-preflights
                         Skip PR/CI/spec/devnet preflights before snapshot insertion
   --skip-spec-vector-refresh
-                        Do not refresh the dedicated consensus-specs test-vector cache
+                        Do not refresh the dedicated consensus-specs test-source cache
                         before domain preflights
   --strict-ci-api-key   Compatibility alias; existing CI credential presence is always required
   --require-devnet-grafana
@@ -76,13 +76,13 @@ run_spec_vector_refresh() {
   fi
 
   if [[ "$RESPONSE_ONLY" -eq 1 ]]; then
-    echo "[spec] Refreshing dedicated consensus-specs test-vector cache before domain preflights" >&2
+    echo "[spec] Refreshing dedicated consensus-specs test-source cache before domain preflights" >&2
     set +e
     "${refresh_cmd[@]}" >&2
     rc=$?
     set -e
   else
-    echo "[spec] Refreshing dedicated consensus-specs test-vector cache before domain preflights"
+    echo "[spec] Refreshing dedicated consensus-specs test-source cache before domain preflights"
     set +e
     "${refresh_cmd[@]}"
     rc=$?
@@ -90,7 +90,7 @@ run_spec_vector_refresh() {
   fi
 
   if [[ "$rc" -ne 0 ]]; then
-    echo "⚠️ Spec test-vector cache refresh failed (exit $rc); continuing so domain preflights can document the blocker." >&2
+    echo "⚠️ Spec test-source cache refresh failed (exit $rc); continuing so domain preflights can document the blocker." >&2
   fi
 }
 

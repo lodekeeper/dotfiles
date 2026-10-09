@@ -14,9 +14,10 @@ usage() {
   cat <<'EOF'
 Usage: ensure-fresh-test-vectors.sh [options]
 
-Ensure a dedicated, clean consensus-specs checkout exists for test-vector
-readiness checks. This avoids mutating an active ~/consensus-specs feature
-branch when the daily autonomy preflight only needs current upstream vectors.
+Ensure a dedicated, clean consensus-specs test-source checkout exists.
+This avoids mutating an active ~/consensus-specs feature branch. Readiness uses
+tests/ Git history as an age proxy; generated fixtures/provenance are unverified.
+The historical command name is retained for compatibility.
 
 Options:
   --base-repo <path>       Existing consensus-specs repo to fetch/worktree from
@@ -33,7 +34,7 @@ Options:
 
 Exit codes:
   0  Fresh target checkout is ready
-  2  Target checkout is missing/stale/dirty or vectors are not fresh enough
+  2  Target checkout is missing/dirty or test-source history is stale/unknown
   1  Invalid args or unexpected failure
 EOF
 }
@@ -82,6 +83,8 @@ payload = {
     "maxAgeDays": int(sys.argv[8]),
     "checkOnly": sys.argv[9] == "true",
     "readiness": readiness,
+    "evidenceKind": "test_sources",
+    "generatedFixturesVerified": False,
 }
 print(json.dumps(payload, sort_keys=True))
 PY
@@ -154,6 +157,20 @@ TARGET_REPO="$(expand_path "$TARGET_REPO")"
 WORKSPACE_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 READINESS_SCRIPT="$WORKSPACE_ROOT/scripts/spec/check-test-vector-readiness.sh"
 
+if [[ -d "$TARGET_REPO/.git" || -f "$TARGET_REPO/.git" ]]; then
+  dirty_status="$(git -C "$TARGET_REPO" status --porcelain --untracked-files=all)"
+  if [[ -n "$dirty_status" ]]; then
+    message="target consensus-specs source cache is dirty; refusing to use or overwrite $TARGET_REPO"
+    if [[ "$JSON_OUTPUT" == "true" ]]; then
+      emit_json false "dirty_cache" "$message"
+    else
+      echo "❌ $message" >&2
+      echo "$dirty_status" >&2
+    fi
+    exit 2
+  fi
+fi
+
 if [[ "$CHECK_ONLY" == "true" ]]; then
   if [[ ! -d "$TARGET_REPO/.git" && ! -f "$TARGET_REPO/.git" ]]; then
     message="fresh consensus-specs cache is missing; run scripts/spec/ensure-fresh-test-vectors.sh"
@@ -174,18 +191,6 @@ else
       git clone --branch "$BRANCH" "$REMOTE_URL" "$TARGET_REPO"
     fi
   else
-    dirty_status="$(git -C "$TARGET_REPO" status --porcelain)"
-    if [[ -n "$dirty_status" ]]; then
-      message="target consensus-specs cache is dirty; refusing to overwrite $TARGET_REPO"
-      if [[ "$JSON_OUTPUT" == "true" ]]; then
-        emit_json false "dirty_cache" "$message"
-      else
-        echo "❌ $message" >&2
-        echo "$dirty_status" >&2
-      fi
-      exit 2
-    fi
-
     if git -C "$TARGET_REPO" remote get-url "$REMOTE" >/dev/null 2>&1; then
       git -C "$TARGET_REPO" fetch "$REMOTE" "$BRANCH"
       git -C "$TARGET_REPO" checkout --detach "$REMOTE/$BRANCH"
@@ -217,15 +222,15 @@ set -e
 
 if [[ "$JSON_OUTPUT" == "true" ]]; then
   if [[ "$readiness_rc" -eq 0 ]]; then
-    emit_json true "ready" "fresh consensus-specs test-vector cache is ready" "$readiness_json"
+    emit_json true "ready" "clean consensus-specs test-source cache is ready; generated fixtures unverified" "$readiness_json"
   else
-    emit_json false "not_ready" "fresh consensus-specs test-vector cache is not ready" "$readiness_json"
+    emit_json false "not_ready" "consensus-specs test-source cache is not ready" "$readiness_json"
   fi
 else
   if [[ "$readiness_rc" -eq 0 ]]; then
-    echo "✅ Fresh consensus-specs test-vector cache is ready: $TARGET_REPO"
+    echo "✅ Clean consensus-specs test-source cache is ready: $TARGET_REPO (generated fixtures unverified)"
   else
-    echo "❌ Fresh consensus-specs test-vector cache is not ready: $TARGET_REPO" >&2
+    echo "❌ Consensus-specs test-source cache is not ready: $TARGET_REPO" >&2
   fi
   bash "$READINESS_SCRIPT" \
     --spec-repo "$TARGET_REPO" \
