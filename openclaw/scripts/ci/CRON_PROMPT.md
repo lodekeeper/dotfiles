@@ -55,6 +55,17 @@ cd ~/.openclaw/workspace && python3 scripts/ci/auto_fix_flaky.py --apply
 
 If status is "clean" → reply with just the JSON output and stop.
 
+## Step 1b: EL triage for every `Sim tests` finding (fixable or not)
+
+Nightly Kurtosis/EL-interop failures are triaged by the `nightly-workflow-alerts` automation, not here. Since 2026-10-09, sim tests run EL trunk images (`.env.test`: `GETH_DOCKER_IMAGE=ethereum/client-go:latest` = geth master, `NETHERMIND_DOCKER_IMAGE=nethermindeth/nethermind:master`). Read the actual values at the failed head. Nico (2026-10-09, Discord #ssz-engine-api): if a sim failure is EL-related, open an issue on the EL's repo directly.
+
+1. Decide EL vs Lodestar from the full logs (Step 2.1 command) plus the uploaded debug-log artifact (`gh run download <runId> --repo ChainSafe/lodestar`). EL evidence: EL panic/crash/exit, EL failing to start or init genesis, EL error responses to engine calls (JSON-RPC error, REST 4xx/5xx problem detail), EL rejecting payloads Lodestar built from that same EL. Lodestar-side or unclear → continue with Step 2/3 as usual.
+2. Pin the EL build: image digest from the "Download required docker images" step, mapped to a commit (`nethermindeth/nethermind:master-<sha>` tags; geth prints its commit at startup). Get the same for the last green `Sim tests` run on unstable → commit range (`https://github.com/<org>/<repo>/compare/<good>...<bad>`).
+3. Require recurrence: the same EL error on ≥2 runs with the same or a later EL commit. A one-off → log only.
+4. Dedup: `gh search issues --repo <NethermindEth/nethermind|ethereum/go-ethereum> "<key error string>"` (open + recently closed). Existing issue → add the Lodestar run as a comment only if it adds new data.
+5. File as `lodekeeper` only (`gh auth status` first; never the connector): `gh issue create --repo <EL repo>`. Body: symptom, image tag + digest + commit, last-good commit + compare link, short log excerpt, failing Lodestar run URL, repro (`pnpm test:sim:<suite>` in `packages/cli` with the image). Evidence only, no guessed root cause.
+6. Tracker: status `el-upstream-issue` + issue URL, so later runs don't refile. Announce the link once in topic `#347` (Step 2.6 routing). If the breakage keeps unstable sim red for >24h, mention pinning `master-<last-good-sha>` in `.env.test` as an option in `#347`; do not open that PR without Nico.
+
 ## Step 2: Act on actionable findings
 
 For each finding where `fixable: true` or `already_fixing_pr` is set:

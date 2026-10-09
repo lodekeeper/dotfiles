@@ -10,6 +10,8 @@
 #   nightly-builder-smoke.yml  Kurtosis Builder Nightly Smoke  02:00 UTC
 #   comptests.yml              Fork-choice compliance tests    03:00 UTC
 #   nightly-spec-tests.yml     Nightly Spec Tests              06:00 UTC
+# plus any other active workflow whose name/path matches interop|engine|kurtosis
+# (e.g. the engine API / EL interop nightly), discovered at runtime.
 #
 # Selection: for each workflow, the most recent *completed* scheduled run on
 # `unstable`. Alert-worthy conclusions: failure, timed_out, startup_failure.
@@ -38,6 +40,18 @@ declare -A WORKFLOWS=(
 )
 # Stable iteration order (matches nightly run time)
 WF_ORDER=(kurtosis.yml nightly-builder-smoke.yml comptests.yml nightly-spec-tests.yml)
+
+# Auto-include EL / engine interop nightlies so new ones are watched without editing this list.
+# Workflows without scheduled runs on unstable produce no output below.
+while IFS=$'\t' read -r path wname; do
+  wf="${path##*/}"
+  [ -n "${WORKFLOWS[$wf]+x}" ] && continue
+  WORKFLOWS[$wf]="$wname"
+  WF_ORDER+=("$wf")
+done < <(gh api "repos/$REPO/actions/workflows?per_page=100" \
+  --jq '.workflows[] | select(.state=="active" and (.path|startswith(".github/workflows/")))
+        | select((.name + " " + .path) | test("interop|engine|kurtosis"; "i"))
+        | [.path, .name] | @tsv' 2>/dev/null)
 
 mkdir -p "$STATE_DIR"
 [ -f "$STATE_FILE" ] || echo '{}' > "$STATE_FILE"
@@ -90,6 +104,8 @@ for wf in "${WF_ORDER[@]}"; do
   # Failed step names (first failed job) + a short error excerpt for the TL;DR.
   failed_steps="$(gh api "repos/$REPO/actions/runs/$run_id/jobs" \
     --jq '[.jobs[] | select(.conclusion=="failure") | .steps[]? | select(.conclusion=="failure") | .name] | unique | join(", ")' 2>/dev/null)"
+  failed_jobs="$(gh api "repos/$REPO/actions/runs/$run_id/jobs?per_page=100" \
+    --jq '[.jobs[] | select(.conclusion=="failure" or .conclusion=="timed_out") | .name] | join(", ")' 2>/dev/null)"
   first_failed_job="$(gh api "repos/$REPO/actions/runs/$run_id/jobs" \
     --jq '[.jobs[] | select(.conclusion=="failure")][0].id' 2>/dev/null)"
   log_excerpt=""
@@ -108,6 +124,7 @@ for wf in "${WF_ORDER[@]}"; do
   printf 'url: %s\n' "$html_url"
   printf 'created_at: %s\n' "$created_at"
   printf 'conclusion: %s\n' "$conclusion"
+  printf 'failed_jobs: %s\n' "${failed_jobs:-<unknown>}"
   printf 'failed_steps: %s\n' "${failed_steps:-<unknown>}"
   printf 'log_excerpt:\n%s\n' "${log_excerpt:-<none captured>}"
   printf '===END===\n'
