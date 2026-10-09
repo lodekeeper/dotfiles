@@ -57,6 +57,8 @@ l1-zkevm/_threads/Proof orchestration/2026-02-23.json
 ```
 Thread messages have `"parent": "<parent channel name>"` (top-level messages have `""`); the thread title comes only from the `_threads/<title>/` path. The check script scans these automatically.
 
+**Layout change (~2026-10-03):** new threads are written as **top-level dirs** with a sanitized title (`Slashing_builder_payment_edge_case/2026-10-08.json`), not under `<channel>/_threads/`. Only the `parent` field links them to their channel. `check-updates.sh` (fixed 2026-10-09) attributes them by `parent` and reports `"thread": "<dir>"` in diff mode or `"<channel>/<dir>"` keys in date mode. When reading raw files by hand, also glob `*/<date>.json` and keep the files whose `parent` is a tracked channel. Before 10-09 the hourly checks missed all thread traffic from 10-03 on.
+
 ## Message Format
 
 ```json
