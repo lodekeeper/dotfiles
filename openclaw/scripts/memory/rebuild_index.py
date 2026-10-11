@@ -38,10 +38,11 @@ BACKLOG_CORRUPTION_GUARD_MARKERS = (
 def should_skip_markdown(path: Path) -> bool:
     if path.name == "BACKLOG.md":
         try:
-            head = "\n".join(path.read_text(encoding="utf-8", errors="ignore").splitlines()[:12])
+            text = path.read_text(encoding="utf-8", errors="ignore")
         except Exception:
             return False
-        if any(marker in head for marker in BACKLOG_CORRUPTION_GUARD_MARKERS):
+        # Prepended entries must not turn recovery data into indexed context.
+        if any(marker in text for marker in BACKLOG_CORRUPTION_GUARD_MARKERS):
             return True
 
     # If structured state exists, skip generated bank views to avoid duplicate indexing.

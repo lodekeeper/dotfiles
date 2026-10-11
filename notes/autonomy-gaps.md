@@ -1,10 +1,28 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-10-10 (170th pass)
+> Updated: 2026-10-11 (171st pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-10-11 (self-improvement-audit-daily, 03:16 UTC)
+
+### PR review
+- **Status:** All five prerequisite checks passed in the Gateway runtime, including context retrieval, artifact/follow-up guards and the verified lodekeeper boundary. No new review-specific blocker. Autonomous review still requires exact-head evidence, independent factual review and authorized provider-session delivery; these checks are not a completed or published PR review.
+
+### CI fix
+- **Status:** All nine prerequisite checks passed; lodekeeper still has no upstream write role, so Actions reruns remain maintainer-owned. Use native worktree git/build/tests, the existing Gateway quality-gate route and all-author duplicate-fix checks for real fixes. Credential/package readiness is not a live model verdict. No CI patch or rerun attempted.
+
+### Spec implementation
+- **Status:** All eight prerequisite checks passed. Clean source cache aa16bb4c1 (2026-10-08) reports generatedFixturesVerified=false. Remaining blocker to a compatibility claim: generation-time fixture provenance plus actual executed-case coverage. Use the existing CODING_CONTEXT.md checklist during the next real spec task, pin its source revision and generator selection, capture artifacts and dirty/untracked tested inputs, then run the narrow selected cases. No fixture generation or Lodestar tests performed today.
+
+### Devnet debugging
+- **Status:** All six prerequisite checks passed; Panda discovery is ready for clickhouse-raw, clickhouse-refined, devnets, ethnode and production. Grafana credential remains absent in this runtime; use Panda cross-client logs and authoritative participant inventory rather than auth churn. The existing devnet monitor owns the reported Besu/Ethrex incidents; no duplicate investigation, live telemetry query or incident post from this audit.
+
+### Audit workflow
+- **Status:** Implemented displacement-resilient recovery-banner detection in the existing backlog status helper and memory-index source filter. Yesterday's three prepended devnet entries moved the warning beyond the former 12-line scan; a line-18 fixture reproduced false negatives in both helpers. Both now check the existing exact markers across the full backlog text, conservatively refusing quoted markers too. CLI flags/exit codes and GitHub's separate structural policy are unchanged. Backlog parser/CLI regressions and five memory-index exclusion tests passed; compilation, baseline-relative/new-file whitespace and live refusal/explicit-audit checks passed. Full Gateway recheck passed 28/28 prerequisites (12 command reuses), with no structured health drift. Independent design/code review approved; reviewer independently reran the narrow tests and parsed the prerequisite evidence. Evidence: notes/autonomy-audit-2026-10-11-review.md and notes/autonomy-preflight-2026-10-11.json. No index rebuild, config/scheduler/auth change, restart, install, commit/push or external publication.
+
+---
 ## Daily Audit Snapshot — 2026-10-10 (self-improvement-audit-daily, 03:16 UTC)
 
 ### PR review
@@ -3049,6 +3067,14 @@ When debugging consensus failures across a devnet, logs from 4-8 nodes all matte
 ---
 
 ## Improvements Implemented This Cycle
+
+### ✅ Recovery-banner detection survives prepended task entries (2026-10-11)
+Updated `scripts/backlog/list_statuses.py` and `scripts/memory/rebuild_index.py`.
+- Detect both existing exact recovery markers anywhere in BACKLOG.md, including after prepended multi-line task blocks; placement no longer silently disables listing refusal or memory-index exclusion.
+- Retain default refusal, required-guard failure, explicit audit allowance and conservative exact-marker matching. GitHub notification sweeping keeps its deliberately different structural guard.
+- Added displaced-banner CLI regressions for both marker variants and five memory-index exclusion tests, including unguarded and non-BACKLOG controls.
+
+**Evidence:** 2026-10-10 16:58 UTC daily note records the three-entry prepend failure; the pre-change line-18 fixture failed both helpers. Narrow regressions, compilation and live guard checks passed. No actual index rebuild, backlog relocation, scheduler/config change or new skill.
 
 ### ✅ CI duplicate/shared-helper check and evidence-led fix guidance (2026-10-07)
 Updated `scripts/ci/CRON_PROMPT.md`, consumed directly by the active CI auto-fix cron.

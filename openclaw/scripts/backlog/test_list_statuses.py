@@ -162,4 +162,41 @@ assert module.is_done(h2_tasks[1])
 assert h2_tasks[2].section == "## 📌 Plain section"
 assert not module.is_actionable(h2_tasks[2])
 
+prepended_tasks = (
+    "### ✅ Devnet health run\n"
+    "- **Status:** Done\n"
+    "- endpoint evidence\n"
+    "- participation evidence\n"
+    "\n"
+) * 3
+with tempfile.TemporaryDirectory() as tmp:
+    displaced = Path(tmp) / "BACKLOG.md"
+    for marker in module.CORRUPTION_GUARD_MARKERS:
+        displaced_text = prepended_tasks + "# BACKLOG\n\n> **⚠️ " + marker + "**\n\n" + sample
+        assert next(i for i, line in enumerate(displaced_text.splitlines(), 1) if marker in line) > 12
+        assert module.has_corruption_guard(displaced_text)
+        displaced.write_text(displaced_text)
+        for guard_args in ([], ["--require-corruption-guard"]):
+            refusal = subprocess.run(
+                [sys.executable, str(SCRIPT), "--file", str(displaced), *guard_args],
+                text=True, capture_output=True, check=False,
+            )
+            assert refusal.returncode == 2, refusal
+            assert refusal.stdout == "", refusal
+            assert "marked corrupted/under recovery" in refusal.stderr
+
+        audit = subprocess.run(
+            [sys.executable, str(SCRIPT), "--file", str(displaced),
+             "--require-corruption-guard", "--allow-corrupted-backlog", "--actionable-only"],
+            text=True, capture_output=True, check=False,
+        )
+        assert audit.returncode == 0, audit
+        assert "### 🟡 First task" in audit.stdout
+        assert "### ✅ Devnet health run" not in audit.stdout
+
+# A quoted exact warning remains fail-closed rather than treating placement as authority.
+assert module.has_corruption_guard(sample + "\n- Historical warning: DO NOT ACT ON THIS FILE\n")
+assert not module.has_corruption_guard(sample + "\n- Historical warning: DO NOT ACT\n")
+
 print("OK: list_statuses parser handles ## sections + ### tasks without stalling")
+print("OK: displaced recovery guards retain refusal and explicit-audit CLI behavior (2 marker variants)")

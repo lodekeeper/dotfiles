@@ -79,8 +79,8 @@ def parse_backlog(text: str) -> list[TaskBlock]:
 
 
 def has_corruption_guard(text: str) -> bool:
-    head = "\n".join(text.splitlines()[:12])
-    return any(marker in head for marker in CORRUPTION_GUARD_MARKERS)
+    # Prepended task entries can displace the standing recovery banner.
+    return any(marker in text for marker in CORRUPTION_GUARD_MARKERS)
 
 
 def is_done(task: TaskBlock) -> bool:
