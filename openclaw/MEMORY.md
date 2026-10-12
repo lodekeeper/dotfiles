@@ -70,6 +70,7 @@ Distilled 2026-10-09: this file pushed main-session bootstrap past the 80K total
 - 2026-04-26: Stamp reviewer artifacts with `Reviewed commit: <SHA>` and verify it matches HEAD.
 - 2026-10-06: Before opening a fix, search open PRs by any author that touch the same helper. #10291 duplicated #10237.
 - 2026-10-08: Build exactly the trigger condition that was asked for. #10310 implemented a general cutoff fallback when Nico wanted "local payload fails AND executiononly/circuit breaker"; he closed it and wrote it himself.
+- 2026-10-09: Check whether Nico is already building the adjacent piece before I ship mine. #10332 (engine/EL nightly matrix) closed because he was adding it himself that day. For pre-existing, low-impact drift, ask "PR or leave it?" first (FCR slashed-balance, same day).
 
 **Tooling & runtime**
 - 2026-02-26: Tee Oracle (and any long advisor) output to a file. Stdout doesn't survive compaction.
@@ -87,6 +88,7 @@ Distilled 2026-10-09: this file pushed main-session bootstrap past the 80K total
 - 2026-10-04: After a runtime upgrade, verify live state before calling anything broken or fixed. Enumerate behavior changes against docs and live runs. (9.8: USER.md cap, skipped heartbeat ticks, gated hooks, closed topic-wake paths, stale CLI paths.)
 - 2026-10-07: Check credentials in the runtime that actually executes the workflow. The CI quality-gate key existed in Gateway exec, not native Codex exec. Passing prerequisite checks isn't end-to-end proof.
 - 2026-10-06: A successful retry can hide incomplete work (the nightly embed timeout was masked by its retry). Check the output, not the exit status.
+- 2026-10-11: When the colliding job is interval-scheduled (`kind: every`), its phase drifts, so moving the victim's slot stops working. Pin the drifting job instead. Recovery guards must not depend on line position (the BACKLOG banner was pushed past a 12-line window, then archived by cleanup). Systemd auto-restart brings the gateway back but leaves the heap leak in place.
 
 **Verification & claims**
 - 2026-03-12: Don't call a leak fixed from one good window. Require sustained corroboration plus heap evidence. Keep critical samplers in one session.
@@ -98,6 +100,8 @@ Distilled 2026-10-09: this file pushed main-session bootstrap past the 80K total
 - 2026-07-23: Distrust my own detectors. Verify both alerts and silences against structured ground truth.
 - 2026-10-05: Probe the live system before a behavior claim lands in a public issue (checkpointz#266 genesis-by-slot correction).
 - 2026-10-07: Claims of absence need the most evidence. "glamsterdam-devnet-10 never launched" came from one skipped launch plan, and abcoathup corrected it publicly in #interop. Scope claims to what the source establishes.
+- 2026-10-09: Classify slot loss before blaming a client: orphaned vs missed vs restart vs validator keys not running (FOCIL 23741 was orphaned by Lighthouse not importing it).
+- 2026-10-10: A clean spec-source cache doesn't prove the generated fixtures. Record dirty/untracked test inputs and count the fixture cases that actually ran, not skipped-suite placeholders.
 - 2026-10-07: Compiler evidence beats source-review assumptions (SSZ ViewDU generic invariance). Check existing SSZ limits/decoders before adding validation.
 
 **Judgment & people**
