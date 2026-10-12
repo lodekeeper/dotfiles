@@ -31,6 +31,8 @@ This is NOT optional. Every task Nico asks for, every task you pick up, every no
 
 **Common failure mode:** Nico asks something in chat → you jump straight to doing it → no backlog entry → Nico can't see what you did. STOP. Write it down first.
 
+**Backlog archival / full-file replacement:** Keep `# BACKLOG`, the preamble and recovery warnings in the live backlog; they are not part of a completed task block. Save a separate before-snapshot, prepare the proposed live-backlog content in a separate file, then run `python3 scripts/backlog/check_edit.py --before <snapshot> --after <candidate> --json` **before any archive or live-file mutation**. Proceed only on exit 0; removal or wording changes to any existing recovery-warning line are rejected regardless of position. This read-only check preserves warnings; it does not validate task decisions, lock writers or make a stale whole-file replacement safe. Re-check the live file against the snapshot immediately before editing and reconcile concurrent changes rather than overwriting them.
+
 ## ❓ Clarify First for Non-Trivial Work (MANDATORY)
 
 Before starting any non-trivial task (feature work, investigations, refactors, multi-step ops), ask clarifying questions first.
