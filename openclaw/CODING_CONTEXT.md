@@ -52,6 +52,15 @@ For changes exercised by upstream spec fixtures, record the following in the tas
 4. Record the tested Lodestar HEAD **and** working-tree diff/harness overrides and relevant untracked test inputs. Run the narrowest relevant file/case selection, retaining the exact command, exit status and log. Report actual passed/failed/skipped counts, plus generated-case coverage and named fork/runner/handler/filter exclusions separately. Harness skips may hide whole fixture groups; a skipped-suite placeholder is not a count of skipped fixture cases. Preserve any local-only runner or unskip patch with the evidence without changing tracked skip policy unless requested.
 5. Link this evidence in the tracker/PR test summary and state the untested scope. A clean, fresh source cache (`generatedFixturesVerified=false`) proves prerequisites only; neither that cache nor a fixture hash inventory proves generator provenance, coverage or passing tests on its own. Do not reconstruct generation-time proof from later file timestamps or relabel an old run as a current one.
 
+## Async Retry / Coalescing Evidence
+
+When changing async request deduplication, retries or in-flight trigger handling:
+
+1. Read the actual helper contract and callers. Promise fulfillment is not necessarily success: helpers may catch errors or resolve with null/missing/partial results. Identify the observable completion condition, not just `.catch()`.
+2. Trace triggers before, during and after an in-flight request. Preserve still-actionable triggers with an eligibility-aware, bounded trailing retry where required; suppress redundant work after success, and honor retry limits, cancellation and terminal/stale-target guards.
+3. Use controlled deferred promises to test event ordering without sleeps: start request A, deliver trigger B while A is pending, settle A, then assert required work and request counts. Cover relevant success, rejection and handled-miss/null paths, plus no-trigger, repeated-trigger and terminal-state cases.
+4. For a race regression, verify the targeted test fails with the original behavior and passes with the fix when practical. Record the exact tested revision/diff, command and result; a test of a rejecting mock alone does not prove a helper's fulfilled-but-incomplete path.
+
 ## Code Style
 
 - **Formatter:** Biome (not Prettier/ESLint)
