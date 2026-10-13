@@ -9,6 +9,8 @@
 #   kurtosis.yml               Kurtosis sim tests              00:00 UTC
 #   nightly-builder-smoke.yml  Kurtosis Builder Nightly Smoke  02:00 UTC
 #   comptests.yml              Fork-choice compliance tests    03:00 UTC
+#   engine-interop.yml         Engine API interop              04:00 UTC
+#   cl-interop.yml             Consensus client interop        05:23 UTC
 #   nightly-spec-tests.yml     Nightly Spec Tests              06:00 UTC
 # plus any other active workflow whose name/path matches interop|engine|kurtosis
 # (e.g. the engine API / EL interop nightly), discovered at runtime.
@@ -21,6 +23,9 @@
 # Usage:
 #   check_nightly_workflows.sh            # detect; prints NO_NEW_FAILURES or ===FAILURE=== blocks
 #   check_nightly_workflows.sh --mark <workflow_file> <run_id>   # record a run as alerted
+#   check_nightly_workflows.sh --known-issues [run_id]   # upstream known issues of the latest scheduled
+#       cl-interop run (green by design, so detect mode never sees them); prints NO_KNOWN_ISSUES or
+#       ===KNOWN=== blocks (client, issue_url, failure, run_id, url). ChainSafe/lodestar issues are skipped.
 #
 # Note: the detect path intentionally does NOT write state, so a failed Discord
 # post doesn't silently swallow the alert. The agent marks only after posting.
@@ -36,10 +41,12 @@ declare -A WORKFLOWS=(
   [kurtosis.yml]="Kurtosis sim tests"
   [nightly-builder-smoke.yml]="Kurtosis Builder Nightly Smoke Test"
   [comptests.yml]="Fork-choice compliance tests"
+  [engine-interop.yml]="Engine API interop"
+  [cl-interop.yml]="Consensus client interop"
   [nightly-spec-tests.yml]="Nightly Spec Tests"
 )
 # Stable iteration order (matches nightly run time)
-WF_ORDER=(kurtosis.yml nightly-builder-smoke.yml comptests.yml nightly-spec-tests.yml)
+WF_ORDER=(kurtosis.yml nightly-builder-smoke.yml comptests.yml engine-interop.yml cl-interop.yml nightly-spec-tests.yml)
 
 # Auto-include EL / engine interop nightlies so new ones are watched without editing this list.
 # Workflows without scheduled runs on unstable produce no output below.
@@ -66,6 +73,49 @@ if [ "${1:-}" = "--mark" ]; then
   jq --arg wf "$wf" --arg id "$run_id" '.[$wf] = {last_alerted_run_id: ($id|tonumber)}' \
      "$STATE_FILE" > "$tmp" && mv "$tmp" "$STATE_FILE"
   echo "marked $wf -> $run_id"
+  exit 0
+fi
+
+# ---- --known-issues mode -----------------------------------------------------
+# Failures with a filed cause are listed in scripts/kurtosis/cl-interop/known-issues.mjs and keep the job green,
+# check.mjs prints them as "known issue: <failure> (<note>, <issue url>)" lines in the job log.
+if [ "${1:-}" = "--known-issues" ]; then
+  wf="cl-interop.yml"
+  if [ -n "${2:-}" ]; then
+    run_json="$(gh api "repos/$REPO/actions/runs/$2" --jq '{id, html_url}' 2>/dev/null)"
+  else
+    run_json="$(gh api "repos/$REPO/actions/workflows/$wf/runs?branch=$BRANCH&per_page=20" \
+      --jq '[.workflow_runs[] | select(.event=="schedule" and .status=="completed" and .head_branch=="'"$BRANCH"'")]
+            | sort_by(.created_at) | last | {id, html_url}' 2>/dev/null)"
+  fi
+  if [ -z "$run_json" ] || [ "$run_json" = "null" ]; then echo "NO_KNOWN_ISSUES"; exit 0; fi
+  run_id="$(echo "$run_json" | jq -r '.id')"
+  html_url="$(echo "$run_json" | jq -r '.html_url')"
+  out=""
+  while IFS=$'\t' read -r job_id job_name; do
+    [ -z "$job_id" ] && continue
+    lines="$(gh api "repos/$REPO/actions/jobs/$job_id/logs" 2>/dev/null | grep -a 'known issue: ' | sed 's/\x1b\[[0-9;]*m//g')"
+    [ -z "$lines" ] && continue
+    out+="$(JOB="$job_name" RUN_ID="$run_id" URL="$html_url" python3 -c '
+import os, re, sys
+seen = set()
+for line in sys.stdin.read().splitlines():
+    for seg in line.split("known issue: ")[1:]:
+        urls = re.findall(r"https://github\.com/[\w.-]+/[\w.-]+/issues/\d+", seg)
+        if not urls or urls[-1] in seen or urls[-1].startswith("https://github.com/ChainSafe/lodestar/"):
+            continue
+        seen.add(urls[-1])
+        failure = re.split(r" \((?=[^()]*https://github\.com/)", seg)[0].strip()
+        print("===KNOWN===")
+        print("client: " + os.environ["JOB"])
+        print("issue_url: " + urls[-1])
+        print("failure: " + failure[:300])
+        print("run_id: " + os.environ["RUN_ID"])
+        print("url: " + os.environ["URL"])
+        print("===END===")
+' <<< "$lines")"$'\n'
+  done < <(gh api "repos/$REPO/actions/runs/$run_id/jobs?per_page=100" --jq '.jobs[] | [.id, .name] | @tsv' 2>/dev/null)
+  if [ -n "${out//[$'\n']/}" ]; then printf '%s' "$out" | sed '/^$/d'; else echo "NO_KNOWN_ISSUES"; fi
   exit 0
 fi
 
