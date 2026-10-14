@@ -131,6 +131,41 @@ def run_gh_paginated_items(endpoint: str, retries: int = 4) -> List[Dict[str, An
     raise last_err
 
 
+_PR_AUTHOR_CACHE: Dict[str, str] = {}
+_SELF_MENTION_RE = re.compile(r"@lodekeeper\b", re.IGNORECASE)
+
+
+def fetch_pr_author(repo: str, number: int) -> str:
+    key = f"{repo}#{number}"
+    if key not in _PR_AUTHOR_CACHE:
+        try:
+            out = subprocess.check_output(
+                ["gh", "api", f"repos/{repo}/issues/{number}", "--jq", ".user.login"],
+                text=True,
+                stderr=subprocess.PIPE,
+            )
+            _PR_AUTHOR_CACHE[key] = out.strip().lower()
+        except Exception:
+            _PR_AUTHOR_CACHE[key] = ""
+    return _PR_AUTHOR_CACHE[key]
+
+
+def should_ack_eyes(comment: Dict[str, Any], repo: str, number: int, own_review_ids: set) -> bool:
+    """Only ack comments meant for the keeper, never bots or other people's side conversations.
+
+    Acking every comment the sweep surfaces was perceived as spam (#10391, 2026-10-14).
+    """
+    user = comment.get("user") or {}
+    login = (user.get("login") or "").lower()
+    if user.get("type") == "Bot" or login.endswith("[bot]"):
+        return False
+    if _SELF_MENTION_RE.search(comment.get("body") or ""):
+        return True
+    if comment.get("in_reply_to_id") in own_review_ids:
+        return True
+    return fetch_pr_author(repo, number) == OWNER_SELF
+
+
 def react_ack_eyes(repo: str, kind: str, comment_id: int, retries: int = 3) -> bool:
     """Best-effort :eyes: reaction on a freshly picked-up GitHub comment.
 
@@ -561,6 +596,10 @@ def main() -> int:
         max_review_body = pr_state.get("last_review_body_id", 0)
         topic_id = topic_routes.get(pr_key)
 
+        own_review_ids = {
+            c.get("id") for c in review_comments if ((c.get("user") or {}).get("login") or "").lower() == OWNER_SELF
+        }
+
         for c in review_comments:
             cid = int(c["id"])
             max_review = max(max_review, cid)
@@ -586,7 +625,7 @@ def main() -> int:
                 }
                 checklist["items"][str(cid)] = item
                 actionable_new.append(item)
-                if ack_enabled and react_ack_eyes(repo, "review", cid):
+                if ack_enabled and should_ack_eyes(c, repo, pr, own_review_ids) and react_ack_eyes(repo, "review", cid):
                     item["ackedAt"] = now
                     ack_count += 1
             elif item is not None:
@@ -617,7 +656,7 @@ def main() -> int:
                 }
                 checklist["items"][str(cid)] = item
                 actionable_new.append(item)
-                if ack_enabled and react_ack_eyes(repo, "issue", cid):
+                if ack_enabled and should_ack_eyes(c, repo, pr, own_review_ids) and react_ack_eyes(repo, "issue", cid):
                     item["ackedAt"] = now
                     ack_count += 1
             elif item is not None:
