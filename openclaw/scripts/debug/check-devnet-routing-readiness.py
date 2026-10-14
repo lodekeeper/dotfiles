@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Preflight devnet investigation routing.
 
-Classifies a target network as a local Kurtosis enclave or a remote panda
-datasource, and fails early when panda datasource discovery is unavailable.
+Classifies a target as a local Kurtosis enclave, active hosted devnet ID, or
+exact panda datasource, and fails early when remote discovery is unavailable.
 """
 
 from __future__ import annotations
@@ -260,6 +260,35 @@ def collect_panda_datasources(timeout: int) -> dict[str, Any]:
     return {"state": "ready", "names": sorted(set(names))}
 
 
+def collect_panda_devnets(timeout: int) -> dict[str, Any]:
+    rc, stdout, stderr = run_command(["panda", "devnets", "-o", "json"], timeout)
+    if rc != 0:
+        return {
+            "state": "error", "names": [], "returncode": rc,
+            "error": (stderr or stdout).strip(),
+        }
+
+    try:
+        payload = json.loads(stdout)
+    except json.JSONDecodeError:
+        return {"state": "invalid_json", "names": [],
+                "error": "panda devnets returned invalid JSON"}
+
+    networks = payload.get("networks") if isinstance(payload, dict) else None
+    if not isinstance(networks, list) or any(
+        not isinstance(item, dict)
+        or not isinstance(item.get("id"), str) or not item["id"].strip()
+        or not isinstance(item.get("status"), str) or not item["status"].strip()
+        for item in networks
+    ):
+        return {"state": "invalid_shape", "names": [],
+                "error": "panda devnets payload must contain network IDs and statuses"}
+
+    return {"state": "ready", "names": sorted({
+        item["id"] for item in networks if item["status"] == "active"
+    })}
+
+
 def find_match(target: str | None, names: list[str]) -> str | None:
     if not target:
         return None
@@ -281,7 +310,7 @@ def build_result(target: str | None, timeout: int) -> tuple[int, dict[str, Any]]
     local = collect_kurtosis_enclaves(timeout)
     panda = collect_panda_datasources(timeout)
     local_match = find_match(target, local["names"])
-    remote_match = find_match(target, panda["names"])
+    remote_match = target if target in panda["names"] else None
 
     result: dict[str, Any] = {
         "target": target,
@@ -289,6 +318,8 @@ def build_result(target: str | None, timeout: int) -> tuple[int, dict[str, Any]]
         "panda": panda,
         "localMatch": local_match,
         "remoteMatch": remote_match,
+        "remoteMatchKind": "datasource" if remote_match else None,
+        "devnets": None,
         "classification": None,
         "status": None,
     }
@@ -298,16 +329,27 @@ def build_result(target: str | None, timeout: int) -> tuple[int, dict[str, Any]]
         result["status"] = "ready"
         return 0, result
 
+    if panda["state"] != "ready":
+        result["status"] = "panda-unavailable"
+        return 2, result
+
     if target and remote_match:
         result["classification"] = "remote-panda"
         result["status"] = "ready"
         return 0, result
 
-    if panda["state"] != "ready":
-        result["status"] = "panda-unavailable"
-        return 2, result
-
     if target:
+        devnets = collect_panda_devnets(timeout)
+        result["devnets"] = devnets
+        if devnets["state"] != "ready":
+            result["status"] = "devnet-inventory-unavailable"
+            return 2, result
+        if target in devnets["names"]:
+            result["remoteMatch"] = target
+            result["remoteMatchKind"] = "network"
+            result["classification"] = "remote-panda"
+            result["status"] = "ready"
+            return 0, result
         result["status"] = "target-not-found"
         return 3, result
 
@@ -320,12 +362,15 @@ def render_text(exit_code: int, result: dict[str, Any]) -> str:
     if exit_code == 0 and result.get("classification") == "local-kurtosis":
         return f"LOCAL_DEVNET_READY target={target} enclave={result['localMatch']}"
     if exit_code == 0 and result.get("classification") == "remote-panda":
-        return f"REMOTE_DEVNET_READY target={target} datasource={result['remoteMatch']}"
+        kind = "network" if result.get("remoteMatchKind") == "network" else "datasource"
+        return f"REMOTE_DEVNET_READY target={target} {kind}={result['remoteMatch']}"
     if exit_code == 0:
         local_count = len(result["local"]["names"])
         remote_count = len(result["panda"]["names"])
         return f"DEVNET_ROUTING_READY local_enclaves={local_count} panda_datasources={remote_count}"
     if exit_code == 2:
+        if result.get("status") == "devnet-inventory-unavailable":
+            return f"PANDA_DEVNET_INVENTORY_UNAVAILABLE target={target} reason={result['devnets'].get('error', 'unknown')}"
         return f"PANDA_DATASOURCES_UNAVAILABLE target={target} reason={result['panda'].get('error', 'unknown')}"
     if exit_code == 3:
         return f"DEVNET_NOT_FOUND target={target}"

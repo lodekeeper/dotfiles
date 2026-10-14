@@ -1,0 +1,486 @@
+{
+  "cacheStats": {
+    "cacheHits": 0,
+    "totalChecks": 6,
+    "uniqueCommands": 6
+  },
+  "checks": [
+    {
+      "cacheHit": false,
+      "command": [
+        "bash",
+        "scripts/debug/devnet-triage.sh",
+        "autonomy-preflight",
+        "--check-only",
+        "--json"
+      ],
+      "domain": "devnetDebugging",
+      "name": "devnetTriage",
+      "ok": true,
+      "returnCode": 0,
+      "stderr": "",
+      "stdout": {
+        "grafana": {
+          "available": false,
+          "lokiDatasourceId": "4",
+          "missing": [
+            "GRAFANA_TOKEN"
+          ],
+          "prometheusDatasourceId": "1",
+          "required": false,
+          "url": "https://grafana-lodestar.chainsafe.io"
+        },
+        "grafanaTokenPresent": false,
+        "lokiQuery": "{instance=~\".*autonomy-preflight.*\"} |~ \"(?i)(error|fatal|panic|exception)\"",
+        "node": "autonomy-preflight",
+        "ok": true,
+        "selector": "instance=~\".*autonomy-preflight.*\"",
+        "status": "ready",
+        "tools": {
+          "curlAvailable": true,
+          "jqAvailable": true,
+          "lsofAvailable": true,
+          "missingRequired": []
+        },
+        "window": "30m",
+        "windowSeconds": 1800
+      },
+      "warnings": [
+        "GRAFANA_TOKEN was absent; verified local devnet debugging tooling only"
+      ]
+    },
+    {
+      "cacheHit": false,
+      "command": [
+        "bash",
+        "scripts/debug/build-incident-bundle.sh",
+        "--node",
+        "autonomy-preflight",
+        "--check-only"
+      ],
+      "domain": "devnetDebugging",
+      "name": "incidentBundle",
+      "ok": true,
+      "returnCode": 0,
+      "stderr": "",
+      "stdout": "\u2705 incident-bundle preflight OK\nPrimary node: autonomy-preflight\nPeer nodes: (none)\nOutput path: notes/incidents/incident-autonomy-preflight-20261014-032139Z.md\nGrafana telemetry prerequisites: optional",
+      "warnings": [
+        "GRAFANA_TOKEN was absent; verified local devnet debugging tooling only"
+      ]
+    },
+    {
+      "cacheHit": false,
+      "command": [
+        "/usr/bin/python3",
+        "scripts/memory/check_context_search_readiness.py",
+        "--json"
+      ],
+      "domain": "devnetDebugging",
+      "name": "memoryContextSearch",
+      "ok": true,
+      "returnCode": 0,
+      "stderr": "",
+      "stdout": {
+        "fallback": {
+          "available": true,
+          "resultCount": 1,
+          "returnCode": 0,
+          "searchOk": true,
+          "timedOut": false
+        },
+        "ok": true,
+        "qmd": {
+          "available": true,
+          "firstFile": "qmd://daily-notes/archive/2026-09-12.md",
+          "path": "/home/openclaw/.local/bin/qmd",
+          "resultCount": 1,
+          "returnCode": 0,
+          "searchOk": true,
+          "timedOut": false
+        },
+        "query": "autonomy",
+        "selectedBackend": "qmd",
+        "status": "ready",
+        "warnings": []
+      },
+      "warnings": []
+    },
+    {
+      "cacheHit": false,
+      "command": [
+        "/usr/bin/python3",
+        "scripts/safety/block-risky-command.py",
+        "--self-test",
+        "--json"
+      ],
+      "domain": "devnetDebugging",
+      "name": "destructiveCommandGuard",
+      "ok": true,
+      "returnCode": 0,
+      "stderr": "",
+      "stdout": {
+        "cases": [
+          {
+            "actualOk": true,
+            "command": "git status --short",
+            "expectedOk": true,
+            "matches": [],
+            "passed": true
+          },
+          {
+            "actualOk": true,
+            "command": "sed -n '1,20p' BACKLOG.md",
+            "expectedOk": true,
+            "matches": [],
+            "passed": true
+          },
+          {
+            "actualOk": true,
+            "command": "bash scripts/notes/run-daily-autonomy-audit.sh --response-only",
+            "expectedOk": true,
+            "matches": [],
+            "passed": true
+          },
+          {
+            "actualOk": false,
+            "command": "rm -f /tmp/example",
+            "expectedOk": false,
+            "matches": [
+              {
+                "name": "rm",
+                "reason": "`rm` deletes immediately and has caused repeated end-of-turn cleanup mistakes"
+              }
+            ],
+            "passed": true
+          },
+          {
+            "actualOk": false,
+            "command": "rm -f /tmp/example; echo \"SKIPPED-DO-NOT-RUN\"",
+            "expectedOk": false,
+            "matches": [
+              {
+                "name": "rm",
+                "reason": "`rm` deletes immediately and has caused repeated end-of-turn cleanup mistakes"
+              }
+            ],
+            "passed": true
+          },
+          {
+            "actualOk": false,
+            "command": "rm -f /tmp/example && echo \"noop\"",
+            "expectedOk": false,
+            "matches": [
+              {
+                "name": "rm",
+                "reason": "`rm` deletes immediately and has caused repeated end-of-turn cleanup mistakes"
+              }
+            ],
+            "passed": true
+          },
+          {
+            "actualOk": false,
+            "command": "trash-put /tmp/example",
+            "expectedOk": false,
+            "matches": [
+              {
+                "name": "trash",
+                "reason": "`trash`/`trash-put` are still destructive when used as reflexive cleanup"
+              }
+            ],
+            "passed": true
+          },
+          {
+            "actualOk": false,
+            "command": "gio trash /tmp/example",
+            "expectedOk": false,
+            "matches": [
+              {
+                "name": "gio-trash",
+                "reason": "`gio trash` is destructive when used as reflexive cleanup"
+              }
+            ],
+            "passed": true
+          },
+          {
+            "actualOk": false,
+            "command": "git stash && pnpm test",
+            "expectedOk": false,
+            "matches": [
+              {
+                "name": "git-stash",
+                "reason": "`git stash` can sweep unrelated dirty worktree state"
+              }
+            ],
+            "passed": true
+          },
+          {
+            "actualOk": false,
+            "command": "git reset --hard",
+            "expectedOk": false,
+            "matches": [
+              {
+                "name": "git-reset-hard",
+                "reason": "`git reset --hard` discards worktree state"
+              }
+            ],
+            "passed": true
+          },
+          {
+            "actualOk": false,
+            "command": "git checkout -- packages/foo.ts",
+            "expectedOk": false,
+            "matches": [
+              {
+                "name": "git-checkout-paths",
+                "reason": "`git checkout -- <path>` discards local file changes"
+              }
+            ],
+            "passed": true
+          },
+          {
+            "actualOk": false,
+            "command": "git clean -fd",
+            "expectedOk": false,
+            "matches": [
+              {
+                "name": "git-clean",
+                "reason": "`git clean` removes untracked files"
+              }
+            ],
+            "passed": true
+          }
+        ],
+        "message": "risky-command guard self-test passed",
+        "ok": true
+      },
+      "warnings": []
+    },
+    {
+      "cacheHit": false,
+      "command": [
+        "/usr/bin/python3",
+        "scripts/safety/block-idle-tool-call.py",
+        "--self-test",
+        "--json"
+      ],
+      "domain": "devnetDebugging",
+      "name": "idleToolCallGuard",
+      "ok": true,
+      "returnCode": 0,
+      "stderr": "",
+      "stdout": {
+        "cases": [
+          {
+            "actualOk": true,
+            "context": "cron",
+            "expectedOk": true,
+            "passed": true,
+            "risks": [],
+            "toolInput": {
+              "cmd": "sed -n '1,20p' BACKLOG.md"
+            },
+            "toolName": "functions.exec_command"
+          },
+          {
+            "actualOk": false,
+            "context": "cron",
+            "expectedOk": false,
+            "passed": true,
+            "risks": [
+              {
+                "name": "noop-shell-command",
+                "reason": "bare no-op shell commands are an idle/padding tool-call pattern"
+              }
+            ],
+            "toolInput": {
+              "cmd": "true"
+            },
+            "toolName": "functions.exec_command"
+          },
+          {
+            "actualOk": false,
+            "context": "cron",
+            "expectedOk": false,
+            "passed": true,
+            "risks": [
+              {
+                "name": "noop-shell-command",
+                "reason": "bare no-op shell commands are an idle/padding tool-call pattern"
+              },
+              {
+                "name": "placeholder-tool-label",
+                "reason": "placeholder/no-op labels have repeatedly accompanied unintended end-of-task tool calls"
+              }
+            ],
+            "toolInput": {
+              "command": "echo done",
+              "description": "noop placeholder"
+            },
+            "toolName": "Bash"
+          },
+          {
+            "actualOk": false,
+            "context": "cron",
+            "expectedOk": false,
+            "passed": true,
+            "risks": [
+              {
+                "name": "cron-stop-wakeup-without-target",
+                "reason": "stop-only wakeup calls in cron/background-wait context are usually inert filler"
+              }
+            ],
+            "toolInput": {
+              "stop": true
+            },
+            "toolName": "ScheduleWakeup"
+          },
+          {
+            "actualOk": true,
+            "context": "cron",
+            "expectedOk": true,
+            "passed": true,
+            "risks": [],
+            "toolInput": {
+              "id": "known-wakeup",
+              "stop": true
+            },
+            "toolName": "ScheduleWakeup"
+          },
+          {
+            "actualOk": true,
+            "context": "cron",
+            "expectedOk": true,
+            "passed": true,
+            "risks": [],
+            "toolInput": {
+              "description": "wait for sweep",
+              "persistent": false,
+              "timeout_ms": 120000
+            },
+            "toolName": "Monitor"
+          },
+          {
+            "actualOk": false,
+            "context": "cron",
+            "expectedOk": false,
+            "passed": true,
+            "risks": [
+              {
+                "name": "malformed-monitor-call",
+                "reason": "monitor call is missing required field(s): description, timeout_ms, persistent"
+              }
+            ],
+            "toolInput": {},
+            "toolName": "Monitor"
+          },
+          {
+            "actualOk": false,
+            "context": "cron",
+            "expectedOk": false,
+            "passed": true,
+            "risks": [
+              {
+                "name": "empty-report-findings-outside-review",
+                "reason": "empty code-review finding reports are not useful outside an active review"
+              }
+            ],
+            "toolInput": {
+              "findings": []
+            },
+            "toolName": "ReportFindings"
+          },
+          {
+            "actualOk": true,
+            "context": "code-review",
+            "expectedOk": true,
+            "passed": true,
+            "risks": [],
+            "toolInput": {
+              "findings": []
+            },
+            "toolName": "ReportFindings"
+          },
+          {
+            "actualOk": false,
+            "context": "cron",
+            "expectedOk": false,
+            "passed": true,
+            "risks": [
+              {
+                "name": "placeholder-tool-search-query",
+                "reason": "placeholder tool-discovery queries are an idle/padding tool-call pattern"
+              }
+            ],
+            "toolInput": {
+              "limit": 1,
+              "query": "placeholder"
+            },
+            "toolName": "tool_search.tool_search_tool"
+          },
+          {
+            "actualOk": true,
+            "context": "cron",
+            "expectedOk": true,
+            "passed": true,
+            "risks": [],
+            "toolInput": {
+              "limit": 1,
+              "query": "skill_workshop"
+            },
+            "toolName": "tool_search.tool_search_tool"
+          }
+        ],
+        "message": "idle-tool-call guard self-test passed",
+        "ok": true
+      },
+      "warnings": []
+    },
+    {
+      "cacheHit": false,
+      "command": [
+        "/usr/bin/python3",
+        "scripts/debug/check-devnet-routing-readiness.py",
+        "--json",
+        "--timeout",
+        "30"
+      ],
+      "domain": "devnetDebugging",
+      "name": "devnetRoutingReadiness",
+      "ok": true,
+      "returnCode": 0,
+      "stderr": "",
+      "stdout": {
+        "classification": null,
+        "devnets": null,
+        "local": {
+          "names": [],
+          "state": "ready"
+        },
+        "localMatch": null,
+        "panda": {
+          "names": [
+            "clickhouse-raw",
+            "clickhouse-refined",
+            "devnets",
+            "ethnode",
+            "production"
+          ],
+          "state": "ready"
+        },
+        "remoteMatch": null,
+        "remoteMatchKind": null,
+        "status": "ready",
+        "target": null
+      },
+      "warnings": []
+    }
+  ],
+  "expectedGitHubActor": "lodekeeper",
+  "ok": true,
+  "requireDevnetGrafana": false,
+  "selectedDomains": [
+    "devnetDebugging"
+  ],
+  "strictCiApiKey": true,
+  "workspace": "/home/openclaw/.openclaw/workspace"
+}

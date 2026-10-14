@@ -1,0 +1,177 @@
+[
+  {
+    "target": "focil-devnet-1",
+    "exitCode": 0,
+    "result": {
+      "classification": "remote-panda",
+      "devnets": {
+        "names": [
+          "focil-devnet-1",
+          "frames-devnet-0",
+          "glamsterdam-devnet-8",
+          "glamsterdam-msf-2"
+        ],
+        "state": "ready"
+      },
+      "local": {
+        "names": [],
+        "state": "ready"
+      },
+      "localMatch": null,
+      "panda": {
+        "names": [
+          "clickhouse-raw",
+          "clickhouse-refined",
+          "devnets",
+          "ethnode",
+          "production"
+        ],
+        "state": "ready"
+      },
+      "remoteMatch": "focil-devnet-1",
+      "remoteMatchKind": "network",
+      "status": "ready",
+      "target": "focil-devnet-1"
+    }
+  },
+  {
+    "target": "frames-devnet-0",
+    "exitCode": 0,
+    "result": {
+      "classification": "remote-panda",
+      "devnets": {
+        "names": [
+          "focil-devnet-1",
+          "frames-devnet-0",
+          "glamsterdam-devnet-8",
+          "glamsterdam-msf-2"
+        ],
+        "state": "ready"
+      },
+      "local": {
+        "names": [],
+        "state": "ready"
+      },
+      "localMatch": null,
+      "panda": {
+        "names": [
+          "clickhouse-raw",
+          "clickhouse-refined",
+          "devnets",
+          "ethnode",
+          "production"
+        ],
+        "state": "ready"
+      },
+      "remoteMatch": "frames-devnet-0",
+      "remoteMatchKind": "network",
+      "status": "ready",
+      "target": "frames-devnet-0"
+    }
+  },
+  {
+    "target": "glamsterdam-devnet-8",
+    "exitCode": 0,
+    "result": {
+      "classification": "remote-panda",
+      "devnets": {
+        "names": [
+          "focil-devnet-1",
+          "frames-devnet-0",
+          "glamsterdam-devnet-8",
+          "glamsterdam-msf-2"
+        ],
+        "state": "ready"
+      },
+      "local": {
+        "names": [],
+        "state": "ready"
+      },
+      "localMatch": null,
+      "panda": {
+        "names": [
+          "clickhouse-raw",
+          "clickhouse-refined",
+          "devnets",
+          "ethnode",
+          "production"
+        ],
+        "state": "ready"
+      },
+      "remoteMatch": "glamsterdam-devnet-8",
+      "remoteMatchKind": "network",
+      "status": "ready",
+      "target": "glamsterdam-devnet-8"
+    }
+  },
+  {
+    "target": "glamsterdam-msf-2",
+    "exitCode": 0,
+    "result": {
+      "classification": "remote-panda",
+      "devnets": {
+        "names": [
+          "focil-devnet-1",
+          "frames-devnet-0",
+          "glamsterdam-devnet-8",
+          "glamsterdam-msf-2"
+        ],
+        "state": "ready"
+      },
+      "local": {
+        "names": [],
+        "state": "ready"
+      },
+      "localMatch": null,
+      "panda": {
+        "names": [
+          "clickhouse-raw",
+          "clickhouse-refined",
+          "devnets",
+          "ethnode",
+          "production"
+        ],
+        "state": "ready"
+      },
+      "remoteMatch": "glamsterdam-msf-2",
+      "remoteMatchKind": "network",
+      "status": "ready",
+      "target": "glamsterdam-msf-2"
+    }
+  },
+  {
+    "target": "focil-devnet-999",
+    "exitCode": 3,
+    "result": {
+      "classification": null,
+      "devnets": {
+        "names": [
+          "focil-devnet-1",
+          "frames-devnet-0",
+          "glamsterdam-devnet-8",
+          "glamsterdam-msf-2"
+        ],
+        "state": "ready"
+      },
+      "local": {
+        "names": [],
+        "state": "ready"
+      },
+      "localMatch": null,
+      "panda": {
+        "names": [
+          "clickhouse-raw",
+          "clickhouse-refined",
+          "devnets",
+          "ethnode",
+          "production"
+        ],
+        "state": "ready"
+      },
+      "remoteMatch": null,
+      "remoteMatchKind": null,
+      "status": "target-not-found",
+      "target": "focil-devnet-999"
+    }
+  }
+]
