@@ -71,6 +71,8 @@ Distilled 2026-10-09: this file pushed main-session bootstrap past the 80K total
 - 2026-10-06: Before opening a fix, search open PRs by any author that touch the same helper. #10291 duplicated #10237.
 - 2026-10-08: Build exactly the trigger condition that was asked for. #10310 implemented a general cutoff fallback when Nico wanted "local payload fails AND executiononly/circuit breaker"; he closed it and wrote it himself.
 - 2026-10-09: Check whether Nico is already building the adjacent piece before I ship mine. #10332 (engine/EL nightly matrix) closed because he was adding it himself that day. For pre-existing, low-impact drift, ask "PR or leave it?" first (FCR slashed-balance, same day).
+- 2026-10-12: A reviewer's passing suggestion in someone else's thread is not a request. #10359 (response-timing metrics from twoeths' httpClient remark on #10349) was closed within ~30 min as unnecessary. Ask the owner first.
+- 2026-10-12: Before approving, reconcile every open bot/inline finding against the code. I approved #10329 with a valid codex P2 (in-flight triggers dropped) still open, corrected a minute later, and fixed it in #10366.
 
 **Tooling & runtime**
 - 2026-02-26: Tee Oracle (and any long advisor) output to a file. Stdout doesn't survive compaction.
@@ -102,6 +104,8 @@ Distilled 2026-10-09: this file pushed main-session bootstrap past the 80K total
 - 2026-10-07: Claims of absence need the most evidence. "glamsterdam-devnet-10 never launched" came from one skipped launch plan, and abcoathup corrected it publicly in #interop. Scope claims to what the source establishes.
 - 2026-10-09: Classify slot loss before blaming a client: orphaned vs missed vs restart vs validator keys not running (FOCIL 23741 was orphaned by Lighthouse not importing it).
 - 2026-10-10: A clean spec-source cache doesn't prove the generated fixtures. Record dirty/untracked test inputs and count the fixture cases that actually ran, not skipped-suite placeholders.
+- 2026-10-12/13: Check what a benchmark measured before trusting its number: `runsFactor` normalization (native hex decode looked slow), sample duration (a 0.3s CI sample), and baseline provenance (failed runs contaminating the rolling baseline). Reproduce a flake before fixing it and keep the negative control.
+- 2026-10-14: Check tags before any "since vX" claim (gh tag-contents API). I told #10393 the `builder` cmd existed since v1.50.0; Marko corrected it: v1.46.0.
 - 2026-10-07: Compiler evidence beats source-review assumptions (SSZ ViewDU generic invariance). Check existing SSZ limits/decoders before adding validation.
 
 **Judgment & people**
