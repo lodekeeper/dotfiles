@@ -1,0 +1,2 @@
+# Literal strings the dotfiles content gate should ignore (one per line).
+# Only add verified false positives here, never real IPs or secrets.

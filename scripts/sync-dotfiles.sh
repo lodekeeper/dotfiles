@@ -127,6 +127,13 @@ fi
 git add -A
 assert_no_sensitive_changes
 
+# Content gate: block the push if staged additions contain secrets or public IPs (Nico, 2026-10-15).
+if ! python3 "$DOTFILES_DIR/scripts/sync-content-gate.py"; then
+  git reset -q
+  echo "❌ ABORT: content gate blocked the push (see above). Nothing committed." >&2
+  exit 1
+fi
+
 CHANGED=$(git diff --cached --stat | tail -1)
 git -c user.name=lodekeeper -c user.email=lodekeeper@users.noreply.github.com commit -S -m "chore: sync non-sensitive local changes
 
