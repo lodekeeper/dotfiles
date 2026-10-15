@@ -32,7 +32,7 @@ Get PR #9148 to a genuinely resolved state where Lodestar handles the epbs-devne
 - Genesis / Gloas-from-genesis remains unresolved.
 - Earlier live `discovery11` evidence showed a genuine **Advanced** erigon/caplin peer; with the classification-only patch enabled, Lodestar entered finalized range sync instead of staying on the fully-synced path.
 - That same session then hit a **separate downstream req/resp failure**: outgoing `beacon_blocks_by_range` V2 `INVALID_REQUEST: SSZ_SNAPPY_ERROR_UNDER_SSZ_MIN_SIZE`.
-- The later direct-host repro window is currently unstable: the stable host anchor `46.224.62.16:4401` first degraded to `AHo4o/Behind`, then to repeated peerless/refused windows, so the outgoing error path is not currently re-firing.
+- The later direct-host repro window is currently unstable: the stable host anchor `<caplin-host>:4401` first degraded to `AHo4o/Behind`, then to repeated peerless/refused windows, so the outgoing error path is not currently re-firing.
 - Packaging state is now clear:
   - committed diff vs `origin/epbs-devnet-1` = only the narrow `unknownBlock.ts` missing-parent-envelope recovery fix
   - uncommitted experiments = (A) classification tweak, (B) V1 fallback experiment, (C) invalid-request instrumentation

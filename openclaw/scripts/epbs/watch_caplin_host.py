@@ -11,7 +11,7 @@ from typing import Optional, Tuple
 
 DEFAULT_REST = "http://127.0.0.1:10069"
 DEFAULT_LOG = "/home/openclaw/lodestar-9148-min/runs/pr9156-direct-caplin1/beacon-2026-04-02.log"
-DEFAULT_HOST = "/ip4/46.224.62.16/tcp/4401"
+DEFAULT_HOST = os.environ.get("CAPLIN_HOST_MULTIADDR", "")
 DEFAULT_SEED_PEER = "16Uiu2HAmRCP28eEphgbDmrS7ihqAmtBjCwLUhh8aAV2fCc5Mu85x"
 
 

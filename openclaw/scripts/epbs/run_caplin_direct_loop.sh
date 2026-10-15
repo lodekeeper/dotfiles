@@ -7,7 +7,7 @@ DATA_DIR="$RUN_DIR/beacon-data"
 LOG_FILE="$RUN_DIR/beacon.log"
 REST_PORT=10070
 P2P_PORT=9670
-TARGET_MULTIADDR="/ip4/46.224.62.16/tcp/4401/p2p/16Uiu2HAmRCP28eEphgbDmrS7ihqAmtBjCwLUhh8aAV2fCc5Mu85x"
+TARGET_MULTIADDR="${CAPLIN_DIRECT_MULTIADDR:?set CAPLIN_DIRECT_MULTIADDR=/ip4/<host>/tcp/4401/p2p/<peer-id>}"
 CHECKPOINT_URL="https://checkpoint-sync.epbs-devnet-1.ethpandaops.io"
 MISS_LIMIT=${MISS_LIMIT:-6}
 SLEEP_SEC=${SLEEP_SEC:-30}

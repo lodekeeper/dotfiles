@@ -3,7 +3,7 @@ set -euo pipefail
 ROOT=/home/openclaw/.openclaw/workspace
 WORKTREE=/home/openclaw/lodestar-9148-min
 OUT="$ROOT/tmp/caplin-host-resample-loop.jsonl"
-DIRECT=/ip4/46.224.62.16/tcp/4401/p2p/16Uiu2HAmRCP28eEphgbDmrS7ihqAmtBjCwLUhh8aAV2fCc5Mu85x
+DIRECT="${CAPLIN_DIRECT_MULTIADDR:?set CAPLIN_DIRECT_MULTIADDR=/ip4/<host>/tcp/4401/p2p/<peer-id>}"
 # Keep the short-lived resample loop away from the long-lived direct-caplin loop
 # (currently living around REST 10070 / libp2p 9710) so later iterations do not
 # self-poison with EADDRINUSE once the counter reaches that lane.

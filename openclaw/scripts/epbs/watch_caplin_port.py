@@ -7,7 +7,7 @@ import time
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(description="Watch a TCP host:port and exit when it becomes reachable")
-    ap.add_argument("--host", default="46.224.62.16")
+    ap.add_argument("--host", required=True, help="caplin host IP")
     ap.add_argument("--port", type=int, default=4401)
     ap.add_argument("--interval", type=float, default=60.0)
     ap.add_argument("--timeout", type=float, default=5.0)

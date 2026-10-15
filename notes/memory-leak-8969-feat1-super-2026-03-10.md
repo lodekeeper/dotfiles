@@ -1,7 +1,7 @@
 # Memory leak RCA — feat1-super network thread (2026-03-10)
 
 ## Scope
-- Host: `feat1-super` (`devops@65.109.29.221 -p 3022`)
+- Host: `feat1-super` (`devops@<feat1-super-ip> -p 3022`)
 - Target: network worker old-space growth
 - Method: live metrics + network-thread heap snapshots + retainer analysis
 
