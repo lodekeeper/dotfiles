@@ -240,6 +240,7 @@ Skills define how tools work. Keep environment-specific local notes in this sect
 **📝 Platform Formatting:**
 - **Discord/WhatsApp:** No markdown tables! Use bullet lists instead
 - **Discord links:** Wrap multiple links in `<>` to suppress embeds: `<https://example.com>`
+- **Discord mentions:** Tag people as `<@USER_ID>`, never plain `@username` (plain text doesn't ping). Nico 2026-10-15. Get IDs from `message action=read` (`author.id`); known IDs in `[[feedback-discord-mentions-use-snowflake-tags]]`
 - **WhatsApp:** No headers — use **bold** or CAPS for emphasis
 
 ### Local notes (migrated from TOOLS.md)
