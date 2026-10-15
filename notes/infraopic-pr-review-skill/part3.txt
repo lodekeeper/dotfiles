@@ -1,0 +1,16 @@
+- **Destructive effects.** A removed or renamed terraform resource is destroyed unless a `moved` block or `removed { lifecycle { destroy = false } }` says otherwise, so check for those and the plan. Also `state: absent`, `rm`, `wipefs`, datadir or volume path changes, `--force`. Removing a host from inventory does not decommission it.
+- **Pins and upgrades.** Image tags and versions are pinned and match the PR body. No `latest`. For client bumps: removed or renamed CLI flags and config options, EL/CL/validator compatibility, fork support for the target network, and DB migrations that make a downgrade impossible (rollback then means a resync).
+- **Ethereum node specifics.**
+  - The same validator keys can never be active on two hosts or clients. Key moves need slashing-protection export/import and the old instance stopped first.
+  - Restarts roll through nodes, never all beacon/validator nodes at once.
+  - The network flag and checkpoint-sync URL match the target network. The JWT secret path is shared correctly between EL and CL. p2p/API port and firewall changes are consistent.
+  - A datadir change means a resync or orphaned data.
+
+Do NOT flag: style, naming, formatting, lint-covered items (when lint actually runs), "could add a comment", hypothetical future needs, files outside the changed-file list.
+
+### Pass B: adversarial / necessity (anything non-trivial)
+Run on a **different model family** than pass A if one is available. Otherwise use a fresh subagent. Questions:
+- Does the diff do exactly what the PR body says, nothing missing and nothing extra?
+- Is it needed? Does an existing role, var, module or workflow already cover it? Is there a smaller change?
+- Rollback: how is this undone, and is it reversible? If not, is that called out?
+- Should it go to one canary host or group first?

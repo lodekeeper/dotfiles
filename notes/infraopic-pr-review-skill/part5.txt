@@ -1,0 +1,15 @@
+5. Merge duplicates. Two passes flagging the same thing independently is a strong signal, so keep it.
+
+Expect to drop a meaningful share. That is the point of this step.
+
+## 4. Post
+- One review: `gh api repos/<o>/<r>/pulls/<PR>/reviews --method POST --input payload.json` with `commit_id` = head SHA and `"event": "COMMENT"` (never APPROVE or REQUEST_CHANGES; leave `event` out and the review stays PENDING and invisible). Inline comments use `line` as an integer, with `side: RIGHT` for added/context lines and `side: LEFT` for removed ones. Cross-cutting points go in the body.
+- Severity: 🔴 must fix (breaks or destroys something), 🟡 should fix, ❓ question for the author. Put suggestion blocks on concrete fixes.
+- The body lists what couldn't be checked (no CI, no plan comment, inventory not rendered).
+- If nothing survived verify, post a short comment saying what was checked and that nothing was found. Don't invent nits.
+- No process narration (passes, models, subagents).
+
+## Repo-specific facts
+- **lodestar-ansible-production (LAP):** every group is prod. There is no PR CI, so this review is the only gate. Deploys are `workflow_dispatch`: a `--check --diff` dry run, then manual approval, then the run. Order: rescue_bn first, wait for healthy beacon nodes, move validators to rescue, then the Lido beacon nodes. Nothing uses `serial`; rolling comes from `-l <group>` plus job order. So treat any change to the deploy workflow's job order or `-l` targets, and anything in the validator-move path, as 🔴-grade scrutiny.
+- **lodestar-ansible-development (LAD):** TODO
+- **infrastructure-general:** TODO

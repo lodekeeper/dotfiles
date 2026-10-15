@@ -1,0 +1,18 @@
+- Is it a manual hotfix that belongs in code (or the reverse)? Does it leave drift between the repo and live hosts?
+- What happens if it's applied twice, partially, or during an incident?
+Report only answers that should change the PR. "Looks reasonable" is not a finding.
+
+### Pass C: security (only when the diff touches one of these)
+Secrets/vault/1Password refs, `no_log`, firewall/ufw/iptables/security groups, users/SSH keys/sudoers, exposed ports/reverse proxy/TLS, IAM/cloud permissions, CI workflows, container privileges (`privileged`, capabilities, host-path mounts, host network/PID, docker socket), k8s RBAC/service accounts, `curl | bash`, new external downloads.
+- Secrets in plaintext, in logs (`debug`, missing `no_log`), or in world-readable files.
+- New exposure: a port bound to `0.0.0.0`, an opened firewall rule, metrics or admin APIs reachable from outside.
+- Privilege changes: new sudo rules, broader IAM or RBAC, new SSH keys (whose key, and is it expected?), containers gaining host access.
+- CI: `pull_request_target` checking out PR code, `permissions:` broader than needed, secrets reachable from forks, actions not pinned to a SHA, `workflow_dispatch` inputs flowing unquoted into shell.
+- Supply chain: unpinned downloads, missing checksum verification, new third-party repos or images.
+
+## 3. Verify (mandatory, done by the orchestrator, not a review pass)
+For every finding from A/B/C:
+1. The file is in the changed-file list. Otherwise drop it.
+2. Quote the exact line from the head diff (a removed line counts). If you can't quote it, drop the finding.
+3. Read the whole file at head (not just the hunk) and check the claim still holds. It may be handled elsewhere in the diff or in a role default.
+4. If it depends on live host state you can't see, rewrite it as a question, not a must-fix.

@@ -1,0 +1,12 @@
+5. Everything else (which hosts a play reaches, helm/compose output, effective config) gets worked out by reading the code. The review states what couldn't be rendered or confirmed.
+
+Small PRs (an IP, a version bump, one var) get pass A plus verify, and skip B. If the diff hits any pass C trigger, C still runs. One line in a workflow or a firewall rule is enough.
+
+## 2. Review passes
+
+### Pass A: correctness and effect (always)
+Report only things that will break or do something the author did not intend. For each changed file:
+- **Reach.** Which hosts, groups or environments does this hit? Is that what the PR says? Look for `hosts: all`, a wrong or missing `-l` in the deploy workflow, a typo in a host or group name (it matches nothing and fails silently), and prod pulled in through `children:`. A change to `all`/shared group_vars lands on every group whose job runs.
+- **Variable resolution.** Precedence: extra-vars > set_fact/task vars > role `vars/` > play vars > host_vars > group_vars (child > parent > all) > role defaults. Role `vars/main.yml` silently beating an inventory value is a classic. A misspelled var name silently falls back to the default.
+- **Apply behaviour.** Does a second run repeat side effects? `shell`/`command` need `creates`/`removes` or a guard. `changed_when` only fixes reporting and handler triggering, it doesn't make a task idempotent. Also check handler/`notify` restarts, ordering, `ignore_errors` hiding failures and `become` scope.
+- **Dry-run honesty.** `--check --diff` is a real gate before approval, so check what it hides. `shell`/`command` tasks are skipped in check mode, which means their effect never shows in the dry run. A task with `check_mode: false` executes **for real** during the dry run.
