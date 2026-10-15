@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import argparse
 import base64
+import binascii
 from datetime import datetime, timezone
 import json
 import os
@@ -66,15 +67,21 @@ def gh_items(endpoint: str) -> list[dict[str, Any]]:
         raise SystemExit(1)
 
     items: list[dict[str, Any]] = []
-    for line in result.stdout.splitlines():
+    for line_number, line in enumerate(result.stdout.splitlines(), start=1):
         line = line.strip()
         if not line:
             continue
+        error = f"ERROR: invalid discussion record from {endpoint} at output line {line_number}"
         try:
-            decoded = base64.b64decode(line).decode("utf-8")
-            items.append(json.loads(decoded))
-        except Exception:
-            continue
+            decoded = base64.b64decode(line.encode("ascii"), validate=True).decode("utf-8")
+            item = json.loads(decoded)
+        except (binascii.Error, UnicodeError, json.JSONDecodeError):
+            print(error, file=sys.stderr)
+            raise SystemExit(1)
+        if not isinstance(item, dict):
+            print(error, file=sys.stderr)
+            raise SystemExit(1)
+        items.append(item)
     return items
 
 

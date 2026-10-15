@@ -1,0 +1,4000 @@
+# Autonomy Gaps — Daily Audit
+
+> "What would I need to do this autonomously?"
+> Updated: 2026-10-14 (174th pass)
+
+---
+
+## Daily Audit Snapshot — 2026-10-14 (self-improvement-audit-daily, 03:16 UTC)
+
+### PR review
+- **Status:** All five current Gateway prerequisite checks passed. Autonomous review still needs exact-head artifacts, independent verification of findings and authorized provider-session delivery; keep the existing async retry/coalescing handoff checks. No PR reviewed or published by this audit.
+
+### CI fix
+- **Status:** All nine current prerequisite checks passed. Concrete blocker unchanged: lodekeeper lacks upstream write role, so maintainers own Actions reruns. Local/fork fixes remain possible; keep all-author duplicate-fix checks and the inherited-environment Gateway quality gate. No CI patch or rerun attempted.
+
+### Spec implementation
+- **Status:** All eight current prerequisite checks passed, but generatedFixturesVerified=false: source readiness is not generation-time fixture provenance or executed-case coverage. During the next real spec task, capture the existing revision/selection/artifact/coverage evidence and run narrow selected cases. No fixture generation or Lodestar tests today.
+
+### Devnet debugging
+- **Status:** All six current prerequisites passed, and six devnet checks passed again after the routing fix. Reproduced a false DEVNET_NOT_FOUND for active focil-devnet-1: the helper matched network IDs against generic datasource names. Fixed scripts/debug/check-devnet-routing-readiness.py to discover exact active IDs via panda devnets -o json, preserve local/no-target routing, and distinguish unavailable inventory from confirmed absence. All four currently advertised hosted IDs now route successfully; a nonexistent ID exits 3. Remaining limits: Grafana unavailable in this inherited execution environment; monitor recovery still depends on advertised service URLs and valid Dora routes rather than synthesized hosts. Use panda devnets endpoints <id> for authoritative service URLs; the audit did not change monitor scheduling, diagnose incidents or rotate auth.
+
+### Audit workflow
+- **Status:** Implemented the live named-devnet routing fix after independent design approval. Ten narrow regression tests passed; the active-hosted-ID regression fails on the preserved original script (exit 3 instead of 0). Fresh full Gateway preflight passed 28/28 prerequisites with no structured health drift; post-change devnet preflight passed 6/6. Live routing smoke passed four advertised IDs and rejected one nonexistent ID. Generic prerequisite readiness is not network finality, endpoint health or a completed investigation. The devnet-debug skill still documents the old named-target workaround; Workshop cannot stage updates to this non-Workshop skill, so that documentation correction remains a proposed follow-up rather than a published skill change. Evidence: notes/autonomy-preflight-2026-10-14.json, notes/autonomy-devnet-preflight-2026-10-14.json and notes/autonomy-routing-2026-10-14.json. Final independent code/report review approved: reviewer reran all ten regressions and the baseline negative control, checked saved live/preflight evidence and verified historical preservation; reviewer did not repeat live network probes. No config/scheduler/auth changes, restart, install, index rebuild, commit/push or external post.
+
+---
+## Daily Audit Snapshot — 2026-10-13 (self-improvement-audit-daily, 03:16 UTC)
+
+### PR review
+- **Status:** All five current Gateway prerequisite checks passed. Recent #10329/#10366 evidence exposed an in-flight-trigger review blind spot: a fulfilled helper promise can still mean missing data. Added conditional async retry/coalescing evidence guidance to the consumed CODING_CONTEXT.md handoff. Exact-head artifacts, independently verified findings and authorized provider-session delivery remain required. This audit did not review or publish a PR.
+
+### CI fix
+- **Status:** All nine current prerequisite checks passed. lodekeeper still has no upstream write role; Actions reruns need a maintainer. Continue native isolated worktree fixes, existing Gateway quality checks and all-author duplicate-fix checks. Credential/package readiness is not a live model verdict. No CI patch or rerun attempted.
+
+### Spec implementation
+- **Status:** All eight current prerequisite checks passed. Clean source cache aa16bb4c1 (2026-10-08) still reports generatedFixturesVerified=false. Blocker unchanged: generation-time fixture provenance and actual executed-case coverage. Capture the existing CODING_CONTEXT.md fixture evidence during the next real spec task and run narrow selected cases. No generation or Lodestar test run today.
+
+### Devnet debugging
+- **Status:** All six current prerequisite checks passed. Panda discovery is ready for clickhouse-raw, clickhouse-refined, devnets, ethnode and production; Grafana credential remains absent here. Recent monitor evidence recovered aliases focil-devnet-1→heze-devnet-1 and frames-devnet-0→bogota-devnet-0 plus urllib HTTP403s via curl. Continue authoritative advertised endpoints and actual participant inventory rather than inferring failure from HTTP404 or running-client membership from generic version lists; existing monitor retains incident ownership. No telemetry query, auth change or restart by this audit.
+
+### Audit workflow
+- **Status:** Implemented a conditional Async Retry / Coalescing Evidence section in the consumed CODING_CONTEXT.md after independent design approval. It requires inspecting actual helper completion semantics, preserving still-actionable in-flight triggers with bounded eligible retries, deterministic deferred-promise ordering tests, relevant handled-miss/null cases and practical negative controls. Live GitHub comment and local tracker source corroborate the recent missed-review path. This is a documented handoff check, not an automated guard or new Lodestar correctness proof. Current Gateway preflight passed 28/28 prerequisites (12 command reuses); structured health has no drift. Final independent diff/report review approved, with no blockers. Reviewer independently inspected the exact diff and historical preservation, parsed all 28 records and reproduced the read-only health comparison; live prerequisites and Lodestar tests were not rerun by the reviewer. Evidence: notes/autonomy-audit-2026-10-13-review.md and notes/autonomy-preflight-2026-10-13.json. No config/scheduler/auth change, restart, install, index rebuild, commit/push, skill publication or external post.
+
+---
+## Daily Audit Snapshot — 2026-10-12 (self-improvement-audit-daily, 03:16 UTC)
+
+### PR review
+- **Status:** All five Gateway prerequisite checks passed, including memory retrieval, follow-up guards and the lodekeeper actor boundary. No new review-specific blocker. Autonomous review still needs exact-head artifacts, independent factual review and authorized provider-session delivery; no PR review or publication performed by this audit.
+
+### CI fix
+- **Status:** All nine prerequisite checks passed. Concrete limit unchanged: lodekeeper has no upstream write role, so a maintainer owns Actions reruns. Use native isolated worktrees for git/build/tests, Gateway inherited-environment quality checks, and all-author duplicate-fix checks before submission. Credential/package readiness is not a live model verdict; no patch or CI rerun attempted.
+
+### Spec implementation
+- **Status:** All eight prerequisite checks passed. Clean source cache aa16bb4c1 (2026-10-08) reports generatedFixturesVerified=false. Remaining gap: generation-time fixture revision/selection/artifact provenance and actual executed-case coverage. Capture the existing CODING_CONTEXT.md evidence checklist during the next real spec task and run the narrow selected cases. No fixture generation or Lodestar test execution today.
+
+### Devnet debugging
+- **Status:** All six prerequisite checks passed; Panda discovery is ready for clickhouse-raw, clickhouse-refined, devnets, ethnode and production. Grafana credential remains absent in this runtime. Use Panda cross-client logs and authoritative participant inventory; keep sustained-incident dedup and existing monitor ownership. No live telemetry query, duplicate incident investigation, auth change or restart.
+
+### Audit workflow
+- **Status:** Implemented read-only scripts/backlog/check_edit.py and a backlog archival/full-file replacement validation step in AGENTS.md. Yesterday's cleanup archived the standing recovery warning; the 15:46 heartbeat restored it. The gate compares exact guard-bearing lines with multiplicity across before/candidate files, using existing marker constants; lost/rewritten warnings fail regardless of position. It rejects identical/aliased inputs and invalid reads without dumping task text. Nine new regressions, existing backlog parser/CLI regressions and five memory-index tests passed; live snapshot/current warning preservation passed. All 28 Gateway prerequisites passed (12 command reuses), with no structured health drift. Independent design/code/report review approved; reviewer independently reran the narrow tests, live warning comparison and permission-error probe, and parsed the prerequisite evidence. This is an explicit workflow validation step, not an automatically intercepted write, concurrency lock, backlog-semantic validator or verified cleanup-cron cycle. Evidence: notes/autonomy-audit-2026-10-12-review.md and notes/autonomy-preflight-2026-10-12.json. No config/scheduler/auth change, restart, install, index rebuild, commit/push, skill publication or external post.
+
+---
+## Daily Audit Snapshot — 2026-10-11 (self-improvement-audit-daily, 03:16 UTC)
+
+### PR review
+- **Status:** All five prerequisite checks passed in the Gateway runtime, including context retrieval, artifact/follow-up guards and the verified lodekeeper boundary. No new review-specific blocker. Autonomous review still requires exact-head evidence, independent factual review and authorized provider-session delivery; these checks are not a completed or published PR review.
+
+### CI fix
+- **Status:** All nine prerequisite checks passed; lodekeeper still has no upstream write role, so Actions reruns remain maintainer-owned. Use native worktree git/build/tests, the existing Gateway quality-gate route and all-author duplicate-fix checks for real fixes. Credential/package readiness is not a live model verdict. No CI patch or rerun attempted.
+
+### Spec implementation
+- **Status:** All eight prerequisite checks passed. Clean source cache aa16bb4c1 (2026-10-08) reports generatedFixturesVerified=false. Remaining blocker to a compatibility claim: generation-time fixture provenance plus actual executed-case coverage. Use the existing CODING_CONTEXT.md checklist during the next real spec task, pin its source revision and generator selection, capture artifacts and dirty/untracked tested inputs, then run the narrow selected cases. No fixture generation or Lodestar tests performed today.
+
+### Devnet debugging
+- **Status:** All six prerequisite checks passed; Panda discovery is ready for clickhouse-raw, clickhouse-refined, devnets, ethnode and production. Grafana credential remains absent in this runtime; use Panda cross-client logs and authoritative participant inventory rather than auth churn. The existing devnet monitor owns the reported Besu/Ethrex incidents; no duplicate investigation, live telemetry query or incident post from this audit.
+
+### Audit workflow
+- **Status:** Implemented displacement-resilient recovery-banner detection in the existing backlog status helper and memory-index source filter. Yesterday's three prepended devnet entries moved the warning beyond the former 12-line scan; a line-18 fixture reproduced false negatives in both helpers. Both now check the existing exact markers across the full backlog text, conservatively refusing quoted markers too. CLI flags/exit codes and GitHub's separate structural policy are unchanged. Backlog parser/CLI regressions and five memory-index exclusion tests passed; compilation, baseline-relative/new-file whitespace and live refusal/explicit-audit checks passed. Full Gateway recheck passed 28/28 prerequisites (12 command reuses), with no structured health drift. Independent design/code review approved; reviewer independently reran the narrow tests and parsed the prerequisite evidence. Evidence: notes/autonomy-audit-2026-10-11-review.md and notes/autonomy-preflight-2026-10-11.json. No index rebuild, config/scheduler/auth change, restart, install, commit/push or external publication.
+
+---
+## Daily Audit Snapshot — 2026-10-10 (self-improvement-audit-daily, 03:16 UTC)
+
+### PR review
+- **Status:** All five prerequisite checks passed in the current Gateway runtime: context search, follow-up/artifact guards and lodekeeper actor boundary. No new review-tooling blocker; keep exact-head artifacts and independent factual review, and route authorized responses through the provider-owning session. Prerequisites only, not a completed or published review.
+
+### CI fix
+- **Status:** All nine prerequisite checks passed. Existing credential/package discovery is not a live model verdict; lodekeeper still has no upstream write role, so Actions reruns are maintainer-owned. Continue native worktree git/build/tests and the existing Gateway quality-gate route for real fixes; check all-author duplicate fixes before submission. No new CI patch or rerun attempted.
+
+### Spec implementation
+- **Status:** All eight prerequisite checks passed; clean source cache aa16bb4c1 (2026-10-08) explicitly reports generatedFixturesVerified=false. Implemented a generation-time evidence checklist in the consumed CODING_CONTEXT.md handoff: exact source revision/command/selection/log, full YAML+SSZ artifact hashes and installation root, tested HEAD plus dirty diff/harness overrides, and actual executed-case coverage versus exclusions/skipped-suite placeholders. Remaining requirement: capture this evidence during the next real fixture generation/test run; no historical provenance was reconstructed and no automated provenance gate or current compatibility proof is claimed.
+
+### Devnet debugging
+- **Status:** All six prerequisite checks passed; Panda discovery is ready for clickhouse-raw, clickhouse-refined, devnets, ethnode and production. Grafana credential remains absent in this runtime. Use cross-client Panda logs plus authoritative participant inventory, advancing-head versus sustained-stall checks and existing incident dedup. No new incident investigation, live telemetry query, auth change or restart.
+
+### Audit workflow
+- **Status:** Added generation-time fixture-evidence requirements to the existing implementation handoff after independent design review. Reviewer inspection exposed two concrete false-coverage risks: tested dirty trees are not identified by HEAD alone, and skipped-suite placeholders do not count excluded fixture cases. Current Gateway recheck passed 28/28 prerequisites (12 reused commands); structured health has no drift. Documentation whitespace check passed; independent design/diff/report review approved. Reviewer independently parsed the 28 records and reproduced the final scoped whitespace check, without rerunning live prerequisites or spec tests. Evidence: notes/autonomy-audit-2026-10-10-review.md and notes/autonomy-preflight-2026-10-10.json. No fixture generation, Lodestar test run, automated provenance gate, config/auth change, restart, install, commit/push or external publication.
+
+---
+## Daily Audit Snapshot — 2026-10-09 (self-improvement-audit-daily, 03:16 UTC)
+
+### PR review
+- **Status:** All five prerequisite checks passed in the current Gateway runtime, including memory-context lookup, reviewer/follow-up artifact guards and the lodekeeper actor boundary. Prerequisites only: no end-to-end review or publication performed. For autonomous review, keep exact-head artifacts and independent factual review; use the provider-owning session for authorized thread responses.
+
+### CI fix
+- **Status:** All nine prerequisite checks passed in the current Gateway runtime; credential presence/package discovery is not a live model verdict. Concrete blocker unchanged: lodekeeper has no upstream write role, so a maintainer owns Actions reruns. Continue local fixes/fork PR preparation through the existing Gateway quality-gate route; request a maintainer rerun only for a real authorized fix, without changing actors or empty retrigger commits.
+
+### Spec implementation
+- **Status:** All eight prerequisite checks passed. Hardened the existing source-cache gate: only current/legacy pyspec test sources count; check-only refuses tracked/untracked dirtiness (including Git-hidden files); strict freshness refuses unknown tests/ history. Refreshed clean cache to aa16bb4c1 (2026-10-08). Output declares test_sources and generatedFixturesVerified=false. Remaining gap: generated-fixture revision/selection/coverage provenance; capture the pinned generator command and artifact inventory at generation time, then run narrow selected Lodestar cases. Source presence and tests/ Git-history age are not test-case freshness or fixture/test-result proof.
+
+### Devnet debugging
+- **Status:** All six prerequisite checks passed. Panda discovery is ready for clickhouse-raw, clickhouse-refined, devnets, ethnode and production; Grafana credential is absent in this execution environment, so no live Grafana query claimed. Use Panda cross-client logs and authoritative participant inventory for diagnosis, with sustained-stall/advancing-head distinction and existing incident dedup. No new incident investigation, auth change or restart from this audit.
+
+### Audit workflow
+- **Status:** Implemented source-cache false-green prevention in the existing helpers and corrected direct JSON/prose plus runner labels; retained historical command/options/keys and advisory statuses. Independent review caught and corrected hidden-untracked behavior. 13 focused regressions, Bash syntax and whitespace checks passed; independent design/code/report review approved. Final live four-domain Gateway recheck passed 28/28 (12 reused commands). Structured drift is limited to specImplementation/testVectorReadiness after the source-evidence correction and cache refresh, not a fixture-provenance repair. Review/evidence: notes/autonomy-audit-2026-10-09-review.md and notes/autonomy-preflight-2026-10-09-final.json. No dependency, Gateway/scheduler/auth configuration, restart, workspace commit/push or external publication.
+
+---
+## Daily Audit Snapshot — 2026-10-08 (self-improvement-audit-daily, 03:16 UTC)
+
+### PR review
+- **Status:** all five review prerequisite checks passed, including context search, follow-up/artifact guards and the verified `lodekeeper` actor boundary. No new review-tooling blocker. These are prerequisite/self-checks, not an end-to-end review or permission to publish one.
+- **Autonomy requirement / next action:** retain exact-head reviewer artifacts and obtain independent review before posting; use the provider-owning session for any authorized thread response. No additional review task was manufactured by this audit.
+
+### CI fix
+- **Status:** all nine prerequisite checks passed through Gateway execution, including the existing CI credential presence/package-discovery check. No live model request in this audit. Removed the audit's fabricated-key fallback rather than treating a native-shell environment difference as a credential outage.
+- **Concrete blocker / proposed fix:** live `lodekeeper` role is read-only upstream, so Actions reruns still require a maintainer; local fixes and fork PR preparation remain possible. Use the existing Gateway inherited-environment route for quality preflight and final verdict, keep normal git/tests in native worktrees, and request a maintainer rerun only when a real authorized fix needs one. Do not switch actors, copy keys, bypass the gate, or push an empty retrigger commit.
+
+### Spec implementation
+- **Status:** all eight implementation prerequisite checks passed. The dedicated source cache was refreshed to `e42b24931` (2026-10-07). The readiness helper's sample is `tests/core/pyspec/eth_consensus_specs/test/helpers/specs.py`: this proves current pyspec sources, not generated `.ssz_snappy` cases or exact-PR fixture coverage. Corrected the rendered status label to preserve that distinction.
+- **Concrete gap / proposed fix:** generated-fixture provenance/coverage is not established by the present cache gate. Before implementing a spec change, pin the exact upstream revision, inspect existing Lodestar patterns, and verify a generated-fixture manifest plus the narrow case-selection/results. Yesterday's Heze work demonstrated manual pinned generation when upstream nightly packaging failed; do not assume today's packaging failed or that the cache alone proves broad compatibility. A future fixture-provenance gate should validate revision, generator selection and actual generated artifacts rather than just source-tree freshness.
+
+### Devnet debugging
+- **Status:** all six debugging prerequisite checks passed; Panda discovery is ready for `clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`. `GRAFANA_TOKEN` is absent in this execution environment, so this audit does not claim a live Grafana/telemetry query. Discovery readiness is not a completed network diagnosis.
+- **Autonomy requirement / next action:** use Panda cross-client logs and authoritative participant inventory for incident attribution; distinguish advancing/short alternate heads from sustained stalls. The existing devnet monitor owns the MSF Erigon incident and posted it earlier today; no duplicate investigation or notification from this audit. No reauth, restart or configuration change.
+
+### Audit workflow
+- **Status:** Implemented removal of dummy-key injection in `scripts/notes/check-autonomy-domain-preflights.py`. Existing credential presence is now always required, even for legacy non-strict callers; `--strict-ci-api-key` remains a compatibility alias and JSON always records strict semantics. Both shell entrypoints default to that policy and document Gateway inherited-environment execution. Renderer failures separate absent packages from runtime-local key absence; success explicitly means prerequisites only, not credential validity or a model verdict. Also clarified test-source cache versus generated-fixture coverage.
+- **Verification:** 6 new CI-prerequisite regressions passed, plus 6 memory-context and 10 CI-rerun regressions (22 total). Shell syntax and whitespace checks passed. Independent design and final implementation review approved. Full live four-domain Gateway preflight completed 28/28 checks successfully (12 cached command reuses), with existing read-only-rerun/Grafana limitations preserved. Structured health changed from yesterday's native missing-key result to today's Gateway prerequisite success; that is an execution-route correction, not evidence of a new credential repair. No API model request, commit/push, skill publication, credential copying, gateway/scheduler configuration change or restart.
+
+---
+## Daily Audit Snapshot — 2026-10-07 (self-improvement-audit-daily, 03:16 UTC)
+
+### PR review
+- **Status:** follow-up guard, reviewer artifact helpers, memory-context search, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** RESOLVED in Nico-requested 2026-10-07 follow-up. The audit’s strict native-shell check correctly found no `OPENAI_API_KEY` in that shell, but this was not a Gateway credential outage. The same `check_fix_quality.py --check-only` passes through OpenClaw `gateway_exec` with inherited environment, and a real quality-gate request on the merged #10237 diff returned root-cause/high/should_flag=false. The enabled CI cron reads the repaired `scripts/ci/CRON_PROMPT.md`, which now requires Gateway execution for both credential-dependent calls and native execution for git/build/tests. No secret copying, dummy key, bypass, auth/configuration change or restart. A full scheduled cron cycle was not part of this verification. Native `--strict-ci-api-key` alone is not an end-to-end Gateway credential check. Upstream CI reruns still require a maintainer.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, memory-context search, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, spec-section extractor, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, incident-bundle helper preflight, memory-context search, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** Implemented an evidence-led duplicate-fix check in the existing `scripts/ci/CRON_PROMPT.md`, which the enabled CI auto-fix job reads directly. The detector's open-PR guard only checks `lodekeeper` PRs by failing test basename; it missed another author's shared-helper fix. The runbook now checks all authors and affected test/helper/source paths, searches state-all root-cause metadata, inspects candidate diffs/live state, and repeats the check before submission. Path overlap alone is not treated as a duplicate. Confirmed open duplicates/historical failures fixed upstream skip patch/PR creation; failures containing a landed fix remain actionable. Existing-PR references on `fixable: false` findings are explicitly re-verified. Replaced generic timeout/error-swallow recipes with full-log root-cause diagnosis; aligned isolated worktrees, explicit staging, canonical signed identity, reviewer approval and routine topic #347 routing with existing workspace policy.
+- **Evidence:** [#10291](https://github.com/ChainSafe/lodestar/pull/10291) is CLOSED; [#10237](https://github.com/ChainSafe/lodestar/pull/10237), by `krisoshea-eth`, is MERGED and fixes the same `waitForHead` helper. Live upstream `unstable` source contains the current-event-slot fix; the failed head `01cc10ce70bc` contains the old first-event-slot comparison. The local `origin/unstable` ref was stale, so the merged-candidate procedure explicitly refreshes it before comparison. No tracker repair or duplicate PR work was performed in this audit.
+- **Verification:** 28 domain checks completed: 27 passed; the known missing-key quality-gate check failed as expected in strict mode. Tested the new read-only PR commands against 72 open PRs (below the 1000-result limit); root-cause search returned both the closed duplicate and the other author's merged fix. Independent review caught a separate per-PR file cap ([CLI query source](https://github.com/cli/cli/blob/trunk/api/query_builder.go)): live #9550 returned 100 of 141 paths. Added `changedFiles` coverage comparison and a paginated-files fallback; the live fallback retrieved all 141 paths and the exact-path check returned no match (expected exit 1). Candidate diff, failed head and live upstream source were inspected. `git diff --check` passed. Independent design and corrected final runbook/report reviews approved. Snapshot consistency, current-date cadence and duplicate-date guards passed.
+- **Remaining limits / proposed fixes:** CI quality-gate credential routing was repaired and live-tested in the follow-up above; upstream CI reruns still require a maintainer. Grafana is still unavailable in this runtime, but Panda discovery is ready across `clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`; use that route for cross-client data instead of auth churn. PR-review/spec helper preflights found no new blockers; they establish tooling prerequisites, not an end-to-end review, implementation, live telemetry query or model-call result. No gateway/cron configuration, auth, dependency, commit, push, or external publication changes.
+- **Health drift:** The structured CI quality-gate result changed because this audit deliberately enabled strict real-key checks. It does not establish that a previously working credential stopped working; yesterday's check was explicitly dummy-key/import-only.
+
+---
+## Daily Audit Snapshot — 2026-10-06 (self-improvement-audit-daily, 03:21 UTC)
+
+### PR review
+- **Status:** follow-up guard, reviewer artifact helpers, memory-context search, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, memory-context search, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; upstream CI-rerun permission diagnostic completed separately from local fix/PR tooling readiness. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only; lodekeeper has no upstream write role on ChainSafe/lodestar; a maintainer must rerun CI jobs. Local fixes and fork PRs remain possible; do not retry upstream reruns as this actor.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, memory-context search, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, spec-section extractor, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, incident-bundle helper preflight, memory-context search, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** Implemented a read-only upstream CI-rerun capability diagnostic after confirming yesterday's 403 rerun failures against live `lodekeeper` repository permissions (pull=true; push/maintain/admin=false). Added `scripts/github/check-ci-rerun-capability.py`, registered `ciFix/githubCiRerunCapability`, required it in rendered CI statuses, and retained boolean permission/capability evidence in structured health signatures. Valid read-only access is explicitly degraded, not a failure of local fix/PR tooling; write roles remain unverified because they do not prove token-level Actions write permission. Wrong actors, failed/malformed API responses, missing permission evidence, and relative path components fail closed. All requests are GET-only. Verification: 16 focused regression tests passed; all 28 live domain checks passed; independent design/final code review approved. No commit, push, external publication, auth change, or gateway/config change.
+- **Recovered:** QMD and SQLite keyword context search both pass in this scheduled runtime; all four memory-context checks now select QMD with status ready. This confirms the previous repair, rather than claiming a new repair today. Structured drift includes the new CI diagnostic and memory-backend recovery.
+- **Concrete blocker / proposed fix:** Upstream CI reruns as `lodekeeper` require a maintainer. Keep local fixes/fork PR preparation separate from rerun ownership; request a maintainer rerun when an authorized CI task actually needs it, rather than switching accounts, repeating 403 requests, or pushing empty retrigger commits. Do not request broader credentials during this unattended audit. Repository role alone is not sufficient proof of rerun authorization ([GitHub Actions permission requirements](https://docs.github.com/en/rest/actions/workflow-runs#re-run-a-workflow)).
+- **Remaining verification limits:** `OPENAI_API_KEY` was absent, so the CI quality gate was checked only with a dummy import-preflight value, not a live model call. `GRAFANA_TOKEN` was absent; Grafana telemetry remains unverified while the existing Panda datasource route is healthy. These are unchanged limits, not new blockers or proof that every end-to-end workflow is autonomous.
+
+---
+## Daily Audit Snapshot — 2026-10-05 (self-improvement-audit-daily, 03:23 UTC)
+
+### PR review
+- **Status:** follow-up guard, reviewer artifact helpers, memory-context search, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle. Warning: QMD is unavailable; memory-context search is degraded. Use `python3 scripts/memory/query_index.py "<query>" --limit 5` until QMD is repaired..
+
+### CI fix
+- **Status:** detector entrypoint, memory-context search, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: QMD is unavailable; memory-context search is degraded. Use `python3 scripts/memory/query_index.py "<query>" --limit 5` until QMD is repaired.; `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, memory-context search, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, spec-section extractor, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle. Warning: QMD is unavailable; memory-context search is degraded. Use `python3 scripts/memory/query_index.py "<query>" --limit 5` until QMD is repaired..
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, incident-bundle helper preflight, memory-context search, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`). Warning: QMD is unavailable; memory-context search is degraded. Use `python3 scripts/memory/query_index.py "<query>" --limit 5` until QMD is repaired..
+
+### Audit workflow
+- **Status:** QMD runtime failure and fallback-readiness mismatch found and mitigated this cycle: QMD searches abort with SIGABRT (-6) at a native RemoveEnvironmentCleanupHook assertion, while the SQLite FTS fallback retrieves real results. Implemented fallback-aware memory-context readiness (ready with both backends, explicitly degraded with either usable backend, blocked only with neither), preserved signal/timeout diagnostics, propagated warnings through cached checks and every domain status, and kept backend transitions in structured health signatures without address-bearing crash stderr. Verified: 6 regression tests passed, Python compilation passed, all 27 live domain checks passed, and sub-agent design/code review approved. All four memory checks explicitly select SQLite in degraded mode. Remaining gap/proposed fix: diagnose and repair QMD native cleanup/runtime compatibility; use scripts/memory/query_index.py for keyword context lookup until both backends pass. No runtime/package/config changes or external publication performed.
+
+---
+## Daily Audit Snapshot — 2026-10-04 (self-improvement-audit-daily, 03:44 UTC)
+
+### PR review
+- **Status:** follow-up guard, reviewer artifact helpers, memory-context search, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, memory-context search, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, memory-context search, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, spec-section extractor, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, incident-bundle helper preflight, memory-context search, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** Durable-memory context-readiness coverage gap found and fixed this cycle: the daily PR review, CI fix, spec implementation, and devnet debugging preflights proved domain tooling but did not prove that QMD/local memory search could retrieve past decisions before autonomous work. Fix applied this cycle: added `scripts/memory/check_context_search_readiness.py --json`, wired it into all four domain preflights as `memoryContextSearch`, and updated rendered domain statuses plus structured health-drift signatures to require/name the check. Structured health drift recorded the four new checks. Verified with Python compilation, direct helper JSON, PR-review domain preflight JSON, and the full daily autonomy audit.
+
+---
+## Daily Audit Snapshot — 2026-10-03 (self-improvement-audit-daily, 03:28 UTC)
+
+### PR review
+- **Status:** follow-up guard, reviewer artifact helpers, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, spec-section extractor, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, incident-bundle helper preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** Spec-implementation spec-context extraction coverage gap found and fixed this cycle: the daily domain preflight proved the pre-PR compliance gate and fresh test-vector cache, but did not prove `scripts/spec/extract-spec-section.sh`, the helper that pulls relevant consensus-specs text before implementation. Fix applied this cycle: `extract-spec-section.sh` now has a side-effect-free `--check-only --json` readiness mode; `scripts/notes/check-autonomy-domain-preflights.py` runs it as `specImplementation/specSectionExtractor`; and `scripts/notes/render-autonomy-domain-statuses.py` now requires and names that check. Structured health drift recorded the new `specImplementation/specSectionExtractor` check. Verified with `bash -n`, Python helper compilation, direct extractor check-only JSON, spec-only domain preflight JSON, and the full daily autonomy audit.
+
+---
+## Daily Audit Snapshot — 2026-10-02 (self-improvement-audit-daily, 03:27 UTC)
+
+### PR review
+- **Status:** follow-up guard, reviewer artifact helpers, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, incident-bundle helper preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** Devnet-debugging handoff-artifact coverage gap found and fixed this cycle: the daily domain preflight proved triage/routing readiness but did not prove `scripts/debug/build-incident-bundle.sh`, the helper that turns a devnet investigation into a shareable incident artifact. Fix applied this cycle: `scripts/notes/check-autonomy-domain-preflights.py` now runs `build-incident-bundle.sh --node autonomy-preflight --check-only` as `devnetDebugging/incidentBundle` (propagating `--require-grafana` when strict telemetry is requested), and `scripts/notes/render-autonomy-domain-statuses.py` now requires and names that check. Structured health drift recorded the new `devnetDebugging/incidentBundle` check. Verified with Python compilation, direct incident-bundle check-only, devnet-only domain preflight JSON, and the full daily autonomy audit.
+
+---
+## Daily Audit Snapshot — 2026-10-01 (self-improvement-audit-daily, 03:26 UTC)
+
+### PR review
+- **Status:** follow-up guard, reviewer artifact helpers, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** PR-review artifact-readiness coverage gap found and fixed this cycle: the PR review autonomy preflight verified discussion/finding/metadata helpers and review-scope capture, but did not prove the reviewer artifact checker/writer that preserve sub-agent outputs before a final review is posted. Fix applied this cycle: `scripts/review/run-followup-guards.sh --check-only --json` now verifies `check-review-artifacts.sh` and `write-review-artifact.sh` are executable, syntactically valid, and have working help paths; rendered PR-review status now names reviewer artifact helpers. Proposed recurrence fix: keep artifact-helper readiness inside the PR-review follow-up guard so future review-workflow changes drift the structured health signature instead of silently weakening autonomous review readiness.
+
+---
+## Daily Audit Snapshot — 2026-09-30 (self-improvement-audit-daily, 03:24 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** structured health-state consumption gap found and fixed this cycle: `run-autonomy-audit-preflight.sh` wrote `state/autonomy-domain-preflight-health.json` before proving the daily snapshot insert had succeeded, so a failed insert could mark a preflight signature drift as consumed without persisting the audit-workflow status in `notes/autonomy-gaps.md`. Fix applied this cycle: health drift detection now runs read-only first, records the audit status, and defers the state update until after the snapshot scaffold is inserted; `AUTONOMY_DOMAIN_HEALTH_STATE_FILE` can override the state path for fixture tests. Verified with `bash -n`, Python helper compilation, consistency guard, read-only temp-target failure fixture that left the temp health state absent, success fixture that wrote the deferred temp health state, fresh spec-vector refresh, and live 2026-09-30 domain preflight.
+
+---
+## Daily Audit Snapshot — 2026-09-29 (self-improvement-audit-daily, 03:24 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** close-out memory-integrity gap found and fixed this cycle: `close-autonomy-audit.sh --update-memory-outcome` wrote "completed" into `memory/<date>.md` before proving finalization, cadence, and live-priority guards had passed, so a failed close-out could leave a false completed outcome in the daily note. Fix applied this cycle: the memory outcome update is now deferred until the successful response path, while `--update-memory-outcome` still satisfies the placeholder guard during the run. Verified with `bash -n`, Python helper compilation, a live no-op close-out rerun, a temp failure fixture that preserved the placeholder, and a temp success fixture that wrote the outcome before `NO_REPLY`.
+
+---
+## Daily Audit Snapshot — 2026-09-28 (self-improvement-audit-daily, 03:22 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** close-out helper readiness gap found and fixed this cycle: the daily preflight inserted the snapshot before proving `check-next-audit-priorities.py`, so syntax or JSON-output drift there could leave the audit half-open and fail only during the final `NO_REPLY` guard. Fix applied this cycle: `run-autonomy-audit-preflight.sh` now compiles `check-next-audit-priorities.py` and validates its JSON shape before memory/scaffold insertion. Verified with `bash -n`, `py_compile`, direct helper JSON, and a duplicate-date preflight rerun.
+
+---
+## Daily Audit Snapshot — 2026-09-27 (self-improvement-audit-daily, 03:21 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** PR-review readiness coverage gap found and fixed this cycle: `run-followup-guards.sh --check-only` verified finding trackers, discussion fetch, metadata drift, GitHub access, and report-dir readiness, but not the mandatory `check-review-scope.sh` guard that captures the changed-file list before reviewer spawns. Fix applied this cycle: `run-followup-guards.sh` now verifies `check-review-scope.sh` is executable, syntactically valid, and has a working help path; `check-autonomy-preflight-health-drift.py` now includes helper readiness booleans (`present`, `executable`, `helpOk`, `syntaxOk`, `checkOnlyJsonOk`, `ready`, etc.) in its structured signature so these preflight additions/drifts are no longer flattened away. Verified with `bash -n`, `run-followup-guards.sh --check-only --json`, PR-review domain preflight, `py_compile`, and refreshed `state/autonomy-domain-preflight-health.json`.
+
+---
+## Daily Audit Snapshot — 2026-09-26 (self-improvement-audit-daily, 03:20 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+---
+## Daily Audit Snapshot — 2026-09-25 (self-improvement-audit-daily, 03:19 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** structured domain-preflight health baseline initialized (21 check(s)) in `/home/openclaw/.openclaw/workspace/state/autonomy-domain-preflight-health.json`. Proposed fix: future audits now compare structured preflight health before treating unchanged prose statuses as `NO_REPLY`.
+
+---
+## Daily Audit Snapshot — 2026-09-24 (self-improvement-audit-daily, 03:17 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+---
+## Daily Audit Snapshot — 2026-09-23 (self-improvement-audit-daily, 03:23 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+---
+## Daily Audit Snapshot — 2026-09-22 (self-improvement-audit-daily, 03:17 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+---
+## Daily Audit Snapshot — 2026-09-21 (self-improvement-audit-daily, 03:17 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+---
+## Daily Audit Snapshot — 2026-09-20 (self-improvement-audit-daily, 03:17 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** cadence guard reported missing-day gap(s) during preflight: - 2026-09-17 → 2026-09-20 (latest snapshot freshness): missing 2 day(s) [2026-09-18, 2026-09-19]. Run-history evidence: `self-improvement-audit-daily` had 5 consecutive failure(s) from 2026-09-18 03:19:38 UTC to 2026-09-19 03:17:55 UTC; latest reason: `FailoverError: You've reached your Codex subscription usage limit. Next reset in 6 hours, Sep 19 at 8:18 AM UTC. Wait until the reset time, use another Codex account if available, or switch to another configured model/provider.`. Fix applied this cycle: `scripts/notes/render-autonomy-cadence-status.py` now classifies Codex usage-limit/rate-limit cadence failures separately and routes them to the parked different-provider fallback sign-off path instead of generic setup-timeout wording. Proposed fix: keep the cadence watchdog active and use the already-parked cron-config sign-off path for a different-provider fallback; do not edit cron/provider config from this unattended audit.
+
+---
+## Daily Audit Snapshot — 2026-09-17 (self-improvement-audit-daily, 03:20 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+---
+## Daily Audit Snapshot — 2026-09-16 (self-improvement-audit-daily, 03:18 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+---
+## Daily Audit Snapshot — 2026-09-15 (self-improvement-audit-daily, 03:17 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+---
+## Daily Audit Snapshot — 2026-09-14 (self-improvement-audit-daily, 03:17 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+---
+## Daily Audit Snapshot — 2026-09-13 (self-improvement-audit-daily, 03:16 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+---
+## Daily Audit Snapshot — 2026-09-12 (self-improvement-audit-daily, 03:16 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** cadence guard reported missing-day gap(s) during preflight: - 2026-09-10 → 2026-09-12: missing 1 day(s) [2026-09-11]. Run-history root cause: `self-improvement-audit-daily` had 4 consecutive isolated setup-timeout failure(s) from 2026-09-11 03:22:41 UTC to 2026-09-11 03:33:23 UTC; each failed before the runner started (`cron: isolated agent setup timed out before runner start`). Fix applied this cycle: added `scripts/notes/render-autonomy-cadence-status.py` and wired `scripts/notes/run-autonomy-audit-preflight.sh` to render cron run-history evidence into future cadence-gap snapshot statuses instead of generic "inspect recent cron runs" text. Proposed follow-up: keep the cadence watchdog active until a current daily snapshot lands; if setup-timeout failures recur, fix isolated runner startup reliability or add a fallback/alert path through the existing cron-config sign-off workflow.
+
+---
+## Daily Audit Snapshot — 2026-09-10 (self-improvement-audit-daily, 03:20 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+---
+## Daily Audit Snapshot — 2026-09-09 (self-improvement-audit-daily, 03:20 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+---
+## Daily Audit Snapshot — 2026-09-08 (self-improvement-audit-daily, 03:17 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** QMD partial-embedding detection gap found and fixed this cycle: yesterday's root cause showed `qmd embed` can leave a hash partially embedded and then skip it forever because `seq=0` exists, leaving semantic memory search blind to document tails. Fix applied: added side-effect-free `scripts/memory/check_qmd_embedding_completeness.py`, wired `scripts/memory/nightly_memory_cycle.sh` to log `QMD_EMBEDDING_INCOMPLETE` after `qmd embed`, and extended `scripts/cron/check_cron_health.py` to surface a virtual `nightly-memory-qmd-index-health` failure from the checker. Live check now detects the current `workspace-core/state.md` partial coverage (`63` chunks, tail `53596` chars) and the watchdog reports it under scratch state. Verified with `python3 -m py_compile`, `bash -n`, the checker self-test, live checker output, and `CRON_HEALTH_STATE_PATH=/dev/null python3 scripts/cron/check_cron_health.py`. Remaining data repair is deliberately not performed here; proposed fix is a verified qmd repair path or forced rebuild before relying on vector/semantic memory search for the affected tail.
+
+---
+## Daily Audit Snapshot — 2026-09-07 (self-improvement-audit-daily, 03:17 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+---
+## Daily Audit Snapshot — 2026-09-06 (self-improvement-audit-daily, 03:16 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+---
+## Daily Audit Snapshot — 2026-09-05 (self-improvement-audit-daily, 03:16 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** response-renderer noise gap found and fixed this cycle: today's run correctly detected that the 2026-09-04 panda/OIDC devnet-routing blocker resolved, but the cron summary also reported the routine removal of yesterday's optional `Audit workflow` section as `section heading changes: -Audit workflow`. Fix applied this cycle: `scripts/notes/render-autonomy-audit-response.py` now suppresses removed non-required headings in the concise response while still reporting added optional sections, changed optional sections, and missing required sections. Verified with `python3 -m py_compile` and a targeted renderer self-check.
+
+---
+## Daily Audit Snapshot — 2026-09-04 (self-improvement-audit-daily, 03:19 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** BLOCKER: domain preflight check(s) failed or were missing: devnetRoutingReadiness. Details: devnetRoutingReadiness: panda returned datasources=null; server token refresh cannot reach OIDC discovery (503 from auth metadata endpoint) - wait for the auth proxy to recover, then retry datasource discovery; credential file permissions are not the blocker. Proposed fix: wait for the panda/authentik proxy discovery endpoint to recover, then rerun `panda datasources --json`; avoid reauth churn while the refresh token is present and credential permissions are healthy.
+
+### Audit workflow
+- **Status:** cadence miss and devnet-auth diagnostics gap found this cycle. `self-improvement-audit-daily` missed the 2026-09-03 snapshot because its 2026-09-03T03:18:03Z run was interrupted by a gateway restart after 14s, before the snapshot was inserted; the next scheduled run recovered and inserted today's snapshot. Separately, the devnet routing preflight detected panda `datasources=null` but still rendered the current OIDC discovery outage as a generic auth/server-access blocker. Fix applied this cycle: `scripts/debug/check-devnet-routing-readiness.py` now detects 503s from the auth metadata discovery endpoint in panda-server logs, and `scripts/notes/render-autonomy-domain-statuses.py` turns that into a concrete wait/retry proposed fix instead of reauth churn. Verified with `python3 -m py_compile`, a live devnet routing preflight showing `oidcDiscoveryUnavailable: true`, and a targeted renderer run showing the specific proposed fix.
+
+---
+## Daily Audit Snapshot — 2026-09-02 (self-improvement-audit-daily, 03:18 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** PR-review notification follow-up gap fixed this cycle: `github_notifications_sweep.py` can now extract handled checklist IDs from current BACKLOG conventions without treating mixed still-open sections as fully handled. Fix applied: added terminal-section vs line-level handled-marker parsing, tightened terminal heading detection to real spaced dash markers, avoided loose reply shorthand for single-line handled markers, and added `scripts/github/test_github_notifications_sweep.py`. Verified the new extractor returns the four previously stuck checklist IDs while excluding the still-open #9835 reply shorthand IDs.
+
+---
+## Daily Audit Snapshot — 2026-09-01 (self-improvement-audit-daily, 03:18 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+---
+## Daily Audit Snapshot — 2026-08-31 (self-improvement-audit-daily, 03:18 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+---
+## Daily Audit Snapshot — 2026-08-30 (self-improvement-audit-daily, 03:18 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+---
+## Daily Audit Snapshot — 2026-08-29 (self-improvement-audit-daily, 03:17 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+---
+## Daily Audit Snapshot — 2026-08-28 (self-improvement-audit-daily, 03:17 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+---
+## Daily Audit Snapshot — 2026-08-27 (self-improvement-audit-daily, 03:17 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** duplicate preflight work gap found and fixed this cycle: the daily domain preflight runner executed identical side-effect-free guard commands separately for PR review, CI fix, spec implementation, and devnet debugging, increasing latency and transient-failure surface without adding coverage. Fix applied: `scripts/notes/check-autonomy-domain-preflights.py` now caches repeated command results within a run while preserving per-domain logical check records, and `scripts/notes/summarize-autonomy-domain-preflights.py` reports cache reuse in the compact summary. Verified with `python3 -m py_compile` and a live domain preflight showing 21 logical checks, 12 unique commands, and 9 reused results.
+
+---
+## Daily Audit Snapshot — 2026-08-26 (self-improvement-audit-daily, 03:16 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** preflight cadence carryover gap found and fixed this cycle: the pre-insertion cadence guard was checking the latest existing snapshot pair, so after the already-documented 2026-08-24 miss it re-reported `2026-08-23 → 2026-08-25` on 2026-08-26 even though current freshness was healthy. Proposed fix was to separate pre-insertion freshness checks from post-insertion latest-pair cadence checks. Fix applied: added `--freshness-only` to `scripts/notes/check-autonomy-audit-cadence.py` and wired `scripts/notes/run-autonomy-audit-preflight.sh` to use it before inserting a new snapshot; close-out still keeps the post-insertion latest-pair/current freshness guard. Verified with syntax/compile checks and a temp-file simulation of the pre-2026-08-26 snapshot state.
+
+---
+## Daily Audit Snapshot — 2026-08-25 (self-improvement-audit-daily, 03:16 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** cadence gap root cause found and watchdog instrumentation improved this cycle: `self-improvement-audit-daily` missed the 2026-08-24 snapshot because four consecutive run attempts from 03:21:23 to 03:38:45 UTC failed before the agent runner started (`cron: isolated agent setup timed out before runner start`), so this was cron setup failure rather than audit/preflight logic. Fix applied: `scripts/cron/check_cron_health.py` now augments the virtual `autonomy-audit-cadence` alert with recent self-improvement run-history evidence, so future stale-snapshot alerts name the failed run window and setup-timeout reason instead of only reporting a missing date. Verified with `python3 -m py_compile`, a pure run-history formatter self-check, and `CRON_HEALTH_STATE_PATH=/dev/null python3 scripts/cron/check_cron_health.py` showing the augmented cadence alert. Config-side fallback/delivery changes remain gated on Nico sign-off.
+
+---
+## Daily Audit Snapshot — 2026-08-23 (self-improvement-audit-daily, 03:21 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+---
+## Daily Audit Snapshot — 2026-08-22 (self-improvement-audit-daily, 03:21 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** memory entity mention-noise gap found and fixed this cycle: yesterday's QMD crash fix left a broader generated-entity noise class (`@protonmail`, npm scopes, version tags, numeric ids, and prose `@mention` examples) that would keep polluting `bank/entities/people/` and QMD memory-bank indexing even though it no longer crashed. Fix applied: `scripts/memory/generate_entity_pages.py` now extracts person mentions with email/package/version/prose noise filters and supports `--prune-stale-person-noise`; `scripts/memory/nightly_memory_cycle.sh` now runs that targeted prune during normal entity regeneration. Verified with `python3 -m py_compile`, `bash -n`, and an isolated mention-filter self-check. Original cron-config ask remains unchanged and still gated on Nico sign-off.
+
+---
+## Daily Audit Snapshot — 2026-08-21 (self-improvement-audit-daily, 03:22 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+---
+## Daily Audit Snapshot — 2026-08-20 (self-improvement-audit-daily, 03:21 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+---
+## Daily Audit Snapshot — 2026-08-19 (self-improvement-audit-daily, 03:21 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+---
+## Daily Audit Snapshot — 2026-08-18 (self-improvement-audit-daily, 03:22 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+---
+## Daily Audit Snapshot — 2026-08-17 (self-improvement-audit-daily, 03:21 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** next-priority helper detail-noise gap found and fixed this cycle: `scripts/notes/check-next-audit-priorities.py --json` previously returned every indented historical re-check under the single live cron-config item as a separate actionable `items` entry, making reminder/guard consumers noisy. Fix applied this cycle: the helper now reports only top-level actionable lines in `items` and moves indented continuation text into `detailLines`, preserving `hasLiveItems` while keeping reminder output compact. Verified with `python3 -m py_compile scripts/notes/check-next-audit-priorities.py` and `python3 scripts/notes/check-next-audit-priorities.py --file notes/autonomy-gaps.md --json`.
+
+---
+## Daily Audit Snapshot — 2026-08-16 (self-improvement-audit-daily, 03:21 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** live-priority helper noise gap found and fixed this cycle: `scripts/notes/check-next-audit-priorities.py --json` correctly detected the existing live cron-config item, but also reported the static "To avoid stale reminder churn..." preamble as a live item whenever the guidance followed a real item. Fix applied this cycle: the helper now treats that preamble as empty-state guidance, so reminder/guard output stays focused on actionable priority lines while still returning `hasLiveItems: true` for the actual pending config item. Verified with `python3 -m py_compile scripts/notes/check-next-audit-priorities.py` and `python3 scripts/notes/check-next-audit-priorities.py --file notes/autonomy-gaps.md --json`.
+
+---
+## Daily Audit Snapshot — 2026-08-15 (self-improvement-audit-daily, 03:22 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+---
+## Daily Audit Snapshot — 2026-08-14 (self-improvement-audit-daily, 03:19 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+---
+## Daily Audit Snapshot — 2026-08-13 (self-improvement-audit-daily, 03:19 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+---
+## Daily Audit Snapshot — 2026-08-12 (self-improvement-audit-daily, 03:20 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+---
+## Daily Audit Snapshot — 2026-08-11 (self-improvement-audit-daily, 03:16 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** response-only close-out noise gap found and fixed this cycle: the daily wrapper could exit nonzero after a green/no-delta audit solely because `Next Audit Priorities` still contained an unchanged live item that is waiting on Nico's cron-config sign-off. That contradicts this cron's own "no meaningful change => NO_REPLY" rule and risks stale reminder churn. Fix applied this cycle: `scripts/notes/run-daily-autonomy-audit.sh --response-only` now automatically passes the existing `--allow-live-priorities-no-reply` close-out guard override, while non-response-only/manual runs remain strict and a new `--strict-live-priorities` flag preserves the old failure mode for debugging. Verified with `bash -n scripts/notes/run-daily-autonomy-audit.sh` and a duplicate-snapshot response-only rerun that now returns `NO_REPLY` cleanly.
+
+---
+## Daily Audit Snapshot — 2026-08-10 (self-improvement-audit-daily, 03:16 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** cron-watchdog diagnosis gap found and fixed this cycle: the live `nightly-memory-consolidation` item can show as a plain timeout even when the local memory pipeline completed successfully after the cron harness timed out. Fix applied this cycle: `scripts/cron/check_cron_health.py` now annotates failing `nightly-memory-consolidation` timeout alerts with local `memory-cycle-YYYY-MM-DD.log` completion evidence, fresh core artifact mtimes, CPU-fallback detection, observed QMD embedding duration, and the remaining proposed config fix (`timeoutSeconds` around 2700s). Verified with `python3 -m py_compile scripts/cron/check_cron_health.py`, a fake timeout job pointed at the 2026-08-09 log, and the current no-job watchdog path (`NO_REPLY`). No cron config changed.
+
+---
+## Daily Audit Snapshot — 2026-08-09 (self-improvement-audit-daily, 03:16 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** cadence guard still reports the historical missed-day gap for 2026-08-07, caused by the Codex subscription quota outage documented in the 2026-08-08 snapshot. No cron model/fallback/delivery config changed here because that remains a Nico-approved config step. Fix applied this cycle: `scripts/notes/run-autonomy-audit-preflight.sh` now passes advisory cadence gaps into `scripts/notes/prepend-autonomy-audit-snapshot.py --audit-workflow-status`, and the prepender can persist an `Audit workflow` section automatically, so future missed-run warnings are not stdout-only.
+- **Proposed follow-up:** keep the existing backlog item open until Nico decides whether to add cross-provider fallbacks to the affected crons and explicit topic #347 delivery instructions to `cron-health-watchdog`.
+
+---
+## Daily Audit Snapshot — 2026-08-08 (self-improvement-audit-daily, 09:35 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** this cron itself missed 2026-08-07 entirely and failed again this morning (`consecutiveErrors: 5`) — root cause: `self-improvement-audit-daily` (`d7f95873`) runs on `payload.model: openai/gpt-5.5` with no cross-provider fallback, and that provider is backed by the same Codex subscription as several other crons. Confirmed via `cron.runs`: 4 failed attempts on 2026-08-07 (03:25–03:32 UTC) and 1 on 2026-08-08 (03:16 UTC), all `Codex subscription usage limit`. Worse: `cron-health-watchdog` (`55c58b83`, `codex/gpt-5.3-codex-spark`, no fallback) — the job whose entire purpose is to catch exactly this — was itself down for the same window, continuous `error` status from 2026-08-06 17:01 UTC through 2026-08-08 03:09 UTC (~34h, all `FallbackSummaryError: All models failed`, same quota). So the one detector that should have caught this was silently blind the whole time, and even when it does detect something its payload has no explicit delivery instructions (same `delivery.mode: none` + no send-tool-call gap already diagnosed for the BACKLOG.md guard-stripper cron and `github-notifications`). Also still erroring as of this snapshot: `nightly-memory-consolidation` (`4aaaf7f7`, `openai/gpt-5.5`, no fallback, `consecutiveErrors: 7` — ~7 consecutive nights of the `bank/state.json`/embeddings pipeline not running) and `check-openclaw-release` (`117efc3f`, `codex/gpt-5.3-codex-spark`, no fallback, `consecutiveErrors: 7`). Crons that already pair a Codex-backed primary with a `claude-cli/*` fallback (`daily-journal`, `daily-summary`, `Devnet health monitor`) stayed healthy through the same window — that's the pattern to copy.
+- **Fix applied this cycle:** manually backfilled this 2026-08-08 snapshot via `run-autonomy-audit-preflight.sh --no-ensure-daily-memory-note --no-seed-audit-memory-entry` + `close-autonomy-audit.sh --skip-memory-outcome-check` (avoided all `memory/*.md` writes, per this cron's own hard constraint) — all four domain preflights came back green. Manually ran `check_openclaw_release.sh` directly to confirm the gap didn't actually cost a missed release: `HEARTBEAT_OK`, nothing missed. Did not touch any cron payload/model/fallback config — treated as a Nico-approved-config-change item, same precedent as the `92fa6d55` guard-stripper fix. Escalated via Telegram DM with the full picture and a proposed fix.
+- **Proposed follow-up:** Nico to decide whether to add `claude-cli/*` fallbacks to `self-improvement-audit-daily`, `cron-health-watchdog`, `nightly-memory-consolidation`, and `check-openclaw-release` (same shape `daily-journal`/`daily-summary`/`Devnet health monitor` already use), and whether `cron-health-watchdog`'s payload should get explicit "post detected failures to topic #347" delivery instructions so a caught failure is never silently swallowed again.
+
+---
+## Daily Audit Snapshot — 2026-08-06 (self-improvement-audit-daily, 03:24 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** idle-tool guard coverage gap found and fixed this cycle: the 2026-08-04 guard covered shell no-ops, stop-only wakeup calls, malformed monitor calls, and empty review reports, but did not catch content-free tool-discovery calls like `tool_search` with `query: "placeholder"`. Fix applied this cycle: extended `scripts/safety/block-idle-tool-call.py` to flag placeholder tool-search queries and added positive/negative self-test coverage. Active PreToolUse wiring remains the separate Nico-approved config step.
+
+---
+## Daily Audit Snapshot — 2026-08-05 (self-improvement-audit-daily, 03:23 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+---
+## Daily Audit Snapshot — 2026-08-04 (self-improvement-audit-daily, 03:20 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, idle-tool guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, idle-tool guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, idle-tool guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** idle/end-of-task tool-call guard gap found and partially fixed this cycle: the existing risky-command helper covered shell cleanup/state commands, but did not cover non-shell filler calls seen in recent cron turns (`ScheduleWakeup(stop:true)` in non-loop cron context, malformed `Monitor({})`, empty `ReportFindings([])`, and bare no-op shell placeholders like `true`). Fix applied this cycle: added side-effect-free `scripts/safety/block-idle-tool-call.py --self-test --json` and wired its self-test into all four autonomy domain preflights plus rendered status lines. Active PreToolUse wiring remains a separate Nico-approved config step.
+
+---
+## Daily Audit Snapshot — 2026-08-03 (self-improvement-audit-daily, 03:18 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+---
+## Daily Audit Snapshot — 2026-08-02 (self-improvement-audit-daily, 03:18 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+---
+## Daily Audit Snapshot — 2026-08-01 (self-improvement-audit-daily, 03:46 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+---
+## Daily Audit Snapshot — 2026-07-31 (self-improvement-audit-daily, 03:33 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+---
+## Daily Audit Snapshot — 2026-07-30 (self-improvement-audit-daily, 03:30 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+---
+## Daily Audit Snapshot — 2026-07-29 (self-improvement-audit-daily, 03:27 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+---
+## Daily Audit Snapshot — 2026-07-28 (self-improvement-audit-daily, 03:25 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** raw cleanup-command surface gap found and fixed this cycle: yesterday's risky-command helper blocks direct shell commands, but the autonomy audit wrappers still contained internal `rm -f` cleanup traps, so the primary daily workflow preserved the same broad cleanup pattern it is supposed to guard against. Fix applied this cycle: added `scripts/safety/unlink-owned-temp-files.py`, which only unlinks registered paths under the process temp directory and refuses directories/non-temp paths; switched `run-daily-autonomy-audit.sh`, `run-autonomy-audit-preflight.sh`, and `close-autonomy-audit.sh` to use it for temporary log/JSON cleanup. Proposed recurrence fix: if another wrapper needs cleanup, reuse the helper instead of adding raw `rm`/`trash`; consider adding a source-scan preflight if risky shell cleanup patterns reappear outside the safety helper.
+
+### Heartbeat follow-up
+- **Status:** pre-authorized warn-only risky-command path implemented but not wired as an active hook. `scripts/safety/block-risky-command.py --warn-only` now exits successfully while returning `shouldWarn=true` for destructive delete targets not passed as read/created/touched in the current session, and for broad state commands like `git stash`. This covers the recurring "noop"/"SKIPPED" cleanup-command shape without changing the separate blocking mode or requiring config changes. Active PreToolUse wiring remains a separate Nico-approved step.
+
+---
+## Daily Audit Snapshot — 2026-07-27 (self-improvement-audit-daily, 03:25 UTC)
+
+### PR review
+- **Status:** follow-up guard, risky-command guard helper, and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, risky-command guard helper, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, risky-command guard helper, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight, risky-command guard helper, and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** broad destructive-command guard gap found and partially fixed this cycle: recent cron failures proved documentation-only "do not run `rm` / `trash` / broad git state commands" rules are not load-bearing, and the daily autonomy preflights did not verify any reusable guard before autonomous shell-driven PR review, CI fix, spec implementation, or devnet debugging work. Fix applied this cycle: added `scripts/safety/block-risky-command.py`, a side-effect-free helper that blocks `rm`, `trash`, `gio trash`, `git stash`, `git clean`, `git reset --hard`, and `git checkout -- <path>` unless explicitly overridden; wired its `--self-test --json` into all four domain preflights and rendered it in daily statuses. Proposed next fix: ask Nico in a live session before wiring this helper into OpenClaw/Codex PreToolUse config; until then it is a validated guard helper, not an active platform hook.
+
+---
+## Daily Audit Snapshot — 2026-07-26 (self-improvement-audit-daily, 03:25 UTC)
+
+### PR review
+- **Status:** follow-up guard and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+---
+## Daily Audit Snapshot — 2026-07-25 (self-improvement-audit-daily, 03:24 UTC)
+
+### PR review
+- **Status:** follow-up guard and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** spec test-vector cache freshness blocker found and fixed this cycle: the first domain preflight failed `specImplementation/testVectorReadiness` because the dedicated consensus-specs cache was not ready. Fix applied this cycle: ran `scripts/spec/ensure-fresh-test-vectors.sh --json`, refreshing `~/.cache/lodekeeper/consensus-specs-fresh` to upstream `master` at `5165fa360` with tests age `0` days, then reran the full autonomy domain preflight successfully. Workflow update: `scripts/notes/run-daily-autonomy-audit.sh` now auto-refreshes the dedicated consensus-specs test-vector cache before check-only domain preflights, with `--skip-spec-vector-refresh` available for intentional side-effect-free runs. Proposed recurrence fix: if the refresh step still reports `missing_cache`, `stale`, or `not_ready`, let the existing domain preflight document the blocker and inspect the cache/remote fetch failure.
+
+---
+## Daily Audit Snapshot — 2026-07-24 (self-improvement-audit-daily, 03:23 UTC)
+
+### PR review
+- **Status:** follow-up guard and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** cron-response output hygiene gap found and fixed this cycle: the one-command audit wrapper still sent lifecycle logs to stdout before the final `NO_REPLY` or summary, so direct command-based schedulers could not treat stdout as the exact deliverable. Gap fixed this cycle: added `--response-only` to `scripts/notes/run-daily-autonomy-audit.sh`, routing preflight/close-out logs to stderr while printing only the final cron response on stdout; default human-readable behavior stays unchanged. Proposed use: scheduled jobs that execute the wrapper directly should pass `--response-only` when delivery expects exact `NO_REPLY`/summary output.
+
+---
+## Daily Audit Snapshot — 2026-07-23 (self-improvement-audit-daily, 03:21 UTC)
+
+### PR review
+- **Status:** follow-up guard and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+---
+## Daily Audit Snapshot — 2026-07-22 (self-improvement-audit-daily, 03:21 UTC)
+
+### PR review
+- **Status:** follow-up guard and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** PR-review notification pagination gap found and fixed this cycle: the 2026-07-22 PR #9486 close-out proved that a non-paginated `gh api` comment fetch can silently miss newest comments on busy threads, and `github_notifications_sweep.py` only requested `per_page=100` without following additional pages for notifications, issue comments, inline review comments, or review bodies. Gap fixed this cycle: added `run_gh_paginated_items()` to the sweep, wired all GitHub collection fetches through `gh api --paginate`, and extended `check-github-guard-coverage.sh` so pagination support is covered by the existing GitHub automation guard. Proposed follow-up if this recurs: use the sweep helper or `scripts/review/fetch-pr-discussion.py` for manual comment-existence checks, not ad-hoc non-paginated `gh api` calls.
+
+---
+## Daily Audit Snapshot — 2026-07-21 (self-improvement-audit-daily, 03:19 UTC)
+
+### PR review
+- **Status:** follow-up guard and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+---
+## Daily Audit Snapshot — 2026-07-20 (self-improvement-audit-daily, 03:19 UTC)
+
+### PR review
+- **Status:** follow-up guard and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+---
+## Daily Audit Snapshot — 2026-07-19 (self-improvement-audit-daily, 03:17 UTC)
+
+### PR review
+- **Status:** follow-up guard and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+---
+## Daily Audit Snapshot — 2026-07-18 (self-improvement-audit-daily, 03:16 UTC)
+
+### PR review
+- **Status:** follow-up guard and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** full-lifecycle audit wrapper gap found and fixed this cycle: the daily cron still required separate preflight and close-out commands plus a manually supplied memory-outcome string, so a rerun could leave the audit half-closed even after the snapshot was inserted. Gap fixed this cycle: added `scripts/notes/run-daily-autonomy-audit.sh` to run preflight, fill the daily memory outcome, close the audit, and print the cron-ready response from one command while preserving strict cadence, domain-preflight, and credential options.
+
+---
+## Daily Audit Snapshot — 2026-07-17 (self-improvement-audit-daily, 03:21 UTC)
+
+### PR review
+- **Status:** follow-up guard and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** cadence gap detected and documented this cycle: the latest prior snapshot was 2026-07-15, so the daily audit missed 2026-07-16. Proposed fix was to make snapshot insertion keep the file-level `Updated` header/pass count in sync automatically, so missed or recovered runs do not leave stale audit metadata behind. Gap fixed this cycle: `scripts/notes/prepend-autonomy-audit-snapshot.py` now refreshes the top-level `Updated` line when it inserts a snapshot; this file was corrected to 2026-07-17 / 91st pass. Remaining external fix: investigate scheduler/run history separately if the 2026-07-16 skip repeats.
+
+---
+## Daily Audit Snapshot — 2026-07-15 (self-improvement-audit-daily, 03:28 UTC)
+
+### PR review
+- **Status:** follow-up guard and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, fresh consensus-spec test-vector cache, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** stale spec-vector blocker resolved this cycle without mutating the active `~/consensus-specs` proposal branch. Gap fixed this cycle: added `scripts/spec/ensure-fresh-test-vectors.sh` to create/update a dedicated upstream consensus-specs cache, fixed `check-test-vector-readiness.sh` to accept Git worktrees, switched the spec-implementation domain preflight to validate that cache in `--check-only` mode, and fixed `render-autonomy-domain-statuses.py` to respect targeted `selectedDomains` so single-domain verification no longer reports unselected domains as missing. Created/refreshed `~/.cache/lodekeeper/consensus-specs-fresh` at upstream `master` (`6408b990c`, tests age 5 days); full autonomy-domain preflight now passes.
+
+---
+## Daily Audit Snapshot — 2026-07-14 (self-improvement-audit-daily, 03:27 UTC)
+
+### PR review
+- **Status:** follow-up guard and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** BLOCKER: domain preflight check(s) failed or were missing: testVectorReadiness. Details: testVectorReadiness: test vectors are older than max-age-days (status=stale). Proposed fix: refresh or point `SPEC_REPO` at a current `consensus-specs` checkout before starting autonomous spec implementation.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** spec-implementation vector-freshness coverage gap found and fixed this cycle: the domain preflight proved the pre-PR compliance helper, GitHub actor, and git identity were healthy, but it did not prove the local `consensus-specs` test-vector corpus was fresh enough before implementation work. Gap fixed this cycle: `check-autonomy-domain-preflights.py` now runs `scripts/spec/check-test-vector-readiness.sh --json --require-fresh` as `specImplementation/testVectorReadiness`, and `render-autonomy-domain-statuses.py` includes the failure message in the generated blocker status. Live blocker: the current `~/consensus-specs` checkout reports stale test vectors, so spec implementation autonomy should refresh or repoint `SPEC_REPO` first.
+
+---
+## Daily Audit Snapshot — 2026-07-13 (self-improvement-audit-daily, 03:27 UTC)
+
+### PR review
+- **Status:** follow-up guard and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** devnet blocker recovery summary gap found and fixed this cycle: yesterday's panda `datasources=null` blocker is now clear, but the close-out renderer would have emitted a very long before/after required-status diff instead of a compact recovery signal. Gap fixed this cycle: `render-autonomy-audit-response.py` now classifies blocker-to-healthy transitions as `resolved previous BLOCKER`, while still preserving full current details for newly introduced or changed blockers.
+
+---
+## Daily Audit Snapshot — 2026-07-12 (self-improvement-audit-daily, 03:27 UTC)
+
+### PR review
+- **Status:** follow-up guard and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** detector entrypoint, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** BLOCKER: domain preflight check(s) failed or were missing: devnetRoutingReadiness. Details: devnetRoutingReadiness: panda returned datasources=null; server proxy token is expired and refresh is rejected (invalid_grant) - fresh `panda auth login` is required. Proposed fix: inspect the failing preflight JSON/stderr before continuing autonomous work in this domain.
+
+### Audit workflow
+- **Status:** panda datasource-null diagnostics and failed-preflight documentation gap found and fixed this cycle: the devnet routing preflight detected `datasources=null`, but only reported a vague auth/server-access failure, and the audit preflight aborted before inserting a snapshot for the blocker. Gap fixed this cycle: `check-devnet-routing-readiness.py` now attaches `panda auth status`, credential-file mode checks, and recent panda-server auth markers when datasources are null; `render-autonomy-domain-statuses.py` carries the concrete failing-check reason into snapshot status text; `run-autonomy-audit-preflight.sh --document-domain-failures` can insert a BLOCKER snapshot instead of aborting. Live diagnosis: panda credential permissions were restored to `0640`, but the server refresh token is expired and rejected with `invalid_grant`, so fresh `panda auth login` is required before remote devnet-debugging autonomy is fully ready.
+
+---
+## Daily Audit Snapshot — 2026-07-11 (self-improvement-audit-daily, 03:27 UTC)
+
+### PR review
+- **Status:** PR-review metadata-checker preflight gap found and fixed this cycle: `run-followup-guards.sh --check-only` verified `check-pr-metadata-drift.py --help`, but not a checker-owned side-effect-free prerequisite path, so `gh pr` subcommand/help or GitHub-access guard drift could pass daily readiness and fail only during a live PR follow-up. Gap fixed this cycle: added `check-pr-metadata-drift.py --check-only --json`, updated `run-followup-guards.sh --check-only --json` to require it and expose `checkOnlyJsonOk`, extended `check-github-guard-coverage.sh` to run it, and verified Python compile, shell syntax, direct checker JSON, wrapper JSON, guard coverage, and the full PR-review domain preflight. GitHub actor-boundary still verifies as `lodekeeper`.
+
+### CI fix
+- **Status:** detector entrypoint, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+---
+## Daily Audit Snapshot — 2026-07-10 (self-improvement-audit-daily, 03:27 UTC)
+
+### PR review
+- **Status:** PR-review follow-up subcommand preflight gap found and fixed this cycle: the domain preflight verified `run-followup-guards.sh --check-only` and top-level `track-findings.py --help`, but not the exact `sync-gh` and `stale` subcommands that real follow-up guards invoke, so a parser/regression could pass daily readiness and fail later during review close-out. Gap fixed this cycle: `run-followup-guards.sh --check-only` now validates `track-findings.py sync-gh --help` and `track-findings.py stale --help`, exposes `syncGhHelpOk`/`staleHelpOk` in JSON, and was verified via shell syntax check, direct check-only JSON, targeted PR-review domain JSON, and full domain status rendering. GitHub actor-boundary still verifies as `lodekeeper`.
+
+### CI fix
+- **Status:** detector entrypoint, fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+---
+## Daily Audit Snapshot — 2026-07-09 (self-improvement-audit-daily, 03:27 UTC)
+
+### PR review
+- **Status:** follow-up guard and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** CI detector entrypoint preflight gap found and fixed this cycle: the daily CI-fix domain checked the quality gate, run-log fetcher, GitHub actor, and git identity, but did not prove `auto_fix_flaky.py` itself could be checked side-effect-free before scanning CI or mutating the tracker. Gap fixed this cycle: added `auto_fix_flaky.py --check-only --json`, wired it into `ciFix/detectorEntrypoint`, updated rendered CI-fix status text and `CRON_PROMPT.md`, and verified Python syntax, direct detector JSON, targeted CI-fix domain JSON, and full domain status rendering. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+---
+## Daily Audit Snapshot — 2026-07-08 (self-improvement-audit-daily, 03:27 UTC)
+
+### PR review
+- **Status:** follow-up guard and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+---
+## Daily Audit Snapshot — 2026-07-07 (self-improvement-audit-daily, 03:26 UTC)
+
+### PR review
+- **Status:** follow-up guard and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** return-to-steady-state delta gap found and fixed this cycle: the day after a required-section fix, the audit would change back to generated healthy preflight prose and still look notification-worthy even when no new blocker existed. Proposed fix was to classify "previous one-off change event -> current steady-state status" as non-meaningful for required sections while preserving real new required-section deltas and non-required workflow updates. Gap fixed this cycle: `scripts/notes/check-autonomy-audit-delta.py` now reports raw required-section changes separately from ignored return-to-steady-state sections and excludes that rollover noise from the `NO_REPLY` decision.
+
+---
+## Daily Audit Snapshot — 2026-07-06 (self-improvement-audit-daily, 03:25 UTC)
+
+### PR review
+- **Status:** follow-up guard and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** CI-log fetch machine-readability gap found and fixed this cycle: `scripts/ci/fetch-run-logs.sh --check-only` only emitted prose, so the consolidated CI-fix preflight could prove the helper exited successfully but not preserve structured details about `gh` and the GitHub access guard. Proposed fix was to add a JSON check-only mode and make the domain preflight consume it. Gap fixed this cycle: added `--json` support to the log-fetch preflight, wired `ciFix/runLogFetch` to call it, and verified shell syntax, Python syntax, direct JSON output, and targeted CI-fix domain preflight JSON. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+---
+## Daily Audit Snapshot — 2026-07-05 (self-improvement-audit-daily, 03:25 UTC)
+
+### PR review
+- **Status:** follow-up guard and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** dotfiles publish-surface guard gap found and fixed this cycle: today's public-dotfiles exposure showed that the sync guard blocked some sensitive additions but did not fail closed when already tracked private workspace files (`openclaw/USER.md`, `openclaw/MEMORY.md`, `openclaw/TOOLS.md`, `openclaw/BACKLOG.md`) were headed to a public remote. Gap fixed this cycle: added `--check-only` plus a remote-visibility guard to `~/dotfiles/scripts/sync-dotfiles.sh`; it now blocks private workspace files whenever the remote is public or visibility cannot be verified, while still passing when `DOTFILES_REPO_VISIBILITY=private` is explicitly confirmed. Verified syntax, private override success, public override failure, and real current-repo failure against the public remote.
+
+---
+## Daily Audit Snapshot — 2026-07-04 (self-improvement-audit-daily, 03:25 UTC)
+
+### PR review
+- **Status:** follow-up guard and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`).
+
+### Audit workflow
+- **Status:** Panda environment-note drift found and fixed this cycle: the live devnet-routing preflight showed current panda datasources as `clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, and `production`, while `TOOLS.md` still described the older v0.35.0 / `xatu-experimental` surface. Gap fixed this cycle: verified `panda --version` reports v0.37.0 and updated `TOOLS.md` so future autonomous devnet-debugging runs use `clickhouse-raw` for Xatu raw tables instead of assuming a separate `xatu-experimental` datasource.
+
+---
+## Daily Audit Snapshot — 2026-07-03 (self-improvement-audit-daily, 03:25 UTC)
+
+### PR review
+- **Status:** follow-up guard and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`, `xatu-experimental`).
+
+### Audit workflow
+- **Status:** single-source domain-preflight gap found and fixed this cycle: the audit preflight wrapper executed the same PR/CI/spec/devnet checks twice, once for console output and once for JSON status prefill, so a scheduled audit could waste runtime and, in theory, print a summary from a different run than the snapshot used. Gap fixed this cycle: added `scripts/notes/summarize-autonomy-domain-preflights.py` and updated `scripts/notes/run-autonomy-audit-preflight.sh` to collect one JSON payload, render both console summary and status-prefill from that same payload, and abort with the captured failure summary if the preflight fails.
+
+---
+## Daily Audit Snapshot — 2026-07-02 (self-improvement-audit-daily, 03:23 UTC)
+
+### PR review
+- **Status:** follow-up guard and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** fix-quality gate, run-log fetch, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`, `xatu-experimental`).
+
+### Audit workflow
+- **Status:** CI-log acquisition preflight gap found and fixed this cycle: autonomous CI-fix runs already had a `scripts/ci/fetch-run-logs.sh --check-only` guard, but the consolidated autonomy-domain preflight did not run it, so the daily audit could report CI-fix readiness without proving failed-run log acquisition still worked. Gap fixed this cycle: added `ciFix/runLogFetch` to `scripts/notes/check-autonomy-domain-preflights.py`, updated `scripts/notes/render-autonomy-domain-statuses.py` to require/report it, and verified Python syntax plus targeted/full preflight rendering.
+
+---
+## Daily Audit Snapshot — 2026-07-01 (self-improvement-audit-daily, 03:23 UTC)
+
+### PR review
+- **Status:** follow-up guard and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** fix-quality gate, GitHub actor-boundary, and git identity preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate, GitHub actor-boundary, and git identity preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`, `xatu-experimental`).
+
+### Audit workflow
+- **Status:** git-author identity gap found and fixed this cycle: CI-fix and spec-implementation autonomy already proved the GitHub write actor was `lodekeeper`, but did not prove local commits would use the canonical `lodekeeper <lodekeeper@users.noreply.github.com>` identity before creating a branch/PR. Proposed fix was to add a side-effect-free git identity boundary preflight alongside the existing GitHub actor boundary. Gap fixed this cycle: added `scripts/git/check-git-identity-boundary.py`, wired it into `scripts/notes/check-autonomy-domain-preflights.py` for `ciFix` and `specImplementation`, updated `scripts/notes/render-autonomy-domain-statuses.py` to require/report the new check, and verified success plus wrong-identity failure.
+
+---
+## Daily Audit Snapshot — 2026-06-30 (self-improvement-audit-daily, 03:23 UTC)
+
+### PR review
+- **Status:** follow-up guard and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** fix-quality gate and GitHub actor-boundary preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`, `xatu-experimental`).
+
+### Audit workflow
+- **Status:** generated-status formatting gap found and fixed this cycle: yesterday's fresh preflight status renderer produced correct current data, but today's generated markdown dropped code formatting around warning identifiers and collapsed panda datasource names into one code span, making the audit harder to scan and causing avoidable status diffs. Gap fixed this cycle: updated `scripts/notes/render-autonomy-domain-statuses.py` to format environment identifiers and datasource lists consistently, then verified Python compilation plus live JSON status rendering.
+
+---
+## Daily Audit Snapshot — 2026-06-29 (self-improvement-audit-daily, 03:22 UTC)
+
+### PR review
+- **Status:** follow-up guard and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** fix-quality gate and GitHub actor-boundary preflights verified from current preflight output; no new CI-fix blocker discovered this cycle. Warning: `OPENAI_API_KEY` was absent; used a dummy value to verify package/import readiness only.
+
+### Spec implementation
+- **Status:** pre-PR compliance gate and GitHub actor-boundary preflights verified from current preflight output as `lodekeeper`; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight and local/remote routing readiness verified from current preflight output; no new devnet-debugging blocker discovered this cycle. `GRAFANA_TOKEN` is absent, so telemetry remains optional/local-only; panda datasource discovery is ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`, `xatu-experimental`).
+
+### Audit workflow
+- **Status:** status-scaffold freshness gap found and fixed this cycle: `run-autonomy-audit-preflight.sh` ran current domain preflights but still inserted required status lines by carrying forward yesterday's prose, so a healthy-looking snapshot could miss current warnings such as the dummy CI key or absent Grafana token. Gap fixed this cycle: added `scripts/notes/render-autonomy-domain-statuses.py`, added `--status-prefill-json` to `prepend-autonomy-audit-snapshot.py`, and wired the audit preflight wrapper to render required status lines from fresh domain preflight JSON whenever domain checks run; carry-forward remains only a fallback when domain preflights are explicitly skipped.
+
+---
+## Daily Audit Snapshot — 2026-06-28 (self-improvement-audit-daily, 03:22 UTC)
+
+### PR review
+- **Status:** follow-up guard and GitHub actor-boundary preflights remain healthy; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** fix-quality gate and GitHub actor-boundary preflights remain healthy; no new CI-fix blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** spec-implementation actor-boundary gap found and fixed this cycle: autonomous spec implementation uses the pre-PR compliance gate before shipping, but the targeted `--domain specImplementation` preflight did not prove that later GitHub write actions would run as `lodekeeper`. Gap fixed this cycle: `scripts/notes/check-autonomy-domain-preflights.py` now also runs `specImplementation/githubActorBoundary`; verified targeted spec preflight success, wrong-actor failure, Python syntax, and full PR/CI/spec/devnet preflight success.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight and local/remote routing readiness are now verified through the consolidated domain runner and audit preflight wrapper. Optional telemetry warnings remain explicit when `GRAFANA_TOKEN` is absent; panda datasource discovery is currently ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`, `xatu-experimental`).
+
+### Audit workflow
+- **Status:** spec-implementation targeted preflight now carries the same GitHub account-boundary guard as PR-review and CI-fix, closing the hole where focused spec automation could validate local compliance tooling without proving the eventual GitHub writer account.
+
+---
+## Daily Audit Snapshot — 2026-06-27 (self-improvement-audit-daily, 03:22 UTC)
+
+### PR review
+- **Status:** no new PR-review blocker discovered this cycle; existing review guardrails remain healthy.
+
+### CI fix
+- **Status:** CI-fix targeted actor-boundary gap found and fixed this cycle: the all-domain audit run verified `prReview/githubActorBoundary`, but `--domain ciFix` only checked the fix-quality gate even though autonomous CI fixes can push branches, open PRs, and label PRs. Gap fixed this cycle: `scripts/notes/check-autonomy-domain-preflights.py` now also runs `ciFix/githubActorBoundary`, so targeted CI-fix preflights fail before any GitHub mutation if `gh` is not authenticated as `lodekeeper`; verified success for the current actor and wrong-actor failure.
+
+### Spec implementation
+- **Status:** pre-PR spec-compliance preflight verified through the consolidated domain runner and now through the audit preflight wrapper; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight and local/remote routing readiness are now verified through the consolidated domain runner and audit preflight wrapper. Optional telemetry warnings remain explicit when `GRAFANA_TOKEN` is absent; panda datasource discovery is currently ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`, `xatu-experimental`).
+
+### Audit workflow
+- **Status:** CI-fix targeted preflight now carries the same GitHub account boundary as PR-review, closing the hole where focused CI automation could validate local fix tooling without proving the eventual GitHub writer account.
+
+---
+## Daily Audit Snapshot — 2026-06-26 (self-improvement-audit-daily, 03:19 UTC)
+
+### PR review
+- **Status:** PR-review actor-boundary gap found and fixed this cycle: the domain preflight verified that `gh` and review helper chains were present, but did not prove that later GitHub write actions would execute as the allowed `lodekeeper` account. Gap fixed this cycle: added `scripts/github/check-gh-actor-boundary.py` and wired it into `scripts/notes/check-autonomy-domain-preflights.py` as `prReview/githubActorBoundary`; verified success for the current `lodekeeper` actor, failure for a mismatched expected actor, targeted PR-review JSON output, and the full PR/CI/spec/devnet preflight run.
+
+### CI fix
+- **Status:** fix-quality gate preflight verified through the consolidated domain runner and now through the audit preflight wrapper. The runner defaults to a dummy `OPENAI_API_KEY` only when the cron shell lacks one, so it can validate local package/import readiness without leaking or requiring a secret; strict mode remains available for real-key enforcement.
+
+### Spec implementation
+- **Status:** pre-PR spec-compliance preflight verified through the consolidated domain runner and now through the audit preflight wrapper; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight and local/remote routing readiness are now verified through the consolidated domain runner and audit preflight wrapper. Optional telemetry warnings remain explicit when `GRAFANA_TOKEN` is absent; panda datasource discovery is currently ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`, `xatu-experimental`).
+
+### Audit workflow
+- **Status:** GitHub actor-boundary preflight added this cycle so autonomous PR-review/write workflows fail before any external mutation when the active `gh` account is not `lodekeeper`. This directly covers the 2026-06-20 account-boundary lesson from the GitHub connector/PR creation incident.
+
+---
+## Daily Audit Snapshot — 2026-06-25 (self-improvement-audit-daily, 03:19 UTC)
+
+### PR review
+- **Status:** follow-up guard preflight verified through the consolidated domain runner and now through the audit preflight wrapper; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** fix-quality gate preflight verified through the consolidated domain runner and now through the audit preflight wrapper. The runner defaults to a dummy `OPENAI_API_KEY` only when the cron shell lacks one, so it can validate local package/import readiness without leaking or requiring a secret; strict mode remains available for real-key enforcement.
+
+### Spec implementation
+- **Status:** pre-PR spec-compliance preflight verified through the consolidated domain runner and now through the audit preflight wrapper; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight and local/remote routing readiness are now verified through the consolidated domain runner and audit preflight wrapper. Optional telemetry warnings remain explicit when `GRAFANA_TOKEN` is absent; panda datasource discovery is currently ready (`clickhouse-raw`, `clickhouse-refined`, `devnets`, `ethnode`, `production`, `xatu-experimental`).
+
+### Audit workflow
+- **Status:** devnet-debugging routing-preflight gap found and fixed this cycle: the daily domain preflight proved the Grafana triage helper was runnable, but it did not prove whether an autonomous investigation could classify local Kurtosis vs hosted panda-backed devnets before starting. Proposed fix was to include the existing side-effect-free routing readiness helper in the devnet-debugging domain checks. Gap fixed this cycle: `check-autonomy-domain-preflights.py` now runs `scripts/debug/check-devnet-routing-readiness.py --json`, surfaces it as `devnetDebugging/devnetRoutingReadiness`, and was verified in targeted devnet mode plus the full PR/CI/spec/devnet preflight run.
+
+---
+## Daily Audit Snapshot — 2026-06-24 (self-improvement-audit-daily, 03:19 UTC)
+
+### PR review
+- **Status:** follow-up guard preflight verified through the consolidated domain runner and now through the audit preflight wrapper; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** fix-quality gate preflight verified through the consolidated domain runner and now through the audit preflight wrapper. The runner defaults to a dummy `OPENAI_API_KEY` only when the cron shell lacks one, so it can validate local package/import readiness without leaking or requiring a secret; strict mode remains available for real-key enforcement.
+
+### Spec implementation
+- **Status:** pre-PR spec-compliance preflight verified through the consolidated domain runner and now through the audit preflight wrapper; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight verified through the consolidated domain runner and now through the audit preflight wrapper; optional telemetry warnings remain explicit when `GRAFANA_TOKEN` is absent, and no new devnet-debugging blocker discovered this cycle.
+
+### Audit workflow
+- **Status:** targeted-domain preflight triage gap found and fixed this cycle: `check-autonomy-domain-preflights.py` could only run every PR/CI/spec/devnet preflight together, so a single-domain failure would force noisy full reruns during autonomous diagnosis. Gap fixed this cycle: added repeatable `--domain {prReview,ciFix,specImplementation,devnetDebugging}` filtering plus `selectedDomains` in JSON output, and verified default, single-domain, and multi-domain JSON runs.
+
+---
+## Daily Audit Snapshot — 2026-06-23 (self-improvement-audit-daily, 03:18 UTC)
+
+### PR review
+- **Status:** follow-up guard preflight verified through the consolidated domain runner and now through the audit preflight wrapper; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** fix-quality gate preflight verified through the consolidated domain runner and now through the audit preflight wrapper. The runner defaults to a dummy `OPENAI_API_KEY` only when the cron shell lacks one, so it can validate local package/import readiness without leaking or requiring a secret; strict mode remains available for real-key enforcement.
+
+### Spec implementation
+- **Status:** pre-PR spec-compliance preflight verified through the consolidated domain runner and now through the audit preflight wrapper; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight verified through the consolidated domain runner and now through the audit preflight wrapper; optional telemetry warnings remain explicit when `GRAFANA_TOKEN` is absent, and no new devnet-debugging blocker discovered this cycle.
+
+### Audit workflow
+- **Status:** audit-preflight verification gap found and fixed this cycle: `run-autonomy-audit-preflight.sh` scaffolded/carried forward daily statuses but did not run `check-autonomy-domain-preflights.py`, so a scheduled audit could document healthy PR/CI/spec/devnet autonomy without first proving those domain checks still passed. Proposed fix was to make domain preflights part of the default audit preflight while preserving explicit strict-mode and skip flags. Gap fixed this cycle: added default domain preflight execution plus `--skip-domain-preflights`, `--strict-ci-api-key`, and `--require-devnet-grafana` options to `scripts/notes/run-autonomy-audit-preflight.sh`.
+
+---
+## Daily Audit Snapshot — 2026-06-22 (self-improvement-audit-daily, 03:18 UTC)
+
+### PR review
+- **Status:** follow-up guard preflight verified through the new consolidated domain runner; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** fix-quality gate preflight verified through the new consolidated domain runner. The runner defaults to a dummy `OPENAI_API_KEY` only when the cron shell lacks one, so it can validate local package/import readiness without leaking or requiring a secret; strict mode correctly fails when the real key is absent.
+
+### Spec implementation
+- **Status:** pre-PR spec-compliance preflight verified through the new consolidated domain runner; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet strict-telemetry gap found and fixed this cycle: the consolidated domain runner verified the devnet-triage JSON preflight only in optional telemetry mode, so autonomous live devnet-debugging wrappers could accidentally prove local shell readiness while missing `GRAFANA_TOKEN`. Proposed fix was to expose a strict devnet telemetry mode and keep optional mode explicit. Gap fixed this cycle: added `--require-devnet-grafana` to `scripts/notes/check-autonomy-domain-preflights.py`, added an optional-mode warning when `GRAFANA_TOKEN` is absent, verified the normal JSON preflight still passes, and verified strict mode now fails early with `status=missing_grafana` until the cron shell has Grafana credentials.
+
+---
+## Daily Audit Snapshot — 2026-06-21 (self-improvement-audit-daily, 03:18 UTC)
+
+### PR review
+- **Status:** follow-up guard preflight verified through the new consolidated domain runner; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** fix-quality gate preflight verified through the new consolidated domain runner. The runner defaults to a dummy `OPENAI_API_KEY` only when the cron shell lacks one, so it can validate local package/import readiness without leaking or requiring a secret; strict mode correctly fails when the real key is absent.
+
+### Spec implementation
+- **Status:** pre-PR spec-compliance preflight verified through the new consolidated domain runner; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight verified through the new consolidated domain runner; telemetry remains optional in this shell because `GRAFANA_TOKEN` is absent, and no new devnet-debugging blocker was discovered this cycle.
+
+---
+## Daily Audit Snapshot — 2026-06-20 (self-improvement-audit-daily, 03:17 UTC)
+
+### PR review
+- **Status:** follow-up guard preflight verified through the new consolidated domain runner; no new PR-review blocker discovered this cycle.
+
+### CI fix
+- **Status:** fix-quality gate preflight verified through the new consolidated domain runner. The runner defaults to a dummy `OPENAI_API_KEY` only when the cron shell lacks one, so it can validate local package/import readiness without leaking or requiring a secret; strict mode correctly fails when the real key is absent.
+
+### Spec implementation
+- **Status:** pre-PR spec-compliance preflight verified through the new consolidated domain runner; no new spec-implementation blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage JSON preflight verified through the new consolidated domain runner; telemetry remains optional in this shell because `GRAFANA_TOKEN` is absent, and no new devnet-debugging blocker was discovered this cycle.
+
+### Audit workflow
+- **Status:** cross-domain audit verification gap found and fixed this cycle: the four required autonomy domains had separate preflight guards, but the daily audit had no single side-effect-free command to prove all of them were still runnable before carrying forward healthy status lines. Gap fixed this cycle: added `scripts/notes/check-autonomy-domain-preflights.py`, which runs PR-review, CI-fix, spec-implementation, and devnet-debugging preflights, normalizes JSON/exit codes, supports a strict CI-key mode, and returns a single cron-friendly pass/fail result.
+
+---
+## Daily Audit Snapshot — 2026-06-19 (self-improvement-audit-daily, 03:17 UTC)
+
+### PR review
+- **Status:** no new PR-review blocker discovered this cycle; full-surface discussion scan + metadata/stale-finding guards remain healthy.
+
+### CI fix
+- **Status:** CI auto-fix quality-gate gap found and fixed this cycle: `scripts/ci/check_fix_quality.py` existed to catch masking flaky-test fixes, but autonomous runs had no cheap preflight for its API/package prerequisites and `scripts/ci/CRON_PROMPT.md` did not require the gate before committing/opening a fix PR. Proposed fix was to make the gate preflightable and wire it into the fix workflow. Gap fixed this cycle: added `--check-only` JSON prerequisite output to `check_fix_quality.py`, documented the mandatory per-fix preflight plus staged-diff gate in `CRON_PROMPT.md`, and verified Python syntax, success with a dummy API key, and the real missing-key failure path.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage telemetry preflight + JSON readiness path remain healthy; no new blocker discovered this cycle.
+
+---
+
+## Daily Audit Snapshot — 2026-06-18 (self-improvement-audit-daily, 03:16 UTC)
+
+### PR review
+- **Status:** no new PR-review blocker discovered this cycle; existing review guardrails remain healthy.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage preflight machine-readability gap found and fixed this cycle: yesterday's `scripts/debug/devnet-triage.sh --check-only --require-grafana` made telemetry availability explicit, but autonomous wrappers still had to parse prose to decide whether Grafana/Loki/Prometheus were ready or intentionally unavailable. Gap fixed this cycle: added `--json` for check-only mode with structured node/window/query/tool/Grafana readiness fields, rejected `--json` outside preflight mode, documented the automation form in `skills/devnet-debug/SKILL.md`, and verified syntax, prose preflight, JSON success, JSON required-Grafana failure, and invalid non-preflight JSON usage.
+
+---
+
+## Daily Audit Snapshot — 2026-06-17 (self-improvement-audit-daily, 03:16 UTC)
+
+### PR review
+- **Status:** no new PR-review blocker discovered this cycle; existing review guardrails remain healthy.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** devnet-triage telemetry preflight gap found and fixed this cycle: `scripts/debug/devnet-triage.sh` could intentionally degrade when `GRAFANA_TOKEN`, `curl`, or `jq` were missing, but there was no cheap dry-run for autonomous devnet-debugging wrappers to prove whether Loki/Prometheus telemetry would be present before starting a longer investigation. Gap fixed this cycle: added `--check-only` plus `--require-grafana`, made the live query helpers fail closed when `curl` is absent, documented the preflight in `skills/devnet-debug/SKILL.md`, and verified syntax, optional dry-run success, required-Grafana failure, and existing GitHub guard coverage.
+
+---
+## Daily Audit Snapshot — 2026-06-16 (self-improvement-audit-daily, 03:16 UTC)
+
+### PR review
+- **Status:** no new PR-review blocker discovered this cycle; existing review guardrails remain healthy.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** spec-vector readiness preflight machine-readability gap found and fixed this cycle: `scripts/spec/check-test-vector-readiness.sh` only emitted prose and could pick generated cache/report files as its sample, so autonomous wrappers had to parse human output and could receive a misleading readiness signal. Gap fixed this cycle: added `--json` with structured readiness/staleness fields, filtered generated cache/report files from sample discovery, made the script executable, and verified human/JSON success plus stale failure paths.
+
+### Devnet debugging
+- **Status:** remote-devnet routing readiness preflight remains healthy; no new blocker discovered this cycle.
+
+---
+## Daily Audit Snapshot — 2026-06-15 (self-improvement-audit-daily, 03:27 UTC)
+
+### PR review
+- **Status:** PR follow-up wrapper preflight gap found and fixed this cycle: `scripts/review/run-followup-guards.sh` had guarded live execution, but autonomous wrappers could not validate the full helper chain without supplying a real PR and risking GitHub fetch/report side effects. Gap fixed this cycle: added `--check-only --json` to validate `python3`, `gh`, shell syntax, discussion fetcher preflight, finding tracker, metadata checker, GitHub access guard, and report-directory readiness without calling GitHub or writing artifacts; wired it into `scripts/github/check-github-guard-coverage.sh`; documented the machine-readable preflight in `skills/lodestar-review/SKILL.md`.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** remote-devnet routing readiness preflight remains healthy; no new blocker discovered this cycle.
+
+---
+## Daily Audit Snapshot — 2026-06-14 (self-improvement-audit-daily, 03:27 UTC)
+
+### PR review
+- **Status:** full-surface PR discussion scanner + metadata/stale finding guards remain healthy; no new blocker discovered this cycle.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** spec-compliance preflight machine-readability gap found and fixed this cycle: yesterday's `scripts/spec/prepr-compliance-gate.sh --check-only` made local prerequisite drift detectable before PR assembly, but autonomous wrappers still had to parse prose to tell a clean pass from missing tooling. Proposed fix was to add a JSON preflight output path and document it where spec implementations run the gate. Gap fixed this cycle: added `--check-only --json` with structured helper/pass fields, kept `--json` rejected outside preflight mode, and documented the automation form in `skills/dev-workflow/SKILL.md`.
+
+### Devnet debugging
+- **Status:** remote-devnet routing readiness preflight remains healthy; no new blocker discovered this cycle.
+
+---
+## Daily Audit Snapshot — 2026-06-13 (self-improvement-audit-daily, 03:27 UTC)
+
+### PR review
+- **Status:** full-surface PR discussion scanner + metadata/stale finding guards remain healthy; no new blocker discovered this cycle.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** spec-compliance gate preflight gap found and fixed this cycle: `scripts/spec/prepr-compliance-gate.sh` could only validate prerequisites after PR/tracker inputs were already assembled, so missing compliance helper/tooling state would surface late in a spec implementation. Gap fixed this cycle: added `--check-only` to validate `python3`, `check-compliance.py`, and `check-compliance-artifacts.sh` without PR inputs, and documented the preflight in `skills/dev-workflow/SKILL.md` before the Phase 4 spec-compliance command.
+
+### Devnet debugging
+- **Status:** remote-devnet routing readiness preflight remains healthy; no new blocker discovered this cycle.
+
+---
+## Daily Audit Snapshot — 2026-06-12 (self-improvement-audit-daily, 03:25 UTC)
+
+### PR review
+- **Status:** full-surface PR discussion scanner + metadata/stale finding guards remain healthy; no new blocker discovered this cycle.
+
+### CI fix
+- **Status:** CI log acquisition had no local-only preflight for `scripts/ci/fetch-run-logs.sh`: guard coverage could verify static strings, but could not execute the helper's prerequisite path without a real Actions run id. Gap fixed this cycle: added `--check-only` to validate `gh` + the cached GitHub access guard without calling GitHub, and wired that preflight into `scripts/github/check-github-guard-coverage.sh`.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** remote-devnet routing readiness preflight remains healthy; no new blocker discovered this cycle.
+
+---
+## Daily Audit Snapshot — 2026-06-11 (self-improvement-audit-daily, 03:25 UTC)
+
+### PR review
+- **Status:** full-surface PR discussion scanner + metadata/stale finding guards remain healthy; no new blocker discovered this cycle.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** remote-devnet routing readiness preflight remains healthy; no new blocker discovered this cycle.
+
+### Audit workflow
+- **Status:** delta-notification noise blocker found and fixed this cycle: when the previous snapshot included a one-off non-required section such as `Audit workflow`, a green carry-forward day with all four required status lines unchanged still looked meaningful because `check-autonomy-audit-delta.py` compared whole snapshot bodies and treated removal of the previous advisory section as an update. Gap fixed this cycle: the delta detector now treats required status changes plus added/changed current non-required sections as meaningful, while reporting removed non-required headings without forcing output; verified today’s green snapshot rendered `NO_REPLY` when the only difference was removal of yesterday’s advisory section.
+
+---
+## Daily Audit Snapshot — 2026-06-10 (self-improvement-audit-daily, 03:25 UTC)
+
+### PR review
+- **Status:** full-surface PR discussion scanner + metadata/stale finding guards remain healthy; no new blocker discovered this cycle.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** remote-devnet routing readiness preflight remains healthy; no new blocker discovered this cycle.
+
+### Audit workflow
+- **Status:** cadence drift blocker found this cycle: the previous snapshot was 2026-06-08, so 2026-06-09 is missing. The watchdog virtual cadence check detects the gap, but `close-autonomy-audit.sh` could still return `NO_REPLY` in advisory mode when the four required status lines carried forward unchanged. Gap fixed this cycle: close-out now treats advisory cadence gaps as meaningful output and returns a concise cadence-gap summary instead of `NO_REPLY`, so a missed daily snapshot cannot be silently masked by unchanged required sections.
+
+---
+## Daily Audit Snapshot — 2026-06-08 (self-improvement-audit-daily, 03:25 UTC)
+
+### PR review
+- **Status:** full-surface PR discussion scanner + metadata/stale finding guards remain healthy; no new blocker discovered this cycle.
+
+### CI fix
+- **Status:** CI log acquisition still had one direct-GitHub helper path outside the cached suspension guard coverage: `scripts/ci/fetch-run-logs.sh` calls `gh run view --log-failed` / full-log fallback directly, so an autonomous CI fixer could fail mid-triage during a known GitHub suspension instead of cleanly short-circuiting. The helper also lacked its executable bit despite being documented as a direct command. Gap fixed this cycle: added `bail_if_github_suspended()` to `fetch-run-logs.sh`, made it emit `GITHUB_SUSPENDED_SKIP` and exit `4` before any `gh run view` call when the cached guard reports suspension, set the helper executable, and expanded `scripts/github/check-github-guard-coverage.sh` to keep this CI helper covered.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** remote-devnet routing readiness preflight remains healthy; no new blocker discovered this cycle.
+
+---
+
+## Daily Audit Snapshot — 2026-06-07 (self-improvement-audit-daily, 03:25 UTC)
+
+### PR review
+- **Status:** no new PR-review blocker discovered this cycle; existing review guardrails remain healthy.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** remote-devnet routing preflight gap found and fixed this cycle: the `investigate` skill asked agents to run `panda datasources --json`, but the command can exit successfully while returning `{"datasources": null}` when panda auth/server datasource access is not ready, which makes a missing-auth/tooling state look like "network not found." Gap fixed this cycle: added `scripts/debug/check-devnet-routing-readiness.py`, documented it in the `investigate` skill, and verified it returns `PANDA_DATASOURCES_UNAVAILABLE` exit `2` for the current `glamsterdam-devnet-5` auth-blocked state before any long investigation starts.
+
+---
+## Daily Audit Snapshot — 2026-06-06 (self-improvement-audit-daily, 03:25 UTC)
+
+### PR review
+- **Status:** PR discussion scanner machine-readable preflight gap found and fixed this cycle: yesterday's new `scripts/review/fetch-pr-discussion.py` had a JSON output path that depended on `datetime` / `timezone` without importing them, and `--check-only` never exercised JSON output, so autonomous wrappers could still discover the bug only during a live PR sweep. Gap fixed this cycle: imported the missing symbols, made `--check-only --json` emit a real JSON preflight payload, and wired `scripts/github/check-github-guard-coverage.sh` to execute that preflight so the full-discussion report's machine-readable path stays covered without calling GitHub.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
+## Daily Audit Snapshot — 2026-06-05 (self-improvement-audit-daily, 03:25 UTC)
+
+### PR review
+- **Status:** PR follow-up coverage gap found and fixed this cycle: `scripts/review/track-findings.py sync-gh` and the follow-up wrapper centered on inline review comments, so a sweep could falsely conclude that lodekeeper had not replied or that only bot chatter existed while issue-level PR comments or review bodies carried the real state. Gap fixed this cycle: added `scripts/review/fetch-pr-discussion.py` to fetch issue comments, inline review comments, and review bodies in one report; wired it into `scripts/review/run-followup-guards.sh` as the default first step; added guard-coverage checks; and documented the full-surface scan requirement in `skills/lodestar-review/SKILL.md`.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
+## Daily Audit Snapshot — 2026-06-04 (self-improvement-audit-daily, 03:24 UTC)
+
+### PR review
+- **Status:** no new PR-review blocker discovered this cycle; existing review guardrails remain healthy.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** incident-bundle telemetry-preflight gap found and fixed this cycle: `scripts/debug/build-incident-bundle.sh` could intentionally degrade into partial bundles when Grafana token/tooling was missing, but there was no fast dry-run guard to make that choice explicit before a debugging run. Gap fixed this cycle: added `--check-only` and `--require-grafana` to validate helper scripts, output path, and telemetry prerequisites before fetching logs or writing bundles, and documented the preflight in `skills/local-mainnet-debug/SKILL.md`.
+
+---
+## Daily Audit Snapshot — 2026-06-03 (self-improvement-audit-daily, 03:24 UTC)
+
+### PR review
+- **Status:** no new PR-review blocker discovered this cycle; existing review guardrails remain healthy.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy. Cron-watchdog testability gap found and fixed this cycle: the virtual autonomy-audit cadence check was hardwired to the live workspace/date/state, so regression-testing stale-audit alerts required mutating real notes/state or waiting for UTC date drift. Gap fixed this cycle: `scripts/cron/check_cron_health.py` now honors `CRON_JOBS_PATH`, `CRON_HEALTH_STATE_PATH`, `WORKSPACE_PATH`, `AUTONOMY_CADENCE_SCRIPT`, `AUTONOMY_CADENCE_FILE`, `AUTONOMY_CADENCE_REFERENCE_DATE`, and `AUTONOMY_CADENCE_EXPECTED_EVERY_DAYS` env overrides, so the virtual failure/recovery path is reproducible against temp fixtures without polluting production watchdog state.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
+## Daily Audit Snapshot — 2026-06-02 (self-improvement-audit-daily, 03:24 UTC)
+
+### PR review
+- **Status:** no new PR-review blocker discovered this cycle; existing review guardrails remain healthy.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy. Cross-automation watchdog gap found and fixed this cycle: missed daily audit snapshots for 2026-05-30 and 2026-05-31 only surfaced inside the next audit preflight, not through the 30-minute cron watchdog. Gap fixed this cycle: `scripts/cron/check_cron_health.py` now treats `scripts/notes/check-autonomy-audit-cadence.py --latest-only --require-current --fail-on-gap` as a virtual failing cron with the existing state/dedup alert path, so future stale autonomy-audit cadence failures alert independently of the audit cron itself.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
+## Daily Audit Snapshot — 2026-06-01 (self-improvement-audit-daily, 03:24 UTC)
+
+### PR review
+- **Status:** PR follow-up guardrails still had a wrapper-level suspension gap: `scripts/review/run-followup-guards.sh` invoked `sync-gh` and metadata drift checks without its own pre-flight, so a suspended GitHub account could fail mid-wrapper or leave partial artifacts even though the child scripts now had guards. Gap fixed this cycle: added a wrapper-level `bail_if_github_suspended()` that honors `GITHUB_ACCESS_STATE_FILE` / `GITHUB_ACCESS_MAX_AGE_MINUTES`, exits `4` with `GITHUB_SUSPENDED_SKIP` before artifact creation, and expanded `scripts/github/check-github-guard-coverage.sh` so this wrapper remains covered.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
+## Daily Audit Snapshot — 2026-05-29 (self-improvement-audit-daily, 03:24 UTC)
+
+### PR review
+- **Status:** PR metadata-drift checking still had one standalone direct-GitHub path without the shared suspension pre-flight: `scripts/github/check-pr-metadata-drift.py` called `gh pr view` / `gh pr diff` directly, so direct metadata-drift checks could crash during the active account suspension instead of producing an explicit skip signal. Gap fixed this cycle: added `bail_if_github_suspended()` to the checker, made suspended-cache runs exit `4` with `GITHUB_SUSPENDED_SKIP` before any PR metadata fetch, and expanded `scripts/github/check-github-guard-coverage.sh` so this PR-review guard surface stays covered by future guard-drift checks.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
+## Daily Audit Snapshot — 2026-05-28 (self-improvement-audit-daily, 03:24 UTC)
+
+### PR review
+- **Status:** PR review follow-up automation still had one direct GitHub path without the shared suspension pre-flight: `scripts/review/track-findings.py import-gh` / `sync-gh` could start local review-state work and then crash on `gh api` during the active account suspension. Proposed fix was to push the existing cached GitHub guard into the finding tracker itself. Gap fixed this cycle: added `bail_if_github_suspended()` to `track-findings.py`, made suspended-cache runs exit `2` with `GITHUB_SUSPENDED_SKIP` before any review-comment fetch, and expanded `scripts/github/check-github-guard-coverage.sh` so this review workflow stays covered by future guard-drift checks.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
+## Daily Audit Snapshot — 2026-05-27 (self-improvement-audit-daily, 03:24 UTC)
+
+### PR review
+- **Status:** PR-review guardrails remain healthy; no new blocker discovered this cycle.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** catch-up/OOM repro setup had no deterministic guard against launching from a checkpoint that is too close to head, which wastes runs and masks the intended deep-sync backlog. Gap fixed this cycle: added `scripts/debug/check-catchup-depth.sh` and wired it into `skills/local-mainnet-debug/SKILL.md`; it validates head/checkpoint slot distance, supports Beacon API-assisted slot fetches, and exits `2` before launch when the checkpoint is too shallow.
+
+---
+## Daily Audit Snapshot — 2026-05-26 (self-improvement-audit-daily, 03:23 UTC)
+
+### PR review
+- **Status:** PR-review guardrails remain healthy; no new blocker discovered this cycle.
+
+### CI fix
+- **Status:** GitHub suspension handling was now implemented in scripts, but there was no coverage guard to prove the guard stayed wired into every GH-dependent cron path after future prompt/script edits. Gap fixed this cycle: added `scripts/github/check-github-guard-coverage.sh` and wired the CI auto-fix prompt to run it before any GitHub access. The verifier checks the shared access guard plus the current notification, PR-CI, and flaky-CI guard callsites and fails before `gh` calls if coverage drifts.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
+## Daily Audit Snapshot — 2026-05-25 (self-improvement-audit-daily, 03:23 UTC)
+
+### PR review
+- **Status:** PR-review guardrails remain healthy; no new blocker discovered this cycle.
+
+### CI fix
+- **Status:** prompt-level GitHub-access guards were not enough for CI autonomy: `scripts/ci/auto_fix_flaky.py` still went straight into `gh` calls when invoked directly, so future prompt drift or manual runs could crash during the active suspension. Gap fixed this cycle: added a script-level `bail_if_github_suspended()` guard to the detector. It calls the shared cached guard before scanning, prints the cron's expected `GITHUB_SUSPENDED_SKIP`, exits 0 on suspension, and exposes `GITHUB_ACCESS_STATE_FILE` / `GITHUB_ACCESS_MAX_AGE_MINUTES` overrides for deterministic tests.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
+## Daily Audit Snapshot — 2026-05-24 (self-improvement-audit-daily, 03:23 UTC)
+
+### PR review
+- **Status:** PR-review guardrails remain healthy; no new blocker discovered this cycle.
+
+### CI fix
+- **Status:** GH-dependent cron callers had no script-level guard against the active GitHub suspension, so each invocation crashed mid-`gh api` rather than short-circuiting cleanly. Gap fixed this cycle: pushed the access guard down into the scripts themselves. **Fix applied this cycle:** added `bail_if_github_suspended()` to `scripts/github/github_notifications_sweep.py` (288 runs/day at every-5-min cadence) and `scripts/github/monitor_open_pr_ci.py` (every 30 min). Both call `scripts/github/check-github-access.sh` at the top of `main()` and print the cron's expected silent signal (`HEARTBEAT_OK` / `NO_REPLY`) before any `gh api` call, so the bail is clean regardless of which cron/human invokes the script.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
+
+## Daily Audit Snapshot — 2026-05-23 (self-improvement-audit-daily, 03:24 UTC)
+
+### PR review
+- **Status:** no new PR-review blocker discovered this cycle; existing review guardrails remain healthy.
+
+### CI fix
+- **Status:** no new CI-fix blocker discovered this cycle. Gap found and fixed this cycle: GH-dependent crons (github-notifications, ci-autofix-unstable, monitor-open-pr-ci) had no shared pre-flight guard to short-circuit when the account is suspended. Each fired independently, burned full prompt context, and only hit 403 mid-execution. **Fix applied this cycle:** added `scripts/github/check-github-access.sh` — a cached guard (10-min TTL) that cron prompts can call at startup; exits 0 when accessible, exits 2 when suspended, caches the result to avoid repeated API hammering.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
+## Daily Audit Snapshot — 2026-05-22 (self-improvement-audit-daily, 03:23 UTC)
+
+### PR review
+- **Status:** no new PR-review blocker discovered this cycle; existing review guardrails remain healthy.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** tool-surface routing gap found and fixed this cycle: Discord / channel follow-up work that needed OpenClaw provider tools could still get bounced into plain Claude Code / CLI sessions with no provider access. **Fix applied this cycle:** codified a provider-surface routing guard in `AGENTS.md` and `HEARTBEAT.md` — keep Discord/Telegram/browser/message follow-ups in the OpenClaw main or channel session, and use `sessions_send` back to `agent:main:discord:channel:<ID>` / topic sessions instead of delegating those steps to plain CLI continuations.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
+## Daily Audit Snapshot — 2026-05-21 (self-improvement-audit-daily, 03:23 UTC)
+
+### PR review
+- **Status:** no new PR-review blocker discovered this cycle; existing review guardrails remain healthy.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
+## Daily Audit Snapshot — 2026-05-19 (self-improvement-audit-daily, 03:23 UTC)
+
+### PR review
+- **Status:** no new PR-review blocker discovered this cycle; existing review guardrails remain healthy.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
+## Daily Audit Snapshot — 2026-05-18 (self-improvement-audit-daily, 03:23 UTC)
+
+### PR review
+- **Status:** close-out targeting gap found and fixed this cycle: when `memory/<date>.md` had multiple unresolved `- Outcome: _fill in after close-out_.` lines (for example after a retried preflight), `close-autonomy-audit.sh --update-memory-outcome` replaced the **first** placeholder, which could update an older stub and leave today's latest audit outcome unresolved. **Fix applied this cycle:** switched replacement to target the **most recent** placeholder via `rsplit(..., 1)`, and updated the warning text accordingly.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
+## Daily Audit Snapshot — 2026-05-17 (self-improvement-audit-daily, 03:23 UTC)
+
+### PR review
+- **Status:** close-out ordering gap found and fixed this cycle: `close-autonomy-audit.sh` ran `finalize-autonomy-audit.py` **before** memory outcome guards, so a missing/placeholder outcome could fail close-out after mutating `notes/autonomy-gaps.md` (partial side effects and noisy rerun paths). **Fix applied this cycle:** moved `--update-memory-outcome` + daily-memory outcome guard to run **before** finalize/cadence, making close-out fail fast without touching audit snapshots when memory stubs are incomplete.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
+## Daily Audit Snapshot — 2026-05-16 (self-improvement-audit-daily, 03:23 UTC)
+
+### PR review
+- **Status:** audit-closeout safety gap found and fixed this cycle: `close-autonomy-audit.sh --update-memory-outcome` replaced **all** `_fill in after close-out_` placeholders in `memory/<date>.md`, which could overwrite multiple unresolved entries with one shared outcome and hide incomplete notes. **Fix applied this cycle:** replacement is now single-target (`replace(..., 1)`), and close-out emits a warning when multiple placeholders are detected so follow-up cleanup stays explicit.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
+## Daily Audit Snapshot — 2026-05-15 (self-improvement-audit-daily, 03:23 UTC)
+
+### PR review
+- **Status:** audit-closeout safety gap found and fixed this cycle: `close-autonomy-audit.sh --update-memory-outcome` previously used raw `sed` replacement, so outcome text containing replacement metacharacters (notably `&`) could be mangled during placeholder updates. **Fix applied this cycle:** replaced the `sed` substitution with a Python atomic rewrite (`read_text` → `replace` → temp-file + `mv`) so arbitrary outcome text is preserved exactly.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
+## Daily Audit Snapshot — 2026-05-13 (self-improvement-audit-daily, 12:18 UTC)
+
+### PR review
+- **Status:** audit-completion workflow gap found and fixed this cycle: `close-autonomy-audit.sh` had no inline way to fill the memory-outcome placeholder — prior flow required a separate manual file edit to replace `_fill in after close-out_.` before close-out could succeed, making incomplete-audit recovery error-prone. **Fix applied this cycle:** added `--update-memory-outcome <text>` flag to `close-autonomy-audit.sh`; atomically replaces the placeholder via tmp-file + mv so close-out becomes a single atomic command.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
+## Daily Audit Snapshot — 2026-05-12 (self-improvement-audit-daily, 09:31 UTC)
+
+### PR review
+- **Status:** no new PR-review blocker discovered this cycle; existing review guardrails remain healthy.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
+## Daily Audit Snapshot — 2026-05-11 (self-improvement-audit-daily, 03:24 UTC)
+
+### PR review
+- **Status:** audit-side-effect gap found and fixed this cycle: preflight wrote `memory/<date>.md` scaffolding before duplicate/consistency/cadence guards, so failed preflight runs could leave orphaned placeholder notes without a corresponding snapshot. **Fix applied this cycle:** updated `scripts/notes/run-autonomy-audit-preflight.sh` to run note/stub writes only after all guard checks pass (new explicit step `[3/5]`), with snapshot insertion moved to `[4/5]`.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
+## Daily Audit Snapshot — 2026-05-10 (self-improvement-audit-daily, 03:24 UTC)
+
+### PR review
+- **Status:** audit-closeout continuity gap found and fixed this cycle: close-out could complete while today's seeded memory stub still had `Outcome: _fill in after close-out_.`, which made daily audit journaling easy to leave incomplete. **Fix applied this cycle:** added a default memory-outcome guard in `scripts/notes/close-autonomy-audit.sh` that requires `memory/<date>.md` to exist and rejects unresolved outcome placeholders unless explicitly overridden with `--skip-memory-outcome-check`.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
+## Daily Audit Snapshot — 2026-05-09 (self-improvement-audit-daily, 03:25 UTC)
+
+### PR review
+- **Status:** audit-trace continuity gap found and fixed this cycle: preflight could create `memory/<date>.md` but still leave the day without an explicit autonomy-audit note stub, making close-out journaling easy to forget. **Fix applied this cycle:** updated `scripts/notes/run-autonomy-audit-preflight.sh` to append a one-time `self-improvement-audit-daily (preflight)` entry stub in `memory/<date>.md` by default, with explicit opt-out via `--no-seed-audit-memory-entry`.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
+## Daily Audit Snapshot — 2026-05-08 (self-improvement-audit-daily, 03:24 UTC)
+
+### PR review
+- **Status:** audit-continuity gap found and fixed this cycle: daily autonomy preflight assumed `memory/<date>.md` already existed, so a fresh day could start without the required daily-note file and force manual repair later. **Fix applied this cycle:** updated `scripts/notes/run-autonomy-audit-preflight.sh` to ensure `memory/<date>.md` exists by default before snapshot insertion, with explicit opt-out via `--no-ensure-daily-memory-note`.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
+## Daily Audit Snapshot — 2026-05-07 (self-improvement-audit-daily, 03:23 UTC)
+
+### PR review
+- **Status:** audit-workflow ergonomics gap found and fixed this cycle: preflight inserted blank placeholder status lines by default even though stable carry-forward logic already existed, which adds avoidable manual churn and placeholder-leak risk. **Fix applied this cycle:** changed `scripts/notes/run-autonomy-audit-preflight.sh` to enable carry-forward status prefill by default, with explicit `--no-carry-forward-status` opt-out for intentional blank scaffolds.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
+## Daily Audit Snapshot — 2026-05-06 (self-improvement-audit-daily, 03:22 UTC)
+
+### PR review
+- **Status:** audit-workflow diagnostics gap found and fixed this cycle: cadence warnings reported only missing-day counts, which made backfill root-cause tracing slower during missed-cron investigations. **Fix applied this cycle:** extended `scripts/notes/check-autonomy-audit-cadence.py` to print explicit missing in-between dates (capped list + overflow count) for each detected cadence gap.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
+## Daily Audit Snapshot — 2026-05-05 (self-improvement-audit-daily, 03:19 UTC)
+
+### PR review
+- **Status:** audit-closeout integrity gap found and fixed this cycle: `close-autonomy-audit.sh` could emit `NO_REPLY` when finalize reported no delta even if `## Next Audit Priorities` still had live items. **Fix applied this cycle:** added a default guard in `scripts/notes/close-autonomy-audit.sh` that runs `check-next-audit-priorities.py --fail-if-live` before emitting `NO_REPLY`, with explicit override flag `--allow-live-priorities-no-reply` for intentional bypasses.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
+## Daily Audit Snapshot — 2026-05-03 (self-improvement-audit-daily, 03:19 UTC)
+
+### PR review
+- **Status:** audit-integrity gap found and fixed this cycle: consistency checks validated snapshot order/dedup metadata but did not verify required section structure across historical snapshots. **Fix applied this cycle:** extended `scripts/notes/check-autonomy-gaps-consistency.py` with snapshot-structure validation (required domains + structured status/blocker/fix markers), including backward-compatible handling for legacy snapshots that use `Blocker/Fix applied` bullets instead of normalized `Status` lines.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
+## Daily Audit Snapshot — 2026-04-30 (self-improvement-audit-daily, 00:57 UTC)
+
+### PR review
+- **Status:** no new PR-review blocker discovered this cycle; existing review guardrails remain healthy.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
+## Daily Audit Snapshot — 2026-04-29 (self-improvement-audit-daily, 00:46 UTC)
+
+### PR review
+- **Status:** reviewer artifacts still depended on manual metadata stamping in reviewer prompts, so marker omissions could break `check-review-artifacts.sh` gating and force avoidable reruns. **Fix applied this cycle:** added `scripts/review/write-review-artifact.sh` to stamp `Reviewer:` + `Reviewed commit:` markers automatically from `--agent` and repo HEAD, and updated `skills/lodestar-review/SKILL.md` durable-output instructions to prefer the helper.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
+## Daily Audit Snapshot — 2026-04-28 (self-improvement-audit-daily, 00:46 UTC)
+
+### PR review
+- **Status:** reviewer artifact verification still accepted agent-swapped files when commit markers matched, so cross-agent copy mistakes could pass synthesis checks. **Fix applied this cycle:** extended `scripts/review/check-review-artifacts.sh` with `--require-agent-marker` (enforces `Reviewer: <agent-id>` per artifact) and updated `skills/lodestar-review/SKILL.md` durable-output + Step 4.1 verifier instructions to stamp and verify reviewer ownership markers.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
+## Daily Audit Snapshot — 2026-04-27 (self-improvement-audit-daily, 00:46 UTC)
+
+### PR review
+- **Status:** reviewer commit-affinity checks still relied on manually interpolating `Reviewed commit: <HEAD_SHA>` text in verifier commands, which is easy to mistype/skip during fast follow-up loops. **Fix applied this cycle:** extended `scripts/review/check-review-artifacts.sh` with `--require-reviewed-head` (auto-resolves `Reviewed commit: <HEAD_SHA>` from git) plus `--head-repo <path>`, and updated `skills/lodestar-review/SKILL.md` Step 4.1 to use the new deterministic guard.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
+## Daily Audit Snapshot — 2026-04-26 (self-improvement-audit-daily, 00:45 UTC)
+
+### PR review
+- **Status:** reviewer artifact freshness checks existed, but they still accepted files from the wrong head commit when those files were recently regenerated. **Fix applied this cycle:** extended `scripts/review/check-review-artifacts.sh` with repeatable `--require-text` markers and updated `skills/lodestar-review/SKILL.md` to stamp/verify `Reviewed commit: <HEAD_SHA>` in each reviewer artifact.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
+## Daily Audit Snapshot — 2026-04-25 (self-improvement-audit-daily, 00:44 UTC)
+
+### PR review
+- **Status:** reviewer artifact presence/size checks existed, but stale files from prior review rounds could still pass and be mistaken as fresh output. **Fix applied this cycle:** extended `scripts/review/check-review-artifacts.sh` with `--max-age-minutes` stale-artifact enforcement and updated `skills/lodestar-review/SKILL.md` Step 4.1 to run the verifier with age bounds (`--max-age-minutes 180`).
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
+## Daily Audit Snapshot — 2026-04-24 (self-improvement-audit-daily, 00:44 UTC)
+
+### PR review
+- **Status:** transport-failure fallback required reviewer artifacts, but there was no one-command guard to verify all expected reviewer files exist before synthesis. **Fix applied this cycle:** added `scripts/review/check-review-artifacts.sh` (checks `pr-<PR>-<agent-id>.md` presence/size and supports `--allow-empty-no-findings`) and wired its usage into `skills/lodestar-review/SKILL.md` Step 4.1 so missing reviewer outputs are caught immediately.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
+## Daily Audit Snapshot — 2026-04-23 (self-improvement-audit-daily, 00:44 UTC)
+
+### PR review
+- **Status:** reviewer-result transport can fail (completion pings without full findings payload), which can silently drop review input in follow-up loops. **Fix applied this cycle:** updated `skills/lodestar-review/SKILL.md` to require durable per-reviewer report artifacts in `notes/review-reports/pr-<PR>-<agent-id>.md` and added a mandatory transport-failure fallback step (read artifact/re-run missing reviewer before synthesis).
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
+## Daily Audit Snapshot — 2026-04-22 (self-improvement-audit-daily, 00:44 UTC)
+
+### PR review
+- **Status:** carry-forward status prefill could copy prior-cycle "implemented this cycle" wording into new snapshots, which created stale self-claims in fresh daily entries. **Fix applied this cycle:** `scripts/notes/prepend-autonomy-audit-snapshot.py` now sanitizes change-event wording (`fix applied` / `implemented` / `added` / `updated`) during `--carry-forward-status` and falls back to section steady-state status templates.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
+## Daily Audit Snapshot — 2026-04-21 (self-improvement-audit-daily, 00:40 UTC)
+
+### PR review
+- **Status:** no new PR-review blocker discovered this cycle; implemented a close-out cadence guard in `scripts/notes/close-autonomy-audit.sh` so missing-day drift is checked even when someone runs close-out directly without preflight.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
+## Daily Audit Snapshot — 2026-04-20 (self-improvement-audit-daily, 00:40 UTC)
+
+### PR review
+- **Status:** no new PR-review blocker discovered this cycle; latest-pair cadence noise is now naturally clear with consecutive snapshots (`2026-04-19` → `2026-04-20`). Implemented a stricter preflight control in `run-autonomy-audit-preflight.sh`: new `--strict-cadence` mode hard-fails on missing-day gaps instead of advisory-only warnings.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
+## Daily Audit Snapshot — 2026-04-19 (self-improvement-audit-daily, 00:39 UTC)
+
+### PR review
+- **Status:** audit-workflow integrity blocker found and fixed this cycle: duplicate snapshot dates could accumulate silently and drift `> Updated:` pass counts out of sync. Added a duplicate-snapshot guard to `run-autonomy-audit-preflight.sh` plus `--dedupe-apply` for one-command cleanup, then removed the stale duplicate `2026-03-15` snapshot block so preflight/finalize checks are deterministic again. Cadence guard still surfaces the historical 2026-03-20→2026-04-18 gap, but now does so explicitly on every run.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
+## Daily Audit Snapshot — 2026-04-18 (self-improvement-audit-daily, 00:38 UTC)
+
+### PR review
+- **Status:** audit-workflow blocker found and fixed this cycle: preflight cadence checks only compared the latest snapshot pair, so long outages after the latest snapshot could be silently missed. Added current-date freshness enforcement (`--require-current`) plus deterministic `--reference-date` support in `check-autonomy-audit-cadence.py`, and wired both into `run-autonomy-audit-preflight.sh`.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
+## Daily Audit Snapshot — 2026-03-20 (self-improvement-audit-daily, 23:46 UTC)
+
+### PR review
+- **Blocker:** follow-up guard wrapper handled GitHub delta sync + metadata drift, but stale unresolved critical/major findings were still a separate manual command, so reviewers could miss aging blockers in re-review loops.
+- **Fix applied this cycle:** expanded `scripts/review/run-followup-guards.sh` into a 3-step guard:
+  - runs `track-findings.py sync-gh`,
+  - runs `check-pr-metadata-drift.py` and stores `pr-<PR>-metadata-drift.md`,
+  - runs `track-findings.py stale --days 7 --severity critical major` and stores `pr-<PR>-stale-findings.md`.
+- Added `--fail-on-stale`, `--stale-days`, and `--skip-stale-check` controls, and updated `skills/lodestar-review/SKILL.md` so this is the default follow-up path.
+
+### CI fix
+- **Status:** retry telemetry + fallback log acquisition path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** architecture-timeout fallback + compliance/vector gates remain healthy; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle workflow remains healthy; no new blocker discovered this cycle.
+
+---
+
+## Daily Audit Snapshot — 2026-03-19 (self-improvement-audit-daily, 23:46 UTC)
+
+### PR review
+- **Blocker (previous cycle):** PR metadata drift checker existed, but follow-up review workflow docs did not require running it before re-review.
+- **Fix applied this cycle:** wired a mandatory metadata-drift guard step into `skills/lodestar-review/SKILL.md` Finding Resolution Tracking workflow:
+  - run `scripts/github/check-pr-metadata-drift.py` on follow-up commits,
+  - persist report to `notes/review-reports/pr-<PR>-metadata-drift.md`,
+  - update title/body via `gh pr edit` when exit code `2` signals drift.
+
+### CI fix
+- **Status:** retry telemetry + `logs-unavailable` fallback path remain healthy; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Status:** advisor timeout fallback policy remains codified and operational; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle path remains healthy; no new blocker discovered this cycle.
+
+---
+
+## Daily Audit Snapshot — 2026-03-18 (self-improvement-audit-daily, 23:46 UTC)
+
+### PR review
+- **Status:** finding tracker + stale escalation path are healthy; no new blocker discovered this cycle.
+
+### CI fix
+- **Status:** `logs-unavailable` fallback wiring is operational (auto-fetch + reclassification metadata); no new blocker discovered this cycle.
+
+### Spec implementation
+- **Blocker:** architecture consult loops can stall on repeated `gpt-advisor` `thinking: xhigh` timeouts, delaying convergence and wasting audit cycles.
+- **Fix applied this cycle:** updated `skills/dev-workflow/SKILL.md` with a required timeout fallback policy:
+  - start with `xhigh`,
+  - allow one tighter retry max,
+  - then fallback to `thinking: high` with practical scope,
+  - log each round outcome in `TRACKER.md` for resumable context.
+
+### Devnet debugging
+- **Status:** triage/correlator/incident bundle path remains healthy; no new blocker discovered this cycle.
+
+---
+
+## Daily Audit Snapshot — 2026-03-17 (self-improvement-audit-daily, 23:46 UTC)
+
+### PR review
+- **Status:** finding tracker + stale-escalation cron path are operational; no new blocker discovered this cycle.
+
+### CI fix
+- **Blocker:** `logs-unavailable` CI classifications are still slow to triage because there was no one-command fallback to pull failed/full run logs into a local artifact.
+- **Fix applied this cycle:** added `scripts/ci/fetch-run-logs.sh <run-id> [--repo owner/repo] [--output <path>]`.
+  - tries `gh run view --log-failed` first, then falls back to `--log`,
+  - saves logs under `tmp/ci-logs/` by default,
+  - prints fetch mode + line/byte counts for quick auditability.
+
+### Spec implementation
+- **Status:** extraction + compliance + vector-readiness gates are operational; no new blocker discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage, correlator, incident bundle, and startup helper scripts are operational; no new blocker discovered this cycle.
+
+---
+
+## Daily Audit Snapshot — 2026-03-16 (self-improvement-audit-daily, 23:46 UTC)
+
+### PR review
+- **Status:** stale-finding weekly escalation cron is now live and reporting correctly; no new blocker discovered this cycle.
+
+### CI fix
+- **Status:** retry telemetry + rolling-window degradation detection are operational; no new blocker discovered this cycle.
+
+### Spec implementation
+- **Blocker (previous cycle):** test-vector freshness checks were implicit (easy to skip).
+- **Fix applied this cycle:** added `scripts/spec/check-test-vector-readiness.sh` and wired it into `skills/dev-workflow/SKILL.md` spec-vector gate.
+  - verifies `~/consensus-specs/tests/` exists and is populated,
+  - reports `tests/` recency based on git history,
+  - supports `--require-fresh` to hard-fail when vectors are stale.
+
+### Devnet debugging
+- **Status:** triage, correlator, incident bundle, and startup helper scripts are operational; no new blocker discovered this cycle.
+
+---
+
+## Daily Audit Snapshot — 2026-03-15 (self-improvement-audit-daily, 23:46 UTC)
+
+### PR review
+- **Blocker:** stale-finding report exists, but no scheduled escalation wrapper is wired yet.
+- **Proposed fix:** add a weekly cron around `scripts/review/stale-findings-report.sh` that only emits when stale critical/major findings are present.
+
+### CI fix
+- **Blocker (previous cycle):** retry telemetry existed but no threshold-based sustained-degradation detection.
+- **Fix applied this cycle:** added rolling-window escalation in `scripts/ci/auto_fix_flaky.py`:
+  - persists `scan_history` with retry telemetry per run,
+  - computes `llm_retry_escalation` over configurable window/thresholds,
+  - emits escalation status in clean/failure JSON output,
+  - stores escalation snapshot under `last_scan` for tracker visibility.
+- **Workflow update:** updated `scripts/ci/CRON_PROMPT.md` to require explicit warning when `llm_retry_escalation.degraded=true`.
+
+### Spec implementation
+- **Status:** extraction + compliance gates operational; no new gap discovered this cycle.
+
+### Devnet debugging
+- **Status:** triage, correlator, and incident bundle scripts operational; no new gap discovered this cycle.
+
+---
+
+## Daily Audit Snapshot — 2026-03-14 (self-improvement-audit-daily)
+
+### PR review
+- **Blocker:** stale-finding query exists, but no automation path currently opens/refreshes a follow-up backlog item when stale critical findings are detected.
+- **Proposed fix:** add a lightweight cron wrapper around `track-findings.py stale --fail-on-match` that writes/updates a single backlog-facing report.
+
+### CI fix
+- **Blocker:** retry telemetry now exists in detector output, but no threshold-based escalation policy is codified (e.g., retry_count spikes over rolling runs).
+- **Proposed fix:** add a tracker-level threshold check (`llm_retry_count` / `llm_retry_wait_s`) with explicit warning output when sustained degradation is detected.
+
+### Spec implementation
+- **Blocker (previous cycle):** compliance checks were split across multiple commands and easy to run inconsistently.
+- **Fix applied this cycle:** added one-command wrapper `scripts/spec/prepr-compliance-gate.sh` to run report generation + metadata checks and emit a single pass/fail summary.
+
+### Devnet debugging
+- **Blocker:** incident packaging is still manual (logs + metrics + timeline + environment metadata in one bundle).
+- **Proposed fix:** add `scripts/debug/build-incident-bundle.sh` to produce one timestamped markdown bundle for sharing in topic threads/PRs.
+
+---
+
+## Daily Audit Snapshot — 2026-03-13 (self-improvement-audit-daily)
+
+### PR review
+- **Blocker (previous cycle):** no explicit escalation query for stale unresolved findings.
+- **Fix applied this cycle:** added `python3 scripts/review/track-findings.py stale <PR>` (+ `--severity`, `--days`, `--use-created`, `--fail-on-match`) and documented it in `skills/lodestar-review/SKILL.md`.
+
+### CI fix
+- **Blocker:** retry/backoff exists, but concise cron summaries still do not surface retry telemetry (hard to spot degraded API health quickly).
+- **Proposed fix:** include `retry_count`, `retry_wait_s`, and `retry_after_seen` in detector summary/tracker line items.
+
+### Spec implementation
+- **Blocker:** compliance artifact checks now exist for tracker + PR body, but there is no single pre-PR wrapper that runs the full compliance bundle and emits one pass/fail summary.
+- **Proposed fix:** add `scripts/spec/prepr-compliance-gate.sh` to run checker + artifact-presence check and produce one markdown summary block for PR descriptions.
+
+### Devnet debugging
+- **Blocker:** incident packaging is still manual (logs + metrics + timeline + environment metadata in one bundle).
+- **Proposed fix:** add `scripts/debug/build-incident-bundle.sh` to produce one timestamped markdown bundle for sharing in topic threads/PRs.
+
+---
+
+## Daily Audit Snapshot — 2026-03-12 (self-improvement-audit-daily)
+
+### PR review
+- **Blocker:** reviewer findings are tracked, but there is still no explicit escalation policy for stale unresolved findings (e.g., open >7 days with no author response).
+- **Proposed fix:** add a `track-findings.py stale` command (or cron wrapper) that flags unresolved high-severity findings older than a threshold.
+
+### CI fix
+- **Blocker:** LLM retry/backoff exists, but retry telemetry is still not surfaced in concise cron summaries (hard to spot degraded API health quickly).
+- **Proposed fix:** include retry-count/backoff stats in the final detector summary line and tracker notes for each run.
+
+### Spec implementation
+- **Blocker:** compliance artifacts were generated but still easy to omit from tracker/PR write-ups.
+- **Fix applied this cycle:** updated `skills/dev-workflow/SKILL.md` to require recording compliance artifacts in `TRACKER.md` and including a dedicated "Spec Compliance" block in PR descriptions; added reusable template `notes/spec-compliance-pr-block.md`.
+- **Next focus:** add lightweight lint/check script that validates tracker + PR body contain compliance artifact references before merge.
+
+### Devnet debugging
+- **Blocker:** incident packaging is still manual (logs + metrics + timeline + environment metadata in one bundle).
+- **Proposed fix:** add `scripts/debug/build-incident-bundle.sh` to produce one timestamped markdown bundle for sharing in topic threads/PRs.
+
+---
+
+## 1. PR Review
+
+### Current State
+Multi-persona review via `lodestar-review` skill. Parallel spawning, persona prompts, inline GitHub comment posting. Works well when diff scope is clear.
+
+### Gaps
+
+#### ~~🟡 PR metadata checker lacked checker-owned local preflight~~ ✅ FIXED (2026-07-11)
+~~`scripts/review/run-followup-guards.sh --check-only` could validate that `check-pr-metadata-drift.py --help` parsed, but it could not exercise the metadata checker's own side-effect-free prerequisite path without a real PR. That left `gh pr view`/`gh pr diff` helper drift or a broken GitHub-access guard detectable only during a live follow-up run.~~
+
+**Fix applied:** added `--check-only --json` to `scripts/github/check-pr-metadata-drift.py`:
+- validates `gh`, `gh pr view --help`, `gh pr diff --help`, non-empty repo input, and the executable GitHub access guard without fetching PR metadata,
+- updated `scripts/review/run-followup-guards.sh --check-only --json` to require that checker-owned preflight and expose `checkOnlyJsonOk`,
+- extended `scripts/github/check-github-guard-coverage.sh` so the direct checker preflight remains covered alongside the wrapper.
+
+#### ~~🟡 PR follow-up wrapper lacked machine-readable local preflight~~ ✅ FIXED (2026-06-15)
+~~`scripts/review/run-followup-guards.sh` had guarded live execution, but autonomous PR-review wrappers could not validate the full helper chain without supplying a real PR and risking GitHub fetch/report side effects. That left helper drift detectable only during an actual follow-up run.~~
+
+**Fix applied:** added `--check-only --json` to `scripts/review/run-followup-guards.sh`:
+- validates `python3`, `gh`, wrapper shell syntax, `fetch-pr-discussion.py --check-only --json`, `track-findings.py --help`, `check-pr-metadata-drift.py --help`, the executable GitHub access guard, and review-report directory readiness,
+- keeps the live follow-up path unchanged and rejects `--json` outside `--check-only`,
+- wired the preflight into `scripts/github/check-github-guard-coverage.sh`,
+- documented the machine-readable preflight in `skills/lodestar-review/SKILL.md`.
+
+#### ~~🟡 PR follow-up wrapper lacked suspension pre-flight~~ ✅ FIXED (2026-06-01)
+~~The review follow-up wrapper `scripts/review/run-followup-guards.sh` invoked `track-findings.py sync-gh` and `check-pr-metadata-drift.py` without a wrapper-level GitHub access pre-flight. During account suspension, the wrapper could fail after entering step 1 or after creating report paths instead of producing one explicit skip signal before side effects.~~
+
+**Fix applied:** added `bail_if_github_suspended()` to `scripts/review/run-followup-guards.sh`:
+- calls the shared cached `scripts/github/check-github-access.sh` guard before sync/artifact steps,
+- supports `GITHUB_ACCESS_STATE_FILE` / `GITHUB_ACCESS_MAX_AGE_MINUTES` overrides for deterministic tests,
+- exits `4` with `GITHUB_SUSPENDED_SKIP` before partial follow-up guard work when GitHub is known suspended,
+- extended `scripts/github/check-github-guard-coverage.sh` to verify the wrapper remains in the guarded surface.
+
+#### ~~🟡 PR metadata-drift checker lacked suspension pre-flight~~ ✅ FIXED (2026-05-29)
+~~The metadata drift checker was part of the PR review follow-up guardrail surface, but `scripts/github/check-pr-metadata-drift.py` still invoked `gh pr view` / `gh pr diff` directly. During GitHub suspension, direct checker runs could fail only after entering the metadata workflow instead of taking the shared cached skip path.~~
+
+**Fix applied:** added `bail_if_github_suspended()` to `scripts/github/check-pr-metadata-drift.py`:
+- calls the shared cached `scripts/github/check-github-access.sh` guard before PR metadata/diff fetches,
+- supports `GITHUB_ACCESS_STATE_FILE` / `GITHUB_ACCESS_MAX_AGE_MINUTES` overrides for deterministic tests,
+- exits `4` with `GITHUB_SUSPENDED_SKIP` before direct `gh pr` calls when GitHub is known suspended,
+- extended `scripts/github/check-github-guard-coverage.sh` to verify the metadata-drift checker remains guarded.
+
+#### ~~🟡 GitHub review-comment import lacked suspension pre-flight~~ ✅ FIXED (2026-05-28)
+~~The review finding tracker had `import-gh` / `sync-gh` commands for PR review-comment follow-up, but those commands invoked `gh api` directly. During GitHub suspension they could fail only after entering the review workflow, which made autonomous review follow-up brittle and inconsistent with the newer cron guards.~~
+
+**Fix applied:** added `bail_if_github_suspended()` to `scripts/review/track-findings.py`:
+- calls the shared cached `scripts/github/check-github-access.sh` guard before `import-gh` and `sync-gh`,
+- supports `GITHUB_ACCESS_STATE_FILE` / `GITHUB_ACCESS_MAX_AGE_MINUTES` overrides for deterministic tests,
+- exits `2` with `GITHUB_SUSPENDED_SKIP` before review-comment fetching when GitHub is known suspended,
+- extended `scripts/github/check-github-guard-coverage.sh` to verify the finding tracker remains guarded.
+
+#### ~~🔴 Reviewer false positives~~ ✅ FIXED (2026-03-08)
+~~Sub-agents sometimes flag files **not in the PR diff** (confirmed on PR #8993: `dataColumns.ts`, `gloas.ts` flagged but not changed). This wastes effort and can lead to spurious follow-up commits.~~
+
+**Fix applied:** mandatory false-positive guard in `lodestar-review/SKILL.md`:
+- get `git diff --name-only` before acting on findings,
+- include changed-file list in reviewer prompts,
+- discard findings for files outside the diff.
+
+#### ~~🟡 No reviewer task pre-injection of changed-file scope~~ ✅ FIXED (2026-03-08)
+~~Reviewer prompts don't currently include the file list — so reviewers have to infer scope from the diff content, which they sometimes miss.~~
+
+**Fix applied:** `lodestar-review/SKILL.md` Step 3 spawn task template now explicitly includes the `## Files Changed in This PR` block (from Step 1.5) between the persona and the diff, with the "IMPORTANT: Only flag issues in the files listed above" instruction baked into the template literal.
+
+#### ~~🟢 No automated convergence triage~~ ✅ FIXED (2026-03-08)
+~~When multiple reviewers flag the same issue, I manually merge.~~
+
+**Fix applied:** `scripts/review/track-findings.py dedup <PR>` groups open findings by file+line proximity (±5 lines), showing which locations are flagged by multiple reviewers. Also added `import --markdown` to parse free-form reviewer output into structured findings, and `check --changed-files` to flag findings on files touched by a new commit.
+
+#### ~~🟡 No stale unresolved-finding escalation query~~ ✅ FIXED (2026-03-13)
+~~Reviewer findings are tracked, but there was no fast way to answer: "which open critical/major findings are stale (>7d)?"~~
+
+**Fix applied:** extended `scripts/review/track-findings.py` with `stale` command:
+- `track-findings.py stale <PR>` defaults to open `critical|major` findings older than 7 days (`updated` timestamp)
+- supports `--severity`, `--days`, `--use-created`, and `--fail-on-match` (for cron/automation wrappers)
+- wired usage into `skills/lodestar-review/SKILL.md` follow-up workflow
+
+#### ~~🔴 No review finding resolution tracking~~ ✅ FIXED (2026-03-08)
+~~After posting a review, when the author pushes new commits, I have no system for tracking which findings got addressed. I manually re-read everything.~~
+
+**Fix applied:** added `scripts/review/track-findings.py` workflows (`check`, `resolve`, `sync-gh`, `dump`) for explicit re-verification after follow-up commits.
+
+---
+
+## 2. CI Fix
+
+### Current State
+CI autofix cron (`573d18ec`) runs hourly, classifies flaky failures, applies pattern-based fixes via Codex, opens PRs against `unstable`. Pattern library covers: shutdown-race, peer-count-flaky, timeout, vitest-crash.
+
+### Gaps
+
+#### ~~🟡 CI log fetch helper lacked local-only preflight~~ ✅ FIXED (2026-06-12)
+~~`scripts/ci/fetch-run-logs.sh` had a guarded live path, but no `--check-only` mode. Guard coverage could assert strings/executable bits, but it could not execute the helper's local prerequisite path without a real Actions run id. That left a small gap where syntax/argument handling or missing local tooling could drift until the next live CI failure triage.~~
+
+**Fix applied:** added `--check-only` to `fetch-run-logs.sh`:
+- validates the `gh` CLI and `scripts/github/check-github-access.sh` executable guard without calling GitHub,
+- allows preflight execution without a run id,
+- keeps the live path unchanged for `gh run view --log-failed` / full-log fallback,
+- wired the preflight into `scripts/github/check-github-guard-coverage.sh`.
+
+#### ~~🟡 CI log fetch helper bypassed GitHub suspension guard~~ ✅ FIXED (2026-06-08)
+~~`scripts/ci/fetch-run-logs.sh` called `gh run view --log-failed` / `--log` directly, so an autonomous CI fixer could still fail mid-triage during a known cached GitHub suspension. It also lacked the executable bit despite being documented as a direct command.~~
+
+**Fix applied:** added `bail_if_github_suspended()` to `fetch-run-logs.sh`, set the helper executable, and expanded `scripts/github/check-github-guard-coverage.sh` to require its guard strings and executable bit. Suspended-cache runs now emit `GITHUB_SUSPENDED_SKIP` and exit `4` before any `gh run view` call.
+
+#### ~~🟡 No auto-linkage to existing GitHub issues~~ ✅ FIXED (2026-03-07)
+~~When CI autofix opens a fix PR, it doesn't check whether an open issue already tracks that failure, and doesn't reference/close it.~~
+
+**Fix applied:** `CRON_PROMPT.md` Step 2 now has an "Issue linkage (mandatory)" step (Step 4): search `gh issue list --search "<test-name> in:title,in:body is:issue state:open"`, if hits found post a PR comment linking them, log linked issue IDs in the tracker update.
+
+#### ~~🟡 Pattern-based classifier misses semantic failures~~ ✅ FIXED (2026-03-07)
+~~The classifier matches keyword patterns. Failures with novel error messages or new test paths fall through unclassified.~~
+
+**Fix applied:** Added `classify_with_llm()` to `auto_fix_flaky.py`. When keyword classifier returns `unknown-failure`, it now calls `gpt-4o-mini` with a structured system prompt and 13-category taxonomy. Returns `classification`, `confidence`, `fixable`, and `fix_hint`. Falls back gracefully if OPENAI_API_KEY is missing or call fails. `--no-llm` flag available for offline use.
+
+#### ~~🟢 No confidence score in fix quality~~ ✅ FIXED (2026-03-07)
+~~Codex applies fixes but there's no check on whether the fix actually addresses root cause vs. masking (e.g., bumping timeout). This leads to PRs that merge but don't fix the underlying issue.~~
+
+**Fix applied:** Added `confidence` field (high/medium/low based on classification source) and `fix_confidence` field (`root-cause` | `likely-root-cause` | `masking-risk` | `unknown`) to all findings in `auto_fix_flaky.py`. `CRON_PROMPT.md` updated: if `fix_confidence` is `masking-risk`/`unknown`, cron agent must add PR comment flagging it for human review.
+
+---
+
+## 3. Spec Implementation
+
+### Current State
+Use `dev-workflow` skill for multi-agent development. Codex/Claude CLI for implementation. `~/consensus-specs` available locally. `scripts/pre-validate.mjs` for basic pre-flight checks.
+
+### Gaps
+
+#### ~~🔴 Spec vector freshness was tied to an active proposal checkout~~ ✅ FIXED (2026-07-15)
+~~The autonomy-domain spec preflight used `~/consensus-specs` directly, so a dirty or long-lived proposal branch could make all autonomous spec implementation look blocked even when a clean upstream test-vector source could be maintained separately. The first attempt to use a worktree cache also exposed that `check-test-vector-readiness.sh` only accepted `.git` directories and rejected valid Git worktrees with `.git` files.~~
+
+**Fix applied:** added `scripts/spec/ensure-fresh-test-vectors.sh` and wired it into the spec-implementation domain preflight:
+- creates or updates a dedicated upstream cache at `~/.cache/lodekeeper/consensus-specs-fresh` without touching the active `~/consensus-specs` branch,
+- supports `--check-only --json` for side-effect-free daily readiness checks,
+- uses the existing test-vector readiness checker after refresh,
+- updated `check-test-vector-readiness.sh` to validate Git worktrees via `git rev-parse --git-dir`,
+- updated the daily status renderer so failures point at the cache refresh command and healthy status names the fresh cache.
+
+Verified with shell/Python syntax checks, cache refresh (`6408b990c`, tests age 5 days), targeted spec-domain JSON preflight, full autonomy-domain JSON preflight, and status rendering.
+
+#### ~~🟡 Spec vector readiness preflight lacked machine-readable output~~ ✅ FIXED (2026-06-16)
+~~`scripts/spec/check-test-vector-readiness.sh` verified the local `~/consensus-specs/tests/` tree, but only emitted prose and could select generated cache/report files as its sample path. Autonomous spec-work wrappers needed brittle text parsing to distinguish ready/stale/missing-vector states, and the sample path could make a cache-only or report-only tree look healthier than it was.~~
+
+**Fix applied:** added `--json` to `scripts/spec/check-test-vector-readiness.sh` and made the script executable.
+- emits structured `ok`, `status`, `stale`, `testsAgeDays`, `maxAgeDays`, `sampleFile`, repo/head metadata, and failure statuses for missing repo/tests/vector data,
+- preserves existing human-readable output and exit codes,
+- filters `__pycache__`, `.pyc`, and `test-reports` files from sample discovery,
+- verified JSON success, JSON stale failure (`--max-age-days 0 --require-fresh`), human output, shell syntax, and missing-repo JSON failure.
+
+#### ~~🟡 Spec compliance preflight lacked machine-readable output~~ ✅ FIXED (2026-06-14)
+~~`scripts/spec/prepr-compliance-gate.sh --check-only` could validate local prerequisites, but only emitted prose. Autonomous wrappers needed brittle text parsing to distinguish a clean pass from missing compliance tooling. Proposed fix: add a JSON output path for check-only preflight and document it in the dev workflow.~~
+
+**Fix applied:** added `--check-only --json` to `scripts/spec/prepr-compliance-gate.sh` and documented the automation form in `skills/dev-workflow/SKILL.md`.
+- emits structured `ok`, `python3Available`, workspace, and helper-specific `present` / `helpOk` / `syntaxOk` fields,
+- exits `2` on failed preflight while preserving machine-readable stdout,
+- rejects `--json` outside `--check-only` so the full PR-gate path remains unchanged.
+
+#### ~~🔴 No automated spec section extraction~~ ✅ FIXED (2026-03-07)
+~~I manually grep `~/consensus-specs` for relevant pseudocode when implementing. This is slow and error-prone (easy to miss related functions/types across files).~~
+
+**Fix applied:** added `scripts/spec/extract-spec-section.sh` to search spec markdown and follow symbol-import chains for related definitions.
+
+#### ~~🔴 No LLM spec compliance check (new — 2026-03-08)~~ ✅ FIXED (2026-03-09)
+Before this was implemented, spec-function ports could ship without a structured pseudocode-vs-TS parity check, relying on slow and error-prone manual reading.
+
+**Fix applied:** `scripts/spec/check-compliance.py <spec-function> <ts-file> <ts-function>` now:
+- Extracts the pseudocode block from `~/consensus-specs`
+- Compares it against the TS implementation with an LLM pass
+- Emits a diff-style compliance report: implemented ✅ / missing ⚠️ / diverged ❌
+
+#### ~~🟡 No test-vector auto-download awareness~~ ✅ FIXED (2026-03-16)
+~~When implementing spec functions, I sometimes forget to run against official test vectors. The vectors live in `~/consensus-specs/tests/` but need a separate download step.~~
+
+**Fix applied:** added `scripts/spec/check-test-vector-readiness.sh` and wired it into the `skills/dev-workflow/SKILL.md` spec-vector gate.
+- validates `~/consensus-specs/tests/` exists and has vector files,
+- reports staleness of `tests/` from git history,
+- supports `--require-fresh` to fail fast when vectors are too old.
+
+#### ~~🟢 No implementation checklist per fork type~~ ✅ FIXED (2026-03-07)
+~~Each fork (Gloas, Fulu, etc.) has different patterns: new SSZ types, new gossip topics, new reqresp methods, new fork-choice fields, new API endpoints. No single checklist ensures all are covered.~~
+
+**Fix applied:** added `notes/fork-implementation-checklist.md` covering fork surfaces, test matrix, interop gates, and PR readiness criteria.
+
+---
+
+## 4. Devnet Debugging
+
+### Current State
+`grafana-loki` skill for log queries. `join-devnet` skill for local beacon node. `kurtosis-devnet` skill for full multi-client devnets. `local-mainnet-debug` skill for mainnet simulation. `investigate` now has a routing preflight for local Kurtosis vs remote panda datasource readiness. Good tooling, but each debugging session starts from scratch.
+
+### Gaps
+
+#### ~~🟡 Devnet triage had no telemetry preflight~~ ✅ FIXED (2026-06-17)
+~~`scripts/debug/devnet-triage.sh` could skip Loki/Prometheus sections when Grafana prerequisites were missing, but autonomous devnet-debugging wrappers had no no-side-effect way to validate that state before a longer investigation. That made it easy to discover missing telemetry only after starting data collection.~~
+
+**Fix applied:** added `--check-only` and `--require-grafana` to `scripts/debug/devnet-triage.sh`, and documented the preflight in `skills/devnet-debug/SKILL.md`:
+- validates local required tools without querying Grafana or writing a report,
+- treats `--require-grafana` as a hard preflight for `GRAFANA_TOKEN`, `curl`, and `jq`,
+- reports optional `lsof` / Grafana availability in the dry-run output,
+- guards live Loki/Prometheus helpers against missing `curl`.
+
+#### ~~🟡 Remote devnet routing treated panda datasource null as network absence~~ ✅ FIXED (2026-06-07)
+~~The `investigate` skill routed remote deployments by asking agents to run `panda datasources --json`, but panda can exit successfully with `{"datasources": null}` when auth/server datasource access is not ready. That lets an auth/tooling blocker masquerade as "target network not found" and can waste a debugging session before any useful data collection starts.~~
+
+**Fix applied:** added `scripts/debug/check-devnet-routing-readiness.py` and wired it into `~/.agents/skills/investigate/SKILL.md`:
+- classifies a target as local Kurtosis or remote panda datasource,
+- treats `datasources=null`, empty datasource names, invalid JSON, or panda command failure as explicit preflight failures,
+- exits `2` with `PANDA_DATASOURCES_UNAVAILABLE` before long remote investigations when panda access is not ready,
+- supports `--json` for wrapper/crons and verified the current auth-blocked `glamsterdam-devnet-5` state.
+
+#### ~~🔴 No multi-node log correlator~~ ✅ FIXED (2026-03-09)
+When debugging consensus failures across a devnet, logs from 4-8 nodes all matter. Today I query Loki once per node and manually cross-reference timestamps. A script that fetches logs from multiple nodes in parallel, merges + sorts by timestamp, and highlights consensus-relevant events (proposal, attestation, fork-choice updates) would turn a 30-min investigation into a 5-min one.
+
+**Fix applied:** `scripts/debug/correlate-logs.sh [node1] [node2...] --from <ts> --to <ts>` now:
+- Queries Loki for each node in parallel
+- Merges results sorted by timestamp
+- Highlights lines matching `/fork_choice|attestation|proposal|head_block|finalized/`
+- Outputs a unified timeline with node-prefixed lines
+
+#### ~~🔴 No scripted first-5-minutes diagnostic~~ ✅ FIXED (2026-03-09)
+~~Every devnet debugging session starts with the same manual sequence: check zombie processes, check ports, check Loki for recent errors, compare Grafana metrics, check peer count. This takes 10-15 minutes every time.~~
+
+**Fix applied:** added `scripts/debug/devnet-triage.sh` for one-command first-pass diagnostics (processes, ports, Loki errors, Prometheus probes, restart hints).
+
+#### ~~🟡 No structured debugging session template~~ ✅ FIXED (2026-03-07)
+~~When investigating complex issues (like feat4 QUIC crashes), I accumulate evidence across many tool calls without a clear structure. Later it's hard to reconstruct what was ruled out and why.~~
+
+**Fix applied:** created `notes/debug-session-template.md` and integrated it into investigation workflow.
+
+#### ~~🟡 Mixed-peer devnet startup is still manual~~ ✅ FIXED (2026-03-08)
+~~Spinning up a mixed-peer devnet (e.g., Lodestar B2 + C2 nodes against ePBS devnet) requires multiple manual steps and ad-hoc configuration.~~
+
+**Fix applied:** codified EPBS devnet-0 startup flow in `scripts/devnet/start-epbs-devnet.sh` for repeatable bring-up.
+
+---
+
+## Improvements Implemented This Cycle
+
+### ✅ Recovery-banner detection survives prepended task entries (2026-10-11)
+Updated `scripts/backlog/list_statuses.py` and `scripts/memory/rebuild_index.py`.
+- Detect both existing exact recovery markers anywhere in BACKLOG.md, including after prepended multi-line task blocks; placement no longer silently disables listing refusal or memory-index exclusion.
+- Retain default refusal, required-guard failure, explicit audit allowance and conservative exact-marker matching. GitHub notification sweeping keeps its deliberately different structural guard.
+- Added displaced-banner CLI regressions for both marker variants and five memory-index exclusion tests, including unguarded and non-BACKLOG controls.
+
+**Evidence:** 2026-10-10 16:58 UTC daily note records the three-entry prepend failure; the pre-change line-18 fixture failed both helpers. Narrow regressions, compilation and live guard checks passed. No actual index rebuild, backlog relocation, scheduler/config change or new skill.
+
+### ✅ CI duplicate/shared-helper check and evidence-led fix guidance (2026-10-07)
+Updated `scripts/ci/CRON_PROMPT.md`, consumed directly by the active CI auto-fix cron.
+- Search all authors' open PRs by actual affected test/helper/source paths, plus state-all root-cause metadata; inspect candidates rather than equating path overlap with a duplicate.
+- Compare returned paths with `changedFiles`, paginate truncated PR file lists, and verify full coverage; repeat the existing-fix check before submission.
+- Re-verify detector `already_fixing_pr` references, skip confirmed duplicates/old failures fixed upstream, and keep post-fix recurrences actionable. Refresh upstream refs before merged-fix comparisons.
+- Use full logs/root-cause evidence instead of automatic timeout increases or error swallowing; preserve the quality gate and existing worktree/identity/review/routing requirements.
+
+**Evidence:** the #10291 duplicate missed krisoshea-eth's #10237 shared-helper fix; live #9550 proved the separate 100-of-141-path cap and the paginated fallback recovered all 141. The known missing CI API key remains blocked, not bypassed. No cron/configuration/auth changes or new script/skill publication.
+
+### ✅ Memory entity mention-noise filter + nightly prune added (2026-08-22)
+Updated `scripts/memory/generate_entity_pages.py` and `scripts/memory/nightly_memory_cycle.sh`.
+- avoids person pages from email domains, npm/package scopes, version tags, numeric/duration ids, and prose placeholders like `@mention`,
+- adds a targeted `--prune-stale-person-noise` mode for stale generated people pages matching the same noise rules,
+- wires the nightly memory cycle to run that prune during entity regeneration.
+
+**Rationale:** the 2026-08-21 QMD crash fix stopped bare-hyphen entity filenames from breaking memory-bank indexing, but left a broader generated-entity noise class that polluted person pages and QMD results. This keeps future generated memory context focused on real people without changing cron config.
+
+### ✅ Next-audit priority helper ignores guidance preamble noise (2026-08-16)
+Updated `scripts/notes/check-next-audit-priorities.py`.
+- treats `To avoid stale reminder churn on top of the live item above:` as empty-state guidance,
+- keeps `hasLiveItems: true` when the section contains a real actionable item,
+- prevents reminder/guard JSON from mixing static policy text into the actionable item list.
+
+**Rationale:** live-priority reminders should surface real blockers and follow-ups, not the explanatory guidance that tells future audits how to avoid stale reminder churn.
+
+### ✅ Placeholder tool-search guard coverage added (2026-08-06)
+Updated `scripts/safety/block-idle-tool-call.py`.
+- flags `tool_search` calls whose query is a placeholder/no-op label such as `placeholder` or `test`,
+- accepts normal targeted tool-discovery queries,
+- handles both wrapped hook payloads and direct JSON payloads with a top-level `query`,
+- extends the built-in self-test with positive and negative `tool_search` cases.
+
+**Rationale:** the 2026-08-04 idle-tool guard covered the main non-shell filler tools, but a later cron incident showed the same reflex can appear as content-free tool discovery. This keeps the side-effect-free guard current while active PreToolUse wiring remains a separate Nico-approved config step.
+
+### ✅ Idle/end-of-task tool-call guard helper added (2026-08-04)
+Added `scripts/safety/block-idle-tool-call.py` and wired its `--self-test --json` into `scripts/notes/check-autonomy-domain-preflights.py` for PR review, CI fix, spec implementation, and devnet debugging.
+- catches bare no-op shell placeholders such as `true` / `echo done`,
+- catches placeholder/no-op tool labels,
+- catches stop-only `ScheduleWakeup` calls in cron/background-wait context without a target wakeup,
+- catches malformed `Monitor` calls and empty `ReportFindings([])` outside code-review context,
+- updates generated domain status text through `scripts/notes/render-autonomy-domain-statuses.py`.
+
+**Rationale:** the risky-command guard covered destructive shell cleanup, but recent cron incidents also showed an idle/end-of-task reflex that emits irrelevant non-shell tool calls. This makes that second surface testable without changing OpenClaw config; active hook wiring still needs Nico approval.
+
+### ✅ Daily autonomy audit wrapper supports response-only stdout (2026-07-24)
+Updated `scripts/notes/run-daily-autonomy-audit.sh`.
+- added `--response-only` for command-based cron surfaces that need stdout to contain only `NO_REPLY` or the concise summary,
+- sends preflight and close-out lifecycle logs to stderr in response-only mode,
+- preserves the existing default output for manual runs.
+
+**Rationale:** autonomous schedulers that relay raw command stdout should not have to parse guard logs before finding the actual audit response.
+
+### ✅ Daily autonomy audit one-command wrapper added (2026-07-18)
+Added `scripts/notes/run-daily-autonomy-audit.sh`.
+- runs `run-autonomy-audit-preflight.sh` with fresh domain preflights and `--document-domain-failures`,
+- fills the seeded daily-memory outcome through `close-autonomy-audit.sh --update-memory-outcome`,
+- preserves strict cadence, domain-preflight, CI-key, Grafana, and live-priority options,
+- prints the final cron-ready response (`NO_REPLY` or concise summary) as the command output.
+
+**Rationale:** daily self-improvement audits should have one repeatable command that completes snapshot creation, journaling, close-out guards, and response rendering instead of relying on the operator to remember the two-step sequence.
+
+### ✅ Spec implementation domain preflight now checks test-vector freshness (2026-07-14)
+Updated `scripts/notes/check-autonomy-domain-preflights.py` and `scripts/notes/render-autonomy-domain-statuses.py` so the spec-implementation domain now verifies consensus-spec test-vector freshness before reporting autonomy as healthy.
+- runs `scripts/spec/check-test-vector-readiness.sh --json --require-fresh` as `specImplementation/testVectorReadiness`,
+- treats stale/missing vectors as a domain blocker,
+- carries the checker's structured `message`/`status` into generated blocker details.
+
+**Rationale:** autonomous spec implementations can pass local helper and identity preflights while still relying on stale upstream vectors. This turns that drift into an explicit pre-work blocker with a concrete refresh/repoint fix.
+
+### ✅ Autonomy audit close-out now summarizes blocker recovery (2026-07-13)
+Updated `scripts/notes/render-autonomy-audit-response.py`.
+- detects required-section transitions from `BLOCKER:` to a healthy/current status,
+- renders those transitions as `resolved previous BLOCKER` instead of dumping the full previous and current status text,
+- keeps newly introduced blockers and blocker-detail changes explicit by including the current blocker text.
+
+**Rationale:** daily autonomy audits should notify clearly when an external blocker recovers without producing noisy, hard-to-scan cron output. Today's panda datasource recovery is exactly that case.
+
+### ✅ CI auto-fix detector now has a local-only preflight (2026-07-09)
+Updated `scripts/ci/auto_fix_flaky.py`, `scripts/notes/check-autonomy-domain-preflights.py`, `scripts/notes/render-autonomy-domain-statuses.py`, and `scripts/ci/CRON_PROMPT.md`.
+- adds `--check-only --json` to the detector without calling GitHub or mutating `memory/unstable-ci-tracker.json`,
+- validates `gh`, the cached GitHub access guard, and tracker-parent writability before CI scanning starts,
+- wires the check into the daily CI-fix domain as `ciFix/detectorEntrypoint`,
+- updates the CI cron instructions so the detector preflight runs before `--apply`,
+- verified Python syntax, direct detector JSON, targeted `--domain ciFix --json`, and full domain status rendering.
+
+**Rationale:** autonomous CI fixes should prove the detector entrypoint itself is locally usable before the cron scans unstable or writes tracker state. The prior daily CI-fix preflight covered downstream helpers but could miss detector drift until a live CI-fix run.
+
+### ✅ CI-fix domain preflight now proves run-log acquisition (2026-07-02)
+Updated `scripts/notes/check-autonomy-domain-preflights.py` and `scripts/notes/render-autonomy-domain-statuses.py`.
+- adds `ciFix/runLogFetch`, backed by `scripts/ci/fetch-run-logs.sh --check-only`,
+- keeps the check side-effect-free while proving the GitHub Actions log-fetch helper and cached GitHub access guard are available before autonomous CI triage,
+- requires the check in rendered daily CI-fix status lines so missing log-acquisition readiness cannot be hidden behind a green fix-quality gate,
+- verified Python syntax, targeted `--domain ciFix --json` output, and full preflight status rendering.
+
+**Rationale:** autonomous CI fixes need failed-run logs before they can classify or repair a failure. The daily CI-fix preflight should prove that acquisition path alongside the LLM quality gate, actor boundary, and git identity boundary.
+
+### ✅ Git identity boundary preflight added for autonomous code paths (2026-07-01)
+Added `scripts/git/check-git-identity-boundary.py` and wired it into `scripts/notes/check-autonomy-domain-preflights.py` for `ciFix` and `specImplementation`.
+- verifies effective local git author config against `lodekeeper <lodekeeper@users.noreply.github.com>`,
+- emits machine-readable JSON with expected/actual identity, `git` availability, cwd, and status,
+- surfaces failures as missing/failed `gitIdentityBoundary` domain checks before autonomous CI/spec work can proceed toward commits,
+- updates `scripts/notes/render-autonomy-domain-statuses.py` so daily audit status lines require/report the new check,
+- verified Python syntax, success for the current identity, wrong-identity failure, full domain preflight success, and rendered status output.
+
+**Rationale:** autonomous CI fixes and spec implementations can create commits and PRs. GitHub actor checks prove the external writer account, but they do not prove the local commit author identity. This closes that gap before branch/commit work starts.
+
+### ✅ CI-fix targeted actor boundary preflight added (2026-06-27)
+Updated `scripts/notes/check-autonomy-domain-preflights.py` so `--domain ciFix` runs both the fix-quality prerequisite check and `scripts/github/check-gh-actor-boundary.py`.
+- surfaces the account check as `ciFix/githubActorBoundary`,
+- keeps the expected actor defaulting to `lodekeeper` with `GITHUB_EXPECTED_ACTOR` / `--expected-github-actor` override support,
+- verified Python syntax, targeted CI-fix JSON success for the current actor, and targeted CI-fix wrong-actor failure.
+
+**Rationale:** autonomous CI-fix workflows can eventually push branches, open PRs, label PRs, and post comments. A focused CI-fix preflight should prove the GitHub write actor before those steps, not rely on a separate PR-review domain check that may be skipped during targeted diagnosis.
+
+### ✅ GitHub actor boundary preflight added to autonomy checks (2026-06-26)
+Added `scripts/github/check-gh-actor-boundary.py` and wired it into `scripts/notes/check-autonomy-domain-preflights.py`.
+- verifies the active GitHub CLI actor against the expected write account (`lodekeeper` by default),
+- emits machine-readable JSON with expected/actual actor, `gh` availability, and status,
+- surfaces the check as `prReview/githubActorBoundary` in the consolidated domain preflight output,
+- supports `GITHUB_EXPECTED_ACTOR` / `--expected-github-actor` for explicit override in controlled runs,
+- verified success for the current `lodekeeper` actor, wrong-actor failure, targeted PR-review JSON output, full-domain JSON output, and Python syntax.
+
+**Rationale:** autonomous PR review and follow-up workflows can eventually post reviews, comments, PR metadata edits, or PRs. They should fail early if `gh` is authenticated as any account other than the allowed writer instead of discovering the account boundary after an external mutation.
+
+### ✅ Autonomy domain preflight runner supports targeted checks (2026-06-24)
+Updated `scripts/notes/check-autonomy-domain-preflights.py`.
+- adds repeatable `--domain` filters for `prReview`, `ciFix`, `specImplementation`, and `devnetDebugging`,
+- reports `selectedDomains` in JSON output for wrapper/debug traceability,
+- keeps the default full cross-domain run unchanged for daily audits,
+- verified Python syntax, default JSON output, single-domain CI-fix output, and multi-domain CI/devnet output.
+
+**Rationale:** autonomous audit/debug loops need a cheap way to rerun the one failing domain preflight without producing unrelated PR/spec/devnet noise.
+
+### ✅ Daily autonomy audit preflight now verifies all domains by default (2026-06-23)
+Updated `scripts/notes/run-autonomy-audit-preflight.sh`.
+- runs `scripts/notes/check-autonomy-domain-preflights.py` before daily memory scaffolding and snapshot insertion,
+- keeps explicit `--skip-domain-preflights` for intentional bypasses,
+- passes through `--strict-ci-api-key` and `--require-devnet-grafana` so CI/devnet credential readiness can be enforced at audit-preflight time,
+- verified shell syntax, standalone domain JSON output, and a rerun of the integrated preflight against the existing 2026-06-23 snapshot.
+
+**Rationale:** the daily audit preflight should not carry forward PR-review, CI-fix, spec-implementation, or devnet-debugging status lines without first proving the corresponding domain checks still run.
+
+### ✅ Daily autonomy audit now has one cross-domain preflight runner (2026-06-20)
+Added `scripts/notes/check-autonomy-domain-preflights.py`.
+- runs the side-effect-free PR-review, CI-fix, spec-implementation, and devnet-debugging preflights from one command,
+- normalizes each helper's JSON/prose output plus exit code into one machine-readable payload,
+- uses a dummy `OPENAI_API_KEY` only for local CI quality-gate package/import readiness when the shell lacks the real key, with `--strict-ci-api-key` available for hard enforcement,
+- verified default JSON success, strict CI-key failure in the current no-key shell, and Python syntax.
+
+**Rationale:** the daily audit should be able to prove the four autonomy guardrails are still runnable together instead of manually carrying forward "healthy" status lines from separate helpers.
+
+### ✅ Devnet triage now has a no-side-effect telemetry preflight (2026-06-17)
+Added `--check-only` and `--require-grafana` to `scripts/debug/devnet-triage.sh`, and wired the command into `skills/devnet-debug/SKILL.md`.
+- validates required local tools without querying Grafana or writing a report,
+- lets agents fail fast when Loki/Prometheus telemetry is required but `GRAFANA_TOKEN`, `curl`, or `jq` are missing,
+- keeps partial, best-effort live triage behavior unchanged when telemetry is optional,
+- verified `bash -n`, optional preflight success, required-Grafana missing-token failure, and existing GitHub guard coverage.
+
+**Rationale:** autonomous devnet debugging should know before data collection whether it is about to produce a telemetry-backed report or a local-only partial report.
+
+### ✅ Spec vector readiness now has JSON output (2026-06-16)
+Added `--json` to `scripts/spec/check-test-vector-readiness.sh` and made the script executable.
+- reports structured ready/stale/missing states with repo/head metadata and `testsAgeDays`,
+- keeps existing human-readable output and exit codes unchanged,
+- excludes generated cache/report files from sample discovery so readiness evidence points at source test content,
+- verified success, stale-failure, missing-repo, syntax, and human-output paths.
+
+**Rationale:** autonomous spec implementation needs a stable machine-readable vector-readiness preflight before spawning implementation/review workers or deciding whether a stale consensus-specs checkout must be refreshed.
+
+### ✅ Spec compliance preflight now has JSON output (2026-06-14)
+Added `--check-only --json` to `scripts/spec/prepr-compliance-gate.sh` and wired the command into `skills/dev-workflow/SKILL.md`.
+- reports `ok`, `python3Available`, workspace, and helper-specific readiness fields,
+- keeps the existing human-readable `--check-only` output unchanged,
+- rejects `--json` for the full PR-gate mode to avoid implying a JSON summary for report generation.
+
+**Rationale:** spec implementation autonomy needs a stable machine-readable preflight result before spawning implementation/review workers or assembling PR metadata.
+
+### ✅ Spec compliance gate now has local-only preflight (2026-06-13)
+Added `--check-only` to `scripts/spec/prepr-compliance-gate.sh` and wired it into `skills/dev-workflow/SKILL.md`.
+- validates `python3` and the required compliance helper scripts without requiring tracker, PR body, or spec tuple inputs,
+- checks `check-compliance.py --help` and shell syntax for `check-compliance-artifacts.sh`,
+- keeps normal pre-PR report generation and metadata validation unchanged.
+
+**Rationale:** spec implementation autonomy should fail fast on local compliance-gate drift before a PR body/tracker is assembled or review is requested.
+
+### ✅ CI run-log fetch helper now has local-only preflight (2026-06-12)
+Added `--check-only` to `scripts/ci/fetch-run-logs.sh` and wired it into `scripts/github/check-github-guard-coverage.sh`.
+- validates local prerequisites (`gh` and the cached GitHub access guard) without requiring a workflow run id,
+- lets the guard coverage script execute the helper's preflight path without calling GitHub,
+- keeps live log fetching unchanged for `gh run view --log-failed` with full-log fallback.
+
+**Rationale:** the CI fixer depends on run logs during triage. A cheap offline preflight makes helper drift visible before a live failed-run investigation needs it.
+
+### ✅ Delta detector ignores removed one-off advisory sections (2026-06-11)
+Updated `scripts/notes/check-autonomy-audit-delta.py` so routine green days after a one-off advisory section no longer produce notification noise.
+- `hasDelta` now comes from changed required statuses, added non-required sections, changed current non-required sections, or removed required headings.
+- Removed non-required headings are still included in JSON diagnostics but do not trigger output by themselves.
+- Verified `render-autonomy-audit-response.py` returned `NO_REPLY` when the only current difference was removal of the prior `Audit workflow` section.
+
+**Rationale:** daily audit autonomy should distinguish new current information from yesterday-only advisory context aging out. Otherwise a successful return to steady state can still generate a needless summary.
+
+### ✅ Close-out now reports cadence gaps instead of silent NO_REPLY (2026-06-10)
+Updated `scripts/notes/close-autonomy-audit.sh` so advisory cadence gaps become visible output even when finalization otherwise sees no snapshot delta.
+- captures missing-day cadence details from `check-autonomy-audit-cadence.py`,
+- preserves `--strict-cadence` as the hard-fail path,
+- in advisory mode, prevents the `finalize NO_CHANGE -> NO_REPLY` branch from hiding missed daily snapshots.
+
+**Rationale:** today’s preflight found a missing 2026-06-09 audit snapshot. The watchdog already detects this, but close-out should also refuse routine silence when cadence drift is present.
+
+### ✅ CI run-log fetch helper now pre-flights GitHub suspension (2026-06-08)
+Wired the shared GitHub-access guard into `scripts/ci/fetch-run-logs.sh`.
+- calls `scripts/github/check-github-access.sh` before `gh run view --log-failed` / full-log fallback,
+- supports `GITHUB_ACCESS_STATE_FILE` and `GITHUB_ACCESS_MAX_AGE_MINUTES` env overrides for deterministic tests,
+- suspended-cache runs emit `GITHUB_SUSPENDED_SKIP` and exit `4` before touching GitHub,
+- set the helper executable so its documented direct invocation works,
+- expanded `scripts/github/check-github-guard-coverage.sh` to verify the guard wiring and executable bit.
+
+**Rationale:** autonomous CI triage often starts by fetching failed run logs. That helper should degrade as cleanly as the detector and PR-CI monitor when GitHub access is externally blocked.
+
+### ✅ Remote devnet routing preflight detects panda datasource readiness (2026-06-07)
+Added `scripts/debug/check-devnet-routing-readiness.py` and documented it in the `investigate` skill.
+- checks local Kurtosis enclaves and remote panda datasources in one preflight,
+- classifies matching targets as `local-kurtosis` or `remote-panda`,
+- treats `panda datasources --json` returning `{"datasources": null}` as an explicit `PANDA_DATASOURCES_UNAVAILABLE` exit `2`,
+- supports `--json` output for future wrappers and cron guards.
+
+**Rationale:** autonomous devnet debugging should distinguish "network absent" from "data access not ready" before spawning long investigations. The current panda-auth blocked state is exactly the failure mode this catches.
+
+### ✅ PR follow-up guards now scan all PR discussion surfaces (2026-06-05)
+Added `scripts/review/fetch-pr-discussion.py` and wired it into `scripts/review/run-followup-guards.sh`.
+- fetches issue-level PR comments, inline review comments, and review bodies in one compact report,
+- writes the default artifact to `notes/review-reports/pr-<PR>-discussion.md` through the follow-up wrapper,
+- supports author filtering and compact body previews for fast "did we answer this?" checks,
+- keeps the shared GitHub suspension guard and `GITHUB_ACCESS_STATE_FILE` / `GITHUB_ACCESS_MAX_AGE_MINUTES` overrides,
+- expanded `scripts/github/check-github-guard-coverage.sh` so this new GitHub-dependent surface stays guarded,
+- documented the full-surface scan requirement in `skills/lodestar-review/SKILL.md`.
+
+**Rationale:** PR follow-up autonomy should not depend on remembering which GitHub endpoint carries the latest state. Inline-only scans can miss issue comments and review bodies, which recently produced a false "lodekeeper not in any thread" conclusion.
+
+### ✅ Cron watchdog autonomy-cadence check now has deterministic test controls (2026-06-03)
+Extended `scripts/cron/check_cron_health.py` so its virtual `autonomy-audit-cadence` check can be exercised against controlled fixtures.
+- `CRON_JOBS_PATH` overrides the jobs registry,
+- `CRON_HEALTH_STATE_PATH` overrides the watchdog state file,
+- `WORKSPACE_PATH` overrides the workspace root used for default helper paths,
+- `AUTONOMY_CADENCE_SCRIPT` overrides the cadence guard script path,
+- `AUTONOMY_CADENCE_FILE` overrides the target autonomy-gaps markdown file,
+- `AUTONOMY_CADENCE_REFERENCE_DATE` passes a deterministic freshness reference date,
+- `AUTONOMY_CADENCE_EXPECTED_EVERY_DAYS` passes a deterministic expected spacing.
+
+**Rationale:** the watchdog should be testable without editing the real `notes/autonomy-gaps.md`, touching production failure state, or waiting for live UTC-date drift. This makes stale-audit regression checks reproducible and keeps the virtual cron failure path easier to validate after future watchdog edits.
+
+### ✅ Cron health watchdog now checks autonomy-audit cadence (2026-06-02)
+Extended `scripts/cron/check_cron_health.py` with a virtual `autonomy-audit-cadence` failure source.
+- it runs `scripts/notes/check-autonomy-audit-cadence.py --latest-only --require-current --fail-on-gap` on each watchdog pass,
+- fresh stale-audit gaps and guard errors enter the existing cron-health active-failure state/dedup path,
+- recovered cadence failures are reported through the same recovery path as real cron jobs.
+
+**Rationale:** daily audit cadence drift can be the thing the audit cron is supposed to detect, so relying on the next successful audit run leaves blind spots. A virtual watchdog entry makes missed snapshots visible during the regular 30-minute cron-health sweep without adding a separate cron/config change.
+
+### ✅ PR follow-up guard wrapper now pre-flights GitHub suspension (2026-06-01)
+Wired the shared GitHub-access guard into `scripts/review/run-followup-guards.sh`.
+- the wrapper now calls `bail_if_github_suspended()` before `sync-gh`, metadata-drift, stale-finding, or report-artifact work,
+- suspended-cache runs exit `4` with `GITHUB_SUSPENDED_SKIP`, making the external blocker explicit without creating partial follow-up artifacts,
+- the guard supports `GITHUB_ACCESS_STATE_FILE` and `GITHUB_ACCESS_MAX_AGE_MINUTES` env overrides for deterministic tests,
+- `scripts/github/check-github-guard-coverage.sh` now verifies the follow-up wrapper remains in the guarded surface.
+
+**Rationale:** PR review follow-up is normally run as a single wrapper command. Guarding only the child scripts still leaves the wrapper vulnerable to mid-step exits and partial side effects. A wrapper-level pre-flight turns a known external blocker into one clear skip signal before any PR review follow-up state is touched.
+
+### ✅ PR metadata-drift checker now pre-flights GitHub suspension (2026-05-29)
+Wired the shared GitHub-access guard into `scripts/github/check-pr-metadata-drift.py`.
+- direct metadata checks now call `bail_if_github_suspended()` before `gh pr view` / `gh pr diff`,
+- suspended-cache runs exit `4` with `GITHUB_SUSPENDED_SKIP`, making the external blocker explicit without doing partial PR metadata work,
+- the guard supports `GITHUB_ACCESS_STATE_FILE` and `GITHUB_ACCESS_MAX_AGE_MINUTES` env overrides for deterministic tests,
+- `scripts/github/check-github-guard-coverage.sh` now verifies the metadata-drift checker remains in the guarded surface.
+
+**Rationale:** PR review follow-up depends on metadata drift checks before re-review. The checker should degrade as cleanly as comment sync and CI automation while GitHub access is suspended, especially when it is run standalone outside the wrapper flow.
+
+### ✅ Review finding tracker now pre-flights GitHub suspension (2026-05-28)
+Wired the shared GitHub-access guard into `scripts/review/track-findings.py`.
+- `import-gh` and `sync-gh` now call `bail_if_github_suspended()` before `gh api` review-comment fetches,
+- suspended-cache runs exit `2` with `GITHUB_SUSPENDED_SKIP`, making the external blocker explicit without doing partial GitHub work,
+- the guard supports `GITHUB_ACCESS_STATE_FILE` and `GITHUB_ACCESS_MAX_AGE_MINUTES` env overrides for deterministic tests,
+- `scripts/github/check-github-guard-coverage.sh` now verifies the finding tracker remains in the guarded surface.
+
+**Rationale:** review follow-up should degrade as cleanly as CI/notification automation while the GitHub account is suspended. PR review autonomy depends on knowing the blocker before fetching comments, not after a mid-workflow `gh` crash.
+
+### ✅ Catch-up repro checkpoint-depth guard added (2026-05-27)
+Added `scripts/debug/check-catchup-depth.sh` to prevent shallow checkpoint starts for sync-depth and OOM repros.
+- accepts direct `--head-slot` / `--checkpoint-slot` inputs or fetches slots through Beacon API URLs,
+- enforces configurable `--min-epochs` / `--slots-per-epoch` thresholds,
+- exits `2` with a clear `too_shallow` signal when the checkpoint cannot exercise the intended catch-up backlog,
+- documented the guard in `skills/local-mainnet-debug/SKILL.md` before the launch workflow.
+
+**Rationale:** the active OOM sync repro showed that a latest-finalized checkpoint can look like a successful setup while being too shallow to reproduce the failure. A pre-launch depth guard turns that assumption into a deterministic check and points the next run toward an older `--checkpointState` when needed.
+
+### ✅ GitHub guard coverage verifier for CI automation (2026-05-26)
+Added `scripts/github/check-github-guard-coverage.sh` to catch regression in the recent GitHub-suspension bail-out work.
+- verifies `scripts/github/check-github-access.sh` exists and is executable,
+- verifies the high-frequency GitHub automation callsites still include their script-level bail-out functions and expected silent outputs,
+- verifies `scripts/ci/CRON_PROMPT.md` still requires the shared guard and `GITHUB_SUSPENDED_SKIP`,
+- wired the CI auto-fix prompt to run this verifier before GitHub access, so prompt/script drift fails before any `gh` call.
+
+**Rationale:** the previous fixes moved suspension handling into scripts, but nothing prevented a future edit from accidentally removing one guard. A cheap local coverage check makes that class of drift visible before a suspended cron burns context or crashes mid-run.
+
+### ✅ CI auto-fix detector now has script-level GitHub-access bail-out (2026-05-25)
+Wired the shared GitHub-access guard into `scripts/ci/auto_fix_flaky.py` itself.
+- calls `scripts/github/check-github-access.sh` before `scan()`,
+- exits cleanly with `GITHUB_SUSPENDED_SKIP` when the cached guard reports suspension,
+- keeps unexpected guard failures non-blocking so normal detector errors still surface,
+- supports `GITHUB_ACCESS_STATE_FILE` and `GITHUB_ACCESS_MAX_AGE_MINUTES` env overrides for deterministic suspended-cache tests,
+- updated `scripts/ci/CRON_PROMPT.md` to document that Step 0 remains mandatory even though the detector now has this fail-safe.
+
+**Rationale:** yesterday's guard covered high-frequency notification/PR-CI scripts, but `ci-autofix-unstable` still depended on prompt discipline. Moving the guard into the detector makes the suspension bail-out resilient to direct/manual runs and future cron prompt edits.
+
+### ✅ Script-level GH-access guard for high-frequency cron callers (2026-05-24)
+Wired the shared access guard into the two highest-frequency GH-dependent scripts so the bail is enforced at the script level, not just in cron prompts.
+- added `bail_if_github_suspended()` to `scripts/github/github_notifications_sweep.py` — fires `HEARTBEAT_OK` and exits 0 cleanly when the guard returns rc=2,
+- added `bail_if_github_suspended()` to `scripts/github/monitor_open_pr_ci.py` — fires `NO_REPLY` and exits 0 cleanly when the guard returns rc=2,
+- guard call wraps `subprocess.run([...], timeout=20)` so transient guard failures degrade safely (return to normal flow rather than blocking),
+- end-to-end verified: simulated suspended-cache run produces the expected silent signal with rc=0 and no `gh api` invocation.
+
+**Rationale:** `github-notifications` runs every 5 min (288×/day) and `monitor-open-pr-ci` every 30 min. With GitHub suspension active, each previously burned ~18s of context per fire on a 403 crash. Pushing the guard from the cron prompt down into the script means *any* caller (cron, manual run, future cron prompt edits) benefits automatically, and the cached check keeps the bail near-zero-cost.
+
+### ✅ Shared GitHub-access guard added for GH-dependent crons (2026-05-23)
+Added `scripts/github/check-github-access.sh` as a pre-flight guard for any cron that calls `gh`.
+- calls `gh api user --jq '.login'` with a short timeout
+- exits 0 (ok) or 2 (suspended/inaccessible), never blocks unexpectedly
+- caches the result in `tmp/github-access-state.json` for up to 10 minutes (configurable) to avoid repeated API calls when multiple crons fire close together
+- clear status output: `GITHUB_ACCESS: ok` / `GITHUB_ACCESS: suspended — skip GH-dependent work`
+- supports `--max-age-minutes` and `--state-file` overrides for testing
+
+**Rationale:** during account suspension, crons like `github-notifications`, `ci-autofix-unstable`, and `monitor-open-pr-ci` each ran full prompt context before hitting the 403 wall. A single cached guard call at the top of any GH-dependent prompt lets the cron bail immediately, preserving tokens for productive work and reducing noise in cron logs.
+
+### ✅ OpenClaw-only provider follow-ups now stay out of plain CLI sessions (2026-05-22)
+Updated `AGENTS.md` and `HEARTBEAT.md` to codify a provider-surface routing guard for channel work.
+- added an explicit rule that Discord/Telegram posting, thread follow-up, browser work, and other OpenClaw-only tooling stay in the OpenClaw main/channel session,
+- directs tagged follow-up back through `sessions_send` to the real session (`agent:main:discord:channel:<ID>` / Telegram topic session) instead of Claude Code / Codex CLI continuation sessions,
+- documents the concrete failure mode exposed by the consensus-specs Discord follow-up that landed in a provider-less CLI session.
+
+**Rationale:** plain CLI coding sessions can continue code investigation, but they may lack provider access and channel context. Routing channel-bound follow-up there creates silent dead ends and missed replies.
+
+### ✅ Close-out now updates the most recent unresolved memory outcome placeholder (2026-05-18)
+Updated `scripts/notes/close-autonomy-audit.sh` so `--update-memory-outcome` no longer targets the first unresolved placeholder in `memory/<date>.md`.
+- switched replacement logic from first-match `replace(..., 1)` to last-match replacement (`rsplit(..., 1)`),
+- updated warning text to reflect the new behavior (`updated only the most recent one`),
+- keeps single-target safety (does not rewrite all placeholders).
+
+**Rationale:** if preflight is retried and multiple unresolved stubs exist in the same daily note, close-out should resolve the latest/current audit stub by default, not an older one.
+
+### ✅ Close-out now fails memory-outcome guards before snapshot mutation (2026-05-17)
+Updated `scripts/notes/close-autonomy-audit.sh` to reorder close-out steps so memory-note integrity checks run before snapshot finalization.
+- moved `--update-memory-outcome` handling to pre-finalize phase,
+- moved daily memory outcome placeholder guard (`--skip-memory-outcome-check` path) to pre-finalize phase,
+- keeps finalize/cadence/render behavior unchanged once memory guards pass.
+
+**Rationale:** close-out should fail fast before mutating `notes/autonomy-gaps.md` when today's memory outcome is missing/placeholder; this removes partial side effects and makes reruns deterministic.
+
+### ✅ Close-out outcome updater now edits only one placeholder and warns on duplicates (2026-05-16)
+Updated `scripts/notes/close-autonomy-audit.sh` to tighten `--update-memory-outcome` replacement scope.
+- switched placeholder rewrite from global replacement to single-target replacement (`replace(..., 1)`),
+- emit an explicit warning when multiple unresolved placeholders are detected in `memory/<date>.md`,
+- preserves existing close-out guard behavior while preventing accidental bulk overwrite of unresolved entries.
+
+**Rationale:** autonomous close-out should only resolve the current audit stub by default; silently rewriting every matching placeholder can hide journaling gaps and degrade note integrity.
+
+### ✅ Close-out memory-outcome replacement now preserves arbitrary text safely (2026-05-15)
+Updated `scripts/notes/close-autonomy-audit.sh` to remove shell-substitution edge cases from `--update-memory-outcome`.
+- replaced raw `sed` substitution with a Python text rewrite (`placeholder` → `outcome`) written to a temp file,
+- kept atomic replacement semantics via tmp-file + `mv`,
+- prevents mangled output when the outcome text includes `&` or other replacement metacharacters.
+
+**Rationale:** autonomous close-out should accept natural free-form outcome text (URLs, ampersands, punctuation) without requiring manual escaping.
+
+### ✅ Preflight now writes memory scaffolding only after guard checks pass (2026-05-11)
+Updated `scripts/notes/run-autonomy-audit-preflight.sh` to avoid side effects before guard validation.
+- moved daily note creation + audit-stub append from pre-guard phase to post-cadence phase,
+- new explicit `[3/5]` step now handles memory note/stub writes only when duplicate/consistency/cadence guards succeeded,
+- snapshot scaffold insertion now runs at `[4/5]`,
+- when note creation is intentionally disabled, preflight now logs explicit skip status for that step.
+
+**Rationale:** failed preflight runs should be side-effect free on memory notes; guard-first ordering avoids orphaned `_fill in after close-out_` placeholders when a run aborts before snapshot insertion.
+
+### ✅ Close-out now enforces daily memory-audit outcome completion (2026-05-10)
+Updated `scripts/notes/close-autonomy-audit.sh` to guard against unresolved daily-note audit placeholders.
+- added default check for `memory/<date>.md` presence during close-out,
+- close-out now fails when the seeded preflight line still contains `- Outcome: _fill in after close-out_.`,
+- added explicit override flag `--skip-memory-outcome-check` for intentional/manual bypass scenarios,
+- updated usage/help text to document the new guard behavior.
+
+**Rationale:** preflight now seeds daily audit stubs by default, so close-out should enforce that those stubs are actually completed rather than silently carrying placeholder text into archived notes.
+
+### ✅ Autonomy preflight now seeds a daily audit memory-log stub (2026-05-09)
+Updated `scripts/notes/run-autonomy-audit-preflight.sh` to bridge the last continuity gap between snapshot scaffolding and daily journaling.
+- added default daily-note stub appender (`self-improvement-audit-daily (preflight)`) in `memory/<date>.md`,
+- writes a one-time entry per day with snapshot date + close-out reminder,
+- added explicit opt-out flag `--no-seed-audit-memory-entry` (and matching help text).
+
+**Rationale:** creating the daily note file alone is not enough; seeding the audit stub makes it much harder to forget writing the same-day audit trace in memory notes.
+
+### ✅ Autonomy preflight now auto-creates the daily memory note scaffold (2026-05-08)
+Updated `scripts/notes/run-autonomy-audit-preflight.sh` to enforce daily-note continuity during audit runs.
+- added default guard that ensures `memory/<date>.md` exists before autonomy snapshot insertion,
+- creates missing daily note files with canonical heading `# Daily Notes — <YYYY-MM-DD>`,
+- added explicit opt-out flag `--no-ensure-daily-memory-note` (and matching help text) for intentional bypasses.
+
+**Rationale:** AGENTS continuity rules expect today's memory note to exist every session; making preflight enforce this removes a recurring manual setup step and prevents avoidable note-gap drift.
+
+### ✅ Autonomy preflight now defaults to carry-forward status prefill (2026-05-07)
+Updated `scripts/notes/run-autonomy-audit-preflight.sh` to reduce avoidable blank-snapshot churn.
+- enabled `--carry-forward-status` behavior by default,
+- added explicit `--no-carry-forward-status` override to intentionally insert blank placeholders,
+- updated usage/help text + close-out hint wording to reflect review/update flow instead of fill-only flow.
+
+**Rationale:** the audit pipeline already has carry-forward sanitization and delta guards; defaulting to prefilled status lines improves autonomous reliability by reducing manual placeholder handling and accidental `_fill in_` leakage.
+
+### ✅ Cadence-gap output now includes exact missing dates (2026-05-06)
+Updated `scripts/notes/check-autonomy-audit-cadence.py` to enrich missing-day diagnostics with concrete in-between dates.
+- each gap line now includes a bounded list of missing dates (for example, `2026-05-04`),
+- large gaps are still concise via `(+N more)` overflow suffix,
+- freshness-gap output (`--require-current`) uses the same date-list format for consistency.
+
+**Rationale:** when a daily audit is missed, concrete missing dates are faster to triage and backfill than raw day-counts alone, especially in autonomous cron runs where log context is limited.
+
+### ✅ Close-out NO_REPLY guard against live priority leakage (2026-05-05)
+Updated `scripts/notes/close-autonomy-audit.sh` so finalize `NO_CHANGE` no longer auto-emits `NO_REPLY` blindly.
+- added default `Next Audit Priorities` live-item guard via `check-next-audit-priorities.py --fail-if-live`
+- when live items still exist, close-out now fails fast with actionable stderr guidance
+- added explicit override flag `--allow-live-priorities-no-reply` for deliberate/manual bypasses
+
+**Rationale:** prevents silent routine replies from masking pending autonomy-follow-up items that should keep the audit loop active.
+
+### ✅ Historical snapshot-structure guard added to autonomy consistency checks (2026-05-03)
+Extended `scripts/notes/check-autonomy-gaps-consistency.py` so it now validates **every** daily snapshot block (not just top-level metadata):
+- verifies required domains are present in each snapshot (`PR review`, `CI fix`, `Spec implementation`, `Devnet debugging`),
+- requires structured progress markers per section,
+- accepts both modern `- **Status:** ...` entries and legacy `Blocker/Fix applied/Proposed fix` formats for backward compatibility,
+- fails with explicit per-snapshot/per-section errors when structure is missing.
+
+**Rationale:** catches malformed historical snapshots early and keeps close-out consistency checks durable across both old and new audit formats.
+
+### ✅ Reviewer artifact metadata writer helper added (2026-04-29)
+Added `scripts/review/write-review-artifact.sh` to make reviewer artifact creation deterministic and marker-safe.
+- writes `notes/review-reports/pr-<PR>-<agent-id>.md` with required metadata lines:
+  - `Reviewer: <agent-id>`
+  - `Reviewed commit: <HEAD_SHA>` (auto-resolved from `--head-repo`)
+- accepts body via `--body-file` or stdin and falls back to `No findings.` when empty
+- prints the artifact path for easy inclusion in reviewer completion messages
+- updated `skills/lodestar-review/SKILL.md` durable-output section to recommend this helper in reviewer tasks
+
+**Rationale:** we already verify metadata markers at synthesis time; this helper prevents marker drift at write time, reducing avoidable reruns from missing marker lines.
+
+### ✅ Reviewer artifact ownership guard added (2026-04-28)
+Extended `scripts/review/check-review-artifacts.sh` with a per-agent ownership check so artifact verification can reject cross-agent file mix-ups.
+- new CLI option: `--require-agent-marker` (requires each artifact to contain `Reviewer: <agent-id>`)
+- verifier summary now reports `missing_agent_marker=<count>` and fails with exit `2` when marker checks fail
+- updated `skills/lodestar-review/SKILL.md` durable-output contract to require both metadata lines:
+  - `Reviewer: <agent-id>`
+  - `Reviewed commit: <HEAD_SHA>`
+- updated Step 4.1 quick verifier command to include `--require-agent-marker`
+
+**Rationale:** commit-affinity checks prove *which head* an artifact reviewed, but not *which reviewer* authored it. Agent-marker enforcement closes that integrity gap and prevents accidental cross-agent artifact reuse during autonomous synthesis loops.
+
+### ✅ Reviewer HEAD-marker auto-resolution guard added (2026-04-27)
+Extended `scripts/review/check-review-artifacts.sh` with built-in reviewed-commit marker resolution so follow-up verifier commands no longer rely on manual SHA interpolation.
+- new CLI option: `--require-reviewed-head` (requires marker `Reviewed commit: <HEAD_SHA>`)
+- new CLI option: `--head-repo <path>` (deterministic HEAD source; defaults to current directory)
+- verifier now fails fast if HEAD cannot be resolved from the selected repo
+- updated `skills/lodestar-review/SKILL.md` Step 4.1 quick verifier to use `--require-reviewed-head --head-repo /absolute/path/to/repo`
+
+**Rationale:** keeps commit-affinity checks deterministic in autonomous follow-up loops and reduces accidental false passes from hand-written SHA marker strings.
+
+### ✅ Reviewer-artifact commit-affinity guard added (2026-04-26)
+Extended `scripts/review/check-review-artifacts.sh` with repeatable `--require-text <value>` markers so artifact validation can enforce run-specific metadata (for example, exact head SHA markers).
+- new repeatable CLI option: `--require-text "..."`
+- verifier now prints required markers and fails with exit `2` when a marker is missing (`missing_text=<count>` in summary)
+- updated `skills/lodestar-review/SKILL.md` to require reviewer artifacts to include `Reviewed commit: <HEAD_SHA>` and to verify that marker during Step 4.1
+
+**Rationale:** age checks catch stale files, but they do not prove the artifact belongs to the current head commit. Marker-based validation blocks fresh-but-wrong artifacts from previous review rounds.
+
+### ✅ Reviewer-artifact freshness guard added (2026-04-25)
+Extended `scripts/review/check-review-artifacts.sh` so the verifier can reject stale reviewer artifacts with a new `--max-age-minutes <n>` option.
+- adds stale-age validation via artifact mtime (summary now reports `stale=<count>`)
+- keeps existing missing/invalid checks and `--allow-empty-no-findings` behavior
+- updated `skills/lodestar-review/SKILL.md` Step 4.1 quick verifier to include `--max-age-minutes 180` and stale-artifact guidance
+
+**Rationale:** presence checks alone can pass old reviewer files from a previous diff. Age-bounding the artifact set ensures synthesis uses fresh findings from the current review round.
+
+### ✅ Reviewer-artifact completeness guard script added (2026-04-24)
+Added `scripts/review/check-review-artifacts.sh` and updated `skills/lodestar-review/SKILL.md` to call it during transport-failure fallback before synthesis.
+- validates expected reviewer artifacts: `notes/review-reports/pr-<PR>-<agent-id>.md`
+- flags missing/undersized files with exit `2`
+- supports `--allow-empty-no-findings` so intentional "No findings" reports pass
+
+**Rationale:** durable artifacts only help if every expected reviewer actually wrote one. This turns that check into a fast deterministic guard instead of a manual file-by-file scan.
+
+### ✅ Durable reviewer-artifact fallback added to lodestar-review workflow (2026-04-23)
+Updated `skills/lodestar-review/SKILL.md` to harden PR-review autonomy against flaky sub-agent result transport:
+- reviewer spawn tasks now include a mandatory durable-output contract (`notes/review-reports/pr-<PR>-<agent-id>.md`),
+- reviewers must always write a report artifact (including explicit "no findings" cases),
+- synthesis workflow now includes a mandatory transport-failure fallback step (read artifact directly / re-run missing reviewer before proceeding).
+
+**Rationale:** prevents silent loss of reviewer findings when completion announces arrive without full payloads, preserving deterministic review loops without depending on session-message transport alone.
+
+### ✅ Carry-forward status sanitizer added to autonomy-audit snapshot scaffolding (2026-04-22)
+Updated `scripts/notes/prepend-autonomy-audit-snapshot.py` so `--carry-forward-status` no longer blindly copies prior-cycle change-event language.
+- Added change-event pattern detection (`fix applied this cycle`, `implemented`, `added`, `updated`).
+- When detected, carry-forward now uses section-specific steady-state status templates instead of stale prior-cycle claims.
+- Preserves normal carry-forward behavior for stable "no new blocker" status lines.
+
+**Rationale:** daily snapshot scaffolding should accelerate status updates without accidentally copying yesterday’s "I implemented X this cycle" wording into today’s audit entry.
+
+### ✅ Close-out cadence guard added to autonomy-audit wrapper (2026-04-21)
+Updated `scripts/notes/close-autonomy-audit.sh` so daily close-out now runs `check-autonomy-audit-cadence.py` with `--require-current` against the selected audit date before rendering output.
+- Added `--strict-cadence` to hard-fail on missing-day gaps when desired.
+- Added `--skip-cadence-check` for explicit manual override/backfill flows.
+- Preserved existing `NO_REPLY` behavior when finalize reports no meaningful delta.
+
+**Rationale:** preflight already enforced cadence, but direct close-out calls could bypass that signal. This closes the workflow gap by keeping freshness/cadence checks on both entry and exit paths.
+
+### ✅ Optional strict cadence enforcement added to autonomy-audit preflight (2026-04-20)
+Updated `scripts/notes/run-autonomy-audit-preflight.sh` with a new `--strict-cadence` flag:
+- keeps existing default behavior (cadence gaps are advisory warnings),
+- allows strict runs to hard-fail immediately when `check-autonomy-audit-cadence.py` reports missing-day gaps,
+- preserves deterministic preflight flow while giving scheduled runs a policy switch for stricter discipline.
+
+**Rationale:** turns cadence handling from one-size-fits-all into an explicit policy choice, so autonomous runs can enforce daily-audit continuity when needed instead of relying on warning-only behavior.
+
+### ✅ Duplicate-snapshot guard wired into autonomy-audit preflight (2026-04-19)
+Updated `scripts/notes/run-autonomy-audit-preflight.sh` with a new step-zero duplicate check:
+- runs `dedupe-autonomy-audit-snapshots.py` before consistency/cadence checks,
+- fails fast when older duplicate snapshot dates exist,
+- supports `--dedupe-apply` for one-command cleanup during preflight.
+
+Also applied the cleanup to `notes/autonomy-gaps.md` this cycle (removed the stale duplicate `2026-03-15` block), then re-synced `> Updated:` metadata so pass counts match snapshot count.
+
+**Rationale:** prevents silent drift in audit history where duplicate date blocks break pass-count metadata and make finalize/preflight checks flaky.
+
+### ✅ Autonomy-audit freshness guard added to cadence checks (2026-04-18)
+Updated `scripts/notes/check-autonomy-audit-cadence.py` with:
+- `--require-current` to enforce latest-snapshot freshness against a reference date,
+- `--reference-date YYYY-MM-DD` for deterministic backfill/manual runs.
+
+Updated `scripts/notes/run-autonomy-audit-preflight.sh` to always run cadence checks with `--require-current`, and to pass the selected `--date` as `--reference-date` so preflight detects long audit outages instead of only comparing the latest two snapshot headings.
+
+**Rationale:** closes a workflow-integrity gap where a long pause in daily audits could go unnoticed once historical snapshot spacing looked clean.
+
+### ✅ Follow-up stale-finding guard fused into wrapper + skill docs (2026-03-20)
+Expanded `scripts/review/run-followup-guards.sh` and refreshed `skills/lodestar-review/SKILL.md` so follow-up rounds now run three checks in one command:
+- `track-findings.py sync-gh` delta sync,
+- `check-pr-metadata-drift.py` artifact generation,
+- `track-findings.py stale` artifact generation for unresolved critical/major findings.
+
+Added wrapper controls: `--fail-on-stale`, `--stale-days`, `--skip-stale-check`, `--stale-use-created`, and default stale artifact path `notes/review-reports/pr-<PR>-stale-findings.md`.
+
+**Rationale:** removes the last manual follow-up step where stale blockers could be missed during re-review, while keeping strict mode opt-in for teams that want stale findings to hard-block.
+
+### ✅ Review-loop follow-up guard wrapper added (2026-03-20)
+Created `scripts/review/run-followup-guards.sh` and wired usage into `skills/lodestar-review/SKILL.md`.
+- runs `track-findings.py sync-gh` and `check-pr-metadata-drift.py` in one command,
+- writes metadata artifact to `notes/review-reports/pr-<PR>-metadata-drift.md` by default,
+- preserves exit-code semantics (`0` pass, `2` drift) and prints an explicit `gh pr edit` reminder command when drift is detected.
+
+**Rationale:** closes the final follow-up ergonomics gap by replacing a fragile two-command manual sequence with a single repeatable guard command for re-review loops.
+
+### ✅ Review-loop metadata drift guard wired into lodestar-review skill (2026-03-19)
+Updated `skills/lodestar-review/SKILL.md` Finding Resolution Tracking workflow with a mandatory follow-up step:
+- run `scripts/github/check-pr-metadata-drift.py --pr <PR>` before posting re-review,
+- persist output to `notes/review-reports/pr-<PR>-metadata-drift.md`,
+- treat exit code `2` as required metadata update (`gh pr edit`) before requesting re-review.
+
+**Rationale:** closes the process gap between having the checker script and actually enforcing it in follow-up review loops.
+
+### ✅ PR metadata drift guard script added (2026-03-19)
+Created `scripts/github/check-pr-metadata-drift.py`:
+- pulls live PR metadata + file list via `gh pr view --json title,body,changedFiles,files`,
+- scans title/body for stale scope signals (path references not in current diff, narrow-scope wording vs broad file count),
+- compares semver claims in metadata against semvers added/removed in the current patch,
+- emits a concise markdown report and exits `2` on drift signals for cron/review-loop integration.
+
+**Rationale:** catches title/body drift after follow-up commits before re-review, reducing mismatches like stale version claims or outdated scope descriptions.
+
+### ✅ Spec architecture-consult timeout fallback policy codified (2026-03-18)
+Updated `skills/dev-workflow/SKILL.md` Phase 1 with a required advisor fallback path:
+- start architecture rounds with `gpt-advisor` `thinking: xhigh`,
+- allow one tighter `xhigh` retry max on timeout/empty output,
+- fallback to `thinking: high` instead of repeated `xhigh` loops,
+- record round outcome metadata in `notes/<feature>/TRACKER.md`.
+
+**Rationale:** converts an ad-hoc timeout workaround into a deterministic workflow rule, reducing stalled spec/design loops and preserving context across sessions.
+
+### ✅ CI `logs-unavailable` fallback wiring added (2026-03-18)
+Updated `scripts/ci/auto_fix_flaky.py` so `logs-unavailable` findings now automatically trigger `scripts/ci/fetch-run-logs.sh <run-id>` once per run, then:
+- persist fallback metadata (`logs_fallback_status`, `logs_fallback_artifact`, `logs_fallback_command`, `logs_fallback_error`, `logs_fallback_reclassified`) into both detector findings and tracker entries,
+- reuse fetched artifact logs for immediate re-classification when available.
+
+**Rationale:** closes the handoff gap between detection and follow-up triage by attaching the exact log artifact path/command directly to the finding instead of leaving logs retrieval as a separate manual step.
+
+### ✅ CI run-log fallback fetcher added (2026-03-17)
+Created `scripts/ci/fetch-run-logs.sh`:
+- fetches run logs by run ID with `gh run view --log-failed` first and `--log` fallback,
+- supports explicit `--repo` and `--output` options,
+- writes local artifacts under `tmp/ci-logs/` by default,
+- prints deterministic output metadata (mode + line/byte counts) for tracker notes.
+
+**Rationale:** closes the CI triage gap for `logs-unavailable` findings by making fallback log acquisition one command instead of ad-hoc/manual command hunting.
+
+### ✅ Autonomy-gaps consistency guard added (2026-03-17)
+Created `scripts/notes/check-autonomy-gaps-consistency.py`:
+- parses `### Gaps` items and `## Improvements Implemented This Cycle` entries,
+- flags contradictory status when the same gap appears both open and fixed,
+- flags path-level contradictions when a script/doc path appears in both an open gap and an implemented improvement,
+- exits with code `2` on contradictions for cron-friendly enforcement.
+
+**Rationale:** prevents drift where autonomy-gap items are marked implemented but remain open elsewhere in the same file.
+
+### ✅ Spec test-vector readiness gate added (2026-03-16)
+Added `scripts/spec/check-test-vector-readiness.sh` and wired it into `skills/dev-workflow/SKILL.md`.
+- validates local `~/consensus-specs/tests/` presence with a real sample file check,
+- reports `tests/` freshness from git history,
+- supports `--require-fresh` for fail-fast enforcement in pre-PR spec workflows.
+
+**Rationale:** closes the last spec-vector gap where test vectors were available but freshness checks were manual/easy to skip.
+
+### ✅ CI retry rolling-window escalation added (2026-03-15)
+Updated `scripts/ci/auto_fix_flaky.py` to convert per-run retry telemetry into a sustained-health signal:
+- persists bounded `scan_history` entries (`scanned_at`, `new_failures`, `llm_retry_telemetry`)
+- computes `llm_retry_escalation` with configurable rolling-window thresholds for retry count, retry wait, and `Retry-After` frequency
+- emits escalation data in detector JSON (`status=clean` and `status=failures_found`)
+- stores escalation snapshot under `last_scan.llm_retry_escalation` when `--apply` is used
+
+Also updated `scripts/ci/CRON_PROMPT.md` so cron summaries must explicitly warn when escalation is degraded.
+
+**Rationale:** turns isolated retry counters into actionable trend detection so persistent API degradation is surfaced automatically instead of being noticed ad hoc.
+
+### ✅ PR stale-finding cron wrapper added (2026-03-15)
+Created `scripts/review/stale-findings-report.sh`:
+- Scans all tracked PRs in findings directory for stale unresolved findings
+- Supports `--days`, `--severity`, `--prs`, and `--output` options
+- Exit code 2 when stale findings detected; writes timestamped markdown report to `notes/review-reports/`
+- Reports include per-PR sections with stale finding details and resolution instructions
+- Designed for cron usage: zero output (exit 0) when clean, actionable report when stale
+
+**Rationale:** converts a manual "remember to check old findings" task into an automatable health signal that can feed into backlog or topic escalation.
+
+### ✅ Devnet incident bundle script added (2026-03-15)
+Created `scripts/debug/build-incident-bundle.sh` to produce one timestamped markdown artifact combining:
+- environment metadata (host/tooling + repo branch/commit)
+- `devnet-triage.sh` output (process, ports, logs, metrics, restart hints)
+- optional multi-node timeline via `correlate-logs.sh` when peers + Grafana token are available
+- structured incident-notes checklist for root-cause write-up
+
+Also tightened `scripts/debug/devnet-triage.sh` process filtering so bundle generation commands are not misreported as node processes.
+
+### ✅ One-command pre-PR compliance gate added (2026-03-14)
+Created `scripts/spec/prepr-compliance-gate.sh` and wired usage into `skills/dev-workflow/SKILL.md`:
+- accepts repeatable `--check "spec_query|ts_file|ts_symbol|report_out"` tuples
+- runs `check-compliance.py` for each tuple and captures verdict/confidence
+- runs `check-compliance-artifacts.sh` for tracker + PR body metadata enforcement
+- emits one markdown pass/fail summary (stdout + optional `--summary-out`) including a reusable PR block snippet
+
+**Rationale:** replaces a fragile multi-command sequence with one deterministic gate, so spec-compliance evidence is generated and validated consistently before PR/re-review.
+
+### ✅ CI retry telemetry surfaced in detector output + tracker entries (2026-03-14)
+Updated `scripts/ci/auto_fix_flaky.py` to expose retry/backoff health signals directly in the detector JSON and per-finding tracker line items:
+- top-level summary now includes `llm_retry_count`, `llm_retry_wait_s`, and `llm_retry_after_seen`
+- each finding + persisted tracker entry now carries per-classification retry telemetry (`llm_retry_*` fields)
+- `--apply` runs now persist `last_scan.llm_retry_telemetry` in `memory/unstable-ci-tracker.json`
+
+**Rationale:** makes degraded LLM/API health visible in concise cron summaries instead of hiding retries in stderr-only logs.
+
+### ✅ Stale unresolved-finding escalation command added (2026-03-13)
+Updated `scripts/review/track-findings.py` with `stale` command:
+- lists open findings older than a threshold (default: `critical|major`, `updated >= 7d`)
+- supports severity/age tuning (`--severity`, `--days`) and timestamp mode (`--use-created`)
+- supports automation mode (`--fail-on-match`) for non-zero exit when stale findings exist
+- updated `skills/lodestar-review/SKILL.md` workflow to run this in follow-up rounds
+
+**Rationale:** converts stale-review escalation from a manual judgment call into a one-command query that can be scripted and monitored.
+
+### ✅ Compliance artifact presence check script + workflow gate added (2026-03-13)
+Created `scripts/spec/check-compliance-artifacts.sh` and wired it into `skills/dev-workflow/SKILL.md` Phase 5:
+- verifies `notes/<feature>/TRACKER.md` has a populated `## Spec Compliance Artifacts` section
+- verifies PR body has a populated `## Spec Compliance` section
+- enforces either `spec-compliance-*.md` references **or** explicit `N/A` + reason
+- enforces `Verdict:` when an artifact file is referenced
+
+**Rationale:** this closes the final traceability gap between generating compliance artifacts and actually surfacing them in both tracker + PR metadata.
+
+### ✅ Spec-compliance artifact traceability codified in dev-workflow (2026-03-12)
+Updated `skills/dev-workflow/SKILL.md` so spec/protocol work now has explicit artifact linkage requirements:
+- `TRACKER.md` template now includes **Spec Compliance Artifacts** section
+- Phase 4 requires logging artifact path + verdict right after running compliance checks
+- Phase 5 PR instructions require a dedicated **Spec Compliance** block with artifact path and verdict
+- Added reusable snippet file: `notes/spec-compliance-pr-block.md`
+
+**Rationale:** the compliance checker existed, but artifact references were easy to lose during PR prep. This closes the gap between "checker ran" and "evidence is attached to the review trail".
+
+### ✅ Review-loop delta-sync step codified in lodestar-review skill (2026-03-12)
+Updated `skills/lodestar-review/SKILL.md` finding-tracking workflow with a mandatory follow-up round step:
+- run `python3 ~/.openclaw/workspace/scripts/review/track-findings.py sync-gh <PR> --repo ChainSafe/lodestar` whenever revisiting a PR with new review comments
+- optional `--include-replies` guidance when reviewer discussion happens in threaded replies
+
+**Rationale:** `sync-gh` existed, but without being part of the default loop it was easy to skip delta imports and miss re-verification handoffs.
+
+### ✅ Dev-workflow spec-compliance gate codified (2026-03-11)
+Updated `skills/dev-workflow/SKILL.md` Phase 4 with an explicit **Spec-compliance gate** for spec/protocol-facing changes:
+- run `python3 scripts/spec/check-compliance.py --spec-query ... --ts-file ... --ts-symbol ... --output ...`
+- if skipped, document reason in PR description
+
+**Rationale:** the checker existed, but without an explicit workflow gate it was easy to omit during fast iterations.
+
+### ✅ PR review false-positive guard added to lodestar-review SKILL.md
+Added Step 1.5 between "Get the diff" and "Read persona prompts":
+- Get `git diff --name-only origin/unstable...HEAD` before spawning reviewers
+- Include file list in reviewer task prompt
+- Mandatory post-review filter: discard findings for files not in the changed-file list
+
+**Rationale:** PR #8993 — two reviewer sub-agents flagged `dataColumns.ts` and `gloas.ts`, which were not in the diff. I spent time verifying these before discovering they were noise. This is a repeating failure mode.
+
+### ✅ Spec section extractor script implemented
+Created `scripts/spec/extract-spec-section.sh`:
+- supports query + `--spec-root`
+- extracts primary pseudocode matches from specs markdown
+- follows import chains for related symbol definitions
+- emits markdown report to stdout or `--output`
+- supports `rg` with `grep` fallback
+
+### ✅ Devnet first-5-minutes triage script implemented
+Created `scripts/debug/devnet-triage.sh`:
+- process/uptime snapshot for matching local node processes
+- listener/zombie check over configurable ports (default 9000/9596/5052)
+- Loki error snapshot via Grafana datasource proxy (configurable window + query)
+- Prometheus peer/attestation probes with fallback query candidates
+- startup/restart hint count from logs
+- markdown report output (`--output`) for easy sharing
+
+### ✅ LLM fallback classification added to CI autofix detector
+Updated `scripts/ci/auto_fix_flaky.py`:
+- `classify_with_llm(job_name, logs)` using `gpt-4o-mini` + JSON response format
+- 13-category taxonomy in system prompt; validated against known categories
+- Graceful fallback if API key missing or call fails; `--no-llm` flag for offline
+- `confidence` field on every finding: `high` (keyword), `medium` (LLM), `low` (no match)
+- `fix_confidence` field: `root-cause` | `likely-root-cause` | `masking-risk` | `unknown`
+- `fix_hint` field: LLM-generated short fix suggestion passed to cron agent
+- `CRON_PROMPT.md` updated with guidance: flag masking-risk fixes for human review
+
+### ✅ Fork implementation checklist template added
+Created `notes/fork-implementation-checklist.md`:
+- end-to-end fork coverage checklist (spec intake → types/state transition → fork choice → networking → API → storage)
+- explicit test matrix (unit/integration/e2e/spec vectors)
+- interop/devnet validation gates
+- PR hygiene/review flow checks
+- merge readiness/exit criteria summary block for PR descriptions
+
+---
+
+### ✅ Multi-node log correlator implemented (2026-03-09)
+Created `scripts/debug/correlate-logs.sh`:
+- accepts multiple node names + `--from/--to` range
+- runs per-node Loki queries in parallel and merges results into a single timestamp-sorted timeline
+- prefixes each line with node name and marks consensus-relevant lines (`fork_choice`, `attestation`, `proposal`, `head_block`, `finalized`)
+- supports `--highlights-only`, custom query template (`{{NODE}}` placeholder), and markdown file output
+
+### ✅ Review finding resolution tracker implemented (2026-03-08)
+Created `scripts/review/track-findings.py`:
+- `add <pr>` — store a finding (file, line, severity, reviewer, body)
+- `list <pr> [--open-only]` — show findings sorted by severity
+- `resolve <pr> <id> [--commit <sha>]` — mark as addressed/acknowledged/wontfix
+- `check <pr> --changed-files <...>` — given new commit's file list, flag findings on changed files as "needs verification" vs. still-untouched
+- `dump <pr>` — markdown summary for GitHub comment copy-paste
+- `import <pr> --markdown <file>` — parse free-form reviewer output into structured findings
+- `dedup <pr>` — group by file+line proximity (±5 lines), showing multi-reviewer overlap
+
+Updated `lodestar-review/SKILL.md` with "Finding Resolution Tracking" section explaining the workflow.
+
+**Rationale:** When PR authors push follow-up commits, I currently re-read my entire review and the new diff manually (10-15 min per follow-up). `check --changed-files` reduces this to <1 min: it immediately shows which of my findings are on changed files (go verify) vs. still-untouched (still open).
+
+### ✅ CI auto-fix PRs now labeled `auto-fix` (2026-03-08)
+Updated `CRON_PROMPT.md` Step 4 `gh pr create` command to include `--label "auto-fix"`, with a comment showing how to create the label if it doesn't exist yet. Makes auto-fix PRs instantly filterable in the ChainSafe/lodestar PR queue.
+
+### ✅ Dev-workflow spec-vector gate added (2026-03-09)
+Updated `skills/dev-workflow/SKILL.md` Phase 4 (Quality Gate) with an explicit **Spec-vector gate**:
+- run `pnpm test:spec` when available before PR on spec/protocol-facing changes
+- if unavailable/skipped, document reason in PR body
+
+**Rationale:** test-vector checks were a known recurring omission risk in spec work. Making it a codified gate reduces regressions from "looks right" implementations that diverge from official vectors.
+
+### ✅ Debug session template created
+Created `notes/debug-session-template.md` (2026-03-07):
+- Structured header (date, topic, linked PR, environment, time budget)
+- Hypothesis-first section (list before looking at evidence)
+- Timestamped evidence log with bash command blocks
+- "Ruled out" table to track eliminated hypotheses
+- Working theory + root cause + fix sections
+- Lessons learned → feeds back into skill updates
+- Quick-reference bash snippets for common starting points
+
+### ✅ GitHub review-comment ingestion added to finding tracker (2026-03-10)
+Updated `scripts/review/track-findings.py` with `import-gh` command:
+- Fetches PR review comments via `gh api repos/<owner>/<repo>/pulls/<pr>/comments`
+- Imports comments as structured findings with source metadata (`kind: github-review-comment`, comment id/url)
+- Skips already-imported comments using source-id dedup
+- Optional `--include-replies` to include in-thread reply comments
+
+### ✅ Finding-tracker GitHub delta-sync added (2026-03-11)
+Updated `scripts/review/track-findings.py` with `sync-gh` command:
+- Checkpointed delta sync via persisted state (`data.sync.github[repo].last_comment_id`)
+- Imports only new comments (`id > checkpoint`), with optional `--since-comment-id` override
+- Optional `--include-replies` and configurable `--match-window-lines`
+- Adds re-verification metadata to matching existing findings (`needs_reverify`, `reverify.events`)
+- Supports `--dry-run` for safe validation
+
+### ✅ CI LLM retry/backoff + fixability wiring in autofix detector (2026-03-10)
+Updated `scripts/ci/auto_fix_flaky.py`:
+- Added bounded retry behavior for OpenAI calls in `_openai_completion()`
+- Added retryability detection for 429/5xx + transient errors
+- Added `Retry-After` header/message parsing and exponential backoff fallback
+- Fixed LLM fixability propagation: `classify_failure()` now returns `llm_fixable`, and `scan()` passes it to `is_fixable()`
+- Persisted `llm_fixable` into findings/tracker entries for auditability
+
+### ✅ Devnet incident-bundle preflight guard (2026-06-04)
+Updated `scripts/debug/build-incident-bundle.sh` and `skills/local-mainnet-debug/SKILL.md`:
+- Added `--check-only` to validate node/peer inputs, helper script presence, and output-path writability without querying Grafana or writing a bundle.
+- Added `--require-grafana` to fail early when `GRAFANA_TOKEN`, `curl`, or `jq` are missing instead of silently producing a partial telemetry bundle.
+- Documented the preflight command in the local mainnet debugging skill so longer devnet debugging runs can fail fast on missing observability prerequisites.
+- Verified with `bash -n`, optional preflight success, and missing-token failure under `env -u GRAFANA_TOKEN`.
+
+---
+
+## Next Audit Priorities (next daily cycles)
+
+1. **Add `claude-cli/*` fallback to 4 Codex-only crons + fix `cron-health-watchdog` delivery** — `self-improvement-audit-daily`, `cron-health-watchdog`, `nightly-memory-consolidation`, and `check-openclaw-release` all run a Codex-subscription-backed model (`openai/gpt-5.5` or `codex/gpt-5.3-codex-spark`) with no cross-provider fallback, and went silently unhealthy during a shared quota-exhaustion window, 2026-08-06 17:01 UTC → 2026-08-08 ~04:00 UTC (full detail: 2026-08-08 Audit workflow entry above). Awaiting Nico's sign-off on the config change (DMed 2026-08-08 ~09:4x UTC) — this is a cron-config edit, not something to patch unilaterally. Once applied: confirm via `cron.list` that `consecutiveErrors` resets to 0 on each of the four jobs, and re-run `python3 scripts/notes/check-autonomy-audit-cadence.py --require-current --fail-on-gap` on the next daily cycle to confirm the snapshot-cadence gap doesn't recur.
+
+     **Carried-forward status (as of 2026-09-28):** ask unchanged, now 51 days pending Nico's sign-off (asked 2026-08-08). Day-by-day history 2026-08-09 → 2026-09-23 (49 entries total, archived across eight passes: 26 entries 08-09→09-02 on 09-06, 6 entries 09-03→09-07 on 09-13, 5 entries 09-08→09-13 on 09-18, 2 entries 09-14→09-15 on 09-21, 4 entries 09-16→09-19 on 09-25, 2 entries 09-20→09-21 on 09-26, 1 entry 09-22 on 09-27, 1 entry 09-23 on 09-28) lives verbatim in `notes/autonomy-gaps-archive.md`. Live section below now keeps only the last ~5 calendar days (09-24 onward); consult the archive file for anything older.
+
+     **QMD root cause (was "cause not investigated" 09-14 → 09-23):** `@tobilu/qmd` 1.0.7 `dist/qmd.js:1439` wraps the whole embed in `withLLMSession(…, {maxDuration: 30*60*1000})`; `dist/llm.js:905-947` aborts the session at the cap and every later `session.embed*` throws `SessionReleasedError`. Nightly workload is 3.2–3.6 MB / 1,631–1,768 chunks (cycle logs 09-20/21/22/24) against ~2.3–2.7 MB per session at CPU speed (~1.9 KB/s), so every night ends at 30m16–30m25s with 458–842 chunks failed (09-21: 575, 09-22: 842, 09-24: 458). Biggest loads: `bank/facts.md` (943 KB / 697 chunks, regenerated 03:32 nightly by the pipeline's own Step 1/2), `BACKLOG_ARCHIVE.md` (1.23 MB / 315+ chunks), `bank/preferences.md`. Selection is `LEFT JOIN content_vectors ON hash AND seq=0 … IS NULL` (`store.js:1665`): docs the cap hit *before* starting (no seq 0) are re-queued next run; docs it hit *mid-file* are never re-queued until their content changes — the permanent "large-tail-after-last-vector" partials (`backlog-archive.md` 315 chunks + 666 KB tail, `state.md` 87 chunks).
+     **Fix applied (script-side, no cron config):** `scripts/memory/nightly_memory_cycle.sh` now runs up to 2 follow-up `qmd embed` passes while `qmd status` shows `Pending: N need embedding` (fresh 30-min session each; bounded; qmd's own CLI only). Verified: `bash -n`; stub-`qmd` control-flow test on the block extracted from the real script (always-pending → 3 embeds/2 status checks, never → 1/1, once → 2/2); real-`qmd status` grep matches while pending and not after; and a live one-off `nice -n 19 qmd embed` today over the 12 stuck docs (165 KB / 101 chunks) → `Embedded 101 chunks from 12 documents in 2m 20s`, 0 failed, completeness **14 → 2 incomplete hashes** (exactly the two partial giants, as predicted). **Not fixed by re-running:** those 2 partials (need a content change or `qmd embed -f`, a multi-hour job). The durable fix is workload reduction — candidates, not applied: stop regenerating `facts.md` nightly, split `BACKLOG_ARCHIVE.md` by month, or keep the giants out of embeddings. The cron still reads `error/timeout` (900s harness vs a ≥31-min pipeline) until the 2700s/detach change lands; this fix changes index completeness, not cron status. Script change is uncommitted in the working tree until tomorrow's 03:30Z run confirms it (same precedent as `17e71a4`); expect `Step 4 (embed pass 2)` in `memory-cycle-2026-09-25.log` and ≤2 incomplete hashes in its Step 4b.
+     **Also found (workflow drift, not fixed here):** `scripts/cron/check_cron_health.py` carries 609 uncommitted lines (its only commit is 2026-03-06 `f1c39ed`; diff has no secret-like strings) — the live watchdog is not in git; commit after a review pass. Housekeeping still due: archive the 09-16 → 09-18 bullets above to `notes/autonomy-gaps-archive.md` (live section keeps ~5 days). Files touched: this file, `BACKLOG.md`, `scripts/memory/nightly_memory_cycle.sh`. No `memory/*.md` edited (hard constraint honored). Scratch left in `/tmp` (mine, untouched): `.cron-list-audit-0924.json`, `.gw-journal-audit-0924.txt`, `.qmd-embed-manual-0924.log`, `nightly-loop-test-x9JC/`. Posted routine status to topic #347.
+   - **2026-10-10 09:3x UTC re-check (`next-audit-priorities-reminder`) — config gaps unchanged (63 days pending); the 10-09 OOM projection landed inside its window (abort 10-09 22:04:31Z, 25h55m uptime); no action possible on either live item:** live `cron list --json` (28 jobs) shows the 4 tracked jobs unchanged (no `fallbacks`; `delivery.mode: none` on all four; `nightly-memory-consolidation` still `timeoutSeconds: 900`), all four `ok`/`consecutiveErrors=0`; no job is red.
+     **Gateway (item 2):** `journalctl --user -u openclaw-gateway --since "2026-10-09 09:31"` (4,812 lines): one crash — pid 1633730 (since 10-08 20:09:39Z) hit `FATAL ERROR: Ineffective mark-compacts near heap limit ... JavaScript heap out of memory` at **10-09 22:04:31Z** (last Mark-Compact 15.86 -> 15.81 GiB, 18.9s), `status=6/ABRT`; systemd restarted it as pid 656203 at 22:04:39Z (automatic, not Nico's). Heap-OOM series: 10-05 18:04Z, 10-07 14:42Z, 10-08 20:09Z, 10-09 22:04Z (uptimes ~27h, ~32h, 27h18m, 25h55m), so the interval is stable at 26-32h. Current pid hourly heap floors: 5.82 (06Z) -> 6.08 -> 6.64 -> 7.16 GiB (09Z), RSS ~9.9 GiB, `level=warning` (threshold 7.9 GiB); next abort projected ~00:00-06:00Z 10-11 by uptime band (~15h of headroom at ~0.55 GiB/h). The `IsGraphAsync` tally and its last-crash reference (09-29 15:18:09Z) are unchanged. Upstream openclaw#159373: still 3 comments, last is mine (10-06 11:17Z); newest releases are v2026.9.9 stable (no leak entry) and v2026.10.1-beta.2, so upgrading is still not a known remedy. Planned restart before the abort (to avoid SIGKILLing live child sessions) or upgrade is Nico's call; the evidence is in BACKLOG.
+     **Housekeeping:** archived the 10-05 bullet (5 lines, verbatim) to `notes/autonomy-gaps-archive.md`; live section keeps 10-06 onward. Refreshed item 2's stale 10-09 numbers. Files touched: this file, `notes/autonomy-gaps-archive.md`, `BACKLOG.md`. No `memory/*.md` edited (hard constraint honored). Scratch left in `/tmp` (mine, untouched): `.cron-list-audit-1010.json`, `.cron-list-audit-1010.err`, `.gw-journal-audit-1010.txt`, `.autonomy-gaps-pre-1010.bak`, `.autonomy-gaps-archive-pre-1010.bak`, `.backlog-pre-1010.bak`.
+   - **2026-10-11 09:3x UTC re-check (`next-audit-priorities-reminder`) — config gaps unchanged (64 days pending); the gateway was deliberately restarted on 10-10 (so the 10-10 "00:00-06:00Z 10-11" projection never had a chance to land) and its replacement is on the same curve, now projected to abort ~14:00-18:00Z today; new stable v2026.10.1 (10-10 23:54Z) has no leak fix; no action possible on either live item:** live `cron list --json` (28 jobs) shows the 4 tracked jobs unchanged (no `fallbacks`; `delivery.mode: none` on all four; `nightly-memory-consolidation` still `timeoutSeconds: 900`), all four `ok`/`consecutiveErrors=0`. Only red job: `workspace-periodic-cleanup` (`consecutiveErrors=1`, 2.5s, 08:34:12Z, `prepared model runtime publication was superseded` = the known cron-setup race, self-heals; next run 14:34:12Z, not touched). Nightly `memory-cycle-2026-10-11.log` repeats the masked-retry pattern (attempt 1 03:30:13Z cut by the 900s harness at ~3% of 1165 chunks; retry embedded 116 chunks/4 docs in 2m24s; job `ok`/195s/ce=0); Step 4b `QMD_EMBEDDING_INCOMPLETE: 1`, `max_tail_chars=4096` (same small tail as 10-08).
+     **Gateway (item 2):** `journalctl --user -u openclaw-gateway --since "2026-10-10 09:31"` (3,970 lines): **0** `heap out of memory`/`status=6/ABRT` matches. The only stop was a deliberate one: `10-10 11:25:49Z systemd: Stopping`, `[gateway] received SIGTERM; restarting` (`SIGTERM: gateway.restart`), pid 656203 -> 2347483 up 11:26:04Z (uptime at stop ~13.5h at heap ~9.2 GiB, RSS ~11.2 GiB; one `claude` child SIGKILLed with the stop). Current pid 2347483 (22h04m, `--max-old-space-size=15987`, RSS 15.2 GB, systemd `Memory: 17.1G`) hourly `[diagnostics/memory]` heap floors: 5.87 (22Z) -> 6.25 -> 6.93 -> 7.39 -> 7.89 -> 8.38 -> 9.07 (04Z, `level=critical`) -> 9.38 -> 9.95 -> 10.60 -> 10.90 -> 11.70 GiB (09Z), latest sample 12.6 GiB at 09:18Z. Slope ~0.53 GiB/h (5.83 GiB over 11h), consistent with the earlier 0.55-0.6 GiB/h; with the OOM at ~15.0-15.9 GiB that leaves ~6h, so the next abort lands ~14:00-18:00Z today (uptime ~28-31h, inside the 26-32h band). Nothing pre-empts it, and an abort SIGKILLs live child sessions; a planned restart before then (or the upgrade below) is Nico's call. `IsGraphAsync` tally and its last-crash reference (09-29 15:18:09Z) unchanged; heap-OOM series unchanged (10-05 18:04Z, 10-07 14:42Z, 10-08 20:09Z, 10-09 22:04Z).
+     **Upstream / release check:** openclaw#159373 unchanged (3 comments, last mine 10-06 11:17Z, no maintainer reply). **New: v2026.10.1 stable** published 10-10 23:54:03Z (installed is still 2026.9.8). `CHANGELOG/2026.10.1.md` (520 KB) has no heap-leak/OOM fix entry, but adds main-isolate memory diagnostics that would help root-cause after an upgrade: up to 15 min of live-only heap sampling (#163813), V8 heap-space metrics and before/after heap-profile breakdowns (#164057), per-request reply-size and approximate memory-change sampling (#164335), and a built-source retained-object workload (#163764). Upgrading is therefore not a known remedy, but it is the first release that makes the leak locatable from inside the process; it also needs a stopped-Gateway SQLite conversion on first start (#163105), so the upgrade timing is Nico's call.
+     **Housekeeping:** archived the 10-06 bullet (4 lines, verbatim) to `notes/autonomy-gaps-archive.md`; live section keeps 10-07 onward. Refreshed item 2's stale 10-10 numbers. Files touched: this file, `notes/autonomy-gaps-archive.md`, `BACKLOG.md`. No `memory/*.md` edited (hard constraint honored). Scratch left in `/tmp` (mine, untouched): `.cron-list-audit-1011.json`, `.cron-list-audit-1011.err`, `.gw-journal-audit-1011.txt`, `.rel-10.1-1011.md`, `.changelog-10.1-1011.md`, `.changelog-10.1-1011.err`, `.autonomy-gaps-pre-1011.bak`, `.autonomy-gaps-archive-pre-1011.bak`, `.backlog-pre-1011.bak`. Posted routine status to topic #347.
+   - **2026-10-12 09:3x UTC re-check (`next-audit-priorities-reminder`) — config gaps unchanged (65 days pending); the 10-11 projection landed (abort 10-11 16:37:19Z, 29h11m uptime); new stable v2026.10.2 has no leak fix; no action possible on either live item:** live `cron list --json` (28 jobs) shows the 4 tracked jobs unchanged (no `fallbacks`; `delivery.mode: none` on all four; `nightly-memory-consolidation` still `timeoutSeconds: 900`), all four `ok`/`consecutiveErrors=0`; no job is red.
+     **Gateway (item 2):** `journalctl --user -u openclaw-gateway --since "2026-10-11 09:31"` (4,405 lines): one crash, pid 2347483 (since the deliberate 10-10 11:25:49Z restart) hit `FATAL ERROR: Ineffective mark-compacts near heap limit ... JavaScript heap out of memory` at **10-11 16:37:19Z**, `status=6/ABRT`; systemd restarted it as pid 1726906 at 16:37:27Z (automatic; the heartbeat checklist already logged it in BACKLOG at 16:5x). Abort series: 10-05 18:04Z, 10-07 14:42Z, 10-08 20:09Z, 10-09 22:04Z, 10-11 16:37Z. Current pid 1726906 hourly heap floors 5.46 (00Z) -> 5.99 (02Z) -> 7.66 (05Z) -> 9.39 (07Z) -> 10.42 GiB (09Z), latest 10.57 GiB, RSS 13.3 GiB, `level=critical` (threshold 11.8 GiB), slope ~0.55 GiB/h, so the next abort is projected ~18:30-21:30Z today (26-29h uptime).
+     **Upstream / release check:** openclaw#159373 unchanged (3 comments, last mine 10-06 11:17Z, no maintainer reply). **New: v2026.10.2 stable** published 10-12 05:34:44Z (installed is still 2026.9.8); its release body (12 KB) has no heap/leak/OOM/RSS fix (the only leak hits are credential redaction chunk boundaries, Codex app-server client leaks and worker-capacity leaks). `v2026.10.5-beta.1` (10-11 13:08Z) not reviewed. Upgrade / planned restart stay Nico's call; the evidence is in BACKLOG.
+     **Housekeeping:** archived the 10-07 bullet (6 lines, verbatim) to `notes/autonomy-gaps-archive.md`; live section keeps 10-08 onward. Refreshed item 2's stale 10-11 numbers. Files touched: this file, `notes/autonomy-gaps-archive.md`, `BACKLOG.md`. No `memory/*.md` edited (hard constraint honored). Scratch left in `/tmp` (mine, untouched): `.cron-list-audit-1012.json`, `.cron-list-audit-1012.err`, `.gw-journal-audit-1012.txt`, `.rel-10.2-1012.md`, `.autonomy-gaps-pre-1012.bak`, `.autonomy-gaps-archive-pre-1012.bak`, `.backlog-pre-1012.bak`. No topic post (no material delta beyond the projection update; the heartbeat checklist tracks the gateway).
+   - **2026-10-13 09:3x UTC re-check (`next-audit-priorities-reminder`) — config gaps unchanged (66 days pending); the 10-12 projection landed (abort 10-12 18:14:26Z, 25h37m uptime, already logged by the heartbeat); new `v2026.10.5-beta.2` has no leak fix; no action possible on either live item:** live `cron list --json` (28 jobs) shows the 4 tracked jobs unchanged (no `fallbacks`; `delivery.mode: none` on all four; `nightly-memory-consolidation` still `timeoutSeconds: 900`), all four `ok`/`consecutiveErrors=0`; no job is red.
+     **Gateway (item 2):** `journalctl --user -u openclaw-gateway --since "2026-10-12 09:31"` (4,809 lines): one crash, pid 1726906 (since 10-11 16:37:27Z) hit `FATAL ERROR: Ineffective mark-compacts near heap limit ... JavaScript heap out of memory` at **10-12 18:14:26Z**, `status=6/ABRT` at 18:14:29; systemd restarted it as pid 707025 at 18:14:34Z (automatic, not Nico's). Abort series: 10-05 18:04Z, 10-07 14:42Z, 10-08 20:09Z, 10-09 22:04Z, 10-11 16:37Z, 10-12 18:14Z (uptimes ~27h, ~32h, 27h18m, 25h55m, 29h11m, 25h37m: the 25-32h band holds). Current pid 707025 (up ~15h16m, no restart) hourly heap floors 4.72 (01Z) -> 5.48 -> 5.99 -> 6.30 -> 6.78 -> 7.54 -> 7.84 -> 8.74 -> 9.12 GiB (09Z), latest 9.31 GiB at 09:25Z, RSS 11.8 GiB, `level` flapping warning/critical at the 11.8 GiB RSS threshold. Slope ~0.55 GiB/h (4.40 GiB over 8h); with the abort at ~15.0-15.9 GiB that leaves ~11h, so the next abort is projected ~19:15Z 10-13 - 02:15Z 10-14 (uptime 25-32h). The `IsGraphAsync` tally and its last-crash reference (09-29 15:18:09Z) are unchanged.
+     **Upstream / release check:** openclaw#159373 unchanged (3 comments, last mine 10-06 11:17Z, no maintainer reply). Releases: stable v2026.10.2 (10-12 05:34Z) is still the latest stable (installed 2026.9.8); **new `v2026.10.5-beta.2`** (10-12 12:10Z) body greps only update-child heap-limit inheritance (#168889/#168729), no heap/leak/OOM/RSS fix, so upgrading is still not a known remedy (beta.1 10-11 not reviewed separately). Upgrade / planned restart stay Nico's call; the evidence is in BACKLOG.
+     **Housekeeping:** archived the 10-08 bullet (3 lines, verbatim) to `notes/autonomy-gaps-archive.md`; live section keeps 10-09 onward. Refreshed item 2's stale 10-12 numbers. Files touched: this file, `notes/autonomy-gaps-archive.md`, `BACKLOG.md`. No `memory/*.md` edited (hard constraint honored). Scratch left in `/tmp` (mine, untouched): `.cron-list-audit-1013.json`, `.cron-list-audit-1013.err`, `.gw-journal-audit-1013.txt`, `.autonomy-gaps-pre-1013.bak`, `.autonomy-gaps-archive-pre-1013.bak`, `.backlog-pre-1013.bak`. No topic post (no material delta beyond the projection update; the heartbeat checklist tracks the gateway).
+   - **2026-10-14 09:3x UTC re-check (`next-audit-priorities-reminder`) — config gaps unchanged (67 days pending); the 10-13 projection was pre-empted by a deliberate restart (10-13 17:46:54Z); new stable v2026.10.3 and `v2026.10.5-beta.3` have no leak fix; no action possible on either live item:** live `cron list --json` (28 jobs) shows the 4 tracked jobs unchanged (no `fallbacks`; `delivery.mode: none` on all four; `nightly-memory-consolidation` still `timeoutSeconds: 900`), all four `ok`/`consecutiveErrors=0`; no job is red.
+     **Gateway (item 2):** `journalctl --user -u openclaw-gateway --since "2026-10-13 09:31"` (3,678 lines): **0** `heap out of memory`/`status=6/ABRT` matches. The only stop was a deliberate one: `10-13 17:46:54Z`, `[admission] closed: restart (SIGTERM: gateway.restart)`, pid 707025 (~23h32m uptime, ahead of its projected 19:15Z window) -> `Started` 17:48:26Z as pid 3432219, `NRestarts=0`. Current pid 3432219 (up 15h42m, `--max-old-space-size=15987`, RSS ~11.2 GB, systemd `Memory: 17.1G`) hourly `[diagnostics/memory]` heap floors 5.59 (04Z) -> 5.69 -> 6.01 -> 6.47 -> 6.95 -> 7.49 -> 7.94 GiB (09Z), latest 8.43 GiB at 09:26:57Z, `level=warning`. Slope ~0.47 GiB/h (2.35 GiB over 5h), a little under the earlier 0.55-0.6 GiB/h; with the abort at ~15.0-15.9 GiB that leaves ~11-16h, so the next abort lands ~20:30Z 10-14 - 01:30Z 10-15 by slope (uptime band 25-32h = 18:48Z 10-14 - 01:48Z 10-15). `IsGraphAsync` tally and its last-crash reference (09-29 15:18:09Z) unchanged.
+     **Upstream / release check:** openclaw#159373 unchanged (3 comments, last mine 10-06 11:17Z, no maintainer reply). **New: v2026.10.3 stable** (10-13 13:49:25Z; installed is still 2026.9.8): release body (6 KB) has no heap/leak/OOM/RSS/memory-growth entry. `v2026.10.5-beta.3` (10-13 10:00Z, 14 KB) also has none (its only "leak" hits are DeepSeek tool markup leaking into messages). Upgrade / planned restart stay Nico's call; the evidence is in BACKLOG.
+     **Housekeeping:** archived the 10-09 bullet (4 lines, verbatim) to `notes/autonomy-gaps-archive.md` (diffed: 4 lines out of this file, 0 added, archive tail matches); live section keeps 10-10 onward. Refreshed item 2's stale 10-13 numbers. Files touched: this file, `notes/autonomy-gaps-archive.md`, `BACKLOG.md`. No `memory/*.md` edited (hard constraint honored). Scratch left in `/tmp` (mine, untouched): `.cron-list-audit-1014.json`, `.cron-list-audit-1014.err`, `.gw-journal-audit-1014.txt`, `.gw-journal-audit-1014.err`, `.rel-10.3-1014.md`, `.rel-10.3-1014.err`, `.rel-10.5b3-1014.md`, `.autonomy-gaps-pre-1014.bak`, `.autonomy-gaps-archive-pre-1014.bak`, `.backlog-pre-1014.bak`. No topic post (no material delta beyond the projection update; the heartbeat checklist tracks the gateway).
+
+2. **Gateway main-process heap leak (since 9.8): planned restart or upgrade, then root cause** — heap grows ~0.47-0.6 GiB/h and the process OOM-aborts at ~15.9 GiB after ~25-32h (aborts: 10-05 18:04:24Z, 10-07 14:42Z, 10-08 20:09:31Z, 10-09 22:04:31Z, 10-11 16:37:19Z, 10-12 18:14:26Z); Nico deliberately restarted it on 10-10 11:25:49Z (~13.5h uptime) and again on 10-13 17:46:54Z (`gateway.restart`, ~23h32m uptime, pre-empting the 19:15Z projection), and the current pid 3432219 (up 15h42m at 09:30Z 10-14) has an hourly heap floor of 7.94 GiB at 2026-10-14 09:00Z (latest 8.43 GiB, `level=warning`) with the next abort projected ~20:30Z 10-14 - 01:30Z 10-15 by slope (uptime band 18:48Z 10-14 - 01:48Z 10-15), which would SIGKILL live child sessions. Upstream openclaw#159373 has no maintainer reply; v2026.9.9, v2026.10.1 (10-10 23:54Z), v2026.10.2 (10-12 05:34Z), v2026.10.3 (10-13 13:49Z) stable and v2026.10.5-beta.2/.3 have no leak fix in their changelogs, but 10.1 adds main-isolate heap sampling/heap-space diagnostics that would let the leak be located after an upgrade. I cannot restart or upgrade the gateway, and any restart-cadence/upgrade/config change needs Nico's sign-off; the heartbeat checklist re-checks every 10 min and posts on material change. Once restarted again: confirm the rate from hourly heap floors in `[diagnostics/memory]` journal events. Full detail: 2026-10-10 through 2026-10-14 bullets above and the BACKLOG "Gateway main-process heap leak" entry.
+
+To avoid stale reminder churn on top of the live items above:
+
+1. Only add a new item here when the **latest daily audit snapshot** introduces a still-open blocker or concrete follow-up.
+2. If the latest snapshot is fully green, leave this section empty of filler work and use `BACKLOG.md` for unrelated concrete tasks.
+3. When repopulating the list, prefer one specific automation gap that is **not already marked `✅ done` elsewhere in this file**.
+4. If a reminder fires while this section has no live items, the correct outcome is routine silence / `NO_REPLY`.
+
+Helper: `python3 scripts/notes/check-next-audit-priorities.py --json` returns whether this section contains live items or only the default empty-state guidance. For shell/cron guards, use `python3 scripts/notes/check-next-audit-priorities.py --quiet --fail-if-live` (`exit 0` = no live items, `exit 3` = live items present).

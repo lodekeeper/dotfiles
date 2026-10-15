@@ -1,0 +1,14 @@
+test_malformed_record_after_valid_item_reports_physical_line (__main__.DiscussionIngestionTests.test_malformed_record_after_valid_item_reports_physical_line) ... FAIL
+
+======================================================================
+FAIL: test_malformed_record_after_valid_item_reports_physical_line (__main__.DiscussionIngestionTests.test_malformed_record_after_valid_item_reports_physical_line)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/openclaw/.openclaw/workspace/scripts/review/test_fetch_pr_discussion.py", line 69, in test_malformed_record_after_valid_item_reports_physical_line
+    with redirect_stderr(stderr), self.assertRaises(SystemExit) as raised:
+AssertionError: SystemExit not raised
+
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+FAILED (failures=1)

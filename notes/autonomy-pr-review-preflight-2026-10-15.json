@@ -1,0 +1,477 @@
+{
+  "cacheStats": {
+    "cacheHits": 0,
+    "totalChecks": 5,
+    "uniqueCommands": 5
+  },
+  "checks": [
+    {
+      "cacheHit": false,
+      "command": [
+        "bash",
+        "scripts/review/run-followup-guards.sh",
+        "--check-only",
+        "--json"
+      ],
+      "domain": "prReview",
+      "name": "followupGuards",
+      "ok": true,
+      "returnCode": 0,
+      "stderr": "",
+      "stdout": {
+        "ghAvailable": true,
+        "helpers": {
+          "checkPrMetadataDrift": {
+            "checkOnlyJsonOk": true,
+            "helpOk": true,
+            "path": "/home/openclaw/.openclaw/workspace/scripts/github/check-pr-metadata-drift.py",
+            "present": true
+          },
+          "checkReviewArtifacts": {
+            "executable": true,
+            "helpOk": true,
+            "path": "/home/openclaw/.openclaw/workspace/scripts/review/check-review-artifacts.sh",
+            "syntaxOk": true
+          },
+          "checkReviewScope": {
+            "executable": true,
+            "helpOk": true,
+            "path": "/home/openclaw/.openclaw/workspace/scripts/review/check-review-scope.sh",
+            "syntaxOk": true
+          },
+          "fetchPrDiscussion": {
+            "checkOnlyJsonOk": true,
+            "path": "/home/openclaw/.openclaw/workspace/scripts/review/fetch-pr-discussion.py",
+            "present": true
+          },
+          "githubAccessGuard": {
+            "executable": true,
+            "path": "/home/openclaw/.openclaw/workspace/scripts/github/check-github-access.sh"
+          },
+          "trackFindings": {
+            "helpOk": true,
+            "path": "/home/openclaw/.openclaw/workspace/scripts/review/track-findings.py",
+            "present": true,
+            "staleHelpOk": true,
+            "syncGhHelpOk": true
+          },
+          "writeReviewArtifact": {
+            "executable": true,
+            "helpOk": true,
+            "path": "/home/openclaw/.openclaw/workspace/scripts/review/write-review-artifact.sh",
+            "syntaxOk": true
+          }
+        },
+        "ok": true,
+        "python3Available": true,
+        "repo": "ChainSafe/lodestar",
+        "reportDirectory": {
+          "path": "/home/openclaw/.openclaw/workspace/notes/review-reports",
+          "ready": true
+        },
+        "selfSyntaxOk": true,
+        "workspace": "/home/openclaw/.openclaw/workspace"
+      },
+      "warnings": []
+    },
+    {
+      "cacheHit": false,
+      "command": [
+        "/usr/bin/python3",
+        "scripts/memory/check_context_search_readiness.py",
+        "--json"
+      ],
+      "domain": "prReview",
+      "name": "memoryContextSearch",
+      "ok": true,
+      "returnCode": 0,
+      "stderr": "",
+      "stdout": {
+        "fallback": {
+          "available": true,
+          "resultCount": 1,
+          "returnCode": 0,
+          "searchOk": true,
+          "timedOut": false
+        },
+        "ok": true,
+        "qmd": {
+          "available": true,
+          "firstFile": "qmd://daily-notes/archive/2026-09-12.md",
+          "path": "/home/openclaw/.local/bin/qmd",
+          "resultCount": 1,
+          "returnCode": 0,
+          "searchOk": true,
+          "timedOut": false
+        },
+        "query": "autonomy",
+        "selectedBackend": "qmd",
+        "status": "ready",
+        "warnings": []
+      },
+      "warnings": []
+    },
+    {
+      "cacheHit": false,
+      "command": [
+        "/usr/bin/python3",
+        "scripts/safety/block-risky-command.py",
+        "--self-test",
+        "--json"
+      ],
+      "domain": "prReview",
+      "name": "destructiveCommandGuard",
+      "ok": true,
+      "returnCode": 0,
+      "stderr": "",
+      "stdout": {
+        "cases": [
+          {
+            "actualOk": true,
+            "command": "git status --short",
+            "expectedOk": true,
+            "matches": [],
+            "passed": true
+          },
+          {
+            "actualOk": true,
+            "command": "sed -n '1,20p' BACKLOG.md",
+            "expectedOk": true,
+            "matches": [],
+            "passed": true
+          },
+          {
+            "actualOk": true,
+            "command": "bash scripts/notes/run-daily-autonomy-audit.sh --response-only",
+            "expectedOk": true,
+            "matches": [],
+            "passed": true
+          },
+          {
+            "actualOk": false,
+            "command": "rm -f /tmp/example",
+            "expectedOk": false,
+            "matches": [
+              {
+                "name": "rm",
+                "reason": "`rm` deletes immediately and has caused repeated end-of-turn cleanup mistakes"
+              }
+            ],
+            "passed": true
+          },
+          {
+            "actualOk": false,
+            "command": "rm -f /tmp/example; echo \"SKIPPED-DO-NOT-RUN\"",
+            "expectedOk": false,
+            "matches": [
+              {
+                "name": "rm",
+                "reason": "`rm` deletes immediately and has caused repeated end-of-turn cleanup mistakes"
+              }
+            ],
+            "passed": true
+          },
+          {
+            "actualOk": false,
+            "command": "rm -f /tmp/example && echo \"noop\"",
+            "expectedOk": false,
+            "matches": [
+              {
+                "name": "rm",
+                "reason": "`rm` deletes immediately and has caused repeated end-of-turn cleanup mistakes"
+              }
+            ],
+            "passed": true
+          },
+          {
+            "actualOk": false,
+            "command": "trash-put /tmp/example",
+            "expectedOk": false,
+            "matches": [
+              {
+                "name": "trash",
+                "reason": "`trash`/`trash-put` are still destructive when used as reflexive cleanup"
+              }
+            ],
+            "passed": true
+          },
+          {
+            "actualOk": false,
+            "command": "gio trash /tmp/example",
+            "expectedOk": false,
+            "matches": [
+              {
+                "name": "gio-trash",
+                "reason": "`gio trash` is destructive when used as reflexive cleanup"
+              }
+            ],
+            "passed": true
+          },
+          {
+            "actualOk": false,
+            "command": "git stash && pnpm test",
+            "expectedOk": false,
+            "matches": [
+              {
+                "name": "git-stash",
+                "reason": "`git stash` can sweep unrelated dirty worktree state"
+              }
+            ],
+            "passed": true
+          },
+          {
+            "actualOk": false,
+            "command": "git reset --hard",
+            "expectedOk": false,
+            "matches": [
+              {
+                "name": "git-reset-hard",
+                "reason": "`git reset --hard` discards worktree state"
+              }
+            ],
+            "passed": true
+          },
+          {
+            "actualOk": false,
+            "command": "git checkout -- packages/foo.ts",
+            "expectedOk": false,
+            "matches": [
+              {
+                "name": "git-checkout-paths",
+                "reason": "`git checkout -- <path>` discards local file changes"
+              }
+            ],
+            "passed": true
+          },
+          {
+            "actualOk": false,
+            "command": "git clean -fd",
+            "expectedOk": false,
+            "matches": [
+              {
+                "name": "git-clean",
+                "reason": "`git clean` removes untracked files"
+              }
+            ],
+            "passed": true
+          }
+        ],
+        "message": "risky-command guard self-test passed",
+        "ok": true
+      },
+      "warnings": []
+    },
+    {
+      "cacheHit": false,
+      "command": [
+        "/usr/bin/python3",
+        "scripts/safety/block-idle-tool-call.py",
+        "--self-test",
+        "--json"
+      ],
+      "domain": "prReview",
+      "name": "idleToolCallGuard",
+      "ok": true,
+      "returnCode": 0,
+      "stderr": "",
+      "stdout": {
+        "cases": [
+          {
+            "actualOk": true,
+            "context": "cron",
+            "expectedOk": true,
+            "passed": true,
+            "risks": [],
+            "toolInput": {
+              "cmd": "sed -n '1,20p' BACKLOG.md"
+            },
+            "toolName": "functions.exec_command"
+          },
+          {
+            "actualOk": false,
+            "context": "cron",
+            "expectedOk": false,
+            "passed": true,
+            "risks": [
+              {
+                "name": "noop-shell-command",
+                "reason": "bare no-op shell commands are an idle/padding tool-call pattern"
+              }
+            ],
+            "toolInput": {
+              "cmd": "true"
+            },
+            "toolName": "functions.exec_command"
+          },
+          {
+            "actualOk": false,
+            "context": "cron",
+            "expectedOk": false,
+            "passed": true,
+            "risks": [
+              {
+                "name": "noop-shell-command",
+                "reason": "bare no-op shell commands are an idle/padding tool-call pattern"
+              },
+              {
+                "name": "placeholder-tool-label",
+                "reason": "placeholder/no-op labels have repeatedly accompanied unintended end-of-task tool calls"
+              }
+            ],
+            "toolInput": {
+              "command": "echo done",
+              "description": "noop placeholder"
+            },
+            "toolName": "Bash"
+          },
+          {
+            "actualOk": false,
+            "context": "cron",
+            "expectedOk": false,
+            "passed": true,
+            "risks": [
+              {
+                "name": "cron-stop-wakeup-without-target",
+                "reason": "stop-only wakeup calls in cron/background-wait context are usually inert filler"
+              }
+            ],
+            "toolInput": {
+              "stop": true
+            },
+            "toolName": "ScheduleWakeup"
+          },
+          {
+            "actualOk": true,
+            "context": "cron",
+            "expectedOk": true,
+            "passed": true,
+            "risks": [],
+            "toolInput": {
+              "id": "known-wakeup",
+              "stop": true
+            },
+            "toolName": "ScheduleWakeup"
+          },
+          {
+            "actualOk": true,
+            "context": "cron",
+            "expectedOk": true,
+            "passed": true,
+            "risks": [],
+            "toolInput": {
+              "description": "wait for sweep",
+              "persistent": false,
+              "timeout_ms": 120000
+            },
+            "toolName": "Monitor"
+          },
+          {
+            "actualOk": false,
+            "context": "cron",
+            "expectedOk": false,
+            "passed": true,
+            "risks": [
+              {
+                "name": "malformed-monitor-call",
+                "reason": "monitor call is missing required field(s): description, timeout_ms, persistent"
+              }
+            ],
+            "toolInput": {},
+            "toolName": "Monitor"
+          },
+          {
+            "actualOk": false,
+            "context": "cron",
+            "expectedOk": false,
+            "passed": true,
+            "risks": [
+              {
+                "name": "empty-report-findings-outside-review",
+                "reason": "empty code-review finding reports are not useful outside an active review"
+              }
+            ],
+            "toolInput": {
+              "findings": []
+            },
+            "toolName": "ReportFindings"
+          },
+          {
+            "actualOk": true,
+            "context": "code-review",
+            "expectedOk": true,
+            "passed": true,
+            "risks": [],
+            "toolInput": {
+              "findings": []
+            },
+            "toolName": "ReportFindings"
+          },
+          {
+            "actualOk": false,
+            "context": "cron",
+            "expectedOk": false,
+            "passed": true,
+            "risks": [
+              {
+                "name": "placeholder-tool-search-query",
+                "reason": "placeholder tool-discovery queries are an idle/padding tool-call pattern"
+              }
+            ],
+            "toolInput": {
+              "limit": 1,
+              "query": "placeholder"
+            },
+            "toolName": "tool_search.tool_search_tool"
+          },
+          {
+            "actualOk": true,
+            "context": "cron",
+            "expectedOk": true,
+            "passed": true,
+            "risks": [],
+            "toolInput": {
+              "limit": 1,
+              "query": "skill_workshop"
+            },
+            "toolName": "tool_search.tool_search_tool"
+          }
+        ],
+        "message": "idle-tool-call guard self-test passed",
+        "ok": true
+      },
+      "warnings": []
+    },
+    {
+      "cacheHit": false,
+      "command": [
+        "/usr/bin/python3",
+        "scripts/github/check-gh-actor-boundary.py",
+        "--expected",
+        "lodekeeper",
+        "--json"
+      ],
+      "domain": "prReview",
+      "name": "githubActorBoundary",
+      "ok": true,
+      "returnCode": 0,
+      "stderr": "",
+      "stdout": {
+        "actual": "lodekeeper",
+        "expected": "lodekeeper",
+        "ghAvailable": true,
+        "ok": true,
+        "status": "ready",
+        "stderr": ""
+      },
+      "warnings": []
+    }
+  ],
+  "expectedGitHubActor": "lodekeeper",
+  "ok": true,
+  "requireDevnetGrafana": false,
+  "selectedDomains": [
+    "prReview"
+  ],
+  "strictCiApiKey": true,
+  "workspace": "/home/openclaw/.openclaw/workspace"
+}
