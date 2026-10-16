@@ -1,0 +1,3 @@
+Confirmed: the new terminal entry wraps at `2 ** 32`, while the previous last-element branch retained the numeric end. The spec does cap total serialized array size below `2 ** 32`, but this is still a regression for previously accepted library inputs.
+
+Kept the ordinary `Uint32Array` path and added `Float64Array` storage only when the input size reaches `2 ** 32`, for both offset readers. The n+1 layout and branchless element loops remain. Added value/tree boundary tests around the threshold, including nonzero starts, without allocating multi-GiB buffers. Also corrected the PR description's claim that the fixed-size case already wrapped.
