@@ -1,0 +1,29 @@
+[
+  {
+    "command": [
+      "/usr/bin/python3",
+      "scripts/backlog/test_list_statuses.py"
+    ],
+    "exitCode": 0,
+    "stdout": "OK: list_statuses parser handles ## sections + ### tasks without stalling\nOK: displaced recovery guards retain refusal and explicit-audit CLI behavior (2 marker variants)\nOK: bold/plain status labels preserve ##/### tasks and CLI filter results (24 cases)\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "/usr/bin/python3",
+      "scripts/backlog/test_check_edit.py"
+    ],
+    "exitCode": 0,
+    "stdout": "",
+    "stderr": ".........\n----------------------------------------------------------------------\nRan 9 tests in 0.095s\n\nOK\n"
+  },
+  {
+    "command": [
+      "/usr/bin/python3",
+      "scripts/memory/test_backlog_guard.py"
+    ],
+    "exitCode": 0,
+    "stdout": "",
+    "stderr": ".....\n----------------------------------------------------------------------\nRan 5 tests in 0.001s\n\nOK\n"
+  }
+]

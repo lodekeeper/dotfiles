@@ -32,7 +32,7 @@ class TaskBlock:
     start_line: int
 
 
-STATUS_RE = re.compile(r"^- \*\*Status:\*\*\s*(.*)$")
+STATUS_RE = re.compile(r"^- (?:\*\*Status:\*\*|Status:(?!\*))\s*(.*)$")
 
 
 def parse_backlog(text: str) -> list[TaskBlock]:

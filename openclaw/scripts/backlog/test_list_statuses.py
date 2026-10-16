@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 import subprocess
 import sys
 import tempfile
@@ -198,5 +199,58 @@ with tempfile.TemporaryDirectory() as tmp:
 assert module.has_corruption_guard(sample + "\n- Historical warning: DO NOT ACT ON THIS FILE\n")
 assert not module.has_corruption_guard(sample + "\n- Historical warning: DO NOT ACT\n")
 
+# Scheduled entries use both plain and bold labels, on both task heading levels.
+label_cases = [
+    ("✅ Done — verified", True, False),
+    ("Done — verified", True, False),
+    ("In progress", False, True),
+    ("Awaiting review", False, False),
+    ("Blocked — needs owner", False, False),
+    ("", False, True),
+]
+mixed_blocks = []
+expected_active = []
+expected_actionable = []
+for level in ("##", "###"):
+    for label in ("**Status:**", "Status:"):
+        for status, done, actionable in label_cases:
+            heading = f"{level} 🟢 Task {len(mixed_blocks)}"
+            block = f"{heading}\n- {label} {status}\n"
+            parsed = module.parse_backlog(block)
+            assert len(parsed) == 1, (block, parsed)
+            assert parsed[0].status == status, (block, parsed[0])
+            assert module.is_done(parsed[0]) is done, (block, parsed[0])
+            assert module.is_actionable(parsed[0]) is actionable, (block, parsed[0])
+            mixed_blocks.append(block)
+            if not done:
+                expected_active.append(heading)
+            if actionable:
+                expected_actionable.append(heading)
+
+for label in ("Status note:", "**Status:", "Status:**", "status:"):
+    # Near-matches must not hide work by interpreting arbitrary prose as Done.
+    for level in ("##", "###"):
+        parsed = module.parse_backlog(f"{level} 🟢 Unrecognized\n- {label} Done\n")
+        if level == "##":
+            assert parsed == [], (label, parsed)
+        else:
+            assert len(parsed) == 1 and parsed[0].status is None, (label, parsed)
+
+assert module.parse_backlog("### 🟢 Missing\n- note\n")[0].status is None
+assert module.parse_backlog("## 🟢 Missing\n- note\n") == []
+with tempfile.TemporaryDirectory() as tmp:
+    mixed = Path(tmp) / "mixed.md"
+    mixed_text = "\n".join(mixed_blocks)
+    mixed.write_text(mixed_text)
+    for flag, expected in (("--active-only", expected_active), ("--actionable-only", expected_actionable)):
+        result = subprocess.run(
+            [sys.executable, str(SCRIPT), "--file", str(mixed), flag, "--json"],
+            text=True, capture_output=True, check=False,
+        )
+        assert result.returncode == 0, result
+        assert [task["heading"] for task in json.loads(result.stdout)] == expected, result
+        assert mixed.read_text() == mixed_text, "listing must not mutate the backlog"
+
 print("OK: list_statuses parser handles ## sections + ### tasks without stalling")
 print("OK: displaced recovery guards retain refusal and explicit-audit CLI behavior (2 marker variants)")
+print("OK: bold/plain status labels preserve ##/### tasks and CLI filter results (24 cases)")
