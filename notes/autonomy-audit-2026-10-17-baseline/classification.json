@@ -1,0 +1,14 @@
+{
+  "parsed": 41,
+  "active": 24,
+  "actionable": [
+    {
+      "heading": "## 🟡 feat4-mainnet-super stale validator service restart loop (no topic)",
+      "status": "⏸ Awaiting deployment owner decision — read-only diagnosis complete, no service changes authorized by status question."
+    },
+    {
+      "heading": "### 🟢 Daily autonomy audit — 2026-10-17 03:16 UTC",
+      "status": "🔄 In progress — compare recent evidence across PR review, CI fixes, spec implementation and devnet debugging; update `notes/autonomy-gaps.md` and implement one evidence-backed practical improvement if feasible. No config, scheduler, auth or service mutations."
+    }
+  ]
+}

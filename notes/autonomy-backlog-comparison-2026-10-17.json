@@ -1,0 +1,21 @@
+{
+  "input": "notes/autonomy-audit-2026-10-17-baseline/BACKLOG.md",
+  "before": {
+    "parsed": 41,
+    "active": 24,
+    "actionable": 2
+  },
+  "after": {
+    "parsed": 41,
+    "active": 24,
+    "actionable": 1
+  },
+  "changes": [
+    {
+      "heading": "## 🟡 feat4-mainnet-super stale validator service restart loop (no topic)",
+      "status": "⏸ Awaiting deployment owner decision — read-only diagnosis complete, no service changes authorized by status question.",
+      "beforeActionable": true,
+      "afterActionable": false
+    }
+  ]
+}

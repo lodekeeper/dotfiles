@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/home/openclaw/.openclaw/workspace/notes/autonomy-audit-2026-10-17-baseline/test_negative_control.py", line 287, in <module>
+    assert module.is_actionable(parsed[0]) is actionable, (block, parsed[0])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('## 🟢 Pause task 0\n- **Status:**  ⏸ Awaiting deployment owner decision  \n', TaskBlock(section='## 🟢 Pause task 0', heading='## 🟢 Pause task 0', status='⏸ Awaiting deployment owner decision', body=['- **Status:**  ⏸ Awaiting deployment owner decision  '], start_line=1))

@@ -1,0 +1,86 @@
+--- before/test_list_statuses.py
++++ after/test_list_statuses.py
+@@ -251,6 +251,83 @@
+         assert [task["heading"] for task in json.loads(result.stdout)] == expected, result
+         assert mixed.read_text() == mixed_text, "listing must not mutate the backlog"
+ 
++# Pause decorations must not turn owner-blocked work into dispatch candidates.
++# Other icons, unknown wording and completion semantics retain existing policy.
++pause_cases = [
++    ("⏸ Awaiting deployment owner decision", False, False),
++    ("⏸️ Awaiting Nico", False, False),
++    ("⏸️   aWaItInG permission", False, False),
++    ("⏸Blocked — needs owner", False, False),
++    ("⏸️ Passive watch", False, False),
++    ("⏸ Parked", False, False),
++    ("⏸️ Superseded", False, False),
++    ("⏸ ⏸️ Awaiting permission", False, False),
++    ("⏸ In progress", False, True),
++    ("⏸️ Asked Nico for approval", False, True),
++    ("⏸️", False, True),
++    ("🔄 In progress", False, True),
++    ("🟡 Awaiting decision", False, True),
++    ("Note: ⏸ Awaiting decision", False, True),
++    ("✅ Awaiting final acknowledgement", True, False),
++    ("⏸ Done", False, True),
++]
++pause_blocks = []
++pause_expected_active = []
++pause_expected_actionable = []
++pause_expected_all = []
++for level in ("##", "###"):
++    for label in ("**Status:**", "Status:"):
++        for status, done, actionable in pause_cases:
++            heading = f"{level} 🟢 Pause task {len(pause_blocks)}"
++            block = f"{heading}\n- {label}  {status}  \n"
++            parsed = module.parse_backlog(block)
++            assert len(parsed) == 1, (block, parsed)
++            assert parsed[0].status == status, (block, parsed[0])
++            assert module.is_done(parsed[0]) is done, (block, parsed[0])
++            assert module.is_actionable(parsed[0]) is actionable, (block, parsed[0])
++            pause_blocks.append(block)
++            pause_expected_all.append((heading, status))
++            if not done:
++                pause_expected_active.append((heading, status))
++            if actionable:
++                pause_expected_actionable.append((heading, status))
++
++with tempfile.TemporaryDirectory() as tmp:
++    paused = Path(tmp) / "paused.md"
++    paused_text = "\n".join(pause_blocks)
++    paused.write_text(paused_text)
++    for flags, expected in (
++        ([], pause_expected_all),
++        (["--active-only"], pause_expected_active),
++        (["--actionable-only"], pause_expected_actionable),
++    ):
++        result = subprocess.run(
++            [sys.executable, str(SCRIPT), "--file", str(paused), *flags, "--json"],
++            text=True, capture_output=True, check=False,
++        )
++        assert result.returncode == 0, result
++        actual = [(task["heading"], task["status"]) for task in json.loads(result.stdout)]
++        assert actual == expected, (flags, actual, expected)
++        assert paused.read_text() == paused_text, "listing must not mutate pause statuses"
++
++    # Filtering is still subordinate to the recovery guard, even for paused work.
++    guarded_text = "> DO NOT ACT ON ENTRIES BELOW\n\n" + paused_text
++    paused.write_text(guarded_text)
++    refusal = subprocess.run(
++        [sys.executable, str(SCRIPT), "--file", str(paused), "--actionable-only", "--json"],
++        text=True, capture_output=True, check=False,
++    )
++    assert refusal.returncode == 2 and refusal.stdout == "", refusal
++    audit = subprocess.run(
++        [sys.executable, str(SCRIPT), "--file", str(paused), "--actionable-only", "--json",
++         "--allow-corrupted-backlog", "--require-corruption-guard"],
++        text=True, capture_output=True, check=False,
++    )
++    assert audit.returncode == 0, audit
++    assert [(task["heading"], task["status"]) for task in json.loads(audit.stdout)] == pause_expected_actionable
++    assert paused.read_text() == guarded_text
++
+ print("OK: list_statuses parser handles ## sections + ### tasks without stalling")
+ print("OK: displaced recovery guards retain refusal and explicit-audit CLI behavior (2 marker variants)")
+ print("OK: bold/plain status labels preserve ##/### tasks and CLI filter results (24 cases)")
++print("OK: pause-prefixed status classification, raw output and guarded CLI behavior (64 cases)")

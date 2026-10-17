@@ -33,6 +33,7 @@ class TaskBlock:
 
 
 STATUS_RE = re.compile(r"^- (?:\*\*Status:\*\*|Status:(?!\*))\s*(.*)$")
+PAUSE_PREFIX_RE = re.compile(r"^(?:⏸\ufe0f?\s*)+")
 
 
 def parse_backlog(text: str) -> list[TaskBlock]:
@@ -99,7 +100,8 @@ def is_actionable(task: TaskBlock) -> bool:
     if task.status is None:
         return True
 
-    status = task.status.casefold()
+    # A leading pause icon decorates the status; retain its existing word policy.
+    status = PAUSE_PREFIX_RE.sub("", task.status.casefold())
     if status.startswith(NON_ACTIONABLE_STATUS_PREFIXES):
         return False
     return not status.startswith("awaiting")
