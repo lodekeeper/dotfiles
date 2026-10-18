@@ -72,7 +72,7 @@ Distilled 2026-10-09: this file pushed main-session bootstrap past the 80K total
 - 2026-10-08: Build exactly the trigger condition that was asked for. #10310 implemented a general cutoff fallback when Nico wanted "local payload fails AND executiononly/circuit breaker"; he closed it and wrote it himself.
 - 2026-10-09: Check whether Nico is already building the adjacent piece before I ship mine. #10332 (engine/EL nightly matrix) closed because he was adding it himself that day. For pre-existing, low-impact drift, ask "PR or leave it?" first (FCR slashed-balance, same day).
 - 2026-10-12: A reviewer's passing suggestion in someone else's thread is not a request. #10359 (response-timing metrics from twoeths' httpClient remark on #10349) was closed within ~30 min as unnecessary. Ask the owner first.
-- 2026-10-12: Before approving, reconcile every open bot/inline finding against the code. I approved #10329 with a valid codex P2 (in-flight triggers dropped) still open, corrected a minute later, and fixed it in #10366.
+- 2026-10-12: Before approving, reconcile every open bot/inline finding against the code. I approved #10329 with a valid codex P2 (in-flight triggers dropped) still open, corrected a minute later, and fixed it in #10366. (Held on #10412, 10-15.)
 
 **Tooling & runtime**
 - 2026-02-26: Tee Oracle (and any long advisor) output to a file. Stdout doesn't survive compaction.
@@ -91,9 +91,10 @@ Distilled 2026-10-09: this file pushed main-session bootstrap past the 80K total
 - 2026-10-07: Check credentials in the runtime that actually executes the workflow. The CI quality-gate key existed in Gateway exec, not native Codex exec. Passing prerequisite checks isn't end-to-end proof.
 - 2026-10-06: A successful retry can hide incomplete work (the nightly embed timeout was masked by its retry). Check the output, not the exit status.
 - 2026-10-11: When the colliding job is interval-scheduled (`kind: every`), its phase drifts, so moving the victim's slot stops working. Pin the drifting job instead. Recovery guards must not depend on line position (the BACKLOG banner was pushed past a 12-line window, then archived by cleanup). Systemd auto-restart brings the gateway back but leaves the heap leak in place.
+- 2026-10-15: Path allowlists don't sanitize content. The dotfiles sync filters by path only, so anything written into a synced path (notes/, skills/, identity files) is public. Since 10-15 `~/dotfiles/scripts/sync-content-gate.py` blocks secrets/public IPs on added lines; other infra details still pass, so keep them out of synced paths.
 
 **Verification & claims**
-- 2026-03-12: Don't call a leak fixed from one good window. Require sustained corroboration plus heap evidence. Keep critical samplers in one session.
+- 2026-03-12: Don't call a leak fixed from one good window. Require sustained corroboration plus heap evidence. Keep critical samplers in one session. Allocation-sampling hot spots are leads, not retained-heap proof (gateway OOM, 10-17).
 - 2026-03-30: Never declare benchmark/CI fixed from partial runs. Say "needs verification" up front.
 - 2026-04-02: `client=` strings aren't membership proof; check the participant list. Tie repro loops to real liveness signals.
 - 2026-04-15 / 05-14: Back spec suspicions with runtime evidence and test against exact upstream fixtures, not nightly bundles.
@@ -105,6 +106,7 @@ Distilled 2026-10-09: this file pushed main-session bootstrap past the 80K total
 - 2026-10-09: Classify slot loss before blaming a client: orphaned vs missed vs restart vs validator keys not running (FOCIL 23741 was orphaned by Lighthouse not importing it).
 - 2026-10-10: A clean spec-source cache doesn't prove the generated fixtures. Record dirty/untracked test inputs and count the fixture cases that actually ran, not skipped-suite placeholders.
 - 2026-10-12/13: Check what a benchmark measured before trusting its number: `runsFactor` normalization (native hex decode looked slow), sample duration (a 0.3s CI sample), and baseline provenance (failed runs contaminating the rolling baseline). Reproduce a flake before fixing it and keep the negative control.
+- 2026-10-16: An explorer's offline flag isn't a client failure. Read the node's own CL/EL logs first (lodestar-reth-1: Dora TLS fault, node synced at head).
 - 2026-10-14: Check tags before any "since vX" claim (gh tag-contents API). I told #10393 the `builder` cmd existed since v1.50.0; Marko corrected it: v1.46.0.
 - 2026-10-07: Compiler evidence beats source-review assumptions (SSZ ViewDU generic invariance). Check existing SSZ limits/decoders before adding validation.
 
@@ -119,6 +121,6 @@ Distilled 2026-10-09: this file pushed main-session bootstrap past the 80K total
 - 2026-10-01: Keep "technically incompatible" separate from "subsumed / soon obsolete" (EIP-8333). Execute withdrawals in the right venue, as the verified account, with narrowly scoped rationale.
 - 2026-10-05: New watches get sane cadences (daily/twice-daily) and honest PRs. Ask a maintainer for `Release-As`; don't game release-please. PR review findings go inline on the PR.
 
-**Wrong-tool / destructive reflex** (full synthesis: IDENTITY.md; counter: STATE.md + `memory/wrong-tool-reflex-log.txt`)
+**Wrong-tool / destructive reflex** (summary: IDENTITY.md; verbatim synthesis: `memory/wrong-tool-reflex-synthesis.md`; counter: STATE.md + `memory/wrong-tool-reflex-log.txt`)
 - 2026-07-27 → 10-02: A generic transition-point reflex shows up as trailing destructive cleanup, filler or invalid tool calls (`Bash("true")`, `ScheduleWakeup` in non-loop turns), or a turn ending before the completion notification arrives. Prose doesn't gate it; only a Nico-approved mechanical pre-tool gate will. If a wrong deferred call slips out, cancel it in the same turn. When the urge hits, redirect it into one real signal-gathering call.
 - 2026-10-06: It left the filesystem. A trailing `docker logout` after a verified image push wiped Nico's only Docker Hub login. Treat credential/auth state (`docker logout`, `gh auth logout`, credential-helper erase) as destructive too.
