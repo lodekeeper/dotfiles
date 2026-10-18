@@ -16,7 +16,7 @@ WORKSPACE="$HOME/.openclaw/workspace"
 # - keep research/** and kurtosis/** (explicitly allowed by Nico)
 # - block backlog artifacts, memory/personas, bank snapshots, local state dumps,
 #   and temporary/archive payloads that should not be published.
-SENSITIVE_REGEX='^(BACKLOG\.md|BACKLOG\.md\.bak-.*|BACKLOG_ARCHIVE\.md|STATE\.md|memory/|bank/|\.openclaw/|\.tmp-.*|tmp_.*|.*\.tgz$)'
+SENSITIVE_REGEX='^(BACKLOG\.md|BACKLOG\.md\.bak-.*|BACKLOG_ARCHIVE\.md|STATE\.md|memory/|bank/|\.openclaw/|\.tmp-.*|tmp_.*|.*\.tgz$|notes/(.*/)?(BACKLOG[^/]*|backlog-[^/]*)$|notes/[^/]*-baseline/)'
 
 assert_no_sensitive_changes() {
   local staged unstaged untracked combined
@@ -75,7 +75,8 @@ for managed_skill in codex; do
 done
 
 # Notes/specs
-[ -d "$WORKSPACE/notes" ] && rsync -a "$WORKSPACE/notes/" "$DOTFILES_DIR/notes/"
+# Backlog snapshots and audit baselines (copies of BACKLOG/daily notes) must never be published (Nico, 2026-10-18).
+[ -d "$WORKSPACE/notes" ] && rsync -a --exclude '*-baseline/' --exclude 'backlog-*' --exclude 'BACKLOG*' "$WORKSPACE/notes/" "$DOTFILES_DIR/notes/"
 [ -d "$WORKSPACE/specs" ] && rsync -a "$WORKSPACE/specs/" "$DOTFILES_DIR/specs/"
 
 # Personas (PR review personas)
