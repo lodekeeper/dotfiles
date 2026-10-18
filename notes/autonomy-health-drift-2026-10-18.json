@@ -1,0 +1,18 @@
+{
+  "originalCheckCount": 28,
+  "currentCheckCount": 32,
+  "addedChecks": [
+    "ciFix/bootstrapContextBudget",
+    "devnetDebugging/bootstrapContextBudget",
+    "prReview/bootstrapContextBudget",
+    "specImplementation/bootstrapContextBudget"
+  ],
+  "removedChecks": [],
+  "changedExistingChecks": [],
+  "finalBudgetRecheckIdentical": true,
+  "postchangeCacheStats": {
+    "cacheHits": 15,
+    "totalChecks": 32,
+    "uniqueCommands": 17
+  }
+}

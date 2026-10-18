@@ -193,7 +193,7 @@ def build_checks(args: argparse.Namespace, workspace: Path) -> list[tuple[str, s
             "GRAFANA_TOKEN was absent; verified local devnet debugging tooling only"
         )
 
-    return [
+    checks = [
         (
             "prReview",
             "followupGuards",
@@ -423,6 +423,13 @@ def build_checks(args: argparse.Namespace, workspace: Path) -> list[tuple[str, s
             [],
         ),
     ]
+    # One counts-only command, reused across the four domains by the cache.
+    for domain in VALID_DOMAINS:
+        checks.append((domain, "bootstrapContextBudget", [
+            "node", "scripts/memory/check-bootstrap-budget.mjs",
+            "--workspace", str(workspace), "--json",
+        ], base_env, []))
+    return checks
 
 
 def main() -> int:

@@ -17,6 +17,7 @@ SECTION_BY_DOMAIN = {
 
 EXPECTED_CHECKS = {
     "prReview": [
+        "bootstrapContextBudget",
         "followupGuards",
         "memoryContextSearch",
         "destructiveCommandGuard",
@@ -24,6 +25,7 @@ EXPECTED_CHECKS = {
         "githubActorBoundary",
     ],
     "ciFix": [
+        "bootstrapContextBudget",
         "detectorEntrypoint",
         "memoryContextSearch",
         "destructiveCommandGuard",
@@ -35,6 +37,7 @@ EXPECTED_CHECKS = {
         "githubCiRerunCapability",
     ],
     "specImplementation": [
+        "bootstrapContextBudget",
         "prePrComplianceGate",
         "memoryContextSearch",
         "destructiveCommandGuard",
@@ -45,6 +48,7 @@ EXPECTED_CHECKS = {
         "gitIdentityBoundary",
     ],
     "devnetDebugging": [
+        "bootstrapContextBudget",
         "devnetTriage",
         "incidentBundle",
         "memoryContextSearch",
@@ -156,6 +160,9 @@ def _proposed_fix(
     failed_names: list[str],
     domain_checks: dict[str, dict[str, Any]],
 ) -> str:
+    if "bootstrapContextBudget" in failed_names:
+        return "inspect `node scripts/memory/check-bootstrap-budget.mjs --json` core-file source-demand projections before editing owner documents; this conservative inventory excludes hooks/personal overlays and may include an unused BOOTSTRAP placeholder. Do not raise config limits automatically."
+
     if "destructiveCommandGuard" in failed_names:
         return "fix `scripts/safety/block-risky-command.py --self-test --json` before continuing autonomous shell-driven work."
 
@@ -317,6 +324,8 @@ def render_statuses(payload: dict[str, Any]) -> dict[str, str]:
                 "devnet-triage JSON preflight, incident-bundle helper preflight, memory-context search, risky-command guard helper, idle-tool guard helper, and local/remote routing readiness verified from current preflight output; "
                 f"no new devnet-debugging blocker discovered this cycle.{suffix}"
             )
+
+        statuses[section] += " Core-file bootstrap source-budget projection verified (not actual injected-context coverage)."
 
         # Devnet Grafana availability is already described in its detail suffix.
         if domain == "devnetDebugging":

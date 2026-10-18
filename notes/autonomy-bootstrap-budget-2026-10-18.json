@@ -1,0 +1,95 @@
+{
+  "ok": true,
+  "projectionOnly": true,
+  "scope": "Conservative core-file inventory before setup filtering; not actual injected context. Excludes hooks, extra files, personal USER overlays and provenance filtering. An absent BOOTSTRAP placeholder may overstate completed-workspace demand.",
+  "agent": "main",
+  "projections": {
+    "main": {
+      "ok": true,
+      "projectionOnly": true,
+      "scope": "Conservative core-file inventory before setup filtering; not actual injected context. Excludes hooks, extra files, personal USER overlays and provenance filtering. An absent BOOTSTRAP placeholder may overstate completed-workspace demand.",
+      "status": "core_source_budget_ready",
+      "maxChars": 40000,
+      "totalMaxChars": 80000,
+      "sourceDemandChars": 75631,
+      "sourceHeadroomChars": 4369,
+      "files": [
+        {
+          "name": "AGENTS.md",
+          "missing": false,
+          "sourceChars": 31602,
+          "perFileLimit": 40000
+        },
+        {
+          "name": "SOUL.md",
+          "missing": false,
+          "sourceChars": 18505,
+          "perFileLimit": 40000
+        },
+        {
+          "name": "IDENTITY.md",
+          "missing": false,
+          "sourceChars": 8280,
+          "perFileLimit": 40000
+        },
+        {
+          "name": "USER.md",
+          "missing": false,
+          "sourceChars": 3242,
+          "perFileLimit": 4000
+        },
+        {
+          "name": "BOOTSTRAP.md",
+          "missing": true,
+          "sourceChars": 70,
+          "perFileLimit": 40000
+        },
+        {
+          "name": "MEMORY.md",
+          "missing": false,
+          "sourceChars": 13932,
+          "perFileLimit": 40000
+        }
+      ],
+      "issues": []
+    },
+    "cron": {
+      "ok": true,
+      "projectionOnly": true,
+      "scope": "Conservative core-file inventory before setup filtering; not actual injected context. Excludes hooks, extra files, personal USER overlays and provenance filtering. An absent BOOTSTRAP placeholder may overstate completed-workspace demand.",
+      "status": "core_source_budget_ready",
+      "maxChars": 40000,
+      "totalMaxChars": 80000,
+      "sourceDemandChars": 61629,
+      "sourceHeadroomChars": 18371,
+      "files": [
+        {
+          "name": "AGENTS.md",
+          "missing": false,
+          "sourceChars": 31602,
+          "perFileLimit": 40000
+        },
+        {
+          "name": "SOUL.md",
+          "missing": false,
+          "sourceChars": 18505,
+          "perFileLimit": 40000
+        },
+        {
+          "name": "IDENTITY.md",
+          "missing": false,
+          "sourceChars": 8280,
+          "perFileLimit": 40000
+        },
+        {
+          "name": "USER.md",
+          "missing": false,
+          "sourceChars": 3242,
+          "perFileLimit": 4000
+        }
+      ],
+      "issues": []
+    }
+  },
+  "message": "Core-file source demand fits configured budgets (projection only)"
+}
