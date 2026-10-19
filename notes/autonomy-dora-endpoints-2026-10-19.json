@@ -1,0 +1,15 @@
+{
+  "assertoor": "https://assertoor.heze-devnet-1.ethpandaops.io",
+  "beacon": "https://beacon.heze-devnet-1.ethpandaops.io",
+  "buildoor": "https://buildoor.heze-devnet-1.ethpandaops.io",
+  "checkpoint_sync": "https://checkpoint-sync.heze-devnet-1.ethpandaops.io",
+  "devnet_spec": "https://github.com/ethpandaops/heze-devnets/tree/master/network-configs/devnet-1/metadata",
+  "dora": "https://dora.heze-devnet-1.ethpandaops.io",
+  "faucet": "https://faucet.heze-devnet-1.ethpandaops.io",
+  "forkmon": "https://forkmon.heze-devnet-1.ethpandaops.io",
+  "forky": "https://forky.heze-devnet-1.ethpandaops.io",
+  "rpc": "https://rpc.heze-devnet-1.ethpandaops.io",
+  "spamoor": "https://spamoor.heze-devnet-1.ethpandaops.io",
+  "syncoor": "https://syncoor.heze-devnet-1.ethpandaops.io",
+  "tracoor": "https://tracoor.heze-devnet-1.ethpandaops.io"
+}

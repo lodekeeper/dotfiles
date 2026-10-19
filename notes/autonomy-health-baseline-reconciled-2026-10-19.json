@@ -1,0 +1,26 @@
+{
+  "reconciledAt": "2026-10-19T03:22:49+00:00",
+  "priorBaselineDiff": {
+    "initialized": false,
+    "hasDrift": true,
+    "addedChecks": [
+      "ciFix/bootstrapContextBudget",
+      "devnetDebugging/bootstrapContextBudget",
+      "prReview/bootstrapContextBudget",
+      "specImplementation/bootstrapContextBudget"
+    ],
+    "removedChecks": [],
+    "changedChecks": [],
+    "optionsChanged": false,
+    "okChanged": false
+  },
+  "afterUpdateDiff": {
+    "initialized": false,
+    "hasDrift": false,
+    "addedChecks": [],
+    "removedChecks": [],
+    "changedChecks": [],
+    "optionsChanged": false,
+    "okChanged": false
+  }
+}

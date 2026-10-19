@@ -1,0 +1,48 @@
+{
+  "networks": [
+    {
+      "id": "focil-devnet-1",
+      "name": "devnet-1",
+      "chain_id": 7084864608,
+      "status": "active",
+      "is_devnet": true,
+      "devnet_group": "focil",
+      "resource_uri": "networks://focil-devnet-1"
+    },
+    {
+      "id": "frames-devnet-1",
+      "name": "devnet-1",
+      "chain_id": 7038851975,
+      "status": "active",
+      "is_devnet": true,
+      "devnet_group": "frames",
+      "resource_uri": "networks://frames-devnet-1"
+    },
+    {
+      "id": "glamsterdam-devnet-8",
+      "name": "devnet-8",
+      "chain_id": 7091047534,
+      "status": "active",
+      "is_devnet": true,
+      "devnet_group": "glamsterdam",
+      "resource_uri": "networks://glamsterdam-devnet-8"
+    }
+  ],
+  "groups": [
+    "focil",
+    "frames",
+    "glamsterdam"
+  ],
+  "active_devnet_groups": {
+    "focil": [
+      "focil-devnet-1"
+    ],
+    "frames": [
+      "frames-devnet-1"
+    ],
+    "glamsterdam": [
+      "glamsterdam-devnet-8"
+    ]
+  },
+  "usage": "This is the authoritative live Cartographoor inventory for current network and devnet ids. For active devnets, use active_devnet_groups or filter networks where is_devnet is true. Use each network's resource_uri, or networks://{id}, for full network details. The name field is a display label and may be short or duplicated. Use networks://{group} for all networks in a devnet group."
+}

@@ -1,0 +1,19 @@
+{
+  "diff": {
+    "addedChecks": [
+      "ciFix/bootstrapContextBudget",
+      "devnetDebugging/bootstrapContextBudget",
+      "prReview/bootstrapContextBudget",
+      "specImplementation/bootstrapContextBudget"
+    ],
+    "changedChecks": [],
+    "hasDrift": true,
+    "initialized": false,
+    "okChanged": false,
+    "optionsChanged": false,
+    "removedChecks": []
+  },
+  "hasDrift": true,
+  "stateFile": "state/autonomy-domain-preflight-health.json",
+  "status": "structured domain-preflight health drift detected: added checks `ciFix/bootstrapContextBudget`, `devnetDebugging/bootstrapContextBudget`, `prReview/bootstrapContextBudget`, `specImplementation/bootstrapContextBudget`. Proposed fix: inspect the changed preflight JSON/check output before treating unchanged rendered status text as a no-op."
+}
