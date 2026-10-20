@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import argparse
 import json
 import os
 import re
@@ -634,7 +635,15 @@ def check_autonomy_audit_cadence(now):
     }
 
 
-def main():
+def main(argv=None):
+    parser = argparse.ArgumentParser(
+        description=(
+            'Check cron health and update the alert/recovery deduplication state. '
+            'Run with no arguments to perform a check; help does not run checks or write state.'
+        ),
+    )
+    parser.parse_args(argv)
+
     now = int(time.time() * 1000)
 
     jobs = load_cron_jobs()

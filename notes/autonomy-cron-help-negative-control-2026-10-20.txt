@@ -1,0 +1,28 @@
+test_help_with_valid_jobs_keeps_pending_recovery (test_check_cron_health.CronHealthCliTests.test_help_with_valid_jobs_keeps_pending_recovery) ... 
+  test_help_with_valid_jobs_keeps_pending_recovery (test_check_cron_health.CronHealthCliTests.test_help_with_valid_jobs_keeps_pending_recovery) (flag='-h') ... FAIL
+  test_help_with_valid_jobs_keeps_pending_recovery (test_check_cron_health.CronHealthCliTests.test_help_with_valid_jobs_keeps_pending_recovery) (flag='--help') ... FAIL
+
+======================================================================
+FAIL: test_help_with_valid_jobs_keeps_pending_recovery (test_check_cron_health.CronHealthCliTests.test_help_with_valid_jobs_keeps_pending_recovery) (flag='-h')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/openclaw/.openclaw/workspace/scripts/cron/test_check_cron_health.py", line 103, in test_help_with_valid_jobs_keeps_pending_recovery
+    self.check_non_operational_args((flag,), 0, True)
+  File "/home/openclaw/.openclaw/workspace/scripts/cron/test_check_cron_health.py", line 79, in check_non_operational_args
+    self.assertFalse(self.probes.exists(), 'help/errors must not execute any probe')
+AssertionError: True is not false : help/errors must not execute any probe
+
+======================================================================
+FAIL: test_help_with_valid_jobs_keeps_pending_recovery (test_check_cron_health.CronHealthCliTests.test_help_with_valid_jobs_keeps_pending_recovery) (flag='--help')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/openclaw/.openclaw/workspace/scripts/cron/test_check_cron_health.py", line 103, in test_help_with_valid_jobs_keeps_pending_recovery
+    self.check_non_operational_args((flag,), 0, True)
+  File "/home/openclaw/.openclaw/workspace/scripts/cron/test_check_cron_health.py", line 79, in check_non_operational_args
+    self.assertFalse(self.probes.exists(), 'help/errors must not execute any probe')
+AssertionError: True is not false : help/errors must not execute any probe
+
+----------------------------------------------------------------------
+Ran 1 test in 0.109s
+
+FAILED (failures=2)

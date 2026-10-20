@@ -1,0 +1,11 @@
+test_help_does_not_create_missing_state (test_check_cron_health.CronHealthCliTests.test_help_does_not_create_missing_state) ... ok
+test_help_preserves_existing_state_without_probes (test_check_cron_health.CronHealthCliTests.test_help_preserves_existing_state_without_probes) ... ok
+test_help_with_valid_jobs_keeps_pending_recovery (test_check_cron_health.CronHealthCliTests.test_help_with_valid_jobs_keeps_pending_recovery) ... ok
+test_invalid_arguments_do_not_create_missing_state (test_check_cron_health.CronHealthCliTests.test_invalid_arguments_do_not_create_missing_state) ... ok
+test_invalid_arguments_preserve_state_without_probes (test_check_cron_health.CronHealthCliTests.test_invalid_arguments_preserve_state_without_probes) ... ok
+test_no_arguments_preserve_failure_dedup_recovery_behavior (test_check_cron_health.CronHealthCliTests.test_no_arguments_preserve_failure_dedup_recovery_behavior) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.575s
+
+OK

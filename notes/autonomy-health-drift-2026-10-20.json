@@ -1,0 +1,14 @@
+{
+  "diff": {
+    "addedChecks": [],
+    "changedChecks": [],
+    "hasDrift": false,
+    "initialized": false,
+    "okChanged": false,
+    "optionsChanged": false,
+    "removedChecks": []
+  },
+  "hasDrift": false,
+  "stateFile": "state/autonomy-domain-preflight-health.json",
+  "status": null
+}
