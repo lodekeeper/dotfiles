@@ -25,6 +25,9 @@ It gives them enough context to work independently in a Lodestar worktree.
 # ALWAYS run from worktree root
 source ~/.nvm/nvm.sh && nvm use 24
 
+# Before pnpm in a reused worktree; stop if installed directories are shared/unverified
+python3 ~/.openclaw/workspace/scripts/review/check-worktree-deps.py --repo "$PWD"
+
 # Build (required before tests)
 pnpm build
 
@@ -41,6 +44,8 @@ pnpm vitest run --project unit <path/to/test.ts>
 # Unit tests (specific package)
 pnpm vitest run --project unit packages/<pkg>/test/unit/
 ```
+
+Do not invoke pnpm if that check fails: even `pnpm vitest` can reconcile dependencies and prune a shared virtual store. Use an independently prepared worktree-local `node_modules`/virtual store; never link another checkout's `node_modules` or `.pnpm`. Rerun the check after setup changes, immediately before package-manager use. This is an opt-in installed-directory containment check, not dependency/version readiness or protection against later pnpm config overrides; normal package symlinks and the shared content-addressed store are outside its scope. Missing or unsupported metadata needs inspection, not an install/repair attempt. For an already validated test setup, a direct local Vitest JS entrypoint avoids pnpm's reconciliation path; it does not make shared dependencies isolated.
 
 ## Spec-Change Evidence
 

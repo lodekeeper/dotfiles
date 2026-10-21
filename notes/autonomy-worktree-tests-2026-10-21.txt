@@ -1,0 +1,14 @@
+test_configured_store_and_conventional_store_both_checked (test_check_worktree_deps.ContainmentTests.test_configured_store_and_conventional_store_both_checked) ... ok
+test_external_root_and_ancestor_symlinks_are_blocked (test_check_worktree_deps.ContainmentTests.test_external_root_and_ancestor_symlinks_are_blocked) ... ok
+test_help_and_bad_arguments_never_inspect_layout (test_check_worktree_deps.ContainmentTests.test_help_and_bad_arguments_never_inspect_layout) ... ok
+test_internal_symlink_layout_passes_but_parent_traversal_blocked (test_check_worktree_deps.ContainmentTests.test_internal_symlink_layout_passes_but_parent_traversal_blocked) ... ok
+test_local_json_and_normal_package_links_pass_without_writes (test_check_worktree_deps.ContainmentTests.test_local_json_and_normal_package_links_pass_without_writes) ... ok
+test_malformed_duplicate_missing_and_unsupported_metadata_blocked (test_check_worktree_deps.ContainmentTests.test_malformed_duplicate_missing_and_unsupported_metadata_blocked) ... ok
+test_metadata_and_virtual_store_external_symlinks_are_blocked (test_check_worktree_deps.ContainmentTests.test_metadata_and_virtual_store_external_symlinks_are_blocked) ... ok
+test_missing_broken_and_non_directory_paths_are_blocked (test_check_worktree_deps.ContainmentTests.test_missing_broken_and_non_directory_paths_are_blocked) ... ok
+test_supported_yaml_scalars_pass (test_check_worktree_deps.ContainmentTests.test_supported_yaml_scalars_pass) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 1.033s
+
+OK
