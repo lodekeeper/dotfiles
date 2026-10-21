@@ -1,0 +1,40 @@
+{
+  "id": 5592395445,
+  "node_id": "PRR_kwDOCD5_Gc8AAAABTVUutQ",
+  "user": {
+    "login": "lodekeeper",
+    "id": 258435968,
+    "node_id": "U_kgDOD2drgA",
+    "avatar_url": "https://avatars.githubusercontent.com/u/258435968?u=73ea59876d1171aa491962c62c7aa27eeee7215f&v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/lodekeeper",
+    "html_url": "https://github.com/lodekeeper",
+    "followers_url": "https://api.github.com/users/lodekeeper/followers",
+    "following_url": "https://api.github.com/users/lodekeeper/following{/other_user}",
+    "gists_url": "https://api.github.com/users/lodekeeper/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/lodekeeper/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/lodekeeper/subscriptions",
+    "organizations_url": "https://api.github.com/users/lodekeeper/orgs",
+    "repos_url": "https://api.github.com/users/lodekeeper/repos",
+    "events_url": "https://api.github.com/users/lodekeeper/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/lodekeeper/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "body": "@markolazic01 Checked `352a400` against the discussion. The requested source changes are present, with `head_v2` canonical-head tracking and pending payments/withdrawals reconciliation left as agreed follow-ups. One test still needs updating: the identity fork-boundary case now times out, as noted inline. The other 50 tests across the four focused files pass; Biome passes on the eight TypeScript files changed by this commit.\n\nSmall metadata fix: the PR description still lists `--jwtSecret`; it should say `--execution.jwtSecret`.\n\nThe older reveal-retry, per-job Engine cancellation and source-idle-warning follow-ups remain separate.",
+  "state": "COMMENTED",
+  "html_url": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5592395445",
+  "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379",
+  "author_association": "CONTRIBUTOR",
+  "_links": {
+    "html": {
+      "href": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5592395445"
+    },
+    "pull_request": {
+      "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379"
+    }
+  },
+  "submitted_at": "2026-10-20T22:06:56Z",
+  "commit_id": "352a400e0664ad910adc486826379c743d014522"
+}

@@ -1,0 +1,221 @@
+{
+  "sha": "352a400e0664ad910adc486826379c743d014522",
+  "node_id": "C_kwDOCD5_GdoAKDM1MmE0MDBlMDY2NGFkOTEwYWRjNDg2ODI2Mzc5Yzc0M2QwMTQ1MjI",
+  "commit": {
+    "author": {
+      "name": "markolazic01",
+      "email": "markolazic01@gmail.com",
+      "date": "2026-10-20T21:48:54Z"
+    },
+    "committer": {
+      "name": "markolazic01",
+      "email": "markolazic01@gmail.com",
+      "date": "2026-10-20T21:48:54Z"
+    },
+    "message": "chore: address review points",
+    "tree": {
+      "sha": "74706652417e15476076fe40ea2b02549bcb9077",
+      "url": "https://api.github.com/repos/ChainSafe/lodestar/git/trees/74706652417e15476076fe40ea2b02549bcb9077"
+    },
+    "url": "https://api.github.com/repos/ChainSafe/lodestar/git/commits/352a400e0664ad910adc486826379c743d014522",
+    "comment_count": 0,
+    "verification": {
+      "verified": true,
+      "reason": "valid",
+      "signature": "-----BEGIN SSH SIGNATURE-----\nU1NIU0lHAAAAAQAAADMAAAALc3NoLWVkMjU1MTkAAAAglLt2D60NWkIPj071sEhoCO0jXd\n33IoTNt6n28hPIORQAAAADZ2l0AAAAAAAAAAZzaGE1MTIAAABTAAAAC3NzaC1lZDI1NTE5\nAAAAQKrZsGrVc9juaa8yTycVh1FtM7LZ1QBGtzCSMRTWkzpUT080GLz8IsHh2SXExVEhjZ\nNkTBdGknQCb9g6F0mf/QM=\n-----END SSH SIGNATURE-----",
+      "payload": "tree 74706652417e15476076fe40ea2b02549bcb9077\nparent 119fda5f3bbe03e0b2d26b6e6bd3ce4b4ccebe4b\nauthor markolazic01 <markolazic01@gmail.com> 1792532934 +0200\ncommitter markolazic01 <markolazic01@gmail.com> 1792532934 +0200\n\nchore: address review points\n",
+      "verified_at": "2026-10-20T21:48:59Z"
+    }
+  },
+  "url": "https://api.github.com/repos/ChainSafe/lodestar/commits/352a400e0664ad910adc486826379c743d014522",
+  "html_url": "https://github.com/ChainSafe/lodestar/commit/352a400e0664ad910adc486826379c743d014522",
+  "comments_url": "https://api.github.com/repos/ChainSafe/lodestar/commits/352a400e0664ad910adc486826379c743d014522/comments",
+  "author": {
+    "login": "markolazic01",
+    "id": 80317369,
+    "node_id": "MDQ6VXNlcjgwMzE3MzY5",
+    "avatar_url": "https://avatars.githubusercontent.com/u/80317369?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/markolazic01",
+    "html_url": "https://github.com/markolazic01",
+    "followers_url": "https://api.github.com/users/markolazic01/followers",
+    "following_url": "https://api.github.com/users/markolazic01/following{/other_user}",
+    "gists_url": "https://api.github.com/users/markolazic01/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/markolazic01/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/markolazic01/subscriptions",
+    "organizations_url": "https://api.github.com/users/markolazic01/orgs",
+    "repos_url": "https://api.github.com/users/markolazic01/repos",
+    "events_url": "https://api.github.com/users/markolazic01/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/markolazic01/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "committer": {
+    "login": "markolazic01",
+    "id": 80317369,
+    "node_id": "MDQ6VXNlcjgwMzE3MzY5",
+    "avatar_url": "https://avatars.githubusercontent.com/u/80317369?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/markolazic01",
+    "html_url": "https://github.com/markolazic01",
+    "followers_url": "https://api.github.com/users/markolazic01/followers",
+    "following_url": "https://api.github.com/users/markolazic01/following{/other_user}",
+    "gists_url": "https://api.github.com/users/markolazic01/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/markolazic01/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/markolazic01/subscriptions",
+    "organizations_url": "https://api.github.com/users/markolazic01/orgs",
+    "repos_url": "https://api.github.com/users/markolazic01/repos",
+    "events_url": "https://api.github.com/users/markolazic01/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/markolazic01/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "parents": [
+    {
+      "sha": "119fda5f3bbe03e0b2d26b6e6bd3ce4b4ccebe4b",
+      "url": "https://api.github.com/repos/ChainSafe/lodestar/commits/119fda5f3bbe03e0b2d26b6e6bd3ce4b4ccebe4b",
+      "html_url": "https://github.com/ChainSafe/lodestar/commit/119fda5f3bbe03e0b2d26b6e6bd3ce4b4ccebe4b"
+    }
+  ],
+  "stats": {
+    "total": 52,
+    "additions": 26,
+    "deletions": 26
+  },
+  "files": [
+    {
+      "sha": "4489626ca9d0a3642a658b26b57d32d87c03f6b5",
+      "filename": ".github/workflows/nightly-builder-smoke.yml",
+      "status": "modified",
+      "additions": 2,
+      "deletions": 2,
+      "changes": 4,
+      "blob_url": "https://github.com/ChainSafe/lodestar/blob/352a400e0664ad910adc486826379c743d014522/.github%2Fworkflows%2Fnightly-builder-smoke.yml",
+      "raw_url": "https://github.com/ChainSafe/lodestar/raw/352a400e0664ad910adc486826379c743d014522/.github%2Fworkflows%2Fnightly-builder-smoke.yml",
+      "contents_url": "https://api.github.com/repos/ChainSafe/lodestar/contents/.github%2Fworkflows%2Fnightly-builder-smoke.yml?ref=352a400e0664ad910adc486826379c743d014522",
+      "patch": "@@ -68,7 +68,7 @@ jobs:\n             --builderPubkey \"$PUBKEY\" \\\n             --beaconNodeUrl \"$BN_URL\" \\\n             --execution.urls \"$EL_URL\" \\\n-            --jwtSecret \"$BUILDER_TEMP/jwt/jwtsecret\" \\\n+            --execution.jwtSecret \"$BUILDER_TEMP/jwt/jwtsecret\" \\\n             --executionFeeRecipient 0x8943545177806ed17b9f23f0a21ee5948ecaa776 \\\n             --paramsFile \"$BUILDER_TEMP/netcfg/config.yaml\" \\\n             --metrics \\\n@@ -106,7 +106,7 @@ jobs:\n             echo \"error-level lines in builder.log\"; exit 1\n           fi\n \n-          # the builder is the only bidder, it must have won bids and revealed their payloads\n+          # the builder is the only bidder and the validators use builderalways, so it must have won bids and revealed their payloads\n           # a win is counted before its reveal is published, scrape again if one is in flight\n           metric() { awk -v name=\"$1\" '$1 == name {print $2}' <<< \"$METRICS\"; }\n           for _ in 1 2 3; do"
+    },
+    {
+      "sha": "0bb5d1b5219dd45f3867e98e68d7fc145e0b1159",
+      "filename": "packages/builder/README.md",
+      "status": "modified",
+      "additions": 1,
+      "deletions": 1,
+      "changes": 2,
+      "blob_url": "https://github.com/ChainSafe/lodestar/blob/352a400e0664ad910adc486826379c743d014522/packages%2Fbuilder%2FREADME.md",
+      "raw_url": "https://github.com/ChainSafe/lodestar/raw/352a400e0664ad910adc486826379c743d014522/packages%2Fbuilder%2FREADME.md",
+      "contents_url": "https://api.github.com/repos/ChainSafe/lodestar/contents/packages%2Fbuilder%2FREADME.md?ref=352a400e0664ad910adc486826379c743d014522",
+      "patch": "@@ -17,7 +17,7 @@ Typescript implementation of the Ethereum Consensus builder client.\n ## Requirements\n \n - A beacon node started with `--emitPayloadAttributes`, the builder bids on the `payload_attributes` events it emits for every slot. Without the flag a beacon node only emits them for slots it proposes itself.\n-- An execution client the builder can send `engine_forkchoiceUpdated` and `engine_getPayload` to, configured with `--execution.urls` and `--jwtSecret`.\n+- An execution client the builder can send `engine_forkchoiceUpdated` and `engine_getPayload` to, configured with `--execution.urls` and `--execution.jwtSecret`.\n \n ## Limitations\n "
+    },
+    {
+      "sha": "a0da32c9baa506d7f216e21822bcd59bb4120339",
+      "filename": "packages/builder/src/builder.ts",
+      "status": "modified",
+      "additions": 1,
+      "deletions": 1,
+      "changes": 2,
+      "blob_url": "https://github.com/ChainSafe/lodestar/blob/352a400e0664ad910adc486826379c743d014522/packages%2Fbuilder%2Fsrc%2Fbuilder.ts",
+      "raw_url": "https://github.com/ChainSafe/lodestar/raw/352a400e0664ad910adc486826379c743d014522/packages%2Fbuilder%2Fsrc%2Fbuilder.ts",
+      "contents_url": "https://api.github.com/repos/ChainSafe/lodestar/contents/packages%2Fbuilder%2Fsrc%2Fbuilder.ts?ref=352a400e0664ad910adc486826379c743d014522",
+      "patch": "@@ -53,7 +53,7 @@ export type BuilderOptions = {\n   /** Fee recipient of built payloads, receives priority fees and MEV */\n   executionFeeRecipient: ExecutionAddress;\n   metrics: Metrics | null;\n-  /** Execution client that builds the payloads */\n+  /** Payload construction software, an execution client is one implementation */\n   payloadSource: PayloadSource;\n   bidding: BidderOptions &\n     ProportionalBidPolicyOpts & {"
+    },
+    {
+      "sha": "c060b0e0c225e7795951ea8750e38c80c5310c71",
+      "filename": "packages/builder/src/defaults.ts",
+      "status": "modified",
+      "additions": 6,
+      "deletions": 4,
+      "changes": 10,
+      "blob_url": "https://github.com/ChainSafe/lodestar/blob/352a400e0664ad910adc486826379c743d014522/packages%2Fbuilder%2Fsrc%2Fdefaults.ts",
+      "raw_url": "https://github.com/ChainSafe/lodestar/raw/352a400e0664ad910adc486826379c743d014522/packages%2Fbuilder%2Fsrc%2Fdefaults.ts",
+      "contents_url": "https://api.github.com/repos/ChainSafe/lodestar/contents/packages%2Fbuilder%2Fsrc%2Fdefaults.ts?ref=352a400e0664ad910adc486826379c743d014522",
+      "patch": "@@ -1,17 +1,19 @@\n+import {MIN_DEPOSIT_AMOUNT} from \"@lodestar/params\";\n+\n export const defaultOptions = {\n   // Source beacon node the builder connects to\n   beaconNodeUrl: \"http://127.0.0.1:9596\",\n   requestTimeout: 10_000,\n \n   bidding: {\n-    /** Share of the payload value offered to the proposer */\n-    shareBps: 9000,\n+    /** Share of the payload value offered to the proposer, the full value by default */\n+    shareBps: 10_000,\n     fixedCostGwei: 0,\n     minValueGwei: 0,\n     /** Retrieve the payload and publish the bid at 95% of the slot before the proposal slot */\n     deadlineBps: 9500,\n     getPayloadTimeout: 1000,\n-    /** Do not bid when the builder balance falls below this, 1.1 ETH leaves headroom above MIN_DEPOSIT_AMOUNT */\n-    minOperatingBalanceGwei: 1_100_000_000,\n+    /** Do not bid when the builder balance falls below this, bids are only covered by the balance above the deposit minimum */\n+    minOperatingBalanceGwei: MIN_DEPOSIT_AMOUNT,\n   },\n };"
+    },
+    {
+      "sha": "79098419ca9f420a05b2f4527bd185c2367b6619",
+      "filename": "packages/builder/src/identity.ts",
+      "status": "modified",
+      "additions": 2,
+      "deletions": 1,
+      "changes": 3,
+      "blob_url": "https://github.com/ChainSafe/lodestar/blob/352a400e0664ad910adc486826379c743d014522/packages%2Fbuilder%2Fsrc%2Fidentity.ts",
+      "raw_url": "https://github.com/ChainSafe/lodestar/raw/352a400e0664ad910adc486826379c743d014522/packages%2Fbuilder%2Fsrc%2Fidentity.ts",
+      "contents_url": "https://api.github.com/repos/ChainSafe/lodestar/contents/packages%2Fbuilder%2Fsrc%2Fidentity.ts?ref=352a400e0664ad910adc486826379c743d014522",
+      "patch": "@@ -144,8 +144,9 @@ async function fetchBuilder(\n   }\n }\n \n+/** Polls at the second slot of the next epoch, the head state has gone through the epoch transition by then */\n function msToNextEpochPoll(clock: IClock): number {\n-  return clock.msToSlot(computeStartSlotAtEpoch(clock.getCurrentEpoch() + 1));\n+  return clock.msToSlot(computeStartSlotAtEpoch(clock.getCurrentEpoch() + 1) + 1);\n }\n \n function msToNextSlotPoll(clock: IClock): number {"
+    },
+    {
+      "sha": "aa16df8b0404512a99df88a7c760e1dd0404da50",
+      "filename": "packages/builder/src/services/bidder.ts",
+      "status": "modified",
+      "additions": 1,
+      "deletions": 1,
+      "changes": 2,
+      "blob_url": "https://github.com/ChainSafe/lodestar/blob/352a400e0664ad910adc486826379c743d014522/packages%2Fbuilder%2Fsrc%2Fservices%2Fbidder.ts",
+      "raw_url": "https://github.com/ChainSafe/lodestar/raw/352a400e0664ad910adc486826379c743d014522/packages%2Fbuilder%2Fsrc%2Fservices%2Fbidder.ts",
+      "contents_url": "https://api.github.com/repos/ChainSafe/lodestar/contents/packages%2Fbuilder%2Fsrc%2Fservices%2Fbidder.ts?ref=352a400e0664ad910adc486826379c743d014522",
+      "patch": "@@ -169,7 +169,7 @@ export class Bidder {\n         gasLimit: executionPayload.gasLimit,\n         transactions: executionPayload.transactions.length,\n         blobs: bid.blobKzgCommitments.length,\n-        secFromSlot: clock.secFromSlot(slot - 1),\n+        secFromSlot: clock.secFromSlot(slot),\n       });\n     } catch (e) {\n       if (!isErrorAborted(e)) {"
+    },
+    {
+      "sha": "16319af1050549b624bcb5ee93f2e844a48f86ae",
+      "filename": "packages/builder/src/services/revealer.ts",
+      "status": "modified",
+      "additions": 4,
+      "deletions": 1,
+      "changes": 5,
+      "blob_url": "https://github.com/ChainSafe/lodestar/blob/352a400e0664ad910adc486826379c743d014522/packages%2Fbuilder%2Fsrc%2Fservices%2Frevealer.ts",
+      "raw_url": "https://github.com/ChainSafe/lodestar/raw/352a400e0664ad910adc486826379c743d014522/packages%2Fbuilder%2Fsrc%2Fservices%2Frevealer.ts",
+      "contents_url": "https://api.github.com/repos/ChainSafe/lodestar/contents/packages%2Fbuilder%2Fsrc%2Fservices%2Frevealer.ts?ref=352a400e0664ad910adc486826379c743d014522",
+      "patch": "@@ -10,7 +10,10 @@ import {createExecutionPayloadEnvelopeContents} from \"./executionPayloadEnvelope\n import {PayloadStore} from \"./payloadStore.js\";\n \n export type RevealerOptions = {\n-  /** Do not reveal after this point within the block's slot, in basis points */\n+  /**\n+   * Latest point within the block's slot at which a reveal may start, in basis points.\n+   * Defaults to the network's PAYLOAD_ATTESTATION_DUE_BPS\n+   */\n   cutoffBps: number;\n };\n "
+    },
+    {
+      "sha": "1424fe100c5713442b06132800b83f05cd93699e",
+      "filename": "packages/builder/test/unit/utils/bidding.ts",
+      "status": "modified",
+      "additions": 2,
+      "deletions": 1,
+      "changes": 3,
+      "blob_url": "https://github.com/ChainSafe/lodestar/blob/352a400e0664ad910adc486826379c743d014522/packages%2Fbuilder%2Ftest%2Funit%2Futils%2Fbidding.ts",
+      "raw_url": "https://github.com/ChainSafe/lodestar/raw/352a400e0664ad910adc486826379c743d014522/packages%2Fbuilder%2Ftest%2Funit%2Futils%2Fbidding.ts",
+      "contents_url": "https://api.github.com/repos/ChainSafe/lodestar/contents/packages%2Fbuilder%2Ftest%2Funit%2Futils%2Fbidding.ts?ref=352a400e0664ad910adc486826379c743d014522",
+      "patch": "@@ -1,6 +1,7 @@\n import {vi} from \"vitest\";\n import {ApiClient} from \"@lodestar/api\";\n import {ChainForkConfig} from \"@lodestar/config\";\n+import {MIN_DEPOSIT_AMOUNT} from \"@lodestar/params\";\n import {IClock} from \"@lodestar/state-transition\";\n import {BuilderIndex, BuilderStatus} from \"@lodestar/types\";\n import {Logger} from \"@lodestar/utils\";\n@@ -23,7 +24,7 @@ export const biddingOptions = {\n   minValueGwei: 0,\n   deadlineBps: 8500,\n   getPayloadTimeout: 1000,\n-  minOperatingBalanceGwei: 1_100_000_000,\n+  minOperatingBalanceGwei: MIN_DEPOSIT_AMOUNT,\n };\n \n export function getPayloadSourceStub() {"
+    },
+    {
+      "sha": "34c98eba4c0a40a4f3424ab1904f0e6017af8ca2",
+      "filename": "packages/cli/src/cmds/builder/handler.ts",
+      "status": "modified",
+      "additions": 3,
+      "deletions": 2,
+      "changes": 5,
+      "blob_url": "https://github.com/ChainSafe/lodestar/blob/352a400e0664ad910adc486826379c743d014522/packages%2Fcli%2Fsrc%2Fcmds%2Fbuilder%2Fhandler.ts",
+      "raw_url": "https://github.com/ChainSafe/lodestar/raw/352a400e0664ad910adc486826379c743d014522/packages%2Fcli%2Fsrc%2Fcmds%2Fbuilder%2Fhandler.ts",
+      "contents_url": "https://api.github.com/repos/ChainSafe/lodestar/contents/packages%2Fcli%2Fsrc%2Fcmds%2Fbuilder%2Fhandler.ts?ref=352a400e0664ad910adc486826379c743d014522",
+      "patch": "@@ -96,8 +96,9 @@ export async function builderHandler(args: IBuilderCliArgs & GlobalArgs): Promis\n       timeout: args[\"execution.timeout\"] ?? defaultExecutionEngineHttpOpts.timeout,\n       retries: args[\"execution.retries\"],\n       retryDelay: args[\"execution.retryDelay\"],\n-      jwtSecretHex: args.jwtSecret ? extractJwtHexSecret(fs.readFileSync(args.jwtSecret, \"utf-8\").trim()) : undefined,\n-      jwtId: args.jwtId,\n+      jwtSecretHex: args[\"execution.jwtSecret\"]\n+        ? extractJwtHexSecret(fs.readFileSync(args[\"execution.jwtSecret\"], \"utf-8\").trim())\n+        : undefined,\n       version,\n       commit,\n     },"
+    },
+    {
+      "sha": "26f08eb94fc7659c8ba70c54a96349ab32e35a53",
+      "filename": "packages/cli/src/cmds/builder/options.ts",
+      "status": "modified",
+      "additions": 3,
+      "deletions": 11,
+      "changes": 14,
+      "blob_url": "https://github.com/ChainSafe/lodestar/blob/352a400e0664ad910adc486826379c743d014522/packages%2Fcli%2Fsrc%2Fcmds%2Fbuilder%2Foptions.ts",
+      "raw_url": "https://github.com/ChainSafe/lodestar/raw/352a400e0664ad910adc486826379c743d014522/packages%2Fcli%2Fsrc%2Fcmds%2Fbuilder%2Foptions.ts",
+      "contents_url": "https://api.github.com/repos/ChainSafe/lodestar/contents/packages%2Fcli%2Fsrc%2Fcmds%2Fbuilder%2Foptions.ts?ref=352a400e0664ad910adc486826379c743d014522",
+      "patch": "@@ -21,8 +21,7 @@ export type IBuilderCliArgs = LogArgs & {\n   \"execution.timeout\"?: number;\n   \"execution.retries\": number;\n   \"execution.retryDelay\": number;\n-  jwtSecret?: string;\n-  jwtId?: string;\n+  \"execution.jwtSecret\"?: string;\n \n   \"bidding.shareBps\": number;\n   \"bidding.fixedCostGwei\": number;\n@@ -43,7 +42,7 @@ export const builderOptions: CliCommandOptions<IBuilderCliArgs> = {\n \n   beaconNodeUrl: {\n     description:\n-      \"Url to a trusted beacon node. The beacon node must run with `--emitPayloadAttributes` to emit the payload attributes of every slot, otherwise the builder only bids on slots the beacon node itself proposes\",\n+      \"URL of the beacon node. It must run with `--emitPayloadAttributes` to emit payload attributes for every slot\",\n     type: \"string\",\n     default: defaultOptions.beaconNodeUrl,\n   },\n@@ -112,20 +111,13 @@ export const builderOptions: CliCommandOptions<IBuilderCliArgs> = {\n     group: \"execution\",\n   },\n \n-  jwtSecret: {\n+  \"execution.jwtSecret\": {\n     description:\n       \"File path to a shared hex-encoded jwt secret which will be used to generate and bundle HS256 encoded jwt tokens for authentication with the EL client's rpc server hosting engine apis. Secret to be exactly same as the one used by the corresponding EL client.\",\n     type: \"string\",\n     group: \"execution\",\n   },\n \n-  jwtId: {\n-    description:\n-      \"An optional identifier to be set in the id field of the claims included in jwt tokens used for authentication with EL client's rpc server hosting engine apis\",\n-    type: \"string\",\n-    group: \"execution\",\n-  },\n-\n   // Bidding\n \n   \"bidding.shareBps\": {"
+    },
+    {
+      "sha": "db66996d3f3695ee9cdb21e1985be5e19218c3dc",
+      "filename": "scripts/kurtosis/run-builder.sh",
+      "status": "modified",
+      "additions": 1,
+      "deletions": 1,
+      "changes": 2,
+      "blob_url": "https://github.com/ChainSafe/lodestar/blob/352a400e0664ad910adc486826379c743d014522/scripts%2Fkurtosis%2Frun-builder.sh",
+      "raw_url": "https://github.com/ChainSafe/lodestar/raw/352a400e0664ad910adc486826379c743d014522/scripts%2Fkurtosis%2Frun-builder.sh",
+      "contents_url": "https://api.github.com/repos/ChainSafe/lodestar/contents/scripts%2Fkurtosis%2Frun-builder.sh?ref=352a400e0664ad910adc486826379c743d014522",
+      "patch": "@@ -59,7 +59,7 @@ echo '  --keystorePassword ./temp/builder-dev/password.txt \\'\n echo '  --builderPubkey 0x8ec9cc826ea7735329831dbe89c28ae700e39b51c817f1086483621a2104145343f912b3bf167027256780a62a1995bd \\'\n echo \"  --beaconNodeUrl $BN_URL \\\\\"\n echo \"  --execution.urls $EL_URL \\\\\"\n-echo '  --jwtSecret ./temp/builder-dev/jwt/jwtsecret \\'\n+echo '  --execution.jwtSecret ./temp/builder-dev/jwt/jwtsecret \\'\n echo '  --executionFeeRecipient 0x8943545177806ed17b9f23f0a21ee5948ecaa776 \\'\n echo '  --paramsFile ./temp/builder-dev/netcfg/config.yaml'\n echo"
+    }
+  ]
+}

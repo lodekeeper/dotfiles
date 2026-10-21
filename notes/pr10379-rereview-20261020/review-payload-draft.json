@@ -1,0 +1,13 @@
+{
+  "commit_id": "352a400e0664ad910adc486826379c743d014522",
+  "event": "COMMENT",
+  "body": "@markolazic01 Checked `352a400` against the discussion. The requested source changes are present, with canonical-head tracking and pending payments/withdrawals reconciliation left as agreed follow-ups. One test still needs updating: the identity fork-boundary case now times out, as noted inline. The other 50 tests across the four focused files pass; lint passes on the changed TypeScript files.\n\nSmall metadata fix: the PR description still lists `--jwtSecret`; it should say `--execution.jwtSecret`.\n\nThe older reveal-retry, per-job Engine cancellation and source-idle-warning follow-ups remain separate.",
+  "comments": [
+    {
+      "path": "packages/builder/src/identity.ts",
+      "line": 149,
+      "side": "RIGHT",
+      "body": "🟡 **Update the fork-boundary test for the slot-1 poll**\n\nThis now wakes one slot later, but `identity.test.ts` still defines `epochPollMs` for epoch slot 0 and advances only that far in `resolves once the Gloas fork is reached`. It then awaits the pending promise without advancing fake time again. I reproduced the 20-second test timeout at this head.\n\nPlease include `+ 1` in the test's poll deadline, move its mocked slot to `SLOTS_PER_EPOCH + 1`, and retain an assertion that no request occurs at slot 0."
+    }
+  ]
+}

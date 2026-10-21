@@ -29,3 +29,4 @@ skills/web-search/state/*.db
 *bn-basic-auth*
 *-cookies.json
 *.cred
+node_modules/

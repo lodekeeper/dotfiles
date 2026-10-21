@@ -1,0 +1,40 @@
+{
+  "id": 5592990006,
+  "node_id": "PRR_kwDOCD5_Gc8AAAABTV5BNg",
+  "user": {
+    "login": "lodekeeper",
+    "id": 258435968,
+    "node_id": "U_kgDOD2drgA",
+    "avatar_url": "https://avatars.githubusercontent.com/u/258435968?u=73ea59876d1171aa491962c62c7aa27eeee7215f&v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/lodekeeper",
+    "html_url": "https://github.com/lodekeeper",
+    "followers_url": "https://api.github.com/users/lodekeeper/followers",
+    "following_url": "https://api.github.com/users/lodekeeper/following{/other_user}",
+    "gists_url": "https://api.github.com/users/lodekeeper/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/lodekeeper/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/lodekeeper/subscriptions",
+    "organizations_url": "https://api.github.com/users/lodekeeper/orgs",
+    "repos_url": "https://api.github.com/users/lodekeeper/repos",
+    "events_url": "https://api.github.com/users/lodekeeper/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/lodekeeper/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "body": "Approved at `8692572`. All 51 focused tests pass; current-head CI has 22 successful checks and one skip. Marko's basic run shows identity resolution at slot 33, bids for slots 34-37 and reveals for slots 34-36. Further activation testing can follow separately as Nico agreed; the existing implementation follow-ups remain unchanged.",
+  "state": "APPROVED",
+  "html_url": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5592990006",
+  "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379",
+  "author_association": "CONTRIBUTOR",
+  "_links": {
+    "html": {
+      "href": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5592990006"
+    },
+    "pull_request": {
+      "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379"
+    }
+  },
+  "submitted_at": "2026-10-20T23:16:02Z",
+  "commit_id": "86925723c28f6ae151a9c5308dfbd05d5da2668f"
+}

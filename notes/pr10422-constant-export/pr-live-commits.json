@@ -1,0 +1,84 @@
+[
+  {
+    "sha": "fbea950520b7cb919a9696fff71e1af07d5a8979",
+    "node_id": "C_kwDORFi-59oAKGZiZWE5NTA1MjBiN2NiOTE5YTk2OTZmZmY3MWUxYWYwN2Q1YTg5Nzk",
+    "commit": {
+      "author": {
+        "name": "lodekeeper",
+        "email": "lodekeeper@users.noreply.github.com",
+        "date": "2026-10-20T21:28:50Z"
+      },
+      "committer": {
+        "name": "lodekeeper",
+        "email": "lodekeeper@users.noreply.github.com",
+        "date": "2026-10-20T21:28:50Z"
+      },
+      "message": "refactor: re-export builder bid cutoff from beacon-node",
+      "tree": {
+        "sha": "ab23647efc9c457a3f1fb06a5433ae5a87013c30",
+        "url": "https://api.github.com/repos/ChainSafe/lodestar/git/trees/ab23647efc9c457a3f1fb06a5433ae5a87013c30"
+      },
+      "url": "https://api.github.com/repos/ChainSafe/lodestar/git/commits/fbea950520b7cb919a9696fff71e1af07d5a8979",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\niHUEABYKAB0WIQQs7J4l0AsmX2hIyHyf1+ca5LTrdAUCatfdEgAKCRCf1+ca5LTr\ndMg4AP0d+3zGukz/1dXoTNun5VdpYtgFwLIhJtT490SNWpBPbQEA2uUSyTW6a/wG\nwDUH1G77R9HiEZqLcA26K8XtcyymiAw=\n=XRSg\n-----END PGP SIGNATURE-----",
+        "payload": "tree ab23647efc9c457a3f1fb06a5433ae5a87013c30\nparent 6c49831117e19c4a38ad52950e0efaf49f203c33\nauthor lodekeeper <lodekeeper@users.noreply.github.com> 1792531730 +0000\ncommitter lodekeeper <lodekeeper@users.noreply.github.com> 1792531730 +0000\n\nrefactor: re-export builder bid cutoff from beacon-node\n",
+        "verified_at": "2026-10-20T21:29:47Z"
+      }
+    },
+    "url": "https://api.github.com/repos/ChainSafe/lodestar/commits/fbea950520b7cb919a9696fff71e1af07d5a8979",
+    "html_url": "https://github.com/ChainSafe/lodestar/commit/fbea950520b7cb919a9696fff71e1af07d5a8979",
+    "comments_url": "https://api.github.com/repos/ChainSafe/lodestar/commits/fbea950520b7cb919a9696fff71e1af07d5a8979/comments",
+    "author": {
+      "login": "lodekeeper",
+      "id": 258435968,
+      "node_id": "U_kgDOD2drgA",
+      "avatar_url": "https://avatars.githubusercontent.com/u/258435968?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/lodekeeper",
+      "html_url": "https://github.com/lodekeeper",
+      "followers_url": "https://api.github.com/users/lodekeeper/followers",
+      "following_url": "https://api.github.com/users/lodekeeper/following{/other_user}",
+      "gists_url": "https://api.github.com/users/lodekeeper/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/lodekeeper/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/lodekeeper/subscriptions",
+      "organizations_url": "https://api.github.com/users/lodekeeper/orgs",
+      "repos_url": "https://api.github.com/users/lodekeeper/repos",
+      "events_url": "https://api.github.com/users/lodekeeper/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/lodekeeper/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "lodekeeper",
+      "id": 258435968,
+      "node_id": "U_kgDOD2drgA",
+      "avatar_url": "https://avatars.githubusercontent.com/u/258435968?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/lodekeeper",
+      "html_url": "https://github.com/lodekeeper",
+      "followers_url": "https://api.github.com/users/lodekeeper/followers",
+      "following_url": "https://api.github.com/users/lodekeeper/following{/other_user}",
+      "gists_url": "https://api.github.com/users/lodekeeper/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/lodekeeper/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/lodekeeper/subscriptions",
+      "organizations_url": "https://api.github.com/users/lodekeeper/orgs",
+      "repos_url": "https://api.github.com/users/lodekeeper/repos",
+      "events_url": "https://api.github.com/users/lodekeeper/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/lodekeeper/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "6c49831117e19c4a38ad52950e0efaf49f203c33",
+        "url": "https://api.github.com/repos/ChainSafe/lodestar/commits/6c49831117e19c4a38ad52950e0efaf49f203c33",
+        "html_url": "https://github.com/ChainSafe/lodestar/commit/6c49831117e19c4a38ad52950e0efaf49f203c33"
+      }
+    ]
+  }
+]

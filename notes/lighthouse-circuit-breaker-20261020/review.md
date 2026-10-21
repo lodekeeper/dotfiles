@@ -1,0 +1,1 @@
+Independent review: /root/review_lighthouse_comparison, GPT-6.1 Sol. Approved sections 9–11, TLDR and quorum corrections against pinned Lighthouse/Prysm/spec sources; no substantive errors. Optional supplied-bid acquisition qualification was verified and incorporated. Source/document inspection only; Rust tests not run.

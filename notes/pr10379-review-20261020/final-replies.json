@@ -1,0 +1,50 @@
+[
+  {
+    "in_reply_to": 4329488280,
+    "body": "`clock.secFromSlot(slot)` gives the sign convention you want: negative before the proposal slot, positive after it starts. `slot - 1` measures from the build slot instead. Keep the preceding slot in the deadline calculation, but log publication relative to the proposal slot."
+  },
+  {
+    "in_reply_to": 4329523765,
+    "body": "Agree. I'd use a small builder-local `head_v2` tracker: it already carries `current_epoch_dependent_root` and `next_epoch_dependent_root` for the head block's epoch and the following epoch ([event contract](https://github.com/ChainSafe/lodestar/blob/119fda5f3bbe03e0b2d26b6e6bd3ce4b4ccebe4b/packages/api/src/beacon/routes/events.ts#L108)). That covers next-epoch proposals without fetching the full duties response per build. Key those roots by the event's epoch, not the clock epoch, since slots can be skipped.\n\nKeep the duties call as a startup/reconnect or missing-epoch fallback, without letting an older fallback result overwrite newer event data. On relevant branch changes, recheck the captured preferences and whether that parent/variant is still a valid build target before publishing; discard only obsolete work. Keep the payload-attributes parent root/hash as the build target, not the duty-dependent root. `head_v2` also reports same-block payload-status changes, unlike legacy `head`."
+  },
+  {
+    "in_reply_to": 4329974378,
+    "body": "\u201cPayload construction software\u201d fits this interface better. The Engine API adapter is one implementation of `PayloadSource`, not a requirement that every source be an execution client."
+  },
+  {
+    "in_reply_to": 4330006169,
+    "body": "The extra 0.1 ETH is only an admission threshold. `coverableGwei` already subtracts `MIN_DEPOSIT_AMOUNT` and unsettled bids, so that floor does not need another 0.1 ETH cushion. A 1 ETH default would leave any additional operating headroom opt-in."
+  },
+  {
+    "in_reply_to": 4330011481,
+    "body": "10000 makes sense as the neutral default: with zero fixed cost, it uses 100% of the reported payload value as the proportional bid rather than reserving a 10% margin. The configured maximum and coverable-balance check still apply; operators can opt into a smaller share or a fixed cost."
+  },
+  {
+    "in_reply_to": 4330028816,
+    "body": "At this head it already requests `stateId: \"head\"` and retries each slot, so a slot-0 read of the previous head state is retried rather than waiting another whole epoch. For a once-per-epoch poll, slot 1 is a better target, provided the head has actually advanced; otherwise it still needs a retry rather than treating that read as final."
+  },
+  {
+    "in_reply_to": 4330036023,
+    "body": "Yes, `Builder.init` resolves it as `opts.reveal.cutoffBps ?? config.PAYLOAD_ATTESTATION_DUE_BPS` ([source](https://github.com/ChainSafe/lodestar/blob/119fda5f3bbe03e0b2d26b6e6bd3ce4b4ccebe4b/packages/builder/src/builder.ts#L211)). I'd copy \u201cDefaults to the network's PAYLOAD_ATTESTATION_DUE_BPS\u201d into this field's JSDoc, as the public builder option and CLI description already do.\n\nIt is a latest-start cutoff: a matching block triggers the reveal immediately, not at that point in the slot. It does not guarantee publication finishes before the cutoff."
+  },
+  {
+    "in_reply_to": 4330072517,
+    "body": "That removed case was specifically `NO_PAYLOAD_ID` on the first preparation attempt, then a permanent error on the second, checking that retries stop. It is already absent from the new version; the separate permanent-error propagation and missing-payload-ID retry tests remain."
+  },
+  {
+    "in_reply_to": 4330126819,
+    "body": "The shorter version can just be \u201cURL of the beacon node. It must run with `--emitPayloadAttributes` to emit payload attributes for every slot.\u201d That keeps the setup requirement without explaining the fallback behavior here."
+  },
+  {
+    "in_reply_to": 4330132833,
+    "body": "The VC currently says \u201cAddresses to connect to BeaconNode\u201d, without \u201ctrusted\u201d ([source](https://github.com/ChainSafe/lodestar/blob/119fda5f3bbe03e0b2d26b6e6bd3ce4b4ccebe4b/packages/cli/src/cmds/validator/options.ts#L201)). \u201cURL of the beacon node\u201d would be consistent here."
+  },
+  {
+    "in_reply_to": 4330139287,
+    "body": "This only supplies the optional JWT `id` claim; the adapter does not otherwise use it. I would leave `jwtId` out of the builder CLI unless there is a concrete consumer for that identifier."
+  },
+  {
+    "in_reply_to": 4330182333,
+    "body": "Yes, `execution.jwtSecret` would match the other execution options. The CLI argument type and handler mapping need the same rename; `execution.jwtId` too if that option is retained."
+  }
+]

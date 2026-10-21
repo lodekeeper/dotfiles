@@ -1,0 +1,1 @@
+Opened https://github.com/ChainSafe/lodestar/pull/10448 against `nflaig/builder-bid-deadline` in ChainSafe/lodestar. It re-exports the cutoff alongside the lag buffer and switches the CLI to the root import. Only those two files change; the constant and timing behavior are unchanged.

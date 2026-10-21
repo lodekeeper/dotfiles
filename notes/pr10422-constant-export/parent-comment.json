@@ -1,0 +1,69 @@
+{
+  "url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/comments/4330019829",
+  "pull_request_review_id": 5591384559,
+  "id": 4330019829,
+  "node_id": "PRRC_kwDOCD5_Gc8AAAABAhbb9Q",
+  "diff_hunk": "@@ -20,10 +21,11 @@ import {SyncOptions, defaultSyncOptions} from \"../sync/options.js\";\n // Re-export so the CLI doesn't need to depend on lodestar-api\n export {allNamespaces} from \"../api/rest/index.js\";\n \n-// Re-export to use as default values in CLI args\n+// Re-export to use as default values and for validation in CLI args\n export {\n   defaultExecutionEngineHttpOpts,\n   defaultExecutionBuilderHttpOpts,\n+  BUILDER_BID_LAG_BUFFER_MS,",
+  "path": "packages/beacon-node/src/node/options.ts",
+  "commit_id": "6c49831117e19c4a38ad52950e0efaf49f203c33",
+  "original_commit_id": "6c49831117e19c4a38ad52950e0efaf49f203c33",
+  "user": {
+    "login": "markolazic01",
+    "id": 80317369,
+    "node_id": "MDQ6VXNlcjgwMzE3MzY5",
+    "avatar_url": "https://avatars.githubusercontent.com/u/80317369?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/markolazic01",
+    "html_url": "https://github.com/markolazic01",
+    "followers_url": "https://api.github.com/users/markolazic01/followers",
+    "following_url": "https://api.github.com/users/markolazic01/following{/other_user}",
+    "gists_url": "https://api.github.com/users/markolazic01/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/markolazic01/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/markolazic01/subscriptions",
+    "organizations_url": "https://api.github.com/users/markolazic01/orgs",
+    "repos_url": "https://api.github.com/users/markolazic01/repos",
+    "events_url": "https://api.github.com/users/markolazic01/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/markolazic01/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "body": "nit: can add `BLOCK_PRODUCTION_RACE_CUTOFF_GLOAS_BPS` to match the `BUILDER_BID_LAG_BUFFER_MS` pattern and let it be directly imported from `@lodestar/beacon-node`",
+  "created_at": "2026-10-20T20:35:56Z",
+  "updated_at": "2026-10-20T20:35:56Z",
+  "html_url": "https://github.com/ChainSafe/lodestar/pull/10422#discussion_r4330019829",
+  "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10422",
+  "_links": {
+    "self": {
+      "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/comments/4330019829"
+    },
+    "html": {
+      "href": "https://github.com/ChainSafe/lodestar/pull/10422#discussion_r4330019829"
+    },
+    "pull_request": {
+      "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10422"
+    }
+  },
+  "reactions": {
+    "url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/comments/4330019829/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "start_line": null,
+  "original_start_line": null,
+  "start_side": null,
+  "line": 28,
+  "original_line": 28,
+  "side": "RIGHT",
+  "author_association": "CONTRIBUTOR",
+  "original_position": 17,
+  "position": 17,
+  "subject_type": "line"
+}

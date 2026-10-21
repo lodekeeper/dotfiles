@@ -1,0 +1,1 @@
+https://github.com/ChainSafe/lodestar/pull/10448

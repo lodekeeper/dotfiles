@@ -1,0 +1,70 @@
+{
+  "url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/comments/4331222543",
+  "pull_request_review_id": 5592840203,
+  "id": 4331222543,
+  "node_id": "PRRC_kwDOCD5_Gc8AAAABAik2Dw",
+  "diff_hunk": "@@ -59,6 +76,113 @@ export const builderOptions: CliCommandOptions<IBuilderCliArgs> = {\n     default: defaultOptions.requestTimeout,\n   },\n \n+  // Execution\n+\n+  \"execution.urls\": {\n+    description:\n+      \"Url to the execution client engine API that builds the payloads. The execution client must be kept in sync by a beacon node\",\n+    default: defaultExecutionEngineHttpOpts.urls.join(\",\"),\n+    type: \"array\",\n+    string: true,\n+    coerce: (urls: string[]): string[] =>\n+      // Parse [\"url1,url2\"] to [\"url1\", \"url2\"]\n+      urls.flatMap((item) => item.split(\",\")),\n+    group: \"execution\",\n+  },\n+\n+  \"execution.timeout\": {\n+    description: \"Timeout in milliseconds for execution engine API HTTP client\",\n+    type: \"number\",\n+    defaultDescription: String(defaultExecutionEngineHttpOpts.timeout),",
+  "path": "packages/cli/src/cmds/builder/options.ts",
+  "commit_id": "86925723c28f6ae151a9c5308dfbd05d5da2668f",
+  "original_commit_id": "725efef25936c2703d8cff028bb6603a10af6cdd",
+  "user": {
+    "login": "lodekeeper",
+    "id": 258435968,
+    "node_id": "U_kgDOD2drgA",
+    "avatar_url": "https://avatars.githubusercontent.com/u/258435968?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/lodekeeper",
+    "html_url": "https://github.com/lodekeeper",
+    "followers_url": "https://api.github.com/users/lodekeeper/followers",
+    "following_url": "https://api.github.com/users/lodekeeper/following{/other_user}",
+    "gists_url": "https://api.github.com/users/lodekeeper/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/lodekeeper/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/lodekeeper/subscriptions",
+    "organizations_url": "https://api.github.com/users/lodekeeper/orgs",
+    "repos_url": "https://api.github.com/users/lodekeeper/repos",
+    "events_url": "https://api.github.com/users/lodekeeper/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/lodekeeper/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "body": "Verified at `8692572`: the handler passes `args[\"execution.timeout\"] ?? defaultExecutionEngineHttpOpts.timeout` to `initializeExecutionEngine`. That fallback is 12,000 ms and is forwarded to both the JSON-RPC and REST clients, so omitting the flag no longer leaves the transport default in effect.",
+  "created_at": "2026-10-20T22:58:51Z",
+  "updated_at": "2026-10-20T22:58:51Z",
+  "html_url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4331222543",
+  "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379",
+  "_links": {
+    "self": {
+      "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/comments/4331222543"
+    },
+    "html": {
+      "href": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4331222543"
+    },
+    "pull_request": {
+      "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379"
+    }
+  },
+  "reactions": {
+    "url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/comments/4331222543/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "start_line": null,
+  "original_start_line": null,
+  "start_side": null,
+  "line": 96,
+  "original_line": 96,
+  "side": "RIGHT",
+  "in_reply_to_id": 4263645869,
+  "author_association": "CONTRIBUTOR",
+  "original_position": 49,
+  "position": 58,
+  "subject_type": "line"
+}

@@ -1,0 +1,1 @@
+Noted for a follow-up to see whether discovery can happen a slot earlier, while preserving the epoch-boundary handling.

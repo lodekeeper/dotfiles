@@ -1,0 +1,24 @@
+{
+  "head": "119fda5f3bbe03e0b2d26b6e6bd3ce4b4ccebe4b",
+  "replyIds": [
+    4329488280,
+    4329523765,
+    4329974378,
+    4330006169,
+    4330011481,
+    4330028816,
+    4330036023,
+    4330072517,
+    4330126819,
+    4330132833,
+    4330139287,
+    4330182333
+  ],
+  "skip": {
+    "4330106988": "Self-retracted in4330114390; no extra reply needed",
+    "4330114390": "Self-retraction, no outstanding question",
+    "4330153831": "Self-retracted description question",
+    "4330209534": "Approval emoji, no action"
+  },
+  "scope": "Technical replies only, no source/branch/PR metadata changes"
+}

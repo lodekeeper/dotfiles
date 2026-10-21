@@ -1,0 +1,1 @@
+Verified at `8692572`: the handler passes `args["execution.timeout"] ?? defaultExecutionEngineHttpOpts.timeout` to `initializeExecutionEngine`. That fallback is 12,000 ms and is forwarded to both the JSON-RPC and REST clients, so omitting the flag no longer leaves the transport default in effect.

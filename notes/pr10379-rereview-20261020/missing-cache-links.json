@@ -1,0 +1,154 @@
+{
+  "semver@7.7.3": [
+    "/home/openclaw/lodestar/node_modules/semver"
+  ],
+  "libp2p@3.3.9": [
+    "/home/openclaw/lodestar/node_modules/libp2p",
+    "/home/openclaw/lodestar/packages/reqresp/node_modules/libp2p",
+    "/home/openclaw/lodestar/packages/beacon-node/node_modules/libp2p"
+  ],
+  "@chainsafe+lodestar-z@1.1.0": [
+    "/home/openclaw/lodestar/node_modules/@chainsafe/lodestar-z",
+    "/home/openclaw/lodestar/packages/builder/node_modules/@chainsafe/lodestar-z",
+    "/home/openclaw/lodestar/packages/beacon-node/node_modules/@chainsafe/lodestar-z",
+    "/home/openclaw/lodestar/packages/state-transition/node_modules/@chainsafe/lodestar-z",
+    "/home/openclaw/lodestar/packages/test-utils/node_modules/@chainsafe/lodestar-z",
+    "/home/openclaw/lodestar/packages/era/node_modules/@chainsafe/lodestar-z",
+    "/home/openclaw/lodestar/packages/validator/node_modules/@chainsafe/lodestar-z",
+    "/home/openclaw/lodestar/packages/cli/node_modules/@chainsafe/lodestar-z"
+  ],
+  "@chainsafe+ssz@1.8.0": [
+    "/home/openclaw/lodestar/packages/builder/node_modules/@chainsafe/ssz",
+    "/home/openclaw/lodestar/packages/fork-choice/node_modules/@chainsafe/ssz",
+    "/home/openclaw/lodestar/packages/reqresp/node_modules/@chainsafe/ssz",
+    "/home/openclaw/lodestar/packages/beacon-node/node_modules/@chainsafe/ssz",
+    "/home/openclaw/lodestar/packages/api/node_modules/@chainsafe/ssz",
+    "/home/openclaw/lodestar/packages/state-transition/node_modules/@chainsafe/ssz",
+    "/home/openclaw/lodestar/packages/config/node_modules/@chainsafe/ssz",
+    "/home/openclaw/lodestar/packages/db/node_modules/@chainsafe/ssz",
+    "/home/openclaw/lodestar/packages/validator/node_modules/@chainsafe/ssz",
+    "/home/openclaw/lodestar/packages/cli/node_modules/@chainsafe/ssz",
+    "/home/openclaw/lodestar/packages/logger/node_modules/@chainsafe/ssz",
+    "/home/openclaw/lodestar/packages/types/node_modules/@chainsafe/ssz",
+    "/home/openclaw/lodestar/packages/spec-test-util/node_modules/@chainsafe/ssz"
+  ],
+  "@libp2p+peer-id@6.0.15": [
+    "/home/openclaw/lodestar/packages/reqresp/node_modules/@libp2p/peer-id",
+    "/home/openclaw/lodestar/packages/beacon-node/node_modules/@libp2p/peer-id",
+    "/home/openclaw/lodestar/packages/cli/node_modules/@libp2p/peer-id"
+  ],
+  "@libp2p+crypto@5.1.23": [
+    "/home/openclaw/lodestar/packages/reqresp/node_modules/@libp2p/crypto",
+    "/home/openclaw/lodestar/packages/beacon-node/node_modules/@libp2p/crypto",
+    "/home/openclaw/lodestar/packages/cli/node_modules/@libp2p/crypto"
+  ],
+  "@libp2p+interface@3.3.0": [
+    "/home/openclaw/lodestar/packages/reqresp/node_modules/@libp2p/interface",
+    "/home/openclaw/lodestar/packages/beacon-node/node_modules/@libp2p/interface",
+    "/home/openclaw/lodestar/packages/cli/node_modules/@libp2p/interface"
+  ],
+  "@libp2p+utils@7.4.1": [
+    "/home/openclaw/lodestar/packages/reqresp/node_modules/@libp2p/utils",
+    "/home/openclaw/lodestar/packages/beacon-node/node_modules/@libp2p/utils"
+  ],
+  "uint8-varint@2.0.4": [
+    "/home/openclaw/lodestar/packages/reqresp/node_modules/uint8-varint"
+  ],
+  "@libp2p+mplex@12.0.30": [
+    "/home/openclaw/lodestar/packages/beacon-node/node_modules/@libp2p/mplex"
+  ],
+  "@libp2p+bootstrap@12.0.30": [
+    "/home/openclaw/lodestar/packages/beacon-node/node_modules/@libp2p/bootstrap"
+  ],
+  "@libp2p+gossipsub@17.1.2": [
+    "/home/openclaw/lodestar/packages/beacon-node/node_modules/@libp2p/gossipsub"
+  ],
+  "@libp2p+mdns@12.0.30": [
+    "/home/openclaw/lodestar/packages/beacon-node/node_modules/@libp2p/mdns"
+  ],
+  "@libp2p+identify@4.1.13": [
+    "/home/openclaw/lodestar/packages/beacon-node/node_modules/@libp2p/identify"
+  ],
+  "@libp2p+prometheus-metrics@5.0.28": [
+    "/home/openclaw/lodestar/packages/beacon-node/node_modules/@libp2p/prometheus-metrics"
+  ],
+  "@libp2p+interface-internal@3.1.12": [
+    "/home/openclaw/lodestar/packages/beacon-node/node_modules/@libp2p/interface-internal"
+  ],
+  "@libp2p+logger@6.2.13": [
+    "/home/openclaw/lodestar/packages/beacon-node/node_modules/@libp2p/logger"
+  ],
+  "@libp2p+tcp@11.0.27": [
+    "/home/openclaw/lodestar/packages/beacon-node/node_modules/@libp2p/tcp"
+  ],
+  "fastify@5.12.1": [
+    "/home/openclaw/lodestar/packages/beacon-node/node_modules/fastify",
+    "/home/openclaw/lodestar/packages/api/node_modules/fastify",
+    "/home/openclaw/lodestar/packages/cli/node_modules/fastify"
+  ],
+  "@chainsafe+libp2p-quic@2.1.4": [
+    "/home/openclaw/lodestar/packages/beacon-node/node_modules/@chainsafe/libp2p-quic"
+  ],
+  "@chainsafe+blst@2.2.0": [
+    "/home/openclaw/lodestar/packages/flare/node_modules/@chainsafe/blst",
+    "/home/openclaw/lodestar/packages/light-client/node_modules/@chainsafe/blst"
+  ],
+  "axios@1.13.3_debug@4.4.3": [
+    "/home/openclaw/lodestar/packages/prover/node_modules/axios"
+  ],
+  "js-yaml@4.1.1": [
+    "/home/openclaw/lodestar/packages/prover/node_modules/js-yaml"
+  ],
+  "http-proxy@1.18.1_debug@4.4.3": [
+    "/home/openclaw/lodestar/packages/prover/node_modules/http-proxy"
+  ],
+  "@types+http-proxy@1.17.10": [
+    "/home/openclaw/lodestar/packages/prover/node_modules/@types/http-proxy"
+  ],
+  "@ethereumjs+common@3.1.2": [
+    "/home/openclaw/lodestar/packages/prover/node_modules/@ethereumjs/common"
+  ],
+  "@ethereumjs+util@8.0.6": [
+    "/home/openclaw/lodestar/packages/prover/node_modules/@ethereumjs/util"
+  ],
+  "@ethereumjs+vm@6.4.2": [
+    "/home/openclaw/lodestar/packages/prover/node_modules/@ethereumjs/vm"
+  ],
+  "@ethereumjs+tx@4.1.2": [
+    "/home/openclaw/lodestar/packages/prover/node_modules/@ethereumjs/tx"
+  ],
+  "@ethereumjs+block@4.2.2": [
+    "/home/openclaw/lodestar/packages/prover/node_modules/@ethereumjs/block"
+  ],
+  "@ethereumjs+blockchain@6.2.2": [
+    "/home/openclaw/lodestar/packages/prover/node_modules/@ethereumjs/blockchain"
+  ],
+  "@ethereumjs+trie@5.0.5": [
+    "/home/openclaw/lodestar/packages/prover/node_modules/@ethereumjs/trie"
+  ],
+  "@chainsafe+persistent-merkle-tree@1.2.1": [
+    "/home/openclaw/lodestar/packages/prover/node_modules/@chainsafe/persistent-merkle-tree",
+    "/home/openclaw/lodestar/packages/light-client/node_modules/@chainsafe/persistent-merkle-tree"
+  ],
+  "any-signal@4.1.1": [
+    "/home/openclaw/lodestar/packages/utils/node_modules/any-signal"
+  ],
+  "mitt@3.0.0": [
+    "/home/openclaw/lodestar/packages/light-client/node_modules/mitt"
+  ],
+  "qs@6.14.1": [
+    "/home/openclaw/lodestar/packages/light-client/node_modules/qs"
+  ],
+  "fastify@5.8.3": [
+    "/home/openclaw/lodestar/packages/light-client/node_modules/fastify"
+  ],
+  "@chainsafe+bls@8.2.0_@chainsafe+blst@2.2.0": [
+    "/home/openclaw/lodestar/packages/light-client/node_modules/@chainsafe/bls"
+  ],
+  "@chainsafe+ssz@1.2.2": [
+    "/home/openclaw/lodestar/packages/light-client/node_modules/@chainsafe/ssz"
+  ],
+  "@chainsafe+as-sha256@1.2.0": [
+    "/home/openclaw/lodestar/packages/light-client/node_modules/@chainsafe/as-sha256"
+  ]
+}

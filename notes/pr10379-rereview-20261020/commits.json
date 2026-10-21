@@ -1,0 +1,1078 @@
+[
+  {
+    "sha": "725efef25936c2703d8cff028bb6603a10af6cdd",
+    "node_id": "C_kwDORrY_ktoAKDcyNWVmZWYyNTkzNmMyNzAzZDhjZmYwMjhiYjY2MDNhMTBhZjZjZGQ",
+    "commit": {
+      "author": {
+        "name": "markolazic01",
+        "email": "markolazic01@gmail.com",
+        "date": "2026-10-13T19:57:26Z"
+      },
+      "committer": {
+        "name": "markolazic01",
+        "email": "markolazic01@gmail.com",
+        "date": "2026-10-13T19:57:26Z"
+      },
+      "message": "feat(builder): minimal wiring",
+      "tree": {
+        "sha": "3c6be893548bb50b8e1abdcb5203a7cac630dd21",
+        "url": "https://api.github.com/repos/ChainSafe/lodestar/git/trees/3c6be893548bb50b8e1abdcb5203a7cac630dd21"
+      },
+      "url": "https://api.github.com/repos/ChainSafe/lodestar/git/commits/725efef25936c2703d8cff028bb6603a10af6cdd",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN SSH SIGNATURE-----\nU1NIU0lHAAAAAQAAADMAAAALc3NoLWVkMjU1MTkAAAAglLt2D60NWkIPj071sEhoCO0jXd\n33IoTNt6n28hPIORQAAAADZ2l0AAAAAAAAAAZzaGE1MTIAAABTAAAAC3NzaC1lZDI1NTE5\nAAAAQPUKN/I4sFqLQUjQqqbxqVrmlCln5n6Evzg3zMKfgcRBM8/z0SOGAALnmSFNZrx1x6\nkKfOqq5ynNZkB72FZqmQw=\n-----END SSH SIGNATURE-----",
+        "payload": "tree 3c6be893548bb50b8e1abdcb5203a7cac630dd21\nparent f8eff664d2304ab97d0b654d0b11c947570e6fcf\nauthor markolazic01 <markolazic01@gmail.com> 1791921446 +0200\ncommitter markolazic01 <markolazic01@gmail.com> 1791921446 +0200\n\nfeat(builder): minimal wiring\n",
+        "verified_at": "2026-10-13T19:57:33Z"
+      }
+    },
+    "url": "https://api.github.com/repos/ChainSafe/lodestar/commits/725efef25936c2703d8cff028bb6603a10af6cdd",
+    "html_url": "https://github.com/ChainSafe/lodestar/commit/725efef25936c2703d8cff028bb6603a10af6cdd",
+    "comments_url": "https://api.github.com/repos/ChainSafe/lodestar/commits/725efef25936c2703d8cff028bb6603a10af6cdd/comments",
+    "author": {
+      "login": "markolazic01",
+      "id": 80317369,
+      "node_id": "MDQ6VXNlcjgwMzE3MzY5",
+      "avatar_url": "https://avatars.githubusercontent.com/u/80317369?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/markolazic01",
+      "html_url": "https://github.com/markolazic01",
+      "followers_url": "https://api.github.com/users/markolazic01/followers",
+      "following_url": "https://api.github.com/users/markolazic01/following{/other_user}",
+      "gists_url": "https://api.github.com/users/markolazic01/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/markolazic01/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/markolazic01/subscriptions",
+      "organizations_url": "https://api.github.com/users/markolazic01/orgs",
+      "repos_url": "https://api.github.com/users/markolazic01/repos",
+      "events_url": "https://api.github.com/users/markolazic01/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/markolazic01/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "markolazic01",
+      "id": 80317369,
+      "node_id": "MDQ6VXNlcjgwMzE3MzY5",
+      "avatar_url": "https://avatars.githubusercontent.com/u/80317369?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/markolazic01",
+      "html_url": "https://github.com/markolazic01",
+      "followers_url": "https://api.github.com/users/markolazic01/followers",
+      "following_url": "https://api.github.com/users/markolazic01/following{/other_user}",
+      "gists_url": "https://api.github.com/users/markolazic01/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/markolazic01/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/markolazic01/subscriptions",
+      "organizations_url": "https://api.github.com/users/markolazic01/orgs",
+      "repos_url": "https://api.github.com/users/markolazic01/repos",
+      "events_url": "https://api.github.com/users/markolazic01/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/markolazic01/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "f8eff664d2304ab97d0b654d0b11c947570e6fcf",
+        "url": "https://api.github.com/repos/ChainSafe/lodestar/commits/f8eff664d2304ab97d0b654d0b11c947570e6fcf",
+        "html_url": "https://github.com/ChainSafe/lodestar/commit/f8eff664d2304ab97d0b654d0b11c947570e6fcf"
+      }
+    ]
+  },
+  {
+    "sha": "5ddb86f26809b8d05fcc9f0db26bbbf4b581a26c",
+    "node_id": "C_kwDORrY_ktoAKDVkZGI4NmYyNjgwOWI4ZDA1ZmNjOWYwZGIyNmJiYmY0YjU4MWEyNmM",
+    "commit": {
+      "author": {
+        "name": "markolazic01",
+        "email": "markolazic01@gmail.com",
+        "date": "2026-10-13T20:53:47Z"
+      },
+      "committer": {
+        "name": "markolazic01",
+        "email": "markolazic01@gmail.com",
+        "date": "2026-10-13T20:53:47Z"
+      },
+      "message": "feat: option handling + description",
+      "tree": {
+        "sha": "c4842aef28f129099b5d4c1a2192a630825c7d88",
+        "url": "https://api.github.com/repos/ChainSafe/lodestar/git/trees/c4842aef28f129099b5d4c1a2192a630825c7d88"
+      },
+      "url": "https://api.github.com/repos/ChainSafe/lodestar/git/commits/5ddb86f26809b8d05fcc9f0db26bbbf4b581a26c",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN SSH SIGNATURE-----\nU1NIU0lHAAAAAQAAADMAAAALc3NoLWVkMjU1MTkAAAAglLt2D60NWkIPj071sEhoCO0jXd\n33IoTNt6n28hPIORQAAAADZ2l0AAAAAAAAAAZzaGE1MTIAAABTAAAAC3NzaC1lZDI1NTE5\nAAAAQNzotLAdonsqaLJsA5r4SwrmxEtvPO0mGA/kM06xwM3AORoUApoy8H+YUgUl+Luati\noFr+lYMrNC/pzEhWYBKgY=\n-----END SSH SIGNATURE-----",
+        "payload": "tree c4842aef28f129099b5d4c1a2192a630825c7d88\nparent 725efef25936c2703d8cff028bb6603a10af6cdd\nauthor markolazic01 <markolazic01@gmail.com> 1791924827 +0200\ncommitter markolazic01 <markolazic01@gmail.com> 1791924827 +0200\n\nfeat: option handling + description\n",
+        "verified_at": "2026-10-13T20:53:51Z"
+      }
+    },
+    "url": "https://api.github.com/repos/ChainSafe/lodestar/commits/5ddb86f26809b8d05fcc9f0db26bbbf4b581a26c",
+    "html_url": "https://github.com/ChainSafe/lodestar/commit/5ddb86f26809b8d05fcc9f0db26bbbf4b581a26c",
+    "comments_url": "https://api.github.com/repos/ChainSafe/lodestar/commits/5ddb86f26809b8d05fcc9f0db26bbbf4b581a26c/comments",
+    "author": {
+      "login": "markolazic01",
+      "id": 80317369,
+      "node_id": "MDQ6VXNlcjgwMzE3MzY5",
+      "avatar_url": "https://avatars.githubusercontent.com/u/80317369?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/markolazic01",
+      "html_url": "https://github.com/markolazic01",
+      "followers_url": "https://api.github.com/users/markolazic01/followers",
+      "following_url": "https://api.github.com/users/markolazic01/following{/other_user}",
+      "gists_url": "https://api.github.com/users/markolazic01/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/markolazic01/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/markolazic01/subscriptions",
+      "organizations_url": "https://api.github.com/users/markolazic01/orgs",
+      "repos_url": "https://api.github.com/users/markolazic01/repos",
+      "events_url": "https://api.github.com/users/markolazic01/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/markolazic01/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "markolazic01",
+      "id": 80317369,
+      "node_id": "MDQ6VXNlcjgwMzE3MzY5",
+      "avatar_url": "https://avatars.githubusercontent.com/u/80317369?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/markolazic01",
+      "html_url": "https://github.com/markolazic01",
+      "followers_url": "https://api.github.com/users/markolazic01/followers",
+      "following_url": "https://api.github.com/users/markolazic01/following{/other_user}",
+      "gists_url": "https://api.github.com/users/markolazic01/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/markolazic01/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/markolazic01/subscriptions",
+      "organizations_url": "https://api.github.com/users/markolazic01/orgs",
+      "repos_url": "https://api.github.com/users/markolazic01/repos",
+      "events_url": "https://api.github.com/users/markolazic01/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/markolazic01/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "725efef25936c2703d8cff028bb6603a10af6cdd",
+        "url": "https://api.github.com/repos/ChainSafe/lodestar/commits/725efef25936c2703d8cff028bb6603a10af6cdd",
+        "html_url": "https://github.com/ChainSafe/lodestar/commit/725efef25936c2703d8cff028bb6603a10af6cdd"
+      }
+    ]
+  },
+  {
+    "sha": "fd0cdcbb15b35cabdd649aa0455c85c1924e218c",
+    "node_id": "C_kwDORrY_ktoAKGZkMGNkY2JiMTViMzVjYWJkZDY0OWFhMDQ1NWM4NWMxOTI0ZTIxOGM",
+    "commit": {
+      "author": {
+        "name": "markolazic01",
+        "email": "markolazic01@gmail.com",
+        "date": "2026-10-13T21:11:28Z"
+      },
+      "committer": {
+        "name": "markolazic01",
+        "email": "markolazic01@gmail.com",
+        "date": "2026-10-13T21:11:28Z"
+      },
+      "message": "chore: remove testing script",
+      "tree": {
+        "sha": "5af75f95a1459dbf10c053c6d2360e88ca912fed",
+        "url": "https://api.github.com/repos/ChainSafe/lodestar/git/trees/5af75f95a1459dbf10c053c6d2360e88ca912fed"
+      },
+      "url": "https://api.github.com/repos/ChainSafe/lodestar/git/commits/fd0cdcbb15b35cabdd649aa0455c85c1924e218c",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN SSH SIGNATURE-----\nU1NIU0lHAAAAAQAAADMAAAALc3NoLWVkMjU1MTkAAAAglLt2D60NWkIPj071sEhoCO0jXd\n33IoTNt6n28hPIORQAAAADZ2l0AAAAAAAAAAZzaGE1MTIAAABTAAAAC3NzaC1lZDI1NTE5\nAAAAQM4ThrzFBvmKEJJjhctZMQjDsIu6Fef5yNKN38fnXiTmCKbmrD45mhVRWgxhJGxHbe\n1JGCPskyyaeU9T4VOXXgk=\n-----END SSH SIGNATURE-----",
+        "payload": "tree 5af75f95a1459dbf10c053c6d2360e88ca912fed\nparent 5ddb86f26809b8d05fcc9f0db26bbbf4b581a26c\nauthor markolazic01 <markolazic01@gmail.com> 1791925888 +0200\ncommitter markolazic01 <markolazic01@gmail.com> 1791925888 +0200\n\nchore: remove testing script\n",
+        "verified_at": "2026-10-13T21:11:41Z"
+      }
+    },
+    "url": "https://api.github.com/repos/ChainSafe/lodestar/commits/fd0cdcbb15b35cabdd649aa0455c85c1924e218c",
+    "html_url": "https://github.com/ChainSafe/lodestar/commit/fd0cdcbb15b35cabdd649aa0455c85c1924e218c",
+    "comments_url": "https://api.github.com/repos/ChainSafe/lodestar/commits/fd0cdcbb15b35cabdd649aa0455c85c1924e218c/comments",
+    "author": {
+      "login": "markolazic01",
+      "id": 80317369,
+      "node_id": "MDQ6VXNlcjgwMzE3MzY5",
+      "avatar_url": "https://avatars.githubusercontent.com/u/80317369?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/markolazic01",
+      "html_url": "https://github.com/markolazic01",
+      "followers_url": "https://api.github.com/users/markolazic01/followers",
+      "following_url": "https://api.github.com/users/markolazic01/following{/other_user}",
+      "gists_url": "https://api.github.com/users/markolazic01/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/markolazic01/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/markolazic01/subscriptions",
+      "organizations_url": "https://api.github.com/users/markolazic01/orgs",
+      "repos_url": "https://api.github.com/users/markolazic01/repos",
+      "events_url": "https://api.github.com/users/markolazic01/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/markolazic01/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "markolazic01",
+      "id": 80317369,
+      "node_id": "MDQ6VXNlcjgwMzE3MzY5",
+      "avatar_url": "https://avatars.githubusercontent.com/u/80317369?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/markolazic01",
+      "html_url": "https://github.com/markolazic01",
+      "followers_url": "https://api.github.com/users/markolazic01/followers",
+      "following_url": "https://api.github.com/users/markolazic01/following{/other_user}",
+      "gists_url": "https://api.github.com/users/markolazic01/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/markolazic01/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/markolazic01/subscriptions",
+      "organizations_url": "https://api.github.com/users/markolazic01/orgs",
+      "repos_url": "https://api.github.com/users/markolazic01/repos",
+      "events_url": "https://api.github.com/users/markolazic01/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/markolazic01/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "5ddb86f26809b8d05fcc9f0db26bbbf4b581a26c",
+        "url": "https://api.github.com/repos/ChainSafe/lodestar/commits/5ddb86f26809b8d05fcc9f0db26bbbf4b581a26c",
+        "html_url": "https://github.com/ChainSafe/lodestar/commit/5ddb86f26809b8d05fcc9f0db26bbbf4b581a26c"
+      }
+    ]
+  },
+  {
+    "sha": "b7ea766b06eb2943dab86648536f34f63b2d8fb6",
+    "node_id": "C_kwDORrY_ktoAKGI3ZWE3NjZiMDZlYjI5NDNkYWI4NjY0ODUzNmYzNGY2M2IyZDhmYjY",
+    "commit": {
+      "author": {
+        "name": "markolazic01",
+        "email": "markolazic01@gmail.com",
+        "date": "2026-10-13T21:30:33Z"
+      },
+      "committer": {
+        "name": "markolazic01",
+        "email": "markolazic01@gmail.com",
+        "date": "2026-10-13T21:30:33Z"
+      },
+      "message": "chore: trim readme sentence",
+      "tree": {
+        "sha": "9c909c4d9ede85e1165af57e68fd817af9f4b267",
+        "url": "https://api.github.com/repos/ChainSafe/lodestar/git/trees/9c909c4d9ede85e1165af57e68fd817af9f4b267"
+      },
+      "url": "https://api.github.com/repos/ChainSafe/lodestar/git/commits/b7ea766b06eb2943dab86648536f34f63b2d8fb6",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN SSH SIGNATURE-----\nU1NIU0lHAAAAAQAAADMAAAALc3NoLWVkMjU1MTkAAAAglLt2D60NWkIPj071sEhoCO0jXd\n33IoTNt6n28hPIORQAAAADZ2l0AAAAAAAAAAZzaGE1MTIAAABTAAAAC3NzaC1lZDI1NTE5\nAAAAQPg96IufOm/fw/puHKO8UVu0OfJzk+Svvm7Rv2EmGwkE3ikTWjnLvVx4P7GsZYpKrM\nK3kK6xRRWuA9RAwdzH5QI=\n-----END SSH SIGNATURE-----",
+        "payload": "tree 9c909c4d9ede85e1165af57e68fd817af9f4b267\nparent fd0cdcbb15b35cabdd649aa0455c85c1924e218c\nauthor markolazic01 <markolazic01@gmail.com> 1791927033 +0200\ncommitter markolazic01 <markolazic01@gmail.com> 1791927033 +0200\n\nchore: trim readme sentence\n",
+        "verified_at": "2026-10-13T21:30:38Z"
+      }
+    },
+    "url": "https://api.github.com/repos/ChainSafe/lodestar/commits/b7ea766b06eb2943dab86648536f34f63b2d8fb6",
+    "html_url": "https://github.com/ChainSafe/lodestar/commit/b7ea766b06eb2943dab86648536f34f63b2d8fb6",
+    "comments_url": "https://api.github.com/repos/ChainSafe/lodestar/commits/b7ea766b06eb2943dab86648536f34f63b2d8fb6/comments",
+    "author": {
+      "login": "markolazic01",
+      "id": 80317369,
+      "node_id": "MDQ6VXNlcjgwMzE3MzY5",
+      "avatar_url": "https://avatars.githubusercontent.com/u/80317369?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/markolazic01",
+      "html_url": "https://github.com/markolazic01",
+      "followers_url": "https://api.github.com/users/markolazic01/followers",
+      "following_url": "https://api.github.com/users/markolazic01/following{/other_user}",
+      "gists_url": "https://api.github.com/users/markolazic01/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/markolazic01/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/markolazic01/subscriptions",
+      "organizations_url": "https://api.github.com/users/markolazic01/orgs",
+      "repos_url": "https://api.github.com/users/markolazic01/repos",
+      "events_url": "https://api.github.com/users/markolazic01/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/markolazic01/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "markolazic01",
+      "id": 80317369,
+      "node_id": "MDQ6VXNlcjgwMzE3MzY5",
+      "avatar_url": "https://avatars.githubusercontent.com/u/80317369?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/markolazic01",
+      "html_url": "https://github.com/markolazic01",
+      "followers_url": "https://api.github.com/users/markolazic01/followers",
+      "following_url": "https://api.github.com/users/markolazic01/following{/other_user}",
+      "gists_url": "https://api.github.com/users/markolazic01/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/markolazic01/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/markolazic01/subscriptions",
+      "organizations_url": "https://api.github.com/users/markolazic01/orgs",
+      "repos_url": "https://api.github.com/users/markolazic01/repos",
+      "events_url": "https://api.github.com/users/markolazic01/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/markolazic01/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "fd0cdcbb15b35cabdd649aa0455c85c1924e218c",
+        "url": "https://api.github.com/repos/ChainSafe/lodestar/commits/fd0cdcbb15b35cabdd649aa0455c85c1924e218c",
+        "html_url": "https://github.com/ChainSafe/lodestar/commit/fd0cdcbb15b35cabdd649aa0455c85c1924e218c"
+      }
+    ]
+  },
+  {
+    "sha": "bd57430b0aa278311aa5417fad516d54316d635b",
+    "node_id": "C_kwDORrY_ktoAKGJkNTc0MzBiMGFhMjc4MzExYWE1NDE3ZmFkNTE2ZDU0MzE2ZDYzNWI",
+    "commit": {
+      "author": {
+        "name": "markolazic01",
+        "email": "markolazic01@gmail.com",
+        "date": "2026-10-13T21:58:03Z"
+      },
+      "committer": {
+        "name": "markolazic01",
+        "email": "markolazic01@gmail.com",
+        "date": "2026-10-13T21:58:03Z"
+      },
+      "message": "chore: import constant instead of a local declaration",
+      "tree": {
+        "sha": "35e715a4644b534d27546eb2b0c5d2e62c19e63d",
+        "url": "https://api.github.com/repos/ChainSafe/lodestar/git/trees/35e715a4644b534d27546eb2b0c5d2e62c19e63d"
+      },
+      "url": "https://api.github.com/repos/ChainSafe/lodestar/git/commits/bd57430b0aa278311aa5417fad516d54316d635b",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN SSH SIGNATURE-----\nU1NIU0lHAAAAAQAAADMAAAALc3NoLWVkMjU1MTkAAAAglLt2D60NWkIPj071sEhoCO0jXd\n33IoTNt6n28hPIORQAAAADZ2l0AAAAAAAAAAZzaGE1MTIAAABTAAAAC3NzaC1lZDI1NTE5\nAAAAQGoflV23UztVchzOGBwwt5quuUCylzTTc+4WRStm56/I1zibTd21nnwOntlA4hW9K7\nkPh96l7BXlljMNVmlOIAM=\n-----END SSH SIGNATURE-----",
+        "payload": "tree 35e715a4644b534d27546eb2b0c5d2e62c19e63d\nparent b7ea766b06eb2943dab86648536f34f63b2d8fb6\nauthor markolazic01 <markolazic01@gmail.com> 1791928683 +0200\ncommitter markolazic01 <markolazic01@gmail.com> 1791928683 +0200\n\nchore: import constant instead of a local declaration\n",
+        "verified_at": "2026-10-13T21:58:09Z"
+      }
+    },
+    "url": "https://api.github.com/repos/ChainSafe/lodestar/commits/bd57430b0aa278311aa5417fad516d54316d635b",
+    "html_url": "https://github.com/ChainSafe/lodestar/commit/bd57430b0aa278311aa5417fad516d54316d635b",
+    "comments_url": "https://api.github.com/repos/ChainSafe/lodestar/commits/bd57430b0aa278311aa5417fad516d54316d635b/comments",
+    "author": {
+      "login": "markolazic01",
+      "id": 80317369,
+      "node_id": "MDQ6VXNlcjgwMzE3MzY5",
+      "avatar_url": "https://avatars.githubusercontent.com/u/80317369?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/markolazic01",
+      "html_url": "https://github.com/markolazic01",
+      "followers_url": "https://api.github.com/users/markolazic01/followers",
+      "following_url": "https://api.github.com/users/markolazic01/following{/other_user}",
+      "gists_url": "https://api.github.com/users/markolazic01/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/markolazic01/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/markolazic01/subscriptions",
+      "organizations_url": "https://api.github.com/users/markolazic01/orgs",
+      "repos_url": "https://api.github.com/users/markolazic01/repos",
+      "events_url": "https://api.github.com/users/markolazic01/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/markolazic01/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "markolazic01",
+      "id": 80317369,
+      "node_id": "MDQ6VXNlcjgwMzE3MzY5",
+      "avatar_url": "https://avatars.githubusercontent.com/u/80317369?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/markolazic01",
+      "html_url": "https://github.com/markolazic01",
+      "followers_url": "https://api.github.com/users/markolazic01/followers",
+      "following_url": "https://api.github.com/users/markolazic01/following{/other_user}",
+      "gists_url": "https://api.github.com/users/markolazic01/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/markolazic01/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/markolazic01/subscriptions",
+      "organizations_url": "https://api.github.com/users/markolazic01/orgs",
+      "repos_url": "https://api.github.com/users/markolazic01/repos",
+      "events_url": "https://api.github.com/users/markolazic01/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/markolazic01/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "b7ea766b06eb2943dab86648536f34f63b2d8fb6",
+        "url": "https://api.github.com/repos/ChainSafe/lodestar/commits/b7ea766b06eb2943dab86648536f34f63b2d8fb6",
+        "html_url": "https://github.com/ChainSafe/lodestar/commit/b7ea766b06eb2943dab86648536f34f63b2d8fb6"
+      }
+    ]
+  },
+  {
+    "sha": "38cec94fee27c0b38a71e87e39d082888458d1a3",
+    "node_id": "C_kwDORrY_ktoAKDM4Y2VjOTRmZWUyN2MwYjM4YTcxZTg3ZTM5ZDA4Mjg4ODQ1OGQxYTM",
+    "commit": {
+      "author": {
+        "name": "markolazic01",
+        "email": "markolazic01@gmail.com",
+        "date": "2026-10-14T13:02:47Z"
+      },
+      "committer": {
+        "name": "markolazic01",
+        "email": "markolazic01@gmail.com",
+        "date": "2026-10-14T13:02:47Z"
+      },
+      "message": "fix: prettier builder README.md",
+      "tree": {
+        "sha": "be409ddf2b3a4f50872810b726499d7205ecaffe",
+        "url": "https://api.github.com/repos/ChainSafe/lodestar/git/trees/be409ddf2b3a4f50872810b726499d7205ecaffe"
+      },
+      "url": "https://api.github.com/repos/ChainSafe/lodestar/git/commits/38cec94fee27c0b38a71e87e39d082888458d1a3",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN SSH SIGNATURE-----\nU1NIU0lHAAAAAQAAADMAAAALc3NoLWVkMjU1MTkAAAAglLt2D60NWkIPj071sEhoCO0jXd\n33IoTNt6n28hPIORQAAAADZ2l0AAAAAAAAAAZzaGE1MTIAAABTAAAAC3NzaC1lZDI1NTE5\nAAAAQI257y4jooVqxe1/6lRDJb1oMZqUB26YqxsAZMTJjVa+g5QfALMkZLwnnModna91Fi\nRuvJKrKUes0prPw/bPEQs=\n-----END SSH SIGNATURE-----",
+        "payload": "tree be409ddf2b3a4f50872810b726499d7205ecaffe\nparent bd57430b0aa278311aa5417fad516d54316d635b\nauthor markolazic01 <markolazic01@gmail.com> 1791982967 +0200\ncommitter markolazic01 <markolazic01@gmail.com> 1791982967 +0200\n\nfix: prettier builder README.md\n",
+        "verified_at": "2026-10-14T13:02:52Z"
+      }
+    },
+    "url": "https://api.github.com/repos/ChainSafe/lodestar/commits/38cec94fee27c0b38a71e87e39d082888458d1a3",
+    "html_url": "https://github.com/ChainSafe/lodestar/commit/38cec94fee27c0b38a71e87e39d082888458d1a3",
+    "comments_url": "https://api.github.com/repos/ChainSafe/lodestar/commits/38cec94fee27c0b38a71e87e39d082888458d1a3/comments",
+    "author": {
+      "login": "markolazic01",
+      "id": 80317369,
+      "node_id": "MDQ6VXNlcjgwMzE3MzY5",
+      "avatar_url": "https://avatars.githubusercontent.com/u/80317369?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/markolazic01",
+      "html_url": "https://github.com/markolazic01",
+      "followers_url": "https://api.github.com/users/markolazic01/followers",
+      "following_url": "https://api.github.com/users/markolazic01/following{/other_user}",
+      "gists_url": "https://api.github.com/users/markolazic01/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/markolazic01/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/markolazic01/subscriptions",
+      "organizations_url": "https://api.github.com/users/markolazic01/orgs",
+      "repos_url": "https://api.github.com/users/markolazic01/repos",
+      "events_url": "https://api.github.com/users/markolazic01/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/markolazic01/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "markolazic01",
+      "id": 80317369,
+      "node_id": "MDQ6VXNlcjgwMzE3MzY5",
+      "avatar_url": "https://avatars.githubusercontent.com/u/80317369?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/markolazic01",
+      "html_url": "https://github.com/markolazic01",
+      "followers_url": "https://api.github.com/users/markolazic01/followers",
+      "following_url": "https://api.github.com/users/markolazic01/following{/other_user}",
+      "gists_url": "https://api.github.com/users/markolazic01/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/markolazic01/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/markolazic01/subscriptions",
+      "organizations_url": "https://api.github.com/users/markolazic01/orgs",
+      "repos_url": "https://api.github.com/users/markolazic01/repos",
+      "events_url": "https://api.github.com/users/markolazic01/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/markolazic01/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "bd57430b0aa278311aa5417fad516d54316d635b",
+        "url": "https://api.github.com/repos/ChainSafe/lodestar/commits/bd57430b0aa278311aa5417fad516d54316d635b",
+        "html_url": "https://github.com/ChainSafe/lodestar/commit/bd57430b0aa278311aa5417fad516d54316d635b"
+      }
+    ]
+  },
+  {
+    "sha": "3046f50bacaa322e6c8c70c0c5e98af25e10ff70",
+    "node_id": "C_kwDORrY_ktoAKDMwNDZmNTBiYWNhYTMyMmU2YzhjNzBjMGM1ZTk4YWYyNWUxMGZmNzA",
+    "commit": {
+      "author": {
+        "name": "markolazic01",
+        "email": "markolazic01@gmail.com",
+        "date": "2026-10-14T22:39:01Z"
+      },
+      "committer": {
+        "name": "markolazic01",
+        "email": "markolazic01@gmail.com",
+        "date": "2026-10-14T22:39:01Z"
+      },
+      "message": "feat: retries on syncing",
+      "tree": {
+        "sha": "504ec2e0ce712f4f451be86784ab5b92a7ab61a6",
+        "url": "https://api.github.com/repos/ChainSafe/lodestar/git/trees/504ec2e0ce712f4f451be86784ab5b92a7ab61a6"
+      },
+      "url": "https://api.github.com/repos/ChainSafe/lodestar/git/commits/3046f50bacaa322e6c8c70c0c5e98af25e10ff70",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN SSH SIGNATURE-----\nU1NIU0lHAAAAAQAAADMAAAALc3NoLWVkMjU1MTkAAAAglLt2D60NWkIPj071sEhoCO0jXd\n33IoTNt6n28hPIORQAAAADZ2l0AAAAAAAAAAZzaGE1MTIAAABTAAAAC3NzaC1lZDI1NTE5\nAAAAQGN3zfPnCoQFFJRGjtZUSm501s+IHoaibuUaEz+LYDc/1XY/ouiPgpRA1S5+I2yKq+\nYKUQDfHg6kFiVDMHTcdgY=\n-----END SSH SIGNATURE-----",
+        "payload": "tree 504ec2e0ce712f4f451be86784ab5b92a7ab61a6\nparent 38cec94fee27c0b38a71e87e39d082888458d1a3\nauthor markolazic01 <markolazic01@gmail.com> 1792017541 +0200\ncommitter markolazic01 <markolazic01@gmail.com> 1792017541 +0200\n\nfeat: retries on syncing\n",
+        "verified_at": "2026-10-14T22:39:06Z"
+      }
+    },
+    "url": "https://api.github.com/repos/ChainSafe/lodestar/commits/3046f50bacaa322e6c8c70c0c5e98af25e10ff70",
+    "html_url": "https://github.com/ChainSafe/lodestar/commit/3046f50bacaa322e6c8c70c0c5e98af25e10ff70",
+    "comments_url": "https://api.github.com/repos/ChainSafe/lodestar/commits/3046f50bacaa322e6c8c70c0c5e98af25e10ff70/comments",
+    "author": {
+      "login": "markolazic01",
+      "id": 80317369,
+      "node_id": "MDQ6VXNlcjgwMzE3MzY5",
+      "avatar_url": "https://avatars.githubusercontent.com/u/80317369?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/markolazic01",
+      "html_url": "https://github.com/markolazic01",
+      "followers_url": "https://api.github.com/users/markolazic01/followers",
+      "following_url": "https://api.github.com/users/markolazic01/following{/other_user}",
+      "gists_url": "https://api.github.com/users/markolazic01/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/markolazic01/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/markolazic01/subscriptions",
+      "organizations_url": "https://api.github.com/users/markolazic01/orgs",
+      "repos_url": "https://api.github.com/users/markolazic01/repos",
+      "events_url": "https://api.github.com/users/markolazic01/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/markolazic01/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "markolazic01",
+      "id": 80317369,
+      "node_id": "MDQ6VXNlcjgwMzE3MzY5",
+      "avatar_url": "https://avatars.githubusercontent.com/u/80317369?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/markolazic01",
+      "html_url": "https://github.com/markolazic01",
+      "followers_url": "https://api.github.com/users/markolazic01/followers",
+      "following_url": "https://api.github.com/users/markolazic01/following{/other_user}",
+      "gists_url": "https://api.github.com/users/markolazic01/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/markolazic01/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/markolazic01/subscriptions",
+      "organizations_url": "https://api.github.com/users/markolazic01/orgs",
+      "repos_url": "https://api.github.com/users/markolazic01/repos",
+      "events_url": "https://api.github.com/users/markolazic01/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/markolazic01/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "38cec94fee27c0b38a71e87e39d082888458d1a3",
+        "url": "https://api.github.com/repos/ChainSafe/lodestar/commits/38cec94fee27c0b38a71e87e39d082888458d1a3",
+        "html_url": "https://github.com/ChainSafe/lodestar/commit/38cec94fee27c0b38a71e87e39d082888458d1a3"
+      }
+    ]
+  },
+  {
+    "sha": "f6069d7c041f4d66cafd0a3f0831555fff7e2be2",
+    "node_id": "C_kwDORrY_ktoAKGY2MDY5ZDdjMDQxZjRkNjZjYWZkMGEzZjA4MzE1NTVmZmY3ZTJiZTI",
+    "commit": {
+      "author": {
+        "name": "Nico Flaig",
+        "email": "nflaig@protonmail.com",
+        "date": "2026-10-15T22:48:45Z"
+      },
+      "committer": {
+        "name": "GitHub",
+        "email": "noreply@github.com",
+        "date": "2026-10-15T22:48:45Z"
+      },
+      "message": "Merge branch 'unstable' into feat/builder-wiring",
+      "tree": {
+        "sha": "98cf18ce12f155f71d4712d67eaa01d40ac0bd35",
+        "url": "https://api.github.com/repos/ChainSafe/lodestar/git/trees/98cf18ce12f155f71d4712d67eaa01d40ac0bd35"
+      },
+      "url": "https://api.github.com/repos/ChainSafe/lodestar/git/commits/f6069d7c041f4d66cafd0a3f0831555fff7e2be2",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJq0VhNCRC1aQ7uu5UhlAAAFDIQAKQuu6I0WTqlpIO/XgrPl2sX\n33dBoJqMCILhbZShJjE+V/ZzjzcrPcYZjjNOzeXlzVQ5labdqCKGrMW9d6CBFigc\nZMuCRa2t+u5ClEMZDOGmfKBDM5s2x2mRUTqdzBnZZATktErYslMNj/oGU9c6cLNh\nH4q8a19FwWxEHlUhgcUySkhvGyMaE24firHICoN6ekd15RCE/D0A3v03s4ns4jzG\n8Z9rEUxyk2ImVvhEueZgLwf5dmYuPzApFZRoa5aSImUX2LE6TiOtiOGKW5ZRm1+v\nZI62mti8FeUKbKGZdta+3oUn48SJ+bqMT9CwPhFOiK+AE/iUjB1bvWOOtUDHMjNx\noik9LpuesZOvXXtylEcCDLT4DYIaJDgvfkrzOWSsxukAz15XWZ1+TCE2egbvVEPE\nsX5X8+YPeZc5kAADHedhk/L6WJxKgF+qh+qYal8XNNCt23i0kWXTzTcyw2JnSQM9\nt52bbhH9PGAXL1KMg9EIHJ4dUXEkjsL47VgtZVcd7IxTBJkBwHgXFRWFg1nlmVGm\nRJDxBicexV5j9g3GuqP10Y0UFDRKLd66JAbC9DYSvdp+iYZmwF2sSLnkA+7EeccZ\nXj0EauWM4v5i08j//FSsif2jIQULaN1Gp0H2WHk6XpmuBgleSkDCk2oejNYA7uYP\nk1+bfdnHSdwpd4Vazt6x\n=d4YD\n-----END PGP SIGNATURE-----\n",
+        "payload": "tree 98cf18ce12f155f71d4712d67eaa01d40ac0bd35\nparent 3046f50bacaa322e6c8c70c0c5e98af25e10ff70\nparent 15ecdb3b2761b9037b2d5c09704c256227e4bd1a\nauthor Nico Flaig <nflaig@protonmail.com> 1792104525 +0100\ncommitter GitHub <noreply@github.com> 1792104525 +0100\n\nMerge branch 'unstable' into feat/builder-wiring",
+        "verified_at": "2026-10-15T22:48:46Z"
+      }
+    },
+    "url": "https://api.github.com/repos/ChainSafe/lodestar/commits/f6069d7c041f4d66cafd0a3f0831555fff7e2be2",
+    "html_url": "https://github.com/ChainSafe/lodestar/commit/f6069d7c041f4d66cafd0a3f0831555fff7e2be2",
+    "comments_url": "https://api.github.com/repos/ChainSafe/lodestar/commits/f6069d7c041f4d66cafd0a3f0831555fff7e2be2/comments",
+    "author": {
+      "login": "nflaig",
+      "id": 38436224,
+      "node_id": "MDQ6VXNlcjM4NDM2MjI0",
+      "avatar_url": "https://avatars.githubusercontent.com/u/38436224?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/nflaig",
+      "html_url": "https://github.com/nflaig",
+      "followers_url": "https://api.github.com/users/nflaig/followers",
+      "following_url": "https://api.github.com/users/nflaig/following{/other_user}",
+      "gists_url": "https://api.github.com/users/nflaig/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/nflaig/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/nflaig/subscriptions",
+      "organizations_url": "https://api.github.com/users/nflaig/orgs",
+      "repos_url": "https://api.github.com/users/nflaig/repos",
+      "events_url": "https://api.github.com/users/nflaig/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/nflaig/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "web-flow",
+      "id": 19864447,
+      "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/web-flow",
+      "html_url": "https://github.com/web-flow",
+      "followers_url": "https://api.github.com/users/web-flow/followers",
+      "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+      "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+      "organizations_url": "https://api.github.com/users/web-flow/orgs",
+      "repos_url": "https://api.github.com/users/web-flow/repos",
+      "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/web-flow/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "3046f50bacaa322e6c8c70c0c5e98af25e10ff70",
+        "url": "https://api.github.com/repos/ChainSafe/lodestar/commits/3046f50bacaa322e6c8c70c0c5e98af25e10ff70",
+        "html_url": "https://github.com/ChainSafe/lodestar/commit/3046f50bacaa322e6c8c70c0c5e98af25e10ff70"
+      },
+      {
+        "sha": "15ecdb3b2761b9037b2d5c09704c256227e4bd1a",
+        "url": "https://api.github.com/repos/ChainSafe/lodestar/commits/15ecdb3b2761b9037b2d5c09704c256227e4bd1a",
+        "html_url": "https://github.com/ChainSafe/lodestar/commit/15ecdb3b2761b9037b2d5c09704c256227e4bd1a"
+      }
+    ]
+  },
+  {
+    "sha": "9238fcc65d3e66bada8649742a012c7c557d4922",
+    "node_id": "C_kwDORrY_ktoAKDkyMzhmY2M2NWQzZTY2YmFkYTg2NDk3NDJhMDEyYzdjNTU3ZDQ5MjI",
+    "commit": {
+      "author": {
+        "name": "markolazic01",
+        "email": "markolazic01@gmail.com",
+        "date": "2026-10-16T19:55:00Z"
+      },
+      "committer": {
+        "name": "markolazic01",
+        "email": "markolazic01@gmail.com",
+        "date": "2026-10-16T19:55:00Z"
+      },
+      "message": "fix(builder): retry payload preparation only on the syncing error",
+      "tree": {
+        "sha": "e151a04832a297358c524e4382f8a0155b3cebd9",
+        "url": "https://api.github.com/repos/ChainSafe/lodestar/git/trees/e151a04832a297358c524e4382f8a0155b3cebd9"
+      },
+      "url": "https://api.github.com/repos/ChainSafe/lodestar/git/commits/9238fcc65d3e66bada8649742a012c7c557d4922",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN SSH SIGNATURE-----\nU1NIU0lHAAAAAQAAADMAAAALc3NoLWVkMjU1MTkAAAAglLt2D60NWkIPj071sEhoCO0jXd\n33IoTNt6n28hPIORQAAAADZ2l0AAAAAAAAAAZzaGE1MTIAAABTAAAAC3NzaC1lZDI1NTE5\nAAAAQFPkwQbiUejW8rysQkQWl8KsBn3mYOvB7/H2FssxVrDS3+h4L6PvfhkJCg0a3buL8E\n708T7HbhTzLQXmaazurQA=\n-----END SSH SIGNATURE-----",
+        "payload": "tree e151a04832a297358c524e4382f8a0155b3cebd9\nparent f6069d7c041f4d66cafd0a3f0831555fff7e2be2\nauthor markolazic01 <markolazic01@gmail.com> 1792180500 +0200\ncommitter markolazic01 <markolazic01@gmail.com> 1792180500 +0200\n\nfix(builder): retry payload preparation only on the syncing error\n",
+        "verified_at": "2026-10-16T19:55:05Z"
+      }
+    },
+    "url": "https://api.github.com/repos/ChainSafe/lodestar/commits/9238fcc65d3e66bada8649742a012c7c557d4922",
+    "html_url": "https://github.com/ChainSafe/lodestar/commit/9238fcc65d3e66bada8649742a012c7c557d4922",
+    "comments_url": "https://api.github.com/repos/ChainSafe/lodestar/commits/9238fcc65d3e66bada8649742a012c7c557d4922/comments",
+    "author": {
+      "login": "markolazic01",
+      "id": 80317369,
+      "node_id": "MDQ6VXNlcjgwMzE3MzY5",
+      "avatar_url": "https://avatars.githubusercontent.com/u/80317369?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/markolazic01",
+      "html_url": "https://github.com/markolazic01",
+      "followers_url": "https://api.github.com/users/markolazic01/followers",
+      "following_url": "https://api.github.com/users/markolazic01/following{/other_user}",
+      "gists_url": "https://api.github.com/users/markolazic01/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/markolazic01/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/markolazic01/subscriptions",
+      "organizations_url": "https://api.github.com/users/markolazic01/orgs",
+      "repos_url": "https://api.github.com/users/markolazic01/repos",
+      "events_url": "https://api.github.com/users/markolazic01/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/markolazic01/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "markolazic01",
+      "id": 80317369,
+      "node_id": "MDQ6VXNlcjgwMzE3MzY5",
+      "avatar_url": "https://avatars.githubusercontent.com/u/80317369?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/markolazic01",
+      "html_url": "https://github.com/markolazic01",
+      "followers_url": "https://api.github.com/users/markolazic01/followers",
+      "following_url": "https://api.github.com/users/markolazic01/following{/other_user}",
+      "gists_url": "https://api.github.com/users/markolazic01/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/markolazic01/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/markolazic01/subscriptions",
+      "organizations_url": "https://api.github.com/users/markolazic01/orgs",
+      "repos_url": "https://api.github.com/users/markolazic01/repos",
+      "events_url": "https://api.github.com/users/markolazic01/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/markolazic01/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "f6069d7c041f4d66cafd0a3f0831555fff7e2be2",
+        "url": "https://api.github.com/repos/ChainSafe/lodestar/commits/f6069d7c041f4d66cafd0a3f0831555fff7e2be2",
+        "html_url": "https://github.com/ChainSafe/lodestar/commit/f6069d7c041f4d66cafd0a3f0831555fff7e2be2"
+      }
+    ]
+  },
+  {
+    "sha": "af8a576438d26267b29dd08c347f701193c2ee32",
+    "node_id": "C_kwDORrY_ktoAKGFmOGE1NzY0MzhkMjYyNjdiMjlkZDA4YzM0N2Y3MDExOTNjMmVlMzI",
+    "commit": {
+      "author": {
+        "name": "Nico Flaig",
+        "email": "nflaig@protonmail.com",
+        "date": "2026-10-20T13:31:58Z"
+      },
+      "committer": {
+        "name": "Nico Flaig",
+        "email": "nflaig@protonmail.com",
+        "date": "2026-10-20T13:31:58Z"
+      },
+      "message": "poll pending builder every slot",
+      "tree": {
+        "sha": "7901fc10fcde0936885a12abd422360616b911bd",
+        "url": "https://api.github.com/repos/ChainSafe/lodestar/git/trees/7901fc10fcde0936885a12abd422360616b911bd"
+      },
+      "url": "https://api.github.com/repos/ChainSafe/lodestar/git/commits/af8a576438d26267b29dd08c347f701193c2ee32",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\niQIzBAABCgAdFiEEzGPCPyPIC6Wkrmq5bgM3XqnH6/cFAmrXbU4ACgkQbgM3XqnH\n6/dmvQ/9Gkbv/0L1rifG2RCbB8DnXzD1DcdzTtGDBfd2ilRTgTpPGc6vIif/9KUf\nl65A5Irzr/TvuckkHd81HNRSDXqUiw7GL4r7o2Z82YO38Oihl6lVuA2qNF3N9bT+\nLNwBjs9dkx5Ws2PrKdYCka0oD2pOAxghyLqOckKolQDwtKzjwGr2bbzSFQfMVAnM\nxH/CmMZFegZNNJ1CN/+S4JjrlFqaofRw+1E178KgBBKTfzlzNXlfReZufjtr9AEf\nxMPHXi4adHQ76AXHLQECBF3XmHTO4oJShqz8a4UdpCj//lUWFqR1fxRUdbawC2aX\nVCDnS4v9ZnQ5ivi8eELTnuONHKslNei0GGBq7D78MjS8J7XWuCaGc3i6tDFjqL1e\n5iOZkhT9e5rJyiIS4/kWVrks4vwKFhurDD+yY+LmaFDeKWfwEO+OJJf/mXImTDD+\nuPWj4Tq2TppaE9i+KdowKHNHGgbG7lefNPTNf/Q1bHI+A19ZDHKAkoK9ukRkT6Xw\ndvKNbh4jYHSwljxpVe/gKH7zc14hHPcOo77HHbUkyrePMil1XHuIDVrylBOGY+uj\nHP0sBm9RlyfMgi5bFbkJKc2frYIGqcEcUUbt7ub3DjxtNx+CYqLau4Rob0mNFc/3\nuoz0hZBPHspUhOhpWFGc/LF/nyzXBD+7DUVoTX0Xhx53GHkTf1w=\n=N9jK\n-----END PGP SIGNATURE-----",
+        "payload": "tree 7901fc10fcde0936885a12abd422360616b911bd\nparent 9238fcc65d3e66bada8649742a012c7c557d4922\nauthor Nico Flaig <nflaig@protonmail.com> 1792503118 +0100\ncommitter Nico Flaig <nflaig@protonmail.com> 1792503118 +0100\n\npoll pending builder every slot\n",
+        "verified_at": "2026-10-20T13:32:08Z"
+      }
+    },
+    "url": "https://api.github.com/repos/ChainSafe/lodestar/commits/af8a576438d26267b29dd08c347f701193c2ee32",
+    "html_url": "https://github.com/ChainSafe/lodestar/commit/af8a576438d26267b29dd08c347f701193c2ee32",
+    "comments_url": "https://api.github.com/repos/ChainSafe/lodestar/commits/af8a576438d26267b29dd08c347f701193c2ee32/comments",
+    "author": {
+      "login": "nflaig",
+      "id": 38436224,
+      "node_id": "MDQ6VXNlcjM4NDM2MjI0",
+      "avatar_url": "https://avatars.githubusercontent.com/u/38436224?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/nflaig",
+      "html_url": "https://github.com/nflaig",
+      "followers_url": "https://api.github.com/users/nflaig/followers",
+      "following_url": "https://api.github.com/users/nflaig/following{/other_user}",
+      "gists_url": "https://api.github.com/users/nflaig/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/nflaig/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/nflaig/subscriptions",
+      "organizations_url": "https://api.github.com/users/nflaig/orgs",
+      "repos_url": "https://api.github.com/users/nflaig/repos",
+      "events_url": "https://api.github.com/users/nflaig/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/nflaig/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "nflaig",
+      "id": 38436224,
+      "node_id": "MDQ6VXNlcjM4NDM2MjI0",
+      "avatar_url": "https://avatars.githubusercontent.com/u/38436224?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/nflaig",
+      "html_url": "https://github.com/nflaig",
+      "followers_url": "https://api.github.com/users/nflaig/followers",
+      "following_url": "https://api.github.com/users/nflaig/following{/other_user}",
+      "gists_url": "https://api.github.com/users/nflaig/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/nflaig/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/nflaig/subscriptions",
+      "organizations_url": "https://api.github.com/users/nflaig/orgs",
+      "repos_url": "https://api.github.com/users/nflaig/repos",
+      "events_url": "https://api.github.com/users/nflaig/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/nflaig/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "9238fcc65d3e66bada8649742a012c7c557d4922",
+        "url": "https://api.github.com/repos/ChainSafe/lodestar/commits/9238fcc65d3e66bada8649742a012c7c557d4922",
+        "html_url": "https://github.com/ChainSafe/lodestar/commit/9238fcc65d3e66bada8649742a012c7c557d4922"
+      }
+    ]
+  },
+  {
+    "sha": "51b283356eb380e7e5536da5af70fb4dca75982a",
+    "node_id": "C_kwDORrY_ktoAKDUxYjI4MzM1NmViMzgwZTdlNTUzNmRhNWFmNzBmYjRkY2E3NTk4MmE",
+    "commit": {
+      "author": {
+        "name": "Nico Flaig",
+        "email": "nflaig@protonmail.com",
+        "date": "2026-10-20T13:31:59Z"
+      },
+      "committer": {
+        "name": "Nico Flaig",
+        "email": "nflaig@protonmail.com",
+        "date": "2026-10-20T13:31:59Z"
+      },
+      "message": "read smoke metrics from one scrape and retry in-flight reveals",
+      "tree": {
+        "sha": "a6a093ea477c146888b31cb614abea44c60dda89",
+        "url": "https://api.github.com/repos/ChainSafe/lodestar/git/trees/a6a093ea477c146888b31cb614abea44c60dda89"
+      },
+      "url": "https://api.github.com/repos/ChainSafe/lodestar/git/commits/51b283356eb380e7e5536da5af70fb4dca75982a",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\niQIzBAABCgAdFiEEzGPCPyPIC6Wkrmq5bgM3XqnH6/cFAmrXbU8ACgkQbgM3XqnH\n6/c9fw/+Kc+HGBOBG76gDLTI7zyjWmJaqvlZMLZbmaYKKBxTJMerZxWlBJtU9kZG\nA4I/Gn2TLi3NLl71CgJtu1++WjJbgkfTPilqkicPBLMP1ssruX4dbolHrofGO1vJ\nl5m/+eA+WEJ37247hIlnpsM1hjThgA3b+uGLet+3iwS/+Sxu60DUn09Y9EUuu/tM\nKNhWHYSrSsjg82098OQQGCPMYDEpNHutvLo72psODzaKJqfNShlM7dQMClvzCOlL\nbmIYoHsMj8e6bsnkfr0xieRk56DvCHnE6nplzG1jhgDBiDEfWVX7ZgANK+Sv9ul/\n7ErkMBUf8PSZK601CsDd7qJ4t69ZrAXzX7aBxqnBlUZipGPynt/KPaMtd4xBXB4h\noCP3Fqodtl+NLLKmpJj9GGo8+FYhJdeVynFdzzHn6vwaNLIBqg5tZ0QVSKc/Kxsa\npyUGgosHJDbu+j25xgdnj6/hc4t+MLVpOTYzbieVwEMlzYZmbVecoTbH524H3LXL\nE1v5BFfA2iy6YHmV8RrE7p8wkr1ixG7TzaYzKn7M2VbP0yZJMT4ooqYuBg0tg8Yg\nbountiGfbirfAmtYyz6sH4OOljEU7eHD1Pbz3sUqc+ZSqJdgY5pAORc34DKaiZ0R\nTxGOEV/KF45Gf276ydecfy/vk/Eh/GOzx3t1aqB6jek2+AV4mP8=\n=0G/G\n-----END PGP SIGNATURE-----",
+        "payload": "tree a6a093ea477c146888b31cb614abea44c60dda89\nparent af8a576438d26267b29dd08c347f701193c2ee32\nauthor Nico Flaig <nflaig@protonmail.com> 1792503119 +0100\ncommitter Nico Flaig <nflaig@protonmail.com> 1792503119 +0100\n\nread smoke metrics from one scrape and retry in-flight reveals\n",
+        "verified_at": "2026-10-20T13:32:08Z"
+      }
+    },
+    "url": "https://api.github.com/repos/ChainSafe/lodestar/commits/51b283356eb380e7e5536da5af70fb4dca75982a",
+    "html_url": "https://github.com/ChainSafe/lodestar/commit/51b283356eb380e7e5536da5af70fb4dca75982a",
+    "comments_url": "https://api.github.com/repos/ChainSafe/lodestar/commits/51b283356eb380e7e5536da5af70fb4dca75982a/comments",
+    "author": {
+      "login": "nflaig",
+      "id": 38436224,
+      "node_id": "MDQ6VXNlcjM4NDM2MjI0",
+      "avatar_url": "https://avatars.githubusercontent.com/u/38436224?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/nflaig",
+      "html_url": "https://github.com/nflaig",
+      "followers_url": "https://api.github.com/users/nflaig/followers",
+      "following_url": "https://api.github.com/users/nflaig/following{/other_user}",
+      "gists_url": "https://api.github.com/users/nflaig/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/nflaig/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/nflaig/subscriptions",
+      "organizations_url": "https://api.github.com/users/nflaig/orgs",
+      "repos_url": "https://api.github.com/users/nflaig/repos",
+      "events_url": "https://api.github.com/users/nflaig/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/nflaig/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "nflaig",
+      "id": 38436224,
+      "node_id": "MDQ6VXNlcjM4NDM2MjI0",
+      "avatar_url": "https://avatars.githubusercontent.com/u/38436224?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/nflaig",
+      "html_url": "https://github.com/nflaig",
+      "followers_url": "https://api.github.com/users/nflaig/followers",
+      "following_url": "https://api.github.com/users/nflaig/following{/other_user}",
+      "gists_url": "https://api.github.com/users/nflaig/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/nflaig/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/nflaig/subscriptions",
+      "organizations_url": "https://api.github.com/users/nflaig/orgs",
+      "repos_url": "https://api.github.com/users/nflaig/repos",
+      "events_url": "https://api.github.com/users/nflaig/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/nflaig/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "af8a576438d26267b29dd08c347f701193c2ee32",
+        "url": "https://api.github.com/repos/ChainSafe/lodestar/commits/af8a576438d26267b29dd08c347f701193c2ee32",
+        "html_url": "https://github.com/ChainSafe/lodestar/commit/af8a576438d26267b29dd08c347f701193c2ee32"
+      }
+    ]
+  },
+  {
+    "sha": "119fda5f3bbe03e0b2d26b6e6bd3ce4b4ccebe4b",
+    "node_id": "C_kwDORrY_ktoAKDExOWZkYTVmM2JiZTAzZTBiMmQyNmI2ZTZiZDNjZTRiNGNjZWJlNGI",
+    "commit": {
+      "author": {
+        "name": "Nico Flaig",
+        "email": "nflaig@protonmail.com",
+        "date": "2026-10-20T13:32:54Z"
+      },
+      "committer": {
+        "name": "GitHub",
+        "email": "noreply@github.com",
+        "date": "2026-10-20T13:32:54Z"
+      },
+      "message": "Merge branch 'unstable' into feat/builder-wiring",
+      "tree": {
+        "sha": "49c40e98a265f8ca0d0aa416f423323ea5ebbf8b",
+        "url": "https://api.github.com/repos/ChainSafe/lodestar/git/trees/49c40e98a265f8ca0d0aa416f423323ea5ebbf8b"
+      },
+      "url": "https://api.github.com/repos/ChainSafe/lodestar/git/commits/119fda5f3bbe03e0b2d26b6e6bd3ce4b4ccebe4b",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJq122GCRC1aQ7uu5UhlAAAer4QAA8LXGVonGSrENiuGifox1q7\nGU1E60+kxA++OC+zWgZuetdLBIJfc/5+nIeDxSb9eE7IRJ0VC+eRaXLob88+CR0C\nrshHwp7Dk89KOFfOkoxmEotUNOFPtMtFQlloOE0ZuMtSwwBGL1n0jnQP3xXQJ9Yi\n/CwHPQodNrhUeuiDBhLuSEIswo7TEIDeKC2UW402qjJ5HdZ77bJYEFN3CJkRQYkc\nM7/yehBfz1cV5c0vYctE2IfhAezI7j5fhseHgVtyNXgTOkKYd3SjmgfcVRZAAVRD\nBHIjKGhGKTiGkmN/JHzN71CftFDMN0zRG4uLn8hmFd3rUuwhrT7rJz+J5rBCrDd5\nZxfDxWPvg1/nPjKEYqi/UxMUTriZFDOlj2+x2LG62g6IthKDBPx9zqBhBZdCtiQD\nIiMdEORwsEurWrs35WLVF41Zp6j5PZ2kLtClkkR+X8BhYAcGZISJ1Xc3QI3aQH1N\npINaCUIurxTSuGeEz6fF5CNyt/qhsEZnMPsiYxr8fHFTJ1biESEQS8KUXVK6UxwX\nrivv765SYZVYXv4CW4gea+Zk2X2r65CWDfvtOs2fCXSsBuaScAGwH1M3HsM8Ww7r\nNIHBQKBo8hjUz88MxONBNXDFAumcB4+xpJssxkMu4IRlgs5TFtvMZtGNeoyhfq4F\nWJs0i0mIwu/X9SAvFikT\n=lWwa\n-----END PGP SIGNATURE-----\n",
+        "payload": "tree 49c40e98a265f8ca0d0aa416f423323ea5ebbf8b\nparent 51b283356eb380e7e5536da5af70fb4dca75982a\nparent 808c9f25d961c419afeffbc82baec42701edf6a8\nauthor Nico Flaig <nflaig@protonmail.com> 1792503174 +0100\ncommitter GitHub <noreply@github.com> 1792503174 +0100\n\nMerge branch 'unstable' into feat/builder-wiring",
+        "verified_at": "2026-10-20T13:32:55Z"
+      }
+    },
+    "url": "https://api.github.com/repos/ChainSafe/lodestar/commits/119fda5f3bbe03e0b2d26b6e6bd3ce4b4ccebe4b",
+    "html_url": "https://github.com/ChainSafe/lodestar/commit/119fda5f3bbe03e0b2d26b6e6bd3ce4b4ccebe4b",
+    "comments_url": "https://api.github.com/repos/ChainSafe/lodestar/commits/119fda5f3bbe03e0b2d26b6e6bd3ce4b4ccebe4b/comments",
+    "author": {
+      "login": "nflaig",
+      "id": 38436224,
+      "node_id": "MDQ6VXNlcjM4NDM2MjI0",
+      "avatar_url": "https://avatars.githubusercontent.com/u/38436224?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/nflaig",
+      "html_url": "https://github.com/nflaig",
+      "followers_url": "https://api.github.com/users/nflaig/followers",
+      "following_url": "https://api.github.com/users/nflaig/following{/other_user}",
+      "gists_url": "https://api.github.com/users/nflaig/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/nflaig/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/nflaig/subscriptions",
+      "organizations_url": "https://api.github.com/users/nflaig/orgs",
+      "repos_url": "https://api.github.com/users/nflaig/repos",
+      "events_url": "https://api.github.com/users/nflaig/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/nflaig/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "web-flow",
+      "id": 19864447,
+      "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/web-flow",
+      "html_url": "https://github.com/web-flow",
+      "followers_url": "https://api.github.com/users/web-flow/followers",
+      "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+      "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+      "organizations_url": "https://api.github.com/users/web-flow/orgs",
+      "repos_url": "https://api.github.com/users/web-flow/repos",
+      "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/web-flow/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "51b283356eb380e7e5536da5af70fb4dca75982a",
+        "url": "https://api.github.com/repos/ChainSafe/lodestar/commits/51b283356eb380e7e5536da5af70fb4dca75982a",
+        "html_url": "https://github.com/ChainSafe/lodestar/commit/51b283356eb380e7e5536da5af70fb4dca75982a"
+      },
+      {
+        "sha": "808c9f25d961c419afeffbc82baec42701edf6a8",
+        "url": "https://api.github.com/repos/ChainSafe/lodestar/commits/808c9f25d961c419afeffbc82baec42701edf6a8",
+        "html_url": "https://github.com/ChainSafe/lodestar/commit/808c9f25d961c419afeffbc82baec42701edf6a8"
+      }
+    ]
+  },
+  {
+    "sha": "352a400e0664ad910adc486826379c743d014522",
+    "node_id": "C_kwDORrY_ktoAKDM1MmE0MDBlMDY2NGFkOTEwYWRjNDg2ODI2Mzc5Yzc0M2QwMTQ1MjI",
+    "commit": {
+      "author": {
+        "name": "markolazic01",
+        "email": "markolazic01@gmail.com",
+        "date": "2026-10-20T21:48:54Z"
+      },
+      "committer": {
+        "name": "markolazic01",
+        "email": "markolazic01@gmail.com",
+        "date": "2026-10-20T21:48:54Z"
+      },
+      "message": "chore: address review points",
+      "tree": {
+        "sha": "74706652417e15476076fe40ea2b02549bcb9077",
+        "url": "https://api.github.com/repos/ChainSafe/lodestar/git/trees/74706652417e15476076fe40ea2b02549bcb9077"
+      },
+      "url": "https://api.github.com/repos/ChainSafe/lodestar/git/commits/352a400e0664ad910adc486826379c743d014522",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN SSH SIGNATURE-----\nU1NIU0lHAAAAAQAAADMAAAALc3NoLWVkMjU1MTkAAAAglLt2D60NWkIPj071sEhoCO0jXd\n33IoTNt6n28hPIORQAAAADZ2l0AAAAAAAAAAZzaGE1MTIAAABTAAAAC3NzaC1lZDI1NTE5\nAAAAQKrZsGrVc9juaa8yTycVh1FtM7LZ1QBGtzCSMRTWkzpUT080GLz8IsHh2SXExVEhjZ\nNkTBdGknQCb9g6F0mf/QM=\n-----END SSH SIGNATURE-----",
+        "payload": "tree 74706652417e15476076fe40ea2b02549bcb9077\nparent 119fda5f3bbe03e0b2d26b6e6bd3ce4b4ccebe4b\nauthor markolazic01 <markolazic01@gmail.com> 1792532934 +0200\ncommitter markolazic01 <markolazic01@gmail.com> 1792532934 +0200\n\nchore: address review points\n",
+        "verified_at": "2026-10-20T21:48:59Z"
+      }
+    },
+    "url": "https://api.github.com/repos/ChainSafe/lodestar/commits/352a400e0664ad910adc486826379c743d014522",
+    "html_url": "https://github.com/ChainSafe/lodestar/commit/352a400e0664ad910adc486826379c743d014522",
+    "comments_url": "https://api.github.com/repos/ChainSafe/lodestar/commits/352a400e0664ad910adc486826379c743d014522/comments",
+    "author": {
+      "login": "markolazic01",
+      "id": 80317369,
+      "node_id": "MDQ6VXNlcjgwMzE3MzY5",
+      "avatar_url": "https://avatars.githubusercontent.com/u/80317369?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/markolazic01",
+      "html_url": "https://github.com/markolazic01",
+      "followers_url": "https://api.github.com/users/markolazic01/followers",
+      "following_url": "https://api.github.com/users/markolazic01/following{/other_user}",
+      "gists_url": "https://api.github.com/users/markolazic01/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/markolazic01/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/markolazic01/subscriptions",
+      "organizations_url": "https://api.github.com/users/markolazic01/orgs",
+      "repos_url": "https://api.github.com/users/markolazic01/repos",
+      "events_url": "https://api.github.com/users/markolazic01/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/markolazic01/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "markolazic01",
+      "id": 80317369,
+      "node_id": "MDQ6VXNlcjgwMzE3MzY5",
+      "avatar_url": "https://avatars.githubusercontent.com/u/80317369?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/markolazic01",
+      "html_url": "https://github.com/markolazic01",
+      "followers_url": "https://api.github.com/users/markolazic01/followers",
+      "following_url": "https://api.github.com/users/markolazic01/following{/other_user}",
+      "gists_url": "https://api.github.com/users/markolazic01/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/markolazic01/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/markolazic01/subscriptions",
+      "organizations_url": "https://api.github.com/users/markolazic01/orgs",
+      "repos_url": "https://api.github.com/users/markolazic01/repos",
+      "events_url": "https://api.github.com/users/markolazic01/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/markolazic01/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "119fda5f3bbe03e0b2d26b6e6bd3ce4b4ccebe4b",
+        "url": "https://api.github.com/repos/ChainSafe/lodestar/commits/119fda5f3bbe03e0b2d26b6e6bd3ce4b4ccebe4b",
+        "html_url": "https://github.com/ChainSafe/lodestar/commit/119fda5f3bbe03e0b2d26b6e6bd3ce4b4ccebe4b"
+      }
+    ]
+  }
+]

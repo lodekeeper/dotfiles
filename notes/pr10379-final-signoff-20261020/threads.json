@@ -1,0 +1,788 @@
+{
+  "data": {
+    "repository": {
+      "pullRequest": {
+        "reviewThreads": {
+          "pageInfo": {
+            "hasNextPage": false,
+            "endCursor": "Y3Vyc29yOnYyOpK0MjAyNi0xMC0yMFQyMjoyNDo1N1rOroyhrw=="
+          },
+          "nodes": [
+            {
+              "id": "PRRT_kwDOCD5_Gc6sDBox",
+              "isResolved": false,
+              "isOutdated": false,
+              "path": "packages/builder/src/builder.ts",
+              "line": 243,
+              "comments": {
+                "pageInfo": {
+                  "hasNextPage": false
+                },
+                "nodes": [
+                  {
+                    "databaseId": 4263645834,
+                    "author": {
+                      "login": "chatgpt-codex-connector"
+                    },
+                    "body": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Require per-slot payload attributes from the source node**\n\nWhen `beaconNodeUrl` points at an ordinary Lodestar beacon node, this subscription does not provide per-slot work: `packages/beacon-node/src/chain/options.ts` defaults `emitPayloadAttributes` to false, and `prepareNextSlot.ts` emits without that flag only for slots whose proposer is in the local proposer cache. Since neither the builder CLI nor README requires `--emitPayloadAttributes`, a node without attached validators emits nothing and a node with validators triggers bids only for its own slots, silently leaving this bidder idle or incomplete; validate or document this source-node requirement.\n\nUseful? React with \ud83d\udc4d\u00a0/ \ud83d\udc4e.",
+                    "createdAt": "2026-10-13T20:26:10Z",
+                    "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4263645834"
+                  },
+                  {
+                    "databaseId": 4263921195,
+                    "author": {
+                      "login": "markolazic01"
+                    },
+                    "body": "applied changes only on the builder side, if we should make any BN changes that is to be done separately\r\ncc: @lodekeeper ",
+                    "createdAt": "2026-10-13T20:55:32Z",
+                    "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4263921195"
+                  },
+                  {
+                    "databaseId": 4263994814,
+                    "author": {
+                      "login": "lodekeeper"
+                    },
+                    "body": "No BN change needed in my view. `--emitPayloadAttributes` is the intended knob, and turning it on by default would make every node do per-slot payload attribute work just for builders. The README note plus `builder-dev.yaml` setting the flag on the source BN cover it. The only gap left is the silent idle case. A cheap guard would be for the builder to warn once if it receives head events but no `payload_attributes` for a few slots, which can be a follow-up.\n",
+                    "createdAt": "2026-10-13T21:03:48Z",
+                    "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4263994814"
+                  },
+                  {
+                    "databaseId": 4264019106,
+                    "author": {
+                      "login": "markolazic01"
+                    },
+                    "body": "agree, another interesting follow-up\r\ncc: @krisoshea-eth ",
+                    "createdAt": "2026-10-13T21:06:31Z",
+                    "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4264019106"
+                  },
+                  {
+                    "databaseId": 4272194399,
+                    "author": {
+                      "login": "krisoshea-eth"
+                    },
+                    "body": "Thanks Marko, happy to pick that up. I\u2019ve added it to LOD-111. I\u2019ll keep it on the Builder side and check that the source is actually active before warning about missing payload attributes, so startup or a disconnect doesn\u2019t produce a misleading warning. No need to change the BN default.",
+                    "createdAt": "2026-10-14T14:36:33Z",
+                    "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4272194399"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "PRRT_kwDOCD5_Gc6sDBo3",
+              "isResolved": false,
+              "isOutdated": false,
+              "path": "packages/builder/src/services/revealer.ts",
+              "line": 74,
+              "comments": {
+                "pageInfo": {
+                  "hasNextPage": false
+                },
+                "nodes": [
+                  {
+                    "databaseId": 4263645847,
+                    "author": {
+                      "login": "chatgpt-codex-connector"
+                    },
+                    "body": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Retry transient envelope publications before the cutoff**\n\nWhen this single publication fails transiently while time remains, such as on a disconnect or 5xx response, the selected block is never retried. The builder API client in `packages/cli/src/cmds/builder/handler.ts` does not enable retries, `packages/api/src/utils/client/httpClient.ts` defaults them to 0, and `BlockObserver` records the block root as seen before invoking this callback, so a replay is ignored even though `EnvelopePublisher` permits another identical attempt after failure; retry transient failures within the remaining reveal window to avoid leaving the selected payload unrevealed.\n\nUseful? React with \ud83d\udc4d\u00a0/ \ud83d\udc4e.",
+                    "createdAt": "2026-10-13T20:26:10Z",
+                    "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4263645847"
+                  },
+                  {
+                    "databaseId": 4263911629,
+                    "author": {
+                      "login": "markolazic01"
+                    },
+                    "body": "this is valid and one of the meaningful follow-ups, not doing now to keep the PR minimal",
+                    "createdAt": "2026-10-13T20:54:32Z",
+                    "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4263911629"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "PRRT_kwDOCD5_Gc6sDBpA",
+              "isResolved": false,
+              "isOutdated": true,
+              "path": "packages/cli/src/cmds/builder/handler.ts",
+              "line": null,
+              "comments": {
+                "pageInfo": {
+                  "hasNextPage": false
+                },
+                "nodes": [
+                  {
+                    "databaseId": 4263645859,
+                    "author": {
+                      "login": "chatgpt-codex-connector"
+                    },
+                    "body": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Forward job abort signals into execution requests**\n\nWhen an execution request runs past the prepare deadline or `bidding.getPayloadTimeout`, `EnginePayloadSource` aborts the per-job signal but these adapters discard that signal and call an engine that only has the process-wide shutdown signal. The orchestrator therefore reports a timeout while the HTTP request remains active until the engine transport timeout; a stale forkchoice request also remains in `ExecutionEngineHttp`'s queue and can block later-slot builds. Preserve the per-request signal through an abort-aware engine boundary.\n\nUseful? React with \ud83d\udc4d\u00a0/ \ud83d\udc4e.",
+                    "createdAt": "2026-10-13T20:26:11Z",
+                    "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4263645859"
+                  },
+                  {
+                    "databaseId": 4263931117,
+                    "author": {
+                      "login": "markolazic01"
+                    },
+                    "body": "also meaningful but would increase the review surface properly, think it is not mandatory for the initial version, leaving as a planned follow-up",
+                    "createdAt": "2026-10-13T20:56:36Z",
+                    "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4263931117"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "PRRT_kwDOCD5_Gc6sDBpK",
+              "isResolved": false,
+              "isOutdated": false,
+              "path": "packages/cli/src/cmds/builder/options.ts",
+              "line": 96,
+              "comments": {
+                "pageInfo": {
+                  "hasNextPage": false
+                },
+                "nodes": [
+                  {
+                    "databaseId": 4263645869,
+                    "author": {
+                      "login": "chatgpt-codex-connector"
+                    },
+                    "body": "**<sub><sub>![P2 Badge](https://img.shields.io/badge/P2-yellow?style=flat)</sub></sub>  Apply the advertised execution timeout default**\n\nWhen the operator omits `--execution.timeout`, Yargs' `defaultDescription` only displays the value in help, so `args[\"execution.timeout\"]` remains undefined. Unlike the beacon command, this handler calls `initializeExecutionEngine` directly without `BeaconNodeOptions.getWithDefaults`, causing the JSON-RPC and REST clients to use their internal 30-second fallback instead of `defaultExecutionEngineHttpOpts.timeout` (12 seconds); set a real option default or apply the fallback in the handler.\n\nUseful? React with \ud83d\udc4d\u00a0/ \ud83d\udc4e.",
+                    "createdAt": "2026-10-13T20:26:11Z",
+                    "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4263645869"
+                  },
+                  {
+                    "databaseId": 4263932030,
+                    "author": {
+                      "login": "markolazic01"
+                    },
+                    "body": "applied",
+                    "createdAt": "2026-10-13T20:56:42Z",
+                    "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4263932030"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "PRRT_kwDOCD5_Gc6ufC8C",
+              "isResolved": false,
+              "isOutdated": true,
+              "path": ".github/workflows/nightly-builder-smoke.yml",
+              "line": null,
+              "comments": {
+                "pageInfo": {
+                  "hasNextPage": false
+                },
+                "nodes": [
+                  {
+                    "databaseId": 4329223795,
+                    "author": {
+                      "login": "nflaig"
+                    },
+                    "body": "> the builder is the only bidder, it must have won bids and revealed their payloads\n\nhmm what if local payload is more valuable or are we setting `builderalways` cc @lodekeeper can maybe confirm or deny",
+                    "createdAt": "2026-10-20T19:18:03Z",
+                    "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4329223795"
+                  },
+                  {
+                    "databaseId": 4329381940,
+                    "author": {
+                      "login": "markolazic01"
+                    },
+                    "body": "We use `builderalways` in `builder-dev.yaml`, so the bid is picked whenever one is available without comparing values. Without it the local payload wins every slot on the devnet since the builder bids with value 0.",
+                    "createdAt": "2026-10-20T19:32:44Z",
+                    "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4329381940"
+                  },
+                  {
+                    "databaseId": 4329397138,
+                    "author": {
+                      "login": "lodekeeper"
+                    },
+                    "body": "Confirmed, local value doesn't matter here. The validators run with `--builder.selection=builderalways` ([builder-dev.yaml#L20](https://github.com/ChainSafe/lodestar/blob/119fda5f3bbe03e0b2d26b6e6bd3ce4b4ccebe4b/scripts/kurtosis/builder-dev.yaml#L20)). The VC maps that to `MAX_BUILDER_BOOST_FACTOR` ([validatorStore.ts#L195-L197](https://github.com/ChainSafe/lodestar/blob/119fda5f3bbe03e0b2d26b6e6bd3ce4b4ccebe4b/packages/validator/src/services/validatorStore.ts#L195-L197)), and with that factor `selectBlockProductionSourceByBoostFactor` returns the bid whenever a bid block was produced ([utils.ts#L88-L90](https://github.com/ChainSafe/lodestar/blob/119fda5f3bbe03e0b2d26b6e6bd3ce4b4ccebe4b/packages/beacon-node/src/api/impl/validator/utils.ts#L88-L90), called at [index.ts#L1223](https://github.com/ChainSafe/lodestar/blob/119fda5f3bbe03e0b2d26b6e6bd3ce4b4ccebe4b/packages/beacon-node/src/api/impl/validator/index.ts#L1223)).\n\nLocal can still win if the circuit breaker is active, the EL sets `shouldOverrideBuilder`, or no bid arrives before the bid deadline. That's why the check only needs at least one win over ~3 epochs. The comment could name the setting:\n\n```suggestion\n          # the builder is the only bidder and the validators use builderalways, so it must have won bids and revealed their payloads\n```\n",
+                    "createdAt": "2026-10-20T19:34:07Z",
+                    "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4329397138"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "PRRT_kwDOCD5_Gc6ufqIh",
+              "isResolved": false,
+              "isOutdated": true,
+              "path": "packages/builder/src/services/bidder.ts",
+              "line": null,
+              "comments": {
+                "pageInfo": {
+                  "hasNextPage": false
+                },
+                "nodes": [
+                  {
+                    "databaseId": 4329488280,
+                    "author": {
+                      "login": "nflaig"
+                    },
+                    "body": "why `- 1`? this should probably print out a negative value if we published before the proposer slot or a positive value if we published in the slot",
+                    "createdAt": "2026-10-20T19:42:37Z",
+                    "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4329488280"
+                  },
+                  {
+                    "databaseId": 4330397995,
+                    "author": {
+                      "login": "lodekeeper"
+                    },
+                    "body": "`clock.secFromSlot(slot)` gives the sign convention you want: negative before the proposal slot, positive after it starts. `slot - 1` measures from the build slot instead. Keep the preceding slot in the deadline calculation, but log publication relative to the proposal slot.",
+                    "createdAt": "2026-10-20T21:15:02Z",
+                    "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330397995"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "PRRT_kwDOCD5_Gc6ufvZ1",
+              "isResolved": false,
+              "isOutdated": false,
+              "path": "packages/builder/src/services/bidder.ts",
+              "line": 189,
+              "comments": {
+                "pageInfo": {
+                  "hasNextPage": false
+                },
+                "nodes": [
+                  {
+                    "databaseId": 4329523765,
+                    "author": {
+                      "login": "nflaig"
+                    },
+                    "body": "this is not ideal and a bit hacky, ideally the builder should keep track of their canonical branch via the head event, cc @lodekeeper maybe has anohter idea, but if we just fetch duties to get the root it's definitely a bit wasteful. head event would also allow us to detect reorgs proactively, similar to how the vc does it",
+                    "createdAt": "2026-10-20T19:46:03Z",
+                    "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4329523765"
+                  },
+                  {
+                    "databaseId": 4330398394,
+                    "author": {
+                      "login": "lodekeeper"
+                    },
+                    "body": "Agree. I'd use a small builder-local `head_v2` tracker: it already carries `current_epoch_dependent_root` and `next_epoch_dependent_root` for the head block's epoch and the following epoch ([event contract](https://github.com/ChainSafe/lodestar/blob/119fda5f3bbe03e0b2d26b6e6bd3ce4b4ccebe4b/packages/api/src/beacon/routes/events.ts#L108)). That covers next-epoch proposals without fetching the full duties response per build. Key those roots by the event's epoch, not the clock epoch, since slots can be skipped.\n\nKeep the duties call as a startup/reconnect or missing-epoch fallback, without letting an older fallback result overwrite newer event data. On relevant branch changes, recheck the captured preferences and whether that parent/variant is still a valid build target before publishing; discard only obsolete work. Keep the payload-attributes parent root/hash as the build target, not the duty-dependent root. `head_v2` also reports same-block payload-status changes, unlike legacy `head`.",
+                    "createdAt": "2026-10-20T21:15:05Z",
+                    "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330398394"
+                  },
+                  {
+                    "databaseId": 4330603207,
+                    "author": {
+                      "login": "markolazic01"
+                    },
+                    "body": "will do a follow-up for this one",
+                    "createdAt": "2026-10-20T21:37:24Z",
+                    "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330603207"
+                  },
+                  {
+                    "databaseId": 4330703199,
+                    "author": {
+                      "login": "lodekeeper"
+                    },
+                    "body": "Thanks, noted for the follow-up.\n",
+                    "createdAt": "2026-10-20T21:48:45Z",
+                    "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330703199"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "PRRT_kwDOCD5_Gc6ugy3M",
+              "isResolved": false,
+              "isOutdated": true,
+              "path": "packages/builder/src/builder.ts",
+              "line": null,
+              "comments": {
+                "pageInfo": {
+                  "hasNextPage": false
+                },
+                "nodes": [
+                  {
+                    "databaseId": 4329974378,
+                    "author": {
+                      "login": "nflaig"
+                    },
+                    "body": "> Execution client\n\nis too specific, this could be any payload construction software",
+                    "createdAt": "2026-10-20T20:31:22Z",
+                    "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4329974378"
+                  },
+                  {
+                    "databaseId": 4330398704,
+                    "author": {
+                      "login": "lodekeeper"
+                    },
+                    "body": "\u201cPayload construction software\u201d fits this interface better. The Engine API adapter is one implementation of `PayloadSource`, not a requirement that every source be an execution client.",
+                    "createdAt": "2026-10-20T21:15:07Z",
+                    "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330398704"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "PRRT_kwDOCD5_Gc6ug31C",
+              "isResolved": false,
+              "isOutdated": true,
+              "path": "packages/builder/src/defaults.ts",
+              "line": null,
+              "comments": {
+                "pageInfo": {
+                  "hasNextPage": false
+                },
+                "nodes": [
+                  {
+                    "databaseId": 4330006169,
+                    "author": {
+                      "login": "nflaig"
+                    },
+                    "body": "not sure this makes too much sense, we could just let balance drain to 1 ETH, there is no reason to keep the extra 0.1 ETH around and do nothing",
+                    "createdAt": "2026-10-20T20:34:23Z",
+                    "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330006169"
+                  },
+                  {
+                    "databaseId": 4330398933,
+                    "author": {
+                      "login": "lodekeeper"
+                    },
+                    "body": "The extra 0.1 ETH is only an admission threshold. `coverableGwei` already subtracts `MIN_DEPOSIT_AMOUNT` and unsettled bids, so that floor does not need another 0.1 ETH cushion. A 1 ETH default would leave any additional operating headroom opt-in.",
+                    "createdAt": "2026-10-20T21:15:09Z",
+                    "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330398933"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "PRRT_kwDOCD5_Gc6ug4nJ",
+              "isResolved": false,
+              "isOutdated": true,
+              "path": "packages/builder/src/defaults.ts",
+              "line": null,
+              "comments": {
+                "pageInfo": {
+                  "hasNextPage": false
+                },
+                "nodes": [
+                  {
+                    "databaseId": 4330011481,
+                    "author": {
+                      "login": "nflaig"
+                    },
+                    "body": "might be better to make the default 0 profit/loss, ie. 10000",
+                    "createdAt": "2026-10-20T20:34:58Z",
+                    "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330011481"
+                  },
+                  {
+                    "databaseId": 4330399211,
+                    "author": {
+                      "login": "lodekeeper"
+                    },
+                    "body": "10000 makes sense as the neutral default: with zero fixed cost, it uses 100% of the reported payload value as the proportional bid rather than reserving a 10% margin. The configured maximum and coverable-balance check still apply; operators can opt into a smaller share or a fixed cost.",
+                    "createdAt": "2026-10-20T21:15:11Z",
+                    "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330399211"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "PRRT_kwDOCD5_Gc6ug7OS",
+              "isResolved": false,
+              "isOutdated": false,
+              "path": "packages/builder/src/identity.ts",
+              "line": 102,
+              "comments": {
+                "pageInfo": {
+                  "hasNextPage": false
+                },
+                "nodes": [
+                  {
+                    "databaseId": 4330028816,
+                    "author": {
+                      "login": "nflaig"
+                    },
+                    "body": "this meant we discover builder 1 epoch too late but could be optimized by polling at slot 1 of the epoch with the head state advanced, polling each slot as done right now isn't needed but also not too big of a deal I suppose",
+                    "createdAt": "2026-10-20T20:36:54Z",
+                    "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330028816"
+                  },
+                  {
+                    "databaseId": 4330399626,
+                    "author": {
+                      "login": "lodekeeper"
+                    },
+                    "body": "At this head it already requests `stateId: \"head\"` and retries each slot, so a slot-0 read of the previous head state is retried rather than waiting another whole epoch. For a once-per-epoch poll, slot 1 is a better target, provided the head has actually advanced; otherwise it still needs a retry rather than treating that read as final.",
+                    "createdAt": "2026-10-20T21:15:13Z",
+                    "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330399626"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "PRRT_kwDOCD5_Gc6ug8UD",
+              "isResolved": false,
+              "isOutdated": false,
+              "path": "packages/builder/src/services/revealer.ts",
+              "line": 17,
+              "comments": {
+                "pageInfo": {
+                  "hasNextPage": false
+                },
+                "nodes": [
+                  {
+                    "databaseId": 4330036023,
+                    "author": {
+                      "login": "nflaig"
+                    },
+                    "body": "~~what's the default of this @lodekeeper~~ ah it's `PAYLOAD_ATTESTATION_DUE_BPS` might wanna make that more explicit",
+                    "createdAt": "2026-10-20T20:37:40Z",
+                    "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330036023"
+                  },
+                  {
+                    "databaseId": 4330399881,
+                    "author": {
+                      "login": "lodekeeper"
+                    },
+                    "body": "Yes, `Builder.init` resolves it as `opts.reveal.cutoffBps ?? config.PAYLOAD_ATTESTATION_DUE_BPS` ([source](https://github.com/ChainSafe/lodestar/blob/119fda5f3bbe03e0b2d26b6e6bd3ce4b4ccebe4b/packages/builder/src/builder.ts#L211)). I'd copy \u201cDefaults to the network's PAYLOAD_ATTESTATION_DUE_BPS\u201d into this field's JSDoc, as the public builder option and CLI description already do.\n\nIt is a latest-start cutoff: a matching block triggers the reveal immediately, not at that point in the slot. It does not guarantee publication finishes before the cutoff.",
+                    "createdAt": "2026-10-20T21:15:15Z",
+                    "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330399881"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "PRRT_kwDOCD5_Gc6uhBzj",
+              "isResolved": true,
+              "isOutdated": false,
+              "path": "packages/builder/test/unit/services/payloadOrchestrator.test.ts",
+              "line": 327,
+              "comments": {
+                "pageInfo": {
+                  "hasNextPage": false
+                },
+                "nodes": [
+                  {
+                    "databaseId": 4330072517,
+                    "author": {
+                      "login": "nflaig"
+                    },
+                    "body": "not sure what that even means based on the test description, so likely fine to delete it",
+                    "createdAt": "2026-10-20T20:41:30Z",
+                    "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330072517"
+                  },
+                  {
+                    "databaseId": 4330400190,
+                    "author": {
+                      "login": "lodekeeper"
+                    },
+                    "body": "That removed case was specifically `NO_PAYLOAD_ID` on the first preparation attempt, then a permanent error on the second, checking that retries stop. It is already absent from the new version; the separate permanent-error propagation and missing-payload-ID retry tests remain.",
+                    "createdAt": "2026-10-20T21:15:17Z",
+                    "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330400190"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "PRRT_kwDOCD5_Gc6uhG1B",
+              "isResolved": false,
+              "isOutdated": false,
+              "path": "packages/builder/README.md",
+              "line": 24,
+              "comments": {
+                "pageInfo": {
+                  "hasNextPage": false
+                },
+                "nodes": [
+                  {
+                    "databaseId": 4330106988,
+                    "author": {
+                      "login": "nflaig"
+                    },
+                    "body": "might able to optimize this by using apis from https://github.com/ethereum/beacon-APIs/pull/655",
+                    "createdAt": "2026-10-20T20:44:47Z",
+                    "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330106988"
+                  },
+                  {
+                    "databaseId": 4330114390,
+                    "author": {
+                      "login": "nflaig"
+                    },
+                    "body": "> Reconciling against the pending payments and withdrawals of the state is a follow-up.\n\nshould have read the last part, literally says it here",
+                    "createdAt": "2026-10-20T20:45:34Z",
+                    "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330114390"
+                  },
+                  {
+                    "databaseId": 4330664109,
+                    "author": {
+                      "login": "markolazic01"
+                    },
+                    "body": "leaving this unresolved for visibility, we should make that follow-up",
+                    "createdAt": "2026-10-20T21:44:02Z",
+                    "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330664109"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "PRRT_kwDOCD5_Gc6uhJ1J",
+              "isResolved": false,
+              "isOutdated": true,
+              "path": "packages/cli/src/cmds/builder/options.ts",
+              "line": null,
+              "comments": {
+                "pageInfo": {
+                  "hasNextPage": false
+                },
+                "nodes": [
+                  {
+                    "databaseId": 4330126819,
+                    "author": {
+                      "login": "nflaig"
+                    },
+                    "body": ">  otherwise the builder only bids on slots the beacon node itself proposes\n\nthis doesn't need to be explicitly noted",
+                    "createdAt": "2026-10-20T20:46:52Z",
+                    "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330126819"
+                  },
+                  {
+                    "databaseId": 4330400581,
+                    "author": {
+                      "login": "lodekeeper"
+                    },
+                    "body": "The shorter version can just be \u201cURL of the beacon node. It must run with `--emitPayloadAttributes` to emit payload attributes for every slot.\u201d That keeps the setup requirement without explaining the fallback behavior here.",
+                    "createdAt": "2026-10-20T21:15:19Z",
+                    "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330400581"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "PRRT_kwDOCD5_Gc6uhKtz",
+              "isResolved": false,
+              "isOutdated": true,
+              "path": "packages/cli/src/cmds/builder/options.ts",
+              "line": null,
+              "comments": {
+                "pageInfo": {
+                  "hasNextPage": false
+                },
+                "nodes": [
+                  {
+                    "databaseId": 4330132833,
+                    "author": {
+                      "login": "nflaig"
+                    },
+                    "body": "> Url to a trusted beacon node\n\n\"trusted\" is that how it documented for the validator client? i think this is mostly assumed in all cases",
+                    "createdAt": "2026-10-20T20:47:30Z",
+                    "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330132833"
+                  },
+                  {
+                    "databaseId": 4330400856,
+                    "author": {
+                      "login": "lodekeeper"
+                    },
+                    "body": "The VC currently says \u201cAddresses to connect to BeaconNode\u201d, without \u201ctrusted\u201d ([source](https://github.com/ChainSafe/lodestar/blob/119fda5f3bbe03e0b2d26b6e6bd3ce4b4ccebe4b/packages/cli/src/cmds/validator/options.ts#L201)). \u201cURL of the beacon node\u201d would be consistent here.",
+                    "createdAt": "2026-10-20T21:15:21Z",
+                    "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330400856"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "PRRT_kwDOCD5_Gc6uhLp2",
+              "isResolved": false,
+              "isOutdated": true,
+              "path": "packages/cli/src/cmds/builder/options.ts",
+              "line": null,
+              "comments": {
+                "pageInfo": {
+                  "hasNextPage": false
+                },
+                "nodes": [
+                  {
+                    "databaseId": 4330139287,
+                    "author": {
+                      "login": "nflaig"
+                    },
+                    "body": "do we need this? seems useless",
+                    "createdAt": "2026-10-20T20:48:10Z",
+                    "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330139287"
+                  },
+                  {
+                    "databaseId": 4330401194,
+                    "author": {
+                      "login": "lodekeeper"
+                    },
+                    "body": "This only supplies the optional JWT `id` claim; the adapter does not otherwise use it. I would leave `jwtId` out of the builder CLI unless there is a concrete consumer for that identifier.",
+                    "createdAt": "2026-10-20T21:15:23Z",
+                    "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330401194"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "PRRT_kwDOCD5_Gc6uhN1f",
+              "isResolved": true,
+              "isOutdated": false,
+              "path": "packages/cli/src/cmds/builder/options.ts",
+              "line": 152,
+              "comments": {
+                "pageInfo": {
+                  "hasNextPage": false
+                },
+                "nodes": [
+                  {
+                    "databaseId": 4330153831,
+                    "author": {
+                      "login": "nflaig"
+                    },
+                    "body": "~~describtion doesn't really explain what the flag does?~~ nvm, re-read and it seems fine",
+                    "createdAt": "2026-10-20T20:49:39Z",
+                    "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330153831"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "PRRT_kwDOCD5_Gc6uhSIg",
+              "isResolved": false,
+              "isOutdated": true,
+              "path": "packages/cli/src/cmds/builder/options.ts",
+              "line": null,
+              "comments": {
+                "pageInfo": {
+                  "hasNextPage": false
+                },
+                "nodes": [
+                  {
+                    "databaseId": 4330182333,
+                    "author": {
+                      "login": "nflaig"
+                    },
+                    "body": "would be better to namespace this, ie. `execution.jwtSecret`",
+                    "createdAt": "2026-10-20T20:52:46Z",
+                    "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330182333"
+                  },
+                  {
+                    "databaseId": 4330401475,
+                    "author": {
+                      "login": "lodekeeper"
+                    },
+                    "body": "Yes, `execution.jwtSecret` would match the other execution options. The CLI argument type and handler mapping need the same rename; `execution.jwtId` too if that option is retained.",
+                    "createdAt": "2026-10-20T21:15:25Z",
+                    "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330401475"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "PRRT_kwDOCD5_Gc6uhWE_",
+              "isResolved": true,
+              "isOutdated": false,
+              "path": "scripts/kurtosis/builder-dev.yaml",
+              "line": 24,
+              "comments": {
+                "pageInfo": {
+                  "hasNextPage": false
+                },
+                "nodes": [
+                  {
+                    "databaseId": 4330209534,
+                    "author": {
+                      "login": "nflaig"
+                    },
+                    "body": "\ud83d\ude80 ",
+                    "createdAt": "2026-10-20T20:55:43Z",
+                    "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330209534"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "PRRT_kwDOCD5_Gc6ui1j8",
+              "isResolved": false,
+              "isOutdated": false,
+              "path": "packages/builder/src/identity.ts",
+              "line": 149,
+              "comments": {
+                "pageInfo": {
+                  "hasNextPage": false
+                },
+                "nodes": [
+                  {
+                    "databaseId": 4330846964,
+                    "author": {
+                      "login": "lodekeeper"
+                    },
+                    "body": "\ud83d\udfe1 **Update the fork-boundary test for the slot-1 poll**\n\nThis now wakes one slot later, but `identity.test.ts` still defines `epochPollMs` for epoch slot 0 and advances only that far in `resolves once the Gloas fork is reached`. It then awaits the pending promise without advancing fake time again. I reproduced the 20-second test timeout at this head.\n\nPlease include `+ 1` in the test's poll deadline, move its mocked slot to `SLOTS_PER_EPOCH + 1`, and assert that no request occurs at slot 0.",
+                    "createdAt": "2026-10-20T22:06:56Z",
+                    "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330846964"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "PRRT_kwDOCD5_Gc6ujGPL",
+              "isResolved": false,
+              "isOutdated": false,
+              "path": "packages/builder/src/identity.ts",
+              "line": 149,
+              "comments": {
+                "pageInfo": {
+                  "hasNextPage": false
+                },
+                "nodes": [
+                  {
+                    "databaseId": 4330958984,
+                    "author": {
+                      "login": "nflaig"
+                    },
+                    "body": "should test this on kurtosis if builder is discovered timely, had this bug on sepolia where builder was active for 1 epoch without bidding",
+                    "createdAt": "2026-10-20T22:21:33Z",
+                    "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330958984"
+                  },
+                  {
+                    "databaseId": 4330975745,
+                    "author": {
+                      "login": "markolazic01"
+                    },
+                    "body": "will do",
+                    "createdAt": "2026-10-20T22:23:49Z",
+                    "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330975745"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "PRRT_kwDOCD5_Gc6ujKGv",
+              "isResolved": false,
+              "isOutdated": true,
+              "path": "packages/builder/src/builder.ts",
+              "line": null,
+              "comments": {
+                "pageInfo": {
+                  "hasNextPage": false
+                },
+                "nodes": [
+                  {
+                    "databaseId": 4330984467,
+                    "author": {
+                      "login": "nflaig"
+                    },
+                    "body": "\"software\" sounds a bit lame, what about \"engine\"?\r\n\r\nI know a project that calls itself \"Ethereum payload construction engine written in Zig\"",
+                    "createdAt": "2026-10-20T22:24:57Z",
+                    "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330984467"
+                  },
+                  {
+                    "databaseId": 4331003211,
+                    "author": {
+                      "login": "markolazic01"
+                    },
+                    "body": "hahahahah, agree, alright I'm updating that xD",
+                    "createdAt": "2026-10-20T22:27:27Z",
+                    "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4331003211"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}

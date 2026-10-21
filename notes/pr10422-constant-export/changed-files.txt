@@ -1,0 +1,11 @@
+packages/beacon-node/src/api/impl/validator/index.ts
+packages/beacon-node/src/execution/builder/apiClient.ts
+packages/beacon-node/src/execution/builder/http.ts
+packages/beacon-node/src/node/nodejs.ts
+packages/beacon-node/src/node/options.ts
+packages/beacon-node/test/mocks/mockedBeaconChain.ts
+packages/beacon-node/test/unit/api/impl/validator/produceBlockV4.test.ts
+packages/beacon-node/test/unit/execution/builder/apiClient.test.ts
+packages/cli/src/cmds/beacon/handler.ts
+packages/cli/src/options/beaconNodeOptions/builder.ts
+packages/cli/test/unit/options/beaconNodeOptions.test.ts

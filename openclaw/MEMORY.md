@@ -92,6 +92,8 @@ Distilled 2026-10-09: this file pushed main-session bootstrap past the 80K total
 - 2026-10-06: A successful retry can hide incomplete work (the nightly embed timeout was masked by its retry). Check the output, not the exit status.
 - 2026-10-11: When the colliding job is interval-scheduled (`kind: every`), its phase drifts, so moving the victim's slot stops working. Pin the drifting job instead. Recovery guards must not depend on line position (the BACKLOG banner was pushed past a 12-line window, then archived by cleanup). Systemd auto-restart brings the gateway back but leaves the heap leak in place.
 - 2026-10-15: Path allowlists don't sanitize content. The dotfiles sync filters by path only, so anything written into a synced path (notes/, skills/, identity files) is public. Since 10-15 `~/dotfiles/scripts/sync-content-gate.py` blocks secrets/public IPs on added lines; other infra details still pass, so keep them out of synced paths.
+- 2026-10-19: `--help` isn't safe on a script without argparse, because the script just runs. Read it first. `check_cron_health.py` used up recovery notices twice before the 10-20 guard.
+- 2026-10-20: pnpm 11 in a cache-linked worktree auto-reconciles and prunes the shared `.pnpm` store. Give review setups an independent virtual store and call the test entrypoint directly.
 
 **Verification & claims**
 - 2026-03-12: Don't call a leak fixed from one good window. Require sustained corroboration plus heap evidence. Keep critical samplers in one session. Allocation-sampling hot spots are leads, not retained-heap proof (gateway OOM, 10-17).
@@ -108,6 +110,8 @@ Distilled 2026-10-09: this file pushed main-session bootstrap past the 80K total
 - 2026-10-12/13: Check what a benchmark measured before trusting its number: `runsFactor` normalization (native hex decode looked slow), sample duration (a 0.3s CI sample), and baseline provenance (failed runs contaminating the rolling baseline). Reproduce a flake before fixing it and keep the negative control.
 - 2026-10-16: An explorer's offline flag isn't a client failure. Read the node's own CL/EL logs first (lodestar-reth-1: Dora TLS fault, node synced at head).
 - 2026-10-14: Check tags before any "since vX" claim (gh tag-contents API). I told #10393 the `builder` cmd existed since v1.50.0; Marko corrected it: v1.46.0.
+- 2026-10-18: A getter's name doesn't prove it governs the path. I relayed an unlock date from a contract's lock getter, but that path exits through a separate staker with its own timestamp. Trace the real exit path, and enumerate sources from the on-chain registry (at first I missed one of three).
+- 2026-10-20: A local repro isn't a production root cause, and JS CPU profiles miss native (libuv/LevelDB) work. Hoodi archiver: #10447 sound, live stall cure unproven.
 - 2026-10-07: Compiler evidence beats source-review assumptions (SSZ ViewDU generic invariance). Check existing SSZ limits/decoders before adding validation.
 
 **Judgment & people**

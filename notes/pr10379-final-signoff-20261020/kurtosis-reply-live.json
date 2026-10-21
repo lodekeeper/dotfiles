@@ -1,0 +1,70 @@
+{
+  "url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/comments/4331222803",
+  "pull_request_review_id": 5592840550,
+  "id": 4331222803,
+  "node_id": "PRRC_kwDOCD5_Gc8AAAABAik3Ew",
+  "diff_hunk": "@@ -145,8 +144,9 @@ async function fetchBuilder(\n   }\n }\n \n+/** Polls at the second slot of the next epoch, the head state has gone through the epoch transition by then */\n function msToNextEpochPoll(clock: IClock): number {\n-  return clock.msToSlot(computeStartSlotAtEpoch(clock.getCurrentEpoch() + 1));\n+  return clock.msToSlot(computeStartSlotAtEpoch(clock.getCurrentEpoch() + 1) + 1);",
+  "path": "packages/builder/src/identity.ts",
+  "commit_id": "86925723c28f6ae151a9c5308dfbd05d5da2668f",
+  "original_commit_id": "352a400e0664ad910adc486826379c743d014522",
+  "user": {
+    "login": "lodekeeper",
+    "id": 258435968,
+    "node_id": "U_kgDOD2drgA",
+    "avatar_url": "https://avatars.githubusercontent.com/u/258435968?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/lodekeeper",
+    "html_url": "https://github.com/lodekeeper",
+    "followers_url": "https://api.github.com/users/lodekeeper/followers",
+    "following_url": "https://api.github.com/users/lodekeeper/following{/other_user}",
+    "gists_url": "https://api.github.com/users/lodekeeper/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/lodekeeper/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/lodekeeper/subscriptions",
+    "organizations_url": "https://api.github.com/users/lodekeeper/orgs",
+    "repos_url": "https://api.github.com/users/lodekeeper/repos",
+    "events_url": "https://api.github.com/users/lodekeeper/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/lodekeeper/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "body": "@markolazic01 could you post the Kurtosis result here once it is done, ideally the activation, identity-discovery and first-bid slots? The slot-1 unit test now passes at `8692572`, but I am leaving final approval pending this check so we can rule out the one-epoch bidding delay.",
+  "created_at": "2026-10-20T22:58:53Z",
+  "updated_at": "2026-10-20T22:58:53Z",
+  "html_url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4331222803",
+  "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379",
+  "_links": {
+    "self": {
+      "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/comments/4331222803"
+    },
+    "html": {
+      "href": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4331222803"
+    },
+    "pull_request": {
+      "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379"
+    }
+  },
+  "reactions": {
+    "url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/comments/4331222803/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "start_line": 147,
+  "original_start_line": 147,
+  "start_side": "RIGHT",
+  "line": 149,
+  "original_line": 149,
+  "side": "RIGHT",
+  "in_reply_to_id": 4330958984,
+  "author_association": "CONTRIBUTOR",
+  "original_position": 20,
+  "position": 20,
+  "subject_type": "line"
+}

@@ -1,0 +1,1 @@
+@markolazic01 could you post the Kurtosis result here once it is done, ideally the activation, identity-discovery and first-bid slots? The slot-1 unit test now passes at `8692572`, but I am leaving final approval pending this check so we can rule out the one-epoch bidding delay.

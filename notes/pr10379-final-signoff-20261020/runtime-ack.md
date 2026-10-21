@@ -1,0 +1,1 @@
+Thanks, the basic run shows pending status through slot 32, active identity resolution at slot 33, bids for slots 34-37 and reveals for slots 34-36. There is no extra epoch without bidding after discovery in this sample. With Nico's agreement to handle further activation testing separately, that clears my remaining sign-off concern.

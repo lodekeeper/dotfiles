@@ -1,0 +1,29 @@
+{
+  "pending_slots": [
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32
+  ],
+  "active_identity_slots": [
+    33
+  ],
+  "bid_proposal_slots": [
+    34,
+    35,
+    36,
+    37
+  ],
+  "revealed_slots": [
+    34,
+    35,
+    36
+  ],
+  "observation_scope": "Author-provided basic runtime log; no independently executed run or exhaustive activation-timing claim."
+}

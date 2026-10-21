@@ -76,7 +76,8 @@ done
 
 # Notes/specs
 # Backlog snapshots and audit baselines (copies of BACKLOG/daily notes) must never be published (Nico, 2026-10-18).
-[ -d "$WORKSPACE/notes" ] && rsync -a --exclude '*-baseline/' --exclude 'backlog-*' --exclude 'BACKLOG*' "$WORKSPACE/notes/" "$DOTFILES_DIR/notes/"
+# Dependency trees (e.g. pnpm cache-recovery node_modules) are never published either.
+[ -d "$WORKSPACE/notes" ] && rsync -a --exclude '*-baseline/' --exclude 'backlog-*' --exclude 'BACKLOG*' --exclude 'node_modules/' "$WORKSPACE/notes/" "$DOTFILES_DIR/notes/"
 [ -d "$WORKSPACE/specs" ] && rsync -a "$WORKSPACE/specs/" "$DOTFILES_DIR/specs/"
 
 # Personas (PR review personas)

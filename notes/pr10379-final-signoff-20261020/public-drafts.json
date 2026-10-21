@@ -1,0 +1,19 @@
+{
+  "review": {
+    "commit_id": "86925723c28f6ae151a9c5308dfbd05d5da2668f",
+    "event": "COMMENT",
+    "body": "Rechecked `8692572`: the identity fork-boundary test is fixed and all 51 focused tests pass. The current head's build, type, lint and unit CI checks are green. The execution-timeout default is also applied correctly; the agreed follow-ups remain separate.\n\nI'm keeping final approval pending the [Kurtosis discovery check](https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330958984) that Marko picked up. The unit test verifies the polling schedule, but does not prove that an active builder starts bidding promptly on a running network."
+  },
+  "identity": {
+    "in_reply_to": 4330846964,
+    "body": "Verified in `f09097a1e5b` and current head `8692572`: the test now checks that no query occurs at slot 0, then advances to slot 1 and resolves. All 19 identity tests pass (51/51 across the four focused files). This finding is fixed."
+  },
+  "bot_timeout": {
+    "in_reply_to": 4263645869,
+    "body": "Verified at `8692572`: the handler passes `args[\"execution.timeout\"] ?? defaultExecutionEngineHttpOpts.timeout` to `initializeExecutionEngine`. That fallback is 12,000 ms and is forwarded to both RPC clients, so omitting the flag no longer leaves the transport default in effect."
+  },
+  "kurtosis": {
+    "in_reply_to": 4330958984,
+    "body": "Could you post the Kurtosis result here once it is done, ideally the activation, identity-discovery and first-bid slots? The slot-1 unit test now passes at `8692572`, but I am leaving final approval pending this check so we can rule out the one-epoch bidding delay."
+  }
+}

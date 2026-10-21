@@ -1,0 +1,37 @@
+commit 86925723c28f6ae151a9c5308dfbd05d5da2668f
+Merge: 7ab0d9b857e 4bacee3dacf
+Author:     Marko Lazic <markolazic01@gmail.com>
+AuthorDate: Wed Oct 21 00:32:03 2026 +0200
+Commit:     GitHub <noreply@github.com>
+CommitDate: Wed Oct 21 00:32:03 2026 +0200
+
+    Merge branch 'unstable' into feat/builder-wiring
+
+ packages/api/src/utils/client/httpClient.ts        |   4 +
+ packages/api/test/unit/client/httpClient.test.ts   |  21 +++
+ .../src/api/impl/beacon/blocks/index.ts            |  20 ++-
+ .../src/chain/archiveStore/utils/archiveBlocks.ts  |  85 +---------
+ packages/beacon-node/src/chain/regen/interface.ts  |   1 -
+ .../src/chain/validation/executionPayloadBid.ts    | 180 ---------------------
+ packages/beacon-node/src/db/beacon.ts              |   5 +
+ .../beacon-node/src/metrics/metrics/lodestar.ts    |   5 +
+ .../src/network/processor/gossipHandlers.ts        |   8 +-
+ .../beacon-node/test/mocks/mockedBeaconChain.ts    |   3 +
+ .../test/spec/utils/specTestIterator.ts            |   6 +-
+ .../blocks/publishExecutionPayloadBid.test.ts      |  15 +-
+ .../unit/chain/archiveStore/blockArchiver.test.ts  |  57 +++----
+ .../test/unit/chain/lightclient/server.test.ts     | 144 ++++++++++++++++-
+ .../chain/validation/executionPayloadBid.test.ts   | 105 +++++++++---
+ packages/beacon-node/test/unit/db/beacon.test.ts   | 101 +++++++++++-
+ .../unit/network/processor/gossipHandlers.test.ts  | 107 ++++++++++--
+ packages/cli/src/cmds/beacon/handler.ts            |   4 +-
+ packages/cli/src/cmds/validator/handler.ts         |  11 +-
+ packages/cli/test/unit/cmds/beacon.test.ts         |   9 +-
+ packages/db/src/controller/interface.ts            |   2 +
+ .../state-transition/src/stateView/interface.ts    |  11 +-
+ .../src/stateView/nativeBeaconStateView.ts         | 115 +++++++++----
+ .../src/stateView/stateViewFactory.ts              |   5 +-
+ .../unit/stateView/nativeBeaconStateView.test.ts   | 118 +++++++++++++-
+ pnpm-lock.yaml                                     |  74 ++++-----
+ pnpm-workspace.yaml                                |   2 +-
+ 27 files changed, 776 insertions(+), 442 deletions(-)

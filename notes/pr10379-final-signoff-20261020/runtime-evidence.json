@@ -1,0 +1,70 @@
+{
+  "url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/comments/4331256769",
+  "pull_request_review_id": 5592882680,
+  "id": 4331256769,
+  "node_id": "PRRC_kwDOCD5_Gc8AAAABAim7wQ",
+  "diff_hunk": "@@ -145,8 +144,9 @@ async function fetchBuilder(\n   }\n }\n \n+/** Polls at the second slot of the next epoch, the head state has gone through the epoch transition by then */\n function msToNextEpochPoll(clock: IClock): number {\n-  return clock.msToSlot(computeStartSlotAtEpoch(clock.getCurrentEpoch() + 1));\n+  return clock.msToSlot(computeStartSlotAtEpoch(clock.getCurrentEpoch() + 1) + 1);",
+  "path": "packages/builder/src/identity.ts",
+  "commit_id": "86925723c28f6ae151a9c5308dfbd05d5da2668f",
+  "original_commit_id": "352a400e0664ad910adc486826379c743d014522",
+  "user": {
+    "login": "markolazic01",
+    "id": 80317369,
+    "node_id": "MDQ6VXNlcjgwMzE3MzY5",
+    "avatar_url": "https://avatars.githubusercontent.com/u/80317369?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/markolazic01",
+    "html_url": "https://github.com/markolazic01",
+    "followers_url": "https://api.github.com/users/markolazic01/followers",
+    "following_url": "https://api.github.com/users/markolazic01/following{/other_user}",
+    "gists_url": "https://api.github.com/users/markolazic01/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/markolazic01/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/markolazic01/subscriptions",
+    "organizations_url": "https://api.github.com/users/markolazic01/orgs",
+    "repos_url": "https://api.github.com/users/markolazic01/repos",
+    "events_url": "https://api.github.com/users/markolazic01/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/markolazic01/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "body": "```\r\nOct-21 00:52:52.018[]                 info: Waiting for builder deposit to be finalized id=0x8ec9cc826ea7735329831dbe89c28ae700e39b51c817f1086483621a2104145343f912b3bf167027256780a62a1995bd, slot=23\r\nOct-21 00:52:58.020[]                 info: Waiting for builder deposit to be finalized id=0x8ec9cc826ea7735329831dbe89c28ae700e39b51c817f1086483621a2104145343f912b3bf167027256780a62a1995bd, slot=24\r\nOct-21 00:53:04.016[]                 info: Waiting for builder deposit to be finalized id=0x8ec9cc826ea7735329831dbe89c28ae700e39b51c817f1086483621a2104145343f912b3bf167027256780a62a1995bd, slot=25\r\nOct-21 00:53:10.010[]                 info: Waiting for builder deposit to be finalized id=0x8ec9cc826ea7735329831dbe89c28ae700e39b51c817f1086483621a2104145343f912b3bf167027256780a62a1995bd, slot=26\r\nOct-21 00:53:16.010[]                 info: Waiting for builder deposit to be finalized id=0x8ec9cc826ea7735329831dbe89c28ae700e39b51c817f1086483621a2104145343f912b3bf167027256780a62a1995bd, slot=27\r\nOct-21 00:53:22.014[]                 info: Waiting for builder deposit to be finalized id=0x8ec9cc826ea7735329831dbe89c28ae700e39b51c817f1086483621a2104145343f912b3bf167027256780a62a1995bd, slot=28\r\nOct-21 00:53:28.017[]                 info: Waiting for builder deposit to be finalized id=0x8ec9cc826ea7735329831dbe89c28ae700e39b51c817f1086483621a2104145343f912b3bf167027256780a62a1995bd, slot=29\r\nOct-21 00:53:34.018[]                 info: Waiting for builder deposit to be finalized id=0x8ec9cc826ea7735329831dbe89c28ae700e39b51c817f1086483621a2104145343f912b3bf167027256780a62a1995bd, slot=30\r\nOct-21 00:53:40.018[]                 info: Waiting for builder deposit to be finalized id=0x8ec9cc826ea7735329831dbe89c28ae700e39b51c817f1086483621a2104145343f912b3bf167027256780a62a1995bd, slot=31\r\nOct-21 00:53:46.013[]                 info: Waiting for builder deposit to be finalized id=0x8ec9cc826ea7735329831dbe89c28ae700e39b51c817f1086483621a2104145343f912b3bf167027256780a62a1995bd, slot=32\r\nOct-21 00:53:52.014[]                 info: Builder identity resolved index=0, status=active, balanceGwei=100000000000, executionAddress=0x8943545177806ed17b9f23f0a21ee5948ecaa776, slot=33\r\nOct-21 00:53:52.021[]                 info: Builder status status=active, balance=100.00000 ETH, epoch=4\r\nOct-21 00:53:52.021[]                 info: Block observer initialized retries=5, retryDelay=200, maxSeenBlockRoots=256\r\nOct-21 00:53:52.034[]                 info: Builder client initialized index=0, executionFeeRecipient=0x8943545177806ed17b9f23f0a21ee5948ecaa776, payloadSource=http://127.0.0.1:38001, shareBps=10000, \r\ndeadlineBps=9500\r\nOct-21 00:53:52.045[]                 info: Builder status status=active, balance=100.00000 ETH, epoch=4\r\nOct-21 00:53:56.056[]                 info: Execution client is synced oldState=ONLINE, newState=SYNCED\r\nOct-21 00:53:57.761[]                 info: Published execution payload bid slot=34, parentBlockRoot=0x72fe7e52636e5b23d4ecc5e83ecb5cf900fafb27ac3daba51f92dc19241aa66d, parentBlockHash=0x185986000783f\r\nac598c7a5b6792c040afedf736f8b08ec54334b6d304573682c, blockHash=0x5be70deac7eb2783034962efaf38eeb234eed5bd58319c5aaee3344ee5d59e60, value=0.00000 ETH, payloadValue=0.00000 ETH, feeRecipient=0x894354517\r\n7806ed17b9f23f0a21ee5948ecaa776, gasLimit=200000000, transactions=0, blobs=0, secFromSlot=-0.2390000820159912\r\nOct-21 00:53:58.583[]                 info: Revealed execution payload slot=34, blockRoot=0xd6f3b656e861b8dfa5223ac3f07ed91f3020949977f4028da72730026e3ecc72, blockHash=0x5be70deac7eb2783034962efaf38ee\r\nb234eed5bd58319c5aaee3344ee5d59e60, blobs=0, transactions=0, secFromSlot=0.5829999446868896\r\nOct-21 00:54:03.734[]                 info: Published execution payload bid slot=35, parentBlockRoot=0xd6f3b656e861b8dfa5223ac3f07ed91f3020949977f4028da72730026e3ecc72, parentBlockHash=0x5be70deac7eb2\r\n783034962efaf38eeb234eed5bd58319c5aaee3344ee5d59e60, blockHash=0x7bf22871811c4c38667878438f73e86ac54062e1ad1bf131acd476c53f0e9c32, value=0.00000 ETH, payloadValue=0.00000 ETH, feeRecipient=0x894354517\r\n7806ed17b9f23f0a21ee5948ecaa776, gasLimit=200000000, transactions=0, blobs=0, secFromSlot=-0.26600003242492676\r\nOct-21 00:54:04.562[]                 info: Revealed execution payload slot=35, blockRoot=0xa856d3a53ed40adc0334bfd7cf836529ab2976ea4305a322c2b89b7bdb2d70ae, blockHash=0x7bf22871811c4c38667878438f73e8\r\n6ac54062e1ad1bf131acd476c53f0e9c32, blobs=0, transactions=0, secFromSlot=0.562000036239624\r\nOct-21 00:54:09.739[]                 info: Published execution payload bid slot=36, parentBlockRoot=0xa856d3a53ed40adc0334bfd7cf836529ab2976ea4305a322c2b89b7bdb2d70ae, parentBlockHash=0x7bf22871811c4\r\nc38667878438f73e86ac54062e1ad1bf131acd476c53f0e9c32, blockHash=0x5f2745bfe144e3525f7dd66ba7f61e7a335eec104164e6eb3bf79e92a25aae40, value=0.00000 ETH, payloadValue=0.00000 ETH, feeRecipient=0x894354517\r\n7806ed17b9f23f0a21ee5948ecaa776, gasLimit=200000000, transactions=0, blobs=0, secFromSlot=-0.2609999179840088\r\nOct-21 00:54:10.562[]                 info: Revealed execution payload slot=36, blockRoot=0xb223da399658a08a498d60f69f85730b9bc5954f8d7406ab94033f0b1cca899f, blockHash=0x5f2745bfe144e3525f7dd66ba7f61e\r\n7a335eec104164e6eb3bf79e92a25aae40, blobs=0, transactions=0, secFromSlot=0.5610001087188721\r\nOct-21 00:54:15.742[]                 info: Published execution payload bid slot=37, parentBlockRoot=0xb223da399658a08a498d60f69f85730b9bc5954f8d7406ab94033f0b1cca899f, parentBlockHash=0x5f2745bfe144e\r\n3525f7dd66ba7f61e7a335eec104164e6eb3bf79e92a25aae40, blockHash=0x82c94c24bed038a759b257898b0cee33c71f8d90cf07773af1010a43832f7df7, value=0.00000 ETH, payloadValue=0.00000 \r\n```",
+  "created_at": "2026-10-20T23:03:26Z",
+  "updated_at": "2026-10-20T23:03:26Z",
+  "html_url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4331256769",
+  "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379",
+  "_links": {
+    "self": {
+      "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/comments/4331256769"
+    },
+    "html": {
+      "href": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4331256769"
+    },
+    "pull_request": {
+      "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379"
+    }
+  },
+  "reactions": {
+    "url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/comments/4331256769/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "start_line": 147,
+  "original_start_line": 147,
+  "start_side": "RIGHT",
+  "line": 149,
+  "original_line": 149,
+  "side": "RIGHT",
+  "in_reply_to_id": 4330958984,
+  "author_association": "CONTRIBUTOR",
+  "original_position": 20,
+  "position": 20,
+  "subject_type": "line"
+}

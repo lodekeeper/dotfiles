@@ -1,0 +1,2769 @@
+{
+  "pr": 10379,
+  "created": "2026-10-20T21:09:28Z",
+  "updated": "2026-10-20T23:44:54Z",
+  "findings": [
+    {
+      "id": "ce0135",
+      "file": "packages/builder/src/builder.ts",
+      "line": 243,
+      "severity": "nit",
+      "reviewer": "chatgpt-codex-connector[bot]",
+      "body": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Require per-slot payload attributes from the source node**\n\nWhen `beaconNodeUrl` points at an ordinary Lodestar beacon node, this subscription does not provide per-slot work: `packages/beacon-node/src/chain/options.ts` defaults `emitPayloadAttributes` to false, and `prepareNextSlot.ts` emits without that flag only for slots whose proposer is in the local proposer cache. Since neither the builder CLI nor READM",
+      "status": "addressed",
+      "addressed_commit": "86925723c28f6ae151a9c5308dfbd05d5da2668f",
+      "note": "Original source requirement fixed by README/CLI --emitPayloadAttributes documentation and devnet flag; separate source-idle warning remains LOD-111.",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "4263645834",
+        "repo": "ChainSafe/lodestar",
+        "pr": 10379,
+        "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4263645834"
+      },
+      "created": "2026-10-20T21:09:29Z",
+      "updated": "2026-10-20T23:00:22Z",
+      "needs_reverify": true,
+      "reverify": {
+        "events": [
+          {
+            "at": "2026-10-20T21:09:29Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4263921195",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4263921195",
+              "author": "markolazic01",
+              "in_reply_to_id": 4263645834
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-10-20T21:09:29Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4263994814",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4263994814",
+              "author": "lodekeeper",
+              "in_reply_to_id": 4263645834
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-10-20T21:09:29Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4264019106",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4264019106",
+              "author": "markolazic01",
+              "in_reply_to_id": 4263645834
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-10-20T21:09:29Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4272194399",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4272194399",
+              "author": "krisoshea-eth",
+              "in_reply_to_id": 4263645834
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          }
+        ],
+        "last_event_at": "2026-10-20T21:09:29Z"
+      }
+    },
+    {
+      "id": "1797a6",
+      "file": "packages/builder/src/services/revealer.ts",
+      "line": 71,
+      "severity": "nit",
+      "reviewer": "chatgpt-codex-connector[bot]",
+      "body": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Retry transient envelope publications before the cutoff**\n\nWhen this single publication fails transiently while time remains, such as on a disconnect or 5xx response, the selected block is never retried. The builder API client in `packages/cli/src/cmds/builder/handler.ts` does not enable retries, `packages/api/src/utils/client/httpClient.ts` defaults them to 0, and `BlockObserver` records the block root as se",
+      "status": "acknowledged",
+      "addressed_commit": "86925723c28f6ae151a9c5308dfbd05d5da2668f",
+      "note": "Explicitly accepted older follow-up: transient reveal retries. Not implemented in this PR.",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "4263645847",
+        "repo": "ChainSafe/lodestar",
+        "pr": 10379,
+        "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4263645847"
+      },
+      "created": "2026-10-20T21:09:29Z",
+      "updated": "2026-10-20T23:00:22Z",
+      "needs_reverify": true,
+      "reverify": {
+        "events": [
+          {
+            "at": "2026-10-20T21:09:29Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4263911629",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4263911629",
+              "author": "markolazic01",
+              "in_reply_to_id": 4263645847
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          }
+        ],
+        "last_event_at": "2026-10-20T21:09:29Z"
+      }
+    },
+    {
+      "id": "9cf0b8",
+      "file": "packages/cli/src/cmds/builder/handler.ts",
+      "line": 108,
+      "severity": "nit",
+      "reviewer": "chatgpt-codex-connector[bot]",
+      "body": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Forward job abort signals into execution requests**\n\nWhen an execution request runs past the prepare deadline or `bidding.getPayloadTimeout`, `EnginePayloadSource` aborts the per-job signal but these adapters discard that signal and call an engine that only has the process-wide shutdown signal. The orchestrator therefore reports a timeout while the HTTP request remains active until the engine transport timeou",
+      "status": "acknowledged",
+      "addressed_commit": "86925723c28f6ae151a9c5308dfbd05d5da2668f",
+      "note": "Explicitly accepted older follow-up: per-job Engine API cancellation. Not implemented in this PR.",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "4263645859",
+        "repo": "ChainSafe/lodestar",
+        "pr": 10379,
+        "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4263645859"
+      },
+      "created": "2026-10-20T21:09:29Z",
+      "updated": "2026-10-20T23:00:22Z",
+      "needs_reverify": true,
+      "reverify": {
+        "events": [
+          {
+            "at": "2026-10-20T21:09:29Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4263931117",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4263931117",
+              "author": "markolazic01",
+              "in_reply_to_id": 4263645859
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          }
+        ],
+        "last_event_at": "2026-10-20T21:09:29Z"
+      }
+    },
+    {
+      "id": "0e0994",
+      "file": "packages/cli/src/cmds/builder/options.ts",
+      "line": 97,
+      "severity": "nit",
+      "reviewer": "chatgpt-codex-connector[bot]",
+      "body": "**<sub><sub>![P2 Badge](https://img.shields.io/badge/P2-yellow?style=flat)</sub></sub>  Apply the advertised execution timeout default**\n\nWhen the operator omits `--execution.timeout`, Yargs' `defaultDescription` only displays the value in help, so `args[\"execution.timeout\"]` remains undefined. Unlike the beacon command, this handler calls `initializeExecutionEngine` directly without `BeaconNodeOptions.getWithDefaults`, causing the JSON-RPC and REST clients to use their internal 30-second fallba",
+      "status": "addressed",
+      "addressed_commit": "86925723c28f6ae151a9c5308dfbd05d5da2668f",
+      "note": "Verified real runtime execution.timeout fallback of12000ms reaches JSON-RPC and REST clients.",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "4263645869",
+        "repo": "ChainSafe/lodestar",
+        "pr": 10379,
+        "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4263645869"
+      },
+      "created": "2026-10-20T21:09:29Z",
+      "updated": "2026-10-20T23:00:22Z",
+      "needs_reverify": true,
+      "reverify": {
+        "events": [
+          {
+            "at": "2026-10-20T21:09:29Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4263932030",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4263932030",
+              "author": "markolazic01",
+              "in_reply_to_id": 4263645869
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-10-20T22:59:46Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4331222543",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4331222543",
+              "author": "lodekeeper",
+              "in_reply_to_id": 4263645869
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          }
+        ],
+        "last_event_at": "2026-10-20T22:59:46Z"
+      }
+    },
+    {
+      "id": "7d29a2",
+      "file": "packages/builder/src/services/revealer.ts",
+      "line": 71,
+      "severity": "minor",
+      "reviewer": "markolazic01",
+      "body": "this is valid and one of the meaningful follow-ups, not doing now to keep the PR minimal",
+      "status": "acknowledged",
+      "addressed_commit": "86925723c28f6ae151a9c5308dfbd05d5da2668f",
+      "note": "Explicitly accepted older follow-up: transient reveal retries. Not implemented in this PR.",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "4263911629",
+        "repo": "ChainSafe/lodestar",
+        "pr": 10379,
+        "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4263911629"
+      },
+      "created": "2026-10-20T21:09:29Z",
+      "updated": "2026-10-20T23:00:22Z",
+      "matched_findings": [
+        "1797a6"
+      ]
+    },
+    {
+      "id": "e35bc0",
+      "file": "packages/builder/src/builder.ts",
+      "line": 243,
+      "severity": "minor",
+      "reviewer": "markolazic01",
+      "body": "applied changes only on the builder side, if we should make any BN changes that is to be done separately\r\ncc: @lodekeeper",
+      "status": "addressed",
+      "addressed_commit": "86925723c28f6ae151a9c5308dfbd05d5da2668f",
+      "note": "Original source requirement fixed by README/CLI --emitPayloadAttributes documentation and devnet flag; separate source-idle warning remains LOD-111.",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "4263921195",
+        "repo": "ChainSafe/lodestar",
+        "pr": 10379,
+        "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4263921195"
+      },
+      "created": "2026-10-20T21:09:29Z",
+      "updated": "2026-10-20T23:00:22Z",
+      "matched_findings": [
+        "ce0135"
+      ],
+      "needs_reverify": true,
+      "reverify": {
+        "events": [
+          {
+            "at": "2026-10-20T21:09:29Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4263994814",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4263994814",
+              "author": "lodekeeper",
+              "in_reply_to_id": 4263645834
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-10-20T21:09:29Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4264019106",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4264019106",
+              "author": "markolazic01",
+              "in_reply_to_id": 4263645834
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-10-20T21:09:29Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4272194399",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4272194399",
+              "author": "krisoshea-eth",
+              "in_reply_to_id": 4263645834
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          }
+        ],
+        "last_event_at": "2026-10-20T21:09:29Z"
+      }
+    },
+    {
+      "id": "be6233",
+      "file": "packages/cli/src/cmds/builder/handler.ts",
+      "line": 108,
+      "severity": "nit",
+      "reviewer": "markolazic01",
+      "body": "also meaningful but would increase the review surface properly, think it is not mandatory for the initial version, leaving as a planned follow-up",
+      "status": "acknowledged",
+      "addressed_commit": "86925723c28f6ae151a9c5308dfbd05d5da2668f",
+      "note": "Explicitly accepted older follow-up: per-job Engine API cancellation. Not implemented in this PR.",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "4263931117",
+        "repo": "ChainSafe/lodestar",
+        "pr": 10379,
+        "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4263931117"
+      },
+      "created": "2026-10-20T21:09:29Z",
+      "updated": "2026-10-20T23:00:22Z",
+      "matched_findings": [
+        "9cf0b8"
+      ]
+    },
+    {
+      "id": "f4445e",
+      "file": "packages/cli/src/cmds/builder/options.ts",
+      "line": 97,
+      "severity": "minor",
+      "reviewer": "markolazic01",
+      "body": "applied",
+      "status": "addressed",
+      "addressed_commit": "86925723c28f6ae151a9c5308dfbd05d5da2668f",
+      "note": "Verified real runtime execution.timeout fallback of12000ms reaches JSON-RPC and REST clients.",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "4263932030",
+        "repo": "ChainSafe/lodestar",
+        "pr": 10379,
+        "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4263932030"
+      },
+      "created": "2026-10-20T21:09:29Z",
+      "updated": "2026-10-20T23:00:22Z",
+      "matched_findings": [
+        "0e0994"
+      ],
+      "needs_reverify": true,
+      "reverify": {
+        "events": [
+          {
+            "at": "2026-10-20T22:59:46Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4331222543",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4331222543",
+              "author": "lodekeeper",
+              "in_reply_to_id": 4263645869
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          }
+        ],
+        "last_event_at": "2026-10-20T22:59:46Z"
+      }
+    },
+    {
+      "id": "7ec9d3",
+      "file": "packages/builder/src/builder.ts",
+      "line": 243,
+      "severity": "minor",
+      "reviewer": "lodekeeper",
+      "body": "No BN change needed in my view. `--emitPayloadAttributes` is the intended knob, and turning it on by default would make every node do per-slot payload attribute work just for builders. The README note plus `builder-dev.yaml` setting the flag on the source BN cover it. The only gap left is the silent idle case. A cheap guard would be for the builder to warn once if it receives head events but no `payload_attributes` for a few slots, which can be a follow-up.",
+      "status": "acknowledged",
+      "addressed_commit": "86925723c28f6ae151a9c5308dfbd05d5da2668f",
+      "note": "Source-idle warning remains explicitly deferred in LOD-111; source flag requirement itself is fixed.",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "4263994814",
+        "repo": "ChainSafe/lodestar",
+        "pr": 10379,
+        "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4263994814"
+      },
+      "created": "2026-10-20T21:09:29Z",
+      "updated": "2026-10-20T23:00:22Z",
+      "matched_findings": [
+        "ce0135",
+        "e35bc0"
+      ],
+      "needs_reverify": true,
+      "reverify": {
+        "events": [
+          {
+            "at": "2026-10-20T21:09:29Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4264019106",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4264019106",
+              "author": "markolazic01",
+              "in_reply_to_id": 4263645834
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-10-20T21:09:29Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4272194399",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4272194399",
+              "author": "krisoshea-eth",
+              "in_reply_to_id": 4263645834
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          }
+        ],
+        "last_event_at": "2026-10-20T21:09:29Z"
+      }
+    },
+    {
+      "id": "17bf7b",
+      "file": "packages/builder/src/builder.ts",
+      "line": 243,
+      "severity": "minor",
+      "reviewer": "markolazic01",
+      "body": "agree, another interesting follow-up\r\ncc: @krisoshea-eth",
+      "status": "acknowledged",
+      "addressed_commit": "86925723c28f6ae151a9c5308dfbd05d5da2668f",
+      "note": "Source-idle warning remains explicitly deferred in LOD-111; source flag requirement itself is fixed.",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "4264019106",
+        "repo": "ChainSafe/lodestar",
+        "pr": 10379,
+        "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4264019106"
+      },
+      "created": "2026-10-20T21:09:29Z",
+      "updated": "2026-10-20T23:00:22Z",
+      "matched_findings": [
+        "ce0135",
+        "e35bc0",
+        "7ec9d3"
+      ],
+      "needs_reverify": true,
+      "reverify": {
+        "events": [
+          {
+            "at": "2026-10-20T21:09:29Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4272194399",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4272194399",
+              "author": "krisoshea-eth",
+              "in_reply_to_id": 4263645834
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          }
+        ],
+        "last_event_at": "2026-10-20T21:09:29Z"
+      }
+    },
+    {
+      "id": "8ed30c",
+      "file": "packages/builder/src/builder.ts",
+      "line": 243,
+      "severity": "minor",
+      "reviewer": "krisoshea-eth",
+      "body": "Thanks Marko, happy to pick that up. I\u2019ve added it to LOD-111. I\u2019ll keep it on the Builder side and check that the source is actually active before warning about missing payload attributes, so startup or a disconnect doesn\u2019t produce a misleading warning. No need to change the BN default.",
+      "status": "acknowledged",
+      "addressed_commit": "86925723c28f6ae151a9c5308dfbd05d5da2668f",
+      "note": "Source-idle warning remains explicitly deferred in LOD-111; source flag requirement itself is fixed.",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "4272194399",
+        "repo": "ChainSafe/lodestar",
+        "pr": 10379,
+        "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4272194399"
+      },
+      "created": "2026-10-20T21:09:29Z",
+      "updated": "2026-10-20T23:00:22Z",
+      "matched_findings": [
+        "ce0135",
+        "e35bc0",
+        "7ec9d3",
+        "17bf7b"
+      ]
+    },
+    {
+      "id": "610fff",
+      "file": ".github/workflows/nightly-builder-smoke.yml",
+      "line": 109,
+      "severity": "minor",
+      "reviewer": "nflaig",
+      "body": "> the builder is the only bidder, it must have won bids and revealed their payloads\n\nhmm what if local payload is more valuable or are we setting `builderalways` cc @lodekeeper can maybe confirm or deny",
+      "status": "addressed",
+      "addressed_commit": "86925723c28f6ae151a9c5308dfbd05d5da2668f",
+      "note": "Answered and smoke comment updated: builderalways is set; check requires at least one win.",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "4329223795",
+        "repo": "ChainSafe/lodestar",
+        "pr": 10379,
+        "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4329223795"
+      },
+      "created": "2026-10-20T21:09:29Z",
+      "updated": "2026-10-20T23:00:22Z",
+      "needs_reverify": true,
+      "reverify": {
+        "events": [
+          {
+            "at": "2026-10-20T21:09:29Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4329381940",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4329381940",
+              "author": "markolazic01",
+              "in_reply_to_id": 4329223795
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-10-20T21:09:29Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4329397138",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4329397138",
+              "author": "lodekeeper",
+              "in_reply_to_id": 4329223795
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          }
+        ],
+        "last_event_at": "2026-10-20T21:09:29Z"
+      }
+    },
+    {
+      "id": "a730c8",
+      "file": ".github/workflows/nightly-builder-smoke.yml",
+      "line": 109,
+      "severity": "minor",
+      "reviewer": "markolazic01",
+      "body": "We use `builderalways` in `builder-dev.yaml`, so the bid is picked whenever one is available without comparing values. Without it the local payload wins every slot on the devnet since the builder bids with value 0.",
+      "status": "addressed",
+      "addressed_commit": "86925723c28f6ae151a9c5308dfbd05d5da2668f",
+      "note": "Answered and smoke comment updated: builderalways is set; check requires at least one win.",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "4329381940",
+        "repo": "ChainSafe/lodestar",
+        "pr": 10379,
+        "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4329381940"
+      },
+      "created": "2026-10-20T21:09:29Z",
+      "updated": "2026-10-20T23:00:22Z",
+      "matched_findings": [
+        "610fff"
+      ],
+      "needs_reverify": true,
+      "reverify": {
+        "events": [
+          {
+            "at": "2026-10-20T21:09:29Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4329397138",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4329397138",
+              "author": "lodekeeper",
+              "in_reply_to_id": 4329223795
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          }
+        ],
+        "last_event_at": "2026-10-20T21:09:29Z"
+      }
+    },
+    {
+      "id": "a3289e",
+      "file": ".github/workflows/nightly-builder-smoke.yml",
+      "line": 109,
+      "severity": "question",
+      "reviewer": "lodekeeper",
+      "body": "Confirmed, local value doesn't matter here. The validators run with `--builder.selection=builderalways` ([builder-dev.yaml#L20](https://github.com/ChainSafe/lodestar/blob/119fda5f3bbe03e0b2d26b6e6bd3ce4b4ccebe4b/scripts/kurtosis/builder-dev.yaml#L20)). The VC maps that to `MAX_BUILDER_BOOST_FACTOR` ([validatorStore.ts#L195-L197](https://github.com/ChainSafe/lodestar/blob/119fda5f3bbe03e0b2d26b6e6bd3ce4b4ccebe4b/packages/validator/src/services/validatorStore.ts#L195-L197)), and with that factor `",
+      "status": "addressed",
+      "addressed_commit": "86925723c28f6ae151a9c5308dfbd05d5da2668f",
+      "note": "Answered and smoke comment updated: builderalways is set; check requires at least one win.",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "4329397138",
+        "repo": "ChainSafe/lodestar",
+        "pr": 10379,
+        "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4329397138"
+      },
+      "created": "2026-10-20T21:09:29Z",
+      "updated": "2026-10-20T23:00:22Z",
+      "matched_findings": [
+        "610fff",
+        "a730c8"
+      ]
+    },
+    {
+      "id": "f9d591",
+      "file": "packages/builder/src/services/bidder.ts",
+      "line": 172,
+      "severity": "question",
+      "reviewer": "nflaig",
+      "body": "why `- 1`? this should probably print out a negative value if we published before the proposer slot or a positive value if we published in the slot",
+      "status": "addressed",
+      "addressed_commit": "86925723c28f6ae151a9c5308dfbd05d5da2668f",
+      "note": "Publication log now uses proposal-slot-relative clock.secFromSlot(slot).",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "4329488280",
+        "repo": "ChainSafe/lodestar",
+        "pr": 10379,
+        "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4329488280"
+      },
+      "created": "2026-10-20T21:09:29Z",
+      "updated": "2026-10-20T23:00:22Z",
+      "needs_reverify": true,
+      "reverify": {
+        "events": [
+          {
+            "at": "2026-10-20T21:59:46Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4330397995",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330397995",
+              "author": "lodekeeper",
+              "in_reply_to_id": 4329488280
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          }
+        ],
+        "last_event_at": "2026-10-20T21:59:46Z"
+      }
+    },
+    {
+      "id": "ed1e72",
+      "file": "packages/builder/src/services/bidder.ts",
+      "line": 189,
+      "severity": "nit",
+      "reviewer": "nflaig",
+      "body": "this is not ideal and a bit hacky, ideally the builder should keep track of their canonical branch via the head event, cc @lodekeeper maybe has anohter idea, but if we just fetch duties to get the root it's definitely a bit wasteful. head event would also allow us to detect reorgs proactively, similar to how the vc does it",
+      "status": "acknowledged",
+      "addressed_commit": "86925723c28f6ae151a9c5308dfbd05d5da2668f",
+      "note": "Explicit current-round follow-up: head_v2 canonical tracking and guarded roots/fallback/stale-work revalidation.",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "4329523765",
+        "repo": "ChainSafe/lodestar",
+        "pr": 10379,
+        "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4329523765"
+      },
+      "created": "2026-10-20T21:09:29Z",
+      "updated": "2026-10-20T23:00:22Z",
+      "needs_reverify": true,
+      "reverify": {
+        "events": [
+          {
+            "at": "2026-10-20T21:59:46Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4330398394",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330398394",
+              "author": "lodekeeper",
+              "in_reply_to_id": 4329523765
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-10-20T21:59:46Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4330603207",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330603207",
+              "author": "markolazic01",
+              "in_reply_to_id": 4329523765
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-10-20T21:59:46Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4330703199",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330703199",
+              "author": "lodekeeper",
+              "in_reply_to_id": 4329523765
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          }
+        ],
+        "last_event_at": "2026-10-20T21:59:46Z"
+      }
+    },
+    {
+      "id": "2629a4",
+      "file": "packages/builder/src/builder.ts",
+      "line": 56,
+      "severity": "minor",
+      "reviewer": "nflaig",
+      "body": "> Execution client\n\nis too specific, this could be any payload construction software",
+      "status": "addressed",
+      "addressed_commit": "86925723c28f6ae151a9c5308dfbd05d5da2668f",
+      "note": "PayloadSource is documented as a payload construction engine, not restricted to an EL.",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "4329974378",
+        "repo": "ChainSafe/lodestar",
+        "pr": 10379,
+        "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4329974378"
+      },
+      "created": "2026-10-20T21:09:29Z",
+      "updated": "2026-10-20T23:00:22Z",
+      "needs_reverify": true,
+      "reverify": {
+        "events": [
+          {
+            "at": "2026-10-20T21:59:46Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4330398704",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330398704",
+              "author": "lodekeeper",
+              "in_reply_to_id": 4329974378
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-10-20T22:54:56Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4330984467",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330984467",
+              "author": "nflaig",
+              "in_reply_to_id": null
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-10-20T22:54:56Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4331003211",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4331003211",
+              "author": "markolazic01",
+              "in_reply_to_id": 4330984467
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          }
+        ],
+        "last_event_at": "2026-10-20T22:54:56Z"
+      }
+    },
+    {
+      "id": "8ffd34",
+      "file": "packages/builder/src/defaults.ts",
+      "line": 15,
+      "severity": "minor",
+      "reviewer": "nflaig",
+      "body": "not sure this makes too much sense, we could just let balance drain to 1 ETH, there is no reason to keep the extra 0.1 ETH around and do nothing",
+      "status": "addressed",
+      "addressed_commit": "86925723c28f6ae151a9c5308dfbd05d5da2668f",
+      "note": "Operating balance default now MIN_DEPOSIT_AMOUNT; separate coverage accounting remains.",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "4330006169",
+        "repo": "ChainSafe/lodestar",
+        "pr": 10379,
+        "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330006169"
+      },
+      "created": "2026-10-20T21:09:29Z",
+      "updated": "2026-10-20T23:00:22Z",
+      "needs_reverify": true,
+      "reverify": {
+        "events": [
+          {
+            "at": "2026-10-20T21:59:46Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4330398933",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330398933",
+              "author": "lodekeeper",
+              "in_reply_to_id": 4330006169
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          }
+        ],
+        "last_event_at": "2026-10-20T21:59:46Z"
+      }
+    },
+    {
+      "id": "5e6b52",
+      "file": "packages/builder/src/defaults.ts",
+      "line": 8,
+      "severity": "minor",
+      "reviewer": "nflaig",
+      "body": "might be better to make the default 0 profit/loss, ie. 10000",
+      "status": "addressed",
+      "addressed_commit": "86925723c28f6ae151a9c5308dfbd05d5da2668f",
+      "note": "Neutral default share is10000bps with zero fixed cost.",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "4330011481",
+        "repo": "ChainSafe/lodestar",
+        "pr": 10379,
+        "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330011481"
+      },
+      "created": "2026-10-20T21:09:29Z",
+      "updated": "2026-10-20T23:00:22Z",
+      "needs_reverify": true,
+      "reverify": {
+        "events": [
+          {
+            "at": "2026-10-20T21:59:46Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4330399211",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330399211",
+              "author": "lodekeeper",
+              "in_reply_to_id": 4330011481
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          }
+        ],
+        "last_event_at": "2026-10-20T21:59:46Z"
+      }
+    },
+    {
+      "id": "776d6c",
+      "file": "packages/builder/src/identity.ts",
+      "line": 102,
+      "severity": "minor",
+      "reviewer": "nflaig",
+      "body": "this meant we discover builder 1 epoch too late but could be optimized by polling at slot 1 of the epoch with the head state advanced, polling each slot as done right now isn't needed but also not too big of a deal I suppose",
+      "status": "addressed",
+      "addressed_commit": "86925723c28f6ae151a9c5308dfbd05d5da2668f",
+      "note": "Head-state lookup/per-slot retries and epoch slot1 wait verified; separate Kurtosis evidence request remains open.",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "4330028816",
+        "repo": "ChainSafe/lodestar",
+        "pr": 10379,
+        "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330028816"
+      },
+      "created": "2026-10-20T21:09:29Z",
+      "updated": "2026-10-20T23:00:22Z",
+      "needs_reverify": true,
+      "reverify": {
+        "events": [
+          {
+            "at": "2026-10-20T21:59:46Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4330399626",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330399626",
+              "author": "lodekeeper",
+              "in_reply_to_id": 4330028816
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          }
+        ],
+        "last_event_at": "2026-10-20T21:59:46Z"
+      }
+    },
+    {
+      "id": "ef1198",
+      "file": "packages/builder/src/services/revealer.ts",
+      "line": 14,
+      "severity": "minor",
+      "reviewer": "nflaig",
+      "body": "~~what's the default of this @lodekeeper~~ ah it's `PAYLOAD_ATTESTATION_DUE_BPS` might wanna make that more explicit",
+      "status": "addressed",
+      "addressed_commit": "86925723c28f6ae151a9c5308dfbd05d5da2668f",
+      "note": "Reveal latest-start semantics and PAYLOAD_ATTESTATION_DUE_BPS default are explicit in JSDoc.",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "4330036023",
+        "repo": "ChainSafe/lodestar",
+        "pr": 10379,
+        "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330036023"
+      },
+      "created": "2026-10-20T21:09:29Z",
+      "updated": "2026-10-20T23:00:23Z",
+      "needs_reverify": true,
+      "reverify": {
+        "events": [
+          {
+            "at": "2026-10-20T21:59:46Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4330399881",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330399881",
+              "author": "lodekeeper",
+              "in_reply_to_id": 4330036023
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          }
+        ],
+        "last_event_at": "2026-10-20T21:59:46Z"
+      }
+    },
+    {
+      "id": "bc548c",
+      "file": "packages/builder/test/unit/services/payloadOrchestrator.test.ts",
+      "line": 327,
+      "severity": "minor",
+      "reviewer": "nflaig",
+      "body": "not sure what that even means based on the test description, so likely fine to delete it",
+      "status": "addressed",
+      "addressed_commit": "86925723c28f6ae151a9c5308dfbd05d5da2668f",
+      "note": "Resolved UI discussion: removed unclear mixed-error case need not return; independent retry/permanent-error tests retained.",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "4330072517",
+        "repo": "ChainSafe/lodestar",
+        "pr": 10379,
+        "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330072517"
+      },
+      "created": "2026-10-20T21:09:29Z",
+      "updated": "2026-10-20T23:00:23Z",
+      "needs_reverify": true,
+      "reverify": {
+        "events": [
+          {
+            "at": "2026-10-20T21:59:46Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4330400190",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330400190",
+              "author": "lodekeeper",
+              "in_reply_to_id": 4330072517
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          }
+        ],
+        "last_event_at": "2026-10-20T21:59:46Z"
+      }
+    },
+    {
+      "id": "72ab64",
+      "file": "packages/builder/README.md",
+      "line": 24,
+      "severity": "minor",
+      "reviewer": "nflaig",
+      "body": "might able to optimize this by using apis from https://github.com/ethereum/beacon-APIs/pull/655",
+      "status": "acknowledged",
+      "addressed_commit": "86925723c28f6ae151a9c5308dfbd05d5da2668f",
+      "note": "Explicit current-round follow-up: reconcile both pending payments and pending withdrawals; not implemented.",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "4330106988",
+        "repo": "ChainSafe/lodestar",
+        "pr": 10379,
+        "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330106988"
+      },
+      "created": "2026-10-20T21:09:29Z",
+      "updated": "2026-10-20T23:00:23Z",
+      "needs_reverify": true,
+      "reverify": {
+        "events": [
+          {
+            "at": "2026-10-20T21:09:29Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4330114390",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330114390",
+              "author": "nflaig",
+              "in_reply_to_id": 4330106988
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-10-20T21:59:46Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4330664109",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330664109",
+              "author": "markolazic01",
+              "in_reply_to_id": 4330106988
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          }
+        ],
+        "last_event_at": "2026-10-20T21:59:46Z"
+      }
+    },
+    {
+      "id": "e371f5",
+      "file": "packages/builder/README.md",
+      "line": 24,
+      "severity": "minor",
+      "reviewer": "nflaig",
+      "body": "> Reconciling against the pending payments and withdrawals of the state is a follow-up.\n\nshould have read the last part, literally says it here",
+      "status": "acknowledged",
+      "addressed_commit": "86925723c28f6ae151a9c5308dfbd05d5da2668f",
+      "note": "Explicit current-round follow-up: reconcile both pending payments and pending withdrawals; not implemented.",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "4330114390",
+        "repo": "ChainSafe/lodestar",
+        "pr": 10379,
+        "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330114390"
+      },
+      "created": "2026-10-20T21:09:29Z",
+      "updated": "2026-10-20T23:00:23Z",
+      "matched_findings": [
+        "72ab64"
+      ],
+      "needs_reverify": true,
+      "reverify": {
+        "events": [
+          {
+            "at": "2026-10-20T21:59:46Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4330664109",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330664109",
+              "author": "markolazic01",
+              "in_reply_to_id": 4330106988
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          }
+        ],
+        "last_event_at": "2026-10-20T21:59:46Z"
+      }
+    },
+    {
+      "id": "ee3ec2",
+      "file": "packages/cli/src/cmds/builder/options.ts",
+      "line": 46,
+      "severity": "minor",
+      "reviewer": "nflaig",
+      "body": ">  otherwise the builder only bids on slots the beacon node itself proposes\n\nthis doesn't need to be explicitly noted",
+      "status": "addressed",
+      "addressed_commit": "86925723c28f6ae151a9c5308dfbd05d5da2668f",
+      "note": "CLI source-node description shortened while retaining required emitPayloadAttributes flag.",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "4330126819",
+        "repo": "ChainSafe/lodestar",
+        "pr": 10379,
+        "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330126819"
+      },
+      "created": "2026-10-20T21:09:29Z",
+      "updated": "2026-10-20T23:00:23Z",
+      "needs_reverify": true,
+      "reverify": {
+        "events": [
+          {
+            "at": "2026-10-20T21:09:29Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4330132833",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330132833",
+              "author": "nflaig",
+              "in_reply_to_id": null
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-10-20T21:59:46Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4330400581",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330400581",
+              "author": "lodekeeper",
+              "in_reply_to_id": 4330126819
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-10-20T21:59:46Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4330400856",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330400856",
+              "author": "lodekeeper",
+              "in_reply_to_id": 4330132833
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          }
+        ],
+        "last_event_at": "2026-10-20T21:59:46Z"
+      }
+    },
+    {
+      "id": "67fedf",
+      "file": "packages/cli/src/cmds/builder/options.ts",
+      "line": 46,
+      "severity": "minor",
+      "reviewer": "nflaig",
+      "body": "> Url to a trusted beacon node\n\n\"trusted\" is that how it documented for the validator client? i think this is mostly assumed in all cases",
+      "status": "addressed",
+      "addressed_commit": "86925723c28f6ae151a9c5308dfbd05d5da2668f",
+      "note": "Unnecessary trusted adjective removed.",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "4330132833",
+        "repo": "ChainSafe/lodestar",
+        "pr": 10379,
+        "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330132833"
+      },
+      "created": "2026-10-20T21:09:29Z",
+      "updated": "2026-10-20T23:00:23Z",
+      "matched_findings": [
+        "ee3ec2"
+      ],
+      "needs_reverify": true,
+      "reverify": {
+        "events": [
+          {
+            "at": "2026-10-20T21:59:46Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4330400581",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330400581",
+              "author": "lodekeeper",
+              "in_reply_to_id": 4330126819
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-10-20T21:59:46Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4330400856",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330400856",
+              "author": "lodekeeper",
+              "in_reply_to_id": 4330132833
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          }
+        ],
+        "last_event_at": "2026-10-20T21:59:46Z"
+      }
+    },
+    {
+      "id": "492ff7",
+      "file": "packages/cli/src/cmds/builder/options.ts",
+      "line": 127,
+      "severity": "minor",
+      "reviewer": "nflaig",
+      "body": "do we need this? seems useless",
+      "status": "addressed",
+      "addressed_commit": "86925723c28f6ae151a9c5308dfbd05d5da2668f",
+      "note": "Unused builder CLI jwtId removed from type/options/handler.",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "4330139287",
+        "repo": "ChainSafe/lodestar",
+        "pr": 10379,
+        "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330139287"
+      },
+      "created": "2026-10-20T21:09:29Z",
+      "updated": "2026-10-20T23:00:23Z",
+      "needs_reverify": true,
+      "reverify": {
+        "events": [
+          {
+            "at": "2026-10-20T21:59:46Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4330401194",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330401194",
+              "author": "lodekeeper",
+              "in_reply_to_id": 4330139287
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          }
+        ],
+        "last_event_at": "2026-10-20T21:59:46Z"
+      }
+    },
+    {
+      "id": "d2edd2",
+      "file": "packages/cli/src/cmds/builder/options.ts",
+      "line": 160,
+      "severity": "minor",
+      "reviewer": "nflaig",
+      "body": "~~describtion doesn't really explain what the flag does?~~ nvm, re-read and it seems fine",
+      "status": "acknowledged",
+      "addressed_commit": "86925723c28f6ae151a9c5308dfbd05d5da2668f",
+      "note": "Reviewer explicitly self-retracted deadline-description objection.",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "4330153831",
+        "repo": "ChainSafe/lodestar",
+        "pr": 10379,
+        "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330153831"
+      },
+      "created": "2026-10-20T21:09:29Z",
+      "updated": "2026-10-20T23:00:23Z"
+    },
+    {
+      "id": "58f879",
+      "file": "packages/cli/src/cmds/builder/options.ts",
+      "line": 115,
+      "severity": "minor",
+      "reviewer": "nflaig",
+      "body": "would be better to namespace this, ie. `execution.jwtSecret`",
+      "status": "addressed",
+      "addressed_commit": "86925723c28f6ae151a9c5308dfbd05d5da2668f",
+      "note": "execution.jwtSecret rename complete in source/examples. Stale PR-description spelling was already reported and is nonblocking.",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "4330182333",
+        "repo": "ChainSafe/lodestar",
+        "pr": 10379,
+        "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330182333"
+      },
+      "created": "2026-10-20T21:09:29Z",
+      "updated": "2026-10-20T23:00:23Z",
+      "needs_reverify": true,
+      "reverify": {
+        "events": [
+          {
+            "at": "2026-10-20T21:59:46Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4330401475",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330401475",
+              "author": "lodekeeper",
+              "in_reply_to_id": 4330182333
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          }
+        ],
+        "last_event_at": "2026-10-20T21:59:46Z"
+      }
+    },
+    {
+      "id": "068f99",
+      "file": "scripts/kurtosis/builder-dev.yaml",
+      "line": 24,
+      "severity": "minor",
+      "reviewer": "nflaig",
+      "body": "\ud83d\ude80",
+      "status": "acknowledged",
+      "addressed_commit": "86925723c28f6ae151a9c5308dfbd05d5da2668f",
+      "note": "Approval-only rocket; no requested code change.",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "4330209534",
+        "repo": "ChainSafe/lodestar",
+        "pr": 10379,
+        "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330209534"
+      },
+      "created": "2026-10-20T21:09:29Z",
+      "updated": "2026-10-20T23:00:23Z"
+    },
+    {
+      "id": "9cab88",
+      "file": "packages/builder/src/services/bidder.ts",
+      "line": 172,
+      "severity": "minor",
+      "reviewer": "lodekeeper",
+      "body": "`clock.secFromSlot(slot)` gives the sign convention you want: negative before the proposal slot, positive after it starts. `slot - 1` measures from the build slot instead. Keep the preceding slot in the deadline calculation, but log publication relative to the proposal slot.",
+      "status": "addressed",
+      "addressed_commit": "86925723c28f6ae151a9c5308dfbd05d5da2668f",
+      "note": "Publication log now uses proposal-slot-relative clock.secFromSlot(slot).",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "4330397995",
+        "repo": "ChainSafe/lodestar",
+        "pr": 10379,
+        "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330397995"
+      },
+      "created": "2026-10-20T21:59:46Z",
+      "updated": "2026-10-20T23:00:23Z",
+      "matched_findings": [
+        "f9d591"
+      ]
+    },
+    {
+      "id": "b908af",
+      "file": "packages/builder/src/services/bidder.ts",
+      "line": 189,
+      "severity": "minor",
+      "reviewer": "lodekeeper",
+      "body": "Agree. I'd use a small builder-local `head_v2` tracker: it already carries `current_epoch_dependent_root` and `next_epoch_dependent_root` for the head block's epoch and the following epoch ([event contract](https://github.com/ChainSafe/lodestar/blob/119fda5f3bbe03e0b2d26b6e6bd3ce4b4ccebe4b/packages/api/src/beacon/routes/events.ts#L108)). That covers next-epoch proposals without fetching the full duties response per build. Key those roots by the event's epoch, not the clock epoch, since slots can",
+      "status": "acknowledged",
+      "addressed_commit": "86925723c28f6ae151a9c5308dfbd05d5da2668f",
+      "note": "Explicit current-round follow-up: head_v2 canonical tracking and guarded roots/fallback/stale-work revalidation.",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "4330398394",
+        "repo": "ChainSafe/lodestar",
+        "pr": 10379,
+        "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330398394"
+      },
+      "created": "2026-10-20T21:59:46Z",
+      "updated": "2026-10-20T23:00:23Z",
+      "matched_findings": [
+        "ed1e72"
+      ],
+      "needs_reverify": true,
+      "reverify": {
+        "events": [
+          {
+            "at": "2026-10-20T21:59:46Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4330603207",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330603207",
+              "author": "markolazic01",
+              "in_reply_to_id": 4329523765
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-10-20T21:59:46Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4330703199",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330703199",
+              "author": "lodekeeper",
+              "in_reply_to_id": 4329523765
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          }
+        ],
+        "last_event_at": "2026-10-20T21:59:46Z"
+      }
+    },
+    {
+      "id": "224270",
+      "file": "packages/builder/src/builder.ts",
+      "line": 56,
+      "severity": "minor",
+      "reviewer": "lodekeeper",
+      "body": "\u201cPayload construction software\u201d fits this interface better. The Engine API adapter is one implementation of `PayloadSource`, not a requirement that every source be an execution client.",
+      "status": "addressed",
+      "addressed_commit": "86925723c28f6ae151a9c5308dfbd05d5da2668f",
+      "note": "PayloadSource is documented as a payload construction engine, not restricted to an EL.",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "4330398704",
+        "repo": "ChainSafe/lodestar",
+        "pr": 10379,
+        "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330398704"
+      },
+      "created": "2026-10-20T21:59:46Z",
+      "updated": "2026-10-20T23:00:23Z",
+      "matched_findings": [
+        "2629a4"
+      ],
+      "needs_reverify": true,
+      "reverify": {
+        "events": [
+          {
+            "at": "2026-10-20T22:54:56Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4330984467",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330984467",
+              "author": "nflaig",
+              "in_reply_to_id": null
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-10-20T22:54:56Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4331003211",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4331003211",
+              "author": "markolazic01",
+              "in_reply_to_id": 4330984467
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          }
+        ],
+        "last_event_at": "2026-10-20T22:54:56Z"
+      }
+    },
+    {
+      "id": "854fd1",
+      "file": "packages/builder/src/defaults.ts",
+      "line": 15,
+      "severity": "minor",
+      "reviewer": "lodekeeper",
+      "body": "The extra 0.1 ETH is only an admission threshold. `coverableGwei` already subtracts `MIN_DEPOSIT_AMOUNT` and unsettled bids, so that floor does not need another 0.1 ETH cushion. A 1 ETH default would leave any additional operating headroom opt-in.",
+      "status": "addressed",
+      "addressed_commit": "86925723c28f6ae151a9c5308dfbd05d5da2668f",
+      "note": "Operating balance default now MIN_DEPOSIT_AMOUNT; separate coverage accounting remains.",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "4330398933",
+        "repo": "ChainSafe/lodestar",
+        "pr": 10379,
+        "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330398933"
+      },
+      "created": "2026-10-20T21:59:46Z",
+      "updated": "2026-10-20T23:00:23Z",
+      "matched_findings": [
+        "8ffd34"
+      ]
+    },
+    {
+      "id": "e84a96",
+      "file": "packages/builder/src/defaults.ts",
+      "line": 8,
+      "severity": "minor",
+      "reviewer": "lodekeeper",
+      "body": "10000 makes sense as the neutral default: with zero fixed cost, it uses 100% of the reported payload value as the proportional bid rather than reserving a 10% margin. The configured maximum and coverable-balance check still apply; operators can opt into a smaller share or a fixed cost.",
+      "status": "addressed",
+      "addressed_commit": "86925723c28f6ae151a9c5308dfbd05d5da2668f",
+      "note": "Neutral default share is10000bps with zero fixed cost.",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "4330399211",
+        "repo": "ChainSafe/lodestar",
+        "pr": 10379,
+        "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330399211"
+      },
+      "created": "2026-10-20T21:59:46Z",
+      "updated": "2026-10-20T23:00:23Z",
+      "matched_findings": [
+        "5e6b52"
+      ]
+    },
+    {
+      "id": "400578",
+      "file": "packages/builder/src/identity.ts",
+      "line": 102,
+      "severity": "minor",
+      "reviewer": "lodekeeper",
+      "body": "At this head it already requests `stateId: \"head\"` and retries each slot, so a slot-0 read of the previous head state is retried rather than waiting another whole epoch. For a once-per-epoch poll, slot 1 is a better target, provided the head has actually advanced; otherwise it still needs a retry rather than treating that read as final.",
+      "status": "addressed",
+      "addressed_commit": "86925723c28f6ae151a9c5308dfbd05d5da2668f",
+      "note": "Head-state lookup/per-slot retries and epoch slot1 wait verified; separate Kurtosis evidence request remains open.",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "4330399626",
+        "repo": "ChainSafe/lodestar",
+        "pr": 10379,
+        "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330399626"
+      },
+      "created": "2026-10-20T21:59:46Z",
+      "updated": "2026-10-20T23:00:23Z",
+      "matched_findings": [
+        "776d6c"
+      ]
+    },
+    {
+      "id": "c1481b",
+      "file": "packages/builder/src/services/revealer.ts",
+      "line": 17,
+      "severity": "nit",
+      "reviewer": "lodekeeper",
+      "body": "Yes, `Builder.init` resolves it as `opts.reveal.cutoffBps ?? config.PAYLOAD_ATTESTATION_DUE_BPS` ([source](https://github.com/ChainSafe/lodestar/blob/119fda5f3bbe03e0b2d26b6e6bd3ce4b4ccebe4b/packages/builder/src/builder.ts#L211)). I'd copy \u201cDefaults to the network's PAYLOAD_ATTESTATION_DUE_BPS\u201d into this field's JSDoc, as the public builder option and CLI description already do.\n\nIt is a latest-start cutoff: a matching block triggers the reveal immediately, not at that point in the slot. It does",
+      "status": "addressed",
+      "addressed_commit": "86925723c28f6ae151a9c5308dfbd05d5da2668f",
+      "note": "Reveal latest-start semantics and PAYLOAD_ATTESTATION_DUE_BPS default are explicit in JSDoc.",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "4330399881",
+        "repo": "ChainSafe/lodestar",
+        "pr": 10379,
+        "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330399881"
+      },
+      "created": "2026-10-20T21:59:46Z",
+      "updated": "2026-10-20T23:00:23Z",
+      "matched_findings": [
+        "ef1198"
+      ]
+    },
+    {
+      "id": "73ca8e",
+      "file": "packages/builder/test/unit/services/payloadOrchestrator.test.ts",
+      "line": 327,
+      "severity": "major",
+      "reviewer": "lodekeeper",
+      "body": "That removed case was specifically `NO_PAYLOAD_ID` on the first preparation attempt, then a permanent error on the second, checking that retries stop. It is already absent from the new version; the separate permanent-error propagation and missing-payload-ID retry tests remain.",
+      "status": "addressed",
+      "addressed_commit": "86925723c28f6ae151a9c5308dfbd05d5da2668f",
+      "note": "Resolved UI discussion: removed unclear mixed-error case need not return; independent retry/permanent-error tests retained.",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "4330400190",
+        "repo": "ChainSafe/lodestar",
+        "pr": 10379,
+        "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330400190"
+      },
+      "created": "2026-10-20T21:59:46Z",
+      "updated": "2026-10-20T23:00:23Z",
+      "matched_findings": [
+        "bc548c"
+      ]
+    },
+    {
+      "id": "f30d66",
+      "file": "packages/cli/src/cmds/builder/options.ts",
+      "line": 46,
+      "severity": "minor",
+      "reviewer": "lodekeeper",
+      "body": "The shorter version can just be \u201cURL of the beacon node. It must run with `--emitPayloadAttributes` to emit payload attributes for every slot.\u201d That keeps the setup requirement without explaining the fallback behavior here.",
+      "status": "addressed",
+      "addressed_commit": "86925723c28f6ae151a9c5308dfbd05d5da2668f",
+      "note": "CLI source-node description shortened while retaining required emitPayloadAttributes flag.",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "4330400581",
+        "repo": "ChainSafe/lodestar",
+        "pr": 10379,
+        "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330400581"
+      },
+      "created": "2026-10-20T21:59:46Z",
+      "updated": "2026-10-20T23:00:23Z",
+      "matched_findings": [
+        "ee3ec2",
+        "67fedf"
+      ],
+      "needs_reverify": true,
+      "reverify": {
+        "events": [
+          {
+            "at": "2026-10-20T21:59:46Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4330400856",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330400856",
+              "author": "lodekeeper",
+              "in_reply_to_id": 4330132833
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          }
+        ],
+        "last_event_at": "2026-10-20T21:59:46Z"
+      }
+    },
+    {
+      "id": "583f63",
+      "file": "packages/cli/src/cmds/builder/options.ts",
+      "line": 46,
+      "severity": "minor",
+      "reviewer": "lodekeeper",
+      "body": "The VC currently says \u201cAddresses to connect to BeaconNode\u201d, without \u201ctrusted\u201d ([source](https://github.com/ChainSafe/lodestar/blob/119fda5f3bbe03e0b2d26b6e6bd3ce4b4ccebe4b/packages/cli/src/cmds/validator/options.ts#L201)). \u201cURL of the beacon node\u201d would be consistent here.",
+      "status": "addressed",
+      "addressed_commit": "86925723c28f6ae151a9c5308dfbd05d5da2668f",
+      "note": "Unnecessary trusted adjective removed.",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "4330400856",
+        "repo": "ChainSafe/lodestar",
+        "pr": 10379,
+        "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330400856"
+      },
+      "created": "2026-10-20T21:59:46Z",
+      "updated": "2026-10-20T23:00:23Z",
+      "matched_findings": [
+        "ee3ec2",
+        "67fedf",
+        "f30d66"
+      ]
+    },
+    {
+      "id": "235177",
+      "file": "packages/cli/src/cmds/builder/options.ts",
+      "line": 127,
+      "severity": "minor",
+      "reviewer": "lodekeeper",
+      "body": "This only supplies the optional JWT `id` claim; the adapter does not otherwise use it. I would leave `jwtId` out of the builder CLI unless there is a concrete consumer for that identifier.",
+      "status": "addressed",
+      "addressed_commit": "86925723c28f6ae151a9c5308dfbd05d5da2668f",
+      "note": "Unused builder CLI jwtId removed from type/options/handler.",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "4330401194",
+        "repo": "ChainSafe/lodestar",
+        "pr": 10379,
+        "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330401194"
+      },
+      "created": "2026-10-20T21:59:46Z",
+      "updated": "2026-10-20T23:00:23Z",
+      "matched_findings": [
+        "492ff7"
+      ]
+    },
+    {
+      "id": "147e9c",
+      "file": "packages/cli/src/cmds/builder/options.ts",
+      "line": 115,
+      "severity": "minor",
+      "reviewer": "lodekeeper",
+      "body": "Yes, `execution.jwtSecret` would match the other execution options. The CLI argument type and handler mapping need the same rename; `execution.jwtId` too if that option is retained.",
+      "status": "addressed",
+      "addressed_commit": "86925723c28f6ae151a9c5308dfbd05d5da2668f",
+      "note": "execution.jwtSecret rename complete in source/examples. Stale PR-description spelling was already reported and is nonblocking.",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "4330401475",
+        "repo": "ChainSafe/lodestar",
+        "pr": 10379,
+        "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330401475"
+      },
+      "created": "2026-10-20T21:59:46Z",
+      "updated": "2026-10-20T23:00:23Z",
+      "matched_findings": [
+        "58f879"
+      ]
+    },
+    {
+      "id": "fa9f4d",
+      "file": "packages/builder/src/services/bidder.ts",
+      "line": 189,
+      "severity": "minor",
+      "reviewer": "markolazic01",
+      "body": "will do a follow-up for this one",
+      "status": "acknowledged",
+      "addressed_commit": "86925723c28f6ae151a9c5308dfbd05d5da2668f",
+      "note": "Explicit current-round follow-up: head_v2 canonical tracking and guarded roots/fallback/stale-work revalidation.",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "4330603207",
+        "repo": "ChainSafe/lodestar",
+        "pr": 10379,
+        "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330603207"
+      },
+      "created": "2026-10-20T21:59:46Z",
+      "updated": "2026-10-20T23:00:23Z",
+      "matched_findings": [
+        "ed1e72",
+        "b908af"
+      ],
+      "needs_reverify": true,
+      "reverify": {
+        "events": [
+          {
+            "at": "2026-10-20T21:59:46Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4330703199",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330703199",
+              "author": "lodekeeper",
+              "in_reply_to_id": 4329523765
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          }
+        ],
+        "last_event_at": "2026-10-20T21:59:46Z"
+      }
+    },
+    {
+      "id": "8dc7db",
+      "file": "packages/builder/README.md",
+      "line": 24,
+      "severity": "minor",
+      "reviewer": "markolazic01",
+      "body": "leaving this unresolved for visibility, we should make that follow-up",
+      "status": "acknowledged",
+      "addressed_commit": "86925723c28f6ae151a9c5308dfbd05d5da2668f",
+      "note": "Explicit current-round follow-up: reconcile both pending payments and pending withdrawals; not implemented.",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "4330664109",
+        "repo": "ChainSafe/lodestar",
+        "pr": 10379,
+        "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330664109"
+      },
+      "created": "2026-10-20T21:59:46Z",
+      "updated": "2026-10-20T23:00:23Z",
+      "matched_findings": [
+        "72ab64",
+        "e371f5"
+      ]
+    },
+    {
+      "id": "715a18",
+      "file": "packages/builder/src/services/bidder.ts",
+      "line": 189,
+      "severity": "minor",
+      "reviewer": "lodekeeper",
+      "body": "Thanks, noted for the follow-up.",
+      "status": "acknowledged",
+      "addressed_commit": "86925723c28f6ae151a9c5308dfbd05d5da2668f",
+      "note": "Explicit current-round follow-up: head_v2 canonical tracking and guarded roots/fallback/stale-work revalidation.",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "4330703199",
+        "repo": "ChainSafe/lodestar",
+        "pr": 10379,
+        "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330703199"
+      },
+      "created": "2026-10-20T21:59:46Z",
+      "updated": "2026-10-20T23:00:24Z",
+      "matched_findings": [
+        "ed1e72",
+        "b908af",
+        "fa9f4d"
+      ]
+    },
+    {
+      "id": "a2c975",
+      "file": "packages/builder/src/identity.ts",
+      "line": 149,
+      "severity": "minor",
+      "reviewer": "lodekeeper",
+      "body": "\ud83d\udfe1 **Update the fork-boundary test for the slot-1 poll**\n\nThis now wakes one slot later, but `identity.test.ts` still defines `epochPollMs` for epoch slot 0 and advances only that far in `resolves once the Gloas fork is reached`. It then awaits the pending promise without advancing fake time again. I reproduced the 20-second test timeout at this head.\n\nPlease include `+ 1` in the test's poll deadline, move its mocked slot to `SLOTS_PER_EPOCH + 1`, and assert that no request occurs at slot 0.",
+      "status": "addressed",
+      "addressed_commit": "86925723c28f6ae151a9c5308dfbd05d5da2668f",
+      "note": "Fixed byf09097a1e5b;19/19 identity tests and51/51 focused tests pass at8692572. Slot0 no-request and slot1 wakeup assertions verified.",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "4330846964",
+        "repo": "ChainSafe/lodestar",
+        "pr": 10379,
+        "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330846964"
+      },
+      "created": "2026-10-20T22:07:27Z",
+      "updated": "2026-10-20T23:44:29Z",
+      "needs_reverify": true,
+      "reverify": {
+        "events": [
+          {
+            "at": "2026-10-20T22:54:56Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4330958984",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330958984",
+              "author": "nflaig",
+              "in_reply_to_id": null
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-10-20T22:54:56Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4330975745",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330975745",
+              "author": "markolazic01",
+              "in_reply_to_id": 4330958984
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-10-20T22:59:46Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4331222246",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4331222246",
+              "author": "lodekeeper",
+              "in_reply_to_id": 4330846964
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-10-20T22:59:46Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4331222803",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4331222803",
+              "author": "lodekeeper",
+              "in_reply_to_id": 4330958984
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-10-20T23:16:23Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4331256769",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4331256769",
+              "author": "markolazic01",
+              "in_reply_to_id": 4330958984
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-10-20T23:16:23Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4331319624",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4331319624",
+              "author": "markolazic01",
+              "in_reply_to_id": 4330958984
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-10-20T23:16:23Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4331339648",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4331339648",
+              "author": "lodekeeper",
+              "in_reply_to_id": 4330958984
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-10-20T23:44:29Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4331413887",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4331413887",
+              "author": "nflaig",
+              "in_reply_to_id": 4330958984
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-10-20T23:44:29Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4331515734",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4331515734",
+              "author": "lodekeeper",
+              "in_reply_to_id": 4330958984
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          }
+        ],
+        "last_event_at": "2026-10-20T23:44:29Z"
+      }
+    },
+    {
+      "id": "8a2c31",
+      "file": "packages/builder/src/identity.ts",
+      "line": 149,
+      "severity": "major",
+      "reviewer": "nflaig",
+      "body": "should test this on kurtosis if builder is discovered timely, had this bug on sepolia where builder was active for 1 epoch without bidding",
+      "status": "addressed",
+      "addressed_commit": "86925723c28f6ae151a9c5308dfbd05d5da2668f",
+      "note": "Author basic-run logs4331256769 show discovery33, bids34-37 and reveals34-36. Nico6303722585 explicitly permits further activation testing/fixes separately. Remaining approval gate closed; no exhaustive runtime claim.",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "4330958984",
+        "repo": "ChainSafe/lodestar",
+        "pr": 10379,
+        "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330958984"
+      },
+      "created": "2026-10-20T22:54:56Z",
+      "updated": "2026-10-20T23:44:29Z",
+      "matched_findings": [
+        "a2c975"
+      ],
+      "needs_reverify": true,
+      "reverify": {
+        "events": [
+          {
+            "at": "2026-10-20T22:54:56Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4330975745",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330975745",
+              "author": "markolazic01",
+              "in_reply_to_id": 4330958984
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-10-20T22:59:46Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4331222246",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4331222246",
+              "author": "lodekeeper",
+              "in_reply_to_id": 4330846964
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-10-20T22:59:46Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4331222803",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4331222803",
+              "author": "lodekeeper",
+              "in_reply_to_id": 4330958984
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-10-20T23:16:23Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4331256769",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4331256769",
+              "author": "markolazic01",
+              "in_reply_to_id": 4330958984
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-10-20T23:16:23Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4331319624",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4331319624",
+              "author": "markolazic01",
+              "in_reply_to_id": 4330958984
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-10-20T23:16:23Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4331339648",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4331339648",
+              "author": "lodekeeper",
+              "in_reply_to_id": 4330958984
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-10-20T23:44:29Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4331413887",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4331413887",
+              "author": "nflaig",
+              "in_reply_to_id": 4330958984
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-10-20T23:44:29Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4331515734",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4331515734",
+              "author": "lodekeeper",
+              "in_reply_to_id": 4330958984
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          }
+        ],
+        "last_event_at": "2026-10-20T23:44:29Z"
+      }
+    },
+    {
+      "id": "b45392",
+      "file": "packages/builder/src/identity.ts",
+      "line": 149,
+      "severity": "minor",
+      "reviewer": "markolazic01",
+      "body": "will do",
+      "status": "acknowledged",
+      "addressed_commit": "86925723c28f6ae151a9c5308dfbd05d5da2668f",
+      "note": "Outstanding pre-merge runtime validation: Marko owns Kurtosis timely discovery/first-bid check. No result or waiver yet; final approval withheld.",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "4330975745",
+        "repo": "ChainSafe/lodestar",
+        "pr": 10379,
+        "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330975745"
+      },
+      "created": "2026-10-20T22:54:56Z",
+      "updated": "2026-10-20T23:44:29Z",
+      "matched_findings": [
+        "a2c975",
+        "8a2c31"
+      ],
+      "needs_reverify": true,
+      "reverify": {
+        "events": [
+          {
+            "at": "2026-10-20T22:59:46Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4331222246",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4331222246",
+              "author": "lodekeeper",
+              "in_reply_to_id": 4330846964
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-10-20T22:59:46Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4331222803",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4331222803",
+              "author": "lodekeeper",
+              "in_reply_to_id": 4330958984
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-10-20T23:16:23Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4331256769",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4331256769",
+              "author": "markolazic01",
+              "in_reply_to_id": 4330958984
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-10-20T23:16:23Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4331319624",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4331319624",
+              "author": "markolazic01",
+              "in_reply_to_id": 4330958984
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-10-20T23:16:23Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4331339648",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4331339648",
+              "author": "lodekeeper",
+              "in_reply_to_id": 4330958984
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-10-20T23:44:29Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4331413887",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4331413887",
+              "author": "nflaig",
+              "in_reply_to_id": 4330958984
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-10-20T23:44:29Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4331515734",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4331515734",
+              "author": "lodekeeper",
+              "in_reply_to_id": 4330958984
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          }
+        ],
+        "last_event_at": "2026-10-20T23:44:29Z"
+      }
+    },
+    {
+      "id": "75a122",
+      "file": "packages/builder/src/builder.ts",
+      "line": 56,
+      "severity": "minor",
+      "reviewer": "nflaig",
+      "body": "\"software\" sounds a bit lame, what about \"engine\"?\r\n\r\nI know a project that calls itself \"Ethereum payload construction engine written in Zig\"",
+      "status": "addressed",
+      "addressed_commit": "86925723c28f6ae151a9c5308dfbd05d5da2668f",
+      "note": "Updated wording to payload construction engine in7ab; retained at8692572.",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "4330984467",
+        "repo": "ChainSafe/lodestar",
+        "pr": 10379,
+        "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330984467"
+      },
+      "created": "2026-10-20T22:54:56Z",
+      "updated": "2026-10-20T23:00:24Z",
+      "matched_findings": [
+        "2629a4",
+        "224270"
+      ],
+      "needs_reverify": true,
+      "reverify": {
+        "events": [
+          {
+            "at": "2026-10-20T22:54:56Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4331003211",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4331003211",
+              "author": "markolazic01",
+              "in_reply_to_id": 4330984467
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          }
+        ],
+        "last_event_at": "2026-10-20T22:54:56Z"
+      }
+    },
+    {
+      "id": "25a4df",
+      "file": "packages/builder/src/builder.ts",
+      "line": 56,
+      "severity": "minor",
+      "reviewer": "markolazic01",
+      "body": "hahahahah, agree, alright I'm updating that xD",
+      "status": "addressed",
+      "addressed_commit": "86925723c28f6ae151a9c5308dfbd05d5da2668f",
+      "note": "Updated wording to payload construction engine in7ab; retained at8692572.",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "4331003211",
+        "repo": "ChainSafe/lodestar",
+        "pr": 10379,
+        "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4331003211"
+      },
+      "created": "2026-10-20T22:54:56Z",
+      "updated": "2026-10-20T23:00:24Z",
+      "matched_findings": [
+        "2629a4",
+        "224270",
+        "75a122"
+      ]
+    },
+    {
+      "id": "379e84",
+      "file": "packages/builder/src/identity.ts",
+      "line": 149,
+      "severity": "minor",
+      "reviewer": "lodekeeper",
+      "body": "Verified in `f09097a1e5b` and current head `8692572`: the test now checks that no query occurs at slot 0, then advances to slot 1 and resolves. All 19 identity tests pass (51/51 across the four focused files). This finding is fixed.",
+      "status": "addressed",
+      "addressed_commit": "86925723c28f6ae151a9c5308dfbd05d5da2668f",
+      "note": "Fixed byf09097a1e5b;19/19 identity tests and51/51 focused tests pass at8692572. Slot0 no-request and slot1 wakeup assertions verified.",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "4331222246",
+        "repo": "ChainSafe/lodestar",
+        "pr": 10379,
+        "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4331222246"
+      },
+      "created": "2026-10-20T22:59:46Z",
+      "updated": "2026-10-20T23:44:29Z",
+      "matched_findings": [
+        "a2c975",
+        "8a2c31",
+        "b45392"
+      ],
+      "needs_reverify": true,
+      "reverify": {
+        "events": [
+          {
+            "at": "2026-10-20T22:59:46Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4331222803",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4331222803",
+              "author": "lodekeeper",
+              "in_reply_to_id": 4330958984
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-10-20T23:16:23Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4331256769",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4331256769",
+              "author": "markolazic01",
+              "in_reply_to_id": 4330958984
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-10-20T23:16:23Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4331319624",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4331319624",
+              "author": "markolazic01",
+              "in_reply_to_id": 4330958984
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-10-20T23:16:23Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4331339648",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4331339648",
+              "author": "lodekeeper",
+              "in_reply_to_id": 4330958984
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-10-20T23:44:29Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4331413887",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4331413887",
+              "author": "nflaig",
+              "in_reply_to_id": 4330958984
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-10-20T23:44:29Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4331515734",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4331515734",
+              "author": "lodekeeper",
+              "in_reply_to_id": 4330958984
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          }
+        ],
+        "last_event_at": "2026-10-20T23:44:29Z"
+      }
+    },
+    {
+      "id": "3b1434",
+      "file": "packages/cli/src/cmds/builder/options.ts",
+      "line": 96,
+      "severity": "nit",
+      "reviewer": "lodekeeper",
+      "body": "Verified at `8692572`: the handler passes `args[\"execution.timeout\"] ?? defaultExecutionEngineHttpOpts.timeout` to `initializeExecutionEngine`. That fallback is 12,000 ms and is forwarded to both the JSON-RPC and REST clients, so omitting the flag no longer leaves the transport default in effect.",
+      "status": "addressed",
+      "addressed_commit": "86925723c28f6ae151a9c5308dfbd05d5da2668f",
+      "note": "Verified real runtime execution.timeout fallback of12000ms reaches JSON-RPC and REST clients.",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "4331222543",
+        "repo": "ChainSafe/lodestar",
+        "pr": 10379,
+        "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4331222543"
+      },
+      "created": "2026-10-20T22:59:46Z",
+      "updated": "2026-10-20T23:00:24Z",
+      "matched_findings": [
+        "0e0994",
+        "f4445e"
+      ]
+    },
+    {
+      "id": "19bafc",
+      "file": "packages/builder/src/identity.ts",
+      "line": 149,
+      "severity": "nit",
+      "reviewer": "lodekeeper",
+      "body": "@markolazic01 could you post the Kurtosis result here once it is done, ideally the activation, identity-discovery and first-bid slots? The slot-1 unit test now passes at `8692572`, but I am leaving final approval pending this check so we can rule out the one-epoch bidding delay.",
+      "status": "acknowledged",
+      "addressed_commit": "86925723c28f6ae151a9c5308dfbd05d5da2668f",
+      "note": "Outstanding pre-merge runtime validation: Marko owns Kurtosis timely discovery/first-bid check. No result or waiver yet; final approval withheld.",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "4331222803",
+        "repo": "ChainSafe/lodestar",
+        "pr": 10379,
+        "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4331222803"
+      },
+      "created": "2026-10-20T22:59:46Z",
+      "updated": "2026-10-20T23:44:29Z",
+      "matched_findings": [
+        "a2c975",
+        "8a2c31",
+        "b45392",
+        "379e84"
+      ],
+      "needs_reverify": true,
+      "reverify": {
+        "events": [
+          {
+            "at": "2026-10-20T23:16:23Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4331256769",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4331256769",
+              "author": "markolazic01",
+              "in_reply_to_id": 4330958984
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-10-20T23:16:23Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4331319624",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4331319624",
+              "author": "markolazic01",
+              "in_reply_to_id": 4330958984
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-10-20T23:16:23Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4331339648",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4331339648",
+              "author": "lodekeeper",
+              "in_reply_to_id": 4330958984
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-10-20T23:44:29Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4331413887",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4331413887",
+              "author": "nflaig",
+              "in_reply_to_id": 4330958984
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-10-20T23:44:29Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4331515734",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4331515734",
+              "author": "lodekeeper",
+              "in_reply_to_id": 4330958984
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          }
+        ],
+        "last_event_at": "2026-10-20T23:44:29Z"
+      }
+    },
+    {
+      "id": "fee4cb",
+      "file": "packages/builder/src/identity.ts",
+      "line": 149,
+      "severity": "nit",
+      "reviewer": "markolazic01",
+      "body": "```\r\nOct-21 00:52:52.018[]                 info: Waiting for builder deposit to be finalized id=0x8ec9cc826ea7735329831dbe89c28ae700e39b51c817f1086483621a2104145343f912b3bf167027256780a62a1995bd, slot=23\r\nOct-21 00:52:58.020[]                 info: Waiting for builder deposit to be finalized id=0x8ec9cc826ea7735329831dbe89c28ae700e39b51c817f1086483621a2104145343f912b3bf167027256780a62a1995bd, slot=24\r\nOct-21 00:53:04.016[]                 info: Waiting for builder deposit to be finalized id=0x8e",
+      "status": "acknowledged",
+      "addressed_commit": "86925723c28f6ae151a9c5308dfbd05d5da2668f",
+      "note": "Basic runtime evidence and scope clarification reviewed, acknowledged in4331339648 and incorporated into final APPROVE5592990006.",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "4331256769",
+        "repo": "ChainSafe/lodestar",
+        "pr": 10379,
+        "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4331256769"
+      },
+      "created": "2026-10-20T23:16:23Z",
+      "updated": "2026-10-20T23:44:29Z",
+      "matched_findings": [
+        "a2c975",
+        "8a2c31",
+        "b45392",
+        "379e84",
+        "19bafc"
+      ],
+      "needs_reverify": true,
+      "reverify": {
+        "events": [
+          {
+            "at": "2026-10-20T23:16:23Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4331319624",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4331319624",
+              "author": "markolazic01",
+              "in_reply_to_id": 4330958984
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-10-20T23:16:23Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4331339648",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4331339648",
+              "author": "lodekeeper",
+              "in_reply_to_id": 4330958984
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-10-20T23:44:29Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4331413887",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4331413887",
+              "author": "nflaig",
+              "in_reply_to_id": 4330958984
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-10-20T23:44:29Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4331515734",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4331515734",
+              "author": "lodekeeper",
+              "in_reply_to_id": 4330958984
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          }
+        ],
+        "last_event_at": "2026-10-20T23:44:29Z"
+      }
+    },
+    {
+      "id": "bf5481",
+      "file": "packages/builder/src/identity.ts",
+      "line": 149,
+      "severity": "minor",
+      "reviewer": "markolazic01",
+      "body": "@lodekeeper here it is, looks fine but it is just a basic run",
+      "status": "acknowledged",
+      "addressed_commit": "86925723c28f6ae151a9c5308dfbd05d5da2668f",
+      "note": "Basic runtime evidence and scope clarification reviewed, acknowledged in4331339648 and incorporated into final APPROVE5592990006.",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "4331319624",
+        "repo": "ChainSafe/lodestar",
+        "pr": 10379,
+        "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4331319624"
+      },
+      "created": "2026-10-20T23:16:23Z",
+      "updated": "2026-10-20T23:44:29Z",
+      "matched_findings": [
+        "a2c975",
+        "8a2c31",
+        "b45392",
+        "379e84",
+        "19bafc",
+        "fee4cb"
+      ],
+      "needs_reverify": true,
+      "reverify": {
+        "events": [
+          {
+            "at": "2026-10-20T23:16:23Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4331339648",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4331339648",
+              "author": "lodekeeper",
+              "in_reply_to_id": 4330958984
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-10-20T23:44:29Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4331413887",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4331413887",
+              "author": "nflaig",
+              "in_reply_to_id": 4330958984
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-10-20T23:44:29Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4331515734",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4331515734",
+              "author": "lodekeeper",
+              "in_reply_to_id": 4330958984
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          }
+        ],
+        "last_event_at": "2026-10-20T23:44:29Z"
+      }
+    },
+    {
+      "id": "90f297",
+      "file": "packages/builder/src/identity.ts",
+      "line": 149,
+      "severity": "minor",
+      "reviewer": "lodekeeper",
+      "body": "Thanks, the basic run shows pending status through slot 32, active identity resolution at slot 33, bids for slots 34-37 and reveals for slots 34-36. There is no extra epoch without bidding after discovery in this sample. With Nico's agreement to handle further activation testing separately, that clears my remaining sign-off concern.",
+      "status": "acknowledged",
+      "addressed_commit": "86925723c28f6ae151a9c5308dfbd05d5da2668f",
+      "note": "Basic runtime evidence and scope clarification reviewed, acknowledged in4331339648 and incorporated into final APPROVE5592990006.",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "4331339648",
+        "repo": "ChainSafe/lodestar",
+        "pr": 10379,
+        "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4331339648"
+      },
+      "created": "2026-10-20T23:16:23Z",
+      "updated": "2026-10-20T23:44:29Z",
+      "matched_findings": [
+        "a2c975",
+        "8a2c31",
+        "b45392",
+        "379e84",
+        "19bafc",
+        "fee4cb",
+        "bf5481"
+      ],
+      "needs_reverify": true,
+      "reverify": {
+        "events": [
+          {
+            "at": "2026-10-20T23:44:29Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4331413887",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4331413887",
+              "author": "nflaig",
+              "in_reply_to_id": 4330958984
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          },
+          {
+            "at": "2026-10-20T23:44:29Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4331515734",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4331515734",
+              "author": "lodekeeper",
+              "in_reply_to_id": 4330958984
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          }
+        ],
+        "last_event_at": "2026-10-20T23:44:29Z"
+      }
+    },
+    {
+      "id": "9fb8b7",
+      "file": "packages/builder/src/identity.ts",
+      "line": 149,
+      "severity": "minor",
+      "reviewer": "nflaig",
+      "body": "might be able to move this forward one slot? either way not blocking to merge this",
+      "status": "acknowledged",
+      "addressed_commit": "f39fad29a1360ef44dcaee2da521e2b93b6be395",
+      "note": "Post-merge, explicitly nonblocking candidate: investigate one-slot-earlier builder discovery while preserving epoch-boundary behavior. Acknowledged in4331515734; not implemented or scheduled.",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "4331413887",
+        "repo": "ChainSafe/lodestar",
+        "pr": 10379,
+        "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4331413887"
+      },
+      "created": "2026-10-20T23:44:29Z",
+      "updated": "2026-10-20T23:44:54Z",
+      "matched_findings": [
+        "a2c975",
+        "8a2c31",
+        "b45392",
+        "379e84",
+        "19bafc",
+        "fee4cb",
+        "bf5481",
+        "90f297"
+      ],
+      "needs_reverify": true,
+      "reverify": {
+        "events": [
+          {
+            "at": "2026-10-20T23:44:29Z",
+            "source": {
+              "kind": "github-review-comment",
+              "repo": "ChainSafe/lodestar",
+              "pr": 10379,
+              "id": "4331515734",
+              "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4331515734",
+              "author": "lodekeeper",
+              "in_reply_to_id": 4330958984
+            },
+            "reason": "new related GitHub review comment in same file/line region"
+          }
+        ],
+        "last_event_at": "2026-10-20T23:44:29Z"
+      }
+    },
+    {
+      "id": "06d21f",
+      "file": "packages/builder/src/identity.ts",
+      "line": 149,
+      "severity": "minor",
+      "reviewer": "lodekeeper",
+      "body": "Noted for a follow-up to see whether discovery can happen a slot earlier, while preserving the epoch-boundary handling.",
+      "status": "acknowledged",
+      "addressed_commit": "f39fad29a1360ef44dcaee2da521e2b93b6be395",
+      "note": "Post-merge, explicitly nonblocking candidate: investigate one-slot-earlier builder discovery while preserving epoch-boundary behavior. Acknowledged in4331515734; not implemented or scheduled.",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "4331515734",
+        "repo": "ChainSafe/lodestar",
+        "pr": 10379,
+        "url": "https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4331515734"
+      },
+      "created": "2026-10-20T23:44:29Z",
+      "updated": "2026-10-20T23:44:54Z",
+      "matched_findings": [
+        "a2c975",
+        "8a2c31",
+        "b45392",
+        "379e84",
+        "19bafc",
+        "fee4cb",
+        "bf5481",
+        "90f297",
+        "9fb8b7"
+      ]
+    }
+  ],
+  "sync": {
+    "github": {
+      "ChainSafe/lodestar": {
+        "last_comment_id": "4331515734",
+        "last_synced": "2026-10-20T23:44:29Z",
+        "last_imported": 2,
+        "last_reverify_updates": 17
+      }
+    }
+  }
+}

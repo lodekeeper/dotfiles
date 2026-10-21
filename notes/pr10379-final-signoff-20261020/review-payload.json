@@ -1,0 +1,5 @@
+{
+  "commit_id": "86925723c28f6ae151a9c5308dfbd05d5da2668f",
+  "event": "COMMENT",
+  "body": "Rechecked `8692572`: the identity fork-boundary test is fixed and all 51 focused tests pass. The current head's build, type, lint and unit CI checks are green. The execution-timeout default is also applied correctly; the agreed follow-ups remain separate.\n\nI'm keeping final approval pending the [Kurtosis discovery check](https://github.com/ChainSafe/lodestar/pull/10379#discussion_r4330958984) that Marko picked up. The unit test verifies the polling schedule, but does not prove that an active builder starts bidding promptly on a running network."
+}

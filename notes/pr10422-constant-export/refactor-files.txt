@@ -1,0 +1,2 @@
+packages/beacon-node/src/node/options.ts
+packages/cli/src/cmds/beacon/handler.ts

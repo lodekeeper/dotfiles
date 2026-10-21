@@ -1,0 +1,1322 @@
+[
+  {
+    "id": 5509528604,
+    "node_id": "PRR_kwDOCD5_Gc8AAAABSGS8HA",
+    "user": {
+      "login": "chatgpt-codex-connector[bot]",
+      "id": 199175422,
+      "node_id": "BOT_kgDOC98s_g",
+      "avatar_url": "https://avatars.githubusercontent.com/in/1144995?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/chatgpt-codex-connector%5Bbot%5D",
+      "html_url": "https://github.com/apps/chatgpt-codex-connector",
+      "followers_url": "https://api.github.com/users/chatgpt-codex-connector%5Bbot%5D/followers",
+      "following_url": "https://api.github.com/users/chatgpt-codex-connector%5Bbot%5D/following{/other_user}",
+      "gists_url": "https://api.github.com/users/chatgpt-codex-connector%5Bbot%5D/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/chatgpt-codex-connector%5Bbot%5D/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/chatgpt-codex-connector%5Bbot%5D/subscriptions",
+      "organizations_url": "https://api.github.com/users/chatgpt-codex-connector%5Bbot%5D/orgs",
+      "repos_url": "https://api.github.com/users/chatgpt-codex-connector%5Bbot%5D/repos",
+      "events_url": "https://api.github.com/users/chatgpt-codex-connector%5Bbot%5D/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/chatgpt-codex-connector%5Bbot%5D/received_events",
+      "type": "Bot",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "\n### \ud83d\udca1 Codex Review\n\nHere are some automated review suggestions for this pull request.\n\n**Reviewed commit:** `725efef259`\n    \n\n<details> <summary>\u2139\ufe0f About Codex in GitHub</summary>\n<br/>\n\nCodex has been enabled to automatically review pull requests in this repo. Reviews are triggered when you\n- Open a pull request for review\n- Mark a draft as ready\n- Comment \"@codex review\".\n\nIf Codex has suggestions, it will comment; otherwise it will react with \ud83d\udc4d.\n\n\n\n\nWhen you [sign up for Codex through ChatGPT](https://openai.com/codex), Codex can also answer questions or update the PR, like \"@codex address that feedback\".\n            \n</details>",
+    "state": "COMMENTED",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5509528604",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379",
+    "author_association": "NONE",
+    "_links": {
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5509528604"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379"
+      }
+    },
+    "submitted_at": "2026-10-13T20:26:10Z",
+    "commit_id": "725efef25936c2703d8cff028bb6603a10af6cdd"
+  },
+  {
+    "id": 5509834638,
+    "node_id": "PRR_kwDOCD5_Gc8AAAABSGlnjg",
+    "user": {
+      "login": "markolazic01",
+      "id": 80317369,
+      "node_id": "MDQ6VXNlcjgwMzE3MzY5",
+      "avatar_url": "https://avatars.githubusercontent.com/u/80317369?u=0b40f8f9e20d1be8aab569c8c186ddf29889987f&v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/markolazic01",
+      "html_url": "https://github.com/markolazic01",
+      "followers_url": "https://api.github.com/users/markolazic01/followers",
+      "following_url": "https://api.github.com/users/markolazic01/following{/other_user}",
+      "gists_url": "https://api.github.com/users/markolazic01/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/markolazic01/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/markolazic01/subscriptions",
+      "organizations_url": "https://api.github.com/users/markolazic01/orgs",
+      "repos_url": "https://api.github.com/users/markolazic01/repos",
+      "events_url": "https://api.github.com/users/markolazic01/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/markolazic01/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "",
+    "state": "COMMENTED",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5509834638",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379",
+    "author_association": "CONTRIBUTOR",
+    "_links": {
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5509834638"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379"
+      }
+    },
+    "submitted_at": "2026-10-13T20:54:32Z",
+    "commit_id": "725efef25936c2703d8cff028bb6603a10af6cdd"
+  },
+  {
+    "id": 5509844927,
+    "node_id": "PRR_kwDOCD5_Gc8AAAABSGmPvw",
+    "user": {
+      "login": "markolazic01",
+      "id": 80317369,
+      "node_id": "MDQ6VXNlcjgwMzE3MzY5",
+      "avatar_url": "https://avatars.githubusercontent.com/u/80317369?u=0b40f8f9e20d1be8aab569c8c186ddf29889987f&v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/markolazic01",
+      "html_url": "https://github.com/markolazic01",
+      "followers_url": "https://api.github.com/users/markolazic01/followers",
+      "following_url": "https://api.github.com/users/markolazic01/following{/other_user}",
+      "gists_url": "https://api.github.com/users/markolazic01/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/markolazic01/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/markolazic01/subscriptions",
+      "organizations_url": "https://api.github.com/users/markolazic01/orgs",
+      "repos_url": "https://api.github.com/users/markolazic01/repos",
+      "events_url": "https://api.github.com/users/markolazic01/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/markolazic01/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "",
+    "state": "COMMENTED",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5509844927",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379",
+    "author_association": "CONTRIBUTOR",
+    "_links": {
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5509844927"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379"
+      }
+    },
+    "submitted_at": "2026-10-13T20:55:32Z",
+    "commit_id": "725efef25936c2703d8cff028bb6603a10af6cdd"
+  },
+  {
+    "id": 5509856343,
+    "node_id": "PRR_kwDOCD5_Gc8AAAABSGm8Vw",
+    "user": {
+      "login": "markolazic01",
+      "id": 80317369,
+      "node_id": "MDQ6VXNlcjgwMzE3MzY5",
+      "avatar_url": "https://avatars.githubusercontent.com/u/80317369?u=0b40f8f9e20d1be8aab569c8c186ddf29889987f&v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/markolazic01",
+      "html_url": "https://github.com/markolazic01",
+      "followers_url": "https://api.github.com/users/markolazic01/followers",
+      "following_url": "https://api.github.com/users/markolazic01/following{/other_user}",
+      "gists_url": "https://api.github.com/users/markolazic01/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/markolazic01/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/markolazic01/subscriptions",
+      "organizations_url": "https://api.github.com/users/markolazic01/orgs",
+      "repos_url": "https://api.github.com/users/markolazic01/repos",
+      "events_url": "https://api.github.com/users/markolazic01/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/markolazic01/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "",
+    "state": "COMMENTED",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5509856343",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379",
+    "author_association": "CONTRIBUTOR",
+    "_links": {
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5509856343"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379"
+      }
+    },
+    "submitted_at": "2026-10-13T20:56:37Z",
+    "commit_id": "725efef25936c2703d8cff028bb6603a10af6cdd"
+  },
+  {
+    "id": 5509857402,
+    "node_id": "PRR_kwDOCD5_Gc8AAAABSGnAeg",
+    "user": {
+      "login": "markolazic01",
+      "id": 80317369,
+      "node_id": "MDQ6VXNlcjgwMzE3MzY5",
+      "avatar_url": "https://avatars.githubusercontent.com/u/80317369?u=0b40f8f9e20d1be8aab569c8c186ddf29889987f&v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/markolazic01",
+      "html_url": "https://github.com/markolazic01",
+      "followers_url": "https://api.github.com/users/markolazic01/followers",
+      "following_url": "https://api.github.com/users/markolazic01/following{/other_user}",
+      "gists_url": "https://api.github.com/users/markolazic01/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/markolazic01/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/markolazic01/subscriptions",
+      "organizations_url": "https://api.github.com/users/markolazic01/orgs",
+      "repos_url": "https://api.github.com/users/markolazic01/repos",
+      "events_url": "https://api.github.com/users/markolazic01/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/markolazic01/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "",
+    "state": "COMMENTED",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5509857402",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379",
+    "author_association": "CONTRIBUTOR",
+    "_links": {
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5509857402"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379"
+      }
+    },
+    "submitted_at": "2026-10-13T20:56:43Z",
+    "commit_id": "725efef25936c2703d8cff028bb6603a10af6cdd"
+  },
+  {
+    "id": 5509930778,
+    "node_id": "PRR_kwDOCD5_Gc8AAAABSGrfGg",
+    "user": {
+      "login": "lodekeeper",
+      "id": 258435968,
+      "node_id": "U_kgDOD2drgA",
+      "avatar_url": "https://avatars.githubusercontent.com/u/258435968?u=73ea59876d1171aa491962c62c7aa27eeee7215f&v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/lodekeeper",
+      "html_url": "https://github.com/lodekeeper",
+      "followers_url": "https://api.github.com/users/lodekeeper/followers",
+      "following_url": "https://api.github.com/users/lodekeeper/following{/other_user}",
+      "gists_url": "https://api.github.com/users/lodekeeper/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/lodekeeper/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/lodekeeper/subscriptions",
+      "organizations_url": "https://api.github.com/users/lodekeeper/orgs",
+      "repos_url": "https://api.github.com/users/lodekeeper/repos",
+      "events_url": "https://api.github.com/users/lodekeeper/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/lodekeeper/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "",
+    "state": "COMMENTED",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5509930778",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379",
+    "author_association": "CONTRIBUTOR",
+    "_links": {
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5509930778"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379"
+      }
+    },
+    "submitted_at": "2026-10-13T21:03:48Z",
+    "commit_id": "5ddb86f26809b8d05fcc9f0db26bbbf4b581a26c"
+  },
+  {
+    "id": 5509958560,
+    "node_id": "PRR_kwDOCD5_Gc8AAAABSGtLoA",
+    "user": {
+      "login": "markolazic01",
+      "id": 80317369,
+      "node_id": "MDQ6VXNlcjgwMzE3MzY5",
+      "avatar_url": "https://avatars.githubusercontent.com/u/80317369?u=0b40f8f9e20d1be8aab569c8c186ddf29889987f&v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/markolazic01",
+      "html_url": "https://github.com/markolazic01",
+      "followers_url": "https://api.github.com/users/markolazic01/followers",
+      "following_url": "https://api.github.com/users/markolazic01/following{/other_user}",
+      "gists_url": "https://api.github.com/users/markolazic01/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/markolazic01/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/markolazic01/subscriptions",
+      "organizations_url": "https://api.github.com/users/markolazic01/orgs",
+      "repos_url": "https://api.github.com/users/markolazic01/repos",
+      "events_url": "https://api.github.com/users/markolazic01/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/markolazic01/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "",
+    "state": "COMMENTED",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5509958560",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379",
+    "author_association": "CONTRIBUTOR",
+    "_links": {
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5509958560"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379"
+      }
+    },
+    "submitted_at": "2026-10-13T21:06:31Z",
+    "commit_id": "725efef25936c2703d8cff028bb6603a10af6cdd"
+  },
+  {
+    "id": 5519662609,
+    "node_id": "PRR_kwDOCD5_Gc8AAAABSP9eEQ",
+    "user": {
+      "login": "krisoshea-eth",
+      "id": 91485468,
+      "node_id": "MDQ6VXNlcjkxNDg1NDY4",
+      "avatar_url": "https://avatars.githubusercontent.com/u/91485468?u=20c3733f0b809e0c56659f34f32c7f2fa735fa6e&v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/krisoshea-eth",
+      "html_url": "https://github.com/krisoshea-eth",
+      "followers_url": "https://api.github.com/users/krisoshea-eth/followers",
+      "following_url": "https://api.github.com/users/krisoshea-eth/following{/other_user}",
+      "gists_url": "https://api.github.com/users/krisoshea-eth/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/krisoshea-eth/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/krisoshea-eth/subscriptions",
+      "organizations_url": "https://api.github.com/users/krisoshea-eth/orgs",
+      "repos_url": "https://api.github.com/users/krisoshea-eth/repos",
+      "events_url": "https://api.github.com/users/krisoshea-eth/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/krisoshea-eth/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "",
+    "state": "COMMENTED",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5519662609",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379",
+    "author_association": "CONTRIBUTOR",
+    "_links": {
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5519662609"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379"
+      }
+    },
+    "submitted_at": "2026-10-14T14:36:33Z",
+    "commit_id": "38cec94fee27c0b38a71e87e39d082888458d1a3"
+  },
+  {
+    "id": 5590377753,
+    "node_id": "PRR_kwDOCD5_Gc8AAAABTTZlGQ",
+    "user": {
+      "login": "nflaig",
+      "id": 38436224,
+      "node_id": "MDQ6VXNlcjM4NDM2MjI0",
+      "avatar_url": "https://avatars.githubusercontent.com/u/38436224?u=5862a2c2438b5c9c48be6e908b07203d1b6d045d&v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/nflaig",
+      "html_url": "https://github.com/nflaig",
+      "followers_url": "https://api.github.com/users/nflaig/followers",
+      "following_url": "https://api.github.com/users/nflaig/following{/other_user}",
+      "gists_url": "https://api.github.com/users/nflaig/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/nflaig/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/nflaig/subscriptions",
+      "organizations_url": "https://api.github.com/users/nflaig/orgs",
+      "repos_url": "https://api.github.com/users/nflaig/repos",
+      "events_url": "https://api.github.com/users/nflaig/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/nflaig/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "",
+    "state": "COMMENTED",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5590377753",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379",
+    "author_association": "MEMBER",
+    "_links": {
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5590377753"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379"
+      }
+    },
+    "submitted_at": "2026-10-20T19:18:03Z",
+    "commit_id": "119fda5f3bbe03e0b2d26b6e6bd3ce4b4ccebe4b"
+  },
+  {
+    "id": 5590582953,
+    "node_id": "PRR_kwDOCD5_Gc8AAAABTTmGqQ",
+    "user": {
+      "login": "markolazic01",
+      "id": 80317369,
+      "node_id": "MDQ6VXNlcjgwMzE3MzY5",
+      "avatar_url": "https://avatars.githubusercontent.com/u/80317369?u=0b40f8f9e20d1be8aab569c8c186ddf29889987f&v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/markolazic01",
+      "html_url": "https://github.com/markolazic01",
+      "followers_url": "https://api.github.com/users/markolazic01/followers",
+      "following_url": "https://api.github.com/users/markolazic01/following{/other_user}",
+      "gists_url": "https://api.github.com/users/markolazic01/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/markolazic01/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/markolazic01/subscriptions",
+      "organizations_url": "https://api.github.com/users/markolazic01/orgs",
+      "repos_url": "https://api.github.com/users/markolazic01/repos",
+      "events_url": "https://api.github.com/users/markolazic01/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/markolazic01/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "",
+    "state": "COMMENTED",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5590582953",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379",
+    "author_association": "CONTRIBUTOR",
+    "_links": {
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5590582953"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379"
+      }
+    },
+    "submitted_at": "2026-10-20T19:32:45Z",
+    "commit_id": "119fda5f3bbe03e0b2d26b6e6bd3ce4b4ccebe4b"
+  },
+  {
+    "id": 5590601776,
+    "node_id": "PRR_kwDOCD5_Gc8AAAABTTnQMA",
+    "user": {
+      "login": "lodekeeper",
+      "id": 258435968,
+      "node_id": "U_kgDOD2drgA",
+      "avatar_url": "https://avatars.githubusercontent.com/u/258435968?u=73ea59876d1171aa491962c62c7aa27eeee7215f&v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/lodekeeper",
+      "html_url": "https://github.com/lodekeeper",
+      "followers_url": "https://api.github.com/users/lodekeeper/followers",
+      "following_url": "https://api.github.com/users/lodekeeper/following{/other_user}",
+      "gists_url": "https://api.github.com/users/lodekeeper/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/lodekeeper/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/lodekeeper/subscriptions",
+      "organizations_url": "https://api.github.com/users/lodekeeper/orgs",
+      "repos_url": "https://api.github.com/users/lodekeeper/repos",
+      "events_url": "https://api.github.com/users/lodekeeper/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/lodekeeper/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "",
+    "state": "COMMENTED",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5590601776",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379",
+    "author_association": "CONTRIBUTOR",
+    "_links": {
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5590601776"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379"
+      }
+    },
+    "submitted_at": "2026-10-20T19:34:07Z",
+    "commit_id": "119fda5f3bbe03e0b2d26b6e6bd3ce4b4ccebe4b"
+  },
+  {
+    "id": 5590714629,
+    "node_id": "PRR_kwDOCD5_Gc8AAAABTTuJBQ",
+    "user": {
+      "login": "nflaig",
+      "id": 38436224,
+      "node_id": "MDQ6VXNlcjM4NDM2MjI0",
+      "avatar_url": "https://avatars.githubusercontent.com/u/38436224?u=5862a2c2438b5c9c48be6e908b07203d1b6d045d&v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/nflaig",
+      "html_url": "https://github.com/nflaig",
+      "followers_url": "https://api.github.com/users/nflaig/followers",
+      "following_url": "https://api.github.com/users/nflaig/following{/other_user}",
+      "gists_url": "https://api.github.com/users/nflaig/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/nflaig/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/nflaig/subscriptions",
+      "organizations_url": "https://api.github.com/users/nflaig/orgs",
+      "repos_url": "https://api.github.com/users/nflaig/repos",
+      "events_url": "https://api.github.com/users/nflaig/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/nflaig/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "",
+    "state": "COMMENTED",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5590714629",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379",
+    "author_association": "MEMBER",
+    "_links": {
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5590714629"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379"
+      }
+    },
+    "submitted_at": "2026-10-20T20:56:14Z",
+    "commit_id": "119fda5f3bbe03e0b2d26b6e6bd3ce4b4ccebe4b"
+  },
+  {
+    "id": 5591829695,
+    "node_id": "PRR_kwDOCD5_Gc8AAAABTUyMvw",
+    "user": {
+      "login": "lodekeeper",
+      "id": 258435968,
+      "node_id": "U_kgDOD2drgA",
+      "avatar_url": "https://avatars.githubusercontent.com/u/258435968?u=73ea59876d1171aa491962c62c7aa27eeee7215f&v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/lodekeeper",
+      "html_url": "https://github.com/lodekeeper",
+      "followers_url": "https://api.github.com/users/lodekeeper/followers",
+      "following_url": "https://api.github.com/users/lodekeeper/following{/other_user}",
+      "gists_url": "https://api.github.com/users/lodekeeper/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/lodekeeper/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/lodekeeper/subscriptions",
+      "organizations_url": "https://api.github.com/users/lodekeeper/orgs",
+      "repos_url": "https://api.github.com/users/lodekeeper/repos",
+      "events_url": "https://api.github.com/users/lodekeeper/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/lodekeeper/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "",
+    "state": "COMMENTED",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5591829695",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379",
+    "author_association": "CONTRIBUTOR",
+    "_links": {
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5591829695"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379"
+      }
+    },
+    "submitted_at": "2026-10-20T21:15:02Z",
+    "commit_id": "119fda5f3bbe03e0b2d26b6e6bd3ce4b4ccebe4b"
+  },
+  {
+    "id": 5591830120,
+    "node_id": "PRR_kwDOCD5_Gc8AAAABTUyOaA",
+    "user": {
+      "login": "lodekeeper",
+      "id": 258435968,
+      "node_id": "U_kgDOD2drgA",
+      "avatar_url": "https://avatars.githubusercontent.com/u/258435968?u=73ea59876d1171aa491962c62c7aa27eeee7215f&v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/lodekeeper",
+      "html_url": "https://github.com/lodekeeper",
+      "followers_url": "https://api.github.com/users/lodekeeper/followers",
+      "following_url": "https://api.github.com/users/lodekeeper/following{/other_user}",
+      "gists_url": "https://api.github.com/users/lodekeeper/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/lodekeeper/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/lodekeeper/subscriptions",
+      "organizations_url": "https://api.github.com/users/lodekeeper/orgs",
+      "repos_url": "https://api.github.com/users/lodekeeper/repos",
+      "events_url": "https://api.github.com/users/lodekeeper/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/lodekeeper/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "",
+    "state": "COMMENTED",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5591830120",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379",
+    "author_association": "CONTRIBUTOR",
+    "_links": {
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5591830120"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379"
+      }
+    },
+    "submitted_at": "2026-10-20T21:15:05Z",
+    "commit_id": "119fda5f3bbe03e0b2d26b6e6bd3ce4b4ccebe4b"
+  },
+  {
+    "id": 5591830488,
+    "node_id": "PRR_kwDOCD5_Gc8AAAABTUyP2A",
+    "user": {
+      "login": "lodekeeper",
+      "id": 258435968,
+      "node_id": "U_kgDOD2drgA",
+      "avatar_url": "https://avatars.githubusercontent.com/u/258435968?u=73ea59876d1171aa491962c62c7aa27eeee7215f&v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/lodekeeper",
+      "html_url": "https://github.com/lodekeeper",
+      "followers_url": "https://api.github.com/users/lodekeeper/followers",
+      "following_url": "https://api.github.com/users/lodekeeper/following{/other_user}",
+      "gists_url": "https://api.github.com/users/lodekeeper/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/lodekeeper/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/lodekeeper/subscriptions",
+      "organizations_url": "https://api.github.com/users/lodekeeper/orgs",
+      "repos_url": "https://api.github.com/users/lodekeeper/repos",
+      "events_url": "https://api.github.com/users/lodekeeper/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/lodekeeper/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "",
+    "state": "COMMENTED",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5591830488",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379",
+    "author_association": "CONTRIBUTOR",
+    "_links": {
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5591830488"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379"
+      }
+    },
+    "submitted_at": "2026-10-20T21:15:07Z",
+    "commit_id": "119fda5f3bbe03e0b2d26b6e6bd3ce4b4ccebe4b"
+  },
+  {
+    "id": 5591830751,
+    "node_id": "PRR_kwDOCD5_Gc8AAAABTUyQ3w",
+    "user": {
+      "login": "lodekeeper",
+      "id": 258435968,
+      "node_id": "U_kgDOD2drgA",
+      "avatar_url": "https://avatars.githubusercontent.com/u/258435968?u=73ea59876d1171aa491962c62c7aa27eeee7215f&v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/lodekeeper",
+      "html_url": "https://github.com/lodekeeper",
+      "followers_url": "https://api.github.com/users/lodekeeper/followers",
+      "following_url": "https://api.github.com/users/lodekeeper/following{/other_user}",
+      "gists_url": "https://api.github.com/users/lodekeeper/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/lodekeeper/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/lodekeeper/subscriptions",
+      "organizations_url": "https://api.github.com/users/lodekeeper/orgs",
+      "repos_url": "https://api.github.com/users/lodekeeper/repos",
+      "events_url": "https://api.github.com/users/lodekeeper/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/lodekeeper/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "",
+    "state": "COMMENTED",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5591830751",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379",
+    "author_association": "CONTRIBUTOR",
+    "_links": {
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5591830751"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379"
+      }
+    },
+    "submitted_at": "2026-10-20T21:15:09Z",
+    "commit_id": "119fda5f3bbe03e0b2d26b6e6bd3ce4b4ccebe4b"
+  },
+  {
+    "id": 5591831108,
+    "node_id": "PRR_kwDOCD5_Gc8AAAABTUySRA",
+    "user": {
+      "login": "lodekeeper",
+      "id": 258435968,
+      "node_id": "U_kgDOD2drgA",
+      "avatar_url": "https://avatars.githubusercontent.com/u/258435968?u=73ea59876d1171aa491962c62c7aa27eeee7215f&v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/lodekeeper",
+      "html_url": "https://github.com/lodekeeper",
+      "followers_url": "https://api.github.com/users/lodekeeper/followers",
+      "following_url": "https://api.github.com/users/lodekeeper/following{/other_user}",
+      "gists_url": "https://api.github.com/users/lodekeeper/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/lodekeeper/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/lodekeeper/subscriptions",
+      "organizations_url": "https://api.github.com/users/lodekeeper/orgs",
+      "repos_url": "https://api.github.com/users/lodekeeper/repos",
+      "events_url": "https://api.github.com/users/lodekeeper/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/lodekeeper/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "",
+    "state": "COMMENTED",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5591831108",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379",
+    "author_association": "CONTRIBUTOR",
+    "_links": {
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5591831108"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379"
+      }
+    },
+    "submitted_at": "2026-10-20T21:15:11Z",
+    "commit_id": "119fda5f3bbe03e0b2d26b6e6bd3ce4b4ccebe4b"
+  },
+  {
+    "id": 5591831545,
+    "node_id": "PRR_kwDOCD5_Gc8AAAABTUyT-Q",
+    "user": {
+      "login": "lodekeeper",
+      "id": 258435968,
+      "node_id": "U_kgDOD2drgA",
+      "avatar_url": "https://avatars.githubusercontent.com/u/258435968?u=73ea59876d1171aa491962c62c7aa27eeee7215f&v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/lodekeeper",
+      "html_url": "https://github.com/lodekeeper",
+      "followers_url": "https://api.github.com/users/lodekeeper/followers",
+      "following_url": "https://api.github.com/users/lodekeeper/following{/other_user}",
+      "gists_url": "https://api.github.com/users/lodekeeper/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/lodekeeper/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/lodekeeper/subscriptions",
+      "organizations_url": "https://api.github.com/users/lodekeeper/orgs",
+      "repos_url": "https://api.github.com/users/lodekeeper/repos",
+      "events_url": "https://api.github.com/users/lodekeeper/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/lodekeeper/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "",
+    "state": "COMMENTED",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5591831545",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379",
+    "author_association": "CONTRIBUTOR",
+    "_links": {
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5591831545"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379"
+      }
+    },
+    "submitted_at": "2026-10-20T21:15:13Z",
+    "commit_id": "119fda5f3bbe03e0b2d26b6e6bd3ce4b4ccebe4b"
+  },
+  {
+    "id": 5591831842,
+    "node_id": "PRR_kwDOCD5_Gc8AAAABTUyVIg",
+    "user": {
+      "login": "lodekeeper",
+      "id": 258435968,
+      "node_id": "U_kgDOD2drgA",
+      "avatar_url": "https://avatars.githubusercontent.com/u/258435968?u=73ea59876d1171aa491962c62c7aa27eeee7215f&v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/lodekeeper",
+      "html_url": "https://github.com/lodekeeper",
+      "followers_url": "https://api.github.com/users/lodekeeper/followers",
+      "following_url": "https://api.github.com/users/lodekeeper/following{/other_user}",
+      "gists_url": "https://api.github.com/users/lodekeeper/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/lodekeeper/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/lodekeeper/subscriptions",
+      "organizations_url": "https://api.github.com/users/lodekeeper/orgs",
+      "repos_url": "https://api.github.com/users/lodekeeper/repos",
+      "events_url": "https://api.github.com/users/lodekeeper/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/lodekeeper/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "",
+    "state": "COMMENTED",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5591831842",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379",
+    "author_association": "CONTRIBUTOR",
+    "_links": {
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5591831842"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379"
+      }
+    },
+    "submitted_at": "2026-10-20T21:15:15Z",
+    "commit_id": "119fda5f3bbe03e0b2d26b6e6bd3ce4b4ccebe4b"
+  },
+  {
+    "id": 5591832225,
+    "node_id": "PRR_kwDOCD5_Gc8AAAABTUyWoQ",
+    "user": {
+      "login": "lodekeeper",
+      "id": 258435968,
+      "node_id": "U_kgDOD2drgA",
+      "avatar_url": "https://avatars.githubusercontent.com/u/258435968?u=73ea59876d1171aa491962c62c7aa27eeee7215f&v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/lodekeeper",
+      "html_url": "https://github.com/lodekeeper",
+      "followers_url": "https://api.github.com/users/lodekeeper/followers",
+      "following_url": "https://api.github.com/users/lodekeeper/following{/other_user}",
+      "gists_url": "https://api.github.com/users/lodekeeper/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/lodekeeper/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/lodekeeper/subscriptions",
+      "organizations_url": "https://api.github.com/users/lodekeeper/orgs",
+      "repos_url": "https://api.github.com/users/lodekeeper/repos",
+      "events_url": "https://api.github.com/users/lodekeeper/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/lodekeeper/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "",
+    "state": "COMMENTED",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5591832225",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379",
+    "author_association": "CONTRIBUTOR",
+    "_links": {
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5591832225"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379"
+      }
+    },
+    "submitted_at": "2026-10-20T21:15:17Z",
+    "commit_id": "119fda5f3bbe03e0b2d26b6e6bd3ce4b4ccebe4b"
+  },
+  {
+    "id": 5591832608,
+    "node_id": "PRR_kwDOCD5_Gc8AAAABTUyYIA",
+    "user": {
+      "login": "lodekeeper",
+      "id": 258435968,
+      "node_id": "U_kgDOD2drgA",
+      "avatar_url": "https://avatars.githubusercontent.com/u/258435968?u=73ea59876d1171aa491962c62c7aa27eeee7215f&v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/lodekeeper",
+      "html_url": "https://github.com/lodekeeper",
+      "followers_url": "https://api.github.com/users/lodekeeper/followers",
+      "following_url": "https://api.github.com/users/lodekeeper/following{/other_user}",
+      "gists_url": "https://api.github.com/users/lodekeeper/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/lodekeeper/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/lodekeeper/subscriptions",
+      "organizations_url": "https://api.github.com/users/lodekeeper/orgs",
+      "repos_url": "https://api.github.com/users/lodekeeper/repos",
+      "events_url": "https://api.github.com/users/lodekeeper/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/lodekeeper/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "",
+    "state": "COMMENTED",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5591832608",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379",
+    "author_association": "CONTRIBUTOR",
+    "_links": {
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5591832608"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379"
+      }
+    },
+    "submitted_at": "2026-10-20T21:15:19Z",
+    "commit_id": "119fda5f3bbe03e0b2d26b6e6bd3ce4b4ccebe4b"
+  },
+  {
+    "id": 5591832934,
+    "node_id": "PRR_kwDOCD5_Gc8AAAABTUyZZg",
+    "user": {
+      "login": "lodekeeper",
+      "id": 258435968,
+      "node_id": "U_kgDOD2drgA",
+      "avatar_url": "https://avatars.githubusercontent.com/u/258435968?u=73ea59876d1171aa491962c62c7aa27eeee7215f&v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/lodekeeper",
+      "html_url": "https://github.com/lodekeeper",
+      "followers_url": "https://api.github.com/users/lodekeeper/followers",
+      "following_url": "https://api.github.com/users/lodekeeper/following{/other_user}",
+      "gists_url": "https://api.github.com/users/lodekeeper/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/lodekeeper/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/lodekeeper/subscriptions",
+      "organizations_url": "https://api.github.com/users/lodekeeper/orgs",
+      "repos_url": "https://api.github.com/users/lodekeeper/repos",
+      "events_url": "https://api.github.com/users/lodekeeper/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/lodekeeper/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "",
+    "state": "COMMENTED",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5591832934",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379",
+    "author_association": "CONTRIBUTOR",
+    "_links": {
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5591832934"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379"
+      }
+    },
+    "submitted_at": "2026-10-20T21:15:21Z",
+    "commit_id": "119fda5f3bbe03e0b2d26b6e6bd3ce4b4ccebe4b"
+  },
+  {
+    "id": 5591833268,
+    "node_id": "PRR_kwDOCD5_Gc8AAAABTUyatA",
+    "user": {
+      "login": "lodekeeper",
+      "id": 258435968,
+      "node_id": "U_kgDOD2drgA",
+      "avatar_url": "https://avatars.githubusercontent.com/u/258435968?u=73ea59876d1171aa491962c62c7aa27eeee7215f&v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/lodekeeper",
+      "html_url": "https://github.com/lodekeeper",
+      "followers_url": "https://api.github.com/users/lodekeeper/followers",
+      "following_url": "https://api.github.com/users/lodekeeper/following{/other_user}",
+      "gists_url": "https://api.github.com/users/lodekeeper/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/lodekeeper/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/lodekeeper/subscriptions",
+      "organizations_url": "https://api.github.com/users/lodekeeper/orgs",
+      "repos_url": "https://api.github.com/users/lodekeeper/repos",
+      "events_url": "https://api.github.com/users/lodekeeper/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/lodekeeper/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "",
+    "state": "COMMENTED",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5591833268",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379",
+    "author_association": "CONTRIBUTOR",
+    "_links": {
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5591833268"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379"
+      }
+    },
+    "submitted_at": "2026-10-20T21:15:24Z",
+    "commit_id": "119fda5f3bbe03e0b2d26b6e6bd3ce4b4ccebe4b"
+  },
+  {
+    "id": 5591833587,
+    "node_id": "PRR_kwDOCD5_Gc8AAAABTUyb8w",
+    "user": {
+      "login": "lodekeeper",
+      "id": 258435968,
+      "node_id": "U_kgDOD2drgA",
+      "avatar_url": "https://avatars.githubusercontent.com/u/258435968?u=73ea59876d1171aa491962c62c7aa27eeee7215f&v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/lodekeeper",
+      "html_url": "https://github.com/lodekeeper",
+      "followers_url": "https://api.github.com/users/lodekeeper/followers",
+      "following_url": "https://api.github.com/users/lodekeeper/following{/other_user}",
+      "gists_url": "https://api.github.com/users/lodekeeper/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/lodekeeper/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/lodekeeper/subscriptions",
+      "organizations_url": "https://api.github.com/users/lodekeeper/orgs",
+      "repos_url": "https://api.github.com/users/lodekeeper/repos",
+      "events_url": "https://api.github.com/users/lodekeeper/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/lodekeeper/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "",
+    "state": "COMMENTED",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5591833587",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379",
+    "author_association": "CONTRIBUTOR",
+    "_links": {
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5591833587"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379"
+      }
+    },
+    "submitted_at": "2026-10-20T21:15:26Z",
+    "commit_id": "119fda5f3bbe03e0b2d26b6e6bd3ce4b4ccebe4b"
+  },
+  {
+    "id": 5592073595,
+    "node_id": "PRR_kwDOCD5_Gc8AAAABTVBFew",
+    "user": {
+      "login": "markolazic01",
+      "id": 80317369,
+      "node_id": "MDQ6VXNlcjgwMzE3MzY5",
+      "avatar_url": "https://avatars.githubusercontent.com/u/80317369?u=0b40f8f9e20d1be8aab569c8c186ddf29889987f&v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/markolazic01",
+      "html_url": "https://github.com/markolazic01",
+      "followers_url": "https://api.github.com/users/markolazic01/followers",
+      "following_url": "https://api.github.com/users/markolazic01/following{/other_user}",
+      "gists_url": "https://api.github.com/users/markolazic01/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/markolazic01/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/markolazic01/subscriptions",
+      "organizations_url": "https://api.github.com/users/markolazic01/orgs",
+      "repos_url": "https://api.github.com/users/markolazic01/repos",
+      "events_url": "https://api.github.com/users/markolazic01/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/markolazic01/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "",
+    "state": "COMMENTED",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5592073595",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379",
+    "author_association": "CONTRIBUTOR",
+    "_links": {
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5592073595"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379"
+      }
+    },
+    "submitted_at": "2026-10-20T21:37:24Z",
+    "commit_id": "119fda5f3bbe03e0b2d26b6e6bd3ce4b4ccebe4b"
+  },
+  {
+    "id": 5592148722,
+    "node_id": "PRR_kwDOCD5_Gc8AAAABTVFq8g",
+    "user": {
+      "login": "markolazic01",
+      "id": 80317369,
+      "node_id": "MDQ6VXNlcjgwMzE3MzY5",
+      "avatar_url": "https://avatars.githubusercontent.com/u/80317369?u=0b40f8f9e20d1be8aab569c8c186ddf29889987f&v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/markolazic01",
+      "html_url": "https://github.com/markolazic01",
+      "followers_url": "https://api.github.com/users/markolazic01/followers",
+      "following_url": "https://api.github.com/users/markolazic01/following{/other_user}",
+      "gists_url": "https://api.github.com/users/markolazic01/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/markolazic01/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/markolazic01/subscriptions",
+      "organizations_url": "https://api.github.com/users/markolazic01/orgs",
+      "repos_url": "https://api.github.com/users/markolazic01/repos",
+      "events_url": "https://api.github.com/users/markolazic01/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/markolazic01/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "",
+    "state": "COMMENTED",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5592148722",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379",
+    "author_association": "CONTRIBUTOR",
+    "_links": {
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5592148722"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379"
+      }
+    },
+    "submitted_at": "2026-10-20T21:44:02Z",
+    "commit_id": "119fda5f3bbe03e0b2d26b6e6bd3ce4b4ccebe4b"
+  },
+  {
+    "id": 5592202571,
+    "node_id": "PRR_kwDOCD5_Gc8AAAABTVI9Sw",
+    "user": {
+      "login": "lodekeeper",
+      "id": 258435968,
+      "node_id": "U_kgDOD2drgA",
+      "avatar_url": "https://avatars.githubusercontent.com/u/258435968?u=73ea59876d1171aa491962c62c7aa27eeee7215f&v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/lodekeeper",
+      "html_url": "https://github.com/lodekeeper",
+      "followers_url": "https://api.github.com/users/lodekeeper/followers",
+      "following_url": "https://api.github.com/users/lodekeeper/following{/other_user}",
+      "gists_url": "https://api.github.com/users/lodekeeper/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/lodekeeper/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/lodekeeper/subscriptions",
+      "organizations_url": "https://api.github.com/users/lodekeeper/orgs",
+      "repos_url": "https://api.github.com/users/lodekeeper/repos",
+      "events_url": "https://api.github.com/users/lodekeeper/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/lodekeeper/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "",
+    "state": "COMMENTED",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5592202571",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379",
+    "author_association": "CONTRIBUTOR",
+    "_links": {
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5592202571"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379"
+      }
+    },
+    "submitted_at": "2026-10-20T21:48:45Z",
+    "commit_id": "119fda5f3bbe03e0b2d26b6e6bd3ce4b4ccebe4b"
+  },
+  {
+    "id": 5592395445,
+    "node_id": "PRR_kwDOCD5_Gc8AAAABTVUutQ",
+    "user": {
+      "login": "lodekeeper",
+      "id": 258435968,
+      "node_id": "U_kgDOD2drgA",
+      "avatar_url": "https://avatars.githubusercontent.com/u/258435968?u=73ea59876d1171aa491962c62c7aa27eeee7215f&v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/lodekeeper",
+      "html_url": "https://github.com/lodekeeper",
+      "followers_url": "https://api.github.com/users/lodekeeper/followers",
+      "following_url": "https://api.github.com/users/lodekeeper/following{/other_user}",
+      "gists_url": "https://api.github.com/users/lodekeeper/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/lodekeeper/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/lodekeeper/subscriptions",
+      "organizations_url": "https://api.github.com/users/lodekeeper/orgs",
+      "repos_url": "https://api.github.com/users/lodekeeper/repos",
+      "events_url": "https://api.github.com/users/lodekeeper/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/lodekeeper/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "@markolazic01 Checked `352a400` against the discussion. The requested source changes are present, with `head_v2` canonical-head tracking and pending payments/withdrawals reconciliation left as agreed follow-ups. One test still needs updating: the identity fork-boundary case now times out, as noted inline. The other 50 tests across the four focused files pass; Biome passes on the eight TypeScript files changed by this commit.\n\nSmall metadata fix: the PR description still lists `--jwtSecret`; it should say `--execution.jwtSecret`.\n\nThe older reveal-retry, per-job Engine cancellation and source-idle-warning follow-ups remain separate.",
+    "state": "COMMENTED",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5592395445",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379",
+    "author_association": "CONTRIBUTOR",
+    "_links": {
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5592395445"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379"
+      }
+    },
+    "submitted_at": "2026-10-20T22:06:56Z",
+    "commit_id": "352a400e0664ad910adc486826379c743d014522"
+  },
+  {
+    "id": 5592523039,
+    "node_id": "PRR_kwDOCD5_Gc8AAAABTVchHw",
+    "user": {
+      "login": "nflaig",
+      "id": 38436224,
+      "node_id": "MDQ6VXNlcjM4NDM2MjI0",
+      "avatar_url": "https://avatars.githubusercontent.com/u/38436224?u=5862a2c2438b5c9c48be6e908b07203d1b6d045d&v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/nflaig",
+      "html_url": "https://github.com/nflaig",
+      "followers_url": "https://api.github.com/users/nflaig/followers",
+      "following_url": "https://api.github.com/users/nflaig/following{/other_user}",
+      "gists_url": "https://api.github.com/users/nflaig/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/nflaig/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/nflaig/subscriptions",
+      "organizations_url": "https://api.github.com/users/nflaig/orgs",
+      "repos_url": "https://api.github.com/users/nflaig/repos",
+      "events_url": "https://api.github.com/users/nflaig/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/nflaig/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "",
+    "state": "COMMENTED",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5592523039",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379",
+    "author_association": "MEMBER",
+    "_links": {
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5592523039"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379"
+      }
+    },
+    "submitted_at": "2026-10-20T22:21:33Z",
+    "commit_id": "352a400e0664ad910adc486826379c743d014522"
+  },
+  {
+    "id": 5592541922,
+    "node_id": "PRR_kwDOCD5_Gc8AAAABTVdq4g",
+    "user": {
+      "login": "markolazic01",
+      "id": 80317369,
+      "node_id": "MDQ6VXNlcjgwMzE3MzY5",
+      "avatar_url": "https://avatars.githubusercontent.com/u/80317369?u=0b40f8f9e20d1be8aab569c8c186ddf29889987f&v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/markolazic01",
+      "html_url": "https://github.com/markolazic01",
+      "followers_url": "https://api.github.com/users/markolazic01/followers",
+      "following_url": "https://api.github.com/users/markolazic01/following{/other_user}",
+      "gists_url": "https://api.github.com/users/markolazic01/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/markolazic01/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/markolazic01/subscriptions",
+      "organizations_url": "https://api.github.com/users/markolazic01/orgs",
+      "repos_url": "https://api.github.com/users/markolazic01/repos",
+      "events_url": "https://api.github.com/users/markolazic01/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/markolazic01/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "",
+    "state": "COMMENTED",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5592541922",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379",
+    "author_association": "CONTRIBUTOR",
+    "_links": {
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5592541922"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379"
+      }
+    },
+    "submitted_at": "2026-10-20T22:23:49Z",
+    "commit_id": "352a400e0664ad910adc486826379c743d014522"
+  },
+  {
+    "id": 5592552050,
+    "node_id": "PRR_kwDOCD5_Gc8AAAABTVeScg",
+    "user": {
+      "login": "nflaig",
+      "id": 38436224,
+      "node_id": "MDQ6VXNlcjM4NDM2MjI0",
+      "avatar_url": "https://avatars.githubusercontent.com/u/38436224?u=5862a2c2438b5c9c48be6e908b07203d1b6d045d&v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/nflaig",
+      "html_url": "https://github.com/nflaig",
+      "followers_url": "https://api.github.com/users/nflaig/followers",
+      "following_url": "https://api.github.com/users/nflaig/following{/other_user}",
+      "gists_url": "https://api.github.com/users/nflaig/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/nflaig/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/nflaig/subscriptions",
+      "organizations_url": "https://api.github.com/users/nflaig/orgs",
+      "repos_url": "https://api.github.com/users/nflaig/repos",
+      "events_url": "https://api.github.com/users/nflaig/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/nflaig/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "",
+    "state": "COMMENTED",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5592552050",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379",
+    "author_association": "MEMBER",
+    "_links": {
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5592552050"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379"
+      }
+    },
+    "submitted_at": "2026-10-20T22:24:56Z",
+    "commit_id": "352a400e0664ad910adc486826379c743d014522"
+  },
+  {
+    "id": 5592573438,
+    "node_id": "PRR_kwDOCD5_Gc8AAAABTVfl_g",
+    "user": {
+      "login": "markolazic01",
+      "id": 80317369,
+      "node_id": "MDQ6VXNlcjgwMzE3MzY5",
+      "avatar_url": "https://avatars.githubusercontent.com/u/80317369?u=0b40f8f9e20d1be8aab569c8c186ddf29889987f&v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/markolazic01",
+      "html_url": "https://github.com/markolazic01",
+      "followers_url": "https://api.github.com/users/markolazic01/followers",
+      "following_url": "https://api.github.com/users/markolazic01/following{/other_user}",
+      "gists_url": "https://api.github.com/users/markolazic01/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/markolazic01/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/markolazic01/subscriptions",
+      "organizations_url": "https://api.github.com/users/markolazic01/orgs",
+      "repos_url": "https://api.github.com/users/markolazic01/repos",
+      "events_url": "https://api.github.com/users/markolazic01/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/markolazic01/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "",
+    "state": "COMMENTED",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5592573438",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379",
+    "author_association": "CONTRIBUTOR",
+    "_links": {
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5592573438"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379"
+      }
+    },
+    "submitted_at": "2026-10-20T22:27:27Z",
+    "commit_id": "352a400e0664ad910adc486826379c743d014522"
+  },
+  {
+    "id": 5592663384,
+    "node_id": "PRR_kwDOCD5_Gc8AAAABTVlFWA",
+    "user": {
+      "login": "nflaig",
+      "id": 38436224,
+      "node_id": "MDQ6VXNlcjM4NDM2MjI0",
+      "avatar_url": "https://avatars.githubusercontent.com/u/38436224?u=5862a2c2438b5c9c48be6e908b07203d1b6d045d&v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/nflaig",
+      "html_url": "https://github.com/nflaig",
+      "followers_url": "https://api.github.com/users/nflaig/followers",
+      "following_url": "https://api.github.com/users/nflaig/following{/other_user}",
+      "gists_url": "https://api.github.com/users/nflaig/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/nflaig/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/nflaig/subscriptions",
+      "organizations_url": "https://api.github.com/users/nflaig/orgs",
+      "repos_url": "https://api.github.com/users/nflaig/repos",
+      "events_url": "https://api.github.com/users/nflaig/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/nflaig/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "LGTM, leaving final approval up to @lodekeeper ",
+    "state": "APPROVED",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5592663384",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379",
+    "author_association": "MEMBER",
+    "_links": {
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/10379#pullrequestreview-5592663384"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10379"
+      }
+    },
+    "submitted_at": "2026-10-20T22:37:59Z",
+    "commit_id": "86925723c28f6ae151a9c5308dfbd05d5da2668f"
+  }
+]

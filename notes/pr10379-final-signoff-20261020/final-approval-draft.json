@@ -1,0 +1,11 @@
+{
+  "approval": {
+    "commit_id": "86925723c28f6ae151a9c5308dfbd05d5da2668f",
+    "event": "APPROVE",
+    "body": "Approved at `8692572`. All 51 focused tests pass and current-head CI is green. Marko's basic run shows identity resolution at slot 33, bids from slot 34 onward and successful reveals. Further testing can follow separately as agreed; the existing implementation follow-ups remain unchanged."
+  },
+  "runtime_reply": {
+    "in_reply_to": 4330958984,
+    "body": "Thanks, the basic run shows pending status through slot 32, active identity resolution at slot 33, then bids for slots 34 onward and reveals for 34–36. There is no extra epoch of idle bidding after discovery in this sample. Together with the fixed slot-1 test, that clears my remaining sign-off concern."
+  }
+}

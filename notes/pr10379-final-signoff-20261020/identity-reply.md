@@ -1,0 +1,1 @@
+Verified in `f09097a1e5b` and current head `8692572`: the test now checks that no query occurs at slot 0, then advances to slot 1 and resolves. All 19 identity tests pass (51/51 across the four focused files). This finding is fixed.
