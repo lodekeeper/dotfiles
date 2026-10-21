@@ -1,0 +1,237 @@
+{
+  "fetched_at": 1792576437,
+  "query": {
+    "query": "{instance=\"public-hoodi-hzax41-1\",job=\"beacon\"} |~ \"processing finalized checkpoint|Migrated blobSidecars|[Pp]runed dataColumnSidecars\"",
+    "start": 1792574637,
+    "end": 1792576437,
+    "limit": 80,
+    "direction": "backward"
+  },
+  "response": {
+    "status": "success",
+    "data": {
+      "resultType": "streams",
+      "result": [
+        {
+          "stream": {
+            "client_name": "lodestar",
+            "container": "beacon",
+            "group": "public",
+            "host_type": "lgnv",
+            "instance": "public-hoodi-hzax41-1",
+            "job": "beacon",
+            "logstream": "stdout",
+            "network": "hoodi",
+            "scrape_location": "beacon",
+            "service_name": "beacon"
+          },
+          "values": [
+            [
+              "1792576297119956697",
+              "Oct-21 09:51:37.119[chain]         \u001b[36mverbose\u001b[39m: Finish processing finalized checkpoint epoch=131151, rootHex=0xe563c9f458071cdb2fcb88e7ddb0e001a29af1e80a5a43a4b7a2c7e04df5154f, prunedBlocks=30"
+            ],
+            [
+              "1792576152102111369",
+              "Oct-21 09:49:12.102[chain]         \u001b[36mverbose\u001b[39m: Migrated blobSidecars from hot DB to cold DB currentEpoch=131153, finalizedEpoch=131151, finalizedRoot=0xe563c9f458071cdb2fcb88e7ddb0e001a29af1e80a5a43a4b7a2c7e04df5154f, migratedEntries=0"
+            ],
+            [
+              "1792576152095013076",
+              "Oct-21 09:49:12.094[chain]         \u001b[36mverbose\u001b[39m: Start processing finalized checkpoint epoch=131151, rootHex=0xe563c9f458071cdb2fcb88e7ddb0e001a29af1e80a5a43a4b7a2c7e04df5154f"
+            ],
+            [
+              "1792576074079306185",
+              "Oct-21 09:47:54.079[chain]         \u001b[36mverbose\u001b[39m: Finish processing finalized checkpoint epoch=131150, rootHex=0xd63cabebb3ac8cb67cc18ca1ee6eefa3a1e0354dd987a17ddc5b3409f950292a, prunedBlocks=30"
+            ],
+            [
+              "1792575768078612993",
+              "Oct-21 09:42:48.078[chain]         \u001b[36mverbose\u001b[39m: Migrated blobSidecars from hot DB to cold DB currentEpoch=131152, finalizedEpoch=131150, finalizedRoot=0xd63cabebb3ac8cb67cc18ca1ee6eefa3a1e0354dd987a17ddc5b3409f950292a, migratedEntries=0"
+            ],
+            [
+              "1792575768057427944",
+              "Oct-21 09:42:48.057[chain]         \u001b[36mverbose\u001b[39m: Start processing finalized checkpoint epoch=131150, rootHex=0xd63cabebb3ac8cb67cc18ca1ee6eefa3a1e0354dd987a17ddc5b3409f950292a"
+            ],
+            [
+              "1792575529031994833",
+              "Oct-21 09:38:49.031[chain]         \u001b[36mverbose\u001b[39m: Finish processing finalized checkpoint epoch=131149, rootHex=0x84d5394e20141427d8dc6a01444776f61f0267cb6c5b2613becb0cc07776611f, prunedBlocks=31"
+            ],
+            [
+              "1792575384075244042",
+              "Oct-21 09:36:24.075[chain]         \u001b[36mverbose\u001b[39m: Migrated blobSidecars from hot DB to cold DB currentEpoch=131151, finalizedEpoch=131149, finalizedRoot=0x84d5394e20141427d8dc6a01444776f61f0267cb6c5b2613becb0cc07776611f, migratedEntries=0"
+            ],
+            [
+              "1792575384059348798",
+              "Oct-21 09:36:24.059[chain]         \u001b[36mverbose\u001b[39m: Start processing finalized checkpoint epoch=131149, rootHex=0x84d5394e20141427d8dc6a01444776f61f0267cb6c5b2613becb0cc07776611f"
+            ],
+            [
+              "1792575144840302363",
+              "Oct-21 09:32:24.840[chain]         \u001b[36mverbose\u001b[39m: Finish processing finalized checkpoint epoch=131148, rootHex=0x61ba400a4d512cbe57430c9c63409ab6a9fb7d68f5f25b689c64236db229f6db, prunedBlocks=30"
+            ],
+            [
+              "1792575000055694641",
+              "Oct-21 09:30:00.055[chain]         \u001b[36mverbose\u001b[39m: Migrated blobSidecars from hot DB to cold DB currentEpoch=131150, finalizedEpoch=131148, finalizedRoot=0x61ba400a4d512cbe57430c9c63409ab6a9fb7d68f5f25b689c64236db229f6db, migratedEntries=0"
+            ],
+            [
+              "1792575000049928469",
+              "Oct-21 09:30:00.049[chain]         \u001b[36mverbose\u001b[39m: Start processing finalized checkpoint epoch=131148, rootHex=0x61ba400a4d512cbe57430c9c63409ab6a9fb7d68f5f25b689c64236db229f6db"
+            ],
+            [
+              "1792574760754793225",
+              "Oct-21 09:26:00.754[chain]         \u001b[36mverbose\u001b[39m: Finish processing finalized checkpoint epoch=131147, rootHex=0x6c57911d9d9a0766fac15f5a90edc1b0a822239580d6c1c5a9a51e1d9847017c, prunedBlocks=29"
+            ]
+          ]
+        }
+      ],
+      "stats": {
+        "summary": {
+          "bytesProcessedPerSecond": 18631512,
+          "linesProcessedPerSecond": 78844,
+          "totalBytesProcessed": 27548615,
+          "totalLinesProcessed": 116579,
+          "execTime": 1.478603,
+          "queueTime": 0.054081,
+          "subqueries": 0,
+          "totalEntriesReturned": 13,
+          "splits": 0,
+          "shards": 16,
+          "totalPostFilterLines": 13,
+          "totalStructuredMetadataBytesProcessed": 0
+        },
+        "querier": {
+          "store": {
+            "totalChunksRef": 0,
+            "totalChunksDownloaded": 0,
+            "chunksDownloadTime": 0,
+            "queryReferencedStructuredMetadata": false,
+            "chunk": {
+              "headChunkBytes": 0,
+              "headChunkLines": 0,
+              "decompressedBytes": 0,
+              "decompressedLines": 0,
+              "compressedBytes": 0,
+              "totalDuplicates": 0,
+              "postFilterLines": 0,
+              "headChunkStructuredMetadataBytes": 0,
+              "decompressedStructuredMetadataBytes": 0
+            },
+            "chunkRefsFetchTime": 0,
+            "congestionControlLatency": 0,
+            "pipelineWrapperFilteredLines": 0
+          }
+        },
+        "ingester": {
+          "totalReached": 16,
+          "totalChunksMatched": 1,
+          "totalBatches": 17,
+          "totalLinesSent": 13,
+          "store": {
+            "totalChunksRef": 2,
+            "totalChunksDownloaded": 2,
+            "chunksDownloadTime": 655409,
+            "queryReferencedStructuredMetadata": false,
+            "chunk": {
+              "headChunkBytes": 64824,
+              "headChunkLines": 429,
+              "decompressedBytes": 27483791,
+              "decompressedLines": 116150,
+              "compressedBytes": 3493019,
+              "totalDuplicates": 0,
+              "postFilterLines": 13,
+              "headChunkStructuredMetadataBytes": 0,
+              "decompressedStructuredMetadataBytes": 0
+            },
+            "chunkRefsFetchTime": 3414044,
+            "congestionControlLatency": 0,
+            "pipelineWrapperFilteredLines": 0
+          }
+        },
+        "cache": {
+          "chunk": {
+            "entriesFound": 0,
+            "entriesRequested": 0,
+            "entriesStored": 0,
+            "bytesReceived": 0,
+            "bytesSent": 0,
+            "requests": 0,
+            "downloadTime": 0,
+            "queryLengthServed": 0
+          },
+          "index": {
+            "entriesFound": 0,
+            "entriesRequested": 0,
+            "entriesStored": 0,
+            "bytesReceived": 0,
+            "bytesSent": 0,
+            "requests": 0,
+            "downloadTime": 0,
+            "queryLengthServed": 0
+          },
+          "result": {
+            "entriesFound": 0,
+            "entriesRequested": 0,
+            "entriesStored": 0,
+            "bytesReceived": 0,
+            "bytesSent": 0,
+            "requests": 0,
+            "downloadTime": 0,
+            "queryLengthServed": 0
+          },
+          "statsResult": {
+            "entriesFound": 0,
+            "entriesRequested": 0,
+            "entriesStored": 0,
+            "bytesReceived": 0,
+            "bytesSent": 0,
+            "requests": 0,
+            "downloadTime": 0,
+            "queryLengthServed": 0
+          },
+          "volumeResult": {
+            "entriesFound": 0,
+            "entriesRequested": 0,
+            "entriesStored": 0,
+            "bytesReceived": 0,
+            "bytesSent": 0,
+            "requests": 0,
+            "downloadTime": 0,
+            "queryLengthServed": 0
+          },
+          "seriesResult": {
+            "entriesFound": 0,
+            "entriesRequested": 0,
+            "entriesStored": 0,
+            "bytesReceived": 0,
+            "bytesSent": 0,
+            "requests": 0,
+            "downloadTime": 0,
+            "queryLengthServed": 0
+          },
+          "labelResult": {
+            "entriesFound": 0,
+            "entriesRequested": 0,
+            "entriesStored": 0,
+            "bytesReceived": 0,
+            "bytesSent": 0,
+            "requests": 0,
+            "downloadTime": 0,
+            "queryLengthServed": 0
+          },
+          "instantMetricResult": {
+            "entriesFound": 0,
+            "entriesRequested": 0,
+            "entriesStored": 0,
+            "bytesReceived": 0,
+            "bytesSent": 0,
+            "requests": 0,
+            "downloadTime": 0,
+            "queryLengthServed": 0
+          }
+        },
+        "index": {
+          "totalChunks": 0,
+          "postFilterChunks": 0,
+          "shardsDuration": 0
+        }
+      }
+    }
+  }
+}

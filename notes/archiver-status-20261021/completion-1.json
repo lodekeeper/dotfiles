@@ -1,0 +1,245 @@
+{
+  "fetched_at": 1792576437,
+  "query": {
+    "query": "{instance=\"public-hoodi-hzax41-1\",job=\"beacon\"} |= \"Finish processing finalized checkpoint\"",
+    "start": 1792571037,
+    "end": 1792576437,
+    "limit": 30,
+    "direction": "backward"
+  },
+  "response": {
+    "status": "success",
+    "data": {
+      "resultType": "streams",
+      "result": [
+        {
+          "stream": {
+            "client_name": "lodestar",
+            "container": "beacon",
+            "group": "public",
+            "host_type": "lgnv",
+            "instance": "public-hoodi-hzax41-1",
+            "job": "beacon",
+            "logstream": "stdout",
+            "network": "hoodi",
+            "scrape_location": "beacon",
+            "service_name": "beacon"
+          },
+          "values": [
+            [
+              "1792576297119956697",
+              "Oct-21 09:51:37.119[chain]         \u001b[36mverbose\u001b[39m: Finish processing finalized checkpoint epoch=131151, rootHex=0xe563c9f458071cdb2fcb88e7ddb0e001a29af1e80a5a43a4b7a2c7e04df5154f, prunedBlocks=30"
+            ],
+            [
+              "1792576074079306185",
+              "Oct-21 09:47:54.079[chain]         \u001b[36mverbose\u001b[39m: Finish processing finalized checkpoint epoch=131150, rootHex=0xd63cabebb3ac8cb67cc18ca1ee6eefa3a1e0354dd987a17ddc5b3409f950292a, prunedBlocks=30"
+            ],
+            [
+              "1792575529031994833",
+              "Oct-21 09:38:49.031[chain]         \u001b[36mverbose\u001b[39m: Finish processing finalized checkpoint epoch=131149, rootHex=0x84d5394e20141427d8dc6a01444776f61f0267cb6c5b2613becb0cc07776611f, prunedBlocks=31"
+            ],
+            [
+              "1792575144840302363",
+              "Oct-21 09:32:24.840[chain]         \u001b[36mverbose\u001b[39m: Finish processing finalized checkpoint epoch=131148, rootHex=0x61ba400a4d512cbe57430c9c63409ab6a9fb7d68f5f25b689c64236db229f6db, prunedBlocks=30"
+            ],
+            [
+              "1792574760754793225",
+              "Oct-21 09:26:00.754[chain]         \u001b[36mverbose\u001b[39m: Finish processing finalized checkpoint epoch=131147, rootHex=0x6c57911d9d9a0766fac15f5a90edc1b0a822239580d6c1c5a9a51e1d9847017c, prunedBlocks=29"
+            ],
+            [
+              "1792574375722108434",
+              "Oct-21 09:19:35.721[chain]         \u001b[36mverbose\u001b[39m: Finish processing finalized checkpoint epoch=131146, rootHex=0xd038c9f792942a140b13518bbdf956ee93dde220b3806e64e0f8b98d26fa6b01, prunedBlocks=31"
+            ],
+            [
+              "1792573991900311504",
+              "Oct-21 09:13:11.900[chain]         \u001b[36mverbose\u001b[39m: Finish processing finalized checkpoint epoch=131145, rootHex=0x064780ccbb82a752d548ebf5c643340bd763a9967d55eb70c77c949fcb130285, prunedBlocks=26"
+            ],
+            [
+              "1792573613173608428",
+              "Oct-21 09:06:53.173[chain]         \u001b[36mverbose\u001b[39m: Finish processing finalized checkpoint epoch=131144, rootHex=0xd781c7c705a27b9ac580c5fa571aa537f603ece7a9c26839d8017f81ef087cb5, prunedBlocks=28"
+            ],
+            [
+              "1792573224639154602",
+              "Oct-21 09:00:24.638[chain]         \u001b[36mverbose\u001b[39m: Finish processing finalized checkpoint epoch=131143, rootHex=0xff68cefe07779067d71e5f4d702d03177f7e57fdbf27151428a8ed1e41ec442a, prunedBlocks=31"
+            ],
+            [
+              "1792572909988721608",
+              "Oct-21 08:55:09.988[chain]         \u001b[36mverbose\u001b[39m: Finish processing finalized checkpoint epoch=131142, rootHex=0x5d82735ccbbe19bc31865d12aaa40e59f1f4b1be2362c17ea2096533167c1fd1, prunedBlocks=31"
+            ],
+            [
+              "1792572765702146591",
+              "Oct-21 08:52:45.701[chain]         \u001b[36mverbose\u001b[39m: Finish processing finalized checkpoint epoch=131141, rootHex=0xf06ea5760b972814325b285afcccfcd5d5a3dca684a960f51246a8b0d7fdb91f, prunedBlocks=31"
+            ],
+            [
+              "1792572072747426558",
+              "Oct-21 08:41:12.747[chain]         \u001b[36mverbose\u001b[39m: Finish processing finalized checkpoint epoch=131140, rootHex=0x859f53f6a90c6f5861ebe75e9846e8c0ca6d9ea95b5fb2b1136765f4d3ef3a15, prunedBlocks=30"
+            ],
+            [
+              "1792571688255892974",
+              "Oct-21 08:34:48.255[chain]         \u001b[36mverbose\u001b[39m: Finish processing finalized checkpoint epoch=131139, rootHex=0x75060ff1dacf50886879c6fba0d526ef74c16ce2c2c38ac4e5ea766c065dbd3f, prunedBlocks=29"
+            ],
+            [
+              "1792571381238315453",
+              "Oct-21 08:29:41.238[chain]         \u001b[36mverbose\u001b[39m: Finish processing finalized checkpoint epoch=131138, rootHex=0x4347555cedc9ab05121ef53a30a9135353f5fd428b20f7b6f215f34ccf38f7b3, prunedBlocks=28"
+            ],
+            [
+              "1792571237008404193",
+              "Oct-21 08:27:17.008[chain]         \u001b[36mverbose\u001b[39m: Finish processing finalized checkpoint epoch=131137, rootHex=0x1eb38bf7e17b3c3ecfe487a8dcb8f472adb1210d23ada817fec28736618b5d81, prunedBlocks=29"
+            ]
+          ]
+        }
+      ],
+      "stats": {
+        "summary": {
+          "bytesProcessedPerSecond": 403824325,
+          "linesProcessedPerSecond": 1755549,
+          "totalBytesProcessed": 80940838,
+          "totalLinesProcessed": 351875,
+          "execTime": 0.200436,
+          "queueTime": 0.039742,
+          "subqueries": 0,
+          "totalEntriesReturned": 15,
+          "splits": 0,
+          "shards": 16,
+          "totalPostFilterLines": 15,
+          "totalStructuredMetadataBytesProcessed": 0
+        },
+        "querier": {
+          "store": {
+            "totalChunksRef": 0,
+            "totalChunksDownloaded": 0,
+            "chunksDownloadTime": 0,
+            "queryReferencedStructuredMetadata": false,
+            "chunk": {
+              "headChunkBytes": 0,
+              "headChunkLines": 0,
+              "decompressedBytes": 0,
+              "decompressedLines": 0,
+              "compressedBytes": 0,
+              "totalDuplicates": 0,
+              "postFilterLines": 0,
+              "headChunkStructuredMetadataBytes": 0,
+              "decompressedStructuredMetadataBytes": 0
+            },
+            "chunkRefsFetchTime": 0,
+            "congestionControlLatency": 0,
+            "pipelineWrapperFilteredLines": 0
+          }
+        },
+        "ingester": {
+          "totalReached": 16,
+          "totalChunksMatched": 1,
+          "totalBatches": 17,
+          "totalLinesSent": 15,
+          "store": {
+            "totalChunksRef": 7,
+            "totalChunksDownloaded": 7,
+            "chunksDownloadTime": 1695393,
+            "queryReferencedStructuredMetadata": false,
+            "chunk": {
+              "headChunkBytes": 64824,
+              "headChunkLines": 429,
+              "decompressedBytes": 80876014,
+              "decompressedLines": 351446,
+              "compressedBytes": 10465539,
+              "totalDuplicates": 0,
+              "postFilterLines": 15,
+              "headChunkStructuredMetadataBytes": 0,
+              "decompressedStructuredMetadataBytes": 0
+            },
+            "chunkRefsFetchTime": 11759507,
+            "congestionControlLatency": 0,
+            "pipelineWrapperFilteredLines": 0
+          }
+        },
+        "cache": {
+          "chunk": {
+            "entriesFound": 0,
+            "entriesRequested": 0,
+            "entriesStored": 0,
+            "bytesReceived": 0,
+            "bytesSent": 0,
+            "requests": 0,
+            "downloadTime": 0,
+            "queryLengthServed": 0
+          },
+          "index": {
+            "entriesFound": 0,
+            "entriesRequested": 0,
+            "entriesStored": 0,
+            "bytesReceived": 0,
+            "bytesSent": 0,
+            "requests": 0,
+            "downloadTime": 0,
+            "queryLengthServed": 0
+          },
+          "result": {
+            "entriesFound": 0,
+            "entriesRequested": 0,
+            "entriesStored": 0,
+            "bytesReceived": 0,
+            "bytesSent": 0,
+            "requests": 0,
+            "downloadTime": 0,
+            "queryLengthServed": 0
+          },
+          "statsResult": {
+            "entriesFound": 0,
+            "entriesRequested": 0,
+            "entriesStored": 0,
+            "bytesReceived": 0,
+            "bytesSent": 0,
+            "requests": 0,
+            "downloadTime": 0,
+            "queryLengthServed": 0
+          },
+          "volumeResult": {
+            "entriesFound": 0,
+            "entriesRequested": 0,
+            "entriesStored": 0,
+            "bytesReceived": 0,
+            "bytesSent": 0,
+            "requests": 0,
+            "downloadTime": 0,
+            "queryLengthServed": 0
+          },
+          "seriesResult": {
+            "entriesFound": 0,
+            "entriesRequested": 0,
+            "entriesStored": 0,
+            "bytesReceived": 0,
+            "bytesSent": 0,
+            "requests": 0,
+            "downloadTime": 0,
+            "queryLengthServed": 0
+          },
+          "labelResult": {
+            "entriesFound": 0,
+            "entriesRequested": 0,
+            "entriesStored": 0,
+            "bytesReceived": 0,
+            "bytesSent": 0,
+            "requests": 0,
+            "downloadTime": 0,
+            "queryLengthServed": 0
+          },
+          "instantMetricResult": {
+            "entriesFound": 0,
+            "entriesRequested": 0,
+            "entriesStored": 0,
+            "bytesReceived": 0,
+            "bytesSent": 0,
+            "requests": 0,
+            "downloadTime": 0,
+            "queryLengthServed": 0
+          }
+        },
+        "index": {
+          "totalChunks": 0,
+          "postFilterChunks": 0,
+          "shardsDuration": 0
+        }
+      }
+    }
+  }
+}

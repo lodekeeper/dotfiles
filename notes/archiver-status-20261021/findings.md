@@ -1,0 +1,14 @@
+# Public Hoodi archiver status — 2026-10-21 09:54 UTC
+
+Read-only update requested by Adrian in Discord message `1562403129121706037`.
+
+- Both public Hoodi beacon nodes still advertise `v1.50.0/4bacee3`, have unchanged process start times from last night's verification, report synced status, and agree on finalized epoch **131151** at the 09:53:57 snapshot.
+- Adrian's `public-hoodi-hzax41-1` finished full checkpoint processing for **131151 at 09:51:37 UTC**. This matches finality at the snapshot. Its most recent job ran 09:49:12–09:51:37 (~145s); repeated increasing full completions are present throughout the 90-minute query. No archive-checkpoint error matched the separate six-hour query. This establishes archiver catch-up at this snapshot, not overall error-free node health or the fix's underlying mechanism.
+- `public-hoodi-hzax41-0` last fully completed checkpoint **131069 at 03:46:23 UTC**. The 12-hour backward query returned its latest 12 full completions, with no later finish. Subsequent epochs **131070–131081** each log `Error processing finalized checkpoint` / `No state in cache for finalized checkpoint state` in the six-hour query. The latest error was 09:51:32, followed immediately by starting 131082. Thus jobs advance but fail before full completion; do not describe the node as indefinitely stuck on one scan or treat last-started epoch as last fully completed epoch.
+- Deployed-source counterpart at PR head shows block archival precedes `maybeArchiveState`; the missing-state exception arises at `strategies/frequencyStateArchiveStrategy.ts:116`. Metrics agree: node 0 has 43 `archive_blocks` observations but 31 `forkchoice_prune` observations. Last full completion is not the last block archival or proof all archive work stopped.
+- Long gaps between node 0's attempts have worsened: recent failures at 07:26:20, 08:04:55, 08:53:19 and 09:51:32. These timestamps alone do not identify the underlying native/DB/filesystem cause, or prove why state is no longer available. Do not claim tombstones confirmed or all nodes fixed.
+- Both nodes also show `getStateValidatorBalances` REST queue-limit errors in the latest bounded error-level queries. Those busy streams are why the specific checkpoint-error query was run independently. No causal connection to archiver latency established.
+
+## Access and limits
+
+Used existing configured read-only Grafana credential without printing it. The credential was absent from shell/Gateway inherited environments; the skill's configured `.bashrc` source provided it. Public version/finality APIs independently agree; concurrent public syncing probe returned 429, so per-node synced status is from Prometheus rather than that failed request. No heavy public API calls, host access, profiling, DB maintenance, deployment, restart, configuration changes or source edits. Raw queries and response snapshots are the adjacent JSON files. Independent response QA checks accuracy and scope before delivery.

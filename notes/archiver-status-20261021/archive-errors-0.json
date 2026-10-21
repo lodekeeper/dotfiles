@@ -1,0 +1,233 @@
+{
+  "fetched_at": 1792576483,
+  "query": {
+    "query": "{instance=\"public-hoodi-hzax41-0\",job=\"beacon\"} |= \"Error processing finalized checkpoint\"",
+    "start": 1792554883,
+    "end": 1792576483,
+    "limit": 25,
+    "direction": "backward"
+  },
+  "response": {
+    "status": "success",
+    "data": {
+      "resultType": "streams",
+      "result": [
+        {
+          "stream": {
+            "client_name": "lodestar",
+            "container": "beacon",
+            "group": "public",
+            "host_type": "lgnv",
+            "instance": "public-hoodi-hzax41-0",
+            "job": "beacon",
+            "logstream": "stdout",
+            "network": "hoodi",
+            "scrape_location": "beacon",
+            "service_name": "beacon"
+          },
+          "values": [
+            [
+              "1792576292862909270",
+              "Oct-21 09:51:32.862[chain]           \u001b[31merror\u001b[39m: Error processing finalized checkpoint epoch=131081 - No state in cache for finalized checkpoint state epoch #131081 root 0x75cfb6aaad386639eef0b3f2f325065307907ad40ee7f0128a92dbaf15cc412d"
+            ],
+            [
+              "1792572799295620971",
+              "Oct-21 08:53:19.295[chain]           \u001b[31merror\u001b[39m: Error processing finalized checkpoint epoch=131080 - No state in cache for finalized checkpoint state epoch #131080 root 0x582649418ee96b3c109e76d6a4af0b7e27dd6c86ac686b9c86e9b48c8220b1d9"
+            ],
+            [
+              "1792569895465509703",
+              "Oct-21 08:04:55.465[chain]           \u001b[31merror\u001b[39m: Error processing finalized checkpoint epoch=131079 - No state in cache for finalized checkpoint state epoch #131079 root 0xf298006db8d7ffb02fe6f00b547de0219c2d118c22ff1d278227f23ce4a5cde4"
+            ],
+            [
+              "1792567580460748784",
+              "Oct-21 07:26:20.460[chain]           \u001b[31merror\u001b[39m: Error processing finalized checkpoint epoch=131078 - No state in cache for finalized checkpoint state epoch #131078 root 0x12abdee2145b3bc3701e801f1b39ba79eb96504a4430b272ccf9af7215822fba"
+            ],
+            [
+              "1792565848744388085",
+              "Oct-21 06:57:28.744[chain]           \u001b[31merror\u001b[39m: Error processing finalized checkpoint epoch=131077 - No state in cache for finalized checkpoint state epoch #131077 root 0xaf0dca3e3aa53f6fd78a40fab1acfa6d63fe05dd7eca6f074d3fb18c51b219d8"
+            ],
+            [
+              "1792564119499041470",
+              "Oct-21 06:28:39.498[chain]           \u001b[31merror\u001b[39m: Error processing finalized checkpoint epoch=131076 - No state in cache for finalized checkpoint state epoch #131076 root 0xc9ad248745ea3c163816b9ef6980f7bc4fbfc43914bf5c9505eb1811843cfe55"
+            ],
+            [
+              "1792562389945992548",
+              "Oct-21 05:59:49.945[chain]           \u001b[31merror\u001b[39m: Error processing finalized checkpoint epoch=131075 - No state in cache for finalized checkpoint state epoch #131075 root 0x5ee33a3d38e0b7ee0fa50c1ff2e92ab7b05d47cef5531ebc2216be32bd83c252"
+            ],
+            [
+              "1792560658569525550",
+              "Oct-21 05:30:58.569[chain]           \u001b[31merror\u001b[39m: Error processing finalized checkpoint epoch=131074 - No state in cache for finalized checkpoint state epoch #131074 root 0x6280bafdd0ff7cdf5aa43394a42d7cf6adc033866133a386e37dfbedf24af7f0"
+            ],
+            [
+              "1792558935358314893",
+              "Oct-21 05:02:15.357[chain]           \u001b[31merror\u001b[39m: Error processing finalized checkpoint epoch=131073 - No state in cache for finalized checkpoint state epoch #131073 root 0x0796e42563f1aa39610d0543dfd2b0eb387f53117c26f73b25f5267a01de6b97"
+            ],
+            [
+              "1792557211877485363",
+              "Oct-21 04:33:31.877[chain]           \u001b[31merror\u001b[39m: Error processing finalized checkpoint epoch=131072 - No state in cache for finalized checkpoint state epoch #131072 root 0x8ea0be0551f3b8e9ea1c88c9a255bf676bd8039616a22a7b8ede6362692109fa"
+            ],
+            [
+              "1792556073992253701",
+              "Oct-21 04:14:33.991[chain]           \u001b[31merror\u001b[39m: Error processing finalized checkpoint epoch=131071 - No state in cache for finalized checkpoint state epoch #131071 root 0x2475ac3b38fe0302eb1cf67dab1d803b7a7df5225f1a5b353af17a55919418fc"
+            ],
+            [
+              "1792554934751592867",
+              "Oct-21 03:55:34.748[chain]           \u001b[31merror\u001b[39m: Error processing finalized checkpoint epoch=131070 - No state in cache for finalized checkpoint state epoch #131070 root 0x9ad421ab056fc94edb9337ec0972519202f169b5cf35136bdb53c7e920c52e68"
+            ]
+          ]
+        }
+      ],
+      "stats": {
+        "summary": {
+          "bytesProcessedPerSecond": 327917164,
+          "linesProcessedPerSecond": 1451239,
+          "totalBytesProcessed": 306903893,
+          "totalLinesProcessed": 1358243,
+          "execTime": 0.935919,
+          "queueTime": 11.71159,
+          "subqueries": 0,
+          "totalEntriesReturned": 12,
+          "splits": 0,
+          "shards": 16,
+          "totalPostFilterLines": 12,
+          "totalStructuredMetadataBytesProcessed": 0
+        },
+        "querier": {
+          "store": {
+            "totalChunksRef": 19,
+            "totalChunksDownloaded": 19,
+            "chunksDownloadTime": 2097898,
+            "queryReferencedStructuredMetadata": false,
+            "chunk": {
+              "headChunkBytes": 0,
+              "headChunkLines": 0,
+              "decompressedBytes": 171976574,
+              "decompressedLines": 757055,
+              "compressedBytes": 22143398,
+              "totalDuplicates": 0,
+              "postFilterLines": 8,
+              "headChunkStructuredMetadataBytes": 0,
+              "decompressedStructuredMetadataBytes": 0
+            },
+            "chunkRefsFetchTime": 3796482,
+            "congestionControlLatency": 0,
+            "pipelineWrapperFilteredLines": 0
+          }
+        },
+        "ingester": {
+          "totalReached": 16,
+          "totalChunksMatched": 1,
+          "totalBatches": 17,
+          "totalLinesSent": 4,
+          "store": {
+            "totalChunksRef": 13,
+            "totalChunksDownloaded": 13,
+            "chunksDownloadTime": 1638883,
+            "queryReferencedStructuredMetadata": false,
+            "chunk": {
+              "headChunkBytes": 34960,
+              "headChunkLines": 225,
+              "decompressedBytes": 134892359,
+              "decompressedLines": 600963,
+              "compressedBytes": 17521100,
+              "totalDuplicates": 0,
+              "postFilterLines": 4,
+              "headChunkStructuredMetadataBytes": 0,
+              "decompressedStructuredMetadataBytes": 0
+            },
+            "chunkRefsFetchTime": 4115879,
+            "congestionControlLatency": 0,
+            "pipelineWrapperFilteredLines": 0
+          }
+        },
+        "cache": {
+          "chunk": {
+            "entriesFound": 19,
+            "entriesRequested": 19,
+            "entriesStored": 0,
+            "bytesReceived": 23639074,
+            "bytesSent": 0,
+            "requests": 4,
+            "downloadTime": 19660,
+            "queryLengthServed": 0
+          },
+          "index": {
+            "entriesFound": 0,
+            "entriesRequested": 0,
+            "entriesStored": 0,
+            "bytesReceived": 0,
+            "bytesSent": 0,
+            "requests": 0,
+            "downloadTime": 0,
+            "queryLengthServed": 0
+          },
+          "result": {
+            "entriesFound": 0,
+            "entriesRequested": 0,
+            "entriesStored": 0,
+            "bytesReceived": 0,
+            "bytesSent": 0,
+            "requests": 0,
+            "downloadTime": 0,
+            "queryLengthServed": 0
+          },
+          "statsResult": {
+            "entriesFound": 0,
+            "entriesRequested": 0,
+            "entriesStored": 0,
+            "bytesReceived": 0,
+            "bytesSent": 0,
+            "requests": 0,
+            "downloadTime": 0,
+            "queryLengthServed": 0
+          },
+          "volumeResult": {
+            "entriesFound": 0,
+            "entriesRequested": 0,
+            "entriesStored": 0,
+            "bytesReceived": 0,
+            "bytesSent": 0,
+            "requests": 0,
+            "downloadTime": 0,
+            "queryLengthServed": 0
+          },
+          "seriesResult": {
+            "entriesFound": 0,
+            "entriesRequested": 0,
+            "entriesStored": 0,
+            "bytesReceived": 0,
+            "bytesSent": 0,
+            "requests": 0,
+            "downloadTime": 0,
+            "queryLengthServed": 0
+          },
+          "labelResult": {
+            "entriesFound": 0,
+            "entriesRequested": 0,
+            "entriesStored": 0,
+            "bytesReceived": 0,
+            "bytesSent": 0,
+            "requests": 0,
+            "downloadTime": 0,
+            "queryLengthServed": 0
+          },
+          "instantMetricResult": {
+            "entriesFound": 0,
+            "entriesRequested": 0,
+            "entriesStored": 0,
+            "bytesReceived": 0,
+            "bytesSent": 0,
+            "requests": 0,
+            "downloadTime": 0,
+            "queryLengthServed": 0
+          }
+        },
+        "index": {
+          "totalChunks": 0,
+          "postFilterChunks": 0,
+          "shardsDuration": 0
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,314 @@
+{
+  "fetched_at": 1792576437,
+  "query": {
+    "query": "{__name__=~\"lodestar_version|beacon_head_slot|beacon_finalized_epoch|lodestar_sync_status|process_start_time_seconds|lodestar_process_finalized_checkpoint_seconds_count\",instance=~\"public-hoodi-hzax41-[01]\",job=\"beacon\"}"
+  },
+  "response": {
+    "status": "success",
+    "data": {
+      "resultType": "vector",
+      "result": [
+        {
+          "metric": {
+            "__name__": "beacon_head_slot",
+            "client_name": "lodestar",
+            "group": "public",
+            "host_type": "lgnv",
+            "instance": "public-hoodi-hzax41-0",
+            "job": "beacon",
+            "network": "hoodi",
+            "scrape_location": "beacon"
+          },
+          "value": [
+            1792576437.669,
+            "4196917"
+          ]
+        },
+        {
+          "metric": {
+            "__name__": "beacon_finalized_epoch",
+            "client_name": "lodestar",
+            "group": "public",
+            "host_type": "lgnv",
+            "instance": "public-hoodi-hzax41-0",
+            "job": "beacon",
+            "network": "hoodi",
+            "scrape_location": "beacon"
+          },
+          "value": [
+            1792576437.669,
+            "131151"
+          ]
+        },
+        {
+          "metric": {
+            "__name__": "lodestar_sync_status",
+            "client_name": "lodestar",
+            "group": "public",
+            "host_type": "lgnv",
+            "instance": "public-hoodi-hzax41-0",
+            "job": "beacon",
+            "network": "hoodi",
+            "scrape_location": "beacon"
+          },
+          "value": [
+            1792576437.669,
+            "3"
+          ]
+        },
+        {
+          "metric": {
+            "__name__": "process_start_time_seconds",
+            "client_name": "lodestar",
+            "group": "public",
+            "host_type": "lgnv",
+            "instance": "public-hoodi-hzax41-0",
+            "job": "beacon",
+            "network": "hoodi",
+            "scrape_location": "beacon"
+          },
+          "value": [
+            1792576437.669,
+            "1792532936"
+          ]
+        },
+        {
+          "metric": {
+            "__name__": "beacon_head_slot",
+            "client_name": "lodestar",
+            "group": "public",
+            "host_type": "lgnv",
+            "instance": "public-hoodi-hzax41-1",
+            "job": "beacon",
+            "network": "hoodi",
+            "scrape_location": "beacon"
+          },
+          "value": [
+            1792576437.669,
+            "4196918"
+          ]
+        },
+        {
+          "metric": {
+            "__name__": "beacon_finalized_epoch",
+            "client_name": "lodestar",
+            "group": "public",
+            "host_type": "lgnv",
+            "instance": "public-hoodi-hzax41-1",
+            "job": "beacon",
+            "network": "hoodi",
+            "scrape_location": "beacon"
+          },
+          "value": [
+            1792576437.669,
+            "131151"
+          ]
+        },
+        {
+          "metric": {
+            "__name__": "lodestar_sync_status",
+            "client_name": "lodestar",
+            "group": "public",
+            "host_type": "lgnv",
+            "instance": "public-hoodi-hzax41-1",
+            "job": "beacon",
+            "network": "hoodi",
+            "scrape_location": "beacon"
+          },
+          "value": [
+            1792576437.669,
+            "3"
+          ]
+        },
+        {
+          "metric": {
+            "__name__": "process_start_time_seconds",
+            "client_name": "lodestar",
+            "group": "public",
+            "host_type": "lgnv",
+            "instance": "public-hoodi-hzax41-1",
+            "job": "beacon",
+            "network": "hoodi",
+            "scrape_location": "beacon"
+          },
+          "value": [
+            1792576437.669,
+            "1792536673"
+          ]
+        },
+        {
+          "metric": {
+            "__name__": "lodestar_process_finalized_checkpoint_seconds_count",
+            "client_name": "lodestar",
+            "group": "public",
+            "host_type": "lgnv",
+            "instance": "public-hoodi-hzax41-0",
+            "job": "beacon",
+            "network": "hoodi",
+            "scrape_location": "beacon",
+            "source": "archive_blocks"
+          },
+          "value": [
+            1792576437.669,
+            "43"
+          ]
+        },
+        {
+          "metric": {
+            "__name__": "lodestar_process_finalized_checkpoint_seconds_count",
+            "client_name": "lodestar",
+            "group": "public",
+            "host_type": "lgnv",
+            "instance": "public-hoodi-hzax41-0",
+            "job": "beacon",
+            "network": "hoodi",
+            "scrape_location": "beacon",
+            "source": "on_finalized_checkpoint"
+          },
+          "value": [
+            1792576437.669,
+            "43"
+          ]
+        },
+        {
+          "metric": {
+            "__name__": "lodestar_process_finalized_checkpoint_seconds_count",
+            "client_name": "lodestar",
+            "group": "public",
+            "host_type": "lgnv",
+            "instance": "public-hoodi-hzax41-0",
+            "job": "beacon",
+            "network": "hoodi",
+            "scrape_location": "beacon",
+            "source": "maybe_archive_state"
+          },
+          "value": [
+            1792576437.669,
+            "31"
+          ]
+        },
+        {
+          "metric": {
+            "__name__": "lodestar_process_finalized_checkpoint_seconds_count",
+            "client_name": "lodestar",
+            "group": "public",
+            "host_type": "lgnv",
+            "instance": "public-hoodi-hzax41-0",
+            "job": "beacon",
+            "network": "hoodi",
+            "scrape_location": "beacon",
+            "source": "forkchoice_prune"
+          },
+          "value": [
+            1792576437.669,
+            "31"
+          ]
+        },
+        {
+          "metric": {
+            "__name__": "lodestar_version",
+            "client_name": "lodestar",
+            "commit": "4bacee3dacfe04629dc167947bad12fa95ae96f1",
+            "group": "public",
+            "host_type": "lgnv",
+            "instance": "public-hoodi-hzax41-0",
+            "job": "beacon",
+            "network": "hoodi",
+            "scrape_location": "beacon",
+            "version": "v1.50.0/4bacee3"
+          },
+          "value": [
+            1792576437.669,
+            "1"
+          ]
+        },
+        {
+          "metric": {
+            "__name__": "lodestar_version",
+            "client_name": "lodestar",
+            "commit": "4bacee3dacfe04629dc167947bad12fa95ae96f1",
+            "group": "public",
+            "host_type": "lgnv",
+            "instance": "public-hoodi-hzax41-1",
+            "job": "beacon",
+            "network": "hoodi",
+            "scrape_location": "beacon",
+            "version": "v1.50.0/4bacee3"
+          },
+          "value": [
+            1792576437.669,
+            "1"
+          ]
+        },
+        {
+          "metric": {
+            "__name__": "lodestar_process_finalized_checkpoint_seconds_count",
+            "client_name": "lodestar",
+            "group": "public",
+            "host_type": "lgnv",
+            "instance": "public-hoodi-hzax41-1",
+            "job": "beacon",
+            "network": "hoodi",
+            "scrape_location": "beacon",
+            "source": "archive_blocks"
+          },
+          "value": [
+            1792576437.669,
+            "103"
+          ]
+        },
+        {
+          "metric": {
+            "__name__": "lodestar_process_finalized_checkpoint_seconds_count",
+            "client_name": "lodestar",
+            "group": "public",
+            "host_type": "lgnv",
+            "instance": "public-hoodi-hzax41-1",
+            "job": "beacon",
+            "network": "hoodi",
+            "scrape_location": "beacon",
+            "source": "on_finalized_checkpoint"
+          },
+          "value": [
+            1792576437.669,
+            "103"
+          ]
+        },
+        {
+          "metric": {
+            "__name__": "lodestar_process_finalized_checkpoint_seconds_count",
+            "client_name": "lodestar",
+            "group": "public",
+            "host_type": "lgnv",
+            "instance": "public-hoodi-hzax41-1",
+            "job": "beacon",
+            "network": "hoodi",
+            "scrape_location": "beacon",
+            "source": "maybe_archive_state"
+          },
+          "value": [
+            1792576437.669,
+            "103"
+          ]
+        },
+        {
+          "metric": {
+            "__name__": "lodestar_process_finalized_checkpoint_seconds_count",
+            "client_name": "lodestar",
+            "group": "public",
+            "host_type": "lgnv",
+            "instance": "public-hoodi-hzax41-1",
+            "job": "beacon",
+            "network": "hoodi",
+            "scrape_location": "beacon",
+            "source": "forkchoice_prune"
+          },
+          "value": [
+            1792576437.669,
+            "103"
+          ]
+        }
+      ]
+    }
+  }
+}

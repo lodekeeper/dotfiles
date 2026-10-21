@@ -1,0 +1,245 @@
+{
+  "fetched_at": 1792576437,
+  "query": {
+    "query": "{instance=\"public-hoodi-hzax41-1\",job=\"beacon\"} |~ \"\\\\[31merror|Error processing finalized checkpoint\"",
+    "start": 1792574637,
+    "end": 1792576437,
+    "limit": 15,
+    "direction": "backward"
+  },
+  "response": {
+    "status": "success",
+    "data": {
+      "resultType": "streams",
+      "result": [
+        {
+          "stream": {
+            "client_name": "lodestar",
+            "container": "beacon",
+            "group": "public",
+            "host_type": "lgnv",
+            "instance": "public-hoodi-hzax41-1",
+            "job": "beacon",
+            "logstream": "stdout",
+            "network": "hoodi",
+            "scrape_location": "beacon",
+            "service_name": "beacon"
+          },
+          "values": [
+            [
+              "1792576436338921863",
+              "Oct-21 09:53:56.338[rest]            \u001b[31merror\u001b[39m: Req req-1864 getStateValidatorBalances error - QUEUE_ERROR_QUEUE_MAX_LENGTH"
+            ],
+            [
+              "1792576434040980342",
+              "Oct-21 09:53:54.040[rest]            \u001b[31merror\u001b[39m: Req req-1861 getStateValidatorBalances error - QUEUE_ERROR_QUEUE_MAX_LENGTH"
+            ],
+            [
+              "1792576432107631118",
+              "Oct-21 09:53:52.107[rest]            \u001b[31merror\u001b[39m: Req req-185y getStateValidatorBalances error - QUEUE_ERROR_QUEUE_MAX_LENGTH"
+            ],
+            [
+              "1792576428603742401",
+              "Oct-21 09:53:48.603[rest]            \u001b[31merror\u001b[39m: Req req-185q getStateValidatorBalances error - QUEUE_ERROR_QUEUE_MAX_LENGTH"
+            ],
+            [
+              "1792576427430309564",
+              "Oct-21 09:53:47.430[rest]            \u001b[31merror\u001b[39m: Req req-185l getStateValidatorBalances error - QUEUE_ERROR_QUEUE_MAX_LENGTH"
+            ],
+            [
+              "1792576416959772239",
+              "Oct-21 09:53:36.959[rest]            \u001b[31merror\u001b[39m: Req req-1858 getStateValidatorBalances error - QUEUE_ERROR_QUEUE_MAX_LENGTH"
+            ],
+            [
+              "1792576415707962110",
+              "Oct-21 09:53:35.707[rest]            \u001b[31merror\u001b[39m: Req req-1855 getStateValidatorBalances error - QUEUE_ERROR_QUEUE_MAX_LENGTH"
+            ],
+            [
+              "1792576415007016416",
+              "Oct-21 09:53:35.006[rest]            \u001b[31merror\u001b[39m: Req req-1854 getStateValidatorBalances error - QUEUE_ERROR_QUEUE_MAX_LENGTH"
+            ],
+            [
+              "1792576412330169288",
+              "Oct-21 09:53:32.330[rest]            \u001b[31merror\u001b[39m: Req req-184z getStateValidatorBalances error - QUEUE_ERROR_QUEUE_MAX_LENGTH"
+            ],
+            [
+              "1792576410520173097",
+              "Oct-21 09:53:30.520[rest]            \u001b[31merror\u001b[39m: Req req-184v getStateValidatorBalances error - QUEUE_ERROR_QUEUE_MAX_LENGTH"
+            ],
+            [
+              "1792576368993542250",
+              "Oct-21 09:52:48.993[rest]            \u001b[31merror\u001b[39m: Req req-1839 getStateValidatorBalances error - QUEUE_ERROR_QUEUE_MAX_LENGTH"
+            ],
+            [
+              "1792576367268769361",
+              "Oct-21 09:52:47.268[rest]            \u001b[31merror\u001b[39m: Req req-1837 getStateValidatorBalances error - QUEUE_ERROR_QUEUE_MAX_LENGTH"
+            ],
+            [
+              "1792576366158270990",
+              "Oct-21 09:52:46.158[rest]            \u001b[31merror\u001b[39m: Req req-1833 getStateValidatorBalances error - QUEUE_ERROR_QUEUE_MAX_LENGTH"
+            ],
+            [
+              "1792576363941478286",
+              "Oct-21 09:52:43.941[rest]            \u001b[31merror\u001b[39m: Req req-1831 getStateValidatorBalances error - QUEUE_ERROR_QUEUE_MAX_LENGTH"
+            ],
+            [
+              "1792576362196992242",
+              "Oct-21 09:52:42.196[rest]            \u001b[31merror\u001b[39m: Req req-182y getStateValidatorBalances error - QUEUE_ERROR_QUEUE_MAX_LENGTH"
+            ]
+          ]
+        }
+      ],
+      "stats": {
+        "summary": {
+          "bytesProcessedPerSecond": 78992760,
+          "linesProcessedPerSecond": 332766,
+          "totalBytesProcessed": 1491709,
+          "totalLinesProcessed": 6284,
+          "execTime": 0.018884,
+          "queueTime": 0.175661,
+          "subqueries": 0,
+          "totalEntriesReturned": 15,
+          "splits": 0,
+          "shards": 16,
+          "totalPostFilterLines": 21,
+          "totalStructuredMetadataBytesProcessed": 0
+        },
+        "querier": {
+          "store": {
+            "totalChunksRef": 0,
+            "totalChunksDownloaded": 0,
+            "chunksDownloadTime": 0,
+            "queryReferencedStructuredMetadata": false,
+            "chunk": {
+              "headChunkBytes": 0,
+              "headChunkLines": 0,
+              "decompressedBytes": 0,
+              "decompressedLines": 0,
+              "compressedBytes": 0,
+              "totalDuplicates": 0,
+              "postFilterLines": 0,
+              "headChunkStructuredMetadataBytes": 0,
+              "decompressedStructuredMetadataBytes": 0
+            },
+            "chunkRefsFetchTime": 0,
+            "congestionControlLatency": 0,
+            "pipelineWrapperFilteredLines": 0
+          }
+        },
+        "ingester": {
+          "totalReached": 16,
+          "totalChunksMatched": 1,
+          "totalBatches": 16,
+          "totalLinesSent": 15,
+          "store": {
+            "totalChunksRef": 2,
+            "totalChunksDownloaded": 2,
+            "chunksDownloadTime": 578898,
+            "queryReferencedStructuredMetadata": false,
+            "chunk": {
+              "headChunkBytes": 64824,
+              "headChunkLines": 429,
+              "decompressedBytes": 1426885,
+              "decompressedLines": 5855,
+              "compressedBytes": 3493019,
+              "totalDuplicates": 0,
+              "postFilterLines": 21,
+              "headChunkStructuredMetadataBytes": 0,
+              "decompressedStructuredMetadataBytes": 0
+            },
+            "chunkRefsFetchTime": 3718911,
+            "congestionControlLatency": 0,
+            "pipelineWrapperFilteredLines": 0
+          }
+        },
+        "cache": {
+          "chunk": {
+            "entriesFound": 0,
+            "entriesRequested": 0,
+            "entriesStored": 0,
+            "bytesReceived": 0,
+            "bytesSent": 0,
+            "requests": 0,
+            "downloadTime": 0,
+            "queryLengthServed": 0
+          },
+          "index": {
+            "entriesFound": 0,
+            "entriesRequested": 0,
+            "entriesStored": 0,
+            "bytesReceived": 0,
+            "bytesSent": 0,
+            "requests": 0,
+            "downloadTime": 0,
+            "queryLengthServed": 0
+          },
+          "result": {
+            "entriesFound": 0,
+            "entriesRequested": 0,
+            "entriesStored": 0,
+            "bytesReceived": 0,
+            "bytesSent": 0,
+            "requests": 0,
+            "downloadTime": 0,
+            "queryLengthServed": 0
+          },
+          "statsResult": {
+            "entriesFound": 0,
+            "entriesRequested": 0,
+            "entriesStored": 0,
+            "bytesReceived": 0,
+            "bytesSent": 0,
+            "requests": 0,
+            "downloadTime": 0,
+            "queryLengthServed": 0
+          },
+          "volumeResult": {
+            "entriesFound": 0,
+            "entriesRequested": 0,
+            "entriesStored": 0,
+            "bytesReceived": 0,
+            "bytesSent": 0,
+            "requests": 0,
+            "downloadTime": 0,
+            "queryLengthServed": 0
+          },
+          "seriesResult": {
+            "entriesFound": 0,
+            "entriesRequested": 0,
+            "entriesStored": 0,
+            "bytesReceived": 0,
+            "bytesSent": 0,
+            "requests": 0,
+            "downloadTime": 0,
+            "queryLengthServed": 0
+          },
+          "labelResult": {
+            "entriesFound": 0,
+            "entriesRequested": 0,
+            "entriesStored": 0,
+            "bytesReceived": 0,
+            "bytesSent": 0,
+            "requests": 0,
+            "downloadTime": 0,
+            "queryLengthServed": 0
+          },
+          "instantMetricResult": {
+            "entriesFound": 0,
+            "entriesRequested": 0,
+            "entriesStored": 0,
+            "bytesReceived": 0,
+            "bytesSent": 0,
+            "requests": 0,
+            "downloadTime": 0,
+            "queryLengthServed": 0
+          }
+        },
+        "index": {
+          "totalChunks": 0,
+          "postFilterChunks": 0,
+          "shardsDuration": 0
+        }
+      }
+    }
+  }
+}
