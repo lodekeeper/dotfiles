@@ -1,0 +1,70 @@
+{
+  "url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/comments/4337710593",
+  "pull_request_review_id": 5600855715,
+  "id": 4337710593,
+  "node_id": "PRRC_kwDOCD5_Gc8AAAABAow2AQ",
+  "diff_hunk": "@@ -40,24 +41,24 @@ const baseChainConfig: ChainConfig = {\n   FULU_FORK_EPOCH: 0,\n   // Gloas\n   GLOAS_FORK_VERSION: b(\"0x8000101b\"),\n-  GLOAS_FORK_EPOCH: Infinity,\n+  GLOAS_FORK_EPOCH: 0,",
+  "path": "packages/config/src/chainConfig/networks/ephemery.ts",
+  "commit_id": "611e3f9956a0bf219d3dd3357529bea0d4c1e2a7",
+  "original_commit_id": "611e3f9956a0bf219d3dd3357529bea0d4c1e2a7",
+  "user": {
+    "login": "lodekeeper",
+    "id": 258435968,
+    "node_id": "U_kgDOD2drgA",
+    "avatar_url": "https://avatars.githubusercontent.com/u/258435968?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/lodekeeper",
+    "html_url": "https://github.com/lodekeeper",
+    "followers_url": "https://api.github.com/users/lodekeeper/followers",
+    "following_url": "https://api.github.com/users/lodekeeper/following{/other_user}",
+    "gists_url": "https://api.github.com/users/lodekeeper/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/lodekeeper/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/lodekeeper/subscriptions",
+    "organizations_url": "https://api.github.com/users/lodekeeper/orgs",
+    "repos_url": "https://api.github.com/users/lodekeeper/repos",
+    "events_url": "https://api.github.com/users/lodekeeper/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/lodekeeper/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "body": "Confirmed: before the reset this branch derives iteration 164's identity but retains Gloas at epoch 0, so it is not safe for the live Fulu network.\n\nThis is intentionally a reset-timed preset update. **Do not merge or deploy it until [ephemery-genesis #75](https://github.com/ephemery-testnet/ephemery-genesis/pull/75) is finalized, the final iteration-165 config is rechecked, and the October 22 reset has occurred** (minimum genesis time 19:00 UTC, slot 0 19:10 UTC). Keeping the existing post-reset-only merge/deployment scope; iteration-aware scheduling remains out of scope here. Ready for review does not remove those merge/deployment gates; I have clarified the stale draft wording in the description.\n",
+  "created_at": "2026-10-21T13:55:30Z",
+  "updated_at": "2026-10-21T13:55:30Z",
+  "html_url": "https://github.com/ChainSafe/lodestar/pull/10457#discussion_r4337710593",
+  "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10457",
+  "_links": {
+    "self": {
+      "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/comments/4337710593"
+    },
+    "html": {
+      "href": "https://github.com/ChainSafe/lodestar/pull/10457#discussion_r4337710593"
+    },
+    "pull_request": {
+      "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10457"
+    }
+  },
+  "reactions": {
+    "url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/comments/4337710593/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "start_line": null,
+  "original_start_line": null,
+  "start_side": null,
+  "line": 44,
+  "original_line": 44,
+  "side": "RIGHT",
+  "in_reply_to_id": 4337576675,
+  "author_association": "CONTRIBUTOR",
+  "original_position": 26,
+  "position": 26,
+  "subject_type": "line"
+}

@@ -1,0 +1,3 @@
+Confirmed: before the reset this branch derives iteration 164's identity but retains Gloas at epoch 0, so it is not safe for the live Fulu network.
+
+This is intentionally a reset-timed preset update. **Do not merge or deploy it until [ephemery-genesis #75](https://github.com/ephemery-testnet/ephemery-genesis/pull/75) is finalized, the final iteration-165 config is rechecked, and the October 22 reset has occurred** (minimum genesis time 19:00 UTC, slot 0 19:10 UTC). Keeping the existing post-reset-only merge/deployment scope; iteration-aware scheduling remains out of scope here. Ready for review does not remove those merge/deployment gates; I have clarified the stale draft wording in the description.

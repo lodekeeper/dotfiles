@@ -1,0 +1,37 @@
+{
+  "pr": 10457,
+  "created": "2026-10-21T13:53:08Z",
+  "updated": "2026-10-21T13:56:18Z",
+  "findings": [
+    {
+      "id": "83dc73",
+      "file": "packages/config/src/chainConfig/networks/ephemery.ts",
+      "line": 44,
+      "severity": "nit",
+      "reviewer": "chatgpt-codex-connector[bot]",
+      "body": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Keep iteration 164 on Fulu until the reset**\n\nWhen a node starts before `1792695600` (the iteration-165 activation on 2026-10-22 19:00 UTC), `getEphemeryChainConfig()` intentionally computes a negative `iterations` value and rolls the genesis time and chain IDs back to the live iteration 164, but this static fork epoch remains 0. Consequently `networksChainConfig.ephemery` selects Gloas at slot 0 for the stil",
+      "status": "acknowledged",
+      "addressed_commit": null,
+      "note": "Confirmed pre-reset iteration164 identity/Gloas mismatch at head611e3f9956a. Retained pre-existing post-reset-only merge/deployment scope; upstream75 finalized, final165config rechecked and actual reset required. No source fix or iteration-aware scheduler. Inline reply4337710593, body gates clarified while preserving Nico ready state.",
+      "source": {
+        "kind": "github-review-comment",
+        "id": "4337576675",
+        "repo": "ChainSafe/lodestar",
+        "pr": 10457,
+        "url": "https://github.com/ChainSafe/lodestar/pull/10457#discussion_r4337576675"
+      },
+      "created": "2026-10-21T13:53:08Z",
+      "updated": "2026-10-21T13:56:18Z"
+    }
+  ],
+  "sync": {
+    "github": {
+      "ChainSafe/lodestar": {
+        "last_comment_id": "4337576675",
+        "last_synced": "2026-10-21T13:53:08Z",
+        "last_imported": 1,
+        "last_reverify_updates": 0
+      }
+    }
+  }
+}
