@@ -57,6 +57,14 @@ For changes exercised by upstream spec fixtures, record the following in the tas
 4. Record the tested Lodestar HEAD **and** working-tree diff/harness overrides and relevant untracked test inputs. Run the narrowest relevant file/case selection, retaining the exact command, exit status and log. Report actual passed/failed/skipped counts, plus generated-case coverage and named fork/runner/handler/filter exclusions separately. Harness skips may hide whole fixture groups; a skipped-suite placeholder is not a count of skipped fixture cases. Preserve any local-only runner or unskip patch with the evidence without changing tracked skip policy unless requested.
 5. Link this evidence in the tracker/PR test summary and state the untested scope. A clean, fresh source cache (`generatedFixturesVerified=false`) proves prerequisites only; neither that cache nor a fixture hash inventory proves generator provenance, coverage or passing tests on its own. Do not reconstruct generation-time proof from later file timestamps or relabel an old run as a current one.
 
+## Reset-Timed Configuration Evidence
+
+For network configuration changes tied to a reset or activation:
+
+1. Pin the upstream config revision and generated artifact, plus the intended network iteration and UTC reset/activation times. Record any normalization or combination of separate identity metadata and runtime parameters. Distinguish automatically rolling identity fields from static fork and blob schedules.
+2. Check relevant prior/current/next iteration boundaries for both identity and fork/limit resolution. Record expected behavior and known incompatibilities separately. If pre-reset compatibility is deliberately out of scope, preserve its explicit merge/deployment restriction; do not call that incompatibility source-fixed or add an unrequested scheduler.
+3. Record review readiness, merge safety and deployment safety separately in the tracker/PR, with their actual outstanding conditions. Passing CI or “ready for review” does not satisfy upstream-finalization, final-config-parity or reset-timing gates. Recheck applicable conditions using fresh read-only evidence before releasing a gate; merge/deploy only within authorization.
+
 ## Async Retry / Coalescing Evidence
 
 When changing async request deduplication, retries or in-flight trigger handling:
