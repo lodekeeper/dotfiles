@@ -1,0 +1,10 @@
+{
+  "observedAt": "2026-10-23T11:08:04.610542+00:00",
+  "errorLevelLines": 0,
+  "lastErrors": [],
+  "lastProgress": [
+    "Oct-23 11:07:30.013[]                 info: Syncing - 1.6 minutes left - 14.1 slots/s - slot: 4787 - head: 3423 0x9352\u20265a89 - exec-block: valid(2888 0x2faf\u2026) - finalized: 0x038e\u2026bed8:105 - peers: 2",
+    "Oct-23 11:07:41.999[]                 info: Syncing - 1.1 minutes left - 15.8 slots/s - slot: 4788 - head: 3775 0xd201\u20262a4b - exec-block: valid(3210 0xd80a\u2026) - finalized: 0x664e\u20261b5a:116 - peers: 2",
+    "Oct-23 11:07:54.001[]                 info: Syncing - 39 seconds left - 17.8 slots/s - slot: 4789 - head: (slot -694) 0xfb1b\u2026e383 - exec-block: valid(3504 0xe8f3\u2026) - finalized: 0x1148\u2026fe7a:125 - peers: 2"
+  ]
+}

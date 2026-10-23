@@ -1,0 +1,56 @@
+[
+  {
+    "base": "https://beaconstate-ephemery.chainsafe.dev",
+    "observedAt": "2026-10-23T11:08:15.589Z",
+    "genesis": {
+      "data": {
+        "genesis_time": "1792696200",
+        "genesis_validators_root": "0x4190afc8844d015754deb884df1fa4ec8cc8a993061b2e5fe5782f47b2c1cc4d",
+        "genesis_fork_version": "0x1000101b"
+      }
+    },
+    "finality": {
+      "data": {
+        "finalized": {
+          "epoch": "147",
+          "root": "0xaddc52b2e10d74a8c74c3a9aa50b902c713a3ae1ab9802add1ca3370ada7683c"
+        },
+        "current_justified": {
+          "epoch": "148",
+          "root": "0x28eced70b3dfad71d075a49c081f6c02b0a8a47b7c864634491bceae624791e3"
+        },
+        "previous_justified": {
+          "epoch": "147",
+          "root": "0xaddc52b2e10d74a8c74c3a9aa50b902c713a3ae1ab9802add1ca3370ada7683c"
+        }
+      }
+    }
+  },
+  {
+    "base": "https://ephemery.beaconstate.ethstaker.cc",
+    "observedAt": "2026-10-23T11:08:15.589Z",
+    "genesis": {
+      "data": {
+        "genesis_time": "1792696200",
+        "genesis_validators_root": "0x4190afc8844d015754deb884df1fa4ec8cc8a993061b2e5fe5782f47b2c1cc4d",
+        "genesis_fork_version": "0x1000101b"
+      }
+    },
+    "finality": {
+      "data": {
+        "finalized": {
+          "epoch": "147",
+          "root": "0xaddc52b2e10d74a8c74c3a9aa50b902c713a3ae1ab9802add1ca3370ada7683c"
+        },
+        "current_justified": {
+          "epoch": "148",
+          "root": "0x28eced70b3dfad71d075a49c081f6c02b0a8a47b7c864634491bceae624791e3"
+        },
+        "previous_justified": {
+          "epoch": "147",
+          "root": "0xaddc52b2e10d74a8c74c3a9aa50b902c713a3ae1ab9802add1ca3370ada7683c"
+        }
+      }
+    }
+  }
+]

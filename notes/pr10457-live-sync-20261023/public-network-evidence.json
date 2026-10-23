@@ -1,0 +1,146 @@
+[
+  {
+    "base": "https://checkpoint-sync.ephemery.ethpandaops.io",
+    "/eth/v1/beacon/genesis": {
+      "status": 200,
+      "body": {
+        "data": {
+          "genesis_time": "1790277000",
+          "genesis_validators_root": "0xda77091227e4fed9f6ac81f72112b54b2f80893fc627f08bd77966ed0d066a3a",
+          "genesis_fork_version": "0x1000101b"
+        }
+      }
+    },
+    "/eth/v1/beacon/headers/head": {
+      "status": 404,
+      "body": "404 page not found\n"
+    },
+    "/eth/v1/beacon/states/head/finality_checkpoints": {
+      "status": 200,
+      "body": {
+        "data": {
+          "finalized": {
+            "epoch": "146",
+            "root": "0xbf6efdcf7a36445b33fd6f8ba1247e3638d571b0dc732bbbd59a16a42977f8ac"
+          },
+          "current_justified": {
+            "epoch": "147",
+            "root": "0xaddc52b2e10d74a8c74c3a9aa50b902c713a3ae1ab9802add1ca3370ada7683c"
+          },
+          "previous_justified": {
+            "epoch": "146",
+            "root": "0xbf6efdcf7a36445b33fd6f8ba1247e3638d571b0dc732bbbd59a16a42977f8ac"
+          }
+        }
+      }
+    }
+  },
+  {
+    "base": "https://beaconstate-ephemery.chainsafe.dev",
+    "/eth/v1/beacon/genesis": {
+      "status": 200,
+      "body": {
+        "data": {
+          "genesis_time": "1792696200",
+          "genesis_validators_root": "0x4190afc8844d015754deb884df1fa4ec8cc8a993061b2e5fe5782f47b2c1cc4d",
+          "genesis_fork_version": "0x1000101b"
+        }
+      }
+    },
+    "/eth/v1/beacon/headers/head": {
+      "status": 404,
+      "body": "404 page not found\n"
+    },
+    "/eth/v1/beacon/states/head/finality_checkpoints": {
+      "status": 200,
+      "body": {
+        "data": {
+          "finalized": {
+            "epoch": "146",
+            "root": "0xbf6efdcf7a36445b33fd6f8ba1247e3638d571b0dc732bbbd59a16a42977f8ac"
+          },
+          "current_justified": {
+            "epoch": "147",
+            "root": "0xaddc52b2e10d74a8c74c3a9aa50b902c713a3ae1ab9802add1ca3370ada7683c"
+          },
+          "previous_justified": {
+            "epoch": "146",
+            "root": "0xbf6efdcf7a36445b33fd6f8ba1247e3638d571b0dc732bbbd59a16a42977f8ac"
+          }
+        }
+      }
+    }
+  },
+  {
+    "base": "https://ephemery.beaconstate.ethstaker.cc",
+    "/eth/v1/beacon/genesis": {
+      "status": 200,
+      "body": {
+        "data": {
+          "genesis_time": "1792696200",
+          "genesis_validators_root": "0x4190afc8844d015754deb884df1fa4ec8cc8a993061b2e5fe5782f47b2c1cc4d",
+          "genesis_fork_version": "0x1000101b"
+        }
+      }
+    },
+    "/eth/v1/beacon/headers/head": {
+      "status": 404,
+      "body": "404 page not found\n"
+    },
+    "/eth/v1/beacon/states/head/finality_checkpoints": {
+      "status": 200,
+      "body": {
+        "data": {
+          "finalized": {
+            "epoch": "146",
+            "root": "0xbf6efdcf7a36445b33fd6f8ba1247e3638d571b0dc732bbbd59a16a42977f8ac"
+          },
+          "current_justified": {
+            "epoch": "147",
+            "root": "0xaddc52b2e10d74a8c74c3a9aa50b902c713a3ae1ab9802add1ca3370ada7683c"
+          },
+          "previous_justified": {
+            "epoch": "146",
+            "root": "0xbf6efdcf7a36445b33fd6f8ba1247e3638d571b0dc732bbbd59a16a42977f8ac"
+          }
+        }
+      }
+    }
+  },
+  {
+    "base": "https://checkpointz.bordel.wtf",
+    "/eth/v1/beacon/genesis": {
+      "status": 200,
+      "body": {
+        "data": {
+          "genesis_time": "1792696200",
+          "genesis_validators_root": "0x4190afc8844d015754deb884df1fa4ec8cc8a993061b2e5fe5782f47b2c1cc4d",
+          "genesis_fork_version": "0x1000101b"
+        }
+      }
+    },
+    "/eth/v1/beacon/headers/head": {
+      "status": 404,
+      "body": "404 page not found\n"
+    },
+    "/eth/v1/beacon/states/head/finality_checkpoints": {
+      "status": 200,
+      "body": {
+        "data": {
+          "finalized": {
+            "epoch": "146",
+            "root": "0xbf6efdcf7a36445b33fd6f8ba1247e3638d571b0dc732bbbd59a16a42977f8ac"
+          },
+          "current_justified": {
+            "epoch": "147",
+            "root": "0xaddc52b2e10d74a8c74c3a9aa50b902c713a3ae1ab9802add1ca3370ada7683c"
+          },
+          "previous_justified": {
+            "epoch": "146",
+            "root": "0xbf6efdcf7a36445b33fd6f8ba1247e3638d571b0dc732bbbd59a16a42977f8ac"
+          }
+        }
+      }
+    }
+  }
+]

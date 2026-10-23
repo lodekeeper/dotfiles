@@ -1,0 +1,82 @@
+[
+  {
+    "base": "http://127.0.0.1:19549",
+    "observedAt": "2026-10-23T11:18:27.902Z",
+    "genesis": {
+      "genesis_validators_root": "0x4190afc8844d015754deb884df1fa4ec8cc8a993061b2e5fe5782f47b2c1cc4d",
+      "genesis_time": "1792696200",
+      "genesis_fork_version": "0x1000101b"
+    },
+    "finality": {
+      "previous_justified": {
+        "epoch": "149",
+        "root": "0x6cf16cef5e58c3f476efab5bdd1b91bfeecf4c71f4998dfe23f5cf1a2b0b0a42"
+      },
+      "current_justified": {
+        "epoch": "150",
+        "root": "0xcccd042af3b75070ab9fb2724e1ebb8cbf55ff736d17d2134b7c2da994cbf5c0"
+      },
+      "finalized": {
+        "epoch": "149",
+        "root": "0x6cf16cef5e58c3f476efab5bdd1b91bfeecf4c71f4998dfe23f5cf1a2b0b0a42"
+      }
+    },
+    "fork": {
+      "previous_version": "0x7000101b",
+      "current_version": "0x8000101b",
+      "epoch": "0"
+    }
+  },
+  {
+    "base": "https://beaconstate-ephemery.chainsafe.dev",
+    "observedAt": "2026-10-23T11:18:27.945Z",
+    "genesis": {
+      "genesis_time": "1792696200",
+      "genesis_validators_root": "0x4190afc8844d015754deb884df1fa4ec8cc8a993061b2e5fe5782f47b2c1cc4d",
+      "genesis_fork_version": "0x1000101b"
+    },
+    "finality": {
+      "finalized": {
+        "epoch": "149",
+        "root": "0x6cf16cef5e58c3f476efab5bdd1b91bfeecf4c71f4998dfe23f5cf1a2b0b0a42"
+      },
+      "current_justified": {
+        "epoch": "150",
+        "root": "0xcccd042af3b75070ab9fb2724e1ebb8cbf55ff736d17d2134b7c2da994cbf5c0"
+      },
+      "previous_justified": {
+        "epoch": "149",
+        "root": "0x6cf16cef5e58c3f476efab5bdd1b91bfeecf4c71f4998dfe23f5cf1a2b0b0a42"
+      }
+    },
+    "fork": {
+      "status": 404
+    }
+  },
+  {
+    "base": "https://ephemery.beaconstate.ethstaker.cc",
+    "observedAt": "2026-10-23T11:18:28.564Z",
+    "genesis": {
+      "genesis_time": "1792696200",
+      "genesis_validators_root": "0x4190afc8844d015754deb884df1fa4ec8cc8a993061b2e5fe5782f47b2c1cc4d",
+      "genesis_fork_version": "0x1000101b"
+    },
+    "finality": {
+      "finalized": {
+        "epoch": "149",
+        "root": "0x6cf16cef5e58c3f476efab5bdd1b91bfeecf4c71f4998dfe23f5cf1a2b0b0a42"
+      },
+      "current_justified": {
+        "epoch": "150",
+        "root": "0xcccd042af3b75070ab9fb2724e1ebb8cbf55ff736d17d2134b7c2da994cbf5c0"
+      },
+      "previous_justified": {
+        "epoch": "149",
+        "root": "0x6cf16cef5e58c3f476efab5bdd1b91bfeecf4c71f4998dfe23f5cf1a2b0b0a42"
+      }
+    },
+    "fork": {
+      "status": 404
+    }
+  }
+]

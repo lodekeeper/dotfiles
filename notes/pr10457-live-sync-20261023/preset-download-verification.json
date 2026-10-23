@@ -1,0 +1,21 @@
+{
+  "pythonProbe": "urllib received403; Node fetch and actual Lodestar downloader returned200",
+  "assets": [
+    {
+      "asset": "genesis.ssz",
+      "url": "https://ephemery.dev/latest/genesis.ssz",
+      "status": 200,
+      "bytes": 7333008,
+      "sha256": "12add4420bbcf7a4d1922366e8754b85503912f922866b79fec919f250a1f31f",
+      "matchesRelease165": true
+    },
+    {
+      "asset": "bootstrap_nodes.txt",
+      "url": "https://ephemery.dev/latest/bootstrap_nodes.txt",
+      "status": 200,
+      "bytes": 1373,
+      "sha256": "7d8a3944e40765b4144e8e4b7467fe3382f08adb37747594b869773fbf9cd1ca",
+      "enrCount": 6
+    }
+  ]
+}

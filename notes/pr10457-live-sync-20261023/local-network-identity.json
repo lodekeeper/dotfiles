@@ -1,0 +1,40 @@
+{
+  "observedAt": "2026-10-23T11:06:32.046737+00:00",
+  "version": {
+    "data": {
+      "version": "Lodestar/v1.50.0/fix/ephemery-gloas-iteration-165/611e3f9"
+    }
+  },
+  "genesis": {
+    "data": {
+      "genesis_validators_root": "0x4190afc8844d015754deb884df1fa4ec8cc8a993061b2e5fe5782f47b2c1cc4d",
+      "genesis_time": "1792696200",
+      "genesis_fork_version": "0x1000101b"
+    }
+  },
+  "fork": {
+    "data": {
+      "previous_version": "0x7000101b",
+      "current_version": "0x8000101b",
+      "epoch": "0"
+    },
+    "execution_optimistic": false,
+    "finalized": false
+  },
+  "spec": {
+    "data": {
+      "CONFIG_NAME": "ephemery",
+      "MIN_GENESIS_TIME": "1792695600",
+      "GENESIS_DELAY": "600",
+      "GLOAS_FORK_EPOCH": "0",
+      "GLOAS_FORK_VERSION": "0x8000101b",
+      "DEPOSIT_CHAIN_ID": "39438165",
+      "BLOB_SCHEDULE": [
+        {
+          "EPOCH": "0",
+          "MAX_BLOBS_PER_BLOCK": "15"
+        }
+      ]
+    }
+  }
+}
