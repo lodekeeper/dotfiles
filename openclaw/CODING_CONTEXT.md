@@ -74,6 +74,15 @@ When changing async request deduplication, retries or in-flight trigger handling
 3. Use controlled deferred promises to test event ordering without sleeps: start request A, deliver trigger B while A is pending, settle A, then assert required work and request counts. Cover relevant success, rejection and handled-miss/null paths, plus no-trigger, repeated-trigger and terminal-state cases.
 4. For a race regression, verify the targeted test fails with the original behavior and passes with the fix when practical. Record the exact tested revision/diff, command and result; a test of a rejecting mock alone does not prove a helper's fulfilled-but-incomplete path.
 
+## CI Status Evidence
+
+When reporting PR CI status or readiness:
+
+1. Collect evidence for the current head: `python3 ~/.openclaw/workspace/scripts/github/check-pr-ci-evidence.py --repo <owner/repo> --pr <n>` (read-only GETs). It reconciles workflow runs, check runs and status contexts and records `headSha`/`observedAt`; cite those and the `nonGreen` links. Exit 0 only means evidence was collected: read `verdict`. Exit 1 / `verdict: unknown` means evidence is incomplete, not green.
+2. "0 failing checks" is not "CI green". `gh pr checks` and check-run rollups omit workflow runs that never started, e.g. fork-PR runs awaiting approval (`action_required`). Report `action_required`, pending, cancelled and `no_ci` results explicitly. A superseded cancellation is not a current failure; confirm the replacement result. Skipped/neutral is not an executed test.
+3. `observed_green` means nothing current is failing, gated, pending or cancelled and at least one CI item (a `pull_request`/`push`/`merge_group` workflow run, a non-Actions check run or a status context) succeeded. It does not evaluate required-check coverage or prove that the relevant tests ran. Successful unrelated workflows, older-head runs and local tests do not establish current PR CI success. Keep local verification, CI readiness, review readiness and merge/deployment conditions separate.
+4. Evidence collection grants no authority to approve workflows, rerun jobs, change permissions or retrigger CI. Unchanged known blockers do not need repeated alerts.
+
 ## Code Style
 
 - **Formatter:** Biome (not Prettier/ESLint)
