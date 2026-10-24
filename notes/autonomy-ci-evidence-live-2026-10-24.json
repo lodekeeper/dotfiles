@@ -1,0 +1,42 @@
+{
+  "ok": true,
+  "repo": "ChainSafe/lodestar",
+  "pr": 10460,
+  "prState": "open",
+  "headSha": "feae3c50b9cd7b332357cc2e26eb21fd5abeb9f0",
+  "headRepo": "lodekeeper/lodestar",
+  "observedAt": "2026-10-24T03:20:00Z",
+  "verdict": "observed_green",
+  "counts": {
+    "ok": 26,
+    "skipped": 2,
+    "failing": 0,
+    "action_required": 0,
+    "pending": 0,
+    "cancelled": 0
+  },
+  "workflowRunsByEvent": {
+    "pull_request": {
+      "ok": 6,
+      "skipped": 1
+    },
+    "pull_request_target": {
+      "ok": 1
+    }
+  },
+  "observed": {
+    "workflowRuns": 8,
+    "checkRuns": 20,
+    "statusContexts": 0,
+    "supersededWorkflowRuns": 0,
+    "supersededCheckRuns": 0,
+    "otherPrWorkflowRuns": 0
+  },
+  "nonGreen": [],
+  "supersededNonGreen": [],
+  "caveats": [
+    "Required-check coverage is not evaluated; observed_green is not merge readiness.",
+    "Newest run per workflow/event and newest check per suite/name are current; a newer skipped item does not hide an older executed result.",
+    "Other-PR exclusion matches PR number only and only while PRs are open; fork-PR runs and runs listing several PRs sharing this head SHA cannot be separated."
+  ]
+}

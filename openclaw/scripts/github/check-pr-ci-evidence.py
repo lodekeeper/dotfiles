@@ -74,9 +74,19 @@ def get_paged(gh: str, endpoint: str, key: str, timeout_s: int) -> list[dict[str
         batch = payload.get(key)
         if not isinstance(batch, list):
             raise CollectionError(f"GitHub GET {endpoint} returned no '{key}' list")
-        items.extend(item for item in batch if isinstance(item, dict))
+        if any(not isinstance(item, dict) for item in batch):
+            raise CollectionError(f"GitHub GET {endpoint} returned a non-object '{key}' record")
         total = payload.get("total_count")
-        if len(batch) < PER_PAGE or (isinstance(total, int) and len(items) >= total):
+        if "total_count" in payload and (type(total) is not int or total < 0):
+            raise CollectionError(f"GitHub GET {endpoint} returned an invalid total_count")
+        items.extend(batch)
+        if total is not None and len(items) > total:
+            raise CollectionError(f"GitHub GET {endpoint} returned more records than total_count; evidence changed or malformed")
+        if len(batch) < PER_PAGE:
+            if total is not None and len(items) < total:
+                raise CollectionError(f"GitHub GET {endpoint} ended before total_count; evidence incomplete")
+            return items
+        if total is not None and len(items) == total:
             return items
     raise CollectionError(f"GitHub GET {endpoint} exceeded {MAX_PAGES} pages; evidence incomplete")
 

@@ -1,0 +1,299 @@
+FFFFFFFFFFFFFFFFFFFFF
+======================================================================
+FAIL: test_non_object_records_never_become_empty_or_green_evidence (ci_tests.PrCiEvidenceTests.test_non_object_records_never_become_empty_or_green_evidence) (endpoint='/actions/runs', record=None)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/openclaw/.openclaw/workspace/scripts/github/test_check_pr_ci_evidence.py", line 268, in test_non_object_records_never_become_empty_or_green_evidence
+    self.assertEqual((rc, out["ok"], out["verdict"]), (1, False, "unknown"))
+AssertionError: Tuples differ: (0, True, 'no_ci') != (1, False, 'unknown')
+
+First differing element 0:
+0
+1
+
+- (0, True, 'no_ci')
++ (1, False, 'unknown')
+
+======================================================================
+FAIL: test_non_object_records_never_become_empty_or_green_evidence (ci_tests.PrCiEvidenceTests.test_non_object_records_never_become_empty_or_green_evidence) (endpoint='/actions/runs', record='lost failure')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/openclaw/.openclaw/workspace/scripts/github/test_check_pr_ci_evidence.py", line 268, in test_non_object_records_never_become_empty_or_green_evidence
+    self.assertEqual((rc, out["ok"], out["verdict"]), (1, False, "unknown"))
+AssertionError: Tuples differ: (0, True, 'no_ci') != (1, False, 'unknown')
+
+First differing element 0:
+0
+1
+
+- (0, True, 'no_ci')
++ (1, False, 'unknown')
+
+======================================================================
+FAIL: test_non_object_records_never_become_empty_or_green_evidence (ci_tests.PrCiEvidenceTests.test_non_object_records_never_become_empty_or_green_evidence) (endpoint='/actions/runs', record=[])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/openclaw/.openclaw/workspace/scripts/github/test_check_pr_ci_evidence.py", line 268, in test_non_object_records_never_become_empty_or_green_evidence
+    self.assertEqual((rc, out["ok"], out["verdict"]), (1, False, "unknown"))
+AssertionError: Tuples differ: (0, True, 'no_ci') != (1, False, 'unknown')
+
+First differing element 0:
+0
+1
+
+- (0, True, 'no_ci')
++ (1, False, 'unknown')
+
+======================================================================
+FAIL: test_non_object_records_never_become_empty_or_green_evidence (ci_tests.PrCiEvidenceTests.test_non_object_records_never_become_empty_or_green_evidence) (endpoint='/actions/runs', record=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/openclaw/.openclaw/workspace/scripts/github/test_check_pr_ci_evidence.py", line 268, in test_non_object_records_never_become_empty_or_green_evidence
+    self.assertEqual((rc, out["ok"], out["verdict"]), (1, False, "unknown"))
+AssertionError: Tuples differ: (0, True, 'no_ci') != (1, False, 'unknown')
+
+First differing element 0:
+0
+1
+
+- (0, True, 'no_ci')
++ (1, False, 'unknown')
+
+======================================================================
+FAIL: test_non_object_records_never_become_empty_or_green_evidence (ci_tests.PrCiEvidenceTests.test_non_object_records_never_become_empty_or_green_evidence) (endpoint='/check-runs', record=None)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/openclaw/.openclaw/workspace/scripts/github/test_check_pr_ci_evidence.py", line 268, in test_non_object_records_never_become_empty_or_green_evidence
+    self.assertEqual((rc, out["ok"], out["verdict"]), (1, False, "unknown"))
+AssertionError: Tuples differ: (0, True, 'observed_green') != (1, False, 'unknown')
+
+First differing element 0:
+0
+1
+
+- (0, True, 'observed_green')
++ (1, False, 'unknown')
+
+======================================================================
+FAIL: test_non_object_records_never_become_empty_or_green_evidence (ci_tests.PrCiEvidenceTests.test_non_object_records_never_become_empty_or_green_evidence) (endpoint='/check-runs', record='lost failure')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/openclaw/.openclaw/workspace/scripts/github/test_check_pr_ci_evidence.py", line 268, in test_non_object_records_never_become_empty_or_green_evidence
+    self.assertEqual((rc, out["ok"], out["verdict"]), (1, False, "unknown"))
+AssertionError: Tuples differ: (0, True, 'observed_green') != (1, False, 'unknown')
+
+First differing element 0:
+0
+1
+
+- (0, True, 'observed_green')
++ (1, False, 'unknown')
+
+======================================================================
+FAIL: test_non_object_records_never_become_empty_or_green_evidence (ci_tests.PrCiEvidenceTests.test_non_object_records_never_become_empty_or_green_evidence) (endpoint='/check-runs', record=[])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/openclaw/.openclaw/workspace/scripts/github/test_check_pr_ci_evidence.py", line 268, in test_non_object_records_never_become_empty_or_green_evidence
+    self.assertEqual((rc, out["ok"], out["verdict"]), (1, False, "unknown"))
+AssertionError: Tuples differ: (0, True, 'observed_green') != (1, False, 'unknown')
+
+First differing element 0:
+0
+1
+
+- (0, True, 'observed_green')
++ (1, False, 'unknown')
+
+======================================================================
+FAIL: test_non_object_records_never_become_empty_or_green_evidence (ci_tests.PrCiEvidenceTests.test_non_object_records_never_become_empty_or_green_evidence) (endpoint='/check-runs', record=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/openclaw/.openclaw/workspace/scripts/github/test_check_pr_ci_evidence.py", line 268, in test_non_object_records_never_become_empty_or_green_evidence
+    self.assertEqual((rc, out["ok"], out["verdict"]), (1, False, "unknown"))
+AssertionError: Tuples differ: (0, True, 'observed_green') != (1, False, 'unknown')
+
+First differing element 0:
+0
+1
+
+- (0, True, 'observed_green')
++ (1, False, 'unknown')
+
+======================================================================
+FAIL: test_non_object_records_never_become_empty_or_green_evidence (ci_tests.PrCiEvidenceTests.test_non_object_records_never_become_empty_or_green_evidence) (endpoint='/status?', record=None)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/openclaw/.openclaw/workspace/scripts/github/test_check_pr_ci_evidence.py", line 268, in test_non_object_records_never_become_empty_or_green_evidence
+    self.assertEqual((rc, out["ok"], out["verdict"]), (1, False, "unknown"))
+AssertionError: Tuples differ: (0, True, 'observed_green') != (1, False, 'unknown')
+
+First differing element 0:
+0
+1
+
+- (0, True, 'observed_green')
++ (1, False, 'unknown')
+
+======================================================================
+FAIL: test_non_object_records_never_become_empty_or_green_evidence (ci_tests.PrCiEvidenceTests.test_non_object_records_never_become_empty_or_green_evidence) (endpoint='/status?', record='lost failure')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/openclaw/.openclaw/workspace/scripts/github/test_check_pr_ci_evidence.py", line 268, in test_non_object_records_never_become_empty_or_green_evidence
+    self.assertEqual((rc, out["ok"], out["verdict"]), (1, False, "unknown"))
+AssertionError: Tuples differ: (0, True, 'observed_green') != (1, False, 'unknown')
+
+First differing element 0:
+0
+1
+
+- (0, True, 'observed_green')
++ (1, False, 'unknown')
+
+======================================================================
+FAIL: test_non_object_records_never_become_empty_or_green_evidence (ci_tests.PrCiEvidenceTests.test_non_object_records_never_become_empty_or_green_evidence) (endpoint='/status?', record=[])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/openclaw/.openclaw/workspace/scripts/github/test_check_pr_ci_evidence.py", line 268, in test_non_object_records_never_become_empty_or_green_evidence
+    self.assertEqual((rc, out["ok"], out["verdict"]), (1, False, "unknown"))
+AssertionError: Tuples differ: (0, True, 'observed_green') != (1, False, 'unknown')
+
+First differing element 0:
+0
+1
+
+- (0, True, 'observed_green')
++ (1, False, 'unknown')
+
+======================================================================
+FAIL: test_non_object_records_never_become_empty_or_green_evidence (ci_tests.PrCiEvidenceTests.test_non_object_records_never_become_empty_or_green_evidence) (endpoint='/status?', record=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/openclaw/.openclaw/workspace/scripts/github/test_check_pr_ci_evidence.py", line 268, in test_non_object_records_never_become_empty_or_green_evidence
+    self.assertEqual((rc, out["ok"], out["verdict"]), (1, False, "unknown"))
+AssertionError: Tuples differ: (0, True, 'observed_green') != (1, False, 'unknown')
+
+First differing element 0:
+0
+1
+
+- (0, True, 'observed_green')
++ (1, False, 'unknown')
+
+======================================================================
+FAIL: test_invalid_totals_cannot_terminate_paging_as_success (ci_tests.PrCiEvidenceTests.test_invalid_totals_cannot_terminate_paging_as_success) (total=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/openclaw/.openclaw/workspace/scripts/github/test_check_pr_ci_evidence.py", line 277, in test_invalid_totals_cannot_terminate_paging_as_success
+    self.assertEqual((rc, out["verdict"]), (1, "unknown"))
+AssertionError: Tuples differ: (0, 'observed_green') != (1, 'unknown')
+
+First differing element 0:
+0
+1
+
+- (0, 'observed_green')
++ (1, 'unknown')
+
+======================================================================
+FAIL: test_invalid_totals_cannot_terminate_paging_as_success (ci_tests.PrCiEvidenceTests.test_invalid_totals_cannot_terminate_paging_as_success) (total=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/openclaw/.openclaw/workspace/scripts/github/test_check_pr_ci_evidence.py", line 277, in test_invalid_totals_cannot_terminate_paging_as_success
+    self.assertEqual((rc, out["verdict"]), (1, "unknown"))
+AssertionError: Tuples differ: (0, 'observed_green') != (1, 'unknown')
+
+First differing element 0:
+0
+1
+
+- (0, 'observed_green')
++ (1, 'unknown')
+
+======================================================================
+FAIL: test_invalid_totals_cannot_terminate_paging_as_success (ci_tests.PrCiEvidenceTests.test_invalid_totals_cannot_terminate_paging_as_success) (total=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/openclaw/.openclaw/workspace/scripts/github/test_check_pr_ci_evidence.py", line 277, in test_invalid_totals_cannot_terminate_paging_as_success
+    self.assertEqual((rc, out["verdict"]), (1, "unknown"))
+AssertionError: Tuples differ: (0, 'observed_green') != (1, 'unknown')
+
+First differing element 0:
+0
+1
+
+- (0, 'observed_green')
++ (1, 'unknown')
+
+======================================================================
+FAIL: test_invalid_totals_cannot_terminate_paging_as_success (ci_tests.PrCiEvidenceTests.test_invalid_totals_cannot_terminate_paging_as_success) (total='1')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/openclaw/.openclaw/workspace/scripts/github/test_check_pr_ci_evidence.py", line 277, in test_invalid_totals_cannot_terminate_paging_as_success
+    self.assertEqual((rc, out["verdict"]), (1, "unknown"))
+AssertionError: Tuples differ: (0, 'observed_green') != (1, 'unknown')
+
+First differing element 0:
+0
+1
+
+- (0, 'observed_green')
++ (1, 'unknown')
+
+======================================================================
+FAIL: test_invalid_totals_cannot_terminate_paging_as_success (ci_tests.PrCiEvidenceTests.test_invalid_totals_cannot_terminate_paging_as_success) (total=1.0)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/openclaw/.openclaw/workspace/scripts/github/test_check_pr_ci_evidence.py", line 277, in test_invalid_totals_cannot_terminate_paging_as_success
+    self.assertEqual((rc, out["verdict"]), (1, "unknown"))
+AssertionError: Tuples differ: (0, 'observed_green') != (1, 'unknown')
+
+First differing element 0:
+0
+1
+
+- (0, 'observed_green')
++ (1, 'unknown')
+
+======================================================================
+FAIL: test_invalid_totals_cannot_terminate_paging_as_success (ci_tests.PrCiEvidenceTests.test_invalid_totals_cannot_terminate_paging_as_success) (total=None)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/openclaw/.openclaw/workspace/scripts/github/test_check_pr_ci_evidence.py", line 277, in test_invalid_totals_cannot_terminate_paging_as_success
+    self.assertEqual((rc, out["verdict"]), (1, "unknown"))
+AssertionError: Tuples differ: (0, 'observed_green') != (1, 'unknown')
+
+First differing element 0:
+0
+1
+
+- (0, 'observed_green')
++ (1, 'unknown')
+
+======================================================================
+FAIL: test_short_first_or_later_page_cannot_hide_advertised_results (ci_tests.PrCiEvidenceTests.test_short_first_or_later_page_cannot_hide_advertised_results) (full_first_page=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/openclaw/.openclaw/workspace/scripts/github/test_check_pr_ci_evidence.py", line 289, in test_short_first_or_later_page_cannot_hide_advertised_results
+    with self.assertRaisesRegex(evidence.CollectionError, "evidence incomplete"):
+AssertionError: CollectionError not raised
+
+======================================================================
+FAIL: test_short_first_or_later_page_cannot_hide_advertised_results (ci_tests.PrCiEvidenceTests.test_short_first_or_later_page_cannot_hide_advertised_results) (full_first_page=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/openclaw/.openclaw/workspace/scripts/github/test_check_pr_ci_evidence.py", line 289, in test_short_first_or_later_page_cannot_hide_advertised_results
+    with self.assertRaisesRegex(evidence.CollectionError, "evidence incomplete"):
+AssertionError: CollectionError not raised
+
+======================================================================
+FAIL: test_total_below_accumulated_records_is_not_complete_evidence (ci_tests.PrCiEvidenceTests.test_total_below_accumulated_records_is_not_complete_evidence)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/openclaw/.openclaw/workspace/scripts/github/test_check_pr_ci_evidence.py", line 296, in test_total_below_accumulated_records_is_not_complete_evidence
+    with self.assertRaisesRegex(evidence.CollectionError, "more records than total_count"):
+AssertionError: CollectionError not raised
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.015s
+
+FAILED (failures=21)

@@ -256,6 +256,68 @@ class PrCiEvidenceTests(unittest.TestCase):
         self.assertEqual((rc, out["verdict"]), (1, "unknown"))
         self.assertIn("exceeded", out["error"])
 
+    def test_non_object_records_never_become_empty_or_green_evidence(self):
+        endpoints = (("/actions/runs", "workflow_runs"), ("/check-runs", "check_runs"),
+                     ("/status?", "statuses"))
+        for fragment, key in endpoints:
+            for bad in (None, "lost failure", [], 1):
+                with self.subTest(endpoint=fragment, record=bad):
+                    fake = FakeGh(runs=[run(1, "Tests", "success")],
+                                  raw={fragment: json.dumps({"total_count": 1, key: [bad]})})
+                    rc, out = invoke(fake)
+                    self.assertEqual((rc, out["ok"], out["verdict"]), (1, False, "unknown"))
+                    self.assertIn("non-object", out["error"])
+
+    def test_invalid_totals_cannot_terminate_paging_as_success(self):
+        for total in (True, False, -1, "1", 1.0, None):
+            with self.subTest(total=total):
+                fake = FakeGh(raw={"/actions/runs": json.dumps({
+                    "total_count": total, "workflow_runs": [run(1, "Tests", "success")]})})
+                rc, out = invoke(fake)
+                self.assertEqual((rc, out["verdict"]), (1, "unknown"))
+                self.assertIn("invalid total_count", out["error"])
+
+    def test_short_first_or_later_page_cannot_hide_advertised_results(self):
+        for full_first_page in (False, True):
+            with self.subTest(full_first_page=full_first_page):
+                pages = ({"total_count": 4, "workflow_runs": [run(1, "Tests", "success")]},)
+                if full_first_page:
+                    pages = ({"total_count": 4, "workflow_runs": [run(2, "Sim", "success"),
+                              run(1, "Tests", "success")]}, *pages)
+                with patch.object(evidence, "PER_PAGE", 2), \
+                        patch.object(evidence, "get_json", side_effect=pages):
+                    with self.assertRaisesRegex(evidence.CollectionError, "evidence incomplete"):
+                        evidence.get_paged("gh", "runs", "workflow_runs", 30)
+
+    def test_total_below_accumulated_records_is_not_complete_evidence(self):
+        pages = [{"total_count": 4, "check_runs": [ext_check(4, "a", "success"), ext_check(3, "b", "success")]},
+                 {"total_count": 2, "check_runs": [ext_check(2, "c", "success")]}]
+        with patch.object(evidence, "PER_PAGE", 2), patch.object(evidence, "get_json", side_effect=pages):
+            with self.assertRaisesRegex(evidence.CollectionError, "more records than total_count"):
+                evidence.get_paged("gh", "checks", "check_runs", 30)
+        rc, out = invoke(FakeGh(raw={"/actions/runs": json.dumps({
+            "total_count": 0, "workflow_runs": [run(1, "Tests", "success")]})}))
+        self.assertEqual((rc, out["verdict"]), (1, "unknown"))
+
+    def test_valid_zero_and_exact_full_page_totals_still_work(self):
+        self.assertEqual(verdict(FakeGh()), "no_ci")
+        fake = FakeGh(checks=[ext_check(1, "a", "success"), ext_check(2, "b", "success")], page_size=2)
+        with patch.object(evidence, "PER_PAGE", 2):
+            rc, out = invoke(fake)
+        self.assertEqual((rc, out["verdict"]), (0, "observed_green"))
+        self.assertEqual(len([c for c in fake.calls if "/check-runs?" in c[-1]]), 1)
+
+    def test_missing_totals_keep_bounded_pagination(self):
+        pages = [{"statuses": [{"context": "a", "state": "success"}, {"context": "b", "state": "success"}]},
+                 {"statuses": [{"context": "c", "state": "failure"}]}]
+        with patch.object(evidence, "PER_PAGE", 2), patch.object(evidence, "get_json", side_effect=pages):
+            statuses = evidence.get_paged("gh", "statuses", "statuses", 30)
+        self.assertEqual([s["state"] for s in statuses], ["success", "success", "failure"])
+        with patch.object(evidence, "PER_PAGE", 2), patch.object(evidence, "MAX_PAGES", 1), \
+                patch.object(evidence, "get_json", return_value=pages[0]):
+            with self.assertRaisesRegex(evidence.CollectionError, "exceeded"):
+                evidence.get_paged("gh", "statuses", "statuses", 30)
+
     def test_only_get_requests_are_issued(self):
         fake = FakeGh(runs=[run(1, "Tests", "success")])
         invoke(fake)

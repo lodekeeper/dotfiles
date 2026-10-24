@@ -1,0 +1,22 @@
+[
+  {
+    "case": "non-object workflow_runs",
+    "exitCode": 0,
+    "verdict": "no_ci"
+  },
+  {
+    "case": "non-object check_runs",
+    "exitCode": 0,
+    "verdict": "observed_green"
+  },
+  {
+    "case": "non-object statuses",
+    "exitCode": 0,
+    "verdict": "observed_green"
+  },
+  {
+    "case": "short workflow page advertises missing result",
+    "exitCode": 0,
+    "verdict": "observed_green"
+  }
+]
