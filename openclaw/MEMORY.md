@@ -56,6 +56,7 @@
 - Track contributor PRs I've reviewed
 - **Consensus specs study:** Systematic study of specs alongside Lodestar code. Progress in `notes/specs/PROGRESS.md`. Reminder fires every 4h. Priority: Gloas/EPBS → Phase0 → ... → PeerDAS. Document everything, open PRs for issues found with detailed spec references.
 - **ChainSafe dev fleet (since 2026-10-06):** read-only health sweeps on request; destructive maintenance only with explicit Nico authorization per run. Raw evidence stays private; only sanitized reports in `reports/devfleet/`.
+- **Vuln watch (since 2026-10-23):** `lodestar-vuln-watch` automation (Mon+Thu) runs `scripts/security/vuln_watch.py`, ledger `memory/vuln-watch/`, posts to the pwn.watch thread.
 
 ## Lessons Learned
 Distilled 2026-10-09: this file pushed main-session bootstrap past the 80K total cap, so full-text lessons (2026-01-31 → 2026-10-05) moved verbatim to `memory/lessons-archive.md`. Lessons already in AGENTS.md (BACKLOG-first, lint before push, merge-not-rebase, reply in-thread) or SOUL.md are one-liners here. Add new ones as one line + date. Put detail in the archive or daily notes.
@@ -68,11 +69,8 @@ Distilled 2026-10-09: this file pushed main-session bootstrap past the 80K total
 - 2026-02-20: Never delete gists, or anything else others link to, without asking.
 - 2026-03-18: Follow repo migration patterns before inventing types or helpers. Keep the fork's `unstable` synced before opening PRs.
 - 2026-04-26: Stamp reviewer artifacts with `Reviewed commit: <SHA>` and verify it matches HEAD.
-- 2026-10-06: Before opening a fix, search open PRs by any author that touch the same helper. #10291 duplicated #10237.
-- 2026-10-08: Build exactly the trigger condition that was asked for. #10310 implemented a general cutoff fallback when Nico wanted "local payload fails AND executiononly/circuit breaker"; he closed it and wrote it himself.
-- 2026-10-09: Check whether Nico is already building the adjacent piece before I ship mine. #10332 (engine/EL nightly matrix) closed because he was adding it himself that day. For pre-existing, low-impact drift, ask "PR or leave it?" first (FCR slashed-balance, same day).
-- 2026-10-12: A reviewer's passing suggestion in someone else's thread is not a request. #10359 (response-timing metrics from twoeths' httpClient remark on #10349) was closed within ~30 min as unnecessary. Ask the owner first.
-- 2026-10-12: Before approving, reconcile every open bot/inline finding against the code. I approved #10329 with a valid codex P2 (in-flight triggers dropped) still open, corrected a minute later, and fixed it in #10366. (Held on #10412, 10-15.)
+- 2026-10-06 → 10-12: Before opening a PR, search open PRs touching the same helper (#10291 ≡ #10237), build exactly the trigger asked for (#10310), check Nico isn't building it (#10332), and don't turn a passing suggestion in someone else's thread into a PR (#10359). For low-impact drift, ask "PR or leave it?". Story in SOUL.md.
+- 2026-10-12: Before approving, reconcile every open bot/inline finding against the code (#10329 approved past a valid codex P2; held since on #10412, #10454).
 
 **Tooling & runtime**
 - 2026-02-26: Tee Oracle (and any long advisor) output to a file. Stdout doesn't survive compaction.
@@ -111,7 +109,9 @@ Distilled 2026-10-09: this file pushed main-session bootstrap past the 80K total
 - 2026-10-16: An explorer's offline flag isn't a client failure. Read the node's own CL/EL logs first (lodestar-reth-1: Dora TLS fault, node synced at head).
 - 2026-10-14: Check tags before any "since vX" claim (gh tag-contents API). I told #10393 the `builder` cmd existed since v1.50.0; Marko corrected it: v1.46.0.
 - 2026-10-18: A getter's name doesn't prove it governs the path. I relayed an unlock date from a contract's lock getter, but that path exits through a separate staker with its own timestamp. Trace the real exit path, and enumerate sources from the on-chain registry (at first I missed one of three).
-- 2026-10-20: A local repro isn't a production root cause, and JS CPU profiles miss native (libuv/LevelDB) work. Hoodi archiver: #10447 sound, live stall cure unproven.
+- 2026-10-20: A local repro isn't a production root cause, and JS CPU profiles miss native (libuv/LevelDB) work. Hoodi archiver: #10447 sound, live stall cure unproven. Confirmed live 10-23: `compactRange` skips the bottom level, so a fast no-op compaction isn't disproof; the sentinel-key compaction fixed it.
+- 2026-10-22: An empty check list isn't green. `gh pr checks` omits workflows held at the fork-approval gate (#10460 read "no failures" with nothing run). Use `scripts/github/check-pr-ci-evidence.py`.
+- 2026-10-23: Before raising a security alert, check whether Lodestar already shipped the fix (Node2Shell was covered by v1.50.1).
 - 2026-10-07: Compiler evidence beats source-review assumptions (SSZ ViewDU generic invariance). Check existing SSZ limits/decoders before adding validation.
 
 **Judgment & people**
