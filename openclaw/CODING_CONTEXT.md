@@ -74,6 +74,15 @@ When changing async request deduplication, retries or in-flight trigger handling
 3. Use controlled deferred promises to test event ordering without sleeps: start request A, deliver trigger B while A is pending, settle A, then assert required work and request counts. Cover relevant success, rejection and handled-miss/null paths, plus no-trigger, repeated-trigger and terminal-state cases.
 4. For a race regression, verify the targeted test fails with the original behavior and passes with the fix when practical. Record the exact tested revision/diff, command and result; a test of a rejecting mock alone does not prove a helper's fulfilled-but-incomplete path.
 
+## Storage Maintenance Evidence
+
+For pruning, compaction or storage-latency changes:
+
+1. Pin the backend/version, revision/diff, encoded range boundaries and operation being measured. A fulfilled maintenance API call or empty logical range does not prove physical reclamation or restored seek performance.
+2. Reproduce the relevant retained-data state with the real backend. For the long-held-iterator deletion case, retain evidence that plain compaction leaves storage behind and the proposed rewrite removes it. Preserve live boundary/out-of-range records; use deterministic storage assertions, not wall-clock test thresholds.
+3. For sentinel-based approaches, verify noncollision, range bounds, write/compact/delete ordering and cleanup. Bounds do not guarantee physical isolation: overlapping storage files may be rewritten. This guidance does not authorize live maintenance or prescribe sentinel use generally.
+4. Record comparable before/after measurements of the same operation and range, distinguishing approximate range size from total filesystem size. Report startup latency, archive progress and API sync separately; none alone proves the others recovered.
+
 ## CI Status Evidence
 
 When reporting PR CI status or readiness:
