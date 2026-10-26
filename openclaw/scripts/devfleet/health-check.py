@@ -155,6 +155,9 @@ def evaluate(results):
             md, level, st, member = (entry.split(":") + ["", "", ""])[:4]
             if level == "INACTIVE" or "_" in st or member != "ok":
                 add("crit", h, "raid", md, f"RAID {md} degraded ({level} {st} {member})")
+        for entry in d.get("mdstate", []):
+            md, state = (entry.split(":") + [""])[:2]
+            add("crit", h, "raid_state", md, f"RAID {md} array_state={state}")
         kerr = d.get("kerr", [])
         disk_err = [k for k in kerr if KERR_DISK.search(k)]
         if disk_err:

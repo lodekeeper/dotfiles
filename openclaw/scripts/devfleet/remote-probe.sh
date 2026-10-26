@@ -22,6 +22,12 @@ if [ -r /proc/mdstat ]; then
        n && /blocks/{if(match($0,/\[[U_]+\]/))st=substr($0,RSTART,RLENGTH)}
        END{if(n)print n":"l":"st":"f}' /proc/mdstat | sed 's/^/md=/'
 fi
+# RAID0 shows no [UU] in mdstat; a lost member only surfaces as array_state=broken in sysfs
+for f in /sys/block/md*/md/array_state; do
+  [ -r "$f" ] || continue
+  s=$(< "$f"); m=${f#/sys/block/}; m=${m%%/*}
+  case "$s" in clean|active|active-idle|write-pending|read-auto) ;; *) echo "mdstate=$m:${s:-unreadable}" ;; esac
+done
 sudo -n journalctl -k -p err --since "-24h" --no-pager -q 2>/dev/null \
   | grep -iE 'I/O error|EXT4-fs error|XFS .*error|Buffer I/O|blk_update_request|nvme.*(timeout|reset|failed)|ata[0-9.]+: (failed|exception)|md/raid.*(fail|disabled)|Medium Error|critical medium|Out of memory|oom-kill' \
   | tail -n 5 | sed 's/^/kerr=/' | cut -c1-240
