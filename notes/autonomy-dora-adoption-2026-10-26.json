@@ -1,0 +1,147 @@
+{
+  "scope": "Observed collector-shaped artifacts plus explicit monitor usage note; not proof of durable scheduler/prompt integration or client health",
+  "usageNote": "memory/2026-10-25.md, 10:13 UTC",
+  "verifiedArtifacts": 10,
+  "records": [
+    {
+      "artifact": "memory/devnet-health/snapshots/2026-10-25-1013/focil-devnet-2-dora.json",
+      "fetchedAt": "2026-10-25T10:13:42+00:00",
+      "counts": {
+        "clients": 17,
+        "forks": 1
+      },
+      "schemaPath": "/api/swagger/doc.json",
+      "paths": {
+        "clients": "/api/v1/clients/consensus",
+        "forks": "/api/v1/network/client_head_forks"
+      },
+      "transportOk": true
+    },
+    {
+      "artifact": "memory/devnet-health/snapshots/2026-10-25-1013/focil-devnet-3-dora.json",
+      "fetchedAt": "2026-10-25T10:13:42+00:00",
+      "counts": {
+        "clients": 22,
+        "forks": 1
+      },
+      "schemaPath": "/api/swagger/doc.json",
+      "paths": {
+        "clients": "/api/v1/clients/consensus",
+        "forks": "/api/v1/network/client_head_forks"
+      },
+      "transportOk": true
+    },
+    {
+      "artifact": "memory/devnet-health/snapshots/2026-10-25-1013/frames-devnet-1-dora.json",
+      "fetchedAt": "2026-10-25T10:13:43+00:00",
+      "counts": {
+        "clients": 11,
+        "forks": 1
+      },
+      "schemaPath": "/api/swagger/doc.json",
+      "paths": {
+        "clients": "/api/v1/clients/consensus",
+        "forks": "/api/v1/network/client_head_forks"
+      },
+      "transportOk": true
+    },
+    {
+      "artifact": "memory/devnet-health/snapshots/2026-10-25-1013/glamsterdam-devnet-8-dora.json",
+      "fetchedAt": "2026-10-25T10:13:43+00:00",
+      "counts": {
+        "clients": 94,
+        "forks": 1
+      },
+      "schemaPath": "/api/swagger/doc.json",
+      "paths": {
+        "clients": "/api/v1/clients/consensus",
+        "forks": "/api/v1/network/client_head_forks"
+      },
+      "transportOk": true
+    },
+    {
+      "artifact": "memory/devnet-health/snapshots/2026-10-25-1013/glamsterdam-pbt-1-dora.json",
+      "fetchedAt": "2026-10-25T10:13:43+00:00",
+      "counts": {
+        "clients": 9,
+        "forks": 1
+      },
+      "schemaPath": "/api/swagger/doc.json",
+      "paths": {
+        "clients": "/api/v1/clients/consensus",
+        "forks": "/api/v1/network/client_head_forks"
+      },
+      "transportOk": true
+    },
+    {
+      "artifact": "memory/devnet-health/snapshots/2026-10-26-0213/focil-devnet-2-dora.json",
+      "fetchedAt": "2026-10-26T02:13:45+00:00",
+      "counts": {
+        "clients": 17,
+        "forks": 1
+      },
+      "schemaPath": "/api/swagger/doc.json",
+      "paths": {
+        "clients": "/api/v1/clients/consensus",
+        "forks": "/api/v1/network/client_head_forks"
+      },
+      "transportOk": true
+    },
+    {
+      "artifact": "memory/devnet-health/snapshots/2026-10-26-0213/focil-devnet-3-dora.json",
+      "fetchedAt": "2026-10-26T02:13:45+00:00",
+      "counts": {
+        "clients": 22,
+        "forks": 1
+      },
+      "schemaPath": "/api/swagger/doc.json",
+      "paths": {
+        "clients": "/api/v1/clients/consensus",
+        "forks": "/api/v1/network/client_head_forks"
+      },
+      "transportOk": true
+    },
+    {
+      "artifact": "memory/devnet-health/snapshots/2026-10-26-0213/frames-devnet-1-dora.json",
+      "fetchedAt": "2026-10-26T02:13:45+00:00",
+      "counts": {
+        "clients": 11,
+        "forks": 1
+      },
+      "schemaPath": "/api/swagger/doc.json",
+      "paths": {
+        "clients": "/api/v1/clients/consensus",
+        "forks": "/api/v1/network/client_head_forks"
+      },
+      "transportOk": true
+    },
+    {
+      "artifact": "memory/devnet-health/snapshots/2026-10-26-0213/glamsterdam-devnet-8-dora.json",
+      "fetchedAt": "2026-10-26T02:13:46+00:00",
+      "counts": {
+        "clients": 94,
+        "forks": 1
+      },
+      "schemaPath": "/api/swagger/doc.json",
+      "paths": {
+        "clients": "/api/v1/clients/consensus",
+        "forks": "/api/v1/network/client_head_forks"
+      },
+      "transportOk": true
+    },
+    {
+      "artifact": "memory/devnet-health/snapshots/2026-10-26-0213/glamsterdam-pbt-1-dora.json",
+      "fetchedAt": "2026-10-26T02:13:45+00:00",
+      "counts": {
+        "clients": 9,
+        "forks": 1
+      },
+      "schemaPath": "/api/swagger/doc.json",
+      "paths": {
+        "clients": "/api/v1/clients/consensus",
+        "forks": "/api/v1/network/client_head_forks"
+      },
+      "transportOk": true
+    }
+  ]
+}
