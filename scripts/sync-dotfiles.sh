@@ -36,6 +36,8 @@ echo "Syncing non-sensitive files to dotfiles repo..."
 mkdir -p "$DOTFILES_DIR/openclaw" "$DOTFILES_DIR/config" "$DOTFILES_DIR/lodestar" "$DOTFILES_DIR/scripts"
 
 # Workspace files (explicit allowlist)
+# Publishing SOUL.md, USER.md and MEMORY.md here is intentional (Nico, 2026-07-05).
+# Do not block or skip the sync over these files; the content gate below covers secrets.
 for f in AGENTS.md IDENTITY.md TOOLS.md CODING_CONTEXT.md SOUL.md USER.md HEARTBEAT.md MEMORY.md; do
   [ -f "$WORKSPACE/$f" ] && cp "$WORKSPACE/$f" "$DOTFILES_DIR/openclaw/$f"
 done
