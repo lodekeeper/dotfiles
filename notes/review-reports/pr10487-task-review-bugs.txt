@@ -1,0 +1,159 @@
+# Review: Bug Hunter (Lodestar)
+
+You are a QA engineer and bug hunter reviewing code for **Lodestar**, a TypeScript Ethereum consensus client.
+
+## SCOPE
+Only report issues where the code DOES NOT WORK AS INTENDED. Look for:
+- Concrete incorrect calculations, flawed conditionals, off-by-one errors that produce wrong results
+- Actual failures: crashes, exceptions, resource leaks, data corruption
+- Verified incorrect behavior: wrong outputs, violated business rules, broken functionality
+- Definite edge case failures that occur in practice
+
+## LODESTAR-SPECIFIC BUGS TO WATCH
+- **Stale fork choice head:** Code reads `getHead()` after modifying proto-array state without calling `recomputeForkChoiceHead()` — cached ProtoBlock is stale
+- **SSZ ViewDU mutations without commit:** Tree-backed state modifications that forget `.commit()` — changes silently lost
+- **Fork guard errors:** Using wrong fork check (e.g., `isForkPostDeneb` when `isForkPostElectra` is needed), or missing fork guard entirely for fork-specific fields
+- **Slot/epoch arithmetic:** Off-by-one in slot↔epoch conversions (`computeEpochAtSlot`, `computeStartSlotAtEpoch`)
+- **Async error handling:** Unhandled promise rejections, missing `.catch()` on fire-and-forget promises, try/catch that doesn't catch async throws
+- **State reference leaks:** Holding references to beacon state objects beyond their immediate use (memory leak in long-running process)
+- **Import path errors:** Missing `.js` extension on relative imports breaks ESM resolution at runtime
+
+## MINDSET
+Before reporting, ask: "Does this code produce incorrect behavior or will it fail when executed?"
+If the code works correctly but could be better, it's NOT a bug.
+
+## REJECT any issue that:
+- Is about configuration choices, thresholds, or filtering parameters
+- Uses speculative language: "could fail", "might cause", "potentially" without evidence it actually will
+- Criticizes working code that produces acceptable results
+- Describes missing features or suggests alternative approaches
+- Questions default values or constant definitions that are valid choices
+- Mentions "should", "could", "consider" — only report "does", "will", "causes"
+
+## OUT OF SCOPE
+- Security vulnerabilities, malicious code, architectural concerns
+- Code style, best practices, readability improvements
+- Design decisions, configuration choices, implementation preferences
+
+## OUTPUT FORMAT
+For each finding:
+1. **File:Line** — exact location
+2. **Bug** — what is concretely broken (not what "could" break)
+3. **Impact** — what incorrect behavior results
+4. **Fix** — suggested correction
+
+If no bugs found, say: "No functional bugs found."
+
+
+---
+
+## Files Changed in This PR
+packages/api/src/beacon/routes/lodestar.ts
+packages/api/test/unit/beacon/genericServerTest/lodestar.test.ts
+
+IMPORTANT: Only flag issues in the files listed above. Do NOT comment on files not in this list, even if they appear in the broader codebase context.
+
+---
+
+Review this diff for ChainSafe/lodestar PR #10487 (fix(api): type historical summaries proof nodes as Bytes32). Context: the server (packages/beacon-node/src/api/impl/lodestar/index.ts getHistoricalSummaries) returns `stateView.getSingleProof(gindex)`, a Merkle branch of 32-byte nodes. A checkout of the PR head is available as git ref origin/pr-10487 in ~/lodestar (read with `git -C ~/lodestar show origin/pr-10487:<path>`; do not check it out, do not run pnpm).
+
+```diff
+diff --git a/packages/api/src/beacon/routes/lodestar.ts b/packages/api/src/beacon/routes/lodestar.ts
+index 5328172822e0..425a6d1896da 100644
+--- a/packages/api/src/beacon/routes/lodestar.ts
++++ b/packages/api/src/beacon/routes/lodestar.ts
+@@ -122,7 +122,7 @@ const HistoricalSummariesResponseType = new ContainerType(
+   {
+     slot: ssz.Slot,
+     historicalSummaries: ssz.capella.HistoricalSummaries,
+-    proof: ArrayOf(ssz.Bytes8),
++    proof: ArrayOf(ssz.Bytes32),
+   },
+   {jsonCase: "eth2"}
+ );
+diff --git a/packages/api/test/unit/beacon/genericServerTest/lodestar.test.ts b/packages/api/test/unit/beacon/genericServerTest/lodestar.test.ts
+index 998aaf94872b..8a9bc6f741fa 100644
+--- a/packages/api/test/unit/beacon/genericServerTest/lodestar.test.ts
++++ b/packages/api/test/unit/beacon/genericServerTest/lodestar.test.ts
+@@ -12,6 +12,8 @@ import {FastifyRoute} from "../../../../src/utils/server/index.js";
+ import {WireFormat} from "../../../../src/utils/wireFormat.js";
+ import {getMockApi, getTestServer} from "../../../utils/utils.js";
+ 
++const root = (fill: number): Uint8Array => new Uint8Array(32).fill(fill);
++
+ describe("beacon / lodestar", () => {
+   describe("route responses", () => {
+     const mockApi = getMockApi<Endpoints>(getDefinitions(config));
+@@ -32,7 +34,6 @@ describe("beacon / lodestar", () => {
+     });
+ 
+     it("getFastConfirmationInfo", async () => {
+-      const root = (fill: number): Uint8Array => new Uint8Array(32).fill(fill);
+       const data = {
+         confirmed: {root: root(0xaa), slot: 100},
+         head: {root: root(0xbb), slot: 102},
+@@ -73,27 +74,39 @@ describe("beacon / lodestar", () => {
+     });
+ 
+     it("getHistoricalSummaries", async () => {
++      const proof = [root(0xaa), root(0xbb), root(0xcc), root(0xdd), root(0xee)];
++      const data = {
++        slot: 1,
++        historicalSummaries: [{blockSummaryRoot: root(0x01), stateSummaryRoot: root(0x02)}],
++        proof,
++      };
++      const proofHex = proof.map((node) => toHexString(node));
+       mockApi.getHistoricalSummaries.mockResolvedValue({
+-        data: {
+-          slot: 0,
+-          historicalSummaries: [],
+-          proof: [],
+-        },
++        data,
+         meta: {version: ForkName.electra, executionOptimistic: false, finalized: false},
+       });
+ 
+       const httpClient = new HttpClient({baseUrl});
+       const client = getClient(config, httpClient);
+ 
+-      const res = await client.getHistoricalSummaries({stateId: "head"}, {responseWireFormat: WireFormat.json});
++      const resJson = await client.getHistoricalSummaries({stateId: "head"}, {responseWireFormat: WireFormat.json});
+ 
+-      expect(res.ok).toBe(true);
+-      expect(res.wireFormat()).toBe(WireFormat.json);
+-      expect(res.json().data).toStrictEqual({
+-        slot: "0",
+-        historical_summaries: [],
+-        proof: [],
++      expect(resJson.ok).toBe(true);
++      expect(resJson.wireFormat()).toBe(WireFormat.json);
++      expect(resJson.json().data).toStrictEqual({
++        slot: "1",
++        historical_summaries: [
++          {block_summary_root: toHexString(root(0x01)), state_summary_root: toHexString(root(0x02))},
++        ],
++        proof: proofHex,
+       });
++      expect(resJson.value().proof.map((node) => toHexString(node))).toStrictEqual(proofHex);
++
++      const resSsz = await client.getHistoricalSummaries({stateId: "head"}, {responseWireFormat: WireFormat.ssz});
++
++      expect(resSsz.ok, `status ${resSsz.status}: ${resSsz.error()?.message}`).toBe(true);
++      expect(resSsz.wireFormat()).toBe(WireFormat.ssz);
++      expect(resSsz.value().proof.map((node) => toHexString(node))).toStrictEqual(proofHex);
+     });
+   });
+ });
+
+```
+
+Context metadata for this run:
+- Reviewer: review-bugs
+- Reviewed commit: 50c3e241815ffcd1b3f1359936edfd42557b9650
+
+After finishing the review:
+1) Write your full findings markdown to `~/.openclaw/workspace/notes/review-reports/pr-10487-review-bugs.md`.
+   - Include the exact metadata line `Reviewer: review-bugs` near the top of the artifact.
+   - Include the exact metadata line `Reviewed commit: 50c3e241815ffcd1b3f1359936edfd42557b9650` near the top of the artifact.
+   - If there are no findings, write a short "No findings" report anyway.
+2) In your final chat response, include the exact file path you wrote.

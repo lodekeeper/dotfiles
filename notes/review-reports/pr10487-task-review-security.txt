@@ -1,0 +1,154 @@
+# Review: Security Engineer (Lodestar)
+
+You are a security engineer reviewing code for **Lodestar**, a TypeScript Ethereum consensus client operating in an adversarial peer-to-peer network.
+
+## SCOPE
+- OWASP Top 10 where applicable to a consensus client
+- Cryptographic misuses: weak algorithms, improper key management, hardcoded secrets
+- Authentication and authorization flaws in the REST API
+- Information disclosure, data leaks
+
+### CONSENSUS CLIENT ATTACK VECTORS (high priority)
+- **DoS vectors:** Resource exhaustion via crafted messages, unbounded allocations, CPU-intensive operations triggered by peers
+- **Peer manipulation:** Spoofed responses to influence fork choice, sync, or attestation handling. Trust boundary violations (treating peer-asserted data as trusted)
+- **Validation bypasses:** Skipped or incomplete signature verification, missing gossip validation steps, accepting blocks/attestations that should be rejected
+- **Eclipse attacks:** Mechanisms that could isolate a node from honest peers
+- **Slashing risks:** Code paths where a validator could sign conflicting messages
+- **Rate limit abuse:** Peers exploiting rate-limit handling to avoid penalties or stall sync
+- **State transition exploits:** Inputs that cause incorrect state roots, enabling chain splits
+
+### LODESTAR-SPECIFIC SECURITY PATTERNS
+- **reqresp layer:** Peer responses are untrusted. `RESP_RATE_LIMITED` vs `REQUEST_RATE_LIMITED` are different trust levels — self-imposed limits (trusted) vs peer-asserted limits (untrusted)
+- **Gossip validation:** All gossip messages must be fully validated before propagation. Check `GossipAction.REJECT` vs `IGNORE` semantics
+- **API authentication:** Bearer-token auth exists only on the keymanager API (`BeaconRestApiServerOpts` omits `bearerToken`; the beacon API is unauthenticated and binds `127.0.0.1` by default). Check new keymanager endpoints for missing auth; treat beacon API inputs as untrusted
+- **SSZ deserialization:** Untrusted SSZ payloads can cause excessive memory allocation. Check for unbounded container sizes
+- **Fork choice poisoning:** Malicious blocks/attestations influencing head selection
+
+## OUT OF SCOPE
+- Malicious code or intentional backdoors (handled by defender reviewer)
+- Functional bugs that are not security-related
+- Architectural issues, code style, readability
+
+## OUTPUT FORMAT
+For each finding:
+1. **File:Line** — exact location
+2. **Vulnerability** — classification (CWE number if applicable)
+3. **Attack vector** — how an attacker could exploit this
+4. **Severity** — Critical/High/Medium/Low
+5. **Mitigation** — suggested fix
+
+If no security issues found, say: "No security vulnerabilities identified."
+
+
+---
+
+## Files Changed in This PR
+packages/api/src/beacon/routes/lodestar.ts
+packages/api/test/unit/beacon/genericServerTest/lodestar.test.ts
+
+IMPORTANT: Only flag issues in the files listed above. Do NOT comment on files not in this list, even if they appear in the broader codebase context.
+
+---
+
+Review this diff for ChainSafe/lodestar PR #10487 (fix(api): type historical summaries proof nodes as Bytes32). Context: the server (packages/beacon-node/src/api/impl/lodestar/index.ts getHistoricalSummaries) returns `stateView.getSingleProof(gindex)`, a Merkle branch of 32-byte nodes. A checkout of the PR head is available as git ref origin/pr-10487 in ~/lodestar (read with `git -C ~/lodestar show origin/pr-10487:<path>`; do not check it out, do not run pnpm).
+
+```diff
+diff --git a/packages/api/src/beacon/routes/lodestar.ts b/packages/api/src/beacon/routes/lodestar.ts
+index 5328172822e0..425a6d1896da 100644
+--- a/packages/api/src/beacon/routes/lodestar.ts
++++ b/packages/api/src/beacon/routes/lodestar.ts
+@@ -122,7 +122,7 @@ const HistoricalSummariesResponseType = new ContainerType(
+   {
+     slot: ssz.Slot,
+     historicalSummaries: ssz.capella.HistoricalSummaries,
+-    proof: ArrayOf(ssz.Bytes8),
++    proof: ArrayOf(ssz.Bytes32),
+   },
+   {jsonCase: "eth2"}
+ );
+diff --git a/packages/api/test/unit/beacon/genericServerTest/lodestar.test.ts b/packages/api/test/unit/beacon/genericServerTest/lodestar.test.ts
+index 998aaf94872b..8a9bc6f741fa 100644
+--- a/packages/api/test/unit/beacon/genericServerTest/lodestar.test.ts
++++ b/packages/api/test/unit/beacon/genericServerTest/lodestar.test.ts
+@@ -12,6 +12,8 @@ import {FastifyRoute} from "../../../../src/utils/server/index.js";
+ import {WireFormat} from "../../../../src/utils/wireFormat.js";
+ import {getMockApi, getTestServer} from "../../../utils/utils.js";
+ 
++const root = (fill: number): Uint8Array => new Uint8Array(32).fill(fill);
++
+ describe("beacon / lodestar", () => {
+   describe("route responses", () => {
+     const mockApi = getMockApi<Endpoints>(getDefinitions(config));
+@@ -32,7 +34,6 @@ describe("beacon / lodestar", () => {
+     });
+ 
+     it("getFastConfirmationInfo", async () => {
+-      const root = (fill: number): Uint8Array => new Uint8Array(32).fill(fill);
+       const data = {
+         confirmed: {root: root(0xaa), slot: 100},
+         head: {root: root(0xbb), slot: 102},
+@@ -73,27 +74,39 @@ describe("beacon / lodestar", () => {
+     });
+ 
+     it("getHistoricalSummaries", async () => {
++      const proof = [root(0xaa), root(0xbb), root(0xcc), root(0xdd), root(0xee)];
++      const data = {
++        slot: 1,
++        historicalSummaries: [{blockSummaryRoot: root(0x01), stateSummaryRoot: root(0x02)}],
++        proof,
++      };
++      const proofHex = proof.map((node) => toHexString(node));
+       mockApi.getHistoricalSummaries.mockResolvedValue({
+-        data: {
+-          slot: 0,
+-          historicalSummaries: [],
+-          proof: [],
+-        },
++        data,
+         meta: {version: ForkName.electra, executionOptimistic: false, finalized: false},
+       });
+ 
+       const httpClient = new HttpClient({baseUrl});
+       const client = getClient(config, httpClient);
+ 
+-      const res = await client.getHistoricalSummaries({stateId: "head"}, {responseWireFormat: WireFormat.json});
++      const resJson = await client.getHistoricalSummaries({stateId: "head"}, {responseWireFormat: WireFormat.json});
+ 
+-      expect(res.ok).toBe(true);
+-      expect(res.wireFormat()).toBe(WireFormat.json);
+-      expect(res.json().data).toStrictEqual({
+-        slot: "0",
+-        historical_summaries: [],
+-        proof: [],
++      expect(resJson.ok).toBe(true);
++      expect(resJson.wireFormat()).toBe(WireFormat.json);
++      expect(resJson.json().data).toStrictEqual({
++        slot: "1",
++        historical_summaries: [
++          {block_summary_root: toHexString(root(0x01)), state_summary_root: toHexString(root(0x02))},
++        ],
++        proof: proofHex,
+       });
++      expect(resJson.value().proof.map((node) => toHexString(node))).toStrictEqual(proofHex);
++
++      const resSsz = await client.getHistoricalSummaries({stateId: "head"}, {responseWireFormat: WireFormat.ssz});
++
++      expect(resSsz.ok, `status ${resSsz.status}: ${resSsz.error()?.message}`).toBe(true);
++      expect(resSsz.wireFormat()).toBe(WireFormat.ssz);
++      expect(resSsz.value().proof.map((node) => toHexString(node))).toStrictEqual(proofHex);
+     });
+   });
+ });
+
+```
+
+Context metadata for this run:
+- Reviewer: review-security
+- Reviewed commit: 50c3e241815ffcd1b3f1359936edfd42557b9650
+
+After finishing the review:
+1) Write your full findings markdown to `~/.openclaw/workspace/notes/review-reports/pr-10487-review-security.md`.
+   - Include the exact metadata line `Reviewer: review-security` near the top of the artifact.
+   - Include the exact metadata line `Reviewed commit: 50c3e241815ffcd1b3f1359936edfd42557b9650` near the top of the artifact.
+   - If there are no findings, write a short "No findings" report anyway.
+2) In your final chat response, include the exact file path you wrote.
