@@ -1,0 +1,13 @@
+test_cli_read_only_private_and_exit_codes (test_check_report_delivery.DeliveryTests.test_cli_read_only_private_and_exit_codes) ... ok
+test_freshness_boundary (test_check_report_delivery.DeliveryTests.test_freshness_boundary) ... ok
+test_inconsistent_timestamps_and_equal_ack_key_mismatch (test_check_report_delivery.DeliveryTests.test_inconsistent_timestamps_and_equal_ack_key_mismatch) ... ok
+test_malformed_evidence_never_green (test_check_report_delivery.DeliveryTests.test_malformed_evidence_never_green) ... ok
+test_missing_state_first_run_and_unknown_inputs_create_nothing (test_check_report_delivery.DeliveryTests.test_missing_state_first_run_and_unknown_inputs_create_nothing) ... ok
+test_newer_snapshot_not_automatically_pending (test_check_report_delivery.DeliveryTests.test_newer_snapshot_not_automatically_pending) ... ok
+test_pending_and_stale_both_preserved (test_check_report_delivery.DeliveryTests.test_pending_and_stale_both_preserved) ... ok
+test_policy_matches_real_producer_without_network (test_check_report_delivery.DeliveryTests.test_policy_matches_real_producer_without_network) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.103s
+
+OK

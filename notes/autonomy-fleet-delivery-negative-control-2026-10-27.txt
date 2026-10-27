@@ -1,0 +1,42 @@
+test_policy_matches_real_producer_without_network (delivery_mutation_test.DeliveryTests.test_policy_matches_real_producer_without_network) ... 
+  test_policy_matches_real_producer_without_network (delivery_mutation_test.DeliveryTests.test_policy_matches_real_producer_without_network) (issues=[{'key': 'private-host:disk:198.51.100.44:warn', 'sev': 'warn', 'host': 'private-host', 'msg': 'secret report'}], ack=None) ... FAIL
+  test_policy_matches_real_producer_without_network (delivery_mutation_test.DeliveryTests.test_policy_matches_real_producer_without_network) (issues=[{'key': 'private-host:disk:198.51.100.44:crit', 'sev': 'crit', 'host': 'private-host', 'msg': 'secret report'}], ack='2026-10-25T07:16:00+00:00') ... FAIL
+  test_policy_matches_real_producer_without_network (delivery_mutation_test.DeliveryTests.test_policy_matches_real_producer_without_network) (issues=[{'key': 'private-host:disk:198.51.100.44:warn', 'sev': 'warn', 'host': 'private-host', 'msg': 'secret report'}], ack='2026-10-19T07:15:59.999999+00:00') ... FAIL
+test_pending_and_stale_both_preserved (delivery_mutation_test.DeliveryTests.test_pending_and_stale_both_preserved) ... FAIL
+
+======================================================================
+FAIL: test_policy_matches_real_producer_without_network (delivery_mutation_test.DeliveryTests.test_policy_matches_real_producer_without_network) (issues=[{'key': 'private-host:disk:198.51.100.44:warn', 'sev': 'warn', 'host': 'private-host', 'msg': 'secret report'}], ack=None)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/openclaw/.openclaw/workspace/scripts/devfleet/test_check_report_delivery.py", line 82, in test_policy_matches_real_producer_without_network
+    self.assertEqual(actual["reportDue"], not output.getvalue().startswith("NO_REPORT"))
+AssertionError: False != True
+
+======================================================================
+FAIL: test_policy_matches_real_producer_without_network (delivery_mutation_test.DeliveryTests.test_policy_matches_real_producer_without_network) (issues=[{'key': 'private-host:disk:198.51.100.44:crit', 'sev': 'crit', 'host': 'private-host', 'msg': 'secret report'}], ack='2026-10-25T07:16:00+00:00')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/openclaw/.openclaw/workspace/scripts/devfleet/test_check_report_delivery.py", line 82, in test_policy_matches_real_producer_without_network
+    self.assertEqual(actual["reportDue"], not output.getvalue().startswith("NO_REPORT"))
+AssertionError: False != True
+
+======================================================================
+FAIL: test_policy_matches_real_producer_without_network (delivery_mutation_test.DeliveryTests.test_policy_matches_real_producer_without_network) (issues=[{'key': 'private-host:disk:198.51.100.44:warn', 'sev': 'warn', 'host': 'private-host', 'msg': 'secret report'}], ack='2026-10-19T07:15:59.999999+00:00')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/openclaw/.openclaw/workspace/scripts/devfleet/test_check_report_delivery.py", line 82, in test_policy_matches_real_producer_without_network
+    self.assertEqual(actual["reportDue"], not output.getvalue().startswith("NO_REPORT"))
+AssertionError: False != True
+
+======================================================================
+FAIL: test_pending_and_stale_both_preserved (delivery_mutation_test.DeliveryTests.test_pending_and_stale_both_preserved)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/openclaw/.openclaw/workspace/scripts/devfleet/test_check_report_delivery.py", line 88, in test_pending_and_stale_both_preserved
+    self.assertTrue(result["reportDue"])
+AssertionError: False is not true
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.011s
+
+FAILED (failures=4)
