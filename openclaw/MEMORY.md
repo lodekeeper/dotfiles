@@ -16,9 +16,9 @@
 - Disclose AI assistance in PRs
 - **Always use sub-agents** for PR reviews and code — get feedback before posting
 - **Ignore sim/e2e test failures** unless Nico specifically asks to investigate
-- **NEVER send "all clear" / "nothing new" heartbeat messages to Nico** — if nothing is actionable, reply NO_REPLY silently. He told me THREE TIMES (2026-03-02). Only message when there's a real alert, blocker, decision, or deliverable.
+- **NEVER send "all clear" / "nothing new" messages to Nico** (told three times, 2026-03-02). Nothing actionable → NO_REPLY.
 - **Always tag other bots** (e.g. <@1483945055025631353> for lodekeeper-z) when replying to them in Discord — don't just reply to the message without a mention. Nico flagged this 2026-03-21.
-- **GitHub account boundary:** all GitHub write actions I perform must use `lodekeeper`, never Nico's `nflaig` account. On 2026-06-20 the Codex Apps GitHub connector was linked to `nflaig` and accidentally opened PR #9536 as Nico; use local `gh` only after `gh auth status` confirms `lodekeeper`, unless Nico explicitly authorizes a different acting account for that specific action.
+- **GitHub account boundary:** every GitHub write goes through local `gh` as `lodekeeper`, never `nflaig` (the connector opened PR #9536 as Nico, 2026-06-20). Details in AGENTS.md.
 - **Dotfiles sync:** local workspace instruction changes must be synced to `github.com/lodekeeper/dotfiles` via `~/dotfiles/scripts/sync-dotfiles.sh` so durable instructions do not drift.
 
 ## Dev Workflow (for complex features)
@@ -59,7 +59,7 @@
 - **Vuln watch (since 2026-10-23):** `lodestar-vuln-watch` automation (Mon+Thu) runs `scripts/security/vuln_watch.py`, ledger `memory/vuln-watch/`, posts to the pwn.watch thread.
 
 ## Lessons Learned
-Distilled 2026-10-09: this file pushed main-session bootstrap past the 80K total cap, so full-text lessons (2026-01-31 → 2026-10-05) moved verbatim to `memory/lessons-archive.md`. Lessons already in AGENTS.md (BACKLOG-first, lint before push, merge-not-rebase, reply in-thread) or SOUL.md are one-liners here. Add new ones as one line + date. Put detail in the archive or daily notes.
+Full-text lessons through 2026-10-05: `memory/lessons-archive.md`. One line + date per lesson here (80K bootstrap cap); detail goes in the archive or daily notes.
 
 **Workflow & GitHub**
 - 2026-02-18: Orchestrate, don't hand-code. Delegate substantial work to Codex/Claude CLI, then review the output.
@@ -69,7 +69,7 @@ Distilled 2026-10-09: this file pushed main-session bootstrap past the 80K total
 - 2026-02-20: Never delete gists, or anything else others link to, without asking.
 - 2026-03-18: Follow repo migration patterns before inventing types or helpers. Keep the fork's `unstable` synced before opening PRs.
 - 2026-04-26: Stamp reviewer artifacts with `Reviewed commit: <SHA>` and verify it matches HEAD.
-- 2026-10-06 → 10-12: Before opening a PR, search open PRs touching the same helper (#10291 ≡ #10237), build exactly the trigger asked for (#10310), check Nico isn't building it (#10332), and don't turn a passing suggestion in someone else's thread into a PR (#10359). For low-impact drift, ask "PR or leave it?". Story in SOUL.md.
+- 2026-10-06 → 10-12: Before opening a PR, search open PRs touching the same helper (#10291 ≡ #10237), build exactly the trigger asked for (#10310), check Nico isn't building it (#10332), and don't turn a passing suggestion in someone else's thread into a PR (#10359). For low-impact drift, ask "PR or leave it?". In-flight work includes deletions (10-26: #10460 fixed blob code #9957 removes). Story in SOUL.md.
 - 2026-10-12: Before approving, reconcile every open bot/inline finding against the code (#10329 approved past a valid codex P2; held since on #10412, #10454).
 
 **Tooling & runtime**
@@ -92,6 +92,7 @@ Distilled 2026-10-09: this file pushed main-session bootstrap past the 80K total
 - 2026-10-15: Path allowlists don't sanitize content. The dotfiles sync filters by path only, so anything written into a synced path (notes/, skills/, identity files) is public. Since 10-15 `~/dotfiles/scripts/sync-content-gate.py` blocks secrets/public IPs on added lines; other infra details still pass, so keep them out of synced paths.
 - 2026-10-19: `--help` isn't safe on a script without argparse, because the script just runs. Read it first. `check_cron_health.py` used up recovery notices twice before the 10-20 guard.
 - 2026-10-20: pnpm 11 in a cache-linked worktree auto-reconciles and prunes the shared `.pnpm` store. Give review setups an independent virtual store and call the test entrypoint directly.
+- 2026-10-26: Mark a superseded decision in the store automation reads (`bank/state.json`), not just in notes. A stale 03-21 "LOCAL ONLY" bank fact blocked the dotfiles sync three times (10-04, 10-05, 10-26) after Nico's 07-05 OK.
 
 **Verification & claims**
 - 2026-03-12: Don't call a leak fixed from one good window. Require sustained corroboration plus heap evidence. Keep critical samplers in one session. Allocation-sampling hot spots are leads, not retained-heap proof (gateway OOM, 10-17).
@@ -111,7 +112,7 @@ Distilled 2026-10-09: this file pushed main-session bootstrap past the 80K total
 - 2026-10-18: A getter's name doesn't prove it governs the path. I relayed an unlock date from a contract's lock getter, but that path exits through a separate staker with its own timestamp. Trace the real exit path, and enumerate sources from the on-chain registry (at first I missed one of three).
 - 2026-10-20: A local repro isn't a production root cause, and JS CPU profiles miss native (libuv/LevelDB) work. Hoodi archiver: #10447 sound, live stall cure unproven. Confirmed live 10-23: `compactRange` skips the bottom level, so a fast no-op compaction isn't disproof; the sentinel-key compaction fixed it.
 - 2026-10-22: An empty check list isn't green. `gh pr checks` omits workflows held at the fork-approval gate (#10460 read "no failures" with nothing run). Use `scripts/github/check-pr-ci-evidence.py`.
-- 2026-10-23: Before raising a security alert, check whether Lodestar already shipped the fix (Node2Shell was covered by v1.50.1).
+- 2026-10-23: Before raising a security alert, check whether Lodestar already shipped the fix (Node2Shell was covered by v1.50.1). A runtime patched on disk doesn't patch processes started before it; compare start time with update time (10-26 Brotli check).
 - 2026-10-07: Compiler evidence beats source-review assumptions (SSZ ViewDU generic invariance). Check existing SSZ limits/decoders before adding validation.
 
 **Judgment & people**
@@ -123,6 +124,7 @@ Distilled 2026-10-09: this file pushed main-session bootstrap past the 80K total
 - 2026-07-09: Read the source before steering a sub-session. A confident wrong "revert" undoes correct work.
 - 2026-07-16: Precedent is a hypothesis. Check whether the new case is actually mine to answer.
 - 2026-10-01: Keep "technically incompatible" separate from "subsumed / soon obsolete" (EIP-8333). Execute withdrawals in the right venue, as the verified account, with narrowly scoped rationale.
+- 2026-10-26: Park the blocker, not its payload. While an alert path is broken, relay its critical findings by hand (dev-fleet reports unposted 10-06 → 10-26).
 - 2026-10-05: New watches get sane cadences (daily/twice-daily) and honest PRs. Ask a maintainer for `Release-As`; don't game release-please. PR review findings go inline on the PR.
 
 **Wrong-tool / destructive reflex** (summary: IDENTITY.md; verbatim synthesis: `memory/wrong-tool-reflex-synthesis.md`; counter: STATE.md + `memory/wrong-tool-reflex-log.txt`)
