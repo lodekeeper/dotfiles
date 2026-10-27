@@ -1,7 +1,8 @@
 // Condition gate for the quinn advisory watcher automation.
 // Fires only when the detector reports a finding key that was not present at the previous check.
 // The first successful check only records a baseline. A failing detector alerts on the 2nd consecutive failed check (daily schedule), then weekly.
-const res = await exec({ command: "python3 /home/openclaw/.openclaw/workspace/scripts/quic/quinn_advisory_watch.py --brief" });
+// The gate has a 30s budget; exec backgrounds after 10s by default, which leaves no output to parse.
+const res = await exec({ command: "python3 /home/openclaw/.openclaw/workspace/scripts/quic/quinn_advisory_watch.py --brief", yieldMs: 25000, timeoutSeconds: 25 });
 const raw = String(res?.aggregated ?? "").trim();
 let out;
 try {
