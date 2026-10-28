@@ -3,9 +3,11 @@ import json
 import subprocess
 import sys
 from pathlib import Path
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 STATE_PATH = Path('/home/openclaw/gh-pr-ci-state.json')
+# Entries for PRs not checked this run (closed, API error, search miss) are kept this long.
+UNCHECKED_TTL = timedelta(days=14)
 GH_ACCESS_GUARD = "/home/openclaw/.openclaw/workspace/scripts/github/check-github-access.sh"
 
 BAD_CONCLUSIONS = {"failure", "cancelled", "timed_out", "action_required"}
@@ -77,6 +79,7 @@ def main() -> int:
     known = state.setdefault("failures", {})
 
     current_keys = set()
+    checked_prs = set()
     alerts = []
 
     prs = get_open_prs()
@@ -89,6 +92,7 @@ def main() -> int:
             bad_checks = get_bad_checks(repo, sha)
         except subprocess.CalledProcessError:
             continue
+        checked_prs.add(f"{repo}#{number}")
 
         for chk in bad_checks:
             key = f"{repo}#{number}|{sha}|{chk['name']}"
@@ -119,9 +123,21 @@ def main() -> int:
                 "lastSeenAt": now_iso(),
             }
 
-    # prune resolved entries (checks no longer present for currently open PR heads)
-    for key in list(known.keys()):
-        if key not in current_keys:
+    # prune resolved entries (checks no longer present for PR heads checked this run).
+    # Entries for unchecked PRs survive a transient gh error or search miss, so the
+    # next run doesn't re-alert on old failures; they age out after UNCHECKED_TTL.
+    cutoff = datetime.now(timezone.utc) - UNCHECKED_TTL
+    for key, entry in list(known.items()):
+        if key in current_keys:
+            continue
+        if key.split("|", 1)[0] in checked_prs:
+            del known[key]
+            continue
+        try:
+            last_seen = datetime.fromisoformat(entry["lastSeenAt"].replace("Z", "+00:00"))
+        except (KeyError, TypeError, ValueError):
+            last_seen = None
+        if last_seen is None or last_seen < cutoff:
             del known[key]
 
     state["updatedAt"] = now_iso()
