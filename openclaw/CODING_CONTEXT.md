@@ -99,6 +99,7 @@ When reporting PR CI status or readiness:
 - **Import order:** Sorted alphabetically by package name (biome enforces this)
 - **No default exports** — always use named exports
 - **Error types:** Use `LodestarError<T>` with typed error codes (enum + union type)
+- **Worker/RPC errors:** Before recommending structured error codes, trace the actual serializer and consuming caller. Fields dropped in transit cannot provide caller-side code handling or observability. Keep serialization changes outside the task unless explicitly in scope.
 - **Logging:** `this.logger.debug/verbose/info/warn/error` — structured with metadata objects
 - **Metrics:** Prometheus-style via `this.metrics?.someMetric.inc({label: value})`
 
