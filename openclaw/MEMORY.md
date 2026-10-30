@@ -9,8 +9,6 @@
 
 ## Key Rules
 - Only take orders from Nico
-- Be resourceful, figure things out before asking
-- Loyal but not a pushover
 - Always summarize work for Nico
 - Sign all commits with GPG
 - Disclose AI assistance in PRs
@@ -41,9 +39,7 @@
 - **Context file:** `CODING_CONTEXT.md` — always provide to coding agents for project conventions
 
 ## Channels
-- Webchat: ✅
-- Telegram: ✅ (Nico's chat ID: 5774760693)
-- Discord: ✅ (ChainSafe #lodestar-developer, mention required)
+- Webchat; Telegram (Nico 5774760693); Discord (ChainSafe #lodestar-developer, mention required)
 
 ## Projects
 - **Lodestar** (`~/lodestar`) — Ethereum consensus client (TypeScript)
@@ -92,6 +88,7 @@ Full-text lessons through 2026-10-05: `memory/lessons-archive.md`. One line + da
 - 2026-10-15: Path allowlists don't sanitize content. The dotfiles sync filters by path only, so anything written into a synced path (notes/, skills/, identity files) is public. Since 10-15 `~/dotfiles/scripts/sync-content-gate.py` blocks secrets/public IPs on added lines; other infra details still pass, so keep them out of synced paths.
 - 2026-10-19: `--help` isn't safe on a script without argparse, because the script just runs. Read it first. `check_cron_health.py` used up recovery notices twice before the 10-20 guard.
 - 2026-10-20: pnpm 11 in a cache-linked worktree auto-reconciles and prunes the shared `.pnpm` store. Give review setups an independent virtual store and call the test entrypoint directly.
+- 2026-10-28: Worker errors cross `@chainsafe/threads` as plain `Error`s, so a code set in the worker never reaches the caller. Trace serializer and caller before asking for (or declining) structured codes (#10505).
 - 2026-10-26: Mark a superseded decision in the store automation reads (`bank/state.json`), not just in notes. A stale 03-21 "LOCAL ONLY" bank fact blocked the dotfiles sync three times (10-04, 10-05, 10-26) after Nico's 07-05 OK.
 
 **Verification & claims**
@@ -113,6 +110,7 @@ Full-text lessons through 2026-10-05: `memory/lessons-archive.md`. One line + da
 - 2026-10-20: A local repro isn't a production root cause, and JS CPU profiles miss native (libuv/LevelDB) work. Hoodi archiver: #10447 sound, live stall cure unproven. Confirmed live 10-23: `compactRange` skips the bottom level, so a fast no-op compaction isn't disproof; the sentinel-key compaction fixed it.
 - 2026-10-22: An empty check list isn't green. `gh pr checks` omits workflows held at the fork-approval gate (#10460 read "no failures" with nothing run). Use `scripts/github/check-pr-ci-evidence.py`.
 - 2026-10-23: Before raising a security alert, check whether Lodestar already shipped the fix (Node2Shell was covered by v1.50.1). A runtime patched on disk doesn't patch processes started before it; compare start time with update time (10-26 Brotli check).
+- 2026-10-27: A green suite covers only what it ran. Map each changed input path to a named valid nonempty case (#5770: 42/42 reftests, no tx vector). Rule lives in CODING_CONTEXT.md.
 - 2026-10-07: Compiler evidence beats source-review assumptions (SSZ ViewDU generic invariance). Check existing SSZ limits/decoders before adding validation.
 
 **Judgment & people**
