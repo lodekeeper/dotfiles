@@ -89,6 +89,17 @@ def run_check(
             "stderr": f"timed out after {timeout_s}s",
             "warnings": warnings or [],
         }
+    except OSError as exc:
+        return {
+            "domain": domain,
+            "name": name,
+            "ok": False,
+            "returnCode": None,
+            "command": command,
+            "stdout": None,
+            "stderr": _truncate(f"could not start check ({type(exc).__name__}): {exc}"),
+            "warnings": warnings or [],
+        }
 
 
 def command_cache_key(command: list[str], env: dict[str, str], timeout_s: int) -> tuple[Any, ...]:
