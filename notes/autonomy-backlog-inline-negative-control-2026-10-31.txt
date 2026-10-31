@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/home/openclaw/.openclaw/workspace/scripts/backlog/test_list_statuses.py", line 348, in <module>
+    assert len(parsed) == 1, (block, parsed)
+           ^^^^^^^^^^^^^^^^
+AssertionError: ('## 🟢 Inline task 0\n- Source: cron 51e7881e; status: done — all30 Lodestar online\n', [])

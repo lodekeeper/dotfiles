@@ -33,6 +33,7 @@ class TaskBlock:
 
 
 STATUS_RE = re.compile(r"^- (?:\*\*Status:\*\*|Status:(?!\*))\s*(.*)$")
+SOURCE_STATUS_RE = re.compile(r"^- (?:\*\*Source:\*\*|Source:(?!\*))\s*[^;\s][^;\n]*;\s*status:\s*(.*)$")
 PAUSE_PREFIX_RE = re.compile(r"^(?:⏸\ufe0f?\s*)+")
 
 
@@ -69,7 +70,15 @@ def parse_backlog(text: str) -> list[TaskBlock]:
                 status = m.group(1).strip()
                 break
 
-        # A `## ` heading is a plain section unless it carries its own Status line
+        # Explicit Status fields, including empty ones, override inline metadata.
+        if status is None:
+            for body_line in body:
+                m = SOURCE_STATUS_RE.match(body_line)
+                if m:
+                    status = m.group(1).strip()
+                    break
+
+        # A `## ` heading is a plain section unless it carries a recognized status
         # (newer entries are written as `## 🔴 Task` with no `### ` child).
         if is_section and status is None:
             continue

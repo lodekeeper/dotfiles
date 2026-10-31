@@ -1,0 +1,5 @@
+OK: list_statuses parser handles ## sections + ### tasks without stalling
+OK: displaced recovery guards retain refusal and explicit-audit CLI behavior (2 marker variants)
+OK: bold/plain status labels preserve ##/### tasks and CLI filter results (24 cases)
+OK: pause-prefixed status classification, raw output and guarded CLI behavior (64 cases)
+OK: inline Source status classification/CLI (24 cases), explicit overrides (24), near-misses (24)

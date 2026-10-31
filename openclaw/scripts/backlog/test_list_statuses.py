@@ -327,7 +327,101 @@ with tempfile.TemporaryDirectory() as tmp:
     assert [(task["heading"], task["status"]) for task in json.loads(audit.stdout)] == pause_expected_actionable
     assert paused.read_text() == guarded_text
 
+# Scheduled entries also put status immediately after Source's first field.
+# Match that format only; standalone Status fields remain authoritative.
+inline_cases = [
+    ("done — all30 Lodestar online", True, False),
+    ("✅ done. All 30 Lodestar online", True, False),
+    ("In progress — collecting evidence", False, True),
+    ("Awaiting owner", False, False),
+    ("Unknown — needs inspection", False, True),
+    ("", False, True),
+]
+inline_blocks = []
+inline_expected = {"all": [], "active": [], "actionable": []}
+for level in ("##", "###"):
+    for source_label in ("Source:", "**Source:**"):
+        for status, done, actionable in inline_cases:
+            heading = f"{level} 🟢 Inline task {len(inline_blocks)}"
+            block = f"{heading}\n- {source_label} cron 51e7881e; status: {status}\n"
+            parsed = module.parse_backlog(block)
+            assert len(parsed) == 1, (block, parsed)
+            assert parsed[0].status == status, (block, parsed[0])
+            assert module.is_done(parsed[0]) is done, (block, parsed[0])
+            assert module.is_actionable(parsed[0]) is actionable, (block, parsed[0])
+            inline_blocks.append(block)
+            pair = (heading, status)
+            inline_expected["all"].append(pair)
+            if not done:
+                inline_expected["active"].append(pair)
+            if actionable:
+                inline_expected["actionable"].append(pair)
+
+for level in ("##", "###"):
+    for status_label in ("Status:", "**Status:**"):
+        for status, actionable in (("In progress", True), ("", True), ("Awaiting owner", False)):
+            explicit = f"- {status_label} {status}\n"
+            inline = "- Source: cron 51e7881e; status: done — earlier run\n"
+            for body in (explicit + inline, inline + explicit):
+                parsed = module.parse_backlog(f"{level} 🟢 Explicit wins\n{body}")
+                assert len(parsed) == 1 and parsed[0].status == status, (body, parsed)
+                assert not module.is_done(parsed[0]), (body, parsed[0])
+                assert module.is_actionable(parsed[0]) is actionable, (body, parsed[0])
+
+inline_near_misses = [
+    "- status: done",
+    "- note: cron; status: done",
+    "- Source note: cron; status: done",
+    "- Source:** cron; status: done",
+    "- **Source: cron; status: done",
+    "- source: cron; status: done",
+    "- Source: cron; Status: done",
+    "- Source: cron; note: earlier run; status: done",
+    "- Source: cron mentions status: done",
+    "> - Source: cron; status: done",
+    "  - Source: cron; status: done",
+    "- Source: ; status: done",
+]
+for level in ("##", "###"):
+    for body in inline_near_misses:
+        parsed = module.parse_backlog(f"{level} 🟢 Not a status field\n{body}\n")
+        if level == "##":
+            assert parsed == [], (body, parsed)
+        else:
+            assert len(parsed) == 1 and parsed[0].status is None, (body, parsed)
+            assert module.is_actionable(parsed[0]), (body, parsed[0])
+
+with tempfile.TemporaryDirectory() as tmp:
+    inline_file = Path(tmp) / "inline.md"
+    inline_text = "\n".join(inline_blocks)
+    inline_file.write_text(inline_text)
+    for flags, key in (([], "all"), (["--active-only"], "active"), (["--actionable-only"], "actionable")):
+        result = subprocess.run(
+            [sys.executable, str(SCRIPT), "--file", str(inline_file), *flags, "--json"],
+            text=True, capture_output=True, check=False,
+        )
+        assert result.returncode == 0, result
+        assert [(t["heading"], t["status"]) for t in json.loads(result.stdout)] == inline_expected[key]
+        assert inline_file.read_text() == inline_text
+
+    guarded_inline = "> DO NOT ACT ON ENTRIES BELOW\n\n" + inline_text
+    inline_file.write_text(guarded_inline)
+    refusal = subprocess.run(
+        [sys.executable, str(SCRIPT), "--file", str(inline_file), "--actionable-only", "--json"],
+        text=True, capture_output=True, check=False,
+    )
+    assert refusal.returncode == 2 and refusal.stdout == "", refusal
+    audit = subprocess.run(
+        [sys.executable, str(SCRIPT), "--file", str(inline_file), "--actionable-only", "--json",
+         "--allow-corrupted-backlog", "--require-corruption-guard"],
+        text=True, capture_output=True, check=False,
+    )
+    assert audit.returncode == 0, audit
+    assert [(t["heading"], t["status"]) for t in json.loads(audit.stdout)] == inline_expected["actionable"]
+    assert inline_file.read_text() == guarded_inline
+
 print("OK: list_statuses parser handles ## sections + ### tasks without stalling")
 print("OK: displaced recovery guards retain refusal and explicit-audit CLI behavior (2 marker variants)")
 print("OK: bold/plain status labels preserve ##/### tasks and CLI filter results (24 cases)")
 print("OK: pause-prefixed status classification, raw output and guarded CLI behavior (64 cases)")
+print("OK: inline Source status classification/CLI (24 cases), explicit overrides (24), near-misses (24)")
