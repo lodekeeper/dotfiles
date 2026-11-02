@@ -20,21 +20,13 @@
 - **Dotfiles sync:** local workspace instruction changes must be synced to `github.com/lodekeeper/dotfiles` via `~/dotfiles/scripts/sync-dotfiles.sh` so durable instructions do not drift.
 
 ## Dev Workflow (for complex features)
-- **Skill:** `skills/dev-workflow/SKILL.md` — full instructions
-- **Phase 1:** Spec with gpt-advisor (multiple rounds, invest time here)
-- **Phase 2:** Fresh worktree via `~/lodestar/scripts/create-worktree.sh`
-- **Phase 3:** Codex CLI implements in worktree (full access, can build/test)
-- **Phase 4:** Quality gate — self-review + gemini-reviewer + codex-reviewer
-- **Phase 5:** PR
-- **I am responsible** for final quality — no blaming sub-agents
-- **Small fixes** (one-liners, lint) → skip workflow, do directly
+- `skills/dev-workflow/SKILL.md`: spec with gpt-advisor (invest here) → fresh worktree (`~/lodestar/scripts/create-worktree.sh`) → Codex CLI implements → self + gemini/codex review → PR. I own final quality. Small fixes skip it.
 
 ## Sub-Agent Config (verified live 2026-10-06, OpenClaw 2026.9.8)
 - **codex-reviewer:** `openai/gpt-6.1-sol` — code reviews
 - **gemini-reviewer:** `google/gemini-3.5-flash` — second perspective
 - **gpt-advisor:** `openai/gpt-6.1-sol` — architecture & deep reasoning (hard asks: Codex CLI astra max)
-- **Codex CLI:** `gpt-6-astra` @ xhigh — implementation in worktrees (`codex exec --dangerously-bypass-approvals-and-sandbox`; `--full-auto` is gone)
-- **Claude CLI:** Claude — implementation in worktrees (broader reasoning, refactoring, debugging; hard tasks `--model fable --effort max`)
+- **Codex CLI** (`gpt-6-astra` @ xhigh) / **Claude CLI:** implementation in worktrees; commands and hard-task flags in AGENTS.md → Coding Agents
 - **Me (main):** `anthropic/claude-opus-5-5` on the claude-cli runtime, fallback `openai/gpt-6.1-sol` (model strategy has flip-flopped before — verify live via `session_status`/config before relying) — **orchestrator**: coordination, delegation, quality control, communication
 - **Context file:** `CODING_CONTEXT.md` — always provide to coding agents for project conventions
 
@@ -50,7 +42,7 @@
 - **Monitor GitHub notifications** (`gh api notifications`) for PR feedback — don't let reviews sit!
 - Monitor my open PRs for feedback
 - Track contributor PRs I've reviewed
-- **Consensus specs study:** Systematic study of specs alongside Lodestar code. Progress in `notes/specs/PROGRESS.md`. Reminder fires every 4h. Priority: Gloas/EPBS → Phase0 → ... → PeerDAS. Document everything, open PRs for issues found with detailed spec references.
+- **Consensus specs study:** weekly `specs-study-reminder`; progress in `notes/specs/PROGRESS.md`. Priority Gloas/EPBS → Phase0 → … → PeerDAS. Open PRs for issues found, with spec refs.
 - **ChainSafe dev fleet (since 2026-10-06):** read-only health sweeps on request; destructive maintenance only with explicit Nico authorization per run. Raw evidence stays private; only sanitized reports in `reports/devfleet/`.
 - **Vuln watch (since 2026-10-23):** `lodestar-vuln-watch` automation (Mon+Thu) runs `scripts/security/vuln_watch.py`, ledger `memory/vuln-watch/`, posts to the pwn.watch thread.
 
@@ -78,18 +70,21 @@ Full-text lessons through 2026-10-05: `memory/lessons-archive.md`. One line + da
 - 2026-03-21: Never run broad git commands or `git reset --hard` in the workspace. Sync via `~/dotfiles`.
 - 2026-04-02: Update BACKLOG via heading-targeted `scripts/backlog/set_status.py`, not exact-match edits.
 - 2026-04-06: Review Royale digests go in a Discord thread, not the main channel.
-- 2026-04-11: Automation needs machine-readable guardrail fields, not prose warnings. (Routing half superseded 10-04: send with the `message` tool + `timeoutMs`; wake topic sessions via `route-topic-nudge.sh`.)
+- 2026-04-11: Automation needs machine-readable guardrail fields, not prose warnings. (Routing: `message` tool + `timeoutMs`; topic wakes via `route-topic-nudge.sh`, 10-04.)
 - 2026-05-16: `sessions.list` is the source of truth for whether a session ran. Gateway log silence proves nothing.
 - 2026-05-20/23: Handle a hard external blocker with one entry and one escalation, then stop. If it persists, add a cached preflight with an explicit skip exit (`check-github-access.sh`).
 - 2026-10-04: After a runtime upgrade, verify live state before calling anything broken or fixed. Enumerate behavior changes against docs and live runs. (9.8: USER.md cap, skipped heartbeat ticks, gated hooks, closed topic-wake paths, stale CLI paths.)
 - 2026-10-07: Check credentials in the runtime that actually executes the workflow. The CI quality-gate key existed in Gateway exec, not native Codex exec. Passing prerequisite checks isn't end-to-end proof.
 - 2026-10-06: A successful retry can hide incomplete work (the nightly embed timeout was masked by its retry). Check the output, not the exit status.
-- 2026-10-11: When the colliding job is interval-scheduled (`kind: every`), its phase drifts, so moving the victim's slot stops working. Pin the drifting job instead. Recovery guards must not depend on line position (the BACKLOG banner was pushed past a 12-line window, then archived by cleanup). Systemd auto-restart brings the gateway back but leaves the heap leak in place.
+- 2026-10-11: An interval-scheduled (`kind: every`) colliding job drifts, so pin it rather than moving the victim. Recovery guards must not depend on line position (the BACKLOG banner got archived). Systemd restart isn't a leak fix.
 - 2026-10-15: Path allowlists don't sanitize content. The dotfiles sync filters by path only, so anything written into a synced path (notes/, skills/, identity files) is public. Since 10-15 `~/dotfiles/scripts/sync-content-gate.py` blocks secrets/public IPs on added lines; other infra details still pass, so keep them out of synced paths.
 - 2026-10-19: `--help` isn't safe on a script without argparse, because the script just runs. Read it first. `check_cron_health.py` used up recovery notices twice before the 10-20 guard.
 - 2026-10-20: pnpm 11 in a cache-linked worktree auto-reconciles and prunes the shared `.pnpm` store. Give review setups an independent virtual store and call the test entrypoint directly.
 - 2026-10-28: Worker errors cross `@chainsafe/threads` as plain `Error`s, so a code set in the worker never reaches the caller. Trace serializer and caller before asking for (or declining) structured codes (#10505).
 - 2026-10-26: Mark a superseded decision in the store automation reads (`bank/state.json`), not just in notes. A stale 03-21 "LOCAL ONLY" bank fact blocked the dotfiles sync three times (10-04, 10-05, 10-26) after Nico's 07-05 OK.
+- 2026-10-30: A finished turn isn't a delivered reply. A stalled background waiter failed the run pre-reply (gateway `outcome=error`); results sat undelivered ~5.5h. Check the gateway log, then post once.
+- 2026-10-30: Clear-and-retry can't converge when one unit outgrows the cap (QMD backlog archive vs the 30-min embed), and it starves the rest. Measure rate × cap before relaunching.
+- 2026-11-01: A continuity file past the read window truncates silently (STATE.md at 280 KB). Archive it byte-exact and keep the handoff ~10 KB.
 
 **Verification & claims**
 - 2026-03-12: Don't call a leak fixed from one good window. Require sustained corroboration plus heap evidence. Keep critical samplers in one session. Allocation-sampling hot spots are leads, not retained-heap proof (gateway OOM, 10-17).
@@ -106,11 +101,13 @@ Full-text lessons through 2026-10-05: `memory/lessons-archive.md`. One line + da
 - 2026-10-12/13: Check what a benchmark measured before trusting its number: `runsFactor` normalization (native hex decode looked slow), sample duration (a 0.3s CI sample), and baseline provenance (failed runs contaminating the rolling baseline). Reproduce a flake before fixing it and keep the negative control.
 - 2026-10-16: An explorer's offline flag isn't a client failure. Read the node's own CL/EL logs first (lodestar-reth-1: Dora TLS fault, node synced at head).
 - 2026-10-14: Check tags before any "since vX" claim (gh tag-contents API). I told #10393 the `builder` cmd existed since v1.50.0; Marko corrected it: v1.46.0.
-- 2026-10-18: A getter's name doesn't prove it governs the path. I relayed an unlock date from a contract's lock getter, but that path exits through a separate staker with its own timestamp. Trace the real exit path, and enumerate sources from the on-chain registry (at first I missed one of three).
+- 2026-10-18: A getter's name doesn't prove it governs the path. I relayed an unlock date from a lock getter, but exits go through a separate staker with its own timestamp. Trace the real path; enumerate sources from the on-chain registry.
 - 2026-10-20: A local repro isn't a production root cause, and JS CPU profiles miss native (libuv/LevelDB) work. Hoodi archiver: #10447 sound, live stall cure unproven. Confirmed live 10-23: `compactRange` skips the bottom level, so a fast no-op compaction isn't disproof; the sentinel-key compaction fixed it.
 - 2026-10-22: An empty check list isn't green. `gh pr checks` omits workflows held at the fork-approval gate (#10460 read "no failures" with nothing run). Use `scripts/github/check-pr-ci-evidence.py`.
 - 2026-10-23: Before raising a security alert, check whether Lodestar already shipped the fix (Node2Shell was covered by v1.50.1). A runtime patched on disk doesn't patch processes started before it; compare start time with update time (10-26 Brotli check).
 - 2026-10-27: A green suite covers only what it ran. Map each changed input path to a named valid nonempty case (#5770: 42/42 reftests, no tx vector). Rule lives in CODING_CONTEXT.md.
+- 2026-10-30: A failing vector can be the runner, not production. #10490's two `*_withdrawals` cases hit an unimplemented `payload` meta key; 28/28 after the harness fix.
+- 2026-11-01: A library probe isn't a Lodestar test. Name the code path the evidence ran through. Nico had to ask before I ran the real binding.
 - 2026-10-07: Compiler evidence beats source-review assumptions (SSZ ViewDU generic invariance). Check existing SSZ limits/decoders before adding validation.
 
 **Judgment & people**
