@@ -47,6 +47,14 @@ pnpm vitest run --project unit packages/<pkg>/test/unit/
 
 Do not invoke pnpm if that check fails: even `pnpm vitest` can reconcile dependencies and prune a shared virtual store. Use an independently prepared worktree-local `node_modules`/virtual store; never link another checkout's `node_modules` or `.pnpm`. Rerun the check after setup changes, immediately before package-manager use. This is an opt-in installed-directory containment check, not dependency/version readiness or protection against later pnpm config overrides; normal package symlinks and the shared content-addressed store are outside its scope. Missing or unsupported metadata needs inspection, not an install/repair attempt. For an already validated test setup, a direct local Vitest JS entrypoint avoids pnpm's reconciliation path; it does not make shared dependencies isolated.
 
+## Implementation Behavior Evidence
+
+For behavior investigations and implementation-validation claims:
+
+1. Name the evidence layer: dependency/library, target binding/component, application caller, or end-to-end. Record the target revision/diff, relevant local overrides and the dependency/version or artifact actually loaded; a library probe alone does not establish target-application behavior.
+2. Run the narrowest check through the claimed target entry point. Retain the command, exit status, log, actual test counts where applicable, and the inputs/path exercised. State observed results separately from source-backed conclusions or inference. Component/caller execution and source tracing are not end-to-end runtime proof.
+3. If the claimed target path cannot run within the authorized setup, record the blocker and untested scope explicitly and qualify the conclusion. This evidence requirement does not authorize dependency installs, live maintenance or task expansion.
+
 ## Spec-Change Evidence
 
 For changes exercised by upstream spec fixtures, record the following in the task's tracker **while generating/installing fixtures and running tests**, before claiming spec compatibility:
