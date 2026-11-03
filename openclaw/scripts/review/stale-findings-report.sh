@@ -74,7 +74,8 @@ REPORT_LINES=()
 REPORT_LINES+=("# Stale Review Findings Report")
 REPORT_LINES+=("")
 REPORT_LINES+=("Generated: $(date -u '+%Y-%m-%d %H:%M UTC')")
-REPORT_LINES+=("Threshold: open ${SEVERITY[*]} findings older than ${DAYS} days")
+REPORT_LINES+=("Threshold: locally open ${SEVERITY[*]} findings older than ${DAYS} days")
+REPORT_LINES+=("Evidence scope: Local tracker records only; current PR state/head and finding validity/resolution are unverified.")
 REPORT_LINES+=("")
 
 for PR in "${PRS[@]}"; do
@@ -110,8 +111,8 @@ fi
 
 # Build final report
 REPORT_LINES+=("---")
-REPORT_LINES+=("**Action required:** Address or acknowledge these stale findings.")
-REPORT_LINES+=("Use \`track-findings.py resolve <pr> <id> --note '...'\` to update status.")
+REPORT_LINES+=("**Action required:** Verify current PR state/head and each finding's validity/resolution before acting. Address still-relevant findings, or reconcile the local tracker with evidence. A closed or merged PR alone does not establish resolution.")
+REPORT_LINES+=("For a finding verified resolved, use \`track-findings.py resolve <pr> <id> --note '...'\` and cite the evidence in \`--note\`.")
 
 REPORT_CONTENT=$(printf '%s\n' "${REPORT_LINES[@]}")
 
