@@ -14,10 +14,9 @@
 - Disclose AI assistance in PRs
 - **Always use sub-agents** for PR reviews and code — get feedback before posting
 - **Ignore sim/e2e test failures** unless Nico specifically asks to investigate
-- **NEVER send "all clear" / "nothing new" messages to Nico** (told three times, 2026-03-02). Nothing actionable → NO_REPLY.
-- **Always tag other bots** (e.g. <@1483945055025631353> for lodekeeper-z) when replying to them in Discord — don't just reply to the message without a mention. Nico flagged this 2026-03-21.
+- **Tag bots with `<@ID>`** when replying to them on Discord (lodekeeper-z <@1483945055025631353>; Nico 03-21).
 - **GitHub account boundary:** every GitHub write goes through local `gh` as `lodekeeper`, never `nflaig` (the connector opened PR #9536 as Nico, 2026-06-20). Details in AGENTS.md.
-- **Dotfiles sync:** local workspace instruction changes must be synced to `github.com/lodekeeper/dotfiles` via `~/dotfiles/scripts/sync-dotfiles.sh` so durable instructions do not drift.
+- **Dotfiles sync:** sync workspace instruction changes via `~/dotfiles/scripts/sync-dotfiles.sh` (→ `lodekeeper/dotfiles`) so they don't drift.
 
 ## Dev Workflow (for complex features)
 - `skills/dev-workflow/SKILL.md`: spec with gpt-advisor (invest here) → fresh worktree (`~/lodestar/scripts/create-worktree.sh`) → Codex CLI implements → self + gemini/codex review → PR. I own final quality. Small fixes skip it.
@@ -64,8 +63,7 @@ Full-text lessons through 2026-10-05: `memory/lessons-archive.md`. One line + da
 - 2026-02-26: Tee Oracle (and any long advisor) output to a file. Stdout doesn't survive compaction.
 - 2026-02-27: A Codex "OOM kill" was really the exec timeout. Launch with `timeout:3600`+. gpt-advisor uses `runTimeoutSeconds: 3600`, and timeouts get raised, never reasoning effort lowered (03-20).
 - 2026-03-05: Advertised capability ≠ live endpoint. Validate at the HTTP route. Routine crons use `delivery.mode=none`, because announce-mode starves compaction.
-- 2026-03-06: Zombie node processes hold ports, so `lsof -iTCP:<port> -sTCP:LISTEN` before starting one. Chrome CDP for ChatGPT is dead; use Camoufox / `scripts/oracle/chatgpt-direct`.
-- 2026-03-09: Model truth lives in both config and live session overrides. Check both.
+- 2026-03-06: Zombie node processes hold ports, so `lsof -iTCP:<port> -sTCP:LISTEN` before starting one.- 2026-03-09: Model truth lives in both config and live session overrides. Check both.
 - 2026-03-15: Sub-agent reviewer inputs must live under `~/.openclaw/workspace/`.
 - 2026-03-21: Never run broad git commands or `git reset --hard` in the workspace. Sync via `~/dotfiles`.
 - 2026-04-02: Update BACKLOG via heading-targeted `scripts/backlog/set_status.py`, not exact-match edits.
@@ -75,7 +73,7 @@ Full-text lessons through 2026-10-05: `memory/lessons-archive.md`. One line + da
 - 2026-05-20/23: Handle a hard external blocker with one entry and one escalation, then stop. If it persists, add a cached preflight with an explicit skip exit (`check-github-access.sh`).
 - 2026-10-04: After a runtime upgrade, verify live state before calling anything broken or fixed. Enumerate behavior changes against docs and live runs. (9.8: USER.md cap, skipped heartbeat ticks, gated hooks, closed topic-wake paths, stale CLI paths.)
 - 2026-10-07: Check credentials in the runtime that actually executes the workflow. The CI quality-gate key existed in Gateway exec, not native Codex exec. Passing prerequisite checks isn't end-to-end proof.
-- 2026-10-06: A successful retry can hide incomplete work (the nightly embed timeout was masked by its retry). Check the output, not the exit status.
+- 2026-10-06: A successful retry can hide incomplete work (the nightly embed timeout was masked by its retry). Check the output, not the exit status. "All hashes embedded" still left 6 partial-tail gaps (11-04).
 - 2026-10-11: An interval-scheduled (`kind: every`) colliding job drifts, so pin it rather than moving the victim. Recovery guards must not depend on line position (the BACKLOG banner got archived). Systemd restart isn't a leak fix.
 - 2026-10-15: Path allowlists don't sanitize content. The dotfiles sync filters by path only, so anything written into a synced path (notes/, skills/, identity files) is public. Since 10-15 `~/dotfiles/scripts/sync-content-gate.py` blocks secrets/public IPs on added lines; other infra details still pass, so keep them out of synced paths.
 - 2026-10-19: `--help` isn't safe on a script without argparse, because the script just runs. Read it first. `check_cron_health.py` used up recovery notices twice before the 10-20 guard.
@@ -92,17 +90,17 @@ Full-text lessons through 2026-10-05: `memory/lessons-archive.md`. One line + da
 - 2026-04-02: `client=` strings aren't membership proof; check the participant list. Tie repro loops to real liveness signals.
 - 2026-04-15 / 05-14: Back spec suspicions with runtime evidence and test against exact upstream fixtures, not nightly bundles.
 - 2026-04-23: A red PR matrix is evidence to inspect (run IDs, ages, reruns), not proof of a regression.
-- 2026-06-01: Reconcile stale written markers against live processes, logs, and timestamps before chaining work.
-- 2026-07-23: Distrust my own detectors. Verify both alerts and silences against structured ground truth.
+- 2026-06-01: Reconcile stale written markers against live processes, logs, and timestamps before chaining work. A tracker record or merged PR doesn't prove a finding resolved (11-03).
+- 2026-07-23: Distrust my own detectors. Verify both alerts and silences against structured ground truth. Raw per-job CI logs beat labels (11-03: "Vitest crash" was a port bind; a short log download was incomplete). A `pgrep -f` poll matches its own cmdline and never sees completion (11-04).
 - 2026-10-05: Probe the live system before a behavior claim lands in a public issue (checkpointz#266 genesis-by-slot correction).
 - 2026-10-07: Claims of absence need the most evidence. "glamsterdam-devnet-10 never launched" came from one skipped launch plan, and abcoathup corrected it publicly in #interop. Scope claims to what the source establishes.
-- 2026-10-09: Classify slot loss before blaming a client: orphaned vs missed vs restart vs validator keys not running (FOCIL 23741 was orphaned by Lighthouse not importing it).
+- 2026-10-09: Classify slot loss before blaming a client: orphaned vs missed vs restart vs validator keys not running (FOCIL 23741, story in IDENTITY).
 - 2026-10-10: A clean spec-source cache doesn't prove the generated fixtures. Record dirty/untracked test inputs and count the fixture cases that actually ran, not skipped-suite placeholders.
 - 2026-10-12/13: Check what a benchmark measured before trusting its number: `runsFactor` normalization (native hex decode looked slow), sample duration (a 0.3s CI sample), and baseline provenance (failed runs contaminating the rolling baseline). Reproduce a flake before fixing it and keep the negative control.
 - 2026-10-16: An explorer's offline flag isn't a client failure. Read the node's own CL/EL logs first (lodestar-reth-1: Dora TLS fault, node synced at head).
-- 2026-10-14: Check tags before any "since vX" claim (gh tag-contents API). I told #10393 the `builder` cmd existed since v1.50.0; Marko corrected it: v1.46.0.
+- 2026-10-14: Check tags before any "since vX" claim (gh tag-contents API; #10393 said v1.50.0, Marko corrected to v1.46.0).
 - 2026-10-18: A getter's name doesn't prove it governs the path. I relayed an unlock date from a lock getter, but exits go through a separate staker with its own timestamp. Trace the real path; enumerate sources from the on-chain registry.
-- 2026-10-20: A local repro isn't a production root cause, and JS CPU profiles miss native (libuv/LevelDB) work. Hoodi archiver: #10447 sound, live stall cure unproven. Confirmed live 10-23: `compactRange` skips the bottom level, so a fast no-op compaction isn't disproof; the sentinel-key compaction fixed it.
+- 2026-10-20: A local repro isn't a production root cause, and JS CPU profiles miss native (libuv/LevelDB) work. `compactRange` skips the bottom level, so a fast no-op compaction isn't disproof (Hoodi; sentinel-key compaction fixed it live 10-23).
 - 2026-10-22: An empty check list isn't green. `gh pr checks` omits workflows held at the fork-approval gate (#10460 read "no failures" with nothing run). Use `scripts/github/check-pr-ci-evidence.py`.
 - 2026-10-23: Before raising a security alert, check whether Lodestar already shipped the fix (Node2Shell was covered by v1.50.1). A runtime patched on disk doesn't patch processes started before it; compare start time with update time (10-26 Brotli check).
 - 2026-10-27: A green suite covers only what it ran. Map each changed input path to a named valid nonempty case (#5770: 42/42 reftests, no tx vector). Rule lives in CODING_CONTEXT.md.
