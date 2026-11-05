@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
+import argparse
 import sys
+
+argparse.ArgumentParser(
+    description="Run the notification sweep with fixed paths and no open-PR scan."
+).parse_args()
+
 sys.path.insert(0, "/home/openclaw/.openclaw/workspace/scripts/github")
 import github_notifications_sweep as g
 
