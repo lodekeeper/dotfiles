@@ -1,0 +1,217 @@
+[
+  {
+    "url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/comments/4479493378",
+    "pull_request_review_id": 5783663350,
+    "id": 4479493378,
+    "node_id": "PRRC_kwDOCD5_Gc8AAAABCv-lAg",
+    "diff_hunk": "@@ -1,4 +1,4 @@\n-FROM node:24-slim AS build_src\n+FROM node:26-slim AS build_src",
+    "path": "Dockerfile",
+    "commit_id": "86ec5cb64a582f4a5e5363283149c2aaf32763d4",
+    "original_commit_id": "763e2469bd61e2b4250064bbab8dfc584aeaf2f6",
+    "user": {
+      "login": "chatgpt-codex-connector[bot]",
+      "id": 199175422,
+      "node_id": "BOT_kgDOC98s_g",
+      "avatar_url": "https://avatars.githubusercontent.com/in/1144995?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/chatgpt-codex-connector%5Bbot%5D",
+      "html_url": "https://github.com/apps/chatgpt-codex-connector",
+      "followers_url": "https://api.github.com/users/chatgpt-codex-connector%5Bbot%5D/followers",
+      "following_url": "https://api.github.com/users/chatgpt-codex-connector%5Bbot%5D/following{/other_user}",
+      "gists_url": "https://api.github.com/users/chatgpt-codex-connector%5Bbot%5D/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/chatgpt-codex-connector%5Bbot%5D/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/chatgpt-codex-connector%5Bbot%5D/subscriptions",
+      "organizations_url": "https://api.github.com/users/chatgpt-codex-connector%5Bbot%5D/orgs",
+      "repos_url": "https://api.github.com/users/chatgpt-codex-connector%5Bbot%5D/repos",
+      "events_url": "https://api.github.com/users/chatgpt-codex-connector%5Bbot%5D/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/chatgpt-codex-connector%5Bbot%5D/received_events",
+      "type": "Bot",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Install Corepack before using the Node 26 base images**\n\nBoth Docker builds still depend on the bundled `corepack` executable: `Dockerfile:25` runs `corepack enable && corepack prepare --activate`, and `Dockerfile.dev:28` runs `corepack enable`, with neither installing Corepack first. [Node.js documents](https://nodejs.org/download/release/v25.8.0/docs/api/corepack.html) that \u201cCorepack will no longer be distributed starting with Node.js v25,\u201d and the [Node 26 slim image definition](https://raw.githubusercontent.com/nodejs/docker-node/main/26/trixie-slim/Dockerfile) does not add it separately. Consequently, switching these base images to 26 breaks both builds with `corepack: not found` before dependency installation. Install Corepack explicitly, or provision the pinned pnpm version another way, in both Dockerfiles.\n\nUseful? React with \ud83d\udc4d\u00a0/ \ud83d\udc4e.\n\n<!-- codex-code-review-finding:v1 -->",
+    "created_at": "2026-11-05T10:48:17Z",
+    "updated_at": "2026-11-05T10:48:17Z",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/10516#discussion_r4479493378",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10516",
+    "_links": {
+      "self": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/comments/4479493378"
+      },
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/10516#discussion_r4479493378"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10516"
+      }
+    },
+    "reactions": {
+      "url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/comments/4479493378/reactions",
+      "total_count": 0,
+      "+1": 0,
+      "-1": 0,
+      "laugh": 0,
+      "hooray": 0,
+      "confused": 0,
+      "heart": 0,
+      "rocket": 0,
+      "eyes": 0
+    },
+    "start_line": null,
+    "original_start_line": null,
+    "start_side": null,
+    "line": 1,
+    "original_line": 1,
+    "side": "RIGHT",
+    "author_association": "NONE",
+    "original_position": 2,
+    "position": 2,
+    "subject_type": "line",
+    "is_copilot_code_review": false,
+    "copilot_code_review_sources": []
+  },
+  {
+    "url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/comments/4479610576",
+    "pull_request_review_id": 5783815125,
+    "id": 4479610576,
+    "node_id": "PRRC_kwDOCD5_Gc8AAAABCwFu0A",
+    "diff_hunk": "@@ -1,4 +1,4 @@\n-FROM node:24-slim AS build_src\n+FROM node:26-slim AS build_src",
+    "path": "Dockerfile",
+    "commit_id": "86ec5cb64a582f4a5e5363283149c2aaf32763d4",
+    "original_commit_id": "763e2469bd61e2b4250064bbab8dfc584aeaf2f6",
+    "user": {
+      "login": "lodekeeper",
+      "id": 258435968,
+      "node_id": "U_kgDOD2drgA",
+      "avatar_url": "https://avatars.githubusercontent.com/u/258435968?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/lodekeeper",
+      "html_url": "https://github.com/lodekeeper",
+      "followers_url": "https://api.github.com/users/lodekeeper/followers",
+      "following_url": "https://api.github.com/users/lodekeeper/following{/other_user}",
+      "gists_url": "https://api.github.com/users/lodekeeper/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/lodekeeper/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/lodekeeper/subscriptions",
+      "organizations_url": "https://api.github.com/users/lodekeeper/orgs",
+      "repos_url": "https://api.github.com/users/lodekeeper/repos",
+      "events_url": "https://api.github.com/users/lodekeeper/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/lodekeeper/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "Valid. I ran both images:\n\n```\n$ docker run --rm node:26-slim sh -c 'node --version; command -v corepack || echo \"corepack: not found\"; ls /usr/local/lib/node_modules'\nv26.13.0\ncorepack: not found\nnpm\n```\n\n`node:26` (used by `Dockerfile.dev`) gives the same output. So `corepack enable` at `Dockerfile:25` and `Dockerfile.dev:28` fail with exit 127. No PR check builds these images. The first build would be the `next` image (`publish.yml` \u2192 `publish-dev.yml` \u2192 `docker.yml`) on the merge push to unstable, plus the nightly Kurtosis run, so both would break right after merge.\n\nThe smallest fix that keeps the `packageManager` pin:\n\n```dockerfile\nRUN npm install -g corepack && corepack enable && corepack prepare --activate && \\\n```\n\nThe same applies to `Dockerfile.dev`. `docs/pages/faqs.md` also tells users to run `corepack enable`. On Node 26 that needs `npm install -g corepack` first, so it's worth updating with the installation docs in this PR.\n\nSeparately, the Benchmark job on this PR runs on Node 26.13.0 against a Node 24 baseline, so its one regression (`phase0 processEffectiveBalanceUpdates - 250000 worstcase 0.5`, x3.2) compares across runtimes. It may be runner noise, but a local A/B of that bench on both versions would settle it.\n",
+    "created_at": "2026-11-05T11:00:42Z",
+    "updated_at": "2026-11-05T11:01:00Z",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/10516#discussion_r4479610576",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10516",
+    "_links": {
+      "self": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/comments/4479610576"
+      },
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/10516#discussion_r4479610576"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10516"
+      }
+    },
+    "reactions": {
+      "url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/comments/4479610576/reactions",
+      "total_count": 0,
+      "+1": 0,
+      "-1": 0,
+      "laugh": 0,
+      "hooray": 0,
+      "confused": 0,
+      "heart": 0,
+      "rocket": 0,
+      "eyes": 0
+    },
+    "start_line": null,
+    "original_start_line": null,
+    "start_side": null,
+    "line": 1,
+    "original_line": 1,
+    "side": "RIGHT",
+    "in_reply_to_id": 4479493378,
+    "author_association": "CONTRIBUTOR",
+    "original_position": 2,
+    "position": 2,
+    "subject_type": "line",
+    "is_copilot_code_review": false,
+    "copilot_code_review_sources": []
+  },
+  {
+    "url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/comments/4480449399",
+    "pull_request_review_id": 5784946540,
+    "id": 4480449399,
+    "node_id": "PRRC_kwDOCD5_Gc8AAAABCw47dw",
+    "diff_hunk": "@@ -1,4 +1,4 @@\n-FROM node:24-slim AS build_src\n+FROM node:26-slim AS build_src",
+    "path": "Dockerfile",
+    "commit_id": "86ec5cb64a582f4a5e5363283149c2aaf32763d4",
+    "original_commit_id": "763e2469bd61e2b4250064bbab8dfc584aeaf2f6",
+    "user": {
+      "login": "nazarhussain",
+      "id": 112468,
+      "node_id": "MDQ6VXNlcjExMjQ2OA==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/112468?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/nazarhussain",
+      "html_url": "https://github.com/nazarhussain",
+      "followers_url": "https://api.github.com/users/nazarhussain/followers",
+      "following_url": "https://api.github.com/users/nazarhussain/following{/other_user}",
+      "gists_url": "https://api.github.com/users/nazarhussain/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/nazarhussain/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/nazarhussain/subscriptions",
+      "organizations_url": "https://api.github.com/users/nazarhussain/orgs",
+      "repos_url": "https://api.github.com/users/nazarhussain/repos",
+      "events_url": "https://api.github.com/users/nazarhussain/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/nazarhussain/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "\ud83e\udd16 Fixed in c3338e98c9. Both Dockerfiles now run `npm install -g corepack@0.36.0` before `corepack enable`, so the `packageManager` pin still applies. Checked on Node 26.13.0: it ships only `npm`/`npx`, and after the install `corepack prepare --activate` activates `pnpm@11.0.0`. Also updated `docs/pages/faqs.md`, `CONTRIBUTING.md` and `AGENTS.md`.\n\nImages are still not built by any PR check, so a local `docker build` is the remaining verification before merge.\n",
+    "created_at": "2026-11-05T12:31:58Z",
+    "updated_at": "2026-11-05T12:31:58Z",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/10516#discussion_r4480449399",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10516",
+    "_links": {
+      "self": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/comments/4480449399"
+      },
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/10516#discussion_r4480449399"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10516"
+      }
+    },
+    "reactions": {
+      "url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/comments/4480449399/reactions",
+      "total_count": 0,
+      "+1": 0,
+      "-1": 0,
+      "laugh": 0,
+      "hooray": 0,
+      "confused": 0,
+      "heart": 0,
+      "rocket": 0,
+      "eyes": 0
+    },
+    "start_line": null,
+    "original_start_line": null,
+    "start_side": null,
+    "line": 1,
+    "original_line": 1,
+    "side": "RIGHT",
+    "in_reply_to_id": 4479493378,
+    "author_association": "CONTRIBUTOR",
+    "original_position": 2,
+    "position": 2,
+    "subject_type": "line",
+    "is_copilot_code_review": false,
+    "copilot_code_review_sources": []
+  }
+]

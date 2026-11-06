@@ -1,0 +1,55 @@
+{
+  "head": "86ec5cb64a582f4a5e5363283149c2aaf32763d4",
+  "observedAt": "2026-11-05T12:54:25.940158+00:00",
+  "architecture": "linux/amd64",
+  "cases": [
+    {
+      "image": "lodestar:pr10516-prod",
+      "imageId": "sha256:7c0f49dee8d32977e0dbf1341e965c2481ae552876cbd430bccfc6bf5eaa2739",
+      "probe": "version",
+      "exitCode": 0,
+      "stdout": "\ud83c\udf1f Lodestar: TypeScript Implementation of the Ethereum Consensus Beacon Chain.\n  * Version: v1.50.1/86ec5cb\n  * by ChainSafe Systems, 2018-2026",
+      "stderr": ""
+    },
+    {
+      "image": "lodestar:pr10516-prod",
+      "imageId": "sha256:7c0f49dee8d32977e0dbf1341e965c2481ae552876cbd430bccfc6bf5eaa2739",
+      "probe": "native-import",
+      "exitCode": 0,
+      "stdout": "native import ok",
+      "stderr": ""
+    },
+    {
+      "image": "lodestar:pr10516-prod",
+      "imageId": "sha256:7c0f49dee8d32977e0dbf1341e965c2481ae552876cbd430bccfc6bf5eaa2739",
+      "probe": "node-options",
+      "exitCode": 0,
+      "stdout": "v26.13.0\nNODE_OPTIONS=--max-old-space-size=8192 --max-semi-space-size=64",
+      "stderr": ""
+    },
+    {
+      "image": "lodestar:pr10516-dev",
+      "imageId": "sha256:b8a01fa784cb65292af3c212344300557be9e6e9a92e812eabd02c0eeaad7b95",
+      "probe": "version",
+      "exitCode": 0,
+      "stdout": "\ud83c\udf1f Lodestar: TypeScript Implementation of the Ethereum Consensus Beacon Chain.\n  * Version: v1.50.1/86ec5cb\n  * by ChainSafe Systems, 2018-2026",
+      "stderr": ""
+    },
+    {
+      "image": "lodestar:pr10516-dev",
+      "imageId": "sha256:b8a01fa784cb65292af3c212344300557be9e6e9a92e812eabd02c0eeaad7b95",
+      "probe": "native-import",
+      "exitCode": 0,
+      "stdout": "native import ok",
+      "stderr": ""
+    },
+    {
+      "image": "lodestar:pr10516-dev",
+      "imageId": "sha256:b8a01fa784cb65292af3c212344300557be9e6e9a92e812eabd02c0eeaad7b95",
+      "probe": "node-options",
+      "exitCode": 0,
+      "stdout": "v26.13.0\nNODE_OPTIONS=--max-old-space-size=8192 --max-semi-space-size=64",
+      "stderr": ""
+    }
+  ]
+}

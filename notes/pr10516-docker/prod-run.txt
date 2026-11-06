@@ -1,0 +1,6 @@
+🌟 Lodestar: TypeScript Implementation of the Ethereum Consensus Beacon Chain.
+  * Version: v1.50.1/86ec5cb
+  * by ChainSafe Systems, 2018-2026
+prod run exit 0
+NODE_OPTIONS=--max-old-space-size=8192 --max-semi-space-size=64
+v26.13.0

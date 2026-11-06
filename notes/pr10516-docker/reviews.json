@@ -1,0 +1,128 @@
+[
+  {
+    "id": 5783663350,
+    "node_id": "PRR_kwDOCD5_Gc8AAAABWLuy9g",
+    "user": {
+      "login": "chatgpt-codex-connector[bot]",
+      "id": 199175422,
+      "node_id": "BOT_kgDOC98s_g",
+      "avatar_url": "https://avatars.githubusercontent.com/in/1144995?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/chatgpt-codex-connector%5Bbot%5D",
+      "html_url": "https://github.com/apps/chatgpt-codex-connector",
+      "followers_url": "https://api.github.com/users/chatgpt-codex-connector%5Bbot%5D/followers",
+      "following_url": "https://api.github.com/users/chatgpt-codex-connector%5Bbot%5D/following{/other_user}",
+      "gists_url": "https://api.github.com/users/chatgpt-codex-connector%5Bbot%5D/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/chatgpt-codex-connector%5Bbot%5D/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/chatgpt-codex-connector%5Bbot%5D/subscriptions",
+      "organizations_url": "https://api.github.com/users/chatgpt-codex-connector%5Bbot%5D/orgs",
+      "repos_url": "https://api.github.com/users/chatgpt-codex-connector%5Bbot%5D/repos",
+      "events_url": "https://api.github.com/users/chatgpt-codex-connector%5Bbot%5D/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/chatgpt-codex-connector%5Bbot%5D/received_events",
+      "type": "Bot",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "<!-- codex-review-receipt:v1 -->\n\n\n### \ud83d\udca1 Codex Review\n\nHere are some automated review suggestions for this pull request.\n\n**Reviewed commit:** `763e2469bd`\n    \n\n<details> <summary>\u2139\ufe0f About Codex in GitHub</summary>\n<br/>\n\n[Your team has set up Codex to review pull requests in this repo](https://chatgpt.com/codex/cloud/settings/general). Reviews are triggered when you\n- Open a pull request for review\n- Mark a draft as ready\n- Comment \"@codex review\".\n\nIf Codex has suggestions, it will comment; otherwise it will react with \ud83d\udc4d.\n\n\n\n\nCodex can also answer questions or update the PR. Try commenting \"@codex address that feedback\".\n            \n</details>",
+    "state": "COMMENTED",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/10516#pullrequestreview-5783663350",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10516",
+    "author_association": "NONE",
+    "is_copilot_code_review": false,
+    "copilot_code_review_effort": null,
+    "_links": {
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/10516#pullrequestreview-5783663350"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10516"
+      }
+    },
+    "submitted_at": "2026-11-05T10:48:17Z",
+    "commit_id": "763e2469bd61e2b4250064bbab8dfc584aeaf2f6"
+  },
+  {
+    "id": 5783815125,
+    "node_id": "PRR_kwDOCD5_Gc8AAAABWL4D1Q",
+    "user": {
+      "login": "lodekeeper",
+      "id": 258435968,
+      "node_id": "U_kgDOD2drgA",
+      "avatar_url": "https://avatars.githubusercontent.com/u/258435968?u=73ea59876d1171aa491962c62c7aa27eeee7215f&v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/lodekeeper",
+      "html_url": "https://github.com/lodekeeper",
+      "followers_url": "https://api.github.com/users/lodekeeper/followers",
+      "following_url": "https://api.github.com/users/lodekeeper/following{/other_user}",
+      "gists_url": "https://api.github.com/users/lodekeeper/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/lodekeeper/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/lodekeeper/subscriptions",
+      "organizations_url": "https://api.github.com/users/lodekeeper/orgs",
+      "repos_url": "https://api.github.com/users/lodekeeper/repos",
+      "events_url": "https://api.github.com/users/lodekeeper/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/lodekeeper/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "",
+    "state": "COMMENTED",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/10516#pullrequestreview-5783815125",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10516",
+    "author_association": "CONTRIBUTOR",
+    "is_copilot_code_review": false,
+    "copilot_code_review_effort": null,
+    "_links": {
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/10516#pullrequestreview-5783815125"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10516"
+      }
+    },
+    "submitted_at": "2026-11-05T11:00:42Z",
+    "commit_id": "763e2469bd61e2b4250064bbab8dfc584aeaf2f6"
+  },
+  {
+    "id": 5784946540,
+    "node_id": "PRR_kwDOCD5_Gc8AAAABWM9HbA",
+    "user": {
+      "login": "nazarhussain",
+      "id": 112468,
+      "node_id": "MDQ6VXNlcjExMjQ2OA==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/112468?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/nazarhussain",
+      "html_url": "https://github.com/nazarhussain",
+      "followers_url": "https://api.github.com/users/nazarhussain/followers",
+      "following_url": "https://api.github.com/users/nazarhussain/following{/other_user}",
+      "gists_url": "https://api.github.com/users/nazarhussain/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/nazarhussain/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/nazarhussain/subscriptions",
+      "organizations_url": "https://api.github.com/users/nazarhussain/orgs",
+      "repos_url": "https://api.github.com/users/nazarhussain/repos",
+      "events_url": "https://api.github.com/users/nazarhussain/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/nazarhussain/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "",
+    "state": "COMMENTED",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/10516#pullrequestreview-5784946540",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10516",
+    "author_association": "CONTRIBUTOR",
+    "is_copilot_code_review": false,
+    "copilot_code_review_effort": null,
+    "_links": {
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/10516#pullrequestreview-5784946540"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10516"
+      }
+    },
+    "submitted_at": "2026-11-05T12:31:58Z",
+    "commit_id": "86ec5cb64a582f4a5e5363283149c2aaf32763d4"
+  }
+]

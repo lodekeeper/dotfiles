@@ -1,0 +1,72 @@
+{
+  "url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/comments/4480704854",
+  "pull_request_review_id": 5785272550,
+  "id": 4480704854,
+  "node_id": "PRRC_kwDOCD5_Gc8AAAABCxIhVg",
+  "diff_hunk": "@@ -1,4 +1,4 @@\n-FROM node:24-slim AS build_src\n+FROM node:26-slim AS build_src",
+  "path": "Dockerfile",
+  "commit_id": "86ec5cb64a582f4a5e5363283149c2aaf32763d4",
+  "original_commit_id": "763e2469bd61e2b4250064bbab8dfc584aeaf2f6",
+  "user": {
+    "login": "lodekeeper",
+    "id": 258435968,
+    "node_id": "U_kgDOD2drgA",
+    "avatar_url": "https://avatars.githubusercontent.com/u/258435968?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/lodekeeper",
+    "html_url": "https://github.com/lodekeeper",
+    "followers_url": "https://api.github.com/users/lodekeeper/followers",
+    "following_url": "https://api.github.com/users/lodekeeper/following{/other_user}",
+    "gists_url": "https://api.github.com/users/lodekeeper/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/lodekeeper/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/lodekeeper/subscriptions",
+    "organizations_url": "https://api.github.com/users/lodekeeper/orgs",
+    "repos_url": "https://api.github.com/users/lodekeeper/repos",
+    "events_url": "https://api.github.com/users/lodekeeper/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/lodekeeper/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "body": "Verified at `86ec5cb64a`: the production image builds successfully and `--version` reports the correct commit on Node 26.13.0. Both Dockerfiles now install Corepack before using it.\n\n`Dockerfile.dev` also builds, and `--version` reports the same commit. Its first build hit `NameServerFailure` fetching a Zig dependency; retrying with `--network=host` succeeded. Both resulting images load the native addon and expose `--max-old-space-size=8192 --max-semi-space-size=64`.\n\nThis addresses the missing-Corepack P1. These checks are linux/amd64 only.\n",
+  "created_at": "2026-11-05T12:57:28Z",
+  "updated_at": "2026-11-05T12:57:28Z",
+  "html_url": "https://github.com/ChainSafe/lodestar/pull/10516#discussion_r4480704854",
+  "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10516",
+  "_links": {
+    "self": {
+      "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/comments/4480704854"
+    },
+    "html": {
+      "href": "https://github.com/ChainSafe/lodestar/pull/10516#discussion_r4480704854"
+    },
+    "pull_request": {
+      "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/10516"
+    }
+  },
+  "reactions": {
+    "url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/comments/4480704854/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "start_line": null,
+  "original_start_line": null,
+  "start_side": null,
+  "line": 1,
+  "original_line": 1,
+  "side": "RIGHT",
+  "in_reply_to_id": 4479493378,
+  "author_association": "CONTRIBUTOR",
+  "original_position": 2,
+  "position": 2,
+  "subject_type": "line",
+  "is_copilot_code_review": false,
+  "copilot_code_review_sources": []
+}

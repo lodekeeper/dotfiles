@@ -1,2 +1,6 @@
 # Literal strings the dotfiles content gate should ignore (one per line).
 # Only add verified false positives here, never real IPs or secrets.
+# V8 engine versions in notes/pr10516-docker (Node 24.22.2 / 26.13.0), not IPs (2026-11-05)
+13.6.233.17-node.63
+14.6.202.34-node.40
+13.6.233.17 (Node 24.22.2)

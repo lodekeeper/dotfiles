@@ -1,0 +1,33 @@
+{
+  "observedAt": "2026-11-05T12:53:44.501263+00:00",
+  "oldSpaceMiB": 8192,
+  "network": "none",
+  "method": "v8.getHeapStatistics().heap_size_limit / 1048576",
+  "cases": [
+    {
+      "image": "node:24-slim",
+      "node": "v24.22.2",
+      "semi64": false,
+      "heapLimitMiB": 8384
+    },
+    {
+      "image": "node:24-slim",
+      "node": "v24.22.2",
+      "semi64": true,
+      "heapLimitMiB": 8384
+    },
+    {
+      "image": "lodestar:pr10516-prod",
+      "node": "v26.13.0",
+      "semi64": false,
+      "heapLimitMiB": 8288
+    },
+    {
+      "image": "lodestar:pr10516-prod",
+      "node": "v26.13.0",
+      "semi64": true,
+      "heapLimitMiB": 8384
+    }
+  ],
+  "scope": "Confirms configured heap-limit effect, not peak dynamic new_space capacity, GC runtime behavior or benchmark causality."
+}

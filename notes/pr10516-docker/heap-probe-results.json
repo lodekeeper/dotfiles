@@ -1,0 +1,65 @@
+{
+  "observedAt": "2026-11-05T12:52:15.945706+00:00",
+  "cases": [
+    {
+      "image": "node:24-slim",
+      "semi64": false,
+      "exitCode": 0,
+      "stdout": "{\"node\":\"v24.22.2\",\"v8\":\"13.6.233.17-node.63\",\"nodeOptions\":\"--max-old-space-size=8192\",\"peakNewSpaceBytes\":67108864,\"peakNewSpaceMiB\":64,\"retainedArrays\":12}",
+      "stderr": "",
+      "result": {
+        "node": "v24.22.2",
+        "v8": "13.6.233.17-node.63",
+        "nodeOptions": "--max-old-space-size=8192",
+        "peakNewSpaceBytes": 67108864,
+        "peakNewSpaceMiB": 64,
+        "retainedArrays": 12
+      }
+    },
+    {
+      "image": "node:24-slim",
+      "semi64": true,
+      "exitCode": 0,
+      "stdout": "{\"node\":\"v24.22.2\",\"v8\":\"13.6.233.17-node.63\",\"nodeOptions\":\"--max-old-space-size=8192 --max-semi-space-size=64\",\"peakNewSpaceBytes\":67108864,\"peakNewSpaceMiB\":64,\"retainedArrays\":12}",
+      "stderr": "",
+      "result": {
+        "node": "v24.22.2",
+        "v8": "13.6.233.17-node.63",
+        "nodeOptions": "--max-old-space-size=8192 --max-semi-space-size=64",
+        "peakNewSpaceBytes": 67108864,
+        "peakNewSpaceMiB": 64,
+        "retainedArrays": 12
+      }
+    },
+    {
+      "image": "lodestar:pr10516-prod",
+      "semi64": false,
+      "exitCode": 0,
+      "stdout": "{\"node\":\"v26.13.0\",\"v8\":\"14.6.202.34-node.40\",\"nodeOptions\":\"--max-old-space-size=8192\",\"peakNewSpaceBytes\":17825792,\"peakNewSpaceMiB\":17,\"retainedArrays\":12}",
+      "stderr": "",
+      "result": {
+        "node": "v26.13.0",
+        "v8": "14.6.202.34-node.40",
+        "nodeOptions": "--max-old-space-size=8192",
+        "peakNewSpaceBytes": 17825792,
+        "peakNewSpaceMiB": 17,
+        "retainedArrays": 12
+      }
+    },
+    {
+      "image": "lodestar:pr10516-prod",
+      "semi64": true,
+      "exitCode": 0,
+      "stdout": "{\"node\":\"v26.13.0\",\"v8\":\"14.6.202.34-node.40\",\"nodeOptions\":\"--max-old-space-size=8192 --max-semi-space-size=64\",\"peakNewSpaceBytes\":16777216,\"peakNewSpaceMiB\":16,\"retainedArrays\":12}",
+      "stderr": "",
+      "result": {
+        "node": "v26.13.0",
+        "v8": "14.6.202.34-node.40",
+        "nodeOptions": "--max-old-space-size=8192 --max-semi-space-size=64",
+        "peakNewSpaceBytes": 16777216,
+        "peakNewSpaceMiB": 16,
+        "retainedArrays": 12
+      }
+    }
+  ]
+}
