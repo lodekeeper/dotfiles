@@ -1,0 +1,16 @@
+{
+  "diff": {
+    "addedChecks": [],
+    "changedChecks": [
+      "specImplementation/testVectorReadiness"
+    ],
+    "hasDrift": true,
+    "initialized": false,
+    "okChanged": true,
+    "optionsChanged": false,
+    "removedChecks": []
+  },
+  "hasDrift": true,
+  "stateFile": "state/autonomy-domain-preflight-health.json",
+  "status": "structured domain-preflight health drift detected: overall ok state changed; changed checks `specImplementation/testVectorReadiness`. Proposed fix: inspect the changed preflight JSON/check output before treating unchanged rendered status text as a no-op."
+}
