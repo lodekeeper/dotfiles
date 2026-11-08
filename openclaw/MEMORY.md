@@ -56,14 +56,15 @@ Full-text lessons through 2026-10-05: `memory/lessons-archive.md`. One line + da
 - 2026-02-20: Never delete gists, or anything else others link to, without asking.
 - 2026-03-18: Follow repo migration patterns before inventing types or helpers. Keep the fork's `unstable` synced before opening PRs.
 - 2026-04-26: Stamp reviewer artifacts with `Reviewed commit: <SHA>` and verify it matches HEAD.
-- 2026-10-06 → 10-12: Before opening a PR, search open PRs touching the same helper (#10291 ≡ #10237), build exactly the trigger asked for (#10310), check Nico isn't building it (#10332), and don't turn a passing suggestion in someone else's thread into a PR (#10359). For low-impact drift, ask "PR or leave it?". In-flight work includes deletions (10-26: #10460 fixed blob code #9957 removes). Story in SOUL.md.
+- 2026-10-06 → 10-26: Before opening a PR, check open PRs (deletions too) and Nico's in-flight work, build exactly the trigger asked for, and don't PR a passing suggestion from someone else's thread. For low-impact drift, ask "PR or leave it?". PR numbers and story in SOUL.md.
 - 2026-10-12: Before approving, reconcile every open bot/inline finding against the code (#10329 approved past a valid codex P2; held since on #10412, #10454).
 
 **Tooling & runtime**
 - 2026-02-26: Tee Oracle (and any long advisor) output to a file. Stdout doesn't survive compaction.
 - 2026-02-27: A Codex "OOM kill" was really the exec timeout. Launch with `timeout:3600`+. gpt-advisor uses `runTimeoutSeconds: 3600`, and timeouts get raised, never reasoning effort lowered (03-20).
 - 2026-03-05: Advertised capability ≠ live endpoint. Validate at the HTTP route. Routine crons use `delivery.mode=none`, because announce-mode starves compaction.
-- 2026-03-06: Zombie node processes hold ports, so `lsof -iTCP:<port> -sTCP:LISTEN` before starting one.- 2026-03-09: Model truth lives in both config and live session overrides. Check both.
+- 2026-03-06: Zombie node processes hold ports, so `lsof -iTCP:<port> -sTCP:LISTEN` before starting one.
+- 2026-03-09: Model truth lives in both config and live session overrides. Check both.
 - 2026-03-15: Sub-agent reviewer inputs must live under `~/.openclaw/workspace/`.
 - 2026-03-21: Never run broad git commands or `git reset --hard` in the workspace. Sync via `~/dotfiles`.
 - 2026-04-02: Update BACKLOG via heading-targeted `scripts/backlog/set_status.py`, not exact-match edits.
@@ -106,6 +107,7 @@ Full-text lessons through 2026-10-05: `memory/lessons-archive.md`. One line + da
 - 2026-10-27: A green suite covers only what it ran. Map each changed input path to a named valid nonempty case (#5770: 42/42 reftests, no tx vector). Rule lives in CODING_CONTEXT.md.
 - 2026-10-30: A failing vector can be the runner, not production. #10490's two `*_withdrawals` cases hit an unimplemented `payload` meta key; 28/28 after the harness fix.
 - 2026-11-01: A library probe isn't a Lodestar test. Name the code path the evidence ran through. Nico had to ask before I ran the real binding.
+- 2026-11-06: Before a private security verdict, trace timer-driven paths (pollers), not just event handlers. A missed poller flipped my verdict once Nico asked about it.
 - 2026-10-07: Compiler evidence beats source-review assumptions (SSZ ViewDU generic invariance). Check existing SSZ limits/decoders before adding validation.
 
 **Judgment & people**
@@ -121,5 +123,5 @@ Full-text lessons through 2026-10-05: `memory/lessons-archive.md`. One line + da
 - 2026-10-05: New watches get sane cadences (daily/twice-daily) and honest PRs. Ask a maintainer for `Release-As`; don't game release-please. PR review findings go inline on the PR.
 
 **Wrong-tool / destructive reflex** (summary: IDENTITY.md; verbatim synthesis: `memory/wrong-tool-reflex-synthesis.md`; counter: STATE.md + `memory/wrong-tool-reflex-log.txt`)
-- 2026-07-27 → 10-02: A generic transition-point reflex shows up as trailing destructive cleanup, filler or invalid tool calls (`Bash("true")`, `ScheduleWakeup` in non-loop turns), or a turn ending before the completion notification arrives. Prose doesn't gate it; only a Nico-approved mechanical pre-tool gate will. If a wrong deferred call slips out, cancel it in the same turn. When the urge hits, redirect it into one real signal-gathering call.
+- 2026-07-27 → 10-02: A transition-point reflex: trailing destructive cleanup, filler/invalid calls (`Bash("true")`, non-loop `ScheduleWakeup`), or ending a turn before a completion arrives. Only a Nico-approved mechanical gate stops it. Cancel a wrong deferred call in the same turn; redirect the urge into one real signal-gathering call.
 - 2026-10-06: It left the filesystem. A trailing `docker logout` after a verified image push wiped Nico's only Docker Hub login. Treat credential/auth state (`docker logout`, `gh auth logout`, credential-helper erase) as destructive too.
