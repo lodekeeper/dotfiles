@@ -1,10 +1,28 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-11-08 (198th pass)
+> Updated: 2026-11-09 (199th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-11-09 (self-improvement-audit-daily, 03:16 UTC)
+
+### PR review
+- **Status:** Six fresh inherited-Gateway prerequisites passed. Autonomous completion still needs exact-head CI evidence, reconciliation of every finding against current code/PR state and authorized provider delivery. Apply the existing event/timer/poll/retry tracing guidance to relevant behavior verdicts. No PR reviewed, approved or commented on by this audit.
+
+### CI fix
+- **Status:** Ten fresh prerequisites passed; verified lodekeeper has repositoryWriteRole=false, so upstream workflow approvals/reruns remain maintainer-owned. Yesterday's recorded unstable scans found no new failures, not proof all CI passed. A real local/fork fix still needs complete/raw-job evidence when necessary, all-author duplicate checks, isolated dependencies and an actual quality verdict. No detector/tracker mutation, rerun or Lodestar fix today.
+
+### Spec implementation
+- **Status:** Nine fresh prerequisites passed. The dedicated source cache remains clean at 204fb4a19, tests-history age 10/14 days; generatedFixturesVerified=false remains. Actual fixture work needs generation-time provenance, inventory, executed-case counts, valid nonempty input coverage, runner/unskip patches and evidence of the implementation layer exercised. Source readiness is not fixture or implementation proof. No cache refresh, fixture generation or Lodestar tests today.
+
+### Devnet debugging
+- **Status:** Seven fresh prerequisites passed; Panda advertises five datasources, Grafana is absent in the inherited environment. Recent fleet work exposed wrong-filesystem data placement and device/filesystem size confusion. Added an opt-in local read-only datadir collector that reports the resolved host path/mount, actual filesystem total/free/available bytes, root device-ID equality and optional matched-device capacity. It neither resolves container mounts automatically nor judges capacity, health or resize safety; use the real host-side data source during an authorized investigation. Seven focused tests pass, including a live local symlink CLI check. No fleet deployment or storage changes. Saved fleet snapshot 11-08 07:13 UTC is fresh: 37 open/33 new-worsened keys vs25 acknowledged 10-06; unacknowledged_due is not independent incident or receipt proof. Existing delivery repair stays owner-gated; no relay or ack. Today's 00:18 monitor note records all30 Lodestar at canonical head; this audit did not re-probe networks.
+
+### Audit workflow
+- **Status:** Implemented scripts/devfleet/check-datadir-storage.py with independent design and final code review approval (no findings); the reviewer independently reran all seven focused tests. Storage evidence remains observational: separate filesystem/device bytes, reserved-space distinction, no parent-disk fallback and explicit unknown optional sysfs evidence. The helper is opt-in, not wired into the live fleet scanner. Fresh prerequisites passed32/32 (6 PR/10 CI/9 spec/7 devnet;17 unique commands,15 cached reuses), with no structured health drift; these are not end-to-end workflow tests or a quality verdict. Current cadence is continuous; the historical11-07 setup failure remains documented, not backfilled or claimed repaired. Evidence: notes/autonomy-audit-2026-11-09-review.md and private memory/autonomy-audit-2026-11-09/. No config/auth/scheduler/scratch edit, restart, install, fixture generation, Lodestar tests, skill publication, commit/push or external post.
+
+---
 ## Daily Audit Snapshot — 2026-11-08 (self-improvement-audit-daily, 03:16 UTC)
 
 ### PR review
