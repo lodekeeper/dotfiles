@@ -26,21 +26,11 @@
 - **gemini-reviewer:** `google/gemini-3.5-flash` — second perspective
 - **gpt-advisor:** `openai/gpt-6.1-sol` — architecture & deep reasoning (hard asks: Codex CLI astra max)
 - **Codex CLI** (`gpt-6-astra` @ xhigh) / **Claude CLI:** implementation in worktrees; commands and hard-task flags in AGENTS.md → Coding Agents
-- **Me (main):** `anthropic/claude-opus-5-5` on the claude-cli runtime, fallback `openai/gpt-6.1-sol` (model strategy has flip-flopped before — verify live via `session_status`/config before relying) — **orchestrator**: coordination, delegation, quality control, communication
+- **Me (main):** `anthropic/claude-opus-5-5` on the claude-cli runtime, fallback `openai/gpt-6.1-sol` (it has flip-flopped; verify live via `session_status`/config) — **orchestrator**: coordination, delegation, quality control, communication
 - **Context file:** `CODING_CONTEXT.md` — always provide to coding agents for project conventions
 
-## Channels
-- Webchat; Telegram (Nico 5774760693); Discord (ChainSafe #lodestar-developer, mention required)
-
-## Projects
-- **Lodestar** (`~/lodestar`) — Ethereum consensus client (TypeScript)
-- **Consensus Specs** (`~/consensus-specs`) — Reference specs (Python)
-
 ## Ongoing Responsibilities
-- Review PRs from @nflaig on ChainSafe/lodestar
-- **Monitor GitHub notifications** (`gh api notifications`) for PR feedback — don't let reviews sit!
-- Monitor my open PRs for feedback
-- Track contributor PRs I've reviewed
+- Review Nico's PRs; watch GitHub notifications, my open PRs and contributor PRs I've reviewed so no feedback sits.
 - **Consensus specs study:** weekly `specs-study-reminder`; progress in `notes/specs/PROGRESS.md`. Priority Gloas/EPBS → Phase0 → … → PeerDAS. Open PRs for issues found, with spec refs.
 - **ChainSafe dev fleet (since 2026-10-06):** read-only health sweeps on request; destructive maintenance only with explicit Nico authorization per run. Raw evidence stays private; only sanitized reports in `reports/devfleet/`.
 - **Vuln watch (since 2026-10-23):** `lodestar-vuln-watch` automation (Mon+Thu) runs `scripts/security/vuln_watch.py`, ledger `memory/vuln-watch/`, posts to the pwn.watch thread.
@@ -68,7 +58,6 @@ Full-text lessons through 2026-10-05: `memory/lessons-archive.md`. One line + da
 - 2026-03-15: Sub-agent reviewer inputs must live under `~/.openclaw/workspace/`.
 - 2026-03-21: Never run broad git commands or `git reset --hard` in the workspace. Sync via `~/dotfiles`.
 - 2026-04-02: Update BACKLOG via heading-targeted `scripts/backlog/set_status.py`, not exact-match edits.
-- 2026-04-06: Review Royale digests go in a Discord thread, not the main channel.
 - 2026-04-11: Automation needs machine-readable guardrail fields, not prose warnings. (Routing: `message` tool + `timeoutMs`; topic wakes via `route-topic-nudge.sh`, 10-04.)
 - 2026-05-16: `sessions.list` is the source of truth for whether a session ran. Gateway log silence proves nothing.
 - 2026-05-20/23: Handle a hard external blocker with one entry and one escalation, then stop. If it persists, add a cached preflight with an explicit skip exit (`check-github-access.sh`).
@@ -108,11 +97,11 @@ Full-text lessons through 2026-10-05: `memory/lessons-archive.md`. One line + da
 - 2026-10-30: A failing vector can be the runner, not production. #10490's two `*_withdrawals` cases hit an unimplemented `payload` meta key; 28/28 after the harness fix.
 - 2026-11-01: A library probe isn't a Lodestar test. Name the code path the evidence ran through. Nico had to ask before I ran the real binding.
 - 2026-11-06: Before a private security verdict, trace timer-driven paths (pollers), not just event handlers. A missed poller flipped my verdict once Nico asked about it.
+- 2026-11-08: A green play isn't live state. A failed task skips Ansible handlers, so the rerun sees no diff and never restarts (a firewall rule never reloaded). Compare the templated file with the live rule. Size stores from finished nodes, not one mid-rebuild (geth 86G → 113G).
+- 2026-11-10: An image or wrapper fix misses hosts that launch `node` with their own `NODE_OPTIONS` (cmdline flags beat it too). Check the live cmdline/env before reading a soak (Node 26 semi-space flag).
 - 2026-10-07: Compiler evidence beats source-review assumptions (SSZ ViewDU generic invariance). Check existing SSZ limits/decoders before adding validation.
 
 **Judgment & people**
-- 2026-02-09: Don't spam Discord with incremental updates. Batch into substantive posts.
-- 2026-02-27: Ask clarifying questions before non-trivial work. Nico praised it.
 - 2026-03-06: Cross-check reviewer findings against `git diff --name-only origin/unstable...HEAD`.
 - 2026-04-20: Stop out-debugging stale auth once local sources are exhausted; ask for fresh credentials. In sweeps, separate real maintainer asks from bot noise fast.
 - 2026-06-20: Verify the acting account before any external write.
