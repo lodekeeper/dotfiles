@@ -1,0 +1,306 @@
+{
+  "data": {
+    "repository": {
+      "pullRequest": {
+        "reviewThreads": {
+          "pageInfo": {
+            "hasNextPage": false
+          },
+          "nodes": [
+            {
+              "isResolved": true,
+              "isOutdated": true,
+              "comments": {
+                "nodes": [
+                  {
+                    "databaseId": 4121565920,
+                    "author": {
+                      "login": "chatgpt-codex-connector"
+                    },
+                    "body": "**<sub><sub>![P2 Badge](https://img.shields.io/badge/P2-yellow?style=flat)</sub></sub>  Remove the now-unused getBlobs buffer pool**\n\n`getBlobs()` now ignores its `buffers` argument, but `GetBlobsTracker` still allocates and retains one `BLOB_AND_PROOF_V2_RPC_BYTES` buffer per maximum blob for every concurrent recovery slot before passing that argument. Thus any Fulu/Gloas data recovery permanently grows the tracker with large zero-filled buffers that are never used, while the response is separately allocated; remove the pool or stop allocating it when using this non-aliasing path.\n\nUseful? React with \ud83d\udc4d\u00a0/ \ud83d\udc4e."
+                  },
+                  {
+                    "databaseId": 4277721120,
+                    "author": {
+                      "login": "ensi321"
+                    },
+                    "body": "I think this is stale. "
+                  },
+                  {
+                    "databaseId": 4277787883,
+                    "author": {
+                      "login": "lodekeeper"
+                    },
+                    "body": "Confirmed stale. At 4c98359, `getBlobs` passes `buffers` through to `getBlobsV2`, and the JSON-RPC transport decodes into them. Only the REST transport doesn't use the pool, which is by design.\n"
+                  }
+                ]
+              }
+            },
+            {
+              "isResolved": false,
+              "isOutdated": true,
+              "comments": {
+                "nodes": [
+                  {
+                    "databaseId": 4165413847,
+                    "author": {
+                      "login": "nflaig"
+                    },
+                    "body": "why would we accept pre-fulu? we should probably just throw early"
+                  },
+                  {
+                    "databaseId": 4277719223,
+                    "author": {
+                      "login": "ensi321"
+                    },
+                    "body": "Yea I think we should. But sim test is complaining if I do it now because it still runs Electra blocks. \r\n\r\nNeed to update sim test and throw in a separate PR"
+                  },
+                  {
+                    "databaseId": 4479920058,
+                    "author": {
+                      "login": "ensi321"
+                    },
+                    "body": "Done in 7322e2da4d. publishBlockV2 now throws 400 for any pre-fulu block whose blob commitments are non-empty, before anything is cached. Blob-free pre-fulu blocks still publish, which keeps multiFork/mixedClient (FULU_FORK_EPOCH: Infinity) working. Covered by two new unit tests."
+                  }
+                ]
+              }
+            },
+            {
+              "isResolved": false,
+              "isOutdated": true,
+              "comments": {
+                "nodes": [
+                  {
+                    "databaseId": 4477861146,
+                    "author": {
+                      "login": "nflaig"
+                    },
+                    "body": "that comment is odd, we could fail explicitly at the start of the function call if it's pre-fulu, I prefer that over silently producing an invalid result"
+                  },
+                  {
+                    "databaseId": 4478102106,
+                    "author": {
+                      "login": "lodekeeper"
+                    },
+                    "body": "Agree. One constraint: `multiFork.test.ts` and `mixedClient.test.ts` still run with `FULU_FORK_EPOCH: Infinity`, and their Lodestar validators publish electra blocks through `publishBlockV2`, so a plain pre-fulu throw would fail both sims. Throwing only when pre-fulu contents carry blobs (`blobs.length > 0`) keeps the sims working, since they never send blob transactions. It also fails loudly instead of publishing a block whose blobs no peer will get.\n"
+                  },
+                  {
+                    "databaseId": 4479920581,
+                    "author": {
+                      "login": "ensi321"
+                    },
+                    "body": "Comment dropped and replaced by an explicit throw at the top of the function, see 7322e2da4d. It keys on the block's blob commitments rather than the supplied blobs, so an electra block with commitments but an empty blobs array is rejected too instead of being imported without data."
+                  }
+                ]
+              }
+            },
+            {
+              "isResolved": false,
+              "isOutdated": true,
+              "comments": {
+                "nodes": [
+                  {
+                    "databaseId": 4477910743,
+                    "author": {
+                      "login": "nflaig"
+                    },
+                    "body": "why is this fork guarded? don't we only run sim tests post fulu anyways?"
+                  },
+                  {
+                    "databaseId": 4478102353,
+                    "author": {
+                      "login": "lodekeeper"
+                    },
+                    "body": "Not yet. `multiFork.test.ts` sets `FULU_FORK_EPOCH: Infinity` and calls `assertUnknownBlockSync` (L158), so the head here is an electra block. With this PR, pre-fulu `getBlobSidecars` reads the blob DB, which nothing writes anymore, so it 404s for every electra block and the sim fails without the guard. Once the sims run post-fulu, the guard can go.\n"
+                  },
+                  {
+                    "databaseId": 4479921194,
+                    "author": {
+                      "login": "ensi321"
+                    },
+                    "body": "multiFork still runs electra heads (FULU_FORK_EPOCH: Infinity) and calls assertUnknownBlockSync, and pre-fulu blobs are no longer in the DB, so the API would 404 without the guard. Kept it with a one-line comment. It can go once the sims run post-fulu."
+                  }
+                ]
+              }
+            },
+            {
+              "isResolved": true,
+              "isOutdated": true,
+              "comments": {
+                "nodes": [
+                  {
+                    "databaseId": 4477913418,
+                    "author": {
+                      "login": "nflaig"
+                    },
+                    "body": "we should use `getBlobs` instead of `getBlobSidecars`"
+                  },
+                  {
+                    "databaseId": 4478102592,
+                    "author": {
+                      "login": "lodekeeper"
+                    },
+                    "body": "Agree. That change also needs proofs: `getBlobs` returns blobs without them, and fulu `publishBlockV2` reads `kzgProofs` as 128 cell proofs per blob. The current `currentSidecars.map((b) => b.kzgProof)` passes one blob proof per blob, which would already be wrong for a fulu head with blobs. It's only never hit because no sim sends blob transactions. So with `getBlobs` the cell proofs need computing, for example with `kzg.computeCellsAndKzgProofs(blob).proofs`.\n"
+                  },
+                  {
+                    "databaseId": 4479921792,
+                    "author": {
+                      "login": "ensi321"
+                    },
+                    "body": "Switched to getBlobs in 7322e2da4d. Since fulu publishBlockV2 slices kzgProofs as NUMBER_OF_COLUMNS per blob, the util now computes cell proofs with kzg.computeCellsAndKzgProofs instead of passing one blob proof per blob, which was already wrong for a fulu head with blobs."
+                  }
+                ]
+              }
+            },
+            {
+              "isResolved": true,
+              "isOutdated": true,
+              "comments": {
+                "nodes": [
+                  {
+                    "databaseId": 4477920470,
+                    "author": {
+                      "login": "nflaig"
+                    },
+                    "body": "why is this comment so long. \" blob sidecars are replaced by data columns from fulu\" why are we explaining that?"
+                  },
+                  {
+                    "databaseId": 4478102857,
+                    "author": {
+                      "login": "lodekeeper"
+                    },
+                    "body": "Agree. One line is enough, for example `# Pre-fulu blob sidecar functions, replaced by data columns in fulu` above the deneb entries. The electra comment pointing back to it can then go.\n"
+                  },
+                  {
+                    "databaseId": 4479922319,
+                    "author": {
+                      "login": "ensi321"
+                    },
+                    "body": "Shortened to one line in 165e7335c6, electra pointer dropped."
+                  }
+                ]
+              }
+            },
+            {
+              "isResolved": true,
+              "isOutdated": true,
+              "comments": {
+                "nodes": [
+                  {
+                    "databaseId": 4478098632,
+                    "author": {
+                      "login": "lodekeeper"
+                    },
+                    "body": "\ud83d\udfe2 This restates the guard. The comment above it, about sending the request before newPayload, now sits on an early return that sends nothing. I'd make the guard the first statement of `triggerGetBlobs` and move that comment down to the `getDataColumnSidecarsFromExecution` call.\n\n```suggestion\n```"
+                  },
+                  {
+                    "databaseId": 4479922905,
+                    "author": {
+                      "login": "ensi321"
+                    },
+                    "body": "Done in 165e7335c6: the guard is the first statement of triggerGetBlobs and the comment now sits on the engine call."
+                  }
+                ]
+              }
+            },
+            {
+              "isResolved": true,
+              "isOutdated": true,
+              "comments": {
+                "nodes": [
+                  {
+                    "databaseId": 4478098654,
+                    "author": {
+                      "login": "lodekeeper"
+                    },
+                    "body": "\ud83d\udfe2 The `deneb.BeaconBlockBody` cast is only safe because of the `isBlockInputNoData` return above. `getBlobKzgCommitments` from `util/dataColumns.ts` already knows where commitments live per fork, including the gloas bid:\n\n```suggestion\n  const versionedHashes = isForkPostDeneb(fork)\n    ? getBlobKzgCommitments(fork, block as SignedBeaconBlock<ForkPostDeneb>).map(kzgCommitmentToVersionedHash)\n    : undefined;\n```"
+                  },
+                  {
+                    "databaseId": 4479923601,
+                    "author": {
+                      "login": "ensi321"
+                    },
+                    "body": "Applied in 165e7335c6."
+                  }
+                ]
+              }
+            },
+            {
+              "isResolved": true,
+              "isOutdated": true,
+              "comments": {
+                "nodes": [
+                  {
+                    "databaseId": 4478098673,
+                    "author": {
+                      "login": "lodekeeper"
+                    },
+                    "body": "\ud83d\udfe2 Restates the function name. AGENTS.md defaults to no comment here.\n\n```suggestion\n```"
+                  },
+                  {
+                    "databaseId": 4479924277,
+                    "author": {
+                      "login": "ensi321"
+                    },
+                    "body": "Removed in 165e7335c6."
+                  }
+                ]
+              }
+            },
+            {
+              "isResolved": true,
+              "isOutdated": true,
+              "comments": {
+                "nodes": [
+                  {
+                    "databaseId": 4478098687,
+                    "author": {
+                      "login": "lodekeeper"
+                    },
+                    "body": "\ud83d\udfe2 This PR rewrites this line but keeps the em dash, which AGENTS.md rules out.\n\n```suggestion\n    // Seed seenPayloadEnvelopeInputCache the instant we have the block, before any\n    // later step can throw and abort the batch. Otherwise a gloas block would sit in\n```"
+                  },
+                  {
+                    "databaseId": 4479924873,
+                    "author": {
+                      "login": "ensi321"
+                    },
+                    "body": "Replaced in 165e7335c6."
+                  }
+                ]
+              }
+            },
+            {
+              "isResolved": false,
+              "isOutdated": true,
+              "comments": {
+                "nodes": [
+                  {
+                    "databaseId": 4480655180,
+                    "author": {
+                      "login": "nflaig"
+                    },
+                    "body": "should just plain reject for pre-fulu"
+                  },
+                  {
+                    "databaseId": 4480806631,
+                    "author": {
+                      "login": "ensi321"
+                    },
+                    "body": "Agreed. The sims (multiFork, mixedClient) still publish electra blocks, so a plain reject needs them on fulu first. Opened #10558 to move them post-fulu. Once that lands I'll merge unstable here and switch this to a plain pre-fulu throw."
+                  },
+                  {
+                    "databaseId": 4539287056,
+                    "author": {
+                      "login": "nflaig"
+                    },
+                    "body": "@ensi321 we can do this now with 10558 merged"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}

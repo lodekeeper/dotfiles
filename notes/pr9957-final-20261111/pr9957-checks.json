@@ -1,0 +1,494 @@
+{
+  "statusCheckRollup": [
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-11T17:22:29Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/ChainSafe/lodestar/actions/runs/43067490853/job/130686220584",
+      "name": "check-specrefs",
+      "startedAt": "2026-11-11T17:22:15Z",
+      "status": "COMPLETED",
+      "workflowName": "Check Spec References"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-11T17:26:19Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/ChainSafe/lodestar/actions/runs/43067490724/job/130686220011",
+      "name": "Docs spellcheck",
+      "startedAt": "2026-11-11T17:22:15Z",
+      "status": "COMPLETED",
+      "workflowName": "Check docs"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-11T17:24:07Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/ChainSafe/lodestar/actions/runs/43067490747/job/130686220417",
+      "name": "Analyze (javascript)",
+      "startedAt": "2026-11-11T17:22:20Z",
+      "status": "COMPLETED",
+      "workflowName": "CodeQL"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-11T17:22:21Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/ChainSafe/lodestar/actions/runs/43067486990/job/130686212544",
+      "name": "Validate PR title",
+      "startedAt": "2026-11-11T17:22:16Z",
+      "status": "COMPLETED",
+      "workflowName": "Lint PR title"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-11T17:23:22Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/ChainSafe/lodestar/actions/runs/43067490810/job/130686221313",
+      "name": "Build",
+      "startedAt": "2026-11-11T17:22:20Z",
+      "status": "COMPLETED",
+      "workflowName": "Sim tests"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-11T17:24:30Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/ChainSafe/lodestar/actions/runs/43067490726/job/130686220525",
+      "name": "Build (24)",
+      "startedAt": "2026-11-11T17:22:22Z",
+      "status": "COMPLETED",
+      "workflowName": "Tests"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-11T17:30:49Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/ChainSafe/lodestar/actions/runs/43067490810/job/130686886015",
+      "name": "Multifork sim test",
+      "startedAt": "2026-11-11T17:23:29Z",
+      "status": "COMPLETED",
+      "workflowName": "Sim tests"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-11T17:28:28Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/ChainSafe/lodestar/actions/runs/43067490726/job/130686221444",
+      "name": "Zig build and tests (ubuntu-latest)",
+      "startedAt": "2026-11-11T17:22:15Z",
+      "status": "COMPLETED",
+      "workflowName": "Tests"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-11T17:24:28Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/ChainSafe/lodestar/actions/runs/43067490726/job/130686220629",
+      "name": "Zig build and tests (ubuntu-24.04-arm)",
+      "startedAt": "2026-11-11T17:22:18Z",
+      "status": "COMPLETED",
+      "workflowName": "Tests"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-11T17:25:25Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/ChainSafe/lodestar/actions/runs/43067490726/job/130686220587",
+      "name": "Zig build and tests (macos-latest)",
+      "startedAt": "2026-11-11T17:22:15Z",
+      "status": "COMPLETED",
+      "workflowName": "Tests"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-11T17:25:30Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/ChainSafe/lodestar/actions/runs/43067490810/job/130686886622",
+      "name": "Endpoint sim tests",
+      "startedAt": "2026-11-11T17:23:34Z",
+      "status": "COMPLETED",
+      "workflowName": "Sim tests"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-11T17:27:26Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/ChainSafe/lodestar/actions/runs/43067490726/job/130686220033",
+      "name": "Zig integration tests",
+      "startedAt": "2026-11-11T17:22:15Z",
+      "status": "COMPLETED",
+      "workflowName": "Tests"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-11T17:28:13Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/ChainSafe/lodestar/actions/runs/43067490810/job/130686886111",
+      "name": "Eth backup provider sim tests",
+      "startedAt": "2026-11-11T17:23:34Z",
+      "status": "COMPLETED",
+      "workflowName": "Sim tests"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-11T17:24:49Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/ChainSafe/lodestar/actions/runs/43067490726/job/130686220903",
+      "name": "Zig spec preparation",
+      "startedAt": "2026-11-11T17:22:16Z",
+      "status": "COMPLETED",
+      "workflowName": "Tests"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-11T17:26:59Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/ChainSafe/lodestar/actions/runs/43067490810/job/130686886156",
+      "name": "Mixed clients sim tests",
+      "startedAt": "2026-11-11T17:23:28Z",
+      "status": "COMPLETED",
+      "workflowName": "Sim tests"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-11T17:25:41Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/ChainSafe/lodestar/actions/runs/43067490726/job/130686220576",
+      "name": "Zig fuzz build",
+      "startedAt": "2026-11-11T17:22:15Z",
+      "status": "COMPLETED",
+      "workflowName": "Tests"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-11T17:27:26Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/ChainSafe/lodestar/actions/runs/43067490726/job/130686222192",
+      "name": "Native platform builds",
+      "startedAt": "2026-11-11T17:22:16Z",
+      "status": "COMPLETED",
+      "workflowName": "Tests"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-11T17:25:13Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/ChainSafe/lodestar/actions/runs/43067490726/job/130687542604",
+      "name": "Lint (24)",
+      "startedAt": "2026-11-11T17:24:32Z",
+      "status": "COMPLETED",
+      "workflowName": "Tests"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-11T17:25:51Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/ChainSafe/lodestar/actions/runs/43067490726/job/130687542684",
+      "name": "Type Checks (24)",
+      "startedAt": "2026-11-11T17:24:32Z",
+      "status": "COMPLETED",
+      "workflowName": "Tests"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-11T17:35:38Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/ChainSafe/lodestar/actions/runs/43067490726/job/130687542559",
+      "name": "Unit Tests (24)",
+      "startedAt": "2026-11-11T17:24:42Z",
+      "status": "COMPLETED",
+      "workflowName": "Tests"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "0001-01-01T00:00:00Z",
+      "conclusion": "",
+      "detailsUrl": "https://github.com/ChainSafe/lodestar/actions/runs/43067490726/job/130687542588",
+      "name": "E2E Tests (24)",
+      "startedAt": "2026-11-11T17:24:40Z",
+      "status": "IN_PROGRESS",
+      "workflowName": "Tests"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-11T17:26:17Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/ChainSafe/lodestar/actions/runs/43067490726/job/130687542477",
+      "name": "Browser Tests (24)",
+      "startedAt": "2026-11-11T17:24:38Z",
+      "status": "COMPLETED",
+      "workflowName": "Tests"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "0001-01-01T00:00:00Z",
+      "conclusion": "",
+      "detailsUrl": "https://github.com/ChainSafe/lodestar/actions/runs/43067490726/job/130687542714",
+      "name": "Spec tests (24)",
+      "startedAt": "2026-11-11T17:24:42Z",
+      "status": "IN_PROGRESS",
+      "workflowName": "Tests"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-11T17:33:27Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/ChainSafe/lodestar/actions/runs/43067490726/job/130687542498",
+      "name": "Spec tests (native) (24, mainnet)",
+      "startedAt": "2026-11-11T17:24:37Z",
+      "status": "COMPLETED",
+      "workflowName": "Tests"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-11T17:26:26Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/ChainSafe/lodestar/actions/runs/43067490726/job/130687542716",
+      "name": "Native bindings tests",
+      "startedAt": "2026-11-11T17:24:41Z",
+      "status": "COMPLETED",
+      "workflowName": "Tests"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-11T17:29:38Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/ChainSafe/lodestar/actions/runs/43067490726/job/130687721759",
+      "name": "Zig spec tests (ssz generic)",
+      "startedAt": "2026-11-11T17:24:51Z",
+      "status": "COMPLETED",
+      "workflowName": "Tests"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-11T17:26:10Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/ChainSafe/lodestar/actions/runs/43067490726/job/130687721710",
+      "name": "Zig spec tests (bls)",
+      "startedAt": "2026-11-11T17:24:51Z",
+      "status": "COMPLETED",
+      "workflowName": "Tests"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-11T17:36:26Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/ChainSafe/lodestar/actions/runs/43067490726/job/130687721729",
+      "name": "Zig spec tests (SSZ static, minimal)",
+      "startedAt": "2026-11-11T17:24:52Z",
+      "status": "COMPLETED",
+      "workflowName": "Tests"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-11T17:26:29Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/ChainSafe/lodestar/actions/runs/43067490726/job/130687721869",
+      "name": "Zig spec tests (SSZ static, mainnet)",
+      "startedAt": "2026-11-11T17:24:51Z",
+      "status": "COMPLETED",
+      "workflowName": "Tests"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-11T17:28:19Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/ChainSafe/lodestar/actions/runs/43067490726/job/130687722152",
+      "name": "Zig spec tests (minimal, operations)",
+      "startedAt": "2026-11-11T17:24:51Z",
+      "status": "COMPLETED",
+      "workflowName": "Tests"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-11T17:26:23Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/ChainSafe/lodestar/actions/runs/43067490726/job/130687722154",
+      "name": "Zig spec tests (minimal, epoch_processing)",
+      "startedAt": "2026-11-11T17:24:51Z",
+      "status": "COMPLETED",
+      "workflowName": "Tests"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-11T17:26:28Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/ChainSafe/lodestar/actions/runs/43067490726/job/130687722327",
+      "name": "Zig spec tests (minimal, sanity)",
+      "startedAt": "2026-11-11T17:24:51Z",
+      "status": "COMPLETED",
+      "workflowName": "Tests"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-11T17:25:58Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/ChainSafe/lodestar/actions/runs/43067490726/job/130687722249",
+      "name": "Zig spec tests (minimal, rewards)",
+      "startedAt": "2026-11-11T17:24:51Z",
+      "status": "COMPLETED",
+      "workflowName": "Tests"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-11T17:27:52Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/ChainSafe/lodestar/actions/runs/43067490726/job/130687723130",
+      "name": "Zig spec tests (minimal, transition)",
+      "startedAt": "2026-11-11T17:24:51Z",
+      "status": "COMPLETED",
+      "workflowName": "Tests"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-11T17:28:58Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/ChainSafe/lodestar/actions/runs/43067490726/job/130687722296",
+      "name": "Zig spec tests (minimal, random)",
+      "startedAt": "2026-11-11T17:24:51Z",
+      "status": "COMPLETED",
+      "workflowName": "Tests"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-11T17:26:37Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/ChainSafe/lodestar/actions/runs/43067490726/job/130687722173",
+      "name": "Zig spec tests (minimal, fork)",
+      "startedAt": "2026-11-11T17:24:51Z",
+      "status": "COMPLETED",
+      "workflowName": "Tests"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-11T17:26:22Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/ChainSafe/lodestar/actions/runs/43067490726/job/130687722365",
+      "name": "Zig spec tests (minimal, finality)",
+      "startedAt": "2026-11-11T17:24:51Z",
+      "status": "COMPLETED",
+      "workflowName": "Tests"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-11T17:25:44Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/ChainSafe/lodestar/actions/runs/43067490726/job/130687722288",
+      "name": "Zig spec tests (minimal, merkle_proof)",
+      "startedAt": "2026-11-11T17:24:51Z",
+      "status": "COMPLETED",
+      "workflowName": "Tests"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-11T17:29:43Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/ChainSafe/lodestar/actions/runs/43067490726/job/130687722317",
+      "name": "Zig spec tests (mainnet, operations)",
+      "startedAt": "2026-11-11T17:24:51Z",
+      "status": "COMPLETED",
+      "workflowName": "Tests"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-11T17:30:01Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/ChainSafe/lodestar/actions/runs/43067490726/job/130687722409",
+      "name": "Zig spec tests (mainnet, epoch_processing)",
+      "startedAt": "2026-11-11T17:24:51Z",
+      "status": "COMPLETED",
+      "workflowName": "Tests"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-11T17:28:45Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/ChainSafe/lodestar/actions/runs/43067490726/job/130687722349",
+      "name": "Zig spec tests (mainnet, sanity)",
+      "startedAt": "2026-11-11T17:24:51Z",
+      "status": "COMPLETED",
+      "workflowName": "Tests"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-11T17:28:50Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/ChainSafe/lodestar/actions/runs/43067490726/job/130687722339",
+      "name": "Zig spec tests (mainnet, rewards)",
+      "startedAt": "2026-11-11T17:24:51Z",
+      "status": "COMPLETED",
+      "workflowName": "Tests"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-11T17:27:53Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/ChainSafe/lodestar/actions/runs/43067490726/job/130687722403",
+      "name": "Zig spec tests (mainnet, transition)",
+      "startedAt": "2026-11-11T17:24:51Z",
+      "status": "COMPLETED",
+      "workflowName": "Tests"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-11T17:29:36Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/ChainSafe/lodestar/actions/runs/43067490726/job/130687722508",
+      "name": "Zig spec tests (mainnet, random)",
+      "startedAt": "2026-11-11T17:24:52Z",
+      "status": "COMPLETED",
+      "workflowName": "Tests"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-11T17:29:04Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/ChainSafe/lodestar/actions/runs/43067490726/job/130687722426",
+      "name": "Zig spec tests (mainnet, fork)",
+      "startedAt": "2026-11-11T17:24:51Z",
+      "status": "COMPLETED",
+      "workflowName": "Tests"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-11T17:28:03Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/ChainSafe/lodestar/actions/runs/43067490726/job/130687722366",
+      "name": "Zig spec tests (mainnet, finality)",
+      "startedAt": "2026-11-11T17:24:52Z",
+      "status": "COMPLETED",
+      "workflowName": "Tests"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-11T17:28:44Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/ChainSafe/lodestar/actions/runs/43067490726/job/130687722326",
+      "name": "Zig spec tests (mainnet, merkle_proof)",
+      "startedAt": "2026-11-11T17:24:52Z",
+      "status": "COMPLETED",
+      "workflowName": "Tests"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-11T17:28:29Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/ChainSafe/lodestar/actions/runs/43067490726/job/130689201348",
+      "name": "Native portability",
+      "startedAt": "2026-11-11T17:27:28Z",
+      "status": "COMPLETED",
+      "workflowName": "Tests"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-11T17:24:02Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/ChainSafe/lodestar/runs/130687200162",
+      "name": "CodeQL",
+      "startedAt": "2026-11-11T17:23:55Z",
+      "status": "COMPLETED",
+      "workflowName": ""
+    }
+  ]
+}

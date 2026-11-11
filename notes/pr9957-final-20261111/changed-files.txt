@@ -1,0 +1,2 @@
+packages/beacon-node/test/e2e/interop/genesisState.test.ts
+packages/state-transition/src/util/genesis.ts

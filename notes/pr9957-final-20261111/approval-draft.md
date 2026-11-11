@@ -1,0 +1,3 @@
+Agreed, 4161c5d563 fixes the same genesis lookahead issue as #10600 without the extra helper. The unconditional pre-Fulu publish rejection is in place, and the new genesis regression test passed in CI. [Mixed clients](https://github.com/ChainSafe/lodestar/actions/runs/43067490810/job/130686886156) and [Multifork](https://github.com/ChainSafe/lodestar/actions/runs/43067490810/job/130686886015) both ran and passed for this head. This lifts my approval hold.
+
+Small PR-description update: the deneb..electra bullet still says `publishBlockV2` accepts contents and discards blobs; it now rejects those blocks with HTTP 400.

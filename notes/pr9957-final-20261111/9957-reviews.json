@@ -1,0 +1,1178 @@
+[
+  {
+    "id": 5337844623,
+    "node_id": "PRR_kwDOCD5_Gc8AAAABPikLjw",
+    "user": {
+      "login": "chatgpt-codex-connector[bot]",
+      "id": 199175422,
+      "node_id": "BOT_kgDOC98s_g",
+      "avatar_url": "https://avatars.githubusercontent.com/in/1144995?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/chatgpt-codex-connector%5Bbot%5D",
+      "html_url": "https://github.com/apps/chatgpt-codex-connector",
+      "followers_url": "https://api.github.com/users/chatgpt-codex-connector%5Bbot%5D/followers",
+      "following_url": "https://api.github.com/users/chatgpt-codex-connector%5Bbot%5D/following{/other_user}",
+      "gists_url": "https://api.github.com/users/chatgpt-codex-connector%5Bbot%5D/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/chatgpt-codex-connector%5Bbot%5D/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/chatgpt-codex-connector%5Bbot%5D/subscriptions",
+      "organizations_url": "https://api.github.com/users/chatgpt-codex-connector%5Bbot%5D/orgs",
+      "repos_url": "https://api.github.com/users/chatgpt-codex-connector%5Bbot%5D/repos",
+      "events_url": "https://api.github.com/users/chatgpt-codex-connector%5Bbot%5D/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/chatgpt-codex-connector%5Bbot%5D/received_events",
+      "type": "Bot",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "\n### \ud83d\udca1 Codex Review\n\nHere are some automated review suggestions for this pull request.\n\n**Reviewed commit:** `ddf7800c1a`\n    \n\n<details> <summary>\u2139\ufe0f About Codex in GitHub</summary>\n<br/>\n\nCodex has been enabled to automatically review pull requests in this repo. Reviews are triggered when you\n- Open a pull request for review\n- Mark a draft as ready\n- Comment \"@codex review\".\n\nIf Codex has suggestions, it will comment; otherwise it will react with \ud83d\udc4d.\n\n\n\n\nWhen you [sign up for Codex through ChatGPT](https://openai.com/codex), Codex can also answer questions or update the PR, like \"@codex address that feedback\".\n            \n</details>",
+    "state": "COMMENTED",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/9957#pullrequestreview-5337844623",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/9957",
+    "author_association": "NONE",
+    "is_copilot_code_review": false,
+    "copilot_code_review_effort": null,
+    "_links": {
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/9957#pullrequestreview-5337844623"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/9957"
+      }
+    },
+    "submitted_at": "2026-09-28T11:24:05Z",
+    "commit_id": "ddf7800c1a551e636070a8ef1ed330c82dcf41da"
+  },
+  {
+    "id": 5391404612,
+    "node_id": "PRR_kwDOCD5_Gc8AAAABQVpORA",
+    "user": {
+      "login": "nflaig",
+      "id": 38436224,
+      "node_id": "MDQ6VXNlcjM4NDM2MjI0",
+      "avatar_url": "https://avatars.githubusercontent.com/u/38436224?u=5862a2c2438b5c9c48be6e908b07203d1b6d045d&v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/nflaig",
+      "html_url": "https://github.com/nflaig",
+      "followers_url": "https://api.github.com/users/nflaig/followers",
+      "following_url": "https://api.github.com/users/nflaig/following{/other_user}",
+      "gists_url": "https://api.github.com/users/nflaig/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/nflaig/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/nflaig/subscriptions",
+      "organizations_url": "https://api.github.com/users/nflaig/orgs",
+      "repos_url": "https://api.github.com/users/nflaig/repos",
+      "events_url": "https://api.github.com/users/nflaig/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/nflaig/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "",
+    "state": "COMMENTED",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/9957#pullrequestreview-5391404612",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/9957",
+    "author_association": "MEMBER",
+    "is_copilot_code_review": false,
+    "copilot_code_review_effort": null,
+    "_links": {
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/9957#pullrequestreview-5391404612"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/9957"
+      }
+    },
+    "submitted_at": "2026-10-02T11:49:30Z",
+    "commit_id": "ddf7800c1a551e636070a8ef1ed330c82dcf41da"
+  },
+  {
+    "id": 5391411421,
+    "node_id": "PRR_kwDOCD5_Gc8AAAABQVpo3Q",
+    "user": {
+      "login": "nflaig",
+      "id": 38436224,
+      "node_id": "MDQ6VXNlcjM4NDM2MjI0",
+      "avatar_url": "https://avatars.githubusercontent.com/u/38436224?u=5862a2c2438b5c9c48be6e908b07203d1b6d045d&v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/nflaig",
+      "html_url": "https://github.com/nflaig",
+      "followers_url": "https://api.github.com/users/nflaig/followers",
+      "following_url": "https://api.github.com/users/nflaig/following{/other_user}",
+      "gists_url": "https://api.github.com/users/nflaig/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/nflaig/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/nflaig/subscriptions",
+      "organizations_url": "https://api.github.com/users/nflaig/orgs",
+      "repos_url": "https://api.github.com/users/nflaig/repos",
+      "events_url": "https://api.github.com/users/nflaig/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/nflaig/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "I feel like this PR just needs to be deployed to a devnet node and a feat group and let AI check if there are issues with it before we review it",
+    "state": "COMMENTED",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/9957#pullrequestreview-5391411421",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/9957",
+    "author_association": "MEMBER",
+    "is_copilot_code_review": false,
+    "copilot_code_review_effort": null,
+    "_links": {
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/9957#pullrequestreview-5391411421"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/9957"
+      }
+    },
+    "submitted_at": "2026-10-02T11:50:28Z",
+    "commit_id": "ddf7800c1a551e636070a8ef1ed330c82dcf41da"
+  },
+  {
+    "id": 5526453329,
+    "node_id": "PRR_kwDOCD5_Gc8AAAABSWb8UQ",
+    "user": {
+      "login": "ensi321",
+      "id": 17676176,
+      "node_id": "MDQ6VXNlcjE3Njc2MTc2",
+      "avatar_url": "https://avatars.githubusercontent.com/u/17676176?u=565f55fc66755779ece77aad28de1bbba67bb876&v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/ensi321",
+      "html_url": "https://github.com/ensi321",
+      "followers_url": "https://api.github.com/users/ensi321/followers",
+      "following_url": "https://api.github.com/users/ensi321/following{/other_user}",
+      "gists_url": "https://api.github.com/users/ensi321/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/ensi321/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/ensi321/subscriptions",
+      "organizations_url": "https://api.github.com/users/ensi321/orgs",
+      "repos_url": "https://api.github.com/users/ensi321/repos",
+      "events_url": "https://api.github.com/users/ensi321/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/ensi321/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "",
+    "state": "COMMENTED",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/9957#pullrequestreview-5526453329",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/9957",
+    "author_association": "MEMBER",
+    "is_copilot_code_review": false,
+    "copilot_code_review_effort": null,
+    "_links": {
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/9957#pullrequestreview-5526453329"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/9957"
+      }
+    },
+    "submitted_at": "2026-10-15T00:27:16Z",
+    "commit_id": "ddf7800c1a551e636070a8ef1ed330c82dcf41da"
+  },
+  {
+    "id": 5526455279,
+    "node_id": "PRR_kwDOCD5_Gc8AAAABSWcD7w",
+    "user": {
+      "login": "ensi321",
+      "id": 17676176,
+      "node_id": "MDQ6VXNlcjE3Njc2MTc2",
+      "avatar_url": "https://avatars.githubusercontent.com/u/17676176?u=565f55fc66755779ece77aad28de1bbba67bb876&v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/ensi321",
+      "html_url": "https://github.com/ensi321",
+      "followers_url": "https://api.github.com/users/ensi321/followers",
+      "following_url": "https://api.github.com/users/ensi321/following{/other_user}",
+      "gists_url": "https://api.github.com/users/ensi321/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/ensi321/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/ensi321/subscriptions",
+      "organizations_url": "https://api.github.com/users/ensi321/orgs",
+      "repos_url": "https://api.github.com/users/ensi321/repos",
+      "events_url": "https://api.github.com/users/ensi321/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/ensi321/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "",
+    "state": "COMMENTED",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/9957#pullrequestreview-5526455279",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/9957",
+    "author_association": "MEMBER",
+    "is_copilot_code_review": false,
+    "copilot_code_review_effort": null,
+    "_links": {
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/9957#pullrequestreview-5526455279"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/9957"
+      }
+    },
+    "submitted_at": "2026-10-15T00:27:36Z",
+    "commit_id": "ddf7800c1a551e636070a8ef1ed330c82dcf41da"
+  },
+  {
+    "id": 5526533540,
+    "node_id": "PRR_kwDOCD5_Gc8AAAABSWg1pA",
+    "user": {
+      "login": "lodekeeper",
+      "id": 258435968,
+      "node_id": "U_kgDOD2drgA",
+      "avatar_url": "https://avatars.githubusercontent.com/u/258435968?u=73ea59876d1171aa491962c62c7aa27eeee7215f&v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/lodekeeper",
+      "html_url": "https://github.com/lodekeeper",
+      "followers_url": "https://api.github.com/users/lodekeeper/followers",
+      "following_url": "https://api.github.com/users/lodekeeper/following{/other_user}",
+      "gists_url": "https://api.github.com/users/lodekeeper/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/lodekeeper/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/lodekeeper/subscriptions",
+      "organizations_url": "https://api.github.com/users/lodekeeper/orgs",
+      "repos_url": "https://api.github.com/users/lodekeeper/repos",
+      "events_url": "https://api.github.com/users/lodekeeper/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/lodekeeper/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "",
+    "state": "COMMENTED",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/9957#pullrequestreview-5526533540",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/9957",
+    "author_association": "CONTRIBUTOR",
+    "is_copilot_code_review": false,
+    "copilot_code_review_effort": null,
+    "_links": {
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/9957#pullrequestreview-5526533540"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/9957"
+      }
+    },
+    "submitted_at": "2026-10-15T00:39:37Z",
+    "commit_id": "4c98359745863268deecf5b87806c09cab6646be"
+  },
+  {
+    "id": 5781060823,
+    "node_id": "PRR_kwDOCD5_Gc8AAAABWJP81w",
+    "user": {
+      "login": "wemeetagain",
+      "id": 1348242,
+      "node_id": "MDQ6VXNlcjEzNDgyNDI=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1348242?u=fa25c97ec7d5a0b51a758deef91094e97eb083d0&v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/wemeetagain",
+      "html_url": "https://github.com/wemeetagain",
+      "followers_url": "https://api.github.com/users/wemeetagain/followers",
+      "following_url": "https://api.github.com/users/wemeetagain/following{/other_user}",
+      "gists_url": "https://api.github.com/users/wemeetagain/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/wemeetagain/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/wemeetagain/subscriptions",
+      "organizations_url": "https://api.github.com/users/wemeetagain/orgs",
+      "repos_url": "https://api.github.com/users/wemeetagain/repos",
+      "events_url": "https://api.github.com/users/wemeetagain/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/wemeetagain/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "",
+    "state": "DISMISSED",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/9957#pullrequestreview-5781060823",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/9957",
+    "author_association": "MEMBER",
+    "is_copilot_code_review": false,
+    "copilot_code_review_effort": null,
+    "_links": {
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/9957#pullrequestreview-5781060823"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/9957"
+      }
+    },
+    "submitted_at": "2026-11-05T07:08:05Z",
+    "commit_id": "258d7d1ca8e6f170adc0c8c9330c07e1fd8a19c0"
+  },
+  {
+    "id": 5781450446,
+    "node_id": "PRR_kwDOCD5_Gc8AAAABWJnuzg",
+    "user": {
+      "login": "nflaig",
+      "id": 38436224,
+      "node_id": "MDQ6VXNlcjM4NDM2MjI0",
+      "avatar_url": "https://avatars.githubusercontent.com/u/38436224?u=5862a2c2438b5c9c48be6e908b07203d1b6d045d&v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/nflaig",
+      "html_url": "https://github.com/nflaig",
+      "followers_url": "https://api.github.com/users/nflaig/followers",
+      "following_url": "https://api.github.com/users/nflaig/following{/other_user}",
+      "gists_url": "https://api.github.com/users/nflaig/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/nflaig/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/nflaig/subscriptions",
+      "organizations_url": "https://api.github.com/users/nflaig/orgs",
+      "repos_url": "https://api.github.com/users/nflaig/repos",
+      "events_url": "https://api.github.com/users/nflaig/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/nflaig/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "@lodekeeper can you please review this code to see if it causes any regression for post-fulu (ie. current mainnet) or gloas, also check comments added in the pr against our agent.md policy",
+    "state": "COMMENTED",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/9957#pullrequestreview-5781450446",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/9957",
+    "author_association": "MEMBER",
+    "is_copilot_code_review": false,
+    "copilot_code_review_effort": null,
+    "_links": {
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/9957#pullrequestreview-5781450446"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/9957"
+      }
+    },
+    "submitted_at": "2026-11-05T07:57:33Z",
+    "commit_id": "258d7d1ca8e6f170adc0c8c9330c07e1fd8a19c0"
+  },
+  {
+    "id": 5781766611,
+    "node_id": "PRR_kwDOCD5_Gc8AAAABWJ7B0w",
+    "user": {
+      "login": "lodekeeper",
+      "id": 258435968,
+      "node_id": "U_kgDOD2drgA",
+      "avatar_url": "https://avatars.githubusercontent.com/u/258435968?u=73ea59876d1171aa491962c62c7aa27eeee7215f&v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/lodekeeper",
+      "html_url": "https://github.com/lodekeeper",
+      "followers_url": "https://api.github.com/users/lodekeeper/followers",
+      "following_url": "https://api.github.com/users/lodekeeper/following{/other_user}",
+      "gists_url": "https://api.github.com/users/lodekeeper/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/lodekeeper/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/lodekeeper/subscriptions",
+      "organizations_url": "https://api.github.com/users/lodekeeper/orgs",
+      "repos_url": "https://api.github.com/users/lodekeeper/repos",
+      "events_url": "https://api.github.com/users/lodekeeper/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/lodekeeper/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "No regression found for post-fulu (current mainnet) or gloas. What I checked on 258d7d1:\n\n- Fulu block inputs are still `BlockInputColumns`, and gloas still uses `BlockInputNoData` plus `PayloadEnvelopeInput`. The new `PreData` to `NotRequired` mapping in `verifyBlocksDataAvailability` only applies to deneb..electra.\n- `engine_newPayload` versioned hashes come from the same body commitments that `BlockInputColumns.getVersionedHashes()` used. Gloas returns at the `isBlockInputNoData` check before that line.\n- `publishBlockV2` computes fulu columns exactly as before, and gloas still publishes its columns with the envelope.\n- Range and by-root sync keep the column, envelope and parent-payload paths unchanged. `GetBlobsTracker` still sends fulu column inputs and gloas `PayloadEnvelopeInput` to getBlobsV2.\n- The removed req/resp protocols and gossip topics are deprecated after `FULU_FORK_EPOCH + MIN_EPOCHS_FOR_BLOB_SIDECARS_REQUESTS`. That has passed on every network in `chainConfig/networks`, gnosis and chiado included. No src references to the removed symbols remain.\n\nOne coverage caveat: `multiFork.test.ts` and `mixedClient.test.ts` still set `FULU_FORK_EPOCH: Infinity`, so those sims exercise electra, not fulu. They pass because no sim sends blob transactions.\n\nLeftovers that could go in this PR:\n- `duplicateBlobCount` and `createdByBlob` in `metrics/metrics/lodestar.ts` lost their only increment sites, and `dashboards/lodestar_beacon_chain.json` still graphs `duplicate_blob`.\n- The `PreFulu` early return in `getDataColumnSidecarsFromExecution` (`util/execution.ts`) can't be reached anymore, since its only caller now filters non-column inputs first.\n\nThe AGENTS.md comment findings are inline. `index.ts:134` and `.ethspecify.yml` already have threads.",
+    "state": "COMMENTED",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/9957#pullrequestreview-5781766611",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/9957",
+    "author_association": "CONTRIBUTOR",
+    "is_copilot_code_review": false,
+    "copilot_code_review_effort": null,
+    "_links": {
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/9957#pullrequestreview-5781766611"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/9957"
+      }
+    },
+    "submitted_at": "2026-11-05T08:19:04Z",
+    "commit_id": "258d7d1ca8e6f170adc0c8c9330c07e1fd8a19c0"
+  },
+  {
+    "id": 5781771007,
+    "node_id": "PRR_kwDOCD5_Gc8AAAABWJ7S_w",
+    "user": {
+      "login": "lodekeeper",
+      "id": 258435968,
+      "node_id": "U_kgDOD2drgA",
+      "avatar_url": "https://avatars.githubusercontent.com/u/258435968?u=73ea59876d1171aa491962c62c7aa27eeee7215f&v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/lodekeeper",
+      "html_url": "https://github.com/lodekeeper",
+      "followers_url": "https://api.github.com/users/lodekeeper/followers",
+      "following_url": "https://api.github.com/users/lodekeeper/following{/other_user}",
+      "gists_url": "https://api.github.com/users/lodekeeper/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/lodekeeper/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/lodekeeper/subscriptions",
+      "organizations_url": "https://api.github.com/users/lodekeeper/orgs",
+      "repos_url": "https://api.github.com/users/lodekeeper/repos",
+      "events_url": "https://api.github.com/users/lodekeeper/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/lodekeeper/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "",
+    "state": "COMMENTED",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/9957#pullrequestreview-5781771007",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/9957",
+    "author_association": "CONTRIBUTOR",
+    "is_copilot_code_review": false,
+    "copilot_code_review_effort": null,
+    "_links": {
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/9957#pullrequestreview-5781771007"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/9957"
+      }
+    },
+    "submitted_at": "2026-11-05T08:19:30Z",
+    "commit_id": "258d7d1ca8e6f170adc0c8c9330c07e1fd8a19c0"
+  },
+  {
+    "id": 5781771310,
+    "node_id": "PRR_kwDOCD5_Gc8AAAABWJ7ULg",
+    "user": {
+      "login": "lodekeeper",
+      "id": 258435968,
+      "node_id": "U_kgDOD2drgA",
+      "avatar_url": "https://avatars.githubusercontent.com/u/258435968?u=73ea59876d1171aa491962c62c7aa27eeee7215f&v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/lodekeeper",
+      "html_url": "https://github.com/lodekeeper",
+      "followers_url": "https://api.github.com/users/lodekeeper/followers",
+      "following_url": "https://api.github.com/users/lodekeeper/following{/other_user}",
+      "gists_url": "https://api.github.com/users/lodekeeper/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/lodekeeper/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/lodekeeper/subscriptions",
+      "organizations_url": "https://api.github.com/users/lodekeeper/orgs",
+      "repos_url": "https://api.github.com/users/lodekeeper/repos",
+      "events_url": "https://api.github.com/users/lodekeeper/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/lodekeeper/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "",
+    "state": "COMMENTED",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/9957#pullrequestreview-5781771310",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/9957",
+    "author_association": "CONTRIBUTOR",
+    "is_copilot_code_review": false,
+    "copilot_code_review_effort": null,
+    "_links": {
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/9957#pullrequestreview-5781771310"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/9957"
+      }
+    },
+    "submitted_at": "2026-11-05T08:19:32Z",
+    "commit_id": "258d7d1ca8e6f170adc0c8c9330c07e1fd8a19c0"
+  },
+  {
+    "id": 5781771585,
+    "node_id": "PRR_kwDOCD5_Gc8AAAABWJ7VQQ",
+    "user": {
+      "login": "lodekeeper",
+      "id": 258435968,
+      "node_id": "U_kgDOD2drgA",
+      "avatar_url": "https://avatars.githubusercontent.com/u/258435968?u=73ea59876d1171aa491962c62c7aa27eeee7215f&v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/lodekeeper",
+      "html_url": "https://github.com/lodekeeper",
+      "followers_url": "https://api.github.com/users/lodekeeper/followers",
+      "following_url": "https://api.github.com/users/lodekeeper/following{/other_user}",
+      "gists_url": "https://api.github.com/users/lodekeeper/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/lodekeeper/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/lodekeeper/subscriptions",
+      "organizations_url": "https://api.github.com/users/lodekeeper/orgs",
+      "repos_url": "https://api.github.com/users/lodekeeper/repos",
+      "events_url": "https://api.github.com/users/lodekeeper/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/lodekeeper/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "",
+    "state": "COMMENTED",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/9957#pullrequestreview-5781771585",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/9957",
+    "author_association": "CONTRIBUTOR",
+    "is_copilot_code_review": false,
+    "copilot_code_review_effort": null,
+    "_links": {
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/9957#pullrequestreview-5781771585"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/9957"
+      }
+    },
+    "submitted_at": "2026-11-05T08:19:34Z",
+    "commit_id": "258d7d1ca8e6f170adc0c8c9330c07e1fd8a19c0"
+  },
+  {
+    "id": 5781771909,
+    "node_id": "PRR_kwDOCD5_Gc8AAAABWJ7WhQ",
+    "user": {
+      "login": "lodekeeper",
+      "id": 258435968,
+      "node_id": "U_kgDOD2drgA",
+      "avatar_url": "https://avatars.githubusercontent.com/u/258435968?u=73ea59876d1171aa491962c62c7aa27eeee7215f&v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/lodekeeper",
+      "html_url": "https://github.com/lodekeeper",
+      "followers_url": "https://api.github.com/users/lodekeeper/followers",
+      "following_url": "https://api.github.com/users/lodekeeper/following{/other_user}",
+      "gists_url": "https://api.github.com/users/lodekeeper/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/lodekeeper/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/lodekeeper/subscriptions",
+      "organizations_url": "https://api.github.com/users/lodekeeper/orgs",
+      "repos_url": "https://api.github.com/users/lodekeeper/repos",
+      "events_url": "https://api.github.com/users/lodekeeper/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/lodekeeper/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "",
+    "state": "COMMENTED",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/9957#pullrequestreview-5781771909",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/9957",
+    "author_association": "CONTRIBUTOR",
+    "is_copilot_code_review": false,
+    "copilot_code_review_effort": null,
+    "_links": {
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/9957#pullrequestreview-5781771909"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/9957"
+      }
+    },
+    "submitted_at": "2026-11-05T08:19:36Z",
+    "commit_id": "258d7d1ca8e6f170adc0c8c9330c07e1fd8a19c0"
+  },
+  {
+    "id": 5784217221,
+    "node_id": "PRR_kwDOCD5_Gc8AAAABWMQmhQ",
+    "user": {
+      "login": "ensi321",
+      "id": 17676176,
+      "node_id": "MDQ6VXNlcjE3Njc2MTc2",
+      "avatar_url": "https://avatars.githubusercontent.com/u/17676176?u=565f55fc66755779ece77aad28de1bbba67bb876&v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/ensi321",
+      "html_url": "https://github.com/ensi321",
+      "followers_url": "https://api.github.com/users/ensi321/followers",
+      "following_url": "https://api.github.com/users/ensi321/following{/other_user}",
+      "gists_url": "https://api.github.com/users/ensi321/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/ensi321/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/ensi321/subscriptions",
+      "organizations_url": "https://api.github.com/users/ensi321/orgs",
+      "repos_url": "https://api.github.com/users/ensi321/repos",
+      "events_url": "https://api.github.com/users/ensi321/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/ensi321/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "",
+    "state": "COMMENTED",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/9957#pullrequestreview-5784217221",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/9957",
+    "author_association": "MEMBER",
+    "is_copilot_code_review": false,
+    "copilot_code_review_effort": null,
+    "_links": {
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/9957#pullrequestreview-5784217221"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/9957"
+      }
+    },
+    "submitted_at": "2026-11-05T11:34:29Z",
+    "commit_id": "165e7335c6b583ea076a3757202efbf706ca81b7"
+  },
+  {
+    "id": 5784217988,
+    "node_id": "PRR_kwDOCD5_Gc8AAAABWMQphA",
+    "user": {
+      "login": "ensi321",
+      "id": 17676176,
+      "node_id": "MDQ6VXNlcjE3Njc2MTc2",
+      "avatar_url": "https://avatars.githubusercontent.com/u/17676176?u=565f55fc66755779ece77aad28de1bbba67bb876&v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/ensi321",
+      "html_url": "https://github.com/ensi321",
+      "followers_url": "https://api.github.com/users/ensi321/followers",
+      "following_url": "https://api.github.com/users/ensi321/following{/other_user}",
+      "gists_url": "https://api.github.com/users/ensi321/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/ensi321/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/ensi321/subscriptions",
+      "organizations_url": "https://api.github.com/users/ensi321/orgs",
+      "repos_url": "https://api.github.com/users/ensi321/repos",
+      "events_url": "https://api.github.com/users/ensi321/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/ensi321/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "",
+    "state": "COMMENTED",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/9957#pullrequestreview-5784217988",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/9957",
+    "author_association": "MEMBER",
+    "is_copilot_code_review": false,
+    "copilot_code_review_effort": null,
+    "_links": {
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/9957#pullrequestreview-5784217988"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/9957"
+      }
+    },
+    "submitted_at": "2026-11-05T11:34:32Z",
+    "commit_id": "165e7335c6b583ea076a3757202efbf706ca81b7"
+  },
+  {
+    "id": 5784218809,
+    "node_id": "PRR_kwDOCD5_Gc8AAAABWMQsuQ",
+    "user": {
+      "login": "ensi321",
+      "id": 17676176,
+      "node_id": "MDQ6VXNlcjE3Njc2MTc2",
+      "avatar_url": "https://avatars.githubusercontent.com/u/17676176?u=565f55fc66755779ece77aad28de1bbba67bb876&v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/ensi321",
+      "html_url": "https://github.com/ensi321",
+      "followers_url": "https://api.github.com/users/ensi321/followers",
+      "following_url": "https://api.github.com/users/ensi321/following{/other_user}",
+      "gists_url": "https://api.github.com/users/ensi321/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/ensi321/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/ensi321/subscriptions",
+      "organizations_url": "https://api.github.com/users/ensi321/orgs",
+      "repos_url": "https://api.github.com/users/ensi321/repos",
+      "events_url": "https://api.github.com/users/ensi321/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/ensi321/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "",
+    "state": "COMMENTED",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/9957#pullrequestreview-5784218809",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/9957",
+    "author_association": "MEMBER",
+    "is_copilot_code_review": false,
+    "copilot_code_review_effort": null,
+    "_links": {
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/9957#pullrequestreview-5784218809"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/9957"
+      }
+    },
+    "submitted_at": "2026-11-05T11:34:35Z",
+    "commit_id": "165e7335c6b583ea076a3757202efbf706ca81b7"
+  },
+  {
+    "id": 5784219585,
+    "node_id": "PRR_kwDOCD5_Gc8AAAABWMQvwQ",
+    "user": {
+      "login": "ensi321",
+      "id": 17676176,
+      "node_id": "MDQ6VXNlcjE3Njc2MTc2",
+      "avatar_url": "https://avatars.githubusercontent.com/u/17676176?u=565f55fc66755779ece77aad28de1bbba67bb876&v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/ensi321",
+      "html_url": "https://github.com/ensi321",
+      "followers_url": "https://api.github.com/users/ensi321/followers",
+      "following_url": "https://api.github.com/users/ensi321/following{/other_user}",
+      "gists_url": "https://api.github.com/users/ensi321/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/ensi321/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/ensi321/subscriptions",
+      "organizations_url": "https://api.github.com/users/ensi321/orgs",
+      "repos_url": "https://api.github.com/users/ensi321/repos",
+      "events_url": "https://api.github.com/users/ensi321/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/ensi321/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "",
+    "state": "COMMENTED",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/9957#pullrequestreview-5784219585",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/9957",
+    "author_association": "MEMBER",
+    "is_copilot_code_review": false,
+    "copilot_code_review_effort": null,
+    "_links": {
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/9957#pullrequestreview-5784219585"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/9957"
+      }
+    },
+    "submitted_at": "2026-11-05T11:34:38Z",
+    "commit_id": "165e7335c6b583ea076a3757202efbf706ca81b7"
+  },
+  {
+    "id": 5784220257,
+    "node_id": "PRR_kwDOCD5_Gc8AAAABWMQyYQ",
+    "user": {
+      "login": "ensi321",
+      "id": 17676176,
+      "node_id": "MDQ6VXNlcjE3Njc2MTc2",
+      "avatar_url": "https://avatars.githubusercontent.com/u/17676176?u=565f55fc66755779ece77aad28de1bbba67bb876&v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/ensi321",
+      "html_url": "https://github.com/ensi321",
+      "followers_url": "https://api.github.com/users/ensi321/followers",
+      "following_url": "https://api.github.com/users/ensi321/following{/other_user}",
+      "gists_url": "https://api.github.com/users/ensi321/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/ensi321/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/ensi321/subscriptions",
+      "organizations_url": "https://api.github.com/users/ensi321/orgs",
+      "repos_url": "https://api.github.com/users/ensi321/repos",
+      "events_url": "https://api.github.com/users/ensi321/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/ensi321/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "",
+    "state": "COMMENTED",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/9957#pullrequestreview-5784220257",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/9957",
+    "author_association": "MEMBER",
+    "is_copilot_code_review": false,
+    "copilot_code_review_effort": null,
+    "_links": {
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/9957#pullrequestreview-5784220257"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/9957"
+      }
+    },
+    "submitted_at": "2026-11-05T11:34:40Z",
+    "commit_id": "165e7335c6b583ea076a3757202efbf706ca81b7"
+  },
+  {
+    "id": 5784220945,
+    "node_id": "PRR_kwDOCD5_Gc8AAAABWMQ1EQ",
+    "user": {
+      "login": "ensi321",
+      "id": 17676176,
+      "node_id": "MDQ6VXNlcjE3Njc2MTc2",
+      "avatar_url": "https://avatars.githubusercontent.com/u/17676176?u=565f55fc66755779ece77aad28de1bbba67bb876&v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/ensi321",
+      "html_url": "https://github.com/ensi321",
+      "followers_url": "https://api.github.com/users/ensi321/followers",
+      "following_url": "https://api.github.com/users/ensi321/following{/other_user}",
+      "gists_url": "https://api.github.com/users/ensi321/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/ensi321/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/ensi321/subscriptions",
+      "organizations_url": "https://api.github.com/users/ensi321/orgs",
+      "repos_url": "https://api.github.com/users/ensi321/repos",
+      "events_url": "https://api.github.com/users/ensi321/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/ensi321/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "",
+    "state": "COMMENTED",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/9957#pullrequestreview-5784220945",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/9957",
+    "author_association": "MEMBER",
+    "is_copilot_code_review": false,
+    "copilot_code_review_effort": null,
+    "_links": {
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/9957#pullrequestreview-5784220945"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/9957"
+      }
+    },
+    "submitted_at": "2026-11-05T11:34:43Z",
+    "commit_id": "165e7335c6b583ea076a3757202efbf706ca81b7"
+  },
+  {
+    "id": 5784221666,
+    "node_id": "PRR_kwDOCD5_Gc8AAAABWMQ34g",
+    "user": {
+      "login": "ensi321",
+      "id": 17676176,
+      "node_id": "MDQ6VXNlcjE3Njc2MTc2",
+      "avatar_url": "https://avatars.githubusercontent.com/u/17676176?u=565f55fc66755779ece77aad28de1bbba67bb876&v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/ensi321",
+      "html_url": "https://github.com/ensi321",
+      "followers_url": "https://api.github.com/users/ensi321/followers",
+      "following_url": "https://api.github.com/users/ensi321/following{/other_user}",
+      "gists_url": "https://api.github.com/users/ensi321/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/ensi321/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/ensi321/subscriptions",
+      "organizations_url": "https://api.github.com/users/ensi321/orgs",
+      "repos_url": "https://api.github.com/users/ensi321/repos",
+      "events_url": "https://api.github.com/users/ensi321/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/ensi321/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "",
+    "state": "COMMENTED",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/9957#pullrequestreview-5784221666",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/9957",
+    "author_association": "MEMBER",
+    "is_copilot_code_review": false,
+    "copilot_code_review_effort": null,
+    "_links": {
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/9957#pullrequestreview-5784221666"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/9957"
+      }
+    },
+    "submitted_at": "2026-11-05T11:34:45Z",
+    "commit_id": "165e7335c6b583ea076a3757202efbf706ca81b7"
+  },
+  {
+    "id": 5784222531,
+    "node_id": "PRR_kwDOCD5_Gc8AAAABWMQ7Qw",
+    "user": {
+      "login": "ensi321",
+      "id": 17676176,
+      "node_id": "MDQ6VXNlcjE3Njc2MTc2",
+      "avatar_url": "https://avatars.githubusercontent.com/u/17676176?u=565f55fc66755779ece77aad28de1bbba67bb876&v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/ensi321",
+      "html_url": "https://github.com/ensi321",
+      "followers_url": "https://api.github.com/users/ensi321/followers",
+      "following_url": "https://api.github.com/users/ensi321/following{/other_user}",
+      "gists_url": "https://api.github.com/users/ensi321/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/ensi321/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/ensi321/subscriptions",
+      "organizations_url": "https://api.github.com/users/ensi321/orgs",
+      "repos_url": "https://api.github.com/users/ensi321/repos",
+      "events_url": "https://api.github.com/users/ensi321/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/ensi321/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "",
+    "state": "COMMENTED",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/9957#pullrequestreview-5784222531",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/9957",
+    "author_association": "MEMBER",
+    "is_copilot_code_review": false,
+    "copilot_code_review_effort": null,
+    "_links": {
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/9957#pullrequestreview-5784222531"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/9957"
+      }
+    },
+    "submitted_at": "2026-11-05T11:34:49Z",
+    "commit_id": "165e7335c6b583ea076a3757202efbf706ca81b7"
+  },
+  {
+    "id": 5784223209,
+    "node_id": "PRR_kwDOCD5_Gc8AAAABWMQ96Q",
+    "user": {
+      "login": "ensi321",
+      "id": 17676176,
+      "node_id": "MDQ6VXNlcjE3Njc2MTc2",
+      "avatar_url": "https://avatars.githubusercontent.com/u/17676176?u=565f55fc66755779ece77aad28de1bbba67bb876&v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/ensi321",
+      "html_url": "https://github.com/ensi321",
+      "followers_url": "https://api.github.com/users/ensi321/followers",
+      "following_url": "https://api.github.com/users/ensi321/following{/other_user}",
+      "gists_url": "https://api.github.com/users/ensi321/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/ensi321/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/ensi321/subscriptions",
+      "organizations_url": "https://api.github.com/users/ensi321/orgs",
+      "repos_url": "https://api.github.com/users/ensi321/repos",
+      "events_url": "https://api.github.com/users/ensi321/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/ensi321/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "",
+    "state": "COMMENTED",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/9957#pullrequestreview-5784223209",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/9957",
+    "author_association": "MEMBER",
+    "is_copilot_code_review": false,
+    "copilot_code_review_effort": null,
+    "_links": {
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/9957#pullrequestreview-5784223209"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/9957"
+      }
+    },
+    "submitted_at": "2026-11-05T11:34:51Z",
+    "commit_id": "165e7335c6b583ea076a3757202efbf706ca81b7"
+  },
+  {
+    "id": 5785209508,
+    "node_id": "PRR_kwDOCD5_Gc8AAAABWNNKpA",
+    "user": {
+      "login": "nflaig",
+      "id": 38436224,
+      "node_id": "MDQ6VXNlcjM4NDM2MjI0",
+      "avatar_url": "https://avatars.githubusercontent.com/u/38436224?u=5862a2c2438b5c9c48be6e908b07203d1b6d045d&v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/nflaig",
+      "html_url": "https://github.com/nflaig",
+      "followers_url": "https://api.github.com/users/nflaig/followers",
+      "following_url": "https://api.github.com/users/nflaig/following{/other_user}",
+      "gists_url": "https://api.github.com/users/nflaig/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/nflaig/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/nflaig/subscriptions",
+      "organizations_url": "https://api.github.com/users/nflaig/orgs",
+      "repos_url": "https://api.github.com/users/nflaig/repos",
+      "events_url": "https://api.github.com/users/nflaig/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/nflaig/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "",
+    "state": "COMMENTED",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/9957#pullrequestreview-5785209508",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/9957",
+    "author_association": "MEMBER",
+    "is_copilot_code_review": false,
+    "copilot_code_review_effort": null,
+    "_links": {
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/9957#pullrequestreview-5785209508"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/9957"
+      }
+    },
+    "submitted_at": "2026-11-05T12:52:15Z",
+    "commit_id": "7322e2da4d239c8648fce66b822369ce11c11c2f"
+  },
+  {
+    "id": 5785402300,
+    "node_id": "PRR_kwDOCD5_Gc8AAAABWNY7vA",
+    "user": {
+      "login": "ensi321",
+      "id": 17676176,
+      "node_id": "MDQ6VXNlcjE3Njc2MTc2",
+      "avatar_url": "https://avatars.githubusercontent.com/u/17676176?u=565f55fc66755779ece77aad28de1bbba67bb876&v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/ensi321",
+      "html_url": "https://github.com/ensi321",
+      "followers_url": "https://api.github.com/users/ensi321/followers",
+      "following_url": "https://api.github.com/users/ensi321/following{/other_user}",
+      "gists_url": "https://api.github.com/users/ensi321/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/ensi321/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/ensi321/subscriptions",
+      "organizations_url": "https://api.github.com/users/ensi321/orgs",
+      "repos_url": "https://api.github.com/users/ensi321/repos",
+      "events_url": "https://api.github.com/users/ensi321/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/ensi321/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "",
+    "state": "COMMENTED",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/9957#pullrequestreview-5785402300",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/9957",
+    "author_association": "MEMBER",
+    "is_copilot_code_review": false,
+    "copilot_code_review_effort": null,
+    "_links": {
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/9957#pullrequestreview-5785402300"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/9957"
+      }
+    },
+    "submitted_at": "2026-11-05T13:07:54Z",
+    "commit_id": "165e7335c6b583ea076a3757202efbf706ca81b7"
+  },
+  {
+    "id": 5793729479,
+    "node_id": "PRR_kwDOCD5_Gc8AAAABWVVLxw",
+    "user": {
+      "login": "lodekeeper",
+      "id": 258435968,
+      "node_id": "U_kgDOD2drgA",
+      "avatar_url": "https://avatars.githubusercontent.com/u/258435968?u=73ea59876d1171aa491962c62c7aa27eeee7215f&v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/lodekeeper",
+      "html_url": "https://github.com/lodekeeper",
+      "followers_url": "https://api.github.com/users/lodekeeper/followers",
+      "following_url": "https://api.github.com/users/lodekeeper/following{/other_user}",
+      "gists_url": "https://api.github.com/users/lodekeeper/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/lodekeeper/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/lodekeeper/subscriptions",
+      "organizations_url": "https://api.github.com/users/lodekeeper/orgs",
+      "repos_url": "https://api.github.com/users/lodekeeper/repos",
+      "events_url": "https://api.github.com/users/lodekeeper/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/lodekeeper/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "Rechecked at 165e7335c6. 7322e2da4d and 165e7335c6 address my four comments. The commitment-keyed pre-fulu reject, the `getBlobs` switch with computed cell proofs, and the two new publish tests look right, and the fix commits add no post-fulu or gloas regressions. CI is green apart from the shared-runner Benchmark job. I'm holding the approval until the plain pre-fulu reject from the open thread lands after #10558.",
+    "state": "COMMENTED",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/9957#pullrequestreview-5793729479",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/9957",
+    "author_association": "CONTRIBUTOR",
+    "is_copilot_code_review": false,
+    "copilot_code_review_effort": null,
+    "_links": {
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/9957#pullrequestreview-5793729479"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/9957"
+      }
+    },
+    "submitted_at": "2026-11-05T23:45:12Z",
+    "commit_id": "165e7335c6b583ea076a3757202efbf706ca81b7"
+  },
+  {
+    "id": 5859414093,
+    "node_id": "PRR_kwDOCD5_Gc8AAAABXT-QTQ",
+    "user": {
+      "login": "wemeetagain",
+      "id": 1348242,
+      "node_id": "MDQ6VXNlcjEzNDgyNDI=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1348242?u=fa25c97ec7d5a0b51a758deef91094e97eb083d0&v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/wemeetagain",
+      "html_url": "https://github.com/wemeetagain",
+      "followers_url": "https://api.github.com/users/wemeetagain/followers",
+      "following_url": "https://api.github.com/users/wemeetagain/following{/other_user}",
+      "gists_url": "https://api.github.com/users/wemeetagain/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/wemeetagain/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/wemeetagain/subscriptions",
+      "organizations_url": "https://api.github.com/users/wemeetagain/orgs",
+      "repos_url": "https://api.github.com/users/wemeetagain/repos",
+      "events_url": "https://api.github.com/users/wemeetagain/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/wemeetagain/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "",
+    "state": "DISMISSED",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/9957#pullrequestreview-5859414093",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/9957",
+    "author_association": "MEMBER",
+    "is_copilot_code_review": false,
+    "copilot_code_review_effort": null,
+    "_links": {
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/9957#pullrequestreview-5859414093"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/9957"
+      }
+    },
+    "submitted_at": "2026-11-11T13:23:05Z",
+    "commit_id": "165e7335c6b583ea076a3757202efbf706ca81b7"
+  },
+  {
+    "id": 5860536177,
+    "node_id": "PRR_kwDOCD5_Gc8AAAABXVCvcQ",
+    "user": {
+      "login": "nflaig",
+      "id": 38436224,
+      "node_id": "MDQ6VXNlcjM4NDM2MjI0",
+      "avatar_url": "https://avatars.githubusercontent.com/u/38436224?u=5862a2c2438b5c9c48be6e908b07203d1b6d045d&v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/nflaig",
+      "html_url": "https://github.com/nflaig",
+      "followers_url": "https://api.github.com/users/nflaig/followers",
+      "following_url": "https://api.github.com/users/nflaig/following{/other_user}",
+      "gists_url": "https://api.github.com/users/nflaig/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/nflaig/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/nflaig/subscriptions",
+      "organizations_url": "https://api.github.com/users/nflaig/orgs",
+      "repos_url": "https://api.github.com/users/nflaig/repos",
+      "events_url": "https://api.github.com/users/nflaig/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/nflaig/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "",
+    "state": "COMMENTED",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/9957#pullrequestreview-5860536177",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/9957",
+    "author_association": "MEMBER",
+    "is_copilot_code_review": false,
+    "copilot_code_review_effort": null,
+    "_links": {
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/9957#pullrequestreview-5860536177"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/9957"
+      }
+    },
+    "submitted_at": "2026-11-11T14:44:48Z",
+    "commit_id": "7322e2da4d239c8648fce66b822369ce11c11c2f"
+  },
+  {
+    "id": 5862458757,
+    "node_id": "PRR_kwDOCD5_Gc8AAAABXW4FhQ",
+    "user": {
+      "login": "lodekeeper",
+      "id": 258435968,
+      "node_id": "U_kgDOD2drgA",
+      "avatar_url": "https://avatars.githubusercontent.com/u/258435968?u=73ea59876d1171aa491962c62c7aa27eeee7215f&v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/lodekeeper",
+      "html_url": "https://github.com/lodekeeper",
+      "followers_url": "https://api.github.com/users/lodekeeper/followers",
+      "following_url": "https://api.github.com/users/lodekeeper/following{/other_user}",
+      "gists_url": "https://api.github.com/users/lodekeeper/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/lodekeeper/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/lodekeeper/subscriptions",
+      "organizations_url": "https://api.github.com/users/lodekeeper/orgs",
+      "repos_url": "https://api.github.com/users/lodekeeper/repos",
+      "events_url": "https://api.github.com/users/lodekeeper/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/lodekeeper/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "The plain pre-fulu reject in 788f6be2af looks right, and moving the sims and e2e configs to fulu at genesis is what it needs.\n\nThe failing Mixed clients sim is real, but the cause isn't in this PR's code. Moving the sim to `FULU_FORK_EPOCH: 0` exposes a genesis bug: Lodestar's `initializeBeaconStateFromEth1` never sets `proposer_lookahead`, so a fulu-at-genesis state keeps it all zeros. The pyspec genesis helper (`create_genesis_state`) does set it, via `initialize_proposer_lookahead`. In the sim artifacts, the Lodestar beacon prepares and produces every slot of epochs 0-1 with `proposerIndex=0`. Lighthouse rejects those blocks with `IncorrectBlockProposer { block: 0, local_shuffling: 23 }` (slot 1) and `44` (slot 2). Peers drop and the heads diverge from slot 2. Unstable still passes this sim with fulu at epoch 1, because `upgradeStateToFulu` initializes the lookahead.\n\nLodestar-only sims don't notice, since every node reads the same zeros. I'll open a separate fix for the genesis lookahead and link it here.",
+    "state": "COMMENTED",
+    "html_url": "https://github.com/ChainSafe/lodestar/pull/9957#pullrequestreview-5862458757",
+    "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/9957",
+    "author_association": "CONTRIBUTOR",
+    "is_copilot_code_review": false,
+    "copilot_code_review_effort": null,
+    "_links": {
+      "html": {
+        "href": "https://github.com/ChainSafe/lodestar/pull/9957#pullrequestreview-5862458757"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/9957"
+      }
+    },
+    "submitted_at": "2026-11-11T17:03:13Z",
+    "commit_id": "788f6be2af1d61268eebe6759d3fb31101e491c0"
+  }
+]

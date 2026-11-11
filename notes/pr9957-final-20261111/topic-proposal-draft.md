@@ -1,0 +1,1 @@
+#9957’s genesis fix is equivalent to #10600’s, and both Mixed clients and Multifork passed in PR CI for head `4161c5d563`. The new genesis regression test passed too. I propose closing #10600 as superseded by that commit; I’m leaving it open for now.

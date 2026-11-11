@@ -1,0 +1,116 @@
+{
+  "id": 130686886156,
+  "run_id": 43067490810,
+  "workflow_name": "Sim tests",
+  "head_branch": "nc/remove-blob-ingest",
+  "run_url": "https://api.github.com/repos/ChainSafe/lodestar/actions/runs/43067490810",
+  "run_attempt": 1,
+  "node_id": "CR_kwDOCD5_Gc8AAAAebYuhDA",
+  "head_sha": "4161c5d563c59241460c8a86c22b6609fcf7c953",
+  "url": "https://api.github.com/repos/ChainSafe/lodestar/actions/jobs/130686886156",
+  "html_url": "https://github.com/ChainSafe/lodestar/actions/runs/43067490810/job/130686886156",
+  "status": "completed",
+  "conclusion": "success",
+  "created_at": "2026-11-11T17:23:22Z",
+  "started_at": "2026-11-11T17:23:28Z",
+  "completed_at": "2026-11-11T17:26:59Z",
+  "name": "Mixed clients sim tests",
+  "steps": [
+    {
+      "name": "Set up job",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 1,
+      "started_at": "2026-11-11T17:23:29Z",
+      "completed_at": "2026-11-11T17:23:30Z"
+    },
+    {
+      "name": "Set up runner",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 2,
+      "started_at": "2026-11-11T17:23:30Z",
+      "completed_at": "2026-11-11T17:23:30Z"
+    },
+    {
+      "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 3,
+      "started_at": "2026-11-11T17:23:30Z",
+      "completed_at": "2026-11-11T17:23:32Z"
+    },
+    {
+      "name": "Run ./.github/actions/restore-build",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 4,
+      "started_at": "2026-11-11T17:23:32Z",
+      "completed_at": "2026-11-11T17:24:00Z"
+    },
+    {
+      "name": "Load env variables",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 5,
+      "started_at": "2026-11-11T17:24:00Z",
+      "completed_at": "2026-11-11T17:24:00Z"
+    },
+    {
+      "name": "Download required docker images before running tests",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 6,
+      "started_at": "2026-11-11T17:24:00Z",
+      "completed_at": "2026-11-11T17:24:06Z"
+    },
+    {
+      "name": "Sim tests mixed client",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 7,
+      "started_at": "2026-11-11T17:24:06Z",
+      "completed_at": "2026-11-11T17:26:53Z"
+    },
+    {
+      "name": "Upload debug log test files for \"packages/cli\"",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 8,
+      "started_at": "2026-11-11T17:26:53Z",
+      "completed_at": "2026-11-11T17:26:55Z"
+    },
+    {
+      "name": "Post Run ./.github/actions/restore-build",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 15,
+      "started_at": "2026-11-11T17:26:55Z",
+      "completed_at": "2026-11-11T17:26:55Z"
+    },
+    {
+      "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 16,
+      "started_at": "2026-11-11T17:26:55Z",
+      "completed_at": "2026-11-11T17:26:55Z"
+    },
+    {
+      "name": "Complete job",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 17,
+      "started_at": "2026-11-11T17:26:55Z",
+      "completed_at": "2026-11-11T17:26:55Z"
+    }
+  ],
+  "check_run_url": "https://api.github.com/repos/ChainSafe/lodestar/check-runs/130686886156",
+  "labels": [
+    "warp-ubuntu-2204-x64-4x"
+  ],
+  "runner_id": 79163,
+  "runner_name": "warp-4x-x64-w93byllp7r8puswd",
+  "runner_group_id": 1,
+  "runner_group_name": "default"
+}

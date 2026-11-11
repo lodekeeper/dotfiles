@@ -1,0 +1,42 @@
+{
+  "id": 5863027469,
+  "node_id": "PRR_kwDOCD5_Gc8AAAABXXazDQ",
+  "user": {
+    "login": "lodekeeper",
+    "id": 258435968,
+    "node_id": "U_kgDOD2drgA",
+    "avatar_url": "https://avatars.githubusercontent.com/u/258435968?u=73ea59876d1171aa491962c62c7aa27eeee7215f&v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/lodekeeper",
+    "html_url": "https://github.com/lodekeeper",
+    "followers_url": "https://api.github.com/users/lodekeeper/followers",
+    "following_url": "https://api.github.com/users/lodekeeper/following{/other_user}",
+    "gists_url": "https://api.github.com/users/lodekeeper/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/lodekeeper/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/lodekeeper/subscriptions",
+    "organizations_url": "https://api.github.com/users/lodekeeper/orgs",
+    "repos_url": "https://api.github.com/users/lodekeeper/repos",
+    "events_url": "https://api.github.com/users/lodekeeper/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/lodekeeper/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "body": "Agreed, 4161c5d563 fixes the same genesis lookahead issue as #10600 without the extra helper. The unconditional pre-Fulu publish rejection is in place, and the new genesis regression test passed in CI. [Mixed clients](https://github.com/ChainSafe/lodestar/actions/runs/43067490810/job/130686886156) and [Multifork](https://github.com/ChainSafe/lodestar/actions/runs/43067490810/job/130686886015) both ran and passed for this head. This lifts my approval hold.\n\nSmall PR-description update: the deneb..electra bullet still says `publishBlockV2` accepts contents and discards blobs; it now rejects those blocks with HTTP 400.\n",
+  "state": "APPROVED",
+  "html_url": "https://github.com/ChainSafe/lodestar/pull/9957#pullrequestreview-5863027469",
+  "pull_request_url": "https://api.github.com/repos/ChainSafe/lodestar/pulls/9957",
+  "author_association": "CONTRIBUTOR",
+  "is_copilot_code_review": false,
+  "copilot_code_review_effort": null,
+  "_links": {
+    "html": {
+      "href": "https://github.com/ChainSafe/lodestar/pull/9957#pullrequestreview-5863027469"
+    },
+    "pull_request": {
+      "href": "https://api.github.com/repos/ChainSafe/lodestar/pulls/9957"
+    }
+  },
+  "submitted_at": "2026-11-11T17:45:25Z",
+  "commit_id": "4161c5d563c59241460c8a86c22b6609fcf7c953"
+}
