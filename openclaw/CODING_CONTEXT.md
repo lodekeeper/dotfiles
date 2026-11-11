@@ -56,6 +56,8 @@ For behavior investigations and implementation-validation claims:
 3. Run the narrowest check through the claimed target entry point. Retain the command, exit status, log, actual test counts where applicable, and the inputs/path exercised. State observed results separately from source-backed conclusions or inference. Component/caller execution and source tracing are not end-to-end runtime proof.
 4. If the claimed target path cannot run within the authorized setup, record the blocker and untested scope explicitly and qualify the conclusion. This evidence requirement does not authorize dependency installs, live maintenance or task expansion.
 
+For runtime-option or soak/benchmark claims, verify the actual launch path, relevant effective options and current process/start identity. Image/wrapper/deployment state alone is insufficient; failed/skipped tasks may leave restart handlers unapplied. Inspect only relevant non-secret settings, not broad environment dumps. If activation is unverified, qualify the result; this check grants no restart or deployment authority.
+
 ## Spec-Change Evidence
 
 For changes exercised by upstream spec fixtures, record the following in the task's tracker **while generating/installing fixtures and running tests**, before claiming spec compatibility:

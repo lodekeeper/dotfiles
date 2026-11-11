@@ -1,0 +1,16 @@
+{
+  "diff": {
+    "addedChecks": [],
+    "changedChecks": [
+      "devnetDebugging/devnetRoutingReadiness"
+    ],
+    "hasDrift": true,
+    "initialized": false,
+    "okChanged": false,
+    "optionsChanged": false,
+    "removedChecks": []
+  },
+  "hasDrift": true,
+  "stateFile": "state/autonomy-domain-preflight-health.json",
+  "status": "structured domain-preflight health drift detected: changed checks `devnetDebugging/devnetRoutingReadiness`. Proposed fix: inspect the changed preflight JSON/check output before treating unchanged rendered status text as a no-op."
+}
