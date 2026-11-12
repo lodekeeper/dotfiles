@@ -55,6 +55,8 @@ cd ~/.openclaw/workspace && python3 scripts/ci/auto_fix_flaky.py --apply
 
 If status is "clean" → reply with just the JSON output and stop.
 
+If status is "incomplete" → GitHub lookups failed even after the detector's small-page jobs fallback. Report it as an incomplete scan (never as clean), list `incompleteWorkflows` / `incompleteRuns`, and stop. Those runs were not written to the tracker, so the next scheduled run retries them; no manual retry loop. If `failures_found` output also carries `incompleteRuns` / `incompleteWorkflows`, handle the findings as usual and name the incomplete items in the final report.
+
 ## Step 1b: EL triage for every `Sim tests` finding (fixable or not)
 
 Nightly Kurtosis/EL-interop failures are triaged by the `nightly-workflow-alerts` automation, not here. Since 2026-10-09, sim tests run EL trunk images (`.env.test`: `GETH_DOCKER_IMAGE=ethereum/client-go:latest` = geth master, `NETHERMIND_DOCKER_IMAGE=nethermindeth/nethermind:master`). Read the actual values at the failed head. Nico (2026-10-09, Discord #ssz-engine-api): if a sim failure is EL-related, open an issue on the EL's repo directly.

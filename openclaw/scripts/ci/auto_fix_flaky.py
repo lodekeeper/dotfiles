@@ -105,13 +105,17 @@ def check_environment() -> dict[str, Any]:
 
 
 def gh_json(args: list[str]) -> Any:
-    """Run gh CLI and parse JSON output."""
-    result = subprocess.run(
-        ["gh"] + args,
-        capture_output=True,
-        text=True,
-        timeout=30,
-    )
+    """Run gh CLI and parse JSON output; None on error or timeout."""
+    try:
+        result = subprocess.run(
+            ["gh"] + args,
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+    except subprocess.TimeoutExpired:
+        print(f"gh error: timed out: gh {' '.join(args)}", file=sys.stderr)
+        return None
     if result.returncode != 0:
         print(f"gh error: {result.stderr.strip()}", file=sys.stderr)
         return None
@@ -149,9 +153,13 @@ def get_investigated_ids(tracker: dict[str, Any]) -> set[int]:
     return ids
 
 
-def get_failed_runs() -> list[dict[str, Any]]:
-    """Fetch recent failed runs on unstable for target workflows."""
+def get_failed_runs() -> tuple[list[dict[str, Any]], list[str]]:
+    """Fetch recent failed runs on unstable for target workflows.
+
+    Returns (failed runs, workflows whose run list could not be fetched).
+    """
     all_failed: list[dict[str, Any]] = []
+    failed_workflows: list[str] = []
 
     for wf in TARGET_WORKFLOWS:
         data = gh_json([
@@ -162,27 +170,59 @@ def get_failed_runs() -> list[dict[str, Any]]:
             "--limit", "10",
             "--json", "databaseId,name,conclusion,createdAt,status",
         ])
-        if not data:
+        if data is None:
+            failed_workflows.append(wf)
             continue
 
         for run in data:
             if run.get("conclusion") == "failure":
                 all_failed.append(run)
 
-    return all_failed
+    return all_failed, failed_workflows
 
 
-def get_failed_jobs(run_id: int) -> list[dict[str, Any]]:
-    """Get failed jobs for a run."""
+def get_jobs_paginated(run_id: int) -> list[dict[str, Any]] | None:
+    """Fallback jobs lookup with small pages; None if it also fails.
+
+    `gh run view --json jobs` requests per_page=100, which repeatedly returned HTTP 502 for
+    39-job `Tests` runs on 2026-11-11 while per_page=20 succeeded.
+    """
+    try:
+        result = subprocess.run(
+            [
+                "gh", "api", "--paginate",
+                f"repos/{REPO}/actions/runs/{run_id}/jobs?per_page=20&filter=latest",
+                "--jq", ".jobs[] | {name, conclusion}",
+            ],
+            capture_output=True,
+            text=True,
+            timeout=60,
+        )
+    except subprocess.TimeoutExpired:
+        print(f"gh error (jobs fallback, run {run_id}): timed out", file=sys.stderr)
+        return None
+    if result.returncode != 0:
+        print(f"gh error (jobs fallback, run {run_id}): {result.stderr.strip()}", file=sys.stderr)
+        return None
+    print(f"jobs fallback recovered run {run_id}", file=sys.stderr)
+    return [json.loads(line) for line in result.stdout.splitlines() if line.strip()]
+
+
+def get_failed_jobs(run_id: int) -> list[dict[str, Any]] | None:
+    """Get failed jobs for a run; None if the jobs lookup failed."""
     data = gh_json([
         "run", "view", str(run_id),
         "--repo", REPO,
         "--json", "jobs",
     ])
-    if not data or "jobs" not in data:
-        return []
+    if data and "jobs" in data:
+        jobs = data["jobs"]
+    else:
+        jobs = get_jobs_paginated(run_id)
+        if jobs is None:
+            return None
 
-    return [j for j in data["jobs"] if j.get("conclusion") == "failure"]
+    return [j for j in jobs if j.get("conclusion") == "failure"]
 
 
 def get_job_logs(run_id: int) -> str:
@@ -289,14 +329,19 @@ def open_fix_pr_for(test_file: str | None, open_prs: list[dict[str, Any]]) -> in
     return None
 
 
-def scan(apply: bool = False) -> list[dict[str, Any]]:
-    """Scan for new failures and classify them."""
+def scan(apply: bool = False) -> tuple[list[dict[str, Any]], dict[str, list[Any]]]:
+    """Scan for new failures and classify them.
+
+    Returns (findings, incomplete) where incomplete lists workflows/runs whose lookup failed.
+    Failed lookups are never written to the tracker, so the next run retries them.
+    """
     tracker = load_tracker()
     investigated = get_investigated_ids(tracker)
-    failed_runs = get_failed_runs()
+    failed_runs, incomplete_workflows = get_failed_runs()
     open_fix_prs = get_open_fix_prs()
 
     new_failures: list[dict[str, Any]] = []
+    incomplete_runs: list[int] = []
 
     for run in failed_runs:
         run_id = int(run["databaseId"])
@@ -305,6 +350,9 @@ def scan(apply: bool = False) -> list[dict[str, Any]]:
 
         # Get failed jobs
         jobs = get_failed_jobs(run_id)
+        if jobs is None:
+            incomplete_runs.append(run_id)
+            continue
         if not jobs:
             continue
 
@@ -358,7 +406,12 @@ def scan(apply: bool = False) -> list[dict[str, Any]]:
     if apply and new_failures:
         save_tracker(tracker)
 
-    return new_failures
+    incomplete: dict[str, list[Any]] = {}
+    if incomplete_workflows:
+        incomplete["incompleteWorkflows"] = incomplete_workflows
+    if incomplete_runs:
+        incomplete["incompleteRuns"] = incomplete_runs
+    return new_failures, incomplete
 
 
 def main() -> None:
@@ -389,7 +442,15 @@ def main() -> None:
 
     bail_if_github_suspended()
 
-    findings = scan(apply=args.apply)
+    findings, incomplete = scan(apply=args.apply)
+
+    if not findings and incomplete:
+        print(json.dumps({
+            "status": "incomplete",
+            "message": "GitHub lookups failed; listed workflows/runs were not classified or tracked",
+            **incomplete,
+        }, indent=2))
+        return
 
     if not findings:
         print(json.dumps({"status": "clean", "message": "No new failures on unstable"}, indent=2))
@@ -404,6 +465,7 @@ def main() -> None:
         "actionable": len(actionable),
         "skipped": len(skipped),
         "findings": findings,
+        **incomplete,
     }
     print(json.dumps(output, indent=2))
 
