@@ -1,7 +1,26 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-11-12 (202nd pass)
+> Updated: 2026-11-13 (203rd pass)
+
+---
+
+## Daily Audit Snapshot — 2026-11-13 (self-improvement-audit-daily, 03:16 UTC)
+
+### PR review
+- **Status:** Six fresh inherited-Gateway prerequisites passed. Autonomous completion still needs exact-head CI evidence, reconciliation of all findings and authorized provider delivery; source-cache readiness and saved notes are not a review verdict. Next authorized review: collect current-head CI, trace relevant event/recovery/construction paths and verify delivery. No live PR reviewed or external review posted by this audit.
+
+### CI fix
+- **Status:** Ten fresh prerequisites passed; verified lodekeeper has repositoryWriteRole=false, so upstream workflow approvals/reruns remain maintainer-owned. Implemented a concrete routing repair in scripts/ci/CRON_PROMPT.md: recover job-scoped raw evidence for logs-unavailable findings before non-fixable log-only handling. Preserve original detector provenance, use existing classification/fixability rules and all submission gates; unknown causes remain log-only. Yesterday's recovered Sim evidence demonstrates recoverability; prompt/detector inspection establishes the routing gap, not a new actionable bug. No detector scan, tracker change, CI rerun or Lodestar fix.
+
+### Spec implementation
+- **Status:** Nine fresh prerequisites passed. Dedicated source cache remains clean at 204fb4a19 with tests-history age14/14 days and generatedFixturesVerified=false. Next actual fixture task: check source suitability/freshness again and refresh if required within its scope; retain generation-time provenance, inventory, actual executed counts, relevant nonempty input coverage, initialization/upgrade paths and harness overrides. No cache refresh, fixture generation or Lodestar tests today.
+
+### Devnet debugging
+- **Status:** Seven fresh prerequisites passed; Panda advertises six sources including local-kurtosis, but no target/query was exercised. Grafana is absent in the inherited check environment. Fresh saved fleet snapshot11-12 07:13UTC has29 open/25 new-worsened keys versus25 acknowledged10-06; unacknowledged_due is not independent incident, resolution or receipt proof. Delivery repair stays owner-gated; next authorized delivery must verify receipt before acknowledgment. Today's02:18 monitor note records30 Lodestar at sampled head; attributed monitor evidence, not this audit's network re-probe. No relay/acknowledgment or fleet operation.
+
+### Audit workflow
+- **Status:** Implemented the design-approved CI evidence-routing correction as a local runbook change, not detector enforcement or a scheduler/config edit. Fresh prerequisites32/32 (PR6/CI10/spec9/devnet7;17 unique commands,15 cached reuses), not end-to-end tests or a quality verdict. No structured drift versus yesterday; persistent-baseline drift remains the already recorded local-kurtosis addition, baseline unchanged. Historical11-07 setup miss remains documented, not backfilled. Evidence: notes/autonomy-audit-2026-11-13-review.md and private memory/autonomy-audit-2026-11-13/. No install, auth/config/scheduler change, restart, source refresh, fixture generation, Lodestar code/test change, detector/tracker mutation, CI rerun, commit/push or external post.
 
 ---
 

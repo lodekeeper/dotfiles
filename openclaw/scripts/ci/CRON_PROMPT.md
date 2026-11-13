@@ -57,6 +57,21 @@ If status is "clean" → reply with just the JSON output and stop.
 
 If status is "incomplete" → GitHub lookups failed even after the detector's small-page jobs fallback. Report it as an incomplete scan (never as clean), list `incompleteWorkflows` / `incompleteRuns`, and stop. Those runs were not written to the tracker, so the next scheduled run retries them; no manual retry loop. If `failures_found` output also carries `incompleteRuns` / `incompleteWorkflows`, handle the findings as usual and name the incomplete items in the final report.
 
+## Step 1a: Recover evidence before routing `logs-unavailable` findings
+
+Do this even when `fixable: false`, before Step 1b/2/3. Empty formatted logs do not prove expiry. Identify the relevant failed, completed job for the intended run attempt from paginated jobs results:
+
+```bash
+gh api --paginate 'repos/ChainSafe/lodestar/actions/runs/<runId>/jobs?per_page=20&filter=latest' \
+  --jq '.jobs[] | {id,name,run_attempt,status,conclusion,steps,check_run_url}'
+scripts/ci/fetch-run-logs.sh <runId> --repo ChainSafe/lodestar --job-id <jobId> \
+  --output /tmp/ci-autofix-<runId>-job-<jobId>-raw.log
+```
+
+The listing selects latest jobs; if investigating an earlier attempt, obtain that attempt's jobs instead and retain its identity. The helper checks completed-job/run membership, not attempt selection. Use a distinct output path; retain `.job.json`, `.err` and unsuccessful-download diagnostics. Reconcile recovered logs with failed steps/annotations and applicable artifacts; download success or size does not establish completeness.
+
+Preserve the original detector classification and record job/attempt IDs, evidence paths and the recovery outcome in the tracker. Re-evaluate job-scoped evidence with the existing `classify_failure()` / `is_fixable()` rules and record the effective classification, fixability and rationale separately; categories remain investigation hints, not root-cause proof. Do not expand autonomous fix categories. Actionable recovered findings must pass every Step 2 gate; every Sim finding still requires Step 1b. Unknown findings remain log-only. Failed recovery means an evidence-collection blocker, not a guessed cause or speculative fix. Do not rerun `--apply` to reclassify: the run is already tracked and will be skipped.
+
 ## Step 1b: EL triage for every `Sim tests` finding (fixable or not)
 
 Nightly Kurtosis/EL-interop failures are triaged by the `nightly-workflow-alerts` automation, not here. Since 2026-10-09, sim tests run EL trunk images (`.env.test`: `GETH_DOCKER_IMAGE=ethereum/client-go:latest` = geth master, `NETHERMIND_DOCKER_IMAGE=nethermindeth/nethermind:master`). Read the actual values at the failed head. Nico (2026-10-09, Discord #ssz-engine-api): if a sim failure is EL-related, open an issue on the EL's repo directly.
@@ -70,7 +85,7 @@ Nightly Kurtosis/EL-interop failures are triaged by the `nightly-workflow-alerts
 
 ## Step 2: Act on actionable findings
 
-For each finding where `fixable: true` or `already_fixing_pr` is set:
+For each finding where `fixable: true` (including effective fixability established in Step 1a) or `already_fixing_pr` is set:
 
 1. **Establish the root cause from full logs**, not just the detector's tail/classification:
    ```bash
@@ -166,5 +181,5 @@ For each finding where `fixable: true` or `already_fixing_pr` is set:
 
 ## Step 3: Report non-actionable findings
 
-For findings where `fixable: false` AND `already_fixing_pr` is unset, just log them — no action needed. Findings with an existing-PR reference must go through the same-cause/live-state check in Step 2 instead of treating a basename match as resolved.
+For findings where `fixable: false` AND `already_fixing_pr` is unset, just log them after any required Step 1a recovery and Step 1b triage — no speculative fix. Use Step 1a's effective classification/fixability when recovery succeeded. Findings with an existing-PR reference must go through the same-cause/live-state check in Step 2 instead of treating a basename match as resolved.
 The tracker has already been updated by the detector script.
