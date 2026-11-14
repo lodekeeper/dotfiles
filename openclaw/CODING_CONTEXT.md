@@ -57,6 +57,8 @@ For behavior investigations and implementation-validation claims:
 4. Run the narrowest check through the claimed target entry point. Retain the command, exit status, log, actual test counts where applicable, and the inputs/path exercised. State observed results separately from source-backed conclusions or inference. Component/caller execution and source tracing are not end-to-end runtime proof.
 5. If the claimed target path cannot run within the authorized setup, record the blocker and untested scope explicitly and qualify the conclusion. This evidence requirement does not authorize dependency installs, live maintenance or task expansion.
 
+Before deferring a behavioral failure as pre-existing or unrelated, reproduce it on a comparable baseline through the relevant target entry point, recording both revisions/diffs, relevant inputs and execution ordering, dependency/setup differences, and observed outcomes. Identical arguments or source shape, or library-only/mock evidence, do not establish equivalent baseline behavior. If a comparable baseline is infeasible, mark attribution unverified and record the blocker; this does not authorize setup changes or unrelated fixes.
+
 For runtime-option or soak/benchmark claims, verify the actual launch path, relevant effective options and current process/start identity. Image/wrapper/deployment state alone is insufficient; failed/skipped tasks may leave restart handlers unapplied. Inspect only relevant non-secret settings, not broad environment dumps. If activation is unverified, qualify the result; this check grants no restart or deployment authority.
 
 ## Spec-Change Evidence
