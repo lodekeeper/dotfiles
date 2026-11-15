@@ -47,6 +47,10 @@ pnpm vitest run --project unit packages/<pkg>/test/unit/
 
 Do not invoke pnpm if that check fails: even `pnpm vitest` can reconcile dependencies and prune a shared virtual store. Use an independently prepared worktree-local `node_modules`/virtual store; never link another checkout's `node_modules` or `.pnpm`. Rerun the check after setup changes, immediately before package-manager use. This is an opt-in installed-directory containment check, not dependency/version readiness or protection against later pnpm config overrides; normal package symlinks and the shared content-addressed store are outside its scope. Missing or unsupported metadata needs inspection, not an install/repair attempt. For an already validated test setup, a direct local Vitest JS entrypoint avoids pnpm's reconciliation path; it does not make shared dependencies isolated.
 
+## Shared Verification Process Control
+
+For authorized local verification stops/restarts, prefer the cancellation tool using the retained task-owned job/session handle. Otherwise establish ownership from the task's launch record, verify the exact PID's current start identity, command and workdir, and recheck immediately before signalling. Matching identity alone does not prove ownership. Never choose targets through broad process-name matching, `pkill`/`killall`, or an unverified process group. Group signalling requires verified task ownership of every affected member; otherwise leave processes untouched and report the blocker. This guidance grants no additional stopping or restart authority.
+
 ## Implementation Behavior Evidence
 
 For behavior investigations and implementation-validation claims:
