@@ -1,0 +1,14 @@
+{
+  "statusCheckRollup": [
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-16T15:04:30Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/ChainSafe/lodestar/actions/runs/43892436540/job/133386946339",
+      "name": "Validate PR title",
+      "startedAt": "2026-11-16T15:04:25Z",
+      "status": "COMPLETED",
+      "workflowName": "Lint PR title"
+    }
+  ]
+}

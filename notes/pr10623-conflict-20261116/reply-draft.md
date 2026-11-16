@@ -1,0 +1,1 @@
+Merged `unstable` and resolved the conflict in 26925e224e, without force-pushing. Build, lint, type checks, all 444 state-transition unit tests, and seven TypeScript/native reproduction scenarios pass locally. GitHub now reports the branch mergeable.
