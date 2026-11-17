@@ -65,6 +65,10 @@ Before deferring a behavioral failure as pre-existing or unrelated, reproduce it
 
 For runtime-option or soak/benchmark claims, verify the actual launch path, relevant effective options and current process/start identity. Image/wrapper/deployment state alone is insufficient; failed/skipped tasks may leave restart handlers unapplied. Inspect only relevant non-secret settings, not broad environment dumps. If activation is unverified, qualify the result; this check grants no restart or deployment authority.
 
+## Upstream Merge / Conflict Resolution Evidence
+
+Before resolving an upstream merge conflict, compare the merge base, pre-merge task head and incoming upstream revision, including the upstream change's purpose. Preserve task requirements while incorporating intentional upstream changes; do not select "ours" or "theirs" mechanically. Record the resolution rationale and run narrow affected-behavior checks on the resulting merge tree, retaining its revision/diff and results. Keep earlier verification attributed to its original tree, explicitly naming relevant suites not rerun. Recheck PR title, description and test claims against the resulting diff/head. This guidance does not grant merge, push or deployment authority.
+
 ## Spec-Change Evidence
 
 For changes exercised by upstream spec fixtures, record the following in the task's tracker **while generating/installing fixtures and running tests**, before claiming spec compatibility:

@@ -1,10 +1,28 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-11-16 (206th pass)
+> Updated: 2026-11-17 (207th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-11-17 (self-improvement-audit-daily, 03:16 UTC)
+
+### PR review
+- **Status:** Six fresh inherited-Gateway prerequisites passed. Autonomous completion still needs current-head CI, findings reconciled against code and comparable baseline evidence, and verified authorized provider delivery. Added merge-conflict guidance to CODING_CONTEXT.md: compare base/task/upstream intent before resolving, check affected behavior on the resulting tree and keep earlier test claims tied to their original tree. Next actual review: collect those task-specific artifacts; no live PR reviewed or verdict posted.
+
+### CI fix
+- **Status:** Ten fresh prerequisites passed; verified lodekeeper has no upstream write role, so maintainers own upstream approvals/reruns. Local/fork fixes remain possible with complete/raw-job evidence, preserved detector provenance, all-author duplicate checks, isolated dependencies and quality/review gates. Saved 11-16 evening detector evidence contains one non-target Zig integration finding, not an actionable sim/E2E/browser fix or proof all CI passed. Apply the new semantic-conflict guidance when refreshing a fix branch. No detector/tracker mutation, rerun or Lodestar patch by this audit.
+
+### Spec implementation
+- **Status:** Nine fresh prerequisites passed. Dedicated source cache remains clean at 313cbfe56, tests-history age 3/14 days, generatedFixturesVerified=false. Actual fixture work still needs generation-time provenance, inventory, executed counts, relevant valid nonempty inputs, construction/ordering coverage and harness overrides. Reconcile intentional fork changes when resolving upstream conflicts, then check the resulting tree. No refresh, fixture generation or Lodestar tests today.
+
+### Devnet debugging
+- **Status:** Seven fresh prerequisites passed, but discovery changed: Panda advertises five names; production is absent versus yesterday, confirmed by an immediate read-only resample. Other advertised names include devnets and local-kurtosis; no target/query exercised, cause or target impact established. Next relevant authorized investigation must rediscover sources and verify the actual target/query instead of assuming production exists. Grafana is absent only in the inherited check environment. Saved fleet snapshot 11-16 07:13 UTC is fresh: 18 open/15 new-or-worsened keys versus 25 acknowledged 10-06; receipt remains unverified. Counts do not independently prove incidents, resolutions or non-delivery; delivery repair stays owner-gated, no auto-acknowledgment. Today 02:18 monitor note records all 30 Lodestar at/within one slot of head and four networks finalizing; attributed evidence, not this audit's network re-probe.
+
+### Audit workflow
+- **Status:** Implemented independently design-reviewed semantic three-way conflict-resolution guidance in CODING_CONTEXT.md from a saved successful merge refresh. Guidance only, not enforcement or new merge/push/deployment authority. Fresh prerequisites 32/32 (PR 6/CI 10/spec 9/devnet 7; 17 unique commands, 15 cached reuses), not end-to-end tests or a quality verdict. Structured drift versus yesterday: production disappeared from advertised Panda sources; four memory-search signatures changed only their successful first-result path. Persistent baseline also retains known local-kurtosis discovery; baseline unchanged. Historical 11-07 setup miss stays documented, not backfilled. Evidence: notes/autonomy-audit-2026-11-17-review.md and private memory/autonomy-audit-2026-11-17/. No install, auth/config/scheduler edit, restart, process signalling, source refresh, fixtures, Lodestar tests, detector/tracker mutation, CI rerun, fleet operation, commit/push or external post.
+
+---
 ## Daily Audit Snapshot — 2026-11-16 (self-improvement-audit-daily, 03:16 UTC)
 
 ### PR review
