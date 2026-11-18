@@ -1,10 +1,28 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-11-17 (207th pass)
+> Updated: 2026-11-18 (208th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-11-18 (self-improvement-audit-daily, 03:16 UTC)
+
+### PR review
+- **Status:** Six fresh inherited-Gateway prerequisites passed. Autonomous completion still needs exact-head CI, every finding reconciled against code/comparable baseline evidence and verified authorized delivery. Saved 11-17 review evidence exposed exceptional pre-validation exits missing cache cleanup; CODING_CONTEXT.md now explicitly traces acquisition-to-release ownership, synchronous throws, awaited rejections and downstream handoffs. Next actual review: collect task-specific evidence and cover relevant exceptional exits; no live PR re-review or verdict posted by this audit.
+
+### CI fix
+- **Status:** Ten fresh prerequisites passed; verified lodekeeper has no upstream write role, so maintainers own upstream approvals/reruns. Local/fork fixes still need complete/raw-job logs, preserved detector provenance, all-author duplicate checks, isolated dependencies and quality/review gates. Saved 11-17 evening detector evidence reports no new failures, not proof all CI passed. Apply the new resource-lifecycle guidance to relevant fixes; no detector/tracker mutation, rerun or Lodestar patch today.
+
+### Spec implementation
+- **Status:** Nine fresh prerequisites passed. Dedicated source cache remains clean at 313cbfe56, tests-history age4/14 days, generatedFixturesVerified=false. Actual fixture work needs generation-time provenance, inventory, executed counts, relevant valid nonempty inputs, construction/ordering coverage and harness overrides. Where lifecycle behavior changes, cover relevant exceptional exits and handoffs rather than only explicit validation failures. No source refresh, fixture generation or Lodestar tests today.
+
+### Devnet debugging
+- **Status:** Seven fresh prerequisites passed; Panda still advertises five names without production, including devnets and local-kurtosis. No actual target/query exercised: rediscover and verify the relevant target during authorized work. Grafana is absent only in the inherited check environment. Saved fleet snapshot11-17 07:13UTC is fresh:29 open/27 new-or-worsened versus25 acknowledged10-06; receipt unverified. Counts and unacknowledged_due establish neither independent incidents, resolutions nor non-delivery; delivery repair remains owner-gated, no auto-acknowledgment. Today02:18 monitor note records30 Lodestar at sampled canonical head and four networks finalizing; attributed evidence, not this audit's network re-probe.
+
+### Audit workflow
+- **Status:** Implemented independently design-reviewed cache/resource ownership and exceptional-exit guidance in CODING_CONTEXT.md, including pre-validation helper failures and preservation of legitimate downstream handoffs. Guidance only, not enforcement or new runtime proof. Fresh prerequisites32/32 (PR6/CI10/spec9/devnet7;17 unique commands,15 cached reuses), not end-to-end tests or a quality verdict. No structured drift versus yesterday; persistent-baseline drift retains previously recorded datasource and memory-search changes, baseline unchanged. Historical11-07 setup miss remains documented, not backfilled. Evidence: notes/autonomy-audit-2026-11-18-review.md and private memory/autonomy-audit-2026-11-18/. No install, auth/config/scheduler edit, restart, process signalling, source refresh, fixtures, Lodestar code/tests, detector/tracker mutation, CI rerun, fleet operation, commit/push or external post.
+
+---
 ## Daily Audit Snapshot — 2026-11-17 (self-improvement-audit-daily, 03:16 UTC)
 
 ### PR review
