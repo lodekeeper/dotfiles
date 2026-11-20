@@ -47,8 +47,9 @@ Full-text lessons through 2026-10-05: `memory/lessons-archive.md`. One line + da
 - 2026-03-18: Follow repo migration patterns before inventing types or helpers. Keep the fork's `unstable` synced before opening PRs.
 - 2026-04-26: Stamp reviewer artifacts with `Reviewed commit: <SHA>` and verify it matches HEAD.
 - 2026-10-06 → 10-26: Before opening a PR, check open PRs (deletions too) and Nico's in-flight work, build exactly the trigger asked for, and don't PR a passing suggestion from someone else's thread. For low-impact drift, ask "PR or leave it?".
-- 2026-10-12: Before approving, reconcile every open bot/inline finding against the code (#10329 approved past a valid codex P2; held since on #10412, #10454).
+- 2026-10-12: Before approving, reconcile every open bot/inline finding against the code (#10329 approved past a valid codex P2).
 - 2026-11-16: A merge conflict is a behavior question. Re-check both sides' contracts on the merged result, not the markers, and scope the PR body to checks run on that head (#10623: pubkey trust modes vs upstream's Heze gate removal).
+- 2026-11-19: Keep a temp CI trigger until every gated workflow is green on the final head. 5/6 on an older config isn't green (#10666).
 
 **Tooling & runtime**
 - 2026-02-26: Tee Oracle (and any long advisor) output to a file. Stdout doesn't survive compaction.
@@ -83,9 +84,7 @@ Full-text lessons through 2026-10-05: `memory/lessons-archive.md`. One line + da
 - 2026-04-15 / 05-14: Back spec suspicions with runtime evidence and test against exact upstream fixtures, not nightly bundles.
 - 2026-04-23: A red PR matrix is evidence to inspect (run IDs, ages, reruns), not proof of a regression.
 - 2026-06-01: Reconcile stale written markers against live processes, logs, and timestamps before chaining work. A tracker record or merged PR doesn't prove a finding resolved (11-03).
-- 2026-07-23: Distrust my own detectors. Verify both alerts and silences against structured ground truth. Raw per-job CI logs beat labels (11-03: "Vitest crash" was a port bind; a short log download was incomplete). A `pgrep -f` poll matches its own cmdline and never sees completion (11-04). A scan with lookup errors is `incomplete`, not clean (CI detector over five 502s, 11-11).
-- 2026-10-07: Claims of absence need the most evidence. Scope claims to what the source establishes (devnet-10 "never launched", story in SOUL).
-- 2026-10-09: Classify slot loss before blaming a client: orphaned vs missed vs restart vs validator keys not running (FOCIL 23741, story in IDENTITY).
+- 2026-07-23: Distrust my own detectors. Verify both alerts and silences against structured ground truth. Raw per-job CI logs beat labels (11-03: "Vitest crash" was a port bind; a short log download was incomplete). A `pgrep -f` poll matches its own cmdline and never sees completion (11-04). A scan with lookup errors is `incomplete`, not clean (CI detector over five 502s, 11-11). A watch that re-checks only known PRs misses new ones: Cayman's js-libp2p-quic#78 went unseen ~3.5h (11-19).
 - 2026-10-10: A clean spec-source cache doesn't prove the generated fixtures. Record dirty/untracked test inputs and count the fixture cases that actually ran, not skipped-suite placeholders.
 - 2026-10-12/13: Check what a benchmark measured before trusting its number: `runsFactor` normalization (native hex decode looked slow), sample duration (a 0.3s CI sample), and baseline provenance (failed runs contaminating the rolling baseline). Reproduce a flake before fixing it and keep the negative control.
 - 2026-10-18: A getter's name doesn't prove it governs the path. I relayed an unlock date from a lock getter, but exits go through a separate staker with its own timestamp. Trace the real path; enumerate sources from the on-chain registry.
@@ -108,7 +107,7 @@ Full-text lessons through 2026-10-05: `memory/lessons-archive.md`. One line + da
 - 2026-07-09: Read the source before steering a sub-session. A confident wrong "revert" undoes correct work.
 - 2026-07-16: Precedent is a hypothesis. Check whether the new case is actually mine to answer.
 - 2026-10-01: Keep "technically incompatible" separate from "subsumed / soon obsolete" (EIP-8333). Execute withdrawals in the right venue, as the verified account, with narrowly scoped rationale.
-- 2026-10-26: Park the blocker, not its payload. While an alert path is broken, relay its critical findings by hand (dev-fleet reports unposted 10-06 → 10-26).
+- 2026-11-19: Ask who can reach a path before calling a bug real. The REST API is trusted, so REST-only leaks are won't-fix, not hardening (#10605/#10606).
 - 2026-10-05: New watches get sane cadences (daily/twice-daily) and honest PRs. Ask a maintainer for `Release-As`; don't game release-please. PR review findings go inline on the PR.
 
 **Wrong-tool / destructive reflex** (summary: IDENTITY.md; verbatim synthesis: `memory/wrong-tool-reflex-synthesis.md`; counter: STATE.md + `memory/wrong-tool-reflex-log.txt`)
