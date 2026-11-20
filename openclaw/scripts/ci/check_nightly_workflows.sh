@@ -7,6 +7,7 @@
 #
 # Watched workflows (ChainSafe/lodestar, branch=unstable, event=schedule):
 #   kurtosis.yml               Kurtosis sim tests              00:00 UTC
+#   benchmark.yml              Benchmark                       01:30 UTC (filtered, see below)
 #   nightly-builder-smoke.yml  Kurtosis Builder Nightly Smoke  02:00 UTC
 #   comptests.yml              Fork-choice compliance tests    03:00 UTC
 #   engine-interop.yml         Engine API interop              04:00 UTC
@@ -19,6 +20,12 @@
 # `unstable`. Alert-worthy conclusions: failure, timed_out, startup_failure.
 # Dedup: state file keyed by workflow file -> last_alerted_run_id. A failure is
 # only reported once; a later re-run with a new run id re-triggers.
+#
+# benchmark.yml compares one sample against one baseline sample, so single benches
+# trip the threshold on unchanged code most nights. A red benchmark run is only
+# reported when a regressed bench (a "!" line) also regressed in the previous
+# scheduled run, when 3+ benches regressed at once, or when the run failed without
+# any regressed bench (build/infra failure). Other red runs are skipped silently.
 #
 # Usage:
 #   check_nightly_workflows.sh            # detect; prints NO_NEW_FAILURES or ===FAILURE=== blocks
@@ -39,6 +46,7 @@ STATE_FILE="$STATE_DIR/state.json"
 # workflow_file -> human name
 declare -A WORKFLOWS=(
   [kurtosis.yml]="Kurtosis sim tests"
+  [benchmark.yml]="Benchmark"
   [nightly-builder-smoke.yml]="Kurtosis Builder Nightly Smoke Test"
   [comptests.yml]="Fork-choice compliance tests"
   [engine-interop.yml]="Engine API interop"
@@ -46,7 +54,7 @@ declare -A WORKFLOWS=(
   [nightly-spec-tests.yml]="Nightly Spec Tests"
 )
 # Stable iteration order (matches nightly run time)
-WF_ORDER=(kurtosis.yml nightly-builder-smoke.yml comptests.yml engine-interop.yml cl-interop.yml nightly-spec-tests.yml)
+WF_ORDER=(kurtosis.yml benchmark.yml nightly-builder-smoke.yml comptests.yml engine-interop.yml cl-interop.yml nightly-spec-tests.yml)
 
 # Auto-include EL / engine interop nightlies so new ones are watched without editing this list.
 # Workflows without scheduled runs on unstable produce no output below.
@@ -122,6 +130,18 @@ fi
 # ---- detect mode -----------------------------------------------------------
 new_failures=0
 
+# Names of the benches a benchmark run flagged as regressed, one per line
+bench_failures() {
+  local job
+  job="$(gh api "repos/$REPO/actions/runs/$1/jobs" --jq '.jobs[0].id' 2>/dev/null)"
+  [ -z "$job" ] || [ "$job" = "null" ] && return 0
+  gh api "repos/$REPO/actions/jobs/$job/logs" 2>/dev/null \
+    | sed -E 's/^[0-9T:.Z-]+ //; s/\x1b\[[0-9;]*m//g' \
+    | grep -aE '^\s*! ' \
+    | sed -E 's/^\s*! //; s/ {2,}[0-9.]+ ops\/s.*$//' \
+    | sort -u
+}
+
 for wf in "${WF_ORDER[@]}"; do
   name="${WORKFLOWS[$wf]}"
 
@@ -151,6 +171,22 @@ for wf in "${WF_ORDER[@]}"; do
   created_at="$(echo "$run_json" | jq -r '.created_at')"
   html_url="$(echo "$run_json" | jq -r '.html_url')"
 
+  bench_regressed=""; bench_repeated=""; bench_prev_run=""
+  if [ "$wf" = "benchmark.yml" ]; then
+    bench_regressed="$(bench_failures "$run_id")"
+    if [ -n "$bench_regressed" ]; then
+      bench_prev_run="$(gh api "repos/$REPO/actions/workflows/$wf/runs?branch=$BRANCH&per_page=20" \
+        --jq '[.workflow_runs[] | select(.event=="schedule" and .status=="completed" and .head_branch=="'"$BRANCH"'")]
+              | sort_by(.created_at) | .[-2].id // empty' 2>/dev/null)"
+      bench_prev=""
+      [ -n "$bench_prev_run" ] && bench_prev="$(bench_failures "$bench_prev_run")"
+      bench_repeated="$(comm -12 <(printf '%s\n' "$bench_regressed") <(printf '%s\n' "$bench_prev") | grep -v '^$' || true)"
+      if [ -z "$bench_repeated" ] && [ "$(grep -c . <<< "$bench_regressed")" -lt 3 ]; then
+        continue
+      fi
+    fi
+  fi
+
   # Failed step names (first failed job) + a short error excerpt for the TL;DR.
   failed_steps="$(gh api "repos/$REPO/actions/runs/$run_id/jobs" \
     --jq '[.jobs[] | select(.conclusion=="failure") | .steps[]? | select(.conclusion=="failure") | .name] | unique | join(", ")' 2>/dev/null)"
@@ -176,6 +212,11 @@ for wf in "${WF_ORDER[@]}"; do
   printf 'conclusion: %s\n' "$conclusion"
   printf 'failed_jobs: %s\n' "${failed_jobs:-<unknown>}"
   printf 'failed_steps: %s\n' "${failed_steps:-<unknown>}"
+  if [ -n "$bench_regressed" ]; then
+    printf 'bench_regressed: %s\n' "$(paste -sd ';' <<< "$bench_regressed")"
+    printf 'bench_repeated_from_previous_run: %s\n' "$(paste -sd ';' <<< "${bench_repeated:-}")"
+    printf 'bench_previous_run_id: %s\n' "${bench_prev_run:-<none>}"
+  fi
   printf 'log_excerpt:\n%s\n' "${log_excerpt:-<none captured>}"
   printf '===END===\n'
 done
