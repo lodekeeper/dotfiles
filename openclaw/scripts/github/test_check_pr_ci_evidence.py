@@ -96,6 +96,97 @@ def verdict(fake):
 
 
 class PrCiEvidenceTests(unittest.TestCase):
+    def expect(self, fake, *names):
+        argv = ["--repo", "ChainSafe/lodestar", "--pr", "10460"]
+        for name in names:
+            argv.extend(["--expect-workflow", name])
+        return invoke(fake, argv)
+
+    def test_missing_expected_workflow_overrides_unrelated_green_or_no_ci(self):
+        for fake in (FakeGh(), FakeGh(runs=[run(1, "Unrelated", "success")]),
+                     FakeGh(checks=[ext_check(1, "Tests", "success")]),
+                     FakeGh(statuses=[{"context": "Tests", "state": "success"}])):
+            with self.subTest(runs=fake.runs, checks=fake.checks, statuses=fake.statuses):
+                rc, out = self.expect(fake, "Tests")
+                self.assertEqual((rc, out["ok"], out["verdict"]), (0, True, "insufficient_coverage"))
+                self.assertFalse(out["workflowCoverage"]["satisfied"])
+                self.assertEqual(out["workflowCoverage"]["workflows"], [
+                    {"name": "Tests", "satisfied": False, "reason": "missing", "latestRuns": []}])
+
+    def test_all_exact_expected_names_are_required_and_duplicates_are_deduplicated(self):
+        rc, out = self.expect(FakeGh(runs=[run(1, "Tests", "success"), run(2, "Interop", "success")]),
+                              "Tests", "Interop", "Tests")
+        self.assertEqual((rc, out["verdict"]), (0, "observed_green"))
+        self.assertEqual(out["workflowCoverage"]["requested"], ["Tests", "Interop"])
+        self.assertTrue(out["workflowCoverage"]["satisfied"])
+        for expected in ("tests", "Tests ", "Missing"):
+            with self.subTest(expected=expected):
+                _, out = self.expect(FakeGh(runs=[run(1, "Tests", "success")]), "Tests", expected)
+                self.assertEqual(out["verdict"], "insufficient_coverage")
+                self.assertEqual([c["satisfied"] for c in out["workflowCoverage"]["workflows"]], [True, False])
+
+    def test_skipped_or_neutral_expected_workflow_does_not_count_as_executed_success(self):
+        for conclusion in ("skipped", "neutral"):
+            with self.subTest(conclusion=conclusion):
+                _, out = self.expect(FakeGh(runs=[run(1, "Tests", conclusion),
+                                                  run(2, "Unrelated", "success")]), "Tests")
+                self.assertEqual(out["verdict"], "insufficient_coverage")
+                item = out["workflowCoverage"]["workflows"][0]
+                self.assertEqual((item["satisfied"], item["reason"]), (False, "not_successful"))
+                self.assertEqual(item["latestRuns"][0]["conclusion"], conclusion)
+
+    def test_newer_skipped_run_cannot_borrow_old_success_for_explicit_coverage(self):
+        runs = [run(1, "Tests", "success"), run(2, "Tests", "skipped")]
+        self.assertEqual(verdict(FakeGh(runs=runs)), "observed_green", "default semantics remain unchanged")
+        _, out = self.expect(FakeGh(runs=runs), "Tests")
+        self.assertEqual(out["verdict"], "insufficient_coverage")
+        self.assertEqual([r["id"] for r in out["workflowCoverage"]["workflows"][0]["latestRuns"]], [2])
+
+    def test_successful_latest_rerun_satisfies_coverage(self):
+        _, out = self.expect(FakeGh(runs=[run(1, "Tests", "failure"), run(2, "Tests", "success")]), "Tests")
+        self.assertEqual(out["verdict"], "observed_green")
+        item = out["workflowCoverage"]["workflows"][0]
+        self.assertEqual((item["satisfied"], item["reason"]), (True, "success"))
+        latest = item["latestRuns"][0]
+        self.assertEqual((latest["id"], latest["workflowId"], latest["event"], latest["attempt"]),
+                         (2, "Tests", "pull_request", 1))
+        self.assertEqual(latest["url"], "https://example.test/runs/2")
+
+    def test_non_ci_events_and_other_pr_runs_do_not_satisfy_expected_workflows(self):
+        for runs in ([run(1, "Tests", "success", event="pull_request_target")],
+                     [run(1, "Tests", "success", prs=(999,))]):
+            with self.subTest(runs=runs):
+                _, out = self.expect(FakeGh(runs=runs), "Tests")
+                self.assertEqual(out["verdict"], "insufficient_coverage")
+                self.assertEqual(out["workflowCoverage"]["workflows"][0]["reason"], "missing")
+
+    def test_one_eligible_success_satisfies_name_despite_skipped_other_event(self):
+        for event in evidence.CI_EVENTS:
+            with self.subTest(event=event):
+                other_event = "push" if event != "push" else "pull_request"
+                _, out = self.expect(FakeGh(runs=[run(1, "Tests", "success", event=event),
+                                                  run(2, "Tests", "skipped", event=other_event)]), "Tests")
+                self.assertEqual(out["verdict"], "observed_green")
+                self.assertTrue(out["workflowCoverage"]["satisfied"])
+
+    def test_expected_coverage_does_not_override_existing_blocker_precedence(self):
+        for conclusion, status, expected in (("failure", "completed", "failing"),
+                                              ("action_required", "completed", "action_required"),
+                                              (None, "in_progress", "pending"),
+                                              ("cancelled", "completed", "cancelled")):
+            with self.subTest(expected=expected):
+                _, out = self.expect(FakeGh(runs=[run(1, "Tests", conclusion, status=status)]),
+                                     "Tests", "Missing")
+                self.assertEqual(out["verdict"], expected)
+                self.assertFalse(out["workflowCoverage"]["satisfied"])
+
+    def test_explicit_expectations_add_no_requests_and_use_only_get(self):
+        plain, expected = FakeGh(runs=[run(1, "Tests", "success")]), FakeGh(runs=[run(1, "Tests", "success")])
+        invoke(plain)
+        self.expect(expected, "Tests", "Interop")
+        self.assertEqual(plain.calls, expected.calls)
+        self.assertTrue(all(c[1:4] == ["api", "--method", "GET"] for c in expected.calls))
+
     def test_approval_gated_runs_are_not_green_despite_zero_failing_checks(self):
         gated = ["Tests", "Sim tests", "Native portability", "Check Spec References", "CodeQL", "Check docs", "Benchmark"]
         lint = run(99, "Lint PR title", "success", event="pull_request_target")
@@ -327,7 +418,9 @@ class PrCiEvidenceTests(unittest.TestCase):
 
     def test_help_and_bad_args_exit_before_any_request(self):
         fake = FakeGh()
-        for argv, code in ((["--help"], 0), (["--repo", "bad", "--pr", "1"], 2), (["--repo", "a/b", "--pr", "0"], 2)):
+        for argv, code in ((["--help"], 0), (["--repo", "bad", "--pr", "1"], 2), (["--repo", "a/b", "--pr", "0"], 2),
+                           (["--repo", "a/b", "--pr", "1", "--expect-workflow", ""], 2),
+                           (["--repo", "a/b", "--pr", "1", "--expect-workflow", "  "], 2)):
             with patch.object(evidence.subprocess, "run", side_effect=fake), \
                     contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
                 with self.assertRaises(SystemExit) as ctx:

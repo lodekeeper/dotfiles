@@ -11,6 +11,10 @@ cancelled, and at least one CI item (a pull_request/push/merge_group workflow
 run, a non-Actions check run or a status context) succeeded. Skipped/neutral
 items never count as success. Required-check coverage is not evaluated
 (branch protection needs admin access), so it is not merge readiness.
+Pass --expect-workflow NAME repeatedly to require successful latest CI-event
+workflow runs with those exact names on this head. Unmet expectations yield
+`insufficient_coverage` unless an observed blocker already takes precedence.
+This checks workflow conclusions, not execution or success of every job inside.
 Exit 0 means evidence was collected; read `verdict`, it is not a green signal.
 """
 from __future__ import annotations
@@ -166,7 +170,7 @@ def suite_id(check: dict[str, Any]) -> Any:
     return suite.get("id") if isinstance(suite, dict) else None
 
 
-def collect(repo: str, pr: int, timeout_s: int) -> dict[str, Any]:
+def collect(repo: str, pr: int, timeout_s: int, expected_workflows: tuple[str, ...] = ()) -> dict[str, Any]:
     gh = shutil.which("gh")
     if not gh:
         raise CollectionError("gh executable not found")
@@ -258,6 +262,23 @@ def collect(repo: str, pr: int, timeout_s: int) -> dict[str, Any]:
     if verdict is None:
         verdict = "observed_green" if ci_success else "no_ci"
 
+    coverage = []
+    for name in dict.fromkeys(expected_workflows):
+        matches = sorted((r for r in newest_by_key.values()
+                          if r.get("name") == name and r.get("event") in CI_EVENTS),
+                         key=lambda r: r.get("id") or 0, reverse=True)
+        satisfied = any(classify_run(r.get("status"), r.get("conclusion")) == "ok" for r in matches)
+        coverage.append({
+            "name": name,
+            "satisfied": satisfied,
+            "reason": "success" if satisfied else "not_successful" if matches else "missing",
+            "latestRuns": [{"id": r.get("id"), "workflowId": r.get("workflow_id"), **run_item(r)}
+                           for r in matches],
+        })
+    coverage_satisfied = all(item["satisfied"] for item in coverage)
+    if not coverage_satisfied and verdict in ("observed_green", "no_ci"):
+        verdict = "insufficient_coverage"
+
     return {
         "ok": True,
         "repo": repo,
@@ -267,6 +288,11 @@ def collect(repo: str, pr: int, timeout_s: int) -> dict[str, Any]:
         "headRepo": (head.get("repo") or {}).get("full_name"),
         "observedAt": now_iso(),
         "verdict": verdict,
+        "workflowCoverage": {
+            "requested": [item["name"] for item in coverage],
+            "satisfied": coverage_satisfied,
+            "workflows": coverage,
+        },
         "counts": counts,
         "workflowRunsByEvent": by_event,
         "observed": {
@@ -285,6 +311,10 @@ def collect(repo: str, pr: int, timeout_s: int) -> dict[str, Any]:
             "does not hide an older executed result.",
             "Other-PR exclusion matches PR number only and only while PRs are open; fork-PR runs and runs "
             "listing several PRs sharing this head SHA cannot be separated.",
+            "Explicit workflow expectations use exact names and the latest run per workflow/event for "
+            "pull_request/push/merge_group only; an older success cannot satisfy a newer skipped run of "
+            "the same workflow/event. One eligible latest success satisfies each name. No expectations "
+            "means no coverage requirement; successful workflow conclusions do not prove job-level coverage.",
         ],
     }
 
@@ -294,7 +324,11 @@ def parse_args(argv: list[str] | None) -> argparse.Namespace:
     parser.add_argument("--repo", required=True, help="owner/repo, e.g. ChainSafe/lodestar")
     parser.add_argument("--pr", required=True, type=int, help="pull request number")
     parser.add_argument("--timeout", type=int, default=30, help="per-request timeout in seconds")
+    parser.add_argument("--expect-workflow", action="append", default=[], metavar="NAME",
+                        help="require a successful latest CI-event workflow with this exact name; repeatable")
     args = parser.parse_args(argv)
+    if any(not name.strip() for name in args.expect_workflow):
+        parser.error("--expect-workflow requires a nonblank exact workflow name")
     if (args.pr < 1 or args.timeout < 1
             or not re.fullmatch(r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+", args.repo)
             or any(part in (".", "..") for part in args.repo.split("/"))):
@@ -305,7 +339,7 @@ def parse_args(argv: list[str] | None) -> argparse.Namespace:
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
     try:
-        result = collect(args.repo, args.pr, args.timeout)
+        result = collect(args.repo, args.pr, args.timeout, tuple(args.expect_workflow))
     except CollectionError as exc:
         result = {"ok": False, "repo": args.repo, "pr": args.pr, "observedAt": now_iso(),
                   "verdict": "unknown", "error": str(exc)}

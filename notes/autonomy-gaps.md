@@ -1,7 +1,26 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-11-19 (209th pass)
+> Updated: 2026-11-20 (210th pass)
+
+---
+
+## Daily Audit Snapshot — 2026-11-20 (self-improvement-audit-daily, 03:16 UTC)
+
+### PR review
+- **Status:** Six fresh prerequisites passed. Blockers: exact-head CI, reconciled findings and authorized delivery remain task-specific; a fixed watch list can miss newly opened fixes (saved 11-19 QUIC watch miss). Next: rediscover all-author open PRs before proposing duplicate work, collect exact-head evidence and explicitly name relevant workflows with the enhanced CI helper. No new PR review or verdict posted.
+
+### CI fix
+- **Status:** Ten fresh prerequisites passed; verified lodekeeper still lacks upstream write role, so maintainers own upstream approval/reruns. Implemented optional --expect-workflow NAME in the read-only CI evidence helper: exact names, latest eligible runs, explicit insufficient_coverage for missing/non-successful expectations unless an observed blocker takes precedence. Old success cannot satisfy a newer skipped run of the same workflow/event. Next actual fix: select relevant workflow names, inspect full task-required job/suite outcomes before removing temporary triggers or claiming readiness, and retain explicit owner acceptance for any allowed red result. Workflow conclusions alone do not prove job-level coverage. Default behavior and evidence-collected exit semantics remain unchanged; no new requests or CI mutations.
+
+### Spec implementation
+- **Status:** Nine fresh prerequisites passed. Clean test-source cache313cbfe56 has tests-history age6/14 days, generatedFixturesVerified=false. Blocker: source readiness is not generated fixtures or executed implementation coverage. Next fixture task must retain generation-time provenance, inventory, actual executed counts, relevant valid nonempty/ordering paths and harness overrides; name relevant CI workflows while recording job-level exclusions separately. No source refresh, generation or Lodestar tests today.
+
+### Devnet debugging
+- **Status:** Seven fresh prerequisites passed. Panda advertises five names without production; target/query access remains unexercised, and Grafana is absent only in the inherited check environment. Saved02:18 monitor artifact has22 observed Lodestar at canonical head on three finalizing reachable networks; focil-devnet-3 health unknown after null endpoints and unavailable public health. This audit read saved evidence, not a network re-probe. Next investigation: rediscover the actual target and distinguish collection coverage from node health. Fresh saved fleet11-19 07:13UTC has46 open/45 new-or-worsened keys vs25 acknowledged10-06, receipt unverified; counts establish neither incidents/resolutions nor non-delivery. Verify underlying incidents and receipt in authorized work; delivery repair remains owner-gated, no auto-acknowledgment.
+
+### Audit workflow
+- **Status:** Implemented independently design-reviewed and code-reviewed expected-workflow CI coverage. Narrow tests38/38 (baseline29), plus live GET-only probe on #10682 at a0b1f67f9a7f: Tests expectation satisfied at03:20:34UTC; not a review, job-level coverage or merge verdict. New behavior is opt-in; existing callers must supply task-relevant names. Fresh prerequisites32/32 (PR6/CI10/spec9/devnet7;17 unique commands,15 cached reuses); no structured drift vs yesterday. Persistent baseline unchanged; historical11-07 setup miss remains documented. Evidence: notes/autonomy-audit-2026-11-20-review.md and private memory/autonomy-audit-2026-11-20/. No install, auth/config/scheduler edit, restart, source refresh, fixtures, Lodestar code/tests, detector/tracker mutation, CI rerun, fleet operation, commit/push or external post.
 
 ---
 
