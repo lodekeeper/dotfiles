@@ -1,10 +1,28 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-11-20 (210th pass)
+> Updated: 2026-11-21 (211th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-11-21 (self-improvement-audit-daily, 03:16 UTC)
+
+### PR review
+- **Status:** Six fresh prerequisites passed. Exact-head CI coverage, finding reconciliation and authorized delivery remain task-specific. Closed the handoff gap left by yesterday's helper enhancement: CODING_CONTEXT.md now invokes repeatable --expect-workflow with exact task-relevant display names and inspects workflowCoverage, including when blocker verdicts take precedence. Workflow conclusions still do not prove job/suite execution. Next actual review: rediscover all-author open PRs, select relevant expectations and reconcile every finding against current code before posting. No live PR reviewed by this audit.
+
+### CI fix
+- **Status:** Ten fresh prerequisites passed; verified lodekeeper has no upstream write role, so maintainers own upstream approval/reruns. Standard handoff now separates explicit workflow coverage from job/suite readiness and requires inspecting relevant outcomes before removing temporary CI triggers; any accepted red result needs explicit owner acceptance. Actual fixes still need complete/raw-job logs, preserved detector provenance, duplicate checks, isolated dependencies and quality/review gates. Saved 11-20 evening detector found no new failures in its deduplicated scope, not proof all CI passed. No detector/tracker change, rerun or product patch today.
+
+### Spec implementation
+- **Status:** Nine fresh prerequisites passed. Dedicated source cache 313cbfe56 remains clean, tests-history age 7/14 days, generatedFixturesVerified=false. Concrete blocker: prerequisites are not generated-fixture provenance or executed coverage. During actual work record pinned generation-time evidence, artifact inventory, executed counts, relevant valid nonempty/ordering paths and harness overrides; use task-relevant CI workflow expectations without claiming job/suite coverage. No source refresh, generation or Lodestar tests today.
+
+### Devnet debugging
+- **Status:** Seven fresh prerequisites passed. Panda advertises five datasource names without production; no actual target/query access exercised. Grafana is absent only in the inherited check environment. Today 02:18 monitor note records 22 observed Lodestar online at sampled canonical head and both Lodestar networks finalizing; attributed saved evidence, not an audit network re-probe. Fresh saved fleet 11-20 07:13 UTC has 46 open / 45 new-or-worsened keys vs 25 acknowledged 10-06; receipt unverified. Counts/unacknowledged_due establish neither independent incidents/resolutions nor non-delivery. Next authorized investigation: rediscover target/endpoints, distinguish collection from node health and verify incidents/receipt before acknowledgment. Delivery repair remains owner-gated.
+
+### Audit workflow
+- **Status:** Implemented a reviewed documentation-only CI handoff integration in CODING_CONTEXT.md; the existing helper already supports expectations, so no new script/tool was needed. Independent reviewer inspected semantics and passed 38/38 focused helper tests. Fresh inherited-Gateway prerequisites 32/32 (PR 6 / CI 10 / spec 9 / devnet 7; 17 unique commands, 15 cached reuses), not end-to-end success. No structured drift vs yesterday; persistent baseline unchanged, retaining known datasource/search-signature drift. Historical 11-07 setup miss remains documented. Evidence: notes/autonomy-audit-2026-11-21-review.md and private memory/autonomy-audit-2026-11-21/. No install, auth/config/scheduler edit, restart, source refresh, fixtures, product patch, detector/tracker mutation, CI rerun, fleet operation, commit/push or external post.
+
+---
 ## Daily Audit Snapshot — 2026-11-20 (self-improvement-audit-daily, 03:16 UTC)
 
 ### PR review
