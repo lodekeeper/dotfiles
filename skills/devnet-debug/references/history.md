@@ -12,3 +12,5 @@ Track what works and what doesn't after each use (moved out of SKILL.md 2026-10-
 
 | 2026-10-08 | glamsterdam-msf-1 Erigon pairs stalled | execution ServiceName (log.file.name absent), grouped BAL decode errors; cross-check Dora and CL logs | sustained >1h, new Discord thread1557556124171898901; exact code defect unproven |
 | 2026-10-12 | glamsterdam-devnet-8 3-day Lodestar sweep (ax41 + 16 hosted) | Loki debug lines + unknownBlock.ts read → per-column incompletePayloadEnvelope fan-out (128 fetches/root); hosted-node metrics via SSH :5054 confirm what otel (info-level) can't see; Dora slots + xatu attestations for per-CL miss/inclusion | otel_logs absence of debug-level signatures ≠ absence; Dora `/api/v1/slots` start_slot pagination ignored (use `max_slot=`); genesis 1786622400 |
+
+| 2026-11-24 04:18 UTC | pq-devnet-0 | Second2h observation: no finalized epoch last8, participation69→17%; own Lodestar/Prysm duty/API timeouts and Nimbus envelope UnviableFork/rewind384. One incident thread1574640941170565281, causal attribution unresolved. Auth healthy; execute missing sandbox0.38.8 image, bounded aggregate query-raw fallback used. |
