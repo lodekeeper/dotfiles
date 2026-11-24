@@ -17,7 +17,11 @@
     "client-development",
     "execution-dev",
     "payload-builders",
-    "ai-workflows"
+    "ai-workflows",
+    "pq-cl",
+    "pq-networking",
+    "pq-el",
+    "pq-general"
   ],
   "digestTimeWET": "08:00",
   "digestTimeUTC": "08:00",
