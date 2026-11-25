@@ -112,6 +112,12 @@ For pruning, compaction or storage-latency changes:
 3. For sentinel-based approaches, verify noncollision, range bounds, write/compact/delete ordering and cleanup. Bounds do not guarantee physical isolation: overlapping storage files may be rewritten. This guidance does not authorize live maintenance or prescribe sentinel use generally.
 4. Record comparable before/after measurements of the same operation and range, distinguishing approximate range size from total filesystem size. Report startup latency, archive progress and API sync separately; none alone proves the others recovered.
 
+## Review Suggestion Completeness
+
+Before presenting a GitHub suggestion block as apply-ready, check its effect against the current head, including required imports, types, call-site changes and test expectations outside the selected hunk. Reserve suggestion blocks for self-contained changes. If dependent edits are needed, explain the complete change in prose or provide a complete patch only within existing authorization; put illustrative snippets in ordinary code fences labeled "not apply-as-is", not UI-applicable suggestion blocks.
+
+Distinguish source-inspected completeness from an actually applied and tested patch. After a suggestion is applied or follow-up changes are pushed, verify the affected behavior/checks on the resulting head before renewing a verdict. Keep prior tests and review conclusions attributed to their original revision, and use CI Status Evidence below for current-head CI claims. This guidance grants no write or setup authority.
+
 ## CI Status Evidence
 
 When reporting PR CI status or readiness:

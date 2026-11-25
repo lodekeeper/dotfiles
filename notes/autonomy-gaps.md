@@ -1,10 +1,28 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-11-24 (214th pass)
+> Updated: 2026-11-25 (215th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-11-25 (self-improvement-audit-daily, 03:16 UTC)
+
+### PR review
+- **Status:** Six fresh prerequisites passed. Implemented self-contained review-suggestion guidance in CODING_CONTEXT.md after saved #10744 evidence: UI-applying a partial suggestion omitted required import/test edits and broke the head. Reserve suggestion blocks for self-contained changes; explain dependent edits in prose or a complete authorized patch, with illustrative snippets explicitly not apply-as-is. Exact-head verification, finding reconciliation and authorized delivery remain task-specific blockers. Next actual review: inspect the full dependency footprint and revalidate affected behavior on the resulting head; this audit reviewed no live PR.
+
+### CI fix
+- **Status:** Ten fresh prerequisites passed; verified lodekeeper has no upstream write role, so maintainers own upstream approval/reruns. Concrete fixes still need complete/raw-job logs, duplicate checks, comparable baseline/fix evidence, isolated dependencies and quality/review gates. Saved 11-24 scans reported no new failures in their deduplicated recent-run scope, not proof all CI passed. Next authorized fix: retain actual job/suite outcomes and test the complete resulting patch, including required import/test updates. No detector/tracker mutation, rerun or product patch.
+
+### Spec implementation
+- **Status:** Nine fresh prerequisites passed. Clean source cache 313cbfe56 has tests-history age 11/14 days and generatedFixturesVerified=false. Concrete blockers remain pinned generation-time provenance, artifact inventory, executed counts and coverage of relevant valid nonempty/ordering paths. Saved #10759 discussion identifies another coverage distinction: spec-runner verification settings can bypass the production batch-signature path. Next actual implementation: map runner flags and target entry points to the production path, record missing coverage and retain harness overrides; passing source-readiness checks are not fixture or batch-path proof. No source refresh, generation or Lodestar tests.
+
+### Devnet debugging
+- **Status:** Seven fresh prerequisites passed. Panda advertises five datasource names; no actual target/query or sandbox execution exercised, and Grafana is absent only in inherited checks. Saved 11-24 notes show datasource discovery did not prevent a missing sandbox-image execution failure, later repaired by another session; saved Dora guessed-route recoveries still leave helper adoption unresolved. Next authorized investigation: discover current endpoints, use the schema-driven Dora helper and establish execution/target access before relying on query results, distinguishing collection health from node health. Saved 02:18 monitor evidence reports Heze/Glamsterdam finalizing with all 22 Lodestar at sampled head; PQ finalizing but known Lodestar stalls persist. This is attributed evidence, not an audit re-probe or new incident. Fleet receipt/delivery repair remains owner-gated.
+
+### Audit workflow
+- **Status:** Implemented independently design-reviewed review-suggestion completeness guidance in the existing coding handoff: no UI-applicable partial snippets, distinguish source inspection from tested application, and revalidate changed heads under existing CI evidence rules. Documentation is not automatic enforcement. Fresh inherited-Gateway prerequisites passed 32/32 (PR 6/CI 10/spec 9/devnet 7; 17 unique commands, 15 cached reuses), not end-to-end tests. No structured drift versus yesterday; persistent baseline unchanged with known datasource/search-signature drift. Historical 11-07 setup miss remains documented. Evidence: notes/autonomy-audit-2026-11-25-review.md and private memory/autonomy-audit/2026-11-25-0316/. No install, auth/config/scheduler edit, restart, source refresh, fixture generation, product patch/tests, detector/tracker mutation, CI rerun, fleet operation, commit/push or external post.
+
+---
 ## Daily Audit Snapshot — 2026-11-24 (self-improvement-audit-daily, 03:16 UTC)
 
 ### PR review
