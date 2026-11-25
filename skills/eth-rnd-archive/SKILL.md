@@ -48,6 +48,12 @@ Configured in `config.json` (this skill directory). Only these channels are moni
 - `interop-🌃` — cross-client interop/devnet coordination (Glamsterdam devnet triage lives here). Since 2026-10-03 the archive writes this channel to `interop-_/` instead; both dirs are tracked. If another tracked channel goes silent for days, `ls -d <name>*` for a renamed sibling dir.
 - `client-development` — client team discussions
 
+### Post-Quantum
+- `pq-cl` — PQ consensus layer (pq-devnet, XMSS keys, leanVM)
+- `pq-general` — general PQ discussion
+- `pq-networking` — PQ networking
+- `pq-el` — PQ execution layer
+
 ## Thread Support
 
 Threads are stored in `_threads/` subdirectories within each channel:
