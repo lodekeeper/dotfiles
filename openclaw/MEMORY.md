@@ -50,6 +50,7 @@ Full-text lessons through 2026-10-05: `memory/lessons-archive.md`. One line + da
 - 2026-10-12: Before approving, reconcile every open bot/inline finding against the code (#10329 approved past a valid codex P2).
 - 2026-11-16: A merge conflict is a behavior question. Re-check both sides' contracts on the merged result, not the markers, and scope the PR body to checks run on that head (#10623: pubkey trust modes vs upstream's Heze gate removal).
 - 2026-11-19: Keep a temp CI trigger until every gated workflow is green on the final head. 5/6 on an older config isn't green (#10666).
+- 2026-11-24: A suggestion block must be self-contained. My #10744 one needed an import and test edits; applied from the UI it broke the head.
 
 **Tooling & runtime**
 - 2026-02-26: Tee Oracle (and any long advisor) output to a file. Stdout doesn't survive compaction.
@@ -71,7 +72,7 @@ Full-text lessons through 2026-10-05: `memory/lessons-archive.md`. One line + da
 - 2026-10-19: `--help` isn't safe on a script without argparse, because the script just runs. Read it first. `check_cron_health.py` used up recovery notices twice before the 10-20 guard.
 - 2026-10-20: pnpm 11 in a cache-linked worktree auto-reconciles and prunes the shared `.pnpm` store. Give review setups an independent virtual store and call the test entrypoint directly.
 - 2026-10-28: Worker errors cross `@chainsafe/threads` as plain `Error`s, so a code set in the worker never reaches the caller. Trace serializer and caller before asking for (or declining) structured codes (#10505).
-- 2026-10-26: Mark a superseded decision in the store automation reads (`bank/state.json`), not just in notes. A stale "LOCAL ONLY" bank fact blocked the dotfiles sync three times after Nico's 07-05 OK.
+- 2026-10-26: Mark a superseded decision in the store automation reads (`bank/state.json`), not just in notes (a stale "LOCAL ONLY" fact blocked the dotfiles sync 3x).
 - 2026-10-30: A finished turn isn't a delivered reply. A stalled background waiter failed the run pre-reply (gateway `outcome=error`); results sat undelivered ~5.5h. Check the gateway log, then post once.
 - 2026-10-30: Clear-and-retry can't converge when one unit outgrows the cap (QMD backlog archive vs the 30-min embed), and it starves the rest. Measure rate × cap before relaunching.
 - 2026-11-01: A continuity file past the read window truncates silently (STATE.md at 280 KB). Archive it byte-exact and keep the handoff ~10 KB.
@@ -84,10 +85,10 @@ Full-text lessons through 2026-10-05: `memory/lessons-archive.md`. One line + da
 - 2026-04-15 / 05-14: Back spec suspicions with runtime evidence and test against exact upstream fixtures, not nightly bundles.
 - 2026-04-23: A red PR matrix is evidence to inspect (run IDs, ages, reruns), not proof of a regression.
 - 2026-06-01: Reconcile stale written markers against live processes, logs, and timestamps before chaining work. A tracker record or merged PR doesn't prove a finding resolved (11-03).
-- 2026-07-23: Distrust my own detectors. Verify both alerts and silences against structured ground truth. Raw per-job CI logs beat labels (11-03: "Vitest crash" was a port bind; a short log download was incomplete). A `pgrep -f` poll matches its own cmdline and never sees completion (11-04). A scan with lookup errors is `incomplete`, not clean (CI detector over five 502s, 11-11). A watch that re-checks only known PRs misses new ones: Cayman's js-libp2p-quic#78 went unseen ~3.5h (11-19).
+- 2026-07-23: Distrust my own detectors. Verify both alerts and silences against structured ground truth. Raw per-job CI logs beat labels (11-03: "Vitest crash" was a port bind; a short log download was incomplete). A `pgrep -f` poll matches its own cmdline and never sees completion (11-04). A scan with lookup errors is `incomplete`, not clean (CI detector over five 502s, 11-11). A watch that re-checks only known PRs misses new ones: Cayman's js-libp2p-quic#78 went unseen ~3.5h (11-19).- 2026-11-25: "Is fix X in release Y" is `compare <mergeSha>...<tag>`, not changelog wording. Two fixes I called absent from beta.1 were tag ancestors.
 - 2026-10-10: A clean spec-source cache doesn't prove the generated fixtures. Record dirty/untracked test inputs and count the fixture cases that actually ran, not skipped-suite placeholders.
 - 2026-10-12/13: Check what a benchmark measured (normalization, sample duration, baseline provenance) before trusting its number. Reproduce a flake before fixing it; keep the negative control.
-- 2026-10-18: A getter's name doesn't prove it governs the path. I relayed an unlock date from a lock getter, but exits go through a separate staker with its own timestamp. Trace the real path; enumerate sources from the on-chain registry.
+- 2026-10-18: A getter's name doesn't prove it governs the path (an unlock date from a lock getter; exits use a separate staker). Trace the real path.
 - 2026-10-20: A local repro isn't a production root cause, and JS CPU profiles miss native (libuv/LevelDB) work. `compactRange` skips the bottom level, so a fast no-op compaction isn't disproof (Hoodi; sentinel-key compaction fixed it live 10-23).
 - 2026-10-22: An empty check list isn't green. `gh pr checks` omits workflows held at the fork-approval gate (#10460 read "no failures" with nothing run). Use `scripts/github/check-pr-ci-evidence.py`.
 - 2026-10-23: Before raising a security alert, check whether Lodestar already shipped the fix (Node2Shell was covered by v1.50.1). A runtime patched on disk doesn't patch processes started before it; compare start time with update time (10-26 Brotli check).
@@ -95,7 +96,7 @@ Full-text lessons through 2026-10-05: `memory/lessons-archive.md`. One line + da
 - 2026-10-30: A failing vector can be the runner, not production. #10490's two `*_withdrawals` cases hit an unimplemented `payload` meta key; 28/28 after the harness fix.
 - 2026-11-01: A library probe isn't a Lodestar test. Name the code path the evidence ran through. Nico had to ask before I ran the real binding.
 - 2026-11-06: Before a private security verdict, trace timer-driven paths (pollers), not just event handlers. A missed poller flipped my verdict once Nico asked about it.
-- 2026-11-08: A green play isn't live state. A failed task skips Ansible handlers, so the rerun sees no diff and never restarts (a firewall rule never reloaded). Compare the templated file with the live rule. Size stores from finished nodes, not one mid-rebuild (geth 86G → 113G).
+- 2026-11-08: A green play isn't live state: a failed task skips Ansible handlers, so the rerun never restarts. Compare the templated file with the live rule. Size stores from finished nodes (geth 86G → 113G).
 - 2026-11-10/21: Check the live runtime before reading it. Hosts with their own `NODE_OPTIONS` miss an image fix (Node 26 soak); Bun reports a Node-compat `process.version` (feat1). The newest upgrade is a suspect, not a cause: getBlobsV2's jump was #10329 moving the call.
 - 2026-11-13: "Pre-existing" needs a baseline run, not equal inputs. Same pre-state args hid that deferred BLS resolution saw concurrent cache appends; real signed batches failed only with my fix (#10623).
 - 2026-10-07: Compiler evidence beats source-review assumptions (SSZ ViewDU generic invariance). Check existing SSZ limits/decoders before adding validation.
