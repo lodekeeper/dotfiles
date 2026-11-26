@@ -1,10 +1,28 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-11-25 (215th pass)
+> Updated: 2026-11-26 (216th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-11-26 (self-improvement-audit-daily, 03:16 UTC)
+
+### PR review
+- **Status:** Implemented a read-only lint metadata/config check after saved #9046 evidence: a stale Biome and reduced config missed nine floating promises. Fresh local checks confirm the reused task worktree has installed 2.2.2 versus locked 2.6.3; the existing baseline checkout matches its own 2.2.2 lock. The helper blocks that mismatch and root-config changes, but does not execute lint or verify binary/extended-config provenance. Next actual review: use the check, run repository lint with the intended configuration, retain exact-head evidence and reconcile every finding; qualify compatibility-config runs as partial. No live PR reviewed.
+
+### CI fix
+- **Status:** Saved 11-25 detector scans reported no new failures in their deduplicated scope, not proof all CI passed. Stale local lint remains a concrete readiness blocker now mechanically detectable through the coding handoff. Next authorized fix: retain raw-job logs, check all-author duplicate work, compare baseline/fix outcomes and run the complete resulting patch with repository lint; use independent dependency directories. The previous audit's upstream write-role limitation was not refreshed here: recheck actor/permissions before any write; upstream approval/reruns remain owner-gated unless authority is established. No detector/tracker mutation or CI rerun.
+
+### Spec implementation
+- **Status:** Fresh read-only source check: cache 313cbfe56 has tests-history age 12/14 days, generatedFixturesVerified=false. This proves source readiness only, not generated provenance, fixture coverage or passing Lodestar tests. Next actual implementation: preserve generation-time revision/commands, artifact inventory, installed-fixture mapping, executed counts and harness overrides; cover relevant valid nonempty inputs and distinguish production batch paths from runner settings. No source refresh, fixture generation or product tests.
+
+### Devnet debugging
+- **Status:** Saved 02:18 monitor evidence reports Heze/Glamsterdam/PQ finalizing with all 24 Lodestar at sampled canonical head. This audit did not re-probe networks, datasource discovery or sandbox execution. Next authorized investigation: discover current endpoints, use the schema-selected Dora helper and prove query/target access before relying on results, distinguishing collection health from node health. Helper adoption and verified fleet receipt/delivery repair remain unresolved; delivery repair stays owner-gated. No new incident inferred from historical blockers.
+
+### Audit workflow
+- **Status:** Added scripts/review/check-lint-readiness.py and integrated its invocation/scope in CODING_CONTEXT.md. Ten focused tests cover matching metadata, stale versions, trimmed configs, missing/duplicate/unsupported metadata and root-versus-nested selection. Live controls return metadata_checks_passed for the matching checkout and blocked for the stale worktree, with inspected input hashes unchanged. This is an opt-in root-metadata/config guard, not automatic global enforcement or a lint/CI verdict. Evidence: notes/autonomy-audit-2026-11-26-review.md and private memory/autonomy-audit/2026-11-26-0316/. No package manager, install, auth/Gateway-config/scheduler change, restart, product patch, CI rerun, fleet operation, commit/push or external post.
+
+---
 ## Daily Audit Snapshot — 2026-11-25 (self-improvement-audit-daily, 03:16 UTC)
 
 ### PR review

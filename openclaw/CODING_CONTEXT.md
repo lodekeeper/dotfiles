@@ -33,6 +33,7 @@ pnpm build
 
 # Lint (biome — MANDATORY before every commit/push, fast check)
 # ⚠️ DO NOT commit or push without passing lint! No exceptions.
+python3 ~/.openclaw/workspace/scripts/review/check-lint-readiness.py --repo "$PWD"
 pnpm lint
 
 # Type check
@@ -46,6 +47,8 @@ pnpm vitest run --project unit packages/<pkg>/test/unit/
 ```
 
 Do not invoke pnpm if that check fails: even `pnpm vitest` can reconcile dependencies and prune a shared virtual store. Use an independently prepared worktree-local `node_modules`/virtual store; never link another checkout's `node_modules` or `.pnpm`. Rerun the check after setup changes, immediately before package-manager use. This is an opt-in installed-directory containment check, not dependency/version readiness or protection against later pnpm config overrides; normal package symlinks and the shared content-addressed store are outside its scope. Missing or unsupported metadata needs inspection, not an install/repair attempt. For an already validated test setup, a direct local Vitest JS entrypoint avoids pnpm's reconciliation path; it does not make shared dependencies isolated.
+
+Before treating local lint as repository verification, inspect the lint-readiness JSON: it compares the declared/root-lockfile Biome metadata with the installed package version and root config bytes with HEAD. A stale version, changed config or unsupported input blocks that metadata check; intentional config changes need review, not automatic reversal. A reduced/compatibility config run is partial evidence, not a repository lint pass. This read-only helper does not execute lint or verify executable provenance, extended config packages, runtime, dependency containment or full CI parity; retain the actual repository lint command/result and relevant overrides. It grants no install or repair authority.
 
 ## Shared Verification Process Control
 
