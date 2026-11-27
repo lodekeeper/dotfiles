@@ -184,7 +184,7 @@ match on the broken substring) rather than re-deleting/re-writing the whole file
    - Log to `/home/openclaw/.openclaw/workspace/memory/eth-rnd-archive-notes/YYYY-MM-DD.md`
    - If something critical (spec changes, breaking decisions, action items for Lodestar): alert Nico immediately
 3. If no tracked-channel messages changed but the repo advanced, log the no-delta result silently so freshness/staleness checks stay auditable.
-4. If no repo changes at all: still append the short hourly log entry (the job always logs). If the archive has had no new data for 24h+ (last commit date / newest JSON file date), send the one-time staleness ping defined in the hourly job payload (Discord `channel:1473573717857800356`, mentioning nixo `<@731289513942450317>`; the payload holds the exact command). Send it once per staleness event: grep the recent notes for an earlier alert first, and record the ping in that hour's log entry.
+4. If no repo changes at all: still append the short hourly log entry (the job always logs). If the archive has had no new data for 24h+ (last commit date / newest JSON file date), send the one-time staleness ping defined in the hourly job payload (Discord `channel:1473573717857800356`, mentioning Barnabas `<@412614104222531604>`, the archive maintainer since 2026-11-23 (not nixo); the payload holds the exact command). Send it once per staleness event: grep the recent notes for an earlier alert first, and record the ping in that hour's log entry.
 
 ### Daily Digest (08:00 Europe/Lisbon / 08:00 UTC while WET is active)
 1. Read the raw tracked-channel JSON for today and yesterday, main channel files and `_threads/` subdirectories (as the digest job payload prescribes)
