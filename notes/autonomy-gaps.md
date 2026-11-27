@@ -1,10 +1,28 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-11-26 (216th pass)
+> Updated: 2026-11-27 (217th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-11-27 (self-improvement-audit-daily, 03:16 UTC)
+
+### PR review
+- **Status:** Saved 11-26 review evidence distinguishes code approval from fork-gated CI and older local dependencies; neither establishes exact-lock current-head CI coverage. A later mixed-purpose revert also exposed loss of a still-applicable reviewer requirement. Next actual review: reconcile the latest owner/reviewer requirements against the resulting tree after follow-up edits, retain exact-head behavior/CI evidence and qualify local setup differences. Existing lint metadata checks still do not execute repository lint. No live PR reviewed by this audit.
+
+### CI fix
+- **Status:** Local commit inspection confirms a mixed-purpose rollback removed both API-wait logic and the requested execution-client selection before a corrective commit restored the client. Added requirement-aware rollback guidance to CODING_CONTEXT.md: map unwanted behavior to exact hunks/commits and preserve still-required changes. Saved 11-26 nightly evidence separates finalizing nodes from the full test timeout caused by an external decoder mismatch; neither this audit nor a passing health probe proves that nightly passes. Next authorized fix: establish current blocker/dependency readiness, preserve raw-job and duplicate checks, test the complete resulting patch and obtain task-required current-head job/suite results before releasing gates. No detector/tracker mutation or CI rerun.
+
+### Spec implementation
+- **Status:** Fresh read-only source-cache check passes: 313cbfe56, tests-history age 13/14 days, generatedFixturesVerified=false. Source readiness does not establish generated provenance, installed-fixture coverage, passing Lodestar tests or downstream decoder compatibility. Next actual implementation: pin generation-time source/commands, artifact inventory and installed mapping; retain actual executed counts, nonempty input coverage and harness overrides, and verify the relevant consumer schema/version when interoperability fails. No source refresh, fixture generation or product tests.
+
+### Devnet debugging
+- **Status:** Saved 11-27 02:18 monitor evidence reports Heze/Glamsterdam/PQ finalizing with all 24 Lodestar at sampled canonical head. This audit did not re-probe networks, datasource discovery or sandbox execution. Concrete gaps remain verified target/query execution, schema-selected helper adoption and fleet receipt/delivery repair; the latter remains owner-gated. Next authorized investigation: discover fresh endpoints, verify execution/target access and consumer compatibility, separate collection failure from node health, and validate the complete requested scenario rather than finality alone.
+
+### Audit workflow
+- **Status:** Implemented independently design-reviewed, requirement-aware rollback guidance in the existing coding handoff, based on inspected mixed-purpose revert/restoration commits. It covers resulting-tree requirement reconciliation, narrow verification and PR/test-claim hygiene; this is opt-in guidance, not automatic enforcement or a product fix. Source readiness alone was refreshed; full-domain prerequisites, live PR/CI state and networks were not rerun. Evidence: notes/autonomy-audit-2026-11-27-review.md and private memory/autonomy-audit/2026-11-27/. No installs, Gateway/config/scheduler changes, restart, product patch, CI rerun, fleet operation, commit/push or external post.
+
+---
 ## Daily Audit Snapshot — 2026-11-26 (self-improvement-audit-daily, 03:16 UTC)
 
 ### PR review

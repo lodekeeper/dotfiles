@@ -74,9 +74,11 @@ For failure-scenario fixes, choose verification that reproduces the claimed trig
 
 For runtime-option or soak/benchmark claims, verify the actual launch path, executing runtime and version, relevant effective options and measured process/start identity. Corroborate runtime attribution with that process's executable path and available runtime-specific evidence (e.g. `process.versions.bun`); Node-compatible `process.version`, an unrelated `node -v`, or an image label alone is insufficient. Image/wrapper/deployment state alone is insufficient; failed/skipped tasks may leave restart handlers unapplied. Inspect only relevant non-secret settings, not broad environment dumps. If runtime attribution cannot be verified, mark it unknown; if activation is unverified, qualify the result. This check grants no restart or deployment authority.
 
-## Upstream Merge / Conflict Resolution Evidence
+## Merge / Conflict / Rollback Evidence
 
 Before resolving an upstream merge conflict, compare the merge base, pre-merge task head and incoming upstream revision, including the upstream change's purpose. Preserve task requirements while incorporating intentional upstream changes; do not select "ours" or "theirs" mechanically. Record the resolution rationale and run narrow affected-behavior checks on the resulting merge tree, retaining its revision/diff and results. Keep earlier verification attributed to its original tree, explicitly naming relevant suites not rerun. Recheck PR title, description and test claims against the resulting diff/head. This guidance does not grant merge, push or deployment authority.
+
+Before a requested revert or rollback, read the current task head/diff and latest applicable owner/reviewer requirements. Map the unwanted behavior to exact hunks/commits; preserve still-required changes even when bundled with the rollback target. Inspect unfamiliar or parallel-worker changes before undoing them. Check the resulting tree/diff against those requirements and run narrow affected-behavior checks. Attribute earlier verification to its original tree and name relevant checks not rerun. Recheck PR title, description and test claims against the resulting diff/head. This guidance grants no additional write, push or deployment authority.
 
 ## Spec-Change Evidence
 
