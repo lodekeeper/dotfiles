@@ -1,10 +1,28 @@
 # Autonomy Gaps — Daily Audit
 
 > "What would I need to do this autonomously?"
-> Updated: 2026-11-27 (217th pass)
+> Updated: 2026-11-28 (218th pass)
 
 ---
 
+## Daily Audit Snapshot — 2026-11-28 (self-improvement-audit-daily, 03:16 UTC)
+
+### PR review
+- **Status:** Exact-head CI/job coverage and finding reconciliation remain task-specific. Historical 9b4c5bed confirms a by-root verifier differed from the PQ-aware path described in saved incident notes. Added explicit fork-validation parity guidance to CODING_CONTEXT.md: map applicable ingress/recovery paths to fork selection, verifier and signing context, and distinguish source tracing from execution. Next actual review: use that map for relevant fork changes, inspect penalty/cache effects and retain exact-head evidence. No live PR reviewed.
+
+### CI fix
+- **Status:** Saved 11-27 detector scans found no new failures in their deduplicated scope, not proof all CI passed; saved nightly work required a reference-runner comparison and an explicitly tracked skip. Next authorized fix: retain complete/raw-job evidence, check duplicate work, compare baseline/fix under the actual trigger and obtain task-required current-head job/suite outcomes before releasing gates. Recheck acting account/permissions before writes; upstream approvals remain owner-gated unless authority is established. No detector/tracker mutation or CI rerun.
+
+### Spec implementation
+- **Status:** Fresh read-only source-cache check passes: clean 313cbfe56, tests-history age 14/14 days, generatedFixturesVerified=false. It is at the freshness limit, not proof of latest upstream source, generated provenance or exercised coverage. Next actual implementation: recheck source readiness against the chosen revision, retain generation-time provenance, installed-fixture mapping and actual case counts, and cover materially distinct fork-dispatch paths. New guidance does not itself verify signatures or require unrelated fixture expansion. No refresh, fixture generation or product tests.
+
+### Devnet debugging
+- **Status:** Saved 11-27 PQ incident notes describe restart catch-up reaching BLS-only by-root verification and penalizing serving peers; the inspected historical patch replaces that call with fork-aware dispatch and adds mocked valid/invalid PQ cases. Saved 11-28 00:18 monitoring reports all 25 Lodestar at sampled canonical head across three finalizing networks, not this audit re-probing recovery. Next authorized investigation: discover fresh endpoints, establish actual query/target execution and reproduce the relevant recovery path; distinguish collection health, node health and peer-penalty effects. Schema-helper adoption and verified fleet receipt remain unresolved; delivery repair stays owner-gated.
+
+### Audit workflow
+- **Status:** Implemented independently design-reviewed fork-validation parity guidance in the existing coding handoff, based on the historical PQ by-root patch and attributed restart incident. This is opt-in workflow guidance, not enforcement, cryptographic validation or end-to-end recovery proof. Only source-cache readiness was refreshed; no full-domain prerequisites, live PR/CI or network checks. Evidence: notes/autonomy-audit-2026-11-28-review.md and private memory/autonomy-audit/2026-11-28/. No installs, Gateway/config/scheduler changes, restarts, product patches, CI reruns, fleet operations, commits/pushes or external posts.
+
+---
 ## Daily Audit Snapshot — 2026-11-27 (self-improvement-audit-daily, 03:16 UTC)
 
 ### PR review
